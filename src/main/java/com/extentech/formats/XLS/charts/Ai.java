@@ -735,6 +735,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 		this.setData( updated );
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -804,6 +805,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 		return expression;
 	}
 
+	@Override
 	public void close()
 	{
 		if( expression != null )
@@ -825,6 +827,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 		super.close();
 	}
 
+	@Override
 	protected void finalize()
 	{
 		this.close();

@@ -34,6 +34,7 @@ public class PyramidBarChart extends Bar3DChart
 		chartobj.chartType = PYRAMIDBARCHART;
 	}
 
+	@Override
 	public int getBarShape()
 	{
 		return defaultShape;

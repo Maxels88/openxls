@@ -42,6 +42,7 @@ public class NumberCellFormat extends NumberFormat implements CellFormat
 		this.string = string;
 	}
 
+	@Override
 	public StringBuffer format( Object input, StringBuffer buffer, FieldPosition pos )
 	{
 		if( input instanceof String )
@@ -100,21 +101,25 @@ public class NumberCellFormat extends NumberFormat implements CellFormat
 		}
 	}
 
+	@Override
 	public StringBuffer format( double number, StringBuffer buffer, FieldPosition pos )
 	{
 		return buffer.append( this.format( Double.valueOf( number ) ) );
 	}
 
+	@Override
 	public StringBuffer format( long number, StringBuffer buffer, FieldPosition pos )
 	{
 		return buffer.append( this.format( Long.valueOf( number ) ) );
 	}
 
+	@Override
 	public Number parse( String source, ParsePosition parsePosition )
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public String format( Cell cell )
 	{
 		return this.format( cell.getVal() );

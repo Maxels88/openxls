@@ -37,6 +37,7 @@ public class Col3DChart extends ColChart
 	 *
 	 * @return
 	 */
+	@Override
 	public StringBuffer getOOXML( String catAxisId, String valAxisId, String serAxisId )
 	{
 		StringBuffer cooxml = new StringBuffer();

@@ -39,6 +39,7 @@ public class MsofbtSplitMenuColors extends EscherRecord
 	}
 
 	// @Override
+	@Override
 	protected byte[] getData()
 	{
 		byte[] fillColorBytes = ByteTools.cLongToLEBytes( fillColor );

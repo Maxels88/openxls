@@ -38,6 +38,7 @@ public class PieFormat extends GenericChartObject implements ChartObject
 	private static final long serialVersionUID = 28305957039802849L;
 	short percentage = 0;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -77,6 +78,7 @@ public class PieFormat extends GenericChartObject implements ChartObject
 		this.getData()[1] = b[1];
 	}
 
+	@Override
 	public String getOptionsXML()
 	{
 		return " Percentage=\"" + percentage + "\"";

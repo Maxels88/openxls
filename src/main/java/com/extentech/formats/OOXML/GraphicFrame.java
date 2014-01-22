@@ -126,6 +126,7 @@ public class GraphicFrame implements OOXMLElement
 		return gf;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -147,6 +148,7 @@ public class GraphicFrame implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new GraphicFrame( this );
@@ -382,6 +384,7 @@ class NvGraphicFramePr implements OOXMLElement
 		return gfp;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -398,6 +401,7 @@ class NvGraphicFramePr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new NvGraphicFramePr( this );
@@ -548,6 +552,7 @@ class CNvGraphicFramePr implements OOXMLElement
 		return cpr;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -559,6 +564,7 @@ class CNvGraphicFramePr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new CNvGraphicFramePr( this );

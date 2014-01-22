@@ -36,6 +36,7 @@ public class UnencryptedXLSRecord extends XLSRecord
 	 */
 	private static final long serialVersionUID = 356283084373599557L;
 
+	@Override
 	public boolean shouldEncrypt()
 	{
 		return false;

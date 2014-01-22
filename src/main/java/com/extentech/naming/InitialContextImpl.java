@@ -65,6 +65,7 @@ public class InitialContextImpl implements javax.naming.Context
 	}
 
 	// check return... -jm
+	@Override
 	public Object addToEnvironment( String propName, Object propVal ) throws NamingException
 	{
 		if( env.contains( propVal ) )
@@ -79,12 +80,14 @@ public class InitialContextImpl implements javax.naming.Context
 	}
 
 	// we use string to bind -- is that bad?
+	@Override
 	public void bind( Name name, Object obj ) throws NamingException
 	{
 		String str = name.toString();
 		this.bind( str, obj );
 	}
 
+	@Override
 	public void bind( String name, Object obj ) throws NamingException
 	{
 		try
@@ -100,12 +103,14 @@ public class InitialContextImpl implements javax.naming.Context
 
 	private boolean closed = false;
 
+	@Override
 	public void close() throws NamingException
 	{
 		closed = true;
 	}
 
 	// ?
+	@Override
 	public Name composeName( Name name, Name prefix ) throws NamingException
 	{
 		NameImpl retval = new NameImpl();
@@ -114,6 +119,7 @@ public class InitialContextImpl implements javax.naming.Context
 		return retval;
 	}
 
+	@Override
 	public String composeName( String name, String prefix ) throws NamingException
 	{
 		StringBuffer sb = new StringBuffer();
@@ -122,57 +128,68 @@ public class InitialContextImpl implements javax.naming.Context
 		return sb.toString();
 	}
 
+	@Override
 	public Hashtable getEnvironment() throws NamingException
 	{
 		return env;
 	}
 
+	@Override
 	public NameParser getNameParser( String name ) throws NamingException
 	{
 		this.nameParser.parse( name );
 		return this.nameParser;
 	}
 
+	@Override
 	public NameParser getNameParser( Name name ) throws NamingException
 	{
 		return this.nameParser;
 	}
 
+	@Override
 	public Object lookup( Name name ) throws NamingException
 	{
 		return env.get( name );
 	}
 
+	@Override
 	public Object lookup( String name ) throws NamingException
 	{
 		return env.get( name );
 	}
 
+	@Override
 	public Object lookupLink( Name name ) throws NamingException
 	{
 		return env.get( name );
 	}
 
+	@Override
 	public Object lookupLink( String name ) throws NamingException
 	{
 		return env.get( name );
 	}
 
+	@Override
 	public void rebind( Name name, Object obj ) throws NamingException
 	{
 		this.bind( name, obj );
 	}
 
+	@Override
 	public void rebind( String name, Object obj ) throws NamingException
 	{
 		this.bind( name, obj );
 	}
 
+	@Override
 	public Object removeFromEnvironment( String propName ) throws NamingException
 	{
 		return env.remove( propName );
 	}
 
+	@Override
 	public void rename( String oldName, String newName ) throws NamingException
 	{
 		Object ob = env.get( oldName );
@@ -180,6 +197,7 @@ public class InitialContextImpl implements javax.naming.Context
 		env.put( newName, ob );
 	}
 
+	@Override
 	public void rename( Name oldName, Name newName ) throws NamingException
 	{
 		Object ob = env.get( oldName );
@@ -187,6 +205,7 @@ public class InitialContextImpl implements javax.naming.Context
 		env.put( newName, ob );
 	}
 
+	@Override
 	public void unbind( String name ) throws NamingException
 	{
 		try
@@ -199,6 +218,7 @@ public class InitialContextImpl implements javax.naming.Context
 		}
 	}
 
+	@Override
 	public void unbind( Name name ) throws NamingException
 	{
 		try
@@ -213,26 +233,31 @@ public class InitialContextImpl implements javax.naming.Context
 
 // TODO: Implement the following mehods -jm 9/27/2004
 
+	@Override
 	public NamingEnumeration list( String name ) throws NamingException
 	{
 		return null;
 	}
 
+	@Override
 	public NamingEnumeration list( Name name ) throws NamingException
 	{
 		return null;
 	}
 
+	@Override
 	public NamingEnumeration listBindings( Name name ) throws NamingException
 	{
 		return null;
 	}
 
+	@Override
 	public NamingEnumeration listBindings( String name ) throws NamingException
 	{
 		return null;
 	}
 
+	@Override
 	public Context createSubcontext( Name name ) throws NamingException
 	{
 		// This method is derived from interface javax.naming.Context
@@ -240,6 +265,7 @@ public class InitialContextImpl implements javax.naming.Context
 		return null;
 	}
 
+	@Override
 	public Context createSubcontext( String name ) throws NamingException
 	{
 		// This method is derived from interface javax.naming.Context
@@ -247,18 +273,21 @@ public class InitialContextImpl implements javax.naming.Context
 		return null;
 	}
 
+	@Override
 	public void destroySubcontext( String name ) throws NamingException
 	{
 		// This method is derived from interface javax.naming.Context
 		// to do: code goes here
 	}
 
+	@Override
 	public void destroySubcontext( Name name ) throws NamingException
 	{
 		// This method is derived from interface javax.naming.Context
 		// to do: code goes here
 	}
 
+	@Override
 	public String getNameInNamespace() throws NamingException
 	{
 		// This method is derived from interface javax.naming.Context

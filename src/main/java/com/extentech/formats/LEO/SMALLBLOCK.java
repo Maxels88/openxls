@@ -47,6 +47,7 @@ public class SMALLBLOCK extends BlockImpl
 	/**
 	 * returns the int representing the block type
 	 */
+	@Override
 	public final int getBlockType()
 	{
 		return SMALL;

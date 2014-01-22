@@ -75,6 +75,7 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 	public static final int BOTTOM = 0, CORNER = 1, TOP = 2, RIGHT = 3, LEFT = 4, NOT_DOCKED = 7;
 	int[] legendCoords = null;
 
+	@Override
 	public void init()
 	{
 		super.init();

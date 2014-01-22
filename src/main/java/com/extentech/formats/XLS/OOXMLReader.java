@@ -1122,6 +1122,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 		ArrayList embeds = parseRels( wrapInputStream( wrapInputStream( zip.getInputStream( target ) ) ) ); // obtain a list of image file references for use in later parsing
 		Collections.sort( embeds, new Comparator()
 		{
+			@Override
 			public int compare( Object o1, Object o2 )
 			{
 				Integer a = Integer.valueOf( ((String[]) o1)[2].substring( 3 ) );

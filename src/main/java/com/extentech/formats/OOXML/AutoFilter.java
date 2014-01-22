@@ -109,6 +109,7 @@ public class AutoFilter implements OOXMLElement
 		return a;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -129,6 +130,7 @@ public class AutoFilter implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new AutoFilter( this );
@@ -222,6 +224,7 @@ class FilterColumn implements OOXMLElement
 		return f;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -263,6 +266,7 @@ class FilterColumn implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new FilterColumn( this );
@@ -332,6 +336,7 @@ class ColorFilter implements OOXMLElement
 		return oe;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -348,6 +353,7 @@ class ColorFilter implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new ColorFilter( this );
@@ -418,6 +424,7 @@ class DynamicFilter implements OOXMLElement
 		return d;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -434,6 +441,7 @@ class DynamicFilter implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new DynamicFilter( this );
@@ -503,6 +511,7 @@ class IconFilter implements OOXMLElement
 		return i;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -519,6 +528,7 @@ class IconFilter implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new IconFilter( this );
@@ -593,6 +603,7 @@ class CustomFilters implements OOXMLElement
 		return c;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -617,6 +628,7 @@ class CustomFilters implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new CustomFilters( this );
@@ -687,6 +699,7 @@ class CustomFilter implements OOXMLElement
 		return c;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -703,6 +716,7 @@ class CustomFilter implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new CustomFilter( this );
@@ -770,6 +784,7 @@ class Top10 implements OOXMLElement
 		return t;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -786,6 +801,7 @@ class Top10 implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Top10( this );
@@ -862,6 +878,7 @@ class Filters implements OOXMLElement
 		return oe;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -881,6 +898,7 @@ class Filters implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Filters( this );

@@ -119,6 +119,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * clear out object references in prep for closing workbook
 	 */
+	@Override
 	public void close()
 	{
 		dbc = null;
@@ -161,6 +162,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * set the position of the ROW on the Worksheet
 	 */
+	@Override
 	public void setRowNumber( int n )
 	{
 		if( DEBUGLEVEL > 3 )
@@ -175,6 +177,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * get the position of the ROW on the Worksheet
 	 */
+	@Override
 	public int getRowNumber()
 	{
 		if( rw < 0 )
@@ -398,6 +401,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 		}
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -459,6 +463,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 		fPhonetic = (byte15 & 0x40) != 0;
 	}
 
+	@Override
 	public void preStream()
 	{
 		if( this.getSheet() != null )
@@ -758,6 +763,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	 * @throws IllegalArgumentException if the given format ID cannot be
 	 *                                  encoded in the 1.5 byte wide field provided for it
 	 */
+	@Override
 	public void setIxfe( int ixfe )
 	{
 		if( (ixfe & ~0xFFF) != 0 )
@@ -786,6 +792,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	 * @return the ID of the current format,
 	 * or the default format ID if no format has been applied
 	 */
+	@Override
 	public int getIxfe()
 	{
 		return fGhostDirty ? ixfe : this.getWorkBook().getDefaultIxfe();

@@ -64,11 +64,13 @@ public class PtgMemFunc extends GenericPtg
 
 	Ptg[] ptgs = null;    // 20090905 KSC: can be PtgRef3d, PtgArea3d, PtgName  ...
 
+	@Override
 	public boolean getIsOperand()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsReference()
 	{
 		return true;
@@ -77,6 +79,7 @@ public class PtgMemFunc extends GenericPtg
 	int cce;
 	byte[] subexp;
 
+	@Override
 	public void init( byte[] b )
 	{
 		ptgId = b[0];
@@ -108,6 +111,7 @@ public class PtgMemFunc extends GenericPtg
 	/**
 	 * update the record internally for ptgmemfunc
 	 */
+	@Override
 	public byte[] getRecord()
 	{
 		int len = 0;
@@ -132,6 +136,7 @@ public class PtgMemFunc extends GenericPtg
 		return record;
 	}
 
+	@Override
 	public int getLength()
 	{
 		return cce + 3;
@@ -139,6 +144,7 @@ public class PtgMemFunc extends GenericPtg
 
 	int calc_id = 1;
 
+	@Override
 	public Object getValue()
 	{
 		if( ptgs == null )
@@ -294,6 +300,7 @@ public class PtgMemFunc extends GenericPtg
 	 * will exist, just with a null value.  This could cause issues when
 	 * programatically populating cells.
 	 */
+	@Override
 	public Ptg[] getComponents()
 	{
 		if( ptgs == null )
@@ -377,6 +384,7 @@ public class PtgMemFunc extends GenericPtg
 		Q47, ), Q47, ":"										'=-(Q47):Q47
 		Q48, Q48, ), ":"										'=-Q48:(Q48)
      */
+	@Override
 	public void setLocation( String complexrange )
 	{
 		byte[] newData = new byte[3];    // 1st 3 bytes= id + cce (length of following data)
@@ -828,6 +836,7 @@ public class PtgMemFunc extends GenericPtg
 
 	}
 
+	@Override
 	public void close()
 	{
 		if( ptgs != null )

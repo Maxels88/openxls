@@ -37,11 +37,13 @@ public class PtgBool extends GenericPtg implements Ptg
 	 */
 	private static final long serialVersionUID = -7270271326251770439L;
 
+	@Override
 	public boolean getIsOperator()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean getIsOperand()
 	{
 		return true;
@@ -52,6 +54,7 @@ public class PtgBool extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of the ptg
 	 */
+	@Override
 	public String getString()
 	{
 		return String.valueOf( val );
@@ -62,6 +65,7 @@ public class PtgBool extends GenericPtg implements Ptg
 		return String.valueOf( val );
 	}
 
+	@Override
 	public Object getValue()
 	{
 		Boolean b = Boolean.valueOf( val );
@@ -74,6 +78,7 @@ public class PtgBool extends GenericPtg implements Ptg
 		this.updateRecord();
 	}
 
+	@Override
 	public void init( byte[] rec )
 	{
 		this.record = rec;
@@ -107,6 +112,7 @@ public class PtgBool extends GenericPtg implements Ptg
 		return val;
 	}
 
+	@Override
 	public void updateRecord()
 	{
 		record = new byte[2];
@@ -121,6 +127,7 @@ public class PtgBool extends GenericPtg implements Ptg
 		}
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_BOOL_LENGTH;

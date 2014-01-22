@@ -52,6 +52,7 @@ public class SxVS extends XLSRecord implements XLSConstants
 
 	private static final long serialVersionUID = 2639291289806138985L;
 
+	@Override
 	public void init()
 	{
 		super.init();

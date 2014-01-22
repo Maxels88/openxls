@@ -45,6 +45,7 @@ public final class PivotTableNotFoundException extends Exception
 		pivotTableName = n;
 	}
 
+	@Override
 	public String getMessage()
 	{
 		return this.toString();

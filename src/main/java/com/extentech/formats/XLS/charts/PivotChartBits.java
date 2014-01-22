@@ -48,6 +48,7 @@ public class PivotChartBits extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = -4587483948421928667L;
 
+	@Override
 	public void init()
 	{
 		super.init();

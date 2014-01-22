@@ -44,6 +44,7 @@ public class MsofbtBSE extends EscherRecord
 		super( fbt, inst, version );
 	}
 
+	@Override
 	protected byte[] getData()
 	{
 		byte[] imgHeader = new byte[61];    // BSE header = 36 bytes, BLIP record header = 24 bytes, then imageData bytes follow

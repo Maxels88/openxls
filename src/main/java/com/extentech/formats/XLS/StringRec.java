@@ -57,6 +57,7 @@ public final class StringRec extends com.extentech.formats.XLS.XLSRecord
 	byte[] rgch;
 	Unicodestring us;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -89,6 +90,7 @@ public final class StringRec extends com.extentech.formats.XLS.XLSRecord
 		//this.setValueForCell(true); why ??? not true
 	}
 
+	@Override
 	public String getStringVal()
 	{
 		if( us == null )
@@ -103,12 +105,14 @@ public final class StringRec extends com.extentech.formats.XLS.XLSRecord
 		return us.toString();
 	}
 
+	@Override
 	public void setStringVal( String s )
 	{
 		us.updateUnicodeString( s );
 		this.setData( us.read() );
 	}
 
+	@Override
 	public Object getVal()
 	{
 		return us.toString();

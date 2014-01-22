@@ -39,6 +39,7 @@ import java.io.IOException;
 public class DefaultTempFileGeneratorImpl implements TempFileGenerator
 {
 
+	@Override
 	public File createTempFile( String prefix, String extension ) throws IOException
 	{
 		String tmpdir = System.getProperty( "java.io.tmpdir" );

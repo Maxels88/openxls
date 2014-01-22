@@ -43,6 +43,7 @@ public class CellAddressComparator implements Comparator, Serializable
 	 * @param o2 the second cell record to be compared
 	 * @throws ClassCastException if either argument is not a cell record
 	 */
+	@Override
 	public int compare( Object o1, Object o2 )
 	{
 		if( o1 == null || !(o1 instanceof XLSRecord) || o2 == null || !(o2 instanceof XLSRecord) )

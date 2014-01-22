@@ -55,6 +55,7 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 	private int nummerges = 0;
 	private CompatibleVector ranges = new CompatibleVector();
 
+	@Override
 	public void init()
 	{
 		super.init();

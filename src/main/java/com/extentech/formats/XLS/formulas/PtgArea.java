@@ -71,11 +71,13 @@ public class PtgArea extends PtgRef implements Ptg
 
 	public static final long serialVersionUID = 666555444333222l;
 
+	@Override
 	public boolean getIsOperand()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsReference()
 	{
 		return true;
@@ -87,6 +89,7 @@ public class PtgArea extends PtgRef implements Ptg
 	/* constructor, takes the array of the ptgRef, including
 	the identifier so we do not need to figure it out again later...
 	*/
+	@Override
 	public void init( byte[] b )
 	{
 		locax = null; // cache reset
@@ -98,6 +101,7 @@ public class PtgArea extends PtgRef implements Ptg
 	/*
 	 Throw this data into two ptgref's
 	*/
+	@Override
 	public void populateVals()
 	{
 		byte[] temp1 = new byte[5];
@@ -133,6 +137,7 @@ public class PtgArea extends PtgRef implements Ptg
 	 * will exist, just with a null value.  This could cause issues when
 	 * programatically populating cells.
 	 */
+	@Override
 	public Ptg[] getComponents()
 	{
 		Vector v = new Vector();
@@ -231,6 +236,7 @@ public class PtgArea extends PtgRef implements Ptg
 	 *
 	 * @return
 	 */
+	@Override
 	public int[] getRowCol()
 	{
 		if( firstPtg == null )
@@ -348,6 +354,7 @@ public class PtgArea extends PtgRef implements Ptg
 	 * return the human-readable String representation of
 	 * this ptg -- if applicable
 	 */
+	@Override
 	public String getString()
 	{
 		return this.getLocation();
@@ -472,6 +479,7 @@ public class PtgArea extends PtgRef implements Ptg
 	 * <br>The Ptg type is important for certain
 	 * functions which require a specific type of operand
 	 */
+	@Override
 	public void setPtgType( short type )
 	{
 		switch( type )
@@ -514,6 +522,7 @@ public class PtgArea extends PtgRef implements Ptg
 		return ret;
 	}
 
+	@Override
 	public void setParentRec( XLSRecord rec )
 	{
 		super.setParentRec( rec );
@@ -531,6 +540,7 @@ public class PtgArea extends PtgRef implements Ptg
 	/* Set the location of this PtgRef.  This takes a location
 	   such as "a14:b15"
 	*/
+	@Override
 	public void setLocation( String address )
 	{
 		String s[] = ExcelTools.stripSheetNameFromRange( address );
@@ -543,6 +553,7 @@ public class PtgArea extends PtgRef implements Ptg
 	 *
 	 * @param loc String[] sheet1, range, sheet2, exref1, exref2
 	 */
+	@Override
 	public void setLocation( String[] loc )
 	{
 		locax = null; // cache reset
@@ -616,6 +627,7 @@ public class PtgArea extends PtgRef implements Ptg
 	 * [2] = lastRow
 	 * [3] = lastCol
 	 */
+	@Override
 	public int[] getIntLocation()
 	{
 		int[] first = firstPtg.getIntLocation();
@@ -630,6 +642,7 @@ public class PtgArea extends PtgRef implements Ptg
 	 * Set the location of this PtgArea.  This takes a location
 	 * such as {1,2,3,4}
 	 */
+	@Override
 	public void setLocation( int[] rowcol )
 	{
 		locax = null; // cache reset
@@ -671,6 +684,7 @@ public class PtgArea extends PtgRef implements Ptg
 	/*
 		Returns the location of the Ptg as a string
 	*/
+	@Override
 	public String getLocation()
 	{
 		String lc = getLocationHelper();
@@ -773,6 +787,7 @@ public class PtgArea extends PtgRef implements Ptg
 
 	/* Updates the record bytes so it can be pulled back out.
    */
+	@Override
 	public void updateRecord()
 	{
 		locax = null; // cache reset
@@ -803,6 +818,7 @@ public class PtgArea extends PtgRef implements Ptg
 		lastPtg.setLocationPolicy( pols[1] );
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_AREA_LENGTH;
@@ -820,6 +836,7 @@ public class PtgArea extends PtgRef implements Ptg
 			  functions, or if the forced array class state is set, it is changed to array class. In all other cases (cell type formula
 			  without forced array class), value class is retained.
 	*/
+	@Override
 	public Object getValue()
 	{
 		// 20080214 KSC: underlying cells may have changed ...if(refCell==null)
@@ -1038,6 +1055,7 @@ public class PtgArea extends PtgRef implements Ptg
 	/**
 	 * @return Returns the refCell.
 	 */
+	@Override
 	public BiffRec[] getRefCells()
 	{
 		double returnval = 0;
@@ -1161,6 +1179,7 @@ public class PtgArea extends PtgRef implements Ptg
 		return refCell;
 	}
 
+	@Override
 	protected long getHashCode()
 	{
 		return lastPtg.hashcode + (firstPtg.hashcode) * ((long) MAXCOLS + (long) MAXROWS * MAXCOLS);

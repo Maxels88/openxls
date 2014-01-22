@@ -63,11 +63,13 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 	// int DEBUGLEVEL = 10;
 	CompatibleVector rgs = new CompatibleVector();
 
+	@Override
 	public void preStream()
 	{
 		this.update();
 	}
 
+	@Override
 	public void setWorkBook( WorkBook bk )
 	{
 		super.setWorkBook( bk );
@@ -241,6 +243,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		return cXTI;
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -636,6 +639,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		return rgs.size() - 1;
 	}
 
+	@Override
 	public void close()
 	{
 		while( rgs.size() > 0 )

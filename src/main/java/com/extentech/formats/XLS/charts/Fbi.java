@@ -32,6 +32,7 @@ public class Fbi extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 6933614402245236374L;
 
+	@Override
 	public void init()
 	{
 		super.init();

@@ -117,6 +117,7 @@ public class Sxvi extends XLSRecord
 	public static final short itmtypeVAR = 0x000B;        //Statistical variance (estimate) of the pivot field
 	public static final short itmtypeVARP = 0x000C;        //Statistical variance (entire population) of the pivot field
 
+	@Override
 	public void init()
 	{
 		super.init();

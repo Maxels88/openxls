@@ -44,6 +44,7 @@ public class Chart3DBarShape extends GenericChartObject implements ChartObject
 	private static final long serialVersionUID = 3029030180040933082L;
 	byte riser, taper;
 
+	@Override
 	public void init()
 	{
 		super.init();

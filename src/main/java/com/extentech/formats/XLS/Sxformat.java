@@ -45,6 +45,7 @@ public class Sxformat extends XLSRecord implements XLSConstants
 	private static final long serialVersionUID = -8702313274711819140L;
 	byte[] data = null;
 
+	@Override
 	public void init()
 	{
 		super.init();

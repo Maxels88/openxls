@@ -61,11 +61,13 @@ public final class Externname extends XLSRecord
 	 */
 	private static final long serialVersionUID = -7153354861666069899L;
 
+	@Override
 	public void setWorkBook( WorkBook bk )
 	{
 		super.setWorkBook( bk );
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();

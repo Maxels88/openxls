@@ -34,6 +34,7 @@ public class Ifmt extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = -509816915750594317L;
 
+	@Override
 	public void init()
 	{
 		super.init();

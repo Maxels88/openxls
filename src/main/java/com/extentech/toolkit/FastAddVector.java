@@ -97,6 +97,7 @@ public class FastAddVector extends SpecialArrayList implements java.io.Serializa
 		super.add( idx, obj );
 	}
 
+	@Override
 	public boolean remove( Object obj )
 	{
 		if( super.remove( obj ) )
@@ -106,11 +107,13 @@ public class FastAddVector extends SpecialArrayList implements java.io.Serializa
 		return false;
 	}
 
+	@Override
 	public void clear()
 	{
 		super.clear();
 	}
 
+	@Override
 	public Object[] toArray()
 	{
 		if( true )
@@ -162,6 +165,7 @@ public class FastAddVector extends SpecialArrayList implements java.io.Serializa
 		return super.get( t );
 	}
 
+	@Override
 	public Object[] toArray( Object[] obj )
 	{
 		for( int i = 0; i < super.size(); i++ )
@@ -182,11 +186,13 @@ public class FastAddVector extends SpecialArrayList implements java.io.Serializa
 			it = itx;
 		}
 
+		@Override
 		public Object nextElement()
 		{
 			return it.elementAt( x++ );
 		}
 
+		@Override
 		public boolean hasMoreElements()
 		{
 			return (x < it.size());

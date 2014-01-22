@@ -33,6 +33,7 @@ public class AlRuns extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = -5255886234371123315L;
 
+	@Override
 	public void init()
 	{
 		super.init();

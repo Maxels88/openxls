@@ -73,6 +73,7 @@ public interface WorkBook extends Handle, Document
 	 *
 	 * @return Returns the properties.
 	 */
+	@Override
 	public Object getProperty( String name );
 
 	/**
@@ -80,6 +81,7 @@ public interface WorkBook extends Handle, Document
 	 *
 	 * @param properties The properties to set.
 	 */
+	@Override
 	public void addProperty( String name, Object val );
 
 	/**
@@ -167,6 +169,7 @@ public interface WorkBook extends Handle, Document
 	 *
 	 * @param WorkBook Name
 	 */
+	@Override
 	public abstract void setName( String nm );
 
 	/**
@@ -175,6 +178,7 @@ public interface WorkBook extends Handle, Document
 	 *
 	 * @parameter int Debug level.  higher=more verbose
 	 */
+	@Override
 	public abstract void setDebugLevel( int l );
 
 	/**
@@ -210,6 +214,7 @@ public interface WorkBook extends Handle, Document
 	 *
 	 * @return String name of WorkBook
 	 */
+	@Override
 	public abstract String getName();
 
 	/**
@@ -296,6 +301,7 @@ public interface WorkBook extends Handle, Document
 	 * is completed to remove the modified values
 	 * and set them back to a default.
 	 */
+	@Override
 	public abstract void reset();
 
 	/**

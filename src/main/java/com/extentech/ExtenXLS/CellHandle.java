@@ -322,6 +322,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 *
 	 * @return boolean true if this Cell has a Date Format applied
 	 */
+	@Override
 	public boolean isDate()
 	{
 		if( mycell.myxf == null )
@@ -1178,6 +1179,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 *
 	 * @return Object value for this Cell
 	 */
+	@Override
 	public Object getVal()
 	{
 		return FormulaHandle.sanitizeValue( mycell.getInternalVal() );
@@ -1226,6 +1228,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 *
 	 * @return int type for this Cell
 	 */
+	@Override
 	public int getCellType()
 	{
 		return mycell.getCellType();
@@ -1270,6 +1273,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 *
 	 * @return int the Column Number of the Cell
 	 */
+	@Override
 	public int getColNum()
 	{
 		setMulblank();
@@ -1286,6 +1290,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 *
 	 * @return 1-based int the Row Number of the Cell
 	 */
+	@Override
 	public int getRowNum()
 	{
 		return mycell.getRowNumber();
@@ -1296,6 +1301,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 *
 	 * @return String the address of this Cell in the WorkSheet
 	 */
+	@Override
 	public String getCellAddress()
 	{
 		setMulblank();
@@ -1339,6 +1345,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 *
 	 * @return String the name this Cell's WorkSheet
 	 */
+	@Override
 	public String getWorkSheetName()
 	{
 		if( wsh == null )
@@ -1378,6 +1385,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 * @return the value of the cell as a string formatted according to the cell
 	 * type and, if present, the number format pattern
 	 */
+	@Override
 	public String getFormattedStringVal()
 	{
 		FormatHandle myfmt = this.getFormatHandle();
@@ -1455,6 +1463,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 *
 	 * @return int the FormatId for this Cell
 	 */
+	@Override
 	public int getFormatId()
 	{
 		setMulblank();
@@ -2786,6 +2795,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		return 0;
 	}
 
+	@Override
 	public int compareTo( CellHandle that )
 	{
 		int comp = this.getRowNum() - that.getRowNum();

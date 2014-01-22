@@ -74,6 +74,7 @@ public class CompatibleVector extends Vector
 		super( i );
 	}
 
+	@Override
 	public Iterator iterator()
 	{
 		return new Itr();
@@ -215,6 +216,7 @@ public class CompatibleVector extends Vector
 		}
 	}
 
+	@Override
 	public Object get( int idx )
 	{
 		return super.elementAt( idx );
@@ -299,6 +301,7 @@ public class CompatibleVector extends Vector
 		}
 	}
 
+	@Override
 	public boolean remove( Object obj )
 	{
 		if( super.remove( obj ) )
@@ -309,12 +312,14 @@ public class CompatibleVector extends Vector
 		return false;
 	}
 
+	@Override
 	public void clear()
 	{
 		this.change_offset = 0;
 		super.removeAllElements();
 	}
 
+	@Override
 	public Object[] toArray()
 	{
 		Object[] obj = new Object[super.size()];
@@ -325,6 +330,7 @@ public class CompatibleVector extends Vector
 		return obj;
 	}
 
+	@Override
 	public Object[] toArray( Object[] obj )
 	{
 		for( int i = 0; i < super.size(); i++ )
@@ -362,11 +368,13 @@ public class CompatibleVector extends Vector
 		 */
 		int expectedModCount = modCount;
 
+		@Override
 		public boolean hasNext()
 		{
 			return cursor != size();
 		}
 
+		@Override
 		public Object next()
 		{
 			Object next = get( cursor );
@@ -374,6 +382,7 @@ public class CompatibleVector extends Vector
 			return next;
 		}
 
+		@Override
 		public void remove()
 		{
 			if( lastRet == -1 )

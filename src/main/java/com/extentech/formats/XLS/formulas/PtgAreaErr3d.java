@@ -46,11 +46,13 @@ public class PtgAreaErr3d extends PtgArea3d implements Ptg
 	 */
 	private static final long serialVersionUID = -9091097082897614748L;
 
+	@Override
 	public boolean getIsRefErr()
 	{
 		return true;
 	}
 
+	@Override
 	public String getString()
 	{
 		if( sheetname == null )
@@ -60,6 +62,7 @@ public class PtgAreaErr3d extends PtgArea3d implements Ptg
 		return sheetname + "!#REF!";
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_AREAERR3D_LENGTH;
@@ -68,6 +71,7 @@ public class PtgAreaErr3d extends PtgArea3d implements Ptg
 	/* constructor, takes the array of the ptgRef, including
 	the identifier so we do not need to figure it out again later...
 	*/
+	@Override
 	public void init( byte[] b )
 	{
 		record = b;
@@ -79,6 +83,7 @@ public class PtgAreaErr3d extends PtgArea3d implements Ptg
 
 	}
 
+	@Override
 	public Object getValue()
 	{
 		if( sheetname == null )
@@ -93,6 +98,7 @@ public class PtgAreaErr3d extends PtgArea3d implements Ptg
 	 * called from copy worksheet
 	 * different from PtgArea3d as PtgAreaErr3d's have not set their  firstPtg and lastPtg
 	 */
+	@Override
 	public void setReferencedSheet( Boundsheet b )
 	{
 		int boundnum = b.getSheetNum();
@@ -113,11 +119,13 @@ public class PtgAreaErr3d extends PtgArea3d implements Ptg
 		}
 	}
 
+	@Override
 	public void setLocation( String[] s )
 	{
 		sheetname = GenericPtg.qualifySheetname( s[0] );
 	}
 
+	@Override
 	public int[] getRowCol()
 	{
 		return new int[]{ -1, -1 };

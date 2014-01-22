@@ -50,6 +50,7 @@ public class Dropbar extends GenericChartObject implements ChartObject
 	private static final long serialVersionUID = 6826327230442065566L;
 	short pcGap;
 
+	@Override
 	public void init()
 	{
 		super.init();

@@ -91,6 +91,7 @@ public class PtgArray extends GenericPtg implements Ptg
 	CompatibleVector arrVals = new CompatibleVector();
 	boolean isIntermediary = false;        // 20090824 KSC: true if this PtgArray is only part of a calcualtion process; if so, apparently can have more than 256 columns [BugTracker 2683]
 
+	@Override
 	public boolean getIsOperand()
 	{
 		return true;
@@ -131,6 +132,7 @@ public class PtgArray extends GenericPtg implements Ptg
 		*/
 	}
 
+	@Override
 	public void init( byte[] b )
 	{
 		ptgId = b[0];
@@ -292,6 +294,7 @@ public class PtgArray extends GenericPtg implements Ptg
 		return -1;
 	}
 
+	@Override
 	public Object getValue()
 	{
 		// 20090820 KSC: value = entire array instead of 1st value; desired value is determined by cell position as compared to current formula; see Formula.calculate [BugTracker 2683]
@@ -303,6 +306,7 @@ public class PtgArray extends GenericPtg implements Ptg
 	 *  returns the string value of the name
 		@see com.extentech.formats.XLS.formulas.Ptg#getValue()
 	 */
+	@Override
 	public String getString()
 	{
 		Object retVal = null;
@@ -345,6 +349,7 @@ public class PtgArray extends GenericPtg implements Ptg
 		return "{" + retVal + "}";
 	}
 
+	@Override
 	public String getTextString()
 	{
 		return getString();
@@ -508,6 +513,7 @@ public class PtgArray extends GenericPtg implements Ptg
 	 * Override due to mystery extra byte
 	 * occasionally found in ptgName recs.
 	 */
+	@Override
 	public int getLength()
 	{
 		/* 20090820 KSC: really want record length not rgval length, which now is separate [BugTracker 2683]
@@ -542,6 +548,7 @@ public class PtgArray extends GenericPtg implements Ptg
 		return this.getString();
 	}
 
+	@Override
 	public Ptg[] getComponents()
 	{
 		Ptg[] retVals = new Ptg[arrVals.size()];

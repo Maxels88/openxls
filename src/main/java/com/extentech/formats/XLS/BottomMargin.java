@@ -40,6 +40,7 @@ public class BottomMargin extends XLSRecord
 		setData( ByteTools.doubleToLEByteArray( margin ) );
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -47,6 +48,7 @@ public class BottomMargin extends XLSRecord
 		margin = ByteTools.eightBytetoLEDouble( getBytesAt( 0, 8 ) );
 	}
 
+	@Override
 	public void setSheet( Sheet sheet )
 	{
 		super.setSheet( sheet );

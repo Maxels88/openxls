@@ -67,6 +67,7 @@ public class SheetProtectionManager extends ProtectionManager implements Seriali
 	 *
 	 * @param record the record to be managed
 	 */
+	@Override
 	public void addRecord( BiffRec record )
 	{
 		if( record instanceof ObjProtect )
@@ -90,6 +91,7 @@ public class SheetProtectionManager extends ProtectionManager implements Seriali
 	/**
 	 * Sets whether the sheet is protected.
 	 */
+	@Override
 	public void setProtected( boolean value )
 	{
 		if( value )
@@ -263,6 +265,7 @@ public class SheetProtectionManager extends ProtectionManager implements Seriali
 	 *
 	 * @param pass the string password to set or null to remove the password
 	 */
+	@Override
 	public void setPassword( String pass )
 	{
 		if( pass != null && !pass.equals( "" ) )
@@ -282,6 +285,7 @@ public class SheetProtectionManager extends ProtectionManager implements Seriali
 	 * @param pass the pre-hashed string password to set
 	 *             or null to remove the password
 	 */
+	@Override
 	public void setPasswordHashed( String pass )
 	{
 		if( pass != null )
@@ -354,6 +358,7 @@ public class SheetProtectionManager extends ProtectionManager implements Seriali
 	/**
 	 * clear out object references in prep for closing workbook
 	 */
+	@Override
 	public void close()
 	{
 		super.close();

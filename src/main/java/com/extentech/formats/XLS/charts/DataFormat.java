@@ -63,6 +63,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	private short yi, xi;
 	private short iss;
 
+	@Override
 	public void init()
 	{
 		super.init();

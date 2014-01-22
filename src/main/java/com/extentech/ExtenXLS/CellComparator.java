@@ -44,6 +44,7 @@ public class CellComparator implements Comparator
 	 * than formula strings, Numbers are sorted ahead of string values.  Dates are stored
 	 * as numbers internally in excel so are sorted against numbers
 	 */
+	@Override
 	public int compare( Object cellHandle1, Object cellHandle2 )
 	{
 		CellHandle cell1 = (CellHandle) cellHandle1;

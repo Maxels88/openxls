@@ -219,6 +219,7 @@ public class SpPr implements OOXMLElement
 		return sp;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -256,6 +257,7 @@ public class SpPr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new SpPr( this );

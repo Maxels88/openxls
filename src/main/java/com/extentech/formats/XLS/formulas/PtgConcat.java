@@ -39,16 +39,19 @@ public class PtgConcat extends GenericPtg implements Ptg
 	 */
 	private static final long serialVersionUID = 6671404163121438253L;
 
+	@Override
 	public boolean getIsOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsBinaryOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsPrimitiveOperator()
 	{
 		return true;
@@ -64,18 +67,21 @@ public class PtgConcat extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 //        return "CONCAT(";	// 20060512 KSC: mod 
 		return "&";
 	}
 
+	@Override
 	public String getString2()
 	{
 //        return ")";
 		return "";
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_CONCAT_LENGTH;
@@ -89,6 +95,7 @@ public class PtgConcat extends GenericPtg implements Ptg
 	/**
 	 * Operator specific calculate method, this Concatenates two values
 	 */
+	@Override
 	public Ptg calculatePtg( Ptg[] form )
 	{
 		try

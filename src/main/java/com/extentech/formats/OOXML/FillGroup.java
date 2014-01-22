@@ -137,6 +137,7 @@ public class FillGroup implements OOXMLElement
 		return f;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -169,6 +170,7 @@ public class FillGroup implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new FillGroup( this );
@@ -349,6 +351,7 @@ class GradFill implements OOXMLElement
 		return gf;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -375,6 +378,7 @@ class GradFill implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new GradFill( this );
@@ -487,6 +491,7 @@ class BlipFill implements OOXMLElement
 		return bf;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -523,6 +528,7 @@ class BlipFill implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new BlipFill( this );
@@ -665,6 +671,7 @@ class SolidFill implements OOXMLElement
 		return s;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -677,6 +684,7 @@ class SolidFill implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new SolidFill( this );
@@ -774,6 +782,7 @@ class PattFill implements OOXMLElement
 		return p;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -790,6 +799,7 @@ class PattFill implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new PattFill( this );
@@ -837,6 +847,7 @@ class GrpFill implements OOXMLElement
 		return g;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -845,6 +856,7 @@ class GrpFill implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new GrpFill();
@@ -911,6 +923,7 @@ class BgClr implements OOXMLElement
 		return s;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -923,6 +936,7 @@ class BgClr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new BgClr( this );
@@ -987,6 +1001,7 @@ class FgClr implements OOXMLElement
 		return s;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -999,6 +1014,7 @@ class FgClr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new FgClr( this );
@@ -1083,6 +1099,7 @@ class Blip implements OOXMLElement
 	}
 
 	// TODO: cstate= "print"
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -1100,6 +1117,7 @@ class Blip implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Blip( this );
@@ -1216,6 +1234,7 @@ class TileRect implements OOXMLElement
 		return t;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -1232,6 +1251,7 @@ class TileRect implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new TileRect( this );
@@ -1303,6 +1323,7 @@ class SrcRect implements OOXMLElement
 		return s;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -1322,6 +1343,7 @@ class SrcRect implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new SrcRect( this );
@@ -1392,6 +1414,7 @@ class FillRect implements OOXMLElement
 		return oe;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -1408,6 +1431,7 @@ class FillRect implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new FillRect( this );
@@ -1500,6 +1524,7 @@ class FillMode implements OOXMLElement
 		return fm;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -1534,6 +1559,7 @@ class FillMode implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new FillMode( this );
@@ -1599,6 +1625,7 @@ class GsLst implements OOXMLElement
 		return gl;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -1619,6 +1646,7 @@ class GsLst implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new GsLst( this );
@@ -1693,6 +1721,7 @@ class Gs implements OOXMLElement
 		return g;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -1702,6 +1731,7 @@ class Gs implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Gs( this );

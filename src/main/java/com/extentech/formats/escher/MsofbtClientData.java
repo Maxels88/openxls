@@ -36,6 +36,7 @@ public class MsofbtClientData extends EscherRecord
 		super( fbt, inst, version );
 	}
 
+	@Override
 	public byte[] getData()
 	{
 		return new byte[0];

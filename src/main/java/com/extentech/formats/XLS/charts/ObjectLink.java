@@ -52,6 +52,7 @@ public class ObjectLink extends GenericChartObject implements ChartObject
 	 */
 	public static final int TYPE_DISPLAYUNITS = 0xC;
 
+	@Override
 	public void init()
 	{
 		super.init();

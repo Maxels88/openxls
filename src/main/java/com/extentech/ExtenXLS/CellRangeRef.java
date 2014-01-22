@@ -343,6 +343,7 @@ public class CellRangeRef implements Cloneable
 	/**
 	 * Creates and returns a copy of this range.
 	 */
+	@Override
 	public Object clone()
 	{
 		try

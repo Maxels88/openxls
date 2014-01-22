@@ -125,6 +125,7 @@ class Xfrm implements OOXMLElement
 		return x;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -153,6 +154,7 @@ class Xfrm implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Xfrm( this );
@@ -232,6 +234,7 @@ class Off implements OOXMLElement
 		return o;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -248,6 +251,7 @@ class Off implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Off( this );

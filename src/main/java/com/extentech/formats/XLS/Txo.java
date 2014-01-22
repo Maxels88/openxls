@@ -92,6 +92,7 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 	short rot = 0;
 	boolean compressedUnicode = false;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -111,6 +112,7 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * returns the String value of this Text Object
 	 */
+	@Override
 	public String getStringVal()
 	{
 		String s = "";
@@ -159,6 +161,7 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 	 * @throws IllegalArgumentException if String is incorrect format
 	 */
 	// TODO: if length of string is > 8218, must have another continues ******************
+	@Override
 	public void setStringVal( String v ) throws IllegalArgumentException
 	{
 		if( v != null && v.indexOf( '<' ) >= 0 )

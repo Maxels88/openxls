@@ -44,6 +44,7 @@ public class PtgInt extends GenericPtg implements Ptg
 	 */
 	private static final long serialVersionUID = -2129624418815329359L;
 
+	@Override
 	public boolean getIsOperand()
 	{
 		return true;
@@ -54,6 +55,7 @@ public class PtgInt extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return String.valueOf( val );
@@ -72,6 +74,7 @@ public class PtgInt extends GenericPtg implements Ptg
 		this.updateRecord();
 	}
 
+	@Override
 	public void init( byte[] b )
 	{
 		ptgId = b[0];
@@ -92,11 +95,13 @@ public class PtgInt extends GenericPtg implements Ptg
 		return val;
 	}
 
+	@Override
 	public int getIntVal()
 	{
 		return val;
 	}
 
+	@Override
 	public Object getValue()
 	{
 		Integer i = Integer.valueOf( val );
@@ -118,6 +123,7 @@ public class PtgInt extends GenericPtg implements Ptg
 		return false;
 	}
 
+	@Override
 	public void updateRecord()
 	{
 		byte[] tmp = new byte[1];
@@ -127,6 +133,7 @@ public class PtgInt extends GenericPtg implements Ptg
 		record = tmp;
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_INT_LENGTH;

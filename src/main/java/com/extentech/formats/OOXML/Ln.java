@@ -167,6 +167,7 @@ public class Ln implements OOXMLElement
 		return l;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -204,6 +205,7 @@ public class Ln implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Ln( this );
@@ -358,6 +360,7 @@ class DashGroup implements OOXMLElement
 		return dg;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -369,6 +372,7 @@ class DashGroup implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new DashGroup( this );
@@ -473,6 +477,7 @@ class JoinGroup implements OOXMLElement
 		return jg;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -491,6 +496,7 @@ class JoinGroup implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new JoinGroup( this );
@@ -581,6 +587,7 @@ class HeadEnd implements OOXMLElement
 		return te;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -602,6 +609,7 @@ class HeadEnd implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new HeadEnd( this );
@@ -691,6 +699,7 @@ class TailEnd implements OOXMLElement
 		return te;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -712,6 +721,7 @@ class TailEnd implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new TailEnd( this );
@@ -774,6 +784,7 @@ class PrstDash implements OOXMLElement
 		return p;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -781,6 +792,7 @@ class PrstDash implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new PrstDash( this );

@@ -42,6 +42,7 @@ public class BookProtectionManager extends ProtectionManager implements Serializ
 	/**
 	 * clear out object references in prep for closing workbook
 	 */
+	@Override
 	public void close()
 	{
 		book = null;

@@ -62,6 +62,7 @@ public final class Boolerr extends XLSCellRecord
 	/**
 	 * get the int val
 	 */
+	@Override
 	public int getIntVal()
 	{
 		if( this.getBooleanVal() )
@@ -74,6 +75,7 @@ public final class Boolerr extends XLSCellRecord
 	/**
 	 * return boolean value in float version 0 or 1
 	 */
+	@Override
 	public float getFloatVal()
 	{
 		if( this.getBooleanVal() )
@@ -86,6 +88,7 @@ public final class Boolerr extends XLSCellRecord
 	/**
 	 * return the boolean value in double version 0 or 1
 	 */
+	@Override
 	public double getDblVal()
 	{
 		if( this.getBooleanVal() )
@@ -98,6 +101,7 @@ public final class Boolerr extends XLSCellRecord
 	/**
 	 * get the String val
 	 */
+	@Override
 	public String getStringVal( String encoding )
 	{
 		if( this.getIsErr() )
@@ -151,6 +155,7 @@ public final class Boolerr extends XLSCellRecord
 	/**
 	 * get the String val
 	 */
+	@Override
 	public String getStringVal()
 	{
 		return this.getStringVal( null ); // char encoding of true/false should be irrelevant -
@@ -161,11 +166,13 @@ public final class Boolerr extends XLSCellRecord
 	 * Get the value of the record as a Boolean.
 	 * Value must be parseable as a Boolean.
 	 */
+	@Override
 	public boolean getBooleanVal()
 	{
 		return val;
 	}
 
+	@Override
 	public void setBooleanVal( boolean newv )
 	{
 		if( newv )
@@ -179,6 +186,7 @@ public final class Boolerr extends XLSCellRecord
 		this.val = newv;
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();

@@ -186,6 +186,7 @@ public final class Password extends XLSRecord
 		setData( ByteTools.shortToLEBytes( hash ) );
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();

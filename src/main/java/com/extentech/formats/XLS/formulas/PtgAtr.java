@@ -88,6 +88,7 @@ public class PtgAtr extends GenericPtg implements Ptg
 		record[1] = type;
 	}
 
+	@Override
 	public String getString()
 	{
 	    /* We may not want any text from this record.. */
@@ -135,6 +136,7 @@ public class PtgAtr extends GenericPtg implements Ptg
 	 * the "closing" portion of this Ptg
 	 * such as a closing parenthesis.
 	 */
+	@Override
 	public String getString2()
 	{
 		if( bitAttrIf > 0 )
@@ -165,6 +167,7 @@ public class PtgAtr extends GenericPtg implements Ptg
 		return "";
 	}
 
+	@Override
 	public boolean getIsControl()
 	{
 		this.init();
@@ -207,6 +210,7 @@ public class PtgAtr extends GenericPtg implements Ptg
 	 * is the space special -- does it go between vars?
 	 * for now we say sure why not.
 	 */
+	@Override
 	public boolean getIsPrimitiveOperator()
 	{
 		this.init();
@@ -217,6 +221,7 @@ public class PtgAtr extends GenericPtg implements Ptg
 		return false;
 	}
 
+	@Override
 	public boolean getIsUnaryOperator()
 	{
 		if( bitAttrIf > 0 )
@@ -230,6 +235,7 @@ public class PtgAtr extends GenericPtg implements Ptg
 		return true;
 	}
 
+	@Override
 	public boolean getIsOperator()
 	{
 		return false;
@@ -244,6 +250,7 @@ public class PtgAtr extends GenericPtg implements Ptg
 		return false;
 	}
 
+	@Override
 	public boolean getIsOperand()
 	{
 		//
@@ -325,6 +332,7 @@ public class PtgAtr extends GenericPtg implements Ptg
 		return getLength();
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_ATR_LENGTH;
@@ -335,6 +343,7 @@ public class PtgAtr extends GenericPtg implements Ptg
 	/*
 		Calculate the value of this ptg.
 	*/
+	@Override
 	public Ptg calculatePtg( Ptg[] pthing ) throws FunctionNotSupportedException, CalculationException
 	{
 		Ptg returnPtg = null;

@@ -39,16 +39,19 @@ public class PtgAdd extends GenericPtg implements Ptg
 	 */
 	private static final long serialVersionUID = -964400139336259946L;
 
+	@Override
 	public boolean getIsOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsBinaryOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsPrimitiveOperator()
 	{
 		return true;
@@ -64,6 +67,7 @@ public class PtgAdd extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return "+";
@@ -74,6 +78,7 @@ public class PtgAdd extends GenericPtg implements Ptg
 		return this.getString();
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_ADD_LENGTH;
@@ -82,6 +87,7 @@ public class PtgAdd extends GenericPtg implements Ptg
 	/*  Operator specific calculate method, this one adds two values.
 
 	*/
+	@Override
 	public Ptg calculatePtg( Ptg[] form )
 	{
 		try

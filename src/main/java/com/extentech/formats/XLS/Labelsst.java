@@ -103,6 +103,7 @@ public final class Labelsst extends XLSCellRecord
 		return retlab;
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -169,6 +170,7 @@ public final class Labelsst extends XLSCellRecord
 	 * int the Shared String Table pointed to by this
 	 * LABELSst record.
 	 */
+	@Override
 	public String getStringVal()
 	{
 		if( unsharedstr != null )
@@ -185,6 +187,7 @@ public final class Labelsst extends XLSCellRecord
 	 * try to convert the String Value of this Labelsst record to an int
 	 * If it cannot be converted, returns NaN.
 	 */
+	@Override
 	public int getIntVal()
 	{
 		String s = getStringVal();
@@ -203,6 +206,7 @@ public final class Labelsst extends XLSCellRecord
 	 * try to convert the String Value of this Labelsst record to a double
 	 * If it cannot be converted,return NaN.
 	 */
+	@Override
 	public double getDblVal()
 	{
 		String s = getStringVal();
@@ -246,6 +250,7 @@ public final class Labelsst extends XLSCellRecord
 	/**
 	 * set a new value for the string
 	 */
+	@Override
 	public void setStringVal( String v )
 	{
 		String ov = this.getStringVal();

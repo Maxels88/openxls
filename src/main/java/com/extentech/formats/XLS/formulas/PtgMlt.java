@@ -41,16 +41,19 @@ public class PtgMlt extends GenericPtg implements Ptg
 	 */
 	private static final long serialVersionUID = -2670754297349356254L;
 
+	@Override
 	public boolean getIsOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsPrimitiveOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsBinaryOperator()
 	{
 		return true;
@@ -59,6 +62,7 @@ public class PtgMlt extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return "*";
@@ -76,6 +80,7 @@ public class PtgMlt extends GenericPtg implements Ptg
 		record[0] = 0x5;
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_MLT_LENGTH;
@@ -84,6 +89,7 @@ public class PtgMlt extends GenericPtg implements Ptg
 	/*  Operator specific calculate method, this one multiplies two values.
 
 	*/
+	@Override
 	public Ptg calculatePtg( Ptg[] form )
 	{
 		// handle ref errs

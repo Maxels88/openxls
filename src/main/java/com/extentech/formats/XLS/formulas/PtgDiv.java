@@ -40,16 +40,19 @@ public final class PtgDiv extends GenericPtg implements Ptg
 	 */
 	private static final long serialVersionUID = -4046772548262378126L;
 
+	@Override
 	public boolean getIsOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsPrimitiveOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsBinaryOperator()
 	{
 		return true;
@@ -65,6 +68,7 @@ public final class PtgDiv extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return "/";
@@ -75,6 +79,7 @@ public final class PtgDiv extends GenericPtg implements Ptg
 		return this.getString();
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_DIV_LENGTH;
@@ -83,6 +88,7 @@ public final class PtgDiv extends GenericPtg implements Ptg
 	/*  Operator specific calculate method, this one divides two values.
 
 	*/
+	@Override
 	public Ptg calculatePtg( Ptg[] form )
 	{
 		try

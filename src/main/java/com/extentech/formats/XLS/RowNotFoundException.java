@@ -44,6 +44,7 @@ public final class RowNotFoundException extends java.lang.Exception
 		rowname = n;
 	}
 
+	@Override
 	public String getMessage()
 	{
 		// This method is derived from class java.lang.Throwable

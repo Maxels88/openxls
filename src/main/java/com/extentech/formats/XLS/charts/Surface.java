@@ -47,6 +47,7 @@ public class Surface extends GenericChartObject implements ChartObject
 	private boolean f3DPhoneShade = false;
 	private boolean is3d = false;	/* since all surface charts contain a 3d record, must store 3d setting separately */
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -115,6 +116,7 @@ public class Surface extends GenericChartObject implements ChartObject
 	/**
 	 * @return String XML representation of this chart-type's options
 	 */
+	@Override
 	public String getOptionsXML()
 	{
 		StringBuffer sb = new StringBuffer();
@@ -132,6 +134,7 @@ public class Surface extends GenericChartObject implements ChartObject
 	/**
 	 * Handle setting options from XML in a generic manner
 	 */
+	@Override
 	public boolean setChartOption( String op, String val )
 	{
 		boolean bHandled = false;

@@ -100,6 +100,7 @@ public class AvLst implements OOXMLElement
 		return av;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -115,6 +116,7 @@ public class AvLst implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new AvLst( this );

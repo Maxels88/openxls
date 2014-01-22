@@ -93,6 +93,7 @@ public class Graphic implements OOXMLElement
 		return gr;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -105,6 +106,7 @@ public class Graphic implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Graphic( this );
@@ -234,6 +236,7 @@ class GraphicData implements OOXMLElement
 		return g;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -254,6 +257,7 @@ class GraphicData implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new GraphicData( this );

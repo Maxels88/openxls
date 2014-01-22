@@ -38,6 +38,7 @@ public class GeneralCellFormat extends Format implements CellFormat
 	{
 	}
 
+	@Override
 	public StringBuffer format( Object obj, StringBuffer buffer, FieldPosition pos )
 	{
 		// try to parse strings as numbers
@@ -71,11 +72,13 @@ public class GeneralCellFormat extends Format implements CellFormat
 		return buffer.append( obj.toString() );
 	}
 
+	@Override
 	public Object parseObject( String source, ParsePosition pos )
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public String format( Cell cell )
 	{
 		return this.format( cell.getVal() );

@@ -133,6 +133,7 @@ public class SxVdEX extends XLSRecord implements XLSConstants
 	private static final long serialVersionUID = 2639291289806138985L;
 	private short citmAutoShow, isxdiAutoSort, isxdiAutoShow, ifmt;
 
+	@Override
 	public void init()
 	{
 		super.init();

@@ -32,6 +32,7 @@ public class SerauxTrend extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 2866392332146662156L;
 
+	@Override
 	public void init()
 	{
 		super.init();

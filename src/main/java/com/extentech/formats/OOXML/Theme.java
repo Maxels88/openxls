@@ -198,11 +198,13 @@ public class Theme implements OOXMLElement
 	}
 
 	// TODO: implement
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return null;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		return null;

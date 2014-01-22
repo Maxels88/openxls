@@ -102,6 +102,7 @@ public class GeomGroup implements OOXMLElement
 		return g;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -116,6 +117,7 @@ public class GeomGroup implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new GeomGroup( this );
@@ -190,6 +192,7 @@ class PrstGeom implements OOXMLElement
 		return p;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -202,6 +205,7 @@ class PrstGeom implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new PrstGeom( this );
@@ -308,6 +312,7 @@ class CustGeom implements OOXMLElement
 		return c;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -338,6 +343,7 @@ class CustGeom implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new CustGeom( this );
@@ -417,6 +423,7 @@ class PathLst implements OOXMLElement
 		return pl;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -441,6 +448,7 @@ class PathLst implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new PathLst( this );
@@ -515,6 +523,7 @@ class Path implements OOXMLElement
 		return p;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -531,6 +540,7 @@ class Path implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Path( this );
@@ -599,6 +609,7 @@ class GdLst implements OOXMLElement
 		return g;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -614,6 +625,7 @@ class GdLst implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new GdLst( this );
@@ -704,6 +716,7 @@ class Rect implements OOXMLElement
 		return r;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -720,6 +733,7 @@ class Rect implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Rect( this );
@@ -793,6 +807,7 @@ class CxnLst implements OOXMLElement
 		return c;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -808,6 +823,7 @@ class CxnLst implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new CxnLst( this );
@@ -890,6 +906,7 @@ class Cxn implements OOXMLElement
 		return c;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -911,6 +928,7 @@ class Cxn implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Cxn( this );
@@ -982,6 +1000,7 @@ class Pos implements OOXMLElement
 		return p;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -998,6 +1017,7 @@ class Pos implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Pos( this );

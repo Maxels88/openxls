@@ -42,11 +42,13 @@ public class PtgMystery extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return "!UNKNOWN!";
 	}
 
+	@Override
 	public int getLength()
 	{
 		return getRecord().length;
@@ -59,6 +61,7 @@ public class PtgMystery extends GenericPtg implements Ptg
 	 * functioning as a Generic, lightweight Ptg
 	 * see PtgRange, PtgUnion, PtgIsect
 	 */
+	@Override
 	public Object getValue()
 	{
 		return vars;

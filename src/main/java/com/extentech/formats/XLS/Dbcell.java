@@ -132,6 +132,7 @@ public final class Dbcell extends com.extentech.formats.XLS.XLSRecord implements
 	 * Index records need to update their DBCELL
 	 * pointers when we add or move a DBCELL.
 	 */
+	@Override
 	public void setIndex( Index idx )
 	{
 		myidx = idx;
@@ -313,6 +314,7 @@ public final class Dbcell extends com.extentech.formats.XLS.XLSRecord implements
 	/**
 	 * Initialize the Dbcell
 	 */
+	@Override
 	public void init()
 	{
 		super.init();
@@ -347,11 +349,13 @@ public final class Dbcell extends com.extentech.formats.XLS.XLSRecord implements
 
 	/**
 	 */
+	@Override
 	public void preStream()
 	{
 		//this.updateIndexes();
 	}
 
+	@Override
 	public void close()
 	{
 		super.close();

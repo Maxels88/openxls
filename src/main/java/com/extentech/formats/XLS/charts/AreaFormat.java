@@ -96,6 +96,7 @@ public class AreaFormat extends GenericChartObject implements ChartObject
 	private short icvBack = 0;
 	boolean fAuto, fInvertNeg;
 
+	@Override
 	public void init()
 	{
 		super.init();

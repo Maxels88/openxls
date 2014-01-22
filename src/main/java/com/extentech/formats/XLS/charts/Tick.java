@@ -61,6 +61,7 @@ public class Tick extends GenericChartObject implements ChartObject
 	short grbit;
 	short rot;
 
+	@Override
 	public void init()
 	{
 		super.init();

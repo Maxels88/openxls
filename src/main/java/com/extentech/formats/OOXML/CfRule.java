@@ -182,11 +182,13 @@ public class CfRule implements OOXMLElement
 		attrs.put( "dxfId", Integer.valueOf( dxfId ).toString() );
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new CfRule( this );
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		// TODO Auto-generated method stub

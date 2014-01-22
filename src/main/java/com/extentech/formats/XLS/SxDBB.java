@@ -56,6 +56,7 @@ public class SxDBB extends XLSRecord implements XLSConstants, PivotCacheRecord
 	short[] cacheitems;
 
 	// TODO: handle > 255 cache items (see SxFDB fShortItms)
+	@Override
 	public void init()
 	{
 		super.init();
@@ -121,6 +122,7 @@ public class SxDBB extends XLSRecord implements XLSConstants, PivotCacheRecord
 	 *
 	 * @return
 	 */
+	@Override
 	public byte[] getRecord()
 	{
 		byte[] b = new byte[4];

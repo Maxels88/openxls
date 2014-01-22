@@ -43,6 +43,7 @@ public class DataLabExt extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = -1868700214505277636L;
 
+	@Override
 	public void init()
 	{
 		super.init();

@@ -81,6 +81,7 @@ public class CrtLayout12 extends GenericChartObject implements ChartObject
 	short wWidthMode, wHeightMode;
 	float x, y, dx, dy;
 
+	@Override
 	public void init()
 	{
 		super.init();

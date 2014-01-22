@@ -32,6 +32,7 @@ public class SerParent extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 4960939713989511226L;
 
+	@Override
 	public void init()
 	{
 		super.init();

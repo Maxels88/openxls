@@ -66,6 +66,7 @@ public class CatLab extends GenericChartObject implements ChartObject
 	short wOffset, at;
 	private static final long serialVersionUID = 3042712098138741496L;
 
+	@Override
 	public void init()
 	{
 		super.init();

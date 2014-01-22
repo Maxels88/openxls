@@ -117,6 +117,7 @@ public class Style implements OOXMLElement
 		return s;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -134,6 +135,7 @@ public class Style implements OOXMLElement
 		return getOOXML();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Style( this );
@@ -221,6 +223,7 @@ class EffectRef implements OOXMLElement
 		return er;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -233,6 +236,7 @@ class EffectRef implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new EffectRef( this );
@@ -323,6 +327,7 @@ class FillRef implements OOXMLElement
 		return fr;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -335,6 +340,7 @@ class FillRef implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new FillRef( this );
@@ -422,6 +428,7 @@ class FontRef implements OOXMLElement
 		return fr;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -434,6 +441,7 @@ class FontRef implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new FontRef( this );
@@ -523,6 +531,7 @@ class lnRef implements OOXMLElement
 		return lr;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -535,6 +544,7 @@ class lnRef implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new lnRef( this );

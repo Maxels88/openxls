@@ -45,16 +45,19 @@ public class PtgGT extends GenericPtg implements Ptg
 	 */
 	private static final long serialVersionUID = -1779961703481749272L;
 
+	@Override
 	public boolean getIsOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsPrimitiveOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsBinaryOperator()
 	{
 		return true;
@@ -70,6 +73,7 @@ public class PtgGT extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return ">";
@@ -80,6 +84,7 @@ public class PtgGT extends GenericPtg implements Ptg
 		return this.getString();
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_GT_LENGTH;
@@ -89,6 +94,7 @@ public class PtgGT extends GenericPtg implements Ptg
 		operand is less than the top operand;  Returns a PtgBool
 
 	*/
+	@Override
 	public Ptg calculatePtg( Ptg[] form )
 	{
 		try

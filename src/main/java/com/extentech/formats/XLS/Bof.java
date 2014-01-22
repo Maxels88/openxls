@@ -56,6 +56,7 @@ public final class Bof extends UnencryptedXLSRecord
 	/**
 	 * Set the offset for this BOF
 	 */
+	@Override
 	public void setOffset( int s )
 	{
 		super.setOffset( s );
@@ -81,6 +82,7 @@ public final class Bof extends UnencryptedXLSRecord
 	/**
 	 * Initialize the BOF record
 	 */
+	@Override
 	public void init()
 	{
 		super.init();

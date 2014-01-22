@@ -58,6 +58,7 @@ public class ChartFrtInfo extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 7722730813154117198L;
 
+	@Override
 	public void init()
 	{
 		super.init();

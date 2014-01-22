@@ -127,6 +127,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	private NumFmt nf = null;        // NumFmt prop for axis
 	String axPos = null;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -191,6 +192,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	/**
 	 * @return String XML representation of this chart-type's options
 	 */
+	@Override
 	public String getOptionsXML()
 	{
 		StringBuffer sb = new StringBuffer();
@@ -475,6 +477,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	/**
 	 * returns the font of the Axis Title
 	 */
+	@Override
 	public com.extentech.formats.XLS.Font getFont()
 	{
 		if( linkedtd == null )
@@ -908,6 +911,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	 * @see ExtenXLS.handleChartElement
 	 * @see ChartHandle.getXML
 	 */
+	@Override
 	public boolean setChartOption( String op, String val )
 	{
 		if( op.equalsIgnoreCase( "Label" ) )
@@ -3027,6 +3031,7 @@ class Scaling implements OOXMLElement
 		return null;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -3052,6 +3057,7 @@ class Scaling implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Scaling( this );

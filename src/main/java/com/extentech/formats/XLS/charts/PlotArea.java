@@ -32,6 +32,7 @@ public class PlotArea extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 834805225367462259L;
 
+	@Override
 	public void init()
 	{
 		super.init();

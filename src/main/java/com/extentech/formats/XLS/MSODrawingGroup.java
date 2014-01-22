@@ -199,6 +199,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 	private ArrayList imageType = new ArrayList();  // parallel array with imageData
 	private ArrayList cRef = new ArrayList();    // 20071120 KSC: keep track of reference count for image data
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -1042,6 +1043,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * clear out object references in prep for closing workbook
 	 */
+	@Override
 	public void close()
 	{
 		super.close();

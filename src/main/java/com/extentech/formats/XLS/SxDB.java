@@ -99,6 +99,7 @@ public class SxDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 	// TODO: cfdbUsed == filtering ****
 	// TODO: flags
 	// TODO: cfWho
+	@Override
 	public void init()
 	{
 		super.init();
@@ -182,6 +183,7 @@ public class SxDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 	 *
 	 * @return
 	 */
+	@Override
 	public byte[] getRecord()
 	{
 		byte[] b = new byte[4];

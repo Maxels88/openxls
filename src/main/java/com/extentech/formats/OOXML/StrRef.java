@@ -106,6 +106,7 @@ public class StrRef implements OOXMLElement
 	/**
 	 * strRef contains f + strRef elements
 	 */
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer tooxml = new StringBuffer();
@@ -122,6 +123,7 @@ public class StrRef implements OOXMLElement
 		return tooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new StrRef( this.stringRef, this.strCache );
@@ -208,6 +210,7 @@ class StrCache implements OOXMLElement
 	 *
 	 * @return
 	 */
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer tooxml = new StringBuffer();
@@ -220,6 +223,7 @@ class StrCache implements OOXMLElement
 		return tooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new StrCache( this.ptCount, this.idx, this.pt );

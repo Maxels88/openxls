@@ -144,6 +144,7 @@ public class Text implements OOXMLElement
 		return oe;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		return null;
@@ -216,6 +217,7 @@ public class Text implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Text( this );

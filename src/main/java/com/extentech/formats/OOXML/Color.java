@@ -212,6 +212,7 @@ public class Color implements OOXMLElement
 		return c;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -264,6 +265,7 @@ public class Color implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Color( this );

@@ -85,6 +85,7 @@ public final class ObjProtect extends com.extentech.formats.XLS.XLSRecord
 		}
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();

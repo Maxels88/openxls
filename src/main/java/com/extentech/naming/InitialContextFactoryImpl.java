@@ -33,6 +33,7 @@ import java.util.Hashtable;
 public class InitialContextFactoryImpl implements InitialContextFactory
 {
 
+	@Override
 	public Context getInitialContext( Hashtable env ) throws NamingException
 	{
 		InitialContextImpl contimple = new InitialContextImpl();

@@ -106,6 +106,7 @@ public class Pos extends GenericChartObject implements ChartObject
 	public static final int TYPE_PLOTAREA = 2;
 	public static final int TYPE_DATATABLE = 3;
 
+	@Override
 	public void init()
 	{
 		super.init();

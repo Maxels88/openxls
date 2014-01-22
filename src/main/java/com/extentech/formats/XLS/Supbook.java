@@ -105,6 +105,7 @@ public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 	CompatibleVector tabs = new CompatibleVector();
 	private String filename;    // for EXTERNAL references
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -371,6 +372,7 @@ public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 	 *
 	 * @see com.extentech.formats.XLS.XLSRecord#preStream()
 	 */
+	@Override
 	public void preStream()
 	{
 		if( this.isGlobalRecord() )

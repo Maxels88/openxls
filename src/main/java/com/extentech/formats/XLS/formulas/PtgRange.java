@@ -41,16 +41,19 @@ public class PtgRange extends GenericPtg implements Ptg
 
 	private static final long serialVersionUID = 7181427387507157013L;
 
+	@Override
 	public boolean getIsOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsBinaryOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsPrimitiveOperator()
 	{
 		return true;
@@ -69,11 +72,13 @@ public class PtgRange extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return ":";
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_RANGE_LENGTH;
@@ -86,6 +91,7 @@ public class PtgRange extends GenericPtg implements Ptg
 	 * <p/>
 	 * NOTE: assumption is NO 3d refs i.e. all on same sheet *******
 	 */
+	@Override
 	public Ptg calculatePtg( Ptg[] form )
 	{
 		if( form.length != 2 )

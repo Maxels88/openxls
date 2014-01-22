@@ -32,6 +32,7 @@ public class Legendxn extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = -7960153045048996505L;
 
+	@Override
 	public void init()
 	{
 		super.init();

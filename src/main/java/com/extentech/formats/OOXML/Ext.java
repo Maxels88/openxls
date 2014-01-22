@@ -106,6 +106,7 @@ public class Ext implements OOXMLElement
 		this.nameSpace = ns;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -122,6 +123,7 @@ public class Ext implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Ext( this );

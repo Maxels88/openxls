@@ -43,6 +43,7 @@ public class PivotChartLink extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = -6202325538826559210L;
 
+	@Override
 	public void init()
 	{
 		super.init();

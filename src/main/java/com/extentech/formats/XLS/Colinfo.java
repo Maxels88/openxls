@@ -82,6 +82,7 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 		this.colFirst = c;
 	}
 
+	@Override
 	public int getColFirst()
 	{
 		return colFirst;
@@ -98,6 +99,7 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 		this.colLast = c;
 	}
 
+	@Override
 	public int getColLast()
 	{
 		return colLast;
@@ -112,6 +114,7 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 		this.setColLast( this.getColLast() + offset );
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -396,6 +399,7 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 		return outlineLevel;
 	}
 
+	@Override
 	public int getIxfe()
 	{
 		return ixfe;
@@ -425,6 +429,7 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 	 * Sets the Ixfe for this record.  For some stupid reason this is the *only* xls record
 	 * that has it's ixfe in a different place.  Intern time at microsoft I guess.
 	 */
+	@Override
 	public void setIxfe( int i )
 	{
 		this.ixfe = i;
@@ -440,6 +445,7 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 		return "ColInfo: " + ExcelTools.getAlphaVal( colFirst ) + "-" + ExcelTools.getAlphaVal( colLast ) + "  ixfe: " + String.valueOf( (int) ixfe ) + " width: " + colWidth;
 	}
 
+	@Override
 	public boolean isSingleCol()
 	{
 		return (this.getColFirst() == this.getColLast());

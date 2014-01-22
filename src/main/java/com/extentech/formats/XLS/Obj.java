@@ -289,6 +289,7 @@ obj.ftCmo.getRec()[17]= (byte)0x02;
 	 * Associate this record with a worksheet.
 	 * \
 	 */
+	@Override
 	public void setSheet( Sheet b )
 	{
 		this.worksheet = b;
@@ -298,6 +299,7 @@ obj.ftCmo.getRec()[17]= (byte)0x02;
 	/**
 	 * Initialize a new OBJ Record
 	 */
+	@Override
 	public void init()
 	{
 		super.init();

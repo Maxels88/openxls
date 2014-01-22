@@ -45,6 +45,7 @@ public class Area extends GenericChartObject implements ChartObject
 	private short grbit = 0;
 	protected boolean fStacked = false, f100 = false, fHasShadow = false;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -76,6 +77,7 @@ public class Area extends GenericChartObject implements ChartObject
 
 	private byte[] PROTOTYPE_BYTES = new byte[]{ 0, 0 };
 
+	@Override
 	public void setIsStacked( boolean bIsStacked )
 	{
 		fStacked = bIsStacked;
@@ -83,6 +85,7 @@ public class Area extends GenericChartObject implements ChartObject
 		updateRecord();
 	}
 
+	@Override
 	public void setIs100Percent( boolean bOn )
 	{
 		f100 = bOn;
@@ -93,11 +96,13 @@ public class Area extends GenericChartObject implements ChartObject
 	/**
 	 * @return truth of "Chart is Stacked"
 	 */
+	@Override
 	public boolean isStacked()
 	{
 		return fStacked;
 	}
 
+	@Override
 	public boolean is100Percent()
 	{
 		return f100;
@@ -106,6 +111,7 @@ public class Area extends GenericChartObject implements ChartObject
 	/**
 	 * Handle setting options
 	 */
+	@Override
 	public boolean setChartOption( String op, String val )
 	{
 		boolean bHandled = false;
@@ -134,6 +140,7 @@ public class Area extends GenericChartObject implements ChartObject
 	/**
 	 * @return String XML representation of this chart-type's options
 	 */
+	@Override
 	public String getOptionsXML()
 	{
 		StringBuffer sb = new StringBuffer();

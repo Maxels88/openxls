@@ -139,6 +139,7 @@ public class Pic implements OOXMLElement
 		return p;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -175,6 +176,7 @@ public class Pic implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Pic( this );
@@ -450,6 +452,7 @@ class NvPicPr implements OOXMLElement
 		return n;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -460,6 +463,7 @@ class NvPicPr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new NvPicPr( this );
@@ -616,6 +620,7 @@ class CNvPicPr implements OOXMLElement
 		return c;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -626,6 +631,7 @@ class CNvPicPr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new CNvPicPr( this );

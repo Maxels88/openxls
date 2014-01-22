@@ -36,6 +36,7 @@ public class MsofbtSpgrContainer extends EscherRecord
 		super( fbt, inst, version );
 	}
 
+	@Override
 	protected byte[] getData()
 	{
 		return new byte[0];

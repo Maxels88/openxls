@@ -70,6 +70,7 @@ public class YMult extends GenericChartObject implements ChartObject
 	short axmid, grbit;
 	double numLabelMultiplier;
 
+	@Override
 	public void init()
 	{
 		super.init();

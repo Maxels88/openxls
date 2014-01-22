@@ -38,6 +38,7 @@ public class Bar3DChart extends BarChart
 	 *
 	 * @return
 	 */
+	@Override
 	public StringBuffer getOOXML( String catAxisId, String valAxisId, String serAxisId )
 	{
 		StringBuffer cooxml = new StringBuffer();

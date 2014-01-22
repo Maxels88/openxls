@@ -82,6 +82,7 @@ public class Sxivd extends XLSRecord implements XLSConstants
 	 */
 	private static final long serialVersionUID = 9027599480633995587L;
 
+	@Override
 	public void init()
 	{
 		super.init();

@@ -112,6 +112,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	/**
 	 * Initialize the font record
 	 */
+	@Override
 	public void init()
 	{
 		super.init();
@@ -376,6 +377,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	/**
 	 * add to Fonts table in Workbook
 	 */
+	@Override
 	public void setWorkBook( WorkBook b )
 	{
 		super.setWorkBook( b );

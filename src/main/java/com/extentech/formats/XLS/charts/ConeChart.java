@@ -35,6 +35,7 @@ public class ConeChart extends Col3DChart
 
 	}
 
+	@Override
 	public int getBarShape()
 	{
 		return defaultShape;

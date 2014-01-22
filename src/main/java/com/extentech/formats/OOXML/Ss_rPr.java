@@ -157,6 +157,7 @@ public class Ss_rPr implements OOXMLElement
 		return r;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -184,6 +185,7 @@ public class Ss_rPr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Ss_rPr( this );

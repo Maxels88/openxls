@@ -40,6 +40,7 @@ public class SeriesList extends GenericChartObject implements ChartObject
 	private static final long serialVersionUID = -7852050067799624402L;
 	int[] seriesmap = null;
 
+	@Override
 	public void init()
 	{
 		super.init();

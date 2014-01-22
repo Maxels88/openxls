@@ -73,6 +73,7 @@ public final class Protect extends com.extentech.formats.XLS.XLSRecord
 		data[0] = (byte) fLock;
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();

@@ -42,6 +42,7 @@ public class ShtProps extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 5462571460161191942L;
 
+	@Override
 	public void init()
 	{
 		super.init();

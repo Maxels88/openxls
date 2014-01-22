@@ -41,6 +41,7 @@ public class MsofbtClientAnchor extends EscherRecord
 		super( fbt, inst, version );
 	}
 
+	@Override
 	public byte[] getData()
 	{
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();

@@ -102,6 +102,7 @@ public class TxPr implements OOXMLElement
 		this.para = tpr.para;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer tooxml = new StringBuffer();
@@ -119,6 +120,7 @@ public class TxPr implements OOXMLElement
 		return tooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new TxPr( this );

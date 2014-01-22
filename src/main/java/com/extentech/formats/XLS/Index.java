@@ -233,6 +233,7 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 		return dbcs;
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -358,6 +359,7 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 	 * Once offsets are correctly calculated in bytestreamer.stream, we can come back and
 	 * populate without the getIndex call overhead.
 	 */
+	@Override
 	public void preStream()
 	{
 		// rebuild the record with the correct length body data to fit the new dbcells

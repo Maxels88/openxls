@@ -78,11 +78,13 @@ public class PtgMemArea extends GenericPtg
 	Stack subexpression = null;
 	Ptg[] ptgs = null;
 
+	@Override
 	public boolean getIsOperand()
 	{
 		return true;
 	}
 
+	@Override
 	public void init( byte[] b )
 	{
 		ptgId = b[0];
@@ -284,6 +286,7 @@ public class PtgMemArea extends GenericPtg
 	 *
 	 * @see getPostRecord
 	 */
+	@Override
 	public byte[] getRecord()
 	{
 		int len = 0;
@@ -310,6 +313,7 @@ public class PtgMemArea extends GenericPtg
 		return record;
 	}
 
+	@Override
 	public int getLength()
 	{
 		return cce + 7;
@@ -328,6 +332,7 @@ public class PtgMemArea extends GenericPtg
 	 * NOTE: now obtaining component ptgs is done in populateValues as it is
 	 * a more complex operation than simply gathering all referenced ptgs
 	 */
+	@Override
 	public Ptg[] getComponents()
 	{
 		/*if(comps!=null) // cache
@@ -364,6 +369,7 @@ public class PtgMemArea extends GenericPtg
 		return FormulaParser.getExpressionString( subexpression ).substring( 1 );    // avoid "="
 	}
 
+	@Override
 	public Object getValue()
 	{
 		try

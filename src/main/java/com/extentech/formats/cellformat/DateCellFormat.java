@@ -41,6 +41,7 @@ public class DateCellFormat extends SimpleDateFormat implements CellFormat
 		this.text_format = text;
 	}
 
+	@Override
 	public String format( Cell cell )
 	{
 		// make sure to return the empty string for blank cells

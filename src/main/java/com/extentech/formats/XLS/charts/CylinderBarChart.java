@@ -34,6 +34,7 @@ public class CylinderBarChart extends Bar3DChart
 		chartobj.chartType = CYLINDERBARCHART;
 	}
 
+	@Override
 	public int getBarShape()
 	{
 		return defaultShape;

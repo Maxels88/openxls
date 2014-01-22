@@ -228,6 +228,7 @@ public class DLbls implements OOXMLElement
 		return d;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -304,6 +305,7 @@ public class DLbls implements OOXMLElement
 	 * }
 	 */
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new DLbls( this );

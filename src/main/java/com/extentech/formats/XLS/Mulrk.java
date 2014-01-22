@@ -63,6 +63,7 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 	 *
 	 * @return
 	 */
+	@Override
 	public boolean removed()
 	{
 		return removed;
@@ -83,6 +84,7 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 	 * populate the MULRk with its data, as well as creating
 	 * multiple Rk records per the Rk array.
 	 */
+	@Override
 	public void init()
 	{
 		super.init();
@@ -155,6 +157,7 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 		return colFirst;
 	}
 
+	@Override
 	public List getRecs()
 	{
 		return rkrecs;

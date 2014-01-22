@@ -66,6 +66,7 @@ public class BarChart extends ChartType
 	/**
 	 * @return truth of "Chart is Clustered"  (Bar/Col only)
 	 */
+	@Override
 	public boolean isClustered()
 	{
 		return (/*cf.isClustered() || */(!isStacked() && !is100PercentStacked()));
@@ -83,6 +84,7 @@ public class BarChart extends ChartType
 	 *
 	 * @return int bar shape
 	 */
+	@Override
 	public int getBarShape()
 	{
 		return cf.getBarShape();
@@ -117,6 +119,7 @@ public class BarChart extends ChartType
 		return sb.toString();
 	}
 
+	@Override
 	public JSONObject getTypeJSON() throws JSONException
 	{
 		JSONObject typeJSON = new JSONObject();
@@ -231,6 +234,7 @@ public class BarChart extends ChartType
 	 * @param seriescolors int[] of series or bar colors color ints
 	 * @return String svg
 	 */
+	@Override
 	public String getSVG( HashMap<String, Double> chartMetrics, HashMap<String, Object> axisMetrics, ChartSeries s )
 	{
 		double x = chartMetrics.get( "x" );
@@ -301,6 +305,7 @@ public class BarChart extends ChartType
 	 *
 	 * @return
 	 */
+	@Override
 	public StringBuffer getOOXML( String catAxisId, String valAxisId, String serAxisId )
 	{
 		StringBuffer cooxml = new StringBuffer();

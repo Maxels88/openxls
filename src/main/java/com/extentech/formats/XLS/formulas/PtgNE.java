@@ -46,16 +46,19 @@ public class PtgNE extends GenericPtg implements Ptg
 	 */
 	private static final long serialVersionUID = 6901661166166179786L;
 
+	@Override
 	public boolean getIsOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsPrimitiveOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsBinaryOperator()
 	{
 		return true;
@@ -71,11 +74,13 @@ public class PtgNE extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return "<>";
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_NE_LENGTH;
@@ -85,6 +90,7 @@ public class PtgNE extends GenericPtg implements Ptg
 		operand is less than the top operand;  Returns a PtgBool
 
 	*/
+	@Override
 	public Ptg calculatePtg( Ptg[] form )
 	{
 		try

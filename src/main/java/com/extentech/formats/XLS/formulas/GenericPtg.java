@@ -46,6 +46,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	private int locationLocked = Ptg.PTG_LOCATION_POLICY_UNLOCKED;
 	private BiffRec trackercell = null;
 
+	@Override
 	public Object clone()
 	{
 		try
@@ -65,6 +66,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 *
 	 * @return
 	 */
+	@Override
 	public int getLock()
 	{
 		return lock_id;
@@ -76,57 +78,68 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 *
 	 * @return
 	 */
+	@Override
 	public void setLock( int x )
 	{
 		lock_id = x;
 	}
 
 	// determine behavior
+	@Override
 	public boolean getIsOperator()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean getIsBinaryOperator()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean getIsUnaryOperator()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean getIsStandAloneOperator()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean getIsPrimitiveOperator()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean getIsOperand()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean getIsFunction()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean getIsControl()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean getIsArray()
 	{
 		return false;
 	}
 
+	@Override
 	public boolean getIsReference()
 	{
 		return false;
@@ -138,6 +151,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 *
 	 * @return int
 	 */
+	@Override
 	public int getLocationPolicy()
 	{
 		return locationLocked;
@@ -149,6 +163,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 *
 	 * @param b setting of the lock the location policy for this Ptg
 	 */
+	@Override
 	public void setLocationPolicy( int b )
 	{
 		locationLocked = b;
@@ -157,6 +172,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	/**
 	 * update the Ptg
 	 */
+	@Override
 	public void updateRecord()
 	{
 
@@ -165,6 +181,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	/**
 	 * Returns the number of Params to pass to the Ptg
 	 */
+	@Override
 	public int getNumParams()
 	{
 		if( getIsPrimitiveOperator() )
@@ -189,6 +206,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 * so we need to pass them in to get a meaningful
 	 * value.
 	 */
+	@Override
 	public void setVars( Ptg[] parr )
 	{
 		this.vars = parr;
@@ -198,6 +216,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 		Return all of the cells in this range as an array
 		of Ptg's.  This is used for range calculations.
 	*/
+	@Override
 	public Ptg[] getComponents()
 	{
 		return null;
@@ -209,6 +228,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 * <p/>
 	 * This effectively calculates the Expression.
 	 */
+	@Override
 	public Object evaluate( Object[] obj )
 	{
 		// do something useful
@@ -219,6 +239,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 * return the human-readable String representation of
 	 * this ptg -- if applicable
 	 */
+	@Override
 	public String getTextString()
 	{
 
@@ -296,6 +317,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 
 	/*text1 and 2 for this Ptg
 	*/
+	@Override
 	public String getString()
 	{
 		return toString();
@@ -307,6 +329,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 * such as a closing parenthesis.
 	 */
 
+	@Override
 	public String getString2()
 	{
 		if( this.getIsPrimitiveOperator() )
@@ -320,6 +343,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 		return "";
 	}
 
+	@Override
 	public byte getOpcode()
 	{
 		return ptgId;
@@ -338,6 +362,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 *
 	 * @throws CalculationException
 	 */
+	@Override
 	public Ptg calculatePtg( Ptg[] parsething ) throws FunctionNotSupportedException, CalculationException
 	{
 		return null;
@@ -347,6 +372,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	/**
 	 * Gets the (return) value of this Ptg as an operand Ptg.
 	 */
+	@Override
 	public Ptg getPtgVal()
 	{
 		Object value = this.getValue();
@@ -381,6 +407,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 *
 	 * @return null for non-operand Ptg.
 	 */
+	@Override
 	public Object getValue()
 	{
 		return null;
@@ -395,6 +422,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 *
 	 * @return integer representing the ptg, or NAN
 	 */
+	@Override
 	public int getIntVal()
 	{
 		try
@@ -424,6 +452,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 *
 	 * @return integer representing the ptg, or NAN
 	 */
+	@Override
 	public double getDoubleVal()
 	{
 		Object pob = null;
@@ -484,22 +513,26 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 * So, here you see we can get the static type from the record itself
 	 * then format the output record.  Some shorthand techniques are shown.
 	 */
+	@Override
 	public byte[] getRecord()
 	{
 		return record;
 	}
 
 	// these do nothing here...
+	@Override
 	public void setLocation( String s )
 	{
 		;
 	}
 
+	@Override
 	public String getLocation() throws FormulaNotFoundException
 	{
 		return null;
 	}
 
+	@Override
 	public int[] getIntLocation() throws FormulaNotFoundException
 	{
 		return null;
@@ -508,11 +541,13 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	// Parent Rec is the BiffRec record referenced by Operand Ptgs
 	protected XLSRecord parent_rec;
 
+	@Override
 	public void setParentRec( XLSRecord f )
 	{
 		parent_rec = f;
 	}
 
+	@Override
 	public XLSRecord getParentRec()
 	{
 		return parent_rec;
@@ -777,6 +812,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 * if the Ptg needs to keep a handle to a cell, this is it...
 	 * tells the Ptg to get it on its own...
 	 */
+	@Override
 	public void updateAddressFromTrackerCell()
 	{
 		this.initTrackerCell();
@@ -792,6 +828,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 * if the Ptg needs to keep a handle to a cell, this is it...
 	 * tells the Ptg to get it on its own...
 	 */
+	@Override
 	public void initTrackerCell()
 	{
 		if( getTrackercell() == null )
@@ -811,6 +848,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	/**
 	 * @return Returns the trackercell.
 	 */
+	@Override
 	public BiffRec getTrackercell()
 	{
 		return trackercell;
@@ -819,12 +857,14 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	/**
 	 * @param trackercell The trackercell to set.
 	 */
+	@Override
 	public void setTrackercell( BiffRec trackercell )
 	{
 		this.trackercell = trackercell;
 	}
 
 	//TODO: PtgRef.isBlank should override!
+	@Override
 	public boolean isBlank()
 	{
 		return false;
@@ -935,6 +975,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	/**
 	 * clear out object references in prep for closing workbook
 	 */
+	@Override
 	public void close()
 	{
 		parent_rec = null;

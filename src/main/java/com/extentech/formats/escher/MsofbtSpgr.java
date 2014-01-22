@@ -44,6 +44,7 @@ public class MsofbtSpgr extends EscherRecord
 		super( fbt, inst, version );
 	}
 
+	@Override
 	protected byte[] getData()
 	{
 		byte[] leftBytes, topBytes, rightBytes, bottomBytes;

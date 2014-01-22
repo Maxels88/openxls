@@ -34,6 +34,7 @@ public class CylinderChart extends Col3DChart
 		chartobj.chartType = CYLINDERCHART;
 	}
 
+	@Override
 	public int getBarShape()
 	{
 		return defaultShape;

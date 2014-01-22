@@ -46,6 +46,7 @@ public class EndBlock extends GenericChartObject implements ChartObject
 	private static final long serialVersionUID = 1132544432743236942L;
 	short iObjectKind = 0;
 
+	@Override
 	public void init()
 	{
 		super.init();

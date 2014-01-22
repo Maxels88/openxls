@@ -92,6 +92,7 @@ public final class NumberRec extends XLSCellRecord
 		setNumberVal( val );
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -144,11 +145,13 @@ public final class NumberRec extends XLSCellRecord
 	 * Value must be parseable as an Float or it
 	 * will throw a NumberFormatException.
 	 */
+	@Override
 	public float getFloatVal()
 	{
 		return (float) fpnum;
 	}
 
+	@Override
 	public int getIntVal()
 	{
 		if( fpnum > Integer.MAX_VALUE )
@@ -162,11 +165,13 @@ public final class NumberRec extends XLSCellRecord
 		return (int) fpnum;
 	}
 
+	@Override
 	public double getDblVal()
 	{
 		return fpnum;
 	}
 
+	@Override
 	public String getStringVal()
 	{
 		if( isIntNumber )
@@ -176,11 +181,13 @@ public final class NumberRec extends XLSCellRecord
 		return ExcelTools.getNumberAsString( fpnum );
 	}
 
+	@Override
 	public void setDoubleVal( double v )
 	{
 		setNumberVal( v );
 	}
 
+	@Override
 	public void setFloatVal( float d )
 	{
 //    	setNumberVal(d);	// original
@@ -193,6 +200,7 @@ public final class NumberRec extends XLSCellRecord
 		super();
 	}
 
+	@Override
 	public void setIntVal( int i )
 	{
 		double d = (double) i;

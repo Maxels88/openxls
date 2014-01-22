@@ -43,6 +43,7 @@ public final class ChartNotFoundException extends java.lang.Exception
 		name = n;
 	}
 
+	@Override
 	public String getMessage()
 	{
 		// This method is derived from class java.lang.Throwable

@@ -628,6 +628,7 @@ class refPtgs extends TreeMap implements Serializable
  */
 class refPtgComparer implements Comparator, Serializable
 {
+	@Override
 	public int compare( Object o1, Object o2 )
 	{
 		long[] key1 = (long[]) o1;

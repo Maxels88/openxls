@@ -85,6 +85,7 @@ public final class SeriesText extends GenericChartObject implements ChartObject
 		this.text = t;
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();

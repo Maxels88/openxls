@@ -32,6 +32,7 @@ public class SerauxErrBar extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = -7334046087318159714L;
 
+	@Override
 	public void init()
 	{
 		super.init();

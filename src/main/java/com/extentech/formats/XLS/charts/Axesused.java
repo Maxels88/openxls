@@ -34,6 +34,7 @@ public class Axesused extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = -4809979818183513617L;
 
+	@Override
 	public void init()
 	{
 		super.init();

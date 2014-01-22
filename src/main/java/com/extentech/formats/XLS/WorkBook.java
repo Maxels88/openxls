@@ -1383,6 +1383,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	/**
 	 * Associate a record with its containers and related records.
 	 */
+	@Override
 	public BiffRec addRecord( BiffRec rec, boolean addtorec )
 	{
 		short opc = rec.getOpcode();
@@ -1927,6 +1928,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 * @param rec
 	 * @return
 	 */
+	@Override
 	public Boundsheet getSheetFromRec( BiffRec rec, Long lbplypos )
 	{
 		Boundsheet bs = null;
@@ -1949,6 +1951,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	/**
 	 * get a handle to the ContinueHandler
 	 */
+	@Override
 	public ContinueHandler getContinueHandler()
 	{
 		return this.contHandler;
@@ -1971,6 +1974,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	/**
 	 * set the Debug level
 	 */
+	@Override
 	public void setDebugLevel( int i )
 	{
 		this.DEBUGLEVEL = i;
@@ -1980,6 +1984,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 * get a handle to the Reader for this
 	 * WorkBook.
 	 */
+	@Override
 	public void setFactory( WorkBookFactory r )
 	{
 		this.factory = r;
@@ -2434,6 +2439,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 *
 	 * @see Boundsheet
 	 */
+	@Override
 	public void setFirstBof( Bof b )
 	{
 		firstBOF = b;
@@ -2449,6 +2455,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		return this.getFileName();
 	}
 
+	@Override
 	public String getFileName()
 	{
 		if( this.factory != null ) // 2003-vers
@@ -2600,6 +2607,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	/**
 	 * Get a substream by name.
 	 */
+	@Override
 	public ByteStreamer getStreamer()
 	{
 		return this.streamer;
@@ -2623,6 +2631,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 *
 	 * @param _out
 	 */
+	@Override
 	public int stream( OutputStream _out )
 	{
 		return streamer.streamOut( _out );
@@ -2631,6 +2640,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	/**
 	 * get a handle to the factory
 	 */
+	@Override
 	public WorkBookFactory getFactory()
 	{
 		return this.factory;

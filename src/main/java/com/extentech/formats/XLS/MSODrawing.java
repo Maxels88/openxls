@@ -370,6 +370,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * parse the data contained in this drawing record
 	 */
+	@Override
 	public void init()
 	{
 		// *************************************************************************************************************************************
@@ -2349,6 +2350,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 	 * 20081106 KSC: when set sheet, record original height and width
 	 * as dependent upon row heights ...
 	 */
+	@Override
 	public void setSheet( Sheet bs )
 	{
 		super.setSheet( bs );
@@ -2611,6 +2613,7 @@ _store_mso_opt_comment {
 		return log.toString();
 	}
 
+	@Override
 	public void close()
 	{
 		super.close();

@@ -32,6 +32,7 @@ public class BoppopCustom extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 544717450572314091L;
 
+	@Override
 	public void init()
 	{
 		super.init();

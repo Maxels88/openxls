@@ -94,6 +94,7 @@ public final class Format extends XLSRecord
 	 *
 	 * @throws IllegalStateException if the record has already been parsed
 	 */
+	@Override
 	public void init()
 	{
 		if( pattern != null )
@@ -123,6 +124,7 @@ public final class Format extends XLSRecord
 		this.getWorkBook().addFormat( this );
 	}
 
+	@Override
 	public void setWorkBook( WorkBook book )
 	{
 		super.setWorkBook( book );

@@ -55,6 +55,7 @@ public class TableStyles extends XLSRecord implements XLSConstants
 	String rgchDefTableStyle = null, rgchDefPivotStyle = null;
 	private static final long serialVersionUID = 2639291289806138985L;
 
+	@Override
 	public void init()
 	{
 		super.init();

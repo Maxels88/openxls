@@ -44,6 +44,7 @@ public final class FunctionNotSupportedException extends java.lang.RuntimeExcept
 		functionName = n;
 	}
 
+	@Override
 	public String getMessage()
 	{
 		// This method is derived from class java.lang.Throwable

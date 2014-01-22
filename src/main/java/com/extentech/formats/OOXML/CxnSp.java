@@ -118,6 +118,7 @@ public class CxnSp implements OOXMLElement
 		return c;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -147,6 +148,7 @@ public class CxnSp implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new CxnSp( this );
@@ -385,6 +387,7 @@ class NvCxnSpPr implements OOXMLElement
 		return n;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -399,6 +402,7 @@ class NvCxnSpPr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new NvCxnSpPr( this );

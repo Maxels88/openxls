@@ -47,6 +47,7 @@ public class BIGBLOCK extends BlockImpl
 	/**
 	 * returns the int representing the block type
 	 */
+	@Override
 	public int getBlockType()
 	{
 		return BIG;

@@ -46,6 +46,7 @@ public class Fontx extends GenericChartObject implements ChartObject
 	// 20070806 KSC: Add init/update to control FontX opts
 	private short ifnt = 0;
 
+	@Override
 	public void init()
 	{
 		super.init();

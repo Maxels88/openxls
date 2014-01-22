@@ -109,6 +109,7 @@ public class SXFDBType extends XLSRecord implements XLSConstants, PivotCacheReco
 		}
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -163,6 +164,7 @@ public class SXFDBType extends XLSRecord implements XLSConstants, PivotCacheReco
 	 *
 	 * @return
 	 */
+	@Override
 	public byte[] getRecord()
 	{
 		byte[] b = new byte[4];

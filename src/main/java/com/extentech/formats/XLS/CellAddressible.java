@@ -57,21 +57,25 @@ public interface CellAddressible extends ColumnRange
 			this( row, col, col );
 		}
 
+		@Override
 		public int getColFirst()
 		{
 			return this.colFirst;
 		}
 
+		@Override
 		public int getColLast()
 		{
 			return this.colLast;
 		}
 
+		@Override
 		public int getRowNumber()
 		{
 			return this.row;
 		}
 
+		@Override
 		public boolean isSingleCol()
 		{
 			return (this.getColFirst() == this.getColLast());
@@ -110,6 +114,7 @@ public interface CellAddressible extends ColumnRange
 		private static final long serialVersionUID = 5477030152120715766L;
 		private static final ColumnRange.Comparator colComp = new ColumnRange.Comparator();
 
+		@Override
 		public int compare( CellAddressible cell1, CellAddressible cell2 )
 		{
 			int rows = cell1.getRowNumber() - cell2.getRowNumber();
@@ -130,6 +135,7 @@ public interface CellAddressible extends ColumnRange
 		private static final long serialVersionUID = -1193867650674693873L;
 		private static final ColumnRange.Comparator colComp = new ColumnRange.Comparator();
 
+		@Override
 		public int compare( CellAddressible cell1, CellAddressible cell2 )
 		{
 			int cols = colComp.compare( cell1, cell2 );

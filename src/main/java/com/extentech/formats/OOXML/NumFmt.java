@@ -117,6 +117,7 @@ public class NumFmt implements OOXMLElement
 		return oe;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		return getOOXML( "" );
@@ -140,6 +141,7 @@ public class NumFmt implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new NumFmt( this );

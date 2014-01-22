@@ -97,6 +97,7 @@ public class CatserRange extends GenericChartObject implements ChartObject
 	}
 
 	// 20070802 KSC: parse data
+	@Override
 	public void init()
 	{
 		super.init();

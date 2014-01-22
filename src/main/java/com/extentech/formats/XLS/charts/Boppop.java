@@ -86,6 +86,7 @@ public class Boppop extends GenericChartObject implements ChartObject
 	float numSplitValue;
 	byte pst;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -306,6 +307,7 @@ public class Boppop extends GenericChartObject implements ChartObject
 	/**
 	 * Set specific options
 	 */
+	@Override
 	public boolean setChartOption( String op, String val )
 	{
 		if( op.equalsIgnoreCase( "Gap" ) )

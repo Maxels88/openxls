@@ -152,12 +152,14 @@ public class Dimensions extends com.extentech.formats.XLS.XLSRecord
 		return colLast;
 	}
 
+	@Override
 	public void setSheet( Sheet bs )
 	{
 		super.setSheet( bs );
 		bs.setDimensions( this );
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();

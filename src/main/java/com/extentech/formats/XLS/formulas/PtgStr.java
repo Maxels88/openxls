@@ -51,6 +51,7 @@ public class PtgStr extends GenericPtg implements Ptg
 	 */
 	private static final long serialVersionUID = -1427051673654768400L;
 
+	@Override
 	public boolean getIsOperand()
 	{
 		return true;
@@ -60,6 +61,7 @@ public class PtgStr extends GenericPtg implements Ptg
 	byte grbit;
 	boolean negativeCch = false;
 
+	@Override
 	public String getString()
 	{
 		String strVal = null;
@@ -95,6 +97,7 @@ public class PtgStr extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getTextString()
 	{
 		try
@@ -107,6 +110,7 @@ public class PtgStr extends GenericPtg implements Ptg
 		return "\"" + getString() + "\"";
 	}
 
+	@Override
 	public Object getValue()
 	{
 		return getString();
@@ -123,6 +127,7 @@ public class PtgStr extends GenericPtg implements Ptg
 		setVal( s );
 	}
 
+	@Override
 	public void init( byte[] b )
 	{
 		grbit = b[2];
@@ -154,6 +159,7 @@ public class PtgStr extends GenericPtg implements Ptg
 		this.updateRecord();
 	}
 
+	@Override
 	public void updateRecord()
 	{
 		String ts = tempstr;
@@ -199,6 +205,7 @@ public class PtgStr extends GenericPtg implements Ptg
 		}
 	}
 
+	@Override
 	public int getLength()
 	{
 		return record.length;

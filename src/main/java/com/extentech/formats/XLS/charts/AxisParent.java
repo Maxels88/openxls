@@ -53,6 +53,7 @@ public class AxisParent extends GenericChartObject implements ChartObject
 	private short iax = 0;
 	private int x = 0, y = 0, dx = 0, dy = 0;
 
+	@Override
 	public void init()
 	{
 		super.init();

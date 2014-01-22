@@ -143,6 +143,7 @@ public class DPt implements OOXMLElement
 		return oe;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -172,6 +173,7 @@ public class DPt implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new DPt( this );

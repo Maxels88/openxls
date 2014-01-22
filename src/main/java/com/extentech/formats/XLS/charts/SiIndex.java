@@ -57,6 +57,7 @@ public class SiIndex extends GenericChartObject implements ChartObject
 	private static final long serialVersionUID = -6810089722566956477L;
 	short type;
 
+	@Override
 	public void init()
 	{
 		super.init();

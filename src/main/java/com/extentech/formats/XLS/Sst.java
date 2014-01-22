@@ -103,6 +103,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		return this.originalsize;
 	}
 
+	@Override
 	public void setData( byte[] b )
 	{
 		if( data == null )
@@ -128,6 +129,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * removes all existing Continues from the Sst
 	 */
+	@Override
 	public void removeContinues()
 	{
 		super.removeContinues();
@@ -196,6 +198,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		return true;
 	}
 
+	@Override
 	public void init()
 	{
 		if( originalsize == 0 )
@@ -993,6 +996,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * clear out object references in prep for closing workbook
 	 */
+	@Override
 	public void close()
 	{
 		cbounds.removeAllElements();
@@ -1735,6 +1739,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * we need to override stream to update changes to the byte array
 	 */
+	@Override
 	public void preStream()
 	{
 		this.updateUnicodestrings();
@@ -1770,6 +1775,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			return super.add( o );
 		}
 
+		@Override
 		public int indexOf( Object o )
 		{
 			Object oo = container.get( o.toString() );
@@ -1780,6 +1786,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			return ((Integer) oo).intValue();
 		}
 
+		@Override
 		public boolean remove( Object o )
 		{
 			Logger.logWarn( "String being removed from SST array, Indexing may be off" );
@@ -2037,6 +2044,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * Returns the length of this record, including the 4 header bytes
 	 */
+	@Override
 	public int getLength()
 	{
 		int len = super.getLength();

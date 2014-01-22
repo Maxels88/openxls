@@ -1215,6 +1215,7 @@ public class Money // Money Class
 	 * @return <b>Money</b> The cloned object
 	 * </p>
 	 */
+	@Override
 	public Object clone()
 	{
 		Money result = new Money( this ); // Create a copy of this Money object.

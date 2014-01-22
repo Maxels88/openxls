@@ -1314,6 +1314,7 @@ class TrackedPtgs extends TreeMap
  */
 class LocationComparer implements Comparator
 {
+	@Override
 	public int compare( Object o1, Object o2 )
 	{
 		long[] key1 = (long[]) o1;

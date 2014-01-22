@@ -40,16 +40,19 @@ public class PtgSub extends GenericPtg implements Ptg
 	 */
 	private static final long serialVersionUID = -3252464873846778499L;
 
+	@Override
 	public boolean getIsOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsPrimitiveOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsBinaryOperator()
 	{
 		return true;
@@ -65,6 +68,7 @@ public class PtgSub extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return "-";
@@ -75,6 +79,7 @@ public class PtgSub extends GenericPtg implements Ptg
 		return getString();
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_SUB_LENGTH;
@@ -83,6 +88,7 @@ public class PtgSub extends GenericPtg implements Ptg
 	/**
 	 * Operator specific calculate method, this one subtracts one value from another
 	 */
+	@Override
 	public Ptg calculatePtg( Ptg[] form )
 	{
 		try

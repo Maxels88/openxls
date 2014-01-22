@@ -104,6 +104,7 @@ public class SxFDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 	boolean fAllAtoms, fRangeGroup, fNumField, fTextEtcField, fnumMinMaxValid, fNonDates, fDateInField, fCalculatedField, fShortItms;
 
 	// TODO: handle ranges/grouping and all the complications that it entails
+	@Override
 	public void init()
 	{
 		super.init();
@@ -180,6 +181,7 @@ public class SxFDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 	 *
 	 * @return
 	 */
+	@Override
 	public byte[] getRecord()
 	{
 		byte[] b = new byte[4];

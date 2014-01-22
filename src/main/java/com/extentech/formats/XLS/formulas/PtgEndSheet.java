@@ -40,6 +40,7 @@ public class PtgEndSheet extends GenericPtg implements Ptg
 	 */
 	private static final long serialVersionUID = -2395432053363123361L;
 
+	@Override
 	public boolean getIsOperand()
 	{
 		return true;
@@ -48,16 +49,19 @@ public class PtgEndSheet extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return "End Sheet Error";
 	}
 
+	@Override
 	public Object getValue()
 	{
 		return "#REF!";
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_ENDSHEET_LENGTH;

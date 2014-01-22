@@ -157,6 +157,7 @@ public class FeatHeadr extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * init the record - as of now, only enhanced protection is supported
 	 */
+	@Override
 	public void init()
 	{
 		super.init();

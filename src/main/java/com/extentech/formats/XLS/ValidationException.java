@@ -56,6 +56,7 @@ public class ValidationException extends Exception
 		return errorText;
 	}
 
+	@Override
 	public String getMessage()
 	{
 		return this.toString();

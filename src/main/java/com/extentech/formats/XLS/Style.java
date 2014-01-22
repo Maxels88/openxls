@@ -68,6 +68,7 @@ public class Style extends com.extentech.formats.XLS.XLSRecord
 
 	boolean builtIn = false;
 
+	@Override
 	public void init()
 	{
 		super.init();

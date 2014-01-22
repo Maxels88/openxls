@@ -80,11 +80,13 @@ public class PtgRefN extends PtgRef
 	short column;
 	private PtgArea parea = null;
 
+	@Override
 	public boolean getIsReference()
 	{
 		return true;
 	}
 
+	@Override
 	public void init( byte[] b )
 	{
 		ptgId = b[0];
@@ -106,6 +108,7 @@ public class PtgRefN extends PtgRef
 	 * There is a problem here as the location will always be relative and incorrect.
 	 * this is deprecated and should be calling convertToPtgRef
 	 */
+	@Override
 	public String getLocation()
 	{
 		//if (!populated){throw new FormulaNotFoundException("Cannot set location, no Formula Present");}
@@ -132,6 +135,7 @@ public class PtgRefN extends PtgRef
 	/* Set the location of this PtgRef.  This takes a location
 	   such as {1,2}
 	*/
+	@Override
 	public void setLocation( int[] rowcol )
 	{
 		if( useReferenceTracker )
@@ -177,6 +181,7 @@ public class PtgRefN extends PtgRef
 	 *
 	 * @return
 	 */
+	@Override
 	public int[] getRowCol()
 	{
 		realRow = rw;
@@ -212,6 +217,7 @@ public class PtgRefN extends PtgRef
 
 	   TODO: check why this is overridden / reversed 12/02 -jm
 	*/
+	@Override
 	public void setLocation( String address )
 	{
 		if( record != null )
@@ -312,6 +318,7 @@ public class PtgRefN extends PtgRef
 	 * @returns int[] row/col absolute (non-offset) location
 	 * @see com.extentech.formats.XLS.formulas.PtgRef#getIntLocation()
 	 */
+	@Override
 	public int[] getIntLocation()
 	{
 
@@ -416,6 +423,7 @@ public class PtgRefN extends PtgRef
 	/**
 	 * add "true" area to reference tracker i.e. entire range referenced by all shared formula members
 	 */
+	@Override
 	public void addToRefTracker()
 	{
 		int iParent = this.getParentRec().getOpcode();
@@ -432,6 +440,7 @@ public class PtgRefN extends PtgRef
 	/**
 	 * remove "true" area from reference tracker i.e. entire range referenced by all shared formula members
 	 */
+	@Override
 	public void removeFromRefTracker()
 	{
 		int iParent = this.getParentRec().getOpcode();
@@ -447,6 +456,7 @@ public class PtgRefN extends PtgRef
 		}
 	}
 
+	@Override
 	public void close()
 	{
 		//removeFromRefTracker();

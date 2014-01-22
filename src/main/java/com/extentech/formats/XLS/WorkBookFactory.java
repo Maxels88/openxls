@@ -65,12 +65,14 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 	private boolean done = false;
 	private String progresstext = "";
 
+	@Override
 	public void register( ProgressListener j )
 	{
 		progresslistener = j;
 		j.addTarget( this );
 	}
 
+	@Override
 	public void fireProgressChanged()
 	{
 		// if (progresslistener != null) {
@@ -78,26 +80,31 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 		// }
 	}
 
+	@Override
 	public int getProgress()
 	{
 		return progress;
 	}
 
+	@Override
 	public String getProgressText()
 	{
 		return progresstext;
 	}
 
+	@Override
 	public void setProgress( int progress )
 	{
 		this.progress = progress;
 	}
 
+	@Override
 	public void setProgressText( String s )
 	{
 		progresstext = s;
 	}
 
+	@Override
 	public boolean iscompleted()
 	{
 		return done;

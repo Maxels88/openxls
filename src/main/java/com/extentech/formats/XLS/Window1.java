@@ -120,6 +120,7 @@ public class Window1 extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * Default init method
 	 */
+	@Override
 	public void init()
 	{
 		super.init();

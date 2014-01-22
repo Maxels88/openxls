@@ -77,6 +77,7 @@ public class LineFormat extends GenericChartObject implements ChartObject
 	public static final int MEDGRAY = 7;
 	public static final int LTGRAY = 8;
 
+	@Override
 	public void init()
 	{
 		super.init();

@@ -80,6 +80,7 @@ public class ValueRange extends GenericChartObject implements ChartObject
 	short grbit = 0;
 	boolean fAutoMin, fAutoMax, fAutoMajor, fAutoMinor, fAutoCross, fLogScale, fReverse, fMaxCross;
 
+	@Override
 	public void init()
 	{
 		super.init();

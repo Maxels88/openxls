@@ -33,6 +33,7 @@ public class RightMargin extends XLSRecord
 
 	double margin;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -47,6 +48,7 @@ public class RightMargin extends XLSRecord
 		setData( ByteTools.doubleToLEByteArray( margin ) );
 	}
 
+	@Override
 	public void setSheet( Sheet sheet )
 	{
 		super.setSheet( sheet );

@@ -140,6 +140,7 @@ public class PtgFunc extends GenericPtg implements Ptg
 		// placeholder
 	}
 
+	@Override
 	public boolean getIsFunction()
 	{
 		return true;
@@ -150,6 +151,7 @@ public class PtgFunc extends GenericPtg implements Ptg
 	 * Unfortunately this seems to vary depending on the formula.
 	 * fill in the non-1's as you get them.
 	 */
+	@Override
 	public int getNumParams()
 	{
 		// 20060425 KSC: Formula consolidation - see FunctionConstants for details
@@ -206,11 +208,13 @@ public class PtgFunc extends GenericPtg implements Ptg
 			return 1; //if we are lucky
 		}
 	*/
+	@Override
 	public boolean getIsUnaryOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public String getString()
 	{
 		short iftb = (short) iftab;
@@ -226,11 +230,13 @@ public class PtgFunc extends GenericPtg implements Ptg
 		return f;
 	}
 
+	@Override
 	public String getString2()
 	{
 		return ")";
 	}
 
+	@Override
 	public void init( byte[] b )
 	{
 		ptgId = b[0];
@@ -254,6 +260,7 @@ public class PtgFunc extends GenericPtg implements Ptg
 		this.updateRecord();
 	}
 
+	@Override
 	public void updateRecord()
 	{
 		byte[] tmp = new byte[1];
@@ -263,11 +270,13 @@ public class PtgFunc extends GenericPtg implements Ptg
 		record = tmp;
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_FUNC_LENGTH;
 	}
 
+	@Override
 	public Ptg calculatePtg( Ptg[] pthings ) throws FunctionNotSupportedException, CalculationException
 	{
 		Ptg[] ptgarr = new Ptg[pthings.length + 1];

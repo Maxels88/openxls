@@ -132,6 +132,7 @@ public class FastGetVector extends ArrayList
 			}
 		}
 	*/
+	@Override
 	public boolean remove( Object obj )
 	{
 		this.change_offset--;
@@ -142,12 +143,14 @@ public class FastGetVector extends ArrayList
 		return false;
 	}
 
+	@Override
 	public void clear()
 	{
 		this.change_offset = 0;
 		super.clear();
 	}
 
+	@Override
 	public Object[] toArray()
 	{
 		Object[] obj = new Object[super.size()];
@@ -192,6 +195,7 @@ public class FastGetVector extends ArrayList
 		return super.get( t );
 	}
 
+	@Override
 	public Object[] toArray( Object[] obj )
 	{
 		for( int i = 0; i < super.size(); i++ )
@@ -214,11 +218,13 @@ final class FastGetVectorEnumerator implements Enumeration
 		it = itx;
 	}
 
+	@Override
 	public Object nextElement()
 	{
 		return it.elementAt( x++ );
 	}
 
+	@Override
 	public boolean hasMoreElements()
 	{
 		return (x < it.size());

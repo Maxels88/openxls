@@ -37,17 +37,20 @@ public class PtgRefErr extends PtgRef implements Ptg
 	 */
 	private static final long serialVersionUID = 2553420345077869256L;
 
+	@Override
 	public boolean getIsRefErr()
 	{
 		return true;
 	}
 
+	@Override
 	public void init( byte[] b )
 	{
 		record = b;
 	}
 
 	// Excel can handle PtgRefErrors within formulas, as long as they are not the result so...
+	@Override
 	public boolean getIsOperand()
 	{
 		return true;
@@ -56,31 +59,37 @@ public class PtgRefErr extends PtgRef implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return "#REF!";    //Invalid Reference Error";
 	}
 
+	@Override
 	public Object getValue()
 	{
 		return "#REF!";
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_REFERR_LENGTH;
 	}
 
+	@Override
 	public int[] getRowCol()
 	{
 		return new int[]{ -1, -1 };
 	}
 
+	@Override
 	public String getLocation()
 	{
 		return "#REF!";
 	}
 
+	@Override
 	public void setLocation( String[] s )
 	{
 	}

@@ -173,6 +173,7 @@ public class P implements OOXMLElement
 		this.run = new TextRun( s );
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -193,6 +194,7 @@ public class P implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new P( this );
@@ -303,6 +305,7 @@ class PPr implements OOXMLElement
 		this.dp = new DefRPr( fontFace, sz, b, i, u, strike, clr );
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -372,6 +375,7 @@ class PPr implements OOXMLElement
 		return pt;
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new PPr( this );
@@ -532,6 +536,7 @@ class EndParaRPr implements OOXMLElement
 		return oe;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -573,6 +578,7 @@ class EndParaRPr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new EndParaRPr( this );

@@ -34,6 +34,7 @@ public class SXBool extends XLSRecord implements XLSConstants, PivotCacheRecord
 	private static final long serialVersionUID = 9027599480633995587L;
 	boolean bool;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -85,6 +86,7 @@ public class SXBool extends XLSRecord implements XLSConstants, PivotCacheRecord
 	 *
 	 * @return
 	 */
+	@Override
 	public byte[] getRecord()
 	{
 		byte[] b = new byte[4];

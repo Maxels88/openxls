@@ -46,6 +46,7 @@ public class StartObject extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = -8933906882043608941L;
 
+	@Override
 	public void init()
 	{
 		super.init();

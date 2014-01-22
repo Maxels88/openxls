@@ -91,6 +91,7 @@ public class Alignment implements OOXMLElement
 		return a;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -107,6 +108,7 @@ public class Alignment implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Alignment( this );

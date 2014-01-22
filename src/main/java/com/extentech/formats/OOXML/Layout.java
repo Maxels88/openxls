@@ -139,6 +139,7 @@ public final class Layout implements OOXMLElement
 	 *
 	 * @return
 	 */
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer looxml = new StringBuffer();
@@ -155,6 +156,7 @@ public final class Layout implements OOXMLElement
 		return looxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Layout( this );
@@ -295,6 +297,7 @@ class ManualLayout implements OOXMLElement
 		return l;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -339,6 +342,7 @@ class ManualLayout implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new ManualLayout( this );

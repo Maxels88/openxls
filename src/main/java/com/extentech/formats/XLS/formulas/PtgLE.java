@@ -47,16 +47,19 @@ public class PtgLE extends GenericPtg implements Ptg
 	 */
 	private static final long serialVersionUID = -4356555760240325388L;
 
+	@Override
 	public boolean getIsOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsPrimitiveOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsBinaryOperator()
 	{
 		return true;
@@ -72,11 +75,13 @@ public class PtgLE extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return "<=";
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_LE_LENGTH;
@@ -86,6 +91,7 @@ public class PtgLE extends GenericPtg implements Ptg
 		operand is less than or equal to the top operand;  Returns a PtgBool
 
 	*/
+	@Override
 	public Ptg calculatePtg( Ptg[] form )
 	{
 		try

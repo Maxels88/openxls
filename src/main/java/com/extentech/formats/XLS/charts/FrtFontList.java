@@ -62,6 +62,7 @@ public class FrtFontList extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 5374035624852924277L;
 
+	@Override
 	public void init()
 	{
 		super.init();

@@ -96,6 +96,7 @@ public class EffectPropsGroup implements OOXMLElement
 		return e;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -110,6 +111,7 @@ public class EffectPropsGroup implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new EffectPropsGroup( this );
@@ -185,6 +187,7 @@ class EffectDag implements OOXMLElement
 		return e;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -203,6 +206,7 @@ class EffectDag implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new EffectDag( this );
@@ -268,6 +272,7 @@ class EffectLst implements OOXMLElement
 		return e;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		//StringBuffer ooxml= new StringBuffer();	
@@ -278,6 +283,7 @@ class EffectLst implements OOXMLElement
 //    	return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new EffectLst( this );

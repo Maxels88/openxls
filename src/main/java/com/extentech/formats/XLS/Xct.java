@@ -50,6 +50,7 @@ public class Xct extends XLSRecord
 	private int nCRNs;    // number of External Cell References CRN record, similar to EXTERNNAME
 	private int supBookIndex;
 
+	@Override
 	public void init()
 	{
 		super.init();

@@ -41,16 +41,19 @@ public class PtgPower extends GenericPtg implements Ptg
 	 */
 	private static final long serialVersionUID = 4675566993519011450L;
 
+	@Override
 	public boolean getIsOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsPrimitiveOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsBinaryOperator()
 	{
 		return true;
@@ -66,11 +69,13 @@ public class PtgPower extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return "^";
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_POWER_LENGTH;
@@ -80,6 +85,7 @@ public class PtgPower extends GenericPtg implements Ptg
 	operand to the power of the top operand
 
 */
+	@Override
 	public Ptg calculatePtg( Ptg[] form )
 	{
 		try

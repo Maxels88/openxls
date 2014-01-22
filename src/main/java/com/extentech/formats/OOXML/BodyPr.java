@@ -139,6 +139,7 @@ public class BodyPr implements OOXMLElement
 		}
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -166,6 +167,7 @@ public class BodyPr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new BodyPr( this );
@@ -251,6 +253,7 @@ class PrstTxWarp implements OOXMLElement
 		return p;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -263,6 +266,7 @@ class PrstTxWarp implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new PrstTxWarp( this );

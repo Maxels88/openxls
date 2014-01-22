@@ -46,6 +46,7 @@ public final class WsBool extends XLSRecord
 {
 	private static final long serialVersionUID = 2794181135988750779L;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -54,6 +55,7 @@ public final class WsBool extends XLSRecord
 
 	}
 
+	@Override
 	public void setSheet( Sheet sheet )
 	{
 		super.setSheet( sheet );

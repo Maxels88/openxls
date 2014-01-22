@@ -51,6 +51,7 @@ public class Dat extends GenericChartObject implements ChartObject
 	private short grbit;
 	boolean fHasBordHorz, fHasBordVert, fHasBordOutline, fShowSeriesKey;
 
+	@Override
 	public void init()
 	{
 		super.init();

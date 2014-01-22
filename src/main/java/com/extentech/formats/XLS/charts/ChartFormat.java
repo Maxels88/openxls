@@ -78,6 +78,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	private boolean fVaried = false;
 	private short drawingOrder = 0;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -1021,6 +1022,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 * @param op String option e.g. Shadow or Percentage
 	 * @return String value of option
 	 */
+	@Override
 	public String getChartOption( String op )
 	{
 		DataFormat df = this.getDataFormatRec( false );

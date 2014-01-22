@@ -34,6 +34,7 @@ public final class Obproj extends com.extentech.formats.XLS.XLSRecord
 	 */
 	private static final long serialVersionUID = 7952338892026147433L;
 
+	@Override
 	public void init()
 	{
 		super.init();

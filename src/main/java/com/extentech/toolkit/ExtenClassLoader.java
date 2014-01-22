@@ -68,11 +68,13 @@ public class ExtenClassLoader extends java.lang.ClassLoader
 		return classBytes;
 	}
 
+	@Override
 	public synchronized Class loadClass( String name ) throws ClassNotFoundException
 	{
 		return loadClass( name, false );
 	}
 
+	@Override
 	public synchronized Class loadClass( String name, boolean resolve ) throws ClassNotFoundException
 	{
 		Class loadedClass;

@@ -120,6 +120,7 @@ class TreeList extends AbstractList
 	 * @param index the index to retrieve
 	 * @return the element at the specified index
 	 */
+	@Override
 	public Object get( int index )
 	{
 		checkInterval( index, 0, size() - 1 );
@@ -131,6 +132,7 @@ class TreeList extends AbstractList
 	 *
 	 * @return the current size
 	 */
+	@Override
 	public int size()
 	{
 		return size;
@@ -141,6 +143,7 @@ class TreeList extends AbstractList
 	 *
 	 * @return an iterator over the list
 	 */
+	@Override
 	public Iterator iterator()
 	{
 		// override to go 75% faster
@@ -152,6 +155,7 @@ class TreeList extends AbstractList
 	 *
 	 * @return the new iterator
 	 */
+	@Override
 	public ListIterator listIterator()
 	{
 		// override to go 75% faster
@@ -164,6 +168,7 @@ class TreeList extends AbstractList
 	 * @param fromIndex the index to start from
 	 * @return the new iterator
 	 */
+	@Override
 	public ListIterator listIterator( int fromIndex )
 	{
 		// override to go 75% faster
@@ -177,6 +182,7 @@ class TreeList extends AbstractList
 	 *
 	 * @return the index of the object, -1 if not found
 	 */
+	@Override
 	public int indexOf( Object object )
 	{
 		// override to go 75% faster
@@ -192,6 +198,7 @@ class TreeList extends AbstractList
 	 *
 	 * @return true if the object is found
 	 */
+	@Override
 	public boolean contains( Object object )
 	{
 		return (indexOf( object ) >= 0);
@@ -202,6 +209,7 @@ class TreeList extends AbstractList
 	 *
 	 * @return the list as an array
 	 */
+	@Override
 	public Object[] toArray()
 	{
 		// override to go 20% faster
@@ -221,6 +229,7 @@ class TreeList extends AbstractList
 	 * @param index the index to add before
 	 * @param obj   the element to add
 	 */
+	@Override
 	public void add( int index, Object obj )
 	{
 		modCount++;
@@ -244,6 +253,7 @@ class TreeList extends AbstractList
 	 * @return the previous object at that index
 	 * @throws IndexOutOfBoundsException if the index is invalid
 	 */
+	@Override
 	public Object set( int index, Object obj )
 	{
 		checkInterval( index, 0, size() - 1 );
@@ -259,6 +269,7 @@ class TreeList extends AbstractList
 	 * @param index the index to remove
 	 * @return the previous object at that index
 	 */
+	@Override
 	public Object remove( int index )
 	{
 		modCount++;
@@ -272,6 +283,7 @@ class TreeList extends AbstractList
 	/**
 	 * Clears the list, removing all entries.
 	 */
+	@Override
 	public void clear()
 	{
 		modCount++;
@@ -955,11 +967,13 @@ class TreeList extends AbstractList
 			}
 		}
 
+		@Override
 		public boolean hasNext()
 		{
 			return (nextIndex < parent.size());
 		}
 
+		@Override
 		public Object next()
 		{
 			checkModCount();
@@ -978,11 +992,13 @@ class TreeList extends AbstractList
 			return value;
 		}
 
+		@Override
 		public boolean hasPrevious()
 		{
 			return (nextIndex > 0);
 		}
 
+		@Override
 		public Object previous()
 		{
 			checkModCount();
@@ -1004,16 +1020,19 @@ class TreeList extends AbstractList
 			return value;
 		}
 
+		@Override
 		public int nextIndex()
 		{
 			return nextIndex;
 		}
 
+		@Override
 		public int previousIndex()
 		{
 			return nextIndex() - 1;
 		}
 
+		@Override
 		public void remove()
 		{
 			checkModCount();
@@ -1028,6 +1047,7 @@ class TreeList extends AbstractList
 			expectedModCount++;
 		}
 
+		@Override
 		public void set( Object obj )
 		{
 			checkModCount();
@@ -1038,6 +1058,7 @@ class TreeList extends AbstractList
 			current.setValue( obj );
 		}
 
+		@Override
 		public void add( Object obj )
 		{
 			checkModCount();

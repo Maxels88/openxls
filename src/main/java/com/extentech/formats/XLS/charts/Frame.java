@@ -50,6 +50,7 @@ public class Frame extends GenericChartObject implements ChartObject
 	boolean fAutoSize, fAutoPosition;
 	int frt;
 
+	@Override
 	public void init()
 	{
 		frt = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );

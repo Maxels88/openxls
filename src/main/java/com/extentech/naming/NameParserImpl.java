@@ -51,6 +51,7 @@ class NameParserImpl implements NameParser
 		NamingException - If a naming exception was encountered.
 	 * @see javax.naming.NameParser#parse(java.lang.String)
 	 */
+	@Override
 	public Name parse( String arg0 ) throws NamingException
 	{
 		Name nm = new NameImpl();

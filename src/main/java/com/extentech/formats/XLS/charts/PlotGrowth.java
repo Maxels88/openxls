@@ -32,6 +32,7 @@ public class PlotGrowth extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 514340954251194805L;
 
+	@Override
 	public void init()
 	{
 		super.init();

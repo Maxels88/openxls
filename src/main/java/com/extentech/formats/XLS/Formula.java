@@ -149,6 +149,7 @@ public final class Formula extends XLSCellRecord
 	 * from bytes. Calling it on a programmatically created formula is
 	 * unnecessary and will probably throw an exception.
 	 */
+	@Override
 	public void init()
 	{
 		// Prevent misuse of init
@@ -707,6 +708,7 @@ public final class Formula extends XLSCellRecord
 	/**
 	 * Updates the record data if necessary to prepare for streaming.
 	 */
+	@Override
 	public void preStream()
 	{
 		// If the record doesn't need to be updated, do nothing
@@ -870,6 +872,7 @@ public final class Formula extends XLSCellRecord
 		dirty = false;
 	}
 
+	@Override
 	public Object clone()
 	{
 		// Make the record bytes available to XLSRecord.clone
@@ -884,6 +887,7 @@ public final class Formula extends XLSCellRecord
 	 *
 	 * @see com.extentech.formats.XLS.XLSRecord#getIntVal()
 	 */
+	@Override
 	public int getIntVal() throws RuntimeException
 	{
 		Object obx = calculateFormula();
@@ -947,6 +951,7 @@ public final class Formula extends XLSCellRecord
 		}
 	}
 
+	@Override
 	public float getFloatVal()
 	{
 		Object obx = calculateFormula();
@@ -986,6 +991,7 @@ public final class Formula extends XLSCellRecord
 		return Float.NaN;
 	}
 
+	@Override
 	public boolean getBooleanVal()
 	{
 		Object obx = calculateFormula();
@@ -1017,6 +1023,7 @@ public final class Formula extends XLSCellRecord
 		return false;
 	}
 
+	@Override
 	public double getDblVal()
 	{
 		Object obx = calculateFormula();
@@ -1072,6 +1079,7 @@ public final class Formula extends XLSCellRecord
 	/**
 	 * return the String representation of the current Formula value
 	 */
+	@Override
 	public String getStringVal()
 	{
 		Object obx = calculateFormula();
@@ -1301,6 +1309,7 @@ public final class Formula extends XLSCellRecord
 		}
 	}
 
+	@Override
 	public void setStringVal( String v )
 	{
 		throw new CellTypeMismatchException( "Attempting to set a string value on a formula" );
@@ -1541,6 +1550,7 @@ public final class Formula extends XLSCellRecord
 	 */
 	private boolean closed = false;
 
+	@Override
 	public void close()
 	{
 		if( expression != null )
@@ -1593,6 +1603,7 @@ public final class Formula extends XLSCellRecord
 		closed = true;
 	}
 
+	@Override
 	protected void finalize()
 	{
 		if( !closed )

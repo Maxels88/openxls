@@ -47,6 +47,7 @@ public class SXDBEx extends XLSRecord implements XLSConstants, PivotCacheRecord
 	int nformulas;
 	double lastdate;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -109,6 +110,7 @@ public class SXDBEx extends XLSRecord implements XLSConstants, PivotCacheRecord
 	 *
 	 * @return
 	 */
+	@Override
 	public byte[] getRecord()
 	{
 		byte[] b = new byte[4];

@@ -200,6 +200,7 @@ public class SxAddl extends XLSRecord implements XLSConstants
 		}
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();

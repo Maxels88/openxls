@@ -53,6 +53,7 @@ public final class Label extends XLSCellRecord
 	int cch;
 	String val;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -92,6 +93,7 @@ public final class Label extends XLSCellRecord
 		this.isString = true;
 	}
 
+	@Override
 	public void setStringVal( String v )
 	{
 		val = v;
@@ -112,6 +114,7 @@ public final class Label extends XLSCellRecord
 		this.setStringVal( v );
 	}
 
+	@Override
 	public String getStringVal()
 	{
 		return val;

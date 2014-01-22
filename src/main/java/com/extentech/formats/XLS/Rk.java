@@ -64,16 +64,19 @@ public final class Rk extends XLSCellRecord implements Mulled
 
 	public boolean DEBUG = false;
 
+	@Override
 	public void setMyMul( Mul m )
 	{
 		mymul = (Mulrk) m;
 	}
 
+	@Override
 	public Mul getMyMul()
 	{
 		return mymul;
 	}
 
+	@Override
 	public void setNoMul()
 	{
 		mymul = null;
@@ -161,6 +164,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 	 * then sends the as-yet unmodded rkdata record across to the
 	 * rktranslate method
 	 */
+	@Override
 	public void init()
 	{
 		super.init();
@@ -328,6 +332,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 	 * returns the position of this record in the array of records
 	 * making up this file.
 	 */
+	@Override
 	public int getRecordIndex()
 	{
 		if( super.getRecordIndex() < 0 )
@@ -415,6 +420,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		return 0.0;
 	}
 
+	@Override
 	public int getIntVal() throws RuntimeException
 	{
 		if( isFPNumber )
@@ -433,6 +439,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		return RKint;
 	}
 
+	@Override
 	public double getDblVal()
 	{
 		if( isIntNumber )
@@ -442,6 +449,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		return (double) Rkdouble;
 	}
 
+	@Override
 	public float getFloatVal()
 	{
 		if( isIntNumber )
@@ -456,6 +464,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 	 * then return a format using scientific notation.  Note this is *not* significant digits,
 	 * rather the actual size of the number.  Emulates Excel functionality and display
 	 */
+	@Override
 	public String getStringVal()
 	{
 		if( isIntNumber )
@@ -468,6 +477,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		}
 	}
 
+	@Override
 	public void setStringVal( String s )
 	{
 		try
@@ -492,6 +502,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 	/**
 	 * @see com.extentech.formats.XLS.XLSRecord#setFloatVal(float)
 	 */
+	@Override
 	public void setFloatVal( float f )
 	{
 		try
@@ -508,6 +519,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 	/**
 	 * @see com.extentech.formats.XLS.XLSRecord#setIntVal(int)
 	 */
+	@Override
 	public void setIntVal( int f )
 	{
 		try
@@ -524,6 +536,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 	/**
 	 * @see com.extentech.formats.XLS.XLSRecord#setDoubleVal(double)
 	 */
+	@Override
 	public void setDoubleVal( double f )
 	{
 		try
@@ -743,6 +756,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 	/**
 	 * set the XF (format) record for this rec
 	 */
+	@Override
 	public void setXFRecord( int i )
 	{
 		if( mymul != null )
@@ -760,6 +774,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		super.setXFRecord();
 	}
 
+	@Override
 	public void close()
 	{
 		super.close();

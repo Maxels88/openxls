@@ -39,6 +39,7 @@ public class RadarAreaChart extends RadarChart
 	 *
 	 * @return
 	 */
+	@Override
 	public StringBuffer getOOXML( String catAxisId, String valAxisId, String serAxisId )
 	{
 		StringBuffer cooxml = new StringBuffer();

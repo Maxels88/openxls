@@ -69,6 +69,7 @@ public class SxPI extends XLSRecord implements XLSConstants
 	private static final long serialVersionUID = 2639291289806138985L;
 	private SXPI_Item[] sxpis;
 
+	@Override
 	public void init()
 	{
 		super.init();

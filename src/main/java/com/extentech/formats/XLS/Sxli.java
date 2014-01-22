@@ -233,6 +233,7 @@ public class Sxli extends XLSRecord
 	ArrayList<SXLI_Item> items;
 	int nItemsPerLine;
 
+	@Override
 	public void init()
 	{
 		super.init();

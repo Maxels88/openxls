@@ -169,6 +169,7 @@ public class SxDI extends XLSRecord implements XLSConstants
 
 	;
 
+	@Override
 	public void init()
 	{
 		super.init();

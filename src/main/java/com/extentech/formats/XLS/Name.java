@@ -216,6 +216,7 @@ public final class Name extends XLSRecord
 	 *
 	 * @see com.extentech.formats.XLS.XLSRecord#init()
 	 */
+	@Override
 	public void init()
 	{
 		init( true );        // default= init Expression
@@ -630,6 +631,7 @@ public final class Name extends XLSRecord
 
 	// remove the name
 	// why the boolean - NR
+	@Override
 	public boolean remove( boolean b )
 	{
 		boolean ret = super.remove( true );
@@ -637,6 +639,7 @@ public final class Name extends XLSRecord
 		return ret;
 	}
 
+	@Override
 	public void setWorkBook( WorkBook b )
 	{
 		super.setWorkBook( b );
@@ -877,6 +880,7 @@ public final class Name extends XLSRecord
 	 * do any pre-streaming processing such as expensive
 	 * index updates or other deferrable processing.
 	 */
+	@Override
 	public void preStream()
 	{
 		try
@@ -960,6 +964,7 @@ public final class Name extends XLSRecord
 		this.setData( updated );
 	}
 
+	@Override
 	public String getCellAddress()
 	{
 		if( this.getSheet() != null )
@@ -1245,6 +1250,7 @@ public final class Name extends XLSRecord
 	/**
 	 * clear out object references in prep for closing workbook
 	 */
+	@Override
 	public void close()
 	{
 		this.externsheet = null;
@@ -1279,6 +1285,7 @@ public final class Name extends XLSRecord
 		super.close();
 	}
 
+	@Override
 	protected void finalize()
 	{
 		this.close();

@@ -40,11 +40,13 @@ public class PtgMemAreaN extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return "MEMAREAN";
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_MEM_AREA_N_LENGTH;

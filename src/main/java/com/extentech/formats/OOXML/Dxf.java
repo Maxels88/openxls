@@ -140,6 +140,7 @@ public class Dxf implements OOXMLElement
 		return d;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -505,6 +506,7 @@ public class Dxf implements OOXMLElement
 		border = new Border( bk, styles, colors );
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Dxf( this );

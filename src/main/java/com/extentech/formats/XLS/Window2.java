@@ -88,6 +88,7 @@ public class Window2 extends com.extentech.formats.XLS.XLSRecord
 	static final int BITMASK_SHEETVISIBLE = 0x0400;
 	static final int BITMASK_SHOWINPRINTPREVIEW = 0x0800;
 
+	@Override
 	public void init()
 	{
 		super.init();

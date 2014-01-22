@@ -43,6 +43,7 @@ public final class Blank extends XLSCellRecord
 	private static final long serialVersionUID = -3847009755105117050L;
 
 	// return a blank string val
+	@Override
 	public String getStringVal()
 	{
 		return "";
@@ -81,6 +82,7 @@ public final class Blank extends XLSCellRecord
 		this.init();
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();

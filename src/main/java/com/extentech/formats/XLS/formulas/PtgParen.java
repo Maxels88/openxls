@@ -55,6 +55,7 @@ public class PtgParen extends GenericPtg implements Ptg
 	 */
 	private static final long serialVersionUID = -8081397558698615537L;
 
+	@Override
 	public boolean getIsControl()
 	{
 		return true;
@@ -63,6 +64,7 @@ public class PtgParen extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		// TODO: add logic to return proper paren 12/02 -jm
@@ -75,6 +77,7 @@ public class PtgParen extends GenericPtg implements Ptg
 	 * the "closing" portion of this Ptg
 	 * such as a closing parenthesis.
 	 */
+	@Override
 	public String getString2()
 	{
 		return ")";
@@ -84,11 +87,13 @@ public class PtgParen extends GenericPtg implements Ptg
 	 * Pass in the last 3 ptgs to evaluate
 	 * where to place the String parens.
 	 */
+	@Override
 	public Object evaluate( Object[] b )
 	{
 		return null;
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_PAREN_LENGTH;

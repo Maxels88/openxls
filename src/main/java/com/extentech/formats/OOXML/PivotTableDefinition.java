@@ -937,11 +937,13 @@ public class PivotTableDefinition implements OOXMLElement
 	 * @param sxview public void setPt(Sxview sxview) { pt= sxview; }
 	 */
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return null;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		// TODO: Finish

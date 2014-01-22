@@ -50,6 +50,7 @@ public class Scatter extends GenericChartObject implements ChartObject
 	private boolean fShowNegBubbles = false;
 	private boolean fHasShadow = false;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -116,6 +117,7 @@ public class Scatter extends GenericChartObject implements ChartObject
 	/**
 	 * @return String XML representation of this chart-type's options
 	 */
+	@Override
 	public String getOptionsXML()
 	{
 		StringBuffer sb = new StringBuffer();
@@ -141,6 +143,7 @@ public class Scatter extends GenericChartObject implements ChartObject
 	/**
 	 * Handle setting options from XML in a generic manner
 	 */
+	@Override
 	public boolean setChartOption( String op, String val )
 	{
 		boolean bHandled = false;

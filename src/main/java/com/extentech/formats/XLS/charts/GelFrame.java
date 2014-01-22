@@ -39,6 +39,7 @@ public class GelFrame extends GenericChartObject implements ChartObject
 	private java.awt.Color fillColor = null;
 	private int fillType = 0;    // default= solid
 
+	@Override
 	public void init()
 	{
 		super.init();

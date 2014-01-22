@@ -117,6 +117,7 @@ public class SheetView implements OOXMLElement
 		return s;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -145,6 +146,7 @@ public class SheetView implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new SheetView( this );
@@ -267,6 +269,7 @@ class Pane implements OOXMLElement
 		return p;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -283,6 +286,7 @@ class Pane implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Pane( this );
@@ -350,6 +354,7 @@ class Selection implements OOXMLElement
 		return s;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -366,6 +371,7 @@ class Selection implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Selection( this );

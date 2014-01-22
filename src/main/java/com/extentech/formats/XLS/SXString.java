@@ -46,6 +46,7 @@ public class SXString extends XLSRecord implements XLSConstants, PivotCacheRecor
 	private short cch;    // length of segment
 	private String segment;    //specifies a cache item with a string value.
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -136,6 +137,7 @@ public class SXString extends XLSRecord implements XLSConstants, PivotCacheRecor
 	 *
 	 * @return
 	 */
+	@Override
 	public byte[] getRecord()
 	{
 		byte[] b = new byte[4];

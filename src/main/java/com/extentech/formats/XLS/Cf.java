@@ -272,6 +272,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * initialize the Cf record
 	 */
+	@Override
 	public void init()
 	{
 		super.init();
@@ -1353,6 +1354,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		patternFillColorsFlag = (short) (patternFillColorsFlag | (patternFillColor << 7));
 	}
 
+	@Override
 	public Font getFont()
 	{
 		if( !this.bHasFontBlock )

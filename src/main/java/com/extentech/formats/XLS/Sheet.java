@@ -82,6 +82,7 @@ public interface Sheet extends BiffRec
 	 * do all of the expensive updating here
 	 * only right before streaming record.
 	 */
+	@Override
 	public abstract void preStream();
 
 	public abstract Bof getMyBof();
@@ -391,6 +392,7 @@ public interface Sheet extends BiffRec
 	 * initialize the SheetImpl with data from
 	 * the byte array.
 	 */
+	@Override
 	public abstract void init();
 
 	public byte getGrbitChr();

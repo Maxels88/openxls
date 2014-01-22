@@ -37,6 +37,7 @@ public class Area3DChart extends AreaChart
 	 *
 	 * @return
 	 */
+	@Override
 	public StringBuffer getOOXML( String catAxisId, String valAxisId, String serAxisId )
 	{
 		StringBuffer cooxml = new StringBuffer();

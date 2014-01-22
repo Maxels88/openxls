@@ -45,6 +45,7 @@ public final class ImageNotFoundException extends java.lang.Exception
 		description = n;
 	}
 
+	@Override
 	public String getMessage()
 	{
 		return this.toString();

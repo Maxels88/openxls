@@ -69,6 +69,7 @@ public class NameImpl implements Name
 	 * * @see javax.naming.Name#clone()
 	 */
 
+	@Override
 	public Object clone()
 	{
 		NameImpl nimple = new NameImpl();
@@ -81,6 +82,7 @@ public class NameImpl implements Name
 	/* (non-Javadoc)
 	 * @see javax.naming.Name#remove(int)
 	 */
+	@Override
 	public Object remove( int arg0 ) throws InvalidNameException
 	{
 		return vals.remove( arg0 );
@@ -89,6 +91,7 @@ public class NameImpl implements Name
 	/* (non-Javadoc)
 	 * @see javax.naming.Name#get(int)
 	 */
+	@Override
 	public String get( int arg0 )
 	{
 		return vals.get( arg0 ).toString();
@@ -97,6 +100,7 @@ public class NameImpl implements Name
 	/* (non-Javadoc)
 	 * @see javax.naming.Name#getAll()
 	 */
+	@Override
 	public Enumeration getAll()
 	{
 		return vals.elements();
@@ -105,6 +109,7 @@ public class NameImpl implements Name
 	/* Creates a name whose components consist of a prefix of the components of this name. 
 	 * @see javax.naming.Name#getPrefix(int)
 	 */
+	@Override
 	public Name getPrefix( int arg0 )
 	{
 		return null;
@@ -113,6 +118,7 @@ public class NameImpl implements Name
 	/* Creates a name whose components consist of a suffix of the components in this name. 
 	 * @see javax.naming.Name#getSuffix(int)
 	 */
+	@Override
 	public Name getSuffix( int arg0 )
 	{
 		// TODO Auto-generated method stub
@@ -122,6 +128,7 @@ public class NameImpl implements Name
 	/* (non-Javadoc)
 	 * @see javax.naming.Name#add(java.lang.String)
 	 */
+	@Override
 	public Name add( String arg0 ) throws InvalidNameException
 	{
 		return null;
@@ -130,6 +137,7 @@ public class NameImpl implements Name
 	/* Adds the components of a name -- in order -- at a specified position within this name. 
 	 * @see javax.naming.Name#addAll(int, javax.naming.Name)
 	 */
+	@Override
 	public Name addAll( int arg0, Name arg1 ) throws InvalidNameException
 	{
 		this.vals.addAll( arg0, ((NameImpl) arg1).getVals() );
@@ -139,6 +147,7 @@ public class NameImpl implements Name
 	/* (non-Javadoc)
 	 * @see javax.naming.Name#addAll(javax.naming.Name)
 	 */
+	@Override
 	public Name addAll( Name arg0 ) throws InvalidNameException
 	{
 		this.vals.addAll( ((NameImpl) arg0).getVals() );
@@ -148,6 +157,7 @@ public class NameImpl implements Name
 	/* (non-Javadoc)
 	 * @see javax.naming.Name#size()
 	 */
+	@Override
 	public int size()
 	{
 		return vals.size();
@@ -156,6 +166,7 @@ public class NameImpl implements Name
 	/* (non-Javadoc)
 	 * @see javax.naming.Name#isEmpty()
 	 */
+	@Override
 	public boolean isEmpty()
 	{
 		return vals.size() > 0;
@@ -164,6 +175,7 @@ public class NameImpl implements Name
 	/* (non-Javadoc)
 	 * @see javax.naming.Name#compareTo(java.lang.Object)
 	 */
+	@Override
 	public int compareTo( Object arg0 )
 	{
 		return this.compareTo( arg0 );
@@ -172,6 +184,7 @@ public class NameImpl implements Name
 	/* (non-Javadoc)
 	 * @see javax.naming.Name#endsWith(javax.naming.Name)
 	 */
+	@Override
 	public boolean endsWith( Name arg0 )
 	{
 		Object ob1 = arg0.get( arg0.size() - 1 );
@@ -182,6 +195,7 @@ public class NameImpl implements Name
 	/* (non-Javadoc)
 	 * @see javax.naming.Name#startsWith(javax.naming.Name)
 	 */
+	@Override
 	public boolean startsWith( Name arg0 )
 	{
 		Object ob1 = arg0.get( 0 );
@@ -192,6 +206,7 @@ public class NameImpl implements Name
 	/* (non-Javadoc)
 	 * @see javax.naming.Name#add(int, java.lang.String)
 	 */
+	@Override
 	public Name add( int arg0, String arg1 ) throws InvalidNameException
 	{
 		vals.set( arg0, arg1 );

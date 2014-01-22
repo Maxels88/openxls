@@ -46,6 +46,7 @@ public class DefaultText extends GenericChartObject implements ChartObject
 
 	private short grbit = 0;
 
+	@Override
 	public void init()
 	{
 		super.init();

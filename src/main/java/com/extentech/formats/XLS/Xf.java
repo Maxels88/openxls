@@ -175,6 +175,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	 * This can get called multiple times.  This results in a disparity within
 	 * xf counting in workbook.
 	 */
+	@Override
 	public void setWorkBook( WorkBook b )
 	{
 		super.setWorkBook( b );
@@ -276,6 +277,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * The XF record can either be a style XF or a Cell XF.
 	 */
+	@Override
 	public void init()
 	{
 		super.init();
@@ -442,6 +444,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * returns the associated  Font record for this XF
 	 */
+	@Override
 	public Font getFont()
 	{
 		if( myFont != null )
@@ -647,6 +650,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	 * <p/>
 	 * case insensitive pattern match is performed...
 	 */
+	@Override
 	public String getFormatPattern()
 	{
 		if( pat != null )
@@ -1873,6 +1877,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * clear out object references in prep for closing workbook
 	 */
+	@Override
 	public void close()
 	{
 		super.close();

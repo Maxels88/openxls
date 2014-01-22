@@ -68,6 +68,7 @@ public class ThreeD extends GenericChartObject implements ChartObject
 	private short grbit = 0; //
 	private boolean fPerspective, fCluster, f3dScaling, f2DWalls; // 20070905 KSC: parse grbit
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -126,6 +127,7 @@ public class ThreeD extends GenericChartObject implements ChartObject
 	/**
 	 * Handle setting options from XML in a generic manner
 	 */
+	@Override
 	public boolean setChartOption( String op, String val )
 	{
 		boolean bHandled = false;
@@ -199,6 +201,7 @@ public class ThreeD extends GenericChartObject implements ChartObject
 	/**
 	 * return the desired option setting in string form
 	 */
+	@Override
 	public String getChartOption( String op )
 	{
 		if( op.equalsIgnoreCase( "AnRot" ) )
@@ -247,6 +250,7 @@ public class ThreeD extends GenericChartObject implements ChartObject
 	/**
 	 * @return String XML representation of this chart-type's options
 	 */
+	@Override
 	public String getOptionsXML()
 	{
 		StringBuffer sb = new StringBuffer();

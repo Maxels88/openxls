@@ -180,6 +180,7 @@ public final class Shrfmla extends XLSRecord
 		rwLast = row;
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -231,6 +232,7 @@ public final class Shrfmla extends XLSRecord
 		ptgs.toArray( ptgcache );
 	}
 
+	@Override
 	public void preStream()
 	{
 		super.preStream();
@@ -526,6 +528,7 @@ public final class Shrfmla extends XLSRecord
 		return c;
 	}
 
+	@Override
 	public void close()
 	{
 		if( members != null )
@@ -554,6 +557,7 @@ public final class Shrfmla extends XLSRecord
 		super.close();
 	}
 
+	@Override
 	protected void finalize()
 	{
 		this.close();

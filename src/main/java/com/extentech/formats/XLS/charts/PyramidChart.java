@@ -34,6 +34,7 @@ public class PyramidChart extends Col3DChart
 		chartobj.chartType = PYRAMIDCHART;
 	}
 
+	@Override
 	public int getBarShape()
 	{
 		return defaultShape;

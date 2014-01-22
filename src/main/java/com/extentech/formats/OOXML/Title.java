@@ -170,6 +170,7 @@ public class Title implements OOXMLElement
 	/**
 	 * tx chart text layout overlay spPr txPr
 	 */
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer tooxml = new StringBuffer();
@@ -195,6 +196,7 @@ public class Title implements OOXMLElement
 		return tooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Title( this.chartText, this.txpr, this.layout, this.sp );
@@ -311,6 +313,7 @@ class ChartText implements OOXMLElement
 		return ct;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer cooxml = new StringBuffer();
@@ -350,6 +353,7 @@ class ChartText implements OOXMLElement
 		return "";
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new ChartText( this.strref, this.para, this.bpr );

@@ -49,6 +49,7 @@ public class FontBasis extends XLSRecord
 	 */
 	private static final long serialVersionUID = 6984935185426785077L;
 
+	@Override
 	public void init()
 	{
 		super.init();

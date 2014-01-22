@@ -44,6 +44,7 @@ public final class DefColWidth extends com.extentech.formats.XLS.XLSRecord
 	 */
 	private static final long serialVersionUID = 8726286841723548636L;
 
+	@Override
 	public void init()
 	{
 		byte[] mydata = this.getData();

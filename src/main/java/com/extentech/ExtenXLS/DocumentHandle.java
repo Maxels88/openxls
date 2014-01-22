@@ -112,6 +112,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	 * @param name the name of the property to retrieve
 	 * @return the value of the requested property or null if it doesn't exist
 	 */
+	@Override
 	public Object getProperty( String name )
 	{
 		return props.get( name );
@@ -124,6 +125,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	 * @param name  the name of the property which should be updated
 	 * @param value the value to which the property should be set
 	 */
+	@Override
 	public void addProperty( String name, Object val )
 	{
 		props.put( name, val );
@@ -164,6 +166,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	 * Sets the user-visible descriptive name or title of this document.
 	 * Some formats will persist this setting in the document itself.
 	 */
+	@Override
 	public void setName( String nm )
 	{
 		name = nm;
@@ -304,6 +307,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	 * a performance penalty, so it is recommended this be left at zero unless
 	 * you are reporting a bug.
 	 */
+	@Override
 	public void setDebugLevel( int level )
 	{
 		DEBUGLEVEL = level;
@@ -375,6 +379,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	/**
 	 * Gets the user-visible descriptive name or title of this document.
 	 */
+	@Override
 	public String getName()
 	{
 		if( name != null )
@@ -393,6 +398,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	 * @throws UnsupportedOperationException if there is not sufficient data
 	 *                                       available to perform the reversion
 	 */
+	@Override
 	public abstract void reset();
 
 	/**
@@ -413,6 +419,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	 * @throws IllegalArgumentException if the given type code is invalid
 	 * @throws IOException              if an error occurs while writing to the stream
 	 */
+	@Override
 	public abstract void write( OutputStream dest, int format ) throws IOException;
 
 	/**
@@ -421,6 +428,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	 * @param dest the stream to which the document should be written
 	 * @throws IOException if an error occurs while writing to the stream
 	 */
+	@Override
 	public void write( OutputStream dest ) throws IOException
 	{
 		this.write( dest, FORMAT_NATIVE );
@@ -434,6 +442,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	 * @throws IllegalArgumentException if the given type code is invalid
 	 * @throws IOException              if an error occurs while writing to the file
 	 */
+	@Override
 	public void write( File file, int format ) throws IOException
 	{
 		if( format > WorkBookHandle.FORMAT_XLS && this.file != null )
@@ -458,6 +467,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	 * @param file the path to which the document should be written
 	 * @throws IOException if an error occurs while writing to the stream
 	 */
+	@Override
 	public void write( File file ) throws IOException
 	{
 		this.write( file, FORMAT_NATIVE );

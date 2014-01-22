@@ -141,6 +141,7 @@ public class CNvPr implements OOXMLElement
 		return cnv;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer tooxml = new StringBuffer();
@@ -160,6 +161,7 @@ public class CNvPr implements OOXMLElement
 		return tooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new CNvPr( this );

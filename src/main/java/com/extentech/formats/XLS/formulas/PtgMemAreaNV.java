@@ -45,6 +45,7 @@ public class PtgMemAreaNV extends PtgMemAreaA implements Ptg
 	 * }
 	 */
 
+	@Override
 	public int getLength()
 	{
 		return PTG_MEM_AREA_NV_LENGTH;

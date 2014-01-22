@@ -34,6 +34,7 @@ public class ChartFormatLink extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 6928761103400718842L;
 
+	@Override
 	public void init()
 	{
 		super.init();

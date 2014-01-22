@@ -66,6 +66,7 @@ public class PtgMemAreaA extends PtgMemArea
 	int cref = 0;
 	MemArea[] areas;
 
+	@Override
 	public void init( byte[] b )
 	{
 		ptgId = b[0];
@@ -73,6 +74,7 @@ public class PtgMemAreaA extends PtgMemArea
 		this.populateVals();
 	}
 
+	@Override
 	void populateVals()
 	{
 		cce = ByteTools.readInt( record[6], record[5] );
@@ -89,6 +91,7 @@ public class PtgMemAreaA extends PtgMemArea
 
 	}
 
+	@Override
 	public int getLength()
 	{
 		return -1;
@@ -97,6 +100,7 @@ public class PtgMemAreaA extends PtgMemArea
 	/*
 	 *  return a string representation of all of the ranges, seperated by comma.
 	 */
+	@Override
 	public Object getValue()
 	{
 		String res = "";

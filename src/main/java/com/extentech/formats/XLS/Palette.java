@@ -47,6 +47,7 @@ public final class Palette extends com.extentech.formats.XLS.XLSRecord
 	CompatibleVector colorvect = new CompatibleVector();
 	int ccv = -1;
 
+	@Override
 	public void init()
 	{
 		super.init();

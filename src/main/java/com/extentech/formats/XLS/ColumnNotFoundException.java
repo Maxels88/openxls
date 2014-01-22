@@ -44,6 +44,7 @@ public final class ColumnNotFoundException extends java.lang.Exception
 		colname = n;
 	}
 
+	@Override
 	public String getMessage()
 	{
 		// This method is derived from class java.lang.Throwable

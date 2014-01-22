@@ -111,6 +111,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	private DLbls d = null;            // OOXML-specific object holds Data Labels properties for this series (all charts except surface)
 	private ArrayList dPts = null;    // OOXML-specific object holds Data Labels properties for this series (all charts except surface)
 
+	@Override
 	public void init()
 	{
 		super.init();

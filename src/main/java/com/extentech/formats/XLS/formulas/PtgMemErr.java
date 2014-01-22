@@ -40,11 +40,13 @@ public class PtgMemErr extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return "MEMERR";
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_MEMERR_LENGTH;

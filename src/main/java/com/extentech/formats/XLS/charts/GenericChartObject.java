@@ -117,21 +117,25 @@ public class GenericChartObject extends XLSRecord implements ChartObject, ChartC
 		return ret;
 	}
 
+	@Override
 	public ArrayList getChartRecords()
 	{
 		return chartArr;
 	}
 
+	@Override
 	public void addChartRecord( XLSRecord b )
 	{
 		chartArr.add( b );
 	}
 
+	@Override
 	public Chart getParentChart()
 	{
 		return parentChart;
 	}
 
+	@Override
 	public void setParentChart( Chart c )
 	{
 		parentChart = c;
@@ -140,6 +144,7 @@ public class GenericChartObject extends XLSRecord implements ChartObject, ChartC
 	/**
 	 * Get the output array of records, including begin/end records and those of it's children.
 	 */
+	@Override
 	public ArrayList getRecordArray()
 	{
 		ArrayList outputArr = new ArrayList();
@@ -177,6 +182,7 @@ public class GenericChartObject extends XLSRecord implements ChartObject, ChartC
 	/**
 	 * clear out object references in prep for closing workbook
 	 */
+	@Override
 	public void close()
 	{
 		for( int i = 0; i < chartArr.size(); i++ )

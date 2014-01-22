@@ -45,6 +45,7 @@ public class LineChart extends ChartType
 	 *
 	 * @return
 	 */
+	@Override
 	public JSONObject getTypeJSON() throws JSONException
 	{
 		JSONObject typeJSON = new JSONObject();
@@ -87,6 +88,7 @@ public class LineChart extends ChartType
 	 * @param seriescolors int[] of series or bar colors color ints
 	 * @return String svg
 	 */
+	@Override
 	public String getSVG( HashMap<String, Double> chartMetrics, HashMap<String, Object> axisMetrics, ChartSeries s )
 	{
 		double x = chartMetrics.get( "x" );    // + (!yAxisReversed?0:w);	// x is constant at x origin unless reversed
@@ -185,6 +187,7 @@ public class LineChart extends ChartType
 	 *
 	 * @return
 	 */
+	@Override
 	public StringBuffer getOOXML( String catAxisId, String valAxisId, String serAxisId )
 	{
 		StringBuffer cooxml = new StringBuffer();

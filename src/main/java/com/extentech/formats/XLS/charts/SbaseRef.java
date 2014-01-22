@@ -32,6 +32,7 @@ public class SbaseRef extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 7832632121207578401L;
 
+	@Override
 	public void init()
 	{
 		super.init();

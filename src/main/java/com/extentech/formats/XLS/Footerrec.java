@@ -48,6 +48,7 @@ public final class Footerrec extends com.extentech.formats.XLS.XLSRecord
 	String rgch = "";
 	boolean DEBUG = false;
 
+	@Override
 	public void setSheet( Sheet bs )
 	{
 		super.setSheet( bs );
@@ -104,6 +105,7 @@ public final class Footerrec extends com.extentech.formats.XLS.XLSRecord
 		return rgch;
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();

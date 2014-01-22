@@ -126,6 +126,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 * @return an iterator over the elements in this list in proper sequence.
 	 * @see #modCount
 	 */
+	@Override
 	public Iterator iterator()
 	{
 		return new Itr();
@@ -232,6 +233,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 *
 	 * @return the number of elements in this list.
 	 */
+	@Override
 	public int size()
 	{
 		return size;
@@ -243,6 +245,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 * @return <tt>true</tt> if this list has no elements;
 	 * <tt>false</tt> otherwise.
 	 */
+	@Override
 	public boolean isEmpty()
 	{
 		return size == 0;
@@ -255,6 +258,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 * @return <code>true</code> if the specified element is present;
 	 * <code>false</code> otherwise.
 	 */
+	@Override
 	public boolean contains( Object elem )
 	{
 		return indexOf( elem ) >= 0;
@@ -269,6 +273,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 * list; returns <tt>-1</tt> if the object is not found.
 	 * @see Object#equals(Object)
 	 */
+	@Override
 	public int indexOf( Object elem )
 	{
 		if( elem == null )
@@ -302,6 +307,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 * @return the index of the last occurrence of the specified object in
 	 * this list; returns -1 if the object is not found.
 	 */
+	@Override
 	public int lastIndexOf( Object elem )
 	{
 		if( elem == null )
@@ -333,6 +339,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 *
 	 * @return a clone of this <tt>ArrayList</tt> instance.
 	 */
+	@Override
 	public Object clone()
 	{
 		try
@@ -357,6 +364,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 * @return an array containing all of the elements in this list
 	 * in the correct order.
 	 */
+	@Override
 	public Object[] toArray()
 	{
 		Object[] result = new Object[size];
@@ -385,6 +393,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 * @throws ArrayStoreException if the runtime type of a is not a supertype
 	 *                             of the runtime type of every element in this list.
 	 */
+	@Override
 	public Object[] toArray( Object a[] )
 	{
 		if( a.length < size )
@@ -412,6 +421,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 * @throws IndexOutOfBoundsException if index is out of range <tt>(index
 	 *                                   &lt; 0 || index &gt;= size())</tt>.
 	 */
+	@Override
 	public Object get( int index )
 	{
 		RangeCheck( index );
@@ -428,6 +438,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 * @throws IndexOutOfBoundsException if index out of range
 	 *                                   <tt>(index &lt; 0 || index &gt;= size())</tt>.
 	 */
+	@Override
 	public Object set( int index, Object element )
 	{
 		RangeCheck( index );
@@ -443,6 +454,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 * @param o element to be appended to this list.
 	 * @return <tt>true</tt> (as per the general contract of Collection.add).
 	 */
+	@Override
 	public boolean add( Object o )
 	{
 		ensureCapacity( size + 1 );  // Increments modCount!!
@@ -460,6 +472,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 * @throws IndexOutOfBoundsException if index is out of range
 	 *                                   <tt>(index &lt; 0 || index &gt; size())</tt>.
 	 */
+	@Override
 	public void add( int index, Object element )
 	{
 		if( index > size || index < 0 )
@@ -483,6 +496,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 * @throws IndexOutOfBoundsException if index out of range <tt>(index
 	 *                                   &lt; 0 || index &gt;= size())</tt>.
 	 */
+	@Override
 	public Object remove( int index )
 	{
 		RangeCheck( index );
@@ -504,6 +518,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 * Removes all of the elements from this list.  The list will
 	 * be empty after this call returns.
 	 */
+	@Override
 	public void clear()
 	{
 		modCount++;
@@ -530,6 +545,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 * @return <tt>true</tt> if this list changed as a result of the call.
 	 * @throws NullPointerException if the specified collection is null.
 	 */
+	@Override
 	public boolean addAll( Collection c )
 	{
 		Object[] a = c.toArray();
@@ -561,6 +577,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 *                                   &lt; 0 || index &gt; size())</tt>.
 	 * @throws NullPointerException      if the specified Collection is null.
 	 */
+	@Override
 	public boolean addAll( int index, Collection c )
 	{
 		if( index > size || index < 0 )
@@ -593,6 +610,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 * @param fromIndex index of first element to be removed.
 	 * @param toIndex   index after last element to be removed.
 	 */
+	@Override
 	protected void removeRange( int fromIndex, int toIndex )
 	{
 		modCount++;
@@ -642,11 +660,13 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 		 */
 		int expectedModCount = modCount;
 
+		@Override
 		public boolean hasNext()
 		{
 			return cursor != size;
 		}
 
+		@Override
 		public Object next()
 		{
 			//    checkForComodification();
@@ -663,6 +683,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 			}
 		}
 
+		@Override
 		public void remove()
 		{
 			if( lastRet == -1 )

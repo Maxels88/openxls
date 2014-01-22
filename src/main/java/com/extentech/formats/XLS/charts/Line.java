@@ -43,6 +43,7 @@ public class Line extends GenericChartObject implements ChartObject
 	private short grbit = 0;
 	private boolean fStacked = false, f100 = false, fHasShadow = false;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -84,6 +85,7 @@ public class Line extends GenericChartObject implements ChartObject
 	/**
 	 * Handle setting options from XML in a generic manner
 	 */
+	@Override
 	public boolean setChartOption( String op, String val )
 	{
 		boolean bHandled = false;
@@ -118,6 +120,7 @@ public class Line extends GenericChartObject implements ChartObject
 	/**
 	 * @return String XML representation of this chart-type's options
 	 */
+	@Override
 	public String getOptionsXML()
 	{
 		StringBuffer sb = new StringBuffer();
@@ -136,6 +139,7 @@ public class Line extends GenericChartObject implements ChartObject
 		return sb.toString();
 	}
 
+	@Override
 	public void setIsStacked( boolean bIsStacked )
 	{
 		fStacked = bIsStacked;
@@ -143,6 +147,7 @@ public class Line extends GenericChartObject implements ChartObject
 		updateRecord();
 	}
 
+	@Override
 	public void setIs100Percent( boolean bOn )
 	{
 		f100 = bOn;
@@ -153,6 +158,7 @@ public class Line extends GenericChartObject implements ChartObject
 	/**
 	 * @return truth of "Chart is Stacked"
 	 */
+	@Override
 	public boolean isStacked()
 	{
 		return fStacked;

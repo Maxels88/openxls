@@ -94,21 +94,25 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	CellRange mergeRange;
 	private int firstblock, lastblock;
 
+	@Override
 	public short getOpcode()
 	{
 		return opcode;
 	}
 
+	@Override
 	public void setOpcode( short op )
 	{
 		this.opcode = op;
 	}
 
+	@Override
 	public void setHyperlink( Hlink hl )
 	{
 		this.hyperlink = hl;
 	}
 
+	@Override
 	public Formula getFormulaRec()
 	{
 		if( this instanceof Formula )
@@ -124,6 +128,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		return true;
 	}
 
+	@Override
 	public void setRow( Row r )
 	{
 		myrow = r;
@@ -132,6 +137,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * get the row of this cell
 	 */
+	@Override
 	public Row getRow()
 	{
 		if( myrow == null )
@@ -141,6 +147,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		return myrow;
 	}
 
+	@Override
 	public Xf getXfRec()
 	{
 		if( myxf == null )
@@ -157,6 +164,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * returns the existing font record
 	 * for this Cell
 	 */
+	@Override
 	public Font getFont()
 	{
 		WorkBook b = this.getWorkBook();
@@ -175,6 +183,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * @return
 	 */
+	@Override
 	public CellRange getMergeRange()
 	{
 		return mergeRange;
@@ -183,6 +192,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * @param range
 	 */
+	@Override
 	public void setMergeRange( CellRange range )
 	{
 		mergeRange = range;
@@ -193,6 +203,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 *
 	 * @param whether to nullify this Cell
 	 */
+	@Override
 	public boolean remove( boolean nullme )
 	{
 		boolean success = false;
@@ -227,6 +238,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * <p/>
 	 * case insensitive pattern match is performed...
 	 */
+	@Override
 	public String getFormatPattern()
 	{
 		if( myxf == null )
@@ -300,6 +312,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 *
 	 * @param pos
 	 */
+	@Override
 	public void setOffset( int pos )
 	{
 		if( originalOffset < 1 )
@@ -316,6 +329,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 *
 	 * @return relative position
 	 */
+	@Override
 	public int getOffset()
 	{
 		if( this.data == null )
@@ -346,6 +360,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 *
 	 * @return
 	 */
+	@Override
 	public void setFirstBlock( int i )
 	{
 		firstblock = i;
@@ -356,6 +371,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 *
 	 * @return
 	 */
+	@Override
 	public void setLastBlock( int i )
 	{
 		lastblock = i;
@@ -366,6 +382,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 *
 	 * @return
 	 */
+	@Override
 	public int getFirstBlock()
 	{
 		return firstblock;
@@ -376,6 +393,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 *
 	 * @return
 	 */
+	@Override
 	public int getLastBlock()
 	{
 		return lastblock;
@@ -423,6 +441,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * Dumps this record as a human-readable string.
 	 */
+	@Override
 	public String toHexDump()
 	{
 		return getRecDesc() + "\n" + ByteTools.getByteDump( this.getData(), 0 );
@@ -433,6 +452,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 *
 	 * @see com.extentech.formats.XLS.BiffRec#copyFormat(com.extentech.formats.XLS.BiffRec)
 	 */
+	@Override
 	public void copyFormat( BiffRec source )
 	{
 		Xf clone = (Xf) source.getXfRec().clone();
@@ -462,6 +482,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * clone a record
 	 */
+	@Override
 	public Object clone()
 	{
 		try
@@ -530,6 +551,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * set the DEBUG level
 	 */
+	@Override
 	public void setDebugLevel( int b )
 	{
 		DEBUGLEVEL = b;
@@ -548,6 +570,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * return the record index of this object
 	 */
+	@Override
 	public int getRecordIndex()
 	{
 		if( streamer == null )
@@ -566,6 +589,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * for this record, containing all data
 	 * beyond the 8224 byte record size limit.
 	 */
+	@Override
 	public void addContinue( Continue c )
 	{
 		if( continues == null )
@@ -578,6 +602,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * remove all Continue records
 	 */
+	@Override
 	public void removeContinues()
 	{
 		if( continues != null )
@@ -586,6 +611,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		}
 	}
 
+	@Override
 	public List getContinueVect()
 	{
 		if( continues != null )
@@ -603,6 +629,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * <p/>
 	 * XLSRecords can have 0 or more CONTINUE records.
 	 */
+	@Override
 	public boolean hasContinues()
 	{
 		if( continues == null )
@@ -620,6 +647,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * set whether this record contains the  value
 	 * of the Cell.
 	 */
+	@Override
 	public void setIsValueForCell( boolean b )
 	{
 		isValueForCell = b;
@@ -628,6 +656,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * associate this record with its Index record
 	 */
+	@Override
 	public void setIndex( Index id )
 	{
 		idx = id;
@@ -638,6 +667,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * First checks to see if there is already
 	 * a cell with this address.
 	 */
+	@Override
 	public void setSheet( Sheet b )
 	{
 		this.worksheet = b;
@@ -646,16 +676,19 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * get the WorkSheet for this record.
 	 */
+	@Override
 	public Boundsheet getSheet()
 	{
 		return (Boundsheet) worksheet;
 	}
 
+	@Override
 	public void setWorkBook( WorkBook wk )
 	{
 		wkbook = (WorkBook) wk;
 	}
 
+	@Override
 	public WorkBook getWorkBook()
 	{
 		if( (wkbook == null) && (worksheet != null) )
@@ -669,6 +702,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * set the column
 	 */
+	@Override
 	public void setCol( short i )
 	{
 		byte[] c = ByteTools.shortToLEBytes( (short) i );
@@ -676,6 +710,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		col = i;
 	}
 
+	@Override
 	public void setRowCol( int[] x )
 	{
 		this.setRowNumber( x[0] );
@@ -685,6 +720,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * set the row
 	 */
+	@Override
 	public void setRowNumber( int i )
 	{
 		byte[] r = ByteTools.cLongToLEBytes( i );
@@ -692,11 +728,13 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		rw = i;
 	}
 
+	@Override
 	public short getColNumber()
 	{
 		return col;
 	}
 
+	@Override
 	public int getRowNumber()
 	{
 		if( rw < 0 )
@@ -718,6 +756,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * get a string address for the
 	 * cell based on row and col ie: "H22"
 	 */
+	@Override
 	public String getCellAddress()
 	{
 		int rownum = rw + 1;
@@ -767,6 +806,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * perform record initialization
 	 */
+	@Override
 	public void init()
 	{
 		if( originalsize == 0 )
@@ -778,6 +818,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * get a default "empty" data value for this record
 	 */
+	@Override
 	public Object getDefaultVal()
 	{
 		if( this.isDoubleNumber )
@@ -814,6 +855,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * get the data type name for this record
 	 */
+	@Override
 	public String getDataType()
 	{
 		if( this.isValueForCell )
@@ -853,6 +895,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * get the int val of the type for the valrec
 	 */
+	@Override
 	public Object getInternalVal()
 	{
 		try
@@ -910,6 +953,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * Get the value of the record as a Boolean.
 	 * Value must be parseable as a Boolean.
 	 */
+	@Override
 	public boolean getBooleanVal()
 	{
 		return false;
@@ -920,6 +964,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * Value must be parseable as an Integer or it
 	 * will throw a NumberFormatException.
 	 */
+	@Override
 	public int getIntVal()
 	{
 		return (int) Float.NaN;
@@ -930,6 +975,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * Value must be parseable as an Double or it
 	 * will throw a NumberFormatException.
 	 */
+	@Override
 	public double getDblVal()
 	{
 		return (double) Float.NaN;
@@ -940,6 +986,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * Value must be parseable as an Float or it
 	 * will throw a NumberFormatException.
 	 */
+	@Override
 	public float getFloatVal()
 	{
 		return Float.NaN;
@@ -948,6 +995,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * Get the value of the record as a String.
 	 */
+	@Override
 	public String getStringVal()
 	{
 		return null;
@@ -956,21 +1004,25 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * Get the value of the record as a String.
 	 */
+	@Override
 	public String getStringVal( String encoding )
 	{
 		return null;
 	}
 
+	@Override
 	public void setStringVal( String v )
 	{
 		Logger.logErr( "Setting String Val on generic XLSRecord, value not held" );
 	}
 
+	@Override
 	public void setBooleanVal( boolean b )
 	{
 		Logger.logErr( "Setting Boolean Val on generic XLSRecord, value not held" );
 	}
 
+	@Override
 	public void setIntVal( int v )
 	{
 		Logger.logErr( "Setting int Val on generic XLSRecord, value not held" );
@@ -981,6 +1033,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		Logger.logErr( "Setting float Val on generic XLSRecord, value not held" );
 	}
 
+	@Override
 	public void setDoubleVal( double v )
 	{
 		Logger.logErr( "Setting Double Val on generic XLSRecord, value not held" );
@@ -990,6 +1043,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * do any pre-streaming processing such as expensive
 	 * index updates or other deferrable processing.
 	 */
+	@Override
 	public void preStream()
 	{
 		// override in sub-classes
@@ -998,6 +1052,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * set the XF (format) record for this rec
 	 */
+	@Override
 	public void setXFRecord()
 	{
 		if( wkbook == null )
@@ -1017,6 +1072,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * set the XF (format) record for this rec
 	 */
+	@Override
 	public void setXFRecord( int i )
 	{
 		if( i != ixfe || myxf == null )
@@ -1029,6 +1085,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * set the XF (format) record for this rec
 	 */
+	@Override
 	public void setIxfe( int i )
 	{
 		this.ixfe = i;
@@ -1044,6 +1101,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * get the ixfe
 	 */
+	@Override
 	public int getIxfe()
 	{
 		return this.ixfe;
@@ -1058,12 +1116,14 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		return null;
 	}
 
+	@Override
 	public void setByteReader( BlockByteReader db )
 	{
 		databuf = db;
 		data = null;
 	}
 
+	@Override
 	public BlockByteReader getByteReader()
 	{
 		return databuf;
@@ -1072,17 +1132,20 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * Hold onto the original encrypted bytes so we can do a look ahead on records
 	 */
+	@Override
 	public void setEncryptedByteReader( BlockByteReader db )
 	{
 		encryptedDatabuf = db;
 
 	}
 
+	@Override
 	public BlockByteReader getEncryptedByteReader()
 	{
 		return encryptedDatabuf;
 	}
 
+	@Override
 	public void setData( byte[] b )
 	{
 		data = b;
@@ -1093,6 +1156,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * gets the record data merging any Continue record
 	 * data.
 	 */
+	@Override
 	public byte[] getData()
 	{
 		int len = 0;
@@ -1176,6 +1240,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * @param off
 	 * @return
 	 */
+	@Override
 	public byte[] getBytes()
 	{
 		return this.getBytesAt( 0, this.getLength() );
@@ -1188,6 +1253,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * @param off
 	 * @return
 	 */
+	@Override
 	public byte[] getBytesAt( int off, int len )
 	{
 		if( this.data != null )
@@ -1229,6 +1295,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * @param off
 	 * @return
 	 */
+	@Override
 	public byte getByteAt( int off )
 	{
 		if( this.data != null )
@@ -1242,6 +1309,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		return this.databuf.get( this, off );
 	}
 
+	@Override
 	public void setLength( int len )
 	{
 		if( this.originalsize <= 0 )
@@ -1255,6 +1323,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 * Returns the length of this
 	 * record, including the 4 header bytes
 	 */
+	@Override
 	public int getLength()
 	{
 		if( data != null )
@@ -1287,6 +1356,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * @return Returns the isValueForCell.
 	 */
+	@Override
 	public boolean isValueForCell()
 	{
 		return isValueForCell;
@@ -1303,6 +1373,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * @return Returns the isReadOnly.
 	 */
+	@Override
 	public boolean isReadOnly()
 	{
 		return isReadOnly;
@@ -1311,6 +1382,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * @return Returns the streamer.
 	 */
+	@Override
 	public ByteStreamer getStreamer()
 	{
 		return streamer;
@@ -1319,6 +1391,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * @param streamer The streamer to set.
 	 */
+	@Override
 	public void setStreamer( ByteStreamer str )
 	{
 		streamer = str;
@@ -1327,11 +1400,13 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	/**
 	 * @return Returns the hyperlink.
 	 */
+	@Override
 	public Hlink getHyperlink()
 	{
 		return hyperlink;
 	}
 
+	@Override
 	public void postStream()
 	{
 		// nothing here -- use to blow out data

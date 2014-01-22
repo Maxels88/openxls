@@ -51,6 +51,7 @@ public class FrtWrapper extends GenericChartObject implements ChartObject
 	private int type;
 	public static final int DEFAULTTEXT = 0, TEXTDISPWITHDATALABELS = 1, BEGIN = 2, POS = 3, AI = 4, OBJECTLINK = 5, END = 6, TEXTDISP = 7;
 
+	@Override
 	public void init()
 	{
 		super.init();

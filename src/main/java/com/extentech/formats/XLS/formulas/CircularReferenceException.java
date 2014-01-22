@@ -33,6 +33,7 @@ public class CircularReferenceException extends CalculationException
 		super( error );
 	}
 
+	@Override
 	public String getName()
 	{
 		return "#CIR_ERR!";

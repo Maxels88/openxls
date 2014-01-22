@@ -143,6 +143,7 @@ public class ColorChoice implements OOXMLElement
 		return c;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -169,6 +170,7 @@ public class ColorChoice implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new ColorChoice( this );
@@ -287,6 +289,7 @@ class SchemeClr implements OOXMLElement
 		return sc;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -299,6 +302,7 @@ class SchemeClr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new SchemeClr( this );
@@ -402,6 +406,7 @@ class SysClr implements OOXMLElement
 		return sc;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -419,6 +424,7 @@ class SysClr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new SysClr( this );
@@ -520,6 +526,7 @@ class SrgbClr implements OOXMLElement
 		return sc;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -532,6 +539,7 @@ class SrgbClr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new SrgbClr( this );
@@ -621,6 +629,7 @@ class ScrgbClr implements OOXMLElement
 		return sc;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -642,6 +651,7 @@ class ScrgbClr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new ScrgbClr( this );
@@ -744,6 +754,7 @@ class PrstClr implements OOXMLElement
 		return sc;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -756,6 +767,7 @@ class PrstClr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new PrstClr( this );

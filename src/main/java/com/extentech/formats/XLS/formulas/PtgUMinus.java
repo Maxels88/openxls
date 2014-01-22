@@ -49,16 +49,19 @@ public class PtgUMinus extends GenericPtg implements Ptg
 		record[0] = 0x13;
 	}
 
+	@Override
 	public boolean getIsOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsPrimitiveOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsUnaryOperator()
 	{
 		return true;
@@ -67,6 +70,7 @@ public class PtgUMinus extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public int getLength()
 	{
 		return PTG_UMINUS_LENGTH;
@@ -75,6 +79,7 @@ public class PtgUMinus extends GenericPtg implements Ptg
 	/**
 	 * Operator specific calculate method, this one returns a single value sent to it.
 	 */
+	@Override
 	public Ptg calculatePtg( Ptg[] form )
 	{
 		if( form.length != 1 )
@@ -107,6 +112,7 @@ public class PtgUMinus extends GenericPtg implements Ptg
 		}
 	}
 
+	@Override
 	public String getString()
 	{
 		return "-";

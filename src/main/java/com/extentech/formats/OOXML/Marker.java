@@ -112,6 +112,7 @@ public final class Marker implements OOXMLElement
 		return m;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -132,6 +133,7 @@ public final class Marker implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Marker( this );

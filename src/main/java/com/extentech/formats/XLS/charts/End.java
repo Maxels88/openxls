@@ -39,6 +39,7 @@ public class End extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 9022736093645720842L;
 
+	@Override
 	public void init()
 	{
 		super.init();

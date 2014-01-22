@@ -41,6 +41,7 @@ public abstract class GenericRecycleBin extends java.lang.Thread implements Map,
 	/**
 	 * add an item
 	 */
+	@Override
 	public void addItem( Recyclable r ) throws RecycleBinFullException
 	{
 		if( (MAXITEMS == -1) || (map.size() < MAXITEMS) )
@@ -63,6 +64,7 @@ public abstract class GenericRecycleBin extends java.lang.Thread implements Map,
 		return active.size();
 	}
 
+	@Override
 	public void addItem( Object key, Recyclable r ) throws RecycleBinFullException
 	{
 		// recycle();
@@ -112,12 +114,14 @@ public abstract class GenericRecycleBin extends java.lang.Thread implements Map,
 
 	}
 
+	@Override
 	public void empty()
 	{
 		map.clear();
 		active.clear();
 	}
 
+	@Override
 	public synchronized List getAll()
 	{
 		return active;
@@ -128,6 +132,7 @@ public abstract class GenericRecycleBin extends java.lang.Thread implements Map,
 	 *
 	 * @see com.extentech.toolkit.RecycleBin#getItem()
 	 */
+	@Override
 	public synchronized Recyclable getItem() throws RecycleBinFullException
 	{
 		Recyclable active = null;
@@ -150,6 +155,7 @@ public abstract class GenericRecycleBin extends java.lang.Thread implements Map,
 	 * max number of items to be put
 	 * in this bin.
 	 */
+	@Override
 	public void setMaxItems( int i )
 	{
 		MAXITEMS = i;
@@ -169,23 +175,27 @@ public abstract class GenericRecycleBin extends java.lang.Thread implements Map,
 	{
 	}
 
+	@Override
 	public void clear()
 	{
 		map.clear();
 		active.clear();
 	}
 
+	@Override
 	public boolean containsKey( Object key )
 	{
 		return map.containsKey( key );
 
 	}
 
+	@Override
 	public boolean containsValue( Object value )
 	{
 		return map.containsValue( value );
 	}
 
+	@Override
 	public Set entrySet()
 	{
 		return map.entrySet();
@@ -196,6 +206,7 @@ public abstract class GenericRecycleBin extends java.lang.Thread implements Map,
 		return map.equals( o );
 	}
 
+	@Override
 	public Object get( Object key )
 	{
 		return map.get( key );
@@ -206,34 +217,40 @@ public abstract class GenericRecycleBin extends java.lang.Thread implements Map,
 		return map.hashCode();
 	}
 
+	@Override
 	public boolean isEmpty()
 	{
 		return map.isEmpty();
 	}
 
+	@Override
 	public Set keySet()
 	{
 		return map.keySet();
 	}
 
+	@Override
 	public Object put( Object arg0, Object arg1 )
 	{
 		active.add( arg1 );
 		return map.put( arg0, arg1 );
 	}
 
+	@Override
 	public void putAll( Map arg0 )
 	{
 		active.addAll( arg0.entrySet() );
 		map.putAll( arg0 );
 	}
 
+	@Override
 	public Object remove( Object key )
 	{
 		active.remove( map.get( key ) );
 		return map.remove( key );
 	}
 
+	@Override
 	public int size()
 	{
 		return map.size();
@@ -244,6 +261,7 @@ public abstract class GenericRecycleBin extends java.lang.Thread implements Map,
 		return map.toString();
 	}
 
+	@Override
 	public Collection values()
 	{
 		return map.values();

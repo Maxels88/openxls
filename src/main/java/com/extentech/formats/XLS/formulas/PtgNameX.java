@@ -50,6 +50,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 	short ixti;
 	int ilbl;
 
+	@Override
 	public boolean getIsOperand()
 	{
 
@@ -57,6 +58,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 	}
 
 	//lookup Name object  in Workbook and return handle
+	@Override
 	public Name getName()
 	{
 		WorkBook b = this.getParentRec().getSheet().getWorkBook();
@@ -79,6 +81,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 		return n;
 	}
 
+	@Override
 	public void addListener()
 	{
 		try
@@ -91,6 +94,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 		}
 	}
 
+	@Override
 	public void init( byte[] b )
 	{
 		ptgId = b[0];
@@ -105,6 +109,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 		ilbl = ByteTools.readShort( record[3], record[4] );
 	}
 
+	@Override
 	public int getVal()
 	{
 		return ilbl;
@@ -115,6 +120,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 	 * returns the string value of the name
 		@see com.extentech.formats.XLS.formulas.Ptg#getValue()
 	 */
+	@Override
 	public Object getValue()
 	{
 
@@ -148,6 +154,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 		}
 	}
 
+	@Override
 	public String getTextString()
 	{
 		Object o = getValue();
@@ -158,6 +165,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 		return o.toString();
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_NAMEX_LENGTH;
@@ -166,6 +174,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 	/**
 	 * @return Returns the ixti.
 	 */
+	@Override
 	public short getIxti()
 	{
 		return ixti;
@@ -174,6 +183,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 	/**
 	 * @param ixti The ixti to set.
 	 */
+	@Override
 	public void setIxti( short ixti )
 	{
 		this.ixti = ixti;
@@ -184,6 +194,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 	/**
 	 * For creating a ptg namex from formula parser
 	 */
+	@Override
 	public void setName( String name )
 	{
 		ptgId = 0x39;    // PtgNameX

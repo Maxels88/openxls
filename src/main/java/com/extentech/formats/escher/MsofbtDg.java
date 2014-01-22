@@ -38,6 +38,7 @@ public class MsofbtDg extends EscherRecord
 		super( fbt, inst, version );
 	}
 
+	@Override
 	protected byte[] getData()
 	{
 		byte[] cspBytes, spIdBytes;

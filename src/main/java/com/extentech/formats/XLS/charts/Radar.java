@@ -43,6 +43,7 @@ public class Radar extends GenericChartObject implements ChartObject
 	private boolean fRdrAxLab = true;
 	private boolean fHasShadow = false;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -74,6 +75,7 @@ public class Radar extends GenericChartObject implements ChartObject
 	/**
 	 * @return String XML representation of this chart-type's options
 	 */
+	@Override
 	public String getOptionsXML()
 	{
 		StringBuffer sb = new StringBuffer();
@@ -91,6 +93,7 @@ public class Radar extends GenericChartObject implements ChartObject
 	/**
 	 * Handle setting options from XML in a generic manner
 	 */
+	@Override
 	public boolean setChartOption( String op, String val )
 	{
 		boolean bHandled = false;

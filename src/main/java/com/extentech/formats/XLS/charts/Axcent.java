@@ -66,6 +66,7 @@ public class Axcent extends GenericChartObject implements ChartObject
 	private static final long serialVersionUID = -660100252646337769L;
 	short catMin, catMax, catMajor, duMajor, catMinor, duMinor, duBase, catCrossDate, grbit;
 
+	@Override
 	public void init()
 	{
 		super.init();

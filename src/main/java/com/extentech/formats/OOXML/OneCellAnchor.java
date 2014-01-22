@@ -116,6 +116,7 @@ public class OneCellAnchor implements OOXMLElement
 		return oca;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -131,6 +132,7 @@ public class OneCellAnchor implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new OneCellAnchor( this );

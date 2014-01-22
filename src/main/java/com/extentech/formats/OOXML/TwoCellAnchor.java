@@ -136,6 +136,7 @@ public class TwoCellAnchor implements OOXMLElement
 		return tca;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -159,6 +160,7 @@ public class TwoCellAnchor implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new TwoCellAnchor( this );
@@ -672,6 +674,7 @@ class From implements OOXMLElement
 		return f;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -684,6 +687,7 @@ class From implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new From( this );
@@ -783,6 +787,7 @@ class To implements OOXMLElement
 		return f;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -795,6 +800,7 @@ class To implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new To( this );

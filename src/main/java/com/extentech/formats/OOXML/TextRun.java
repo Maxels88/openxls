@@ -119,6 +119,7 @@ public class TextRun implements OOXMLElement
 		return oe;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -137,6 +138,7 @@ public class TextRun implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new TextRun( this );
@@ -196,6 +198,7 @@ class r implements OOXMLElement
 		this.t = run.t;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		if( t == null || t.equals( "" ) )
@@ -257,6 +260,7 @@ class r implements OOXMLElement
 		return run;
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new r( this );
@@ -297,6 +301,7 @@ class Br implements OOXMLElement
 		this.rp = b.rp;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -346,6 +351,7 @@ class Br implements OOXMLElement
 		return b;
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Br( this );
@@ -385,6 +391,7 @@ class Fld implements OOXMLElement
 		this.p = f.p;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		if( t == null || t.equals( "" ) )
@@ -479,6 +486,7 @@ class Fld implements OOXMLElement
 		return f;
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Fld( this );
@@ -599,6 +607,7 @@ class RPr implements OOXMLElement
 		return rp;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -649,6 +658,7 @@ class RPr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new RPr( this );

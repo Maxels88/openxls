@@ -130,11 +130,13 @@ public class PtgRef extends GenericPtg implements Ptg
 
 	public boolean wholeRow = false, wholeCol = false;    // denotes a range which spans the entire row or column, a shorthand for checking end col or row # as this will vary between excel versions
 
+	@Override
 	public boolean getIsOperand()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsReference()
 	{
 		return true;
@@ -225,6 +227,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		record[0] = ptgId;
 	}
 
+	@Override
 	public void init( byte[] b )
 	{
 		ptgId = b[0];
@@ -286,6 +289,7 @@ public class PtgRef extends GenericPtg implements Ptg
 	 * return the human-readable String representation of
 	 * this ptg -- if applicable
 	 */
+	@Override
 	public String getString()
 	{
 		return this.getLocation();
@@ -357,6 +361,7 @@ public class PtgRef extends GenericPtg implements Ptg
 	 *
 	 * @see com.extentech.formats.XLS.formulas.GenericPtg#getLocation()
 	 */
+	@Override
 	public String getLocation()
 	{
 		if( locax != null )//cache
@@ -391,6 +396,7 @@ public class PtgRef extends GenericPtg implements Ptg
 	/**
 	 * Get the location of this ptgRef as an int array {row, col}.  0 based
 	 */
+	@Override
 	public int[] getIntLocation()
 	{
 
@@ -537,6 +543,7 @@ public class PtgRef extends GenericPtg implements Ptg
 	 * Set the location of this PtgRef.  This takes a location
 	 * such as "a14",   also can take a absolute location, such as $A14
 	 */
+	@Override
 	public void setLocation( String address )
 	{
 		locax = null;
@@ -951,6 +958,7 @@ public class PtgRef extends GenericPtg implements Ptg
 	/**
 	 * Updates the record bytes so it can be pulled back out.
 	 */
+	@Override
 	public void updateRecord()
 	{
 		byte[] tmp = new byte[5];
@@ -988,6 +996,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		col = (short) col & 0x3FFF;    //get lower 14 bits which represent the actual column;
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_REF_LENGTH;
@@ -998,6 +1007,7 @@ public class PtgRef extends GenericPtg implements Ptg
 	 *
 	 * @return
 	 */
+	@Override
 	public boolean isBlank()
 	{
 		getRefCells();
@@ -1007,6 +1017,7 @@ public class PtgRef extends GenericPtg implements Ptg
 	/**
 	 * returns the value of the cell refereced by the PtgRef
 	 */
+	@Override
 	public Object getValue()
 	{
 		getRefCells();
@@ -1202,6 +1213,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		return true;
 	}
 
+	@Override
 	public void setParentRec( XLSRecord f )
 	{
 		parent_rec = f;
@@ -1412,6 +1424,7 @@ public class PtgRef extends GenericPtg implements Ptg
 	/**
 	 * clear out object references in prep for closing workbook
 	 */
+	@Override
 	public void close()
 	{
 		if( useReferenceTracker )

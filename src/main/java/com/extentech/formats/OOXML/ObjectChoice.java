@@ -121,6 +121,7 @@ public class ObjectChoice implements OOXMLElement
 		return o;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -147,6 +148,7 @@ public class ObjectChoice implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new ObjectChoice( this );

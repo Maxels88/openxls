@@ -140,6 +140,7 @@ public class Sp implements OOXMLElement
 		return shp;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -167,6 +168,7 @@ public class Sp implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Sp( this );
@@ -400,6 +402,7 @@ class NvSpPr implements OOXMLElement
 		return nvp;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -410,6 +413,7 @@ class NvSpPr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new NvSpPr( this );
@@ -575,6 +579,7 @@ class CNvSpPr implements OOXMLElement
 		return cnv;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -592,6 +597,7 @@ class CNvSpPr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new CNvSpPr( this );
@@ -662,6 +668,7 @@ class SpLocks implements OOXMLElement
 		return sp;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -678,6 +685,7 @@ class SpLocks implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new SpLocks( this );

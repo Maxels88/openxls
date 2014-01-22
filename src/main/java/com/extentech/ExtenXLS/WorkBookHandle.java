@@ -280,6 +280,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 *
 	 * @return
 	 */
+	@Override
 	public java.awt.Color[] getColorTable()
 	{
 		return this.getWorkBook().getColorTable();
@@ -298,6 +299,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	/**
 	 * Gets the date format used by this book.
 	 */
+	@Override
 	public DateConverter.DateFormat getDateFormat()
 	{
 		return mybook.getDateFormat();
@@ -340,6 +342,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * @param address
 	 * @return
 	 */
+	@Override
 	public CellHandle getCell( String address ) throws CellNotFoundException, WorkSheetNotFoundException
 	{
 		int shtpos = address.indexOf( "!" );
@@ -376,6 +379,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * @param String name of the PivotTable
 	 * @return PivotTable the PivotTable
 	 */
+	@Override
 	public PivotTableHandle getPivotTable( String ptname ) throws PivotTableNotFoundException
 	{
 		Sxview st = mybook.getPivotTableView( ptname );
@@ -391,6 +395,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 *
 	 * @return PivotTable[] all of the WorkBooks PivotTables
 	 */
+	@Override
 	public PivotTableHandle[] getPivotTables() throws PivotTableNotFoundException
 	{
 		Sxview[] sxv = mybook.getAllPivotTableViews();
@@ -427,6 +432,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 *
 	 * @param CalcMode Calculation mode to use in workbook.
 	 */
+	@Override
 	public void setFormulaCalculationMode( int CalcMode )
 	{
 		mybook.setCalcMode( CalcMode );
@@ -449,6 +455,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 *
 	 * @param CalcMode Calculation mode to use in workbook.
 	 */
+	@Override
 	public int getFormulaCalculationMode()
 	{
 		return mybook.getCalcMode();
@@ -463,6 +470,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 *
 	 * @param boolean whether to protect the book
 	 */
+	@Override
 	public void setProtected( boolean protect )
 	{
 		//TODO: Check that this behavior is correct
@@ -493,6 +501,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	// should be a double as Excel units are 1/20 of what is stored in defaultrowheight
 	// e.g. 12.75 is Excel Units, twips =  12.75*20 = 256 (approx)
 	// should expect users to use Excel units and target method do the 20* conversion
+	@Override
 	public void setDefaultRowHeight( int t )
 	{
 		mybook.setDefaultRowHeight( t );
@@ -507,6 +516,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * This setting is roughly the width of the character '0'
 	 * The default width of a column is 8.
 	 */
+	@Override
 	public void setDefaultColWidth( int t )
 	{
 		mybook.setDefaultColWidth( t );
@@ -585,6 +595,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 *
 	 * @return NameHandle a Named range in the WorkBook
 	 */
+	@Override
 	public NameHandle getNamedRange( String rangename ) throws CellNotFoundException
 	{
 		Name nand = mybook.getName( rangename.toUpperCase() );    // case-insensitive
@@ -640,6 +651,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 */
 	// KSC: NOTE: this methodology needs work as a book may contain charts in different sheets containing the same name
 	// TODO: rethink
+	@Override
 	public ChartHandle getChart( String chartname ) throws ChartNotFoundException
 	{
 		return new ChartHandle( mybook.getChart( chartname ), this );
@@ -650,6 +662,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 *
 	 * @return ChartHandle[] an array of all Charts in the WorkBook
 	 */
+	@Override
 	public ChartHandle[] getCharts()
 	{
 		AbstractList cv = mybook.getChartVect();
@@ -688,6 +701,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 *
 	 * @return NameHandle[] all of the Named ranges in the WorkBook
 	 */
+	@Override
 	public NameHandle[] getNamedRanges()
 	{
 		Name[] nand = mybook.getNames();
@@ -722,6 +736,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 *
 	 * @return String name of WorkBook
 	 */
+	@Override
 	public String getName()
 	{
 		if( name != null )
@@ -736,6 +751,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 *
 	 * @return CellHandle array of all book cells
 	 */
+	@Override
 	public CellHandle[] getCells()
 	{
 		BiffRec[] allcz = this.mybook.getCells();
@@ -769,6 +785,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 *
 	 * @return int number of Cells
 	 */
+	@Override
 	public int getNumCells()
 	{
 		return mybook.getNumCells();
@@ -798,6 +815,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * output. Use the {@link #write} family of methods instead.
 	 * If you need a byte array use {@link ByteArrayOutputStream}.
 	 */
+	@Override
 	@Deprecated
 	public byte[] getBytes()
 	{
@@ -931,6 +949,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	/**
 	 * Gets the constant representing this document's native format.
 	 */
+	@Override
 	public int getFormat()
 	{
 		String name = this.getFileName().toLowerCase();
@@ -980,6 +999,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		}
 	}
 
+	@Override
 	public String getFileExtension()
 	{
 		switch( this.getFormat() )
@@ -1018,6 +1038,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * @throws IllegalArgumentException if the given type code is invalid
 	 * @throws IOException              if an error occurs while writing to the stream
 	 */
+	@Override
 	public void write( OutputStream dest, int format ) throws IOException
 	{
 		if( format == FORMAT_NATIVE )
@@ -1145,6 +1166,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * @return for debugging: a StringBuffer containing an output of the record bytes streamed
 	 * @deprecated Use {@link #write(OutputStream, int)} instead.
 	 */
+	@Override
 	@Deprecated
 	public StringBuffer writeBytes( OutputStream dest )
 	{
@@ -1664,6 +1686,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	/**
 	 * Closes the WorkBook and releases resources.
 	 */
+	@Override
 	public void close()
 	{
 		try
@@ -1692,11 +1715,13 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 //	   Runtime.getRuntime().gc();
 	}
 
+	@Override
 	protected void finalize() throws Throwable
 	{
 		close();
 	}
 
+	@Override
 	public void reset()
 	{
 		initFromFile( new File( myLEOFile.getFileName() ) );
@@ -1708,6 +1733,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 *
 	 * @return WorkSheetHandle[] Array of all WorkSheets in WorkBook
 	 */
+	@Override
 	public WorkSheetHandle[] getWorkSheets()
 	{
 		try
@@ -1747,6 +1773,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * @throws WorkSheetNotFoundException if the specified WorkSheet is
 	 *                                    not found in the WorkBook.
 	 */
+	@Override
 	public WorkSheetHandle getWorkSheet( int sheetnum ) throws WorkSheetNotFoundException
 	{
 		Boundsheet st = mybook.getWorkSheetByNumber( sheetnum );
@@ -1772,6 +1799,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * @throws WorkSheetNotFoundException if the specified WorkSheet is
 	 *                                    not found in the WorkBook.
 	 */
+	@Override
 	public WorkSheetHandle getWorkSheet( String handstr ) throws WorkSheetNotFoundException
 	{
 		if( sheethandles.get( handstr ) != null )
@@ -1822,6 +1850,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * variables on a WorkBook object are subject
 	 * to change without notice in new versions of ExtenXLS.
 	 */
+	@Override
 	public com.extentech.formats.XLS.WorkBook getWorkBook()
 	{
 		return (com.extentech.formats.XLS.WorkBook) this.mybook;
@@ -1861,6 +1890,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 *
 	 * @param int String Encoding Mode
 	 */
+	@Override
 	public void setStringEncodingMode( int mode )
 	{
 		mybook.setStringEncodingMode( mode );
@@ -1899,6 +1929,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 *
 	 * @param int Duplicate String Handling Mode
 	 */
+	@Override
 	public void setDupeStringMode( int mode )
 	{
 		mybook.setDupeStringMode( mode );
@@ -1910,6 +1941,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * @param chartname
 	 * @param sheetname
 	 */
+	@Override
 	public void copyChartToSheet( String chartname, String sheetname ) throws ChartNotFoundException, WorkSheetNotFoundException
 	{
 		mybook.copyChartToSheet( chartname, sheetname );
@@ -1921,6 +1953,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * @param chart
 	 * @param sheet
 	 */
+	@Override
 	public void copyChartToSheet( ChartHandle chart, WorkSheetHandle sheet ) throws ChartNotFoundException, WorkSheetNotFoundException
 	{
 		mybook.copyChartToSheet( chart.getTitle(), sheet.getSheetName() );
@@ -1933,6 +1966,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * @param String the Name of the new (destination) worksheet;
 	 * @return the new WorkSheetHandle
 	 */
+	@Override
 	public WorkSheetHandle copyWorkSheet( String SourceSheetName, String NewSheetName ) throws WorkSheetNotFoundException
 	{
 		try
@@ -1978,6 +2012,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * @see #forceRecalc()
 	 * @see #recalc()
 	 */
+	@Override
 	public void calculateFormulas()
 	{
 		markFormulasDirty();
@@ -2042,6 +2077,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * NOTE: A WorkBook with no sheets is *invalid* and will not open in Excel.  You must add
 	 * sheets to this WorkBook for it to be valid.
 	 */
+	@Override
 	public void removeAllWorkSheets()
 	{
 
@@ -2109,6 +2145,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * @return WorkBookHandle - the empty WorkBookHandle duplicate
 	 * @see addSheetFromWorkBook
 	 */
+	@Override
 	public WorkBookHandle getNoSheetWorkBook()
 	{
 		// to avoid ByteStreamer.stream records expansion
@@ -2128,6 +2165,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * @param destSheetName   - the name of the new sheet in this workbook
 	 * @deprecated - use addWorkSheet(WorkSheetHandle sht, String NewSheetName){
 	 */
+	@Override
 	public boolean addSheetFromWorkBook( WorkBookHandle sourceBook, String sourceSheetName, String destSheetName )
 	{
 		try
@@ -2262,6 +2300,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * @param WorkSheetHandle the source WorkSheetHandle;
 	 * @param String          the Name of the new (destination) worksheet;
 	 */
+	@Override
 	public WorkSheetHandle addWorkSheet( WorkSheetHandle sourceSheet, String NewSheetName )
 	{
 		sourceSheet.getSheet().populateForTransfer();   // copy all formatting + images for this sheet
@@ -2446,6 +2485,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 * @param name the name of the newly created worksheet
 	 * @return the new WorkSheetHandle
 	 */
+	@Override
 	public WorkSheetHandle createWorkSheet( String name )
 	{
 		try
@@ -2494,6 +2534,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	/**
 	 * Returns an array of all FormatHandles in the workbook
 	 */
+	@Override
 	public FormatHandle[] getFormats()
 	{
 		List l = this.mybook.getXfrecs();

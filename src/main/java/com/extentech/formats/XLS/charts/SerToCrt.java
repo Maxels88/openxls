@@ -36,6 +36,7 @@ public class SerToCrt extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 8217594656389677975L;
 
+	@Override
 	public void init()
 	{
 		super.init();

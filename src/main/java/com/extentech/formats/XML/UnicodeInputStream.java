@@ -164,6 +164,7 @@ public class UnicodeInputStream extends InputStream
 		isInited = true;
 	}
 
+	@Override
 	public void close() throws IOException
 	{
 		//init();
@@ -171,6 +172,7 @@ public class UnicodeInputStream extends InputStream
 		internalIn.close();
 	}
 
+	@Override
 	public int read() throws IOException
 	{
 		//init();

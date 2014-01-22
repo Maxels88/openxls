@@ -43,16 +43,19 @@ public class PtgIsect extends GenericPtg implements Ptg
 	 */
 	private static final long serialVersionUID = -2131759675781833457L;
 
+	@Override
 	public boolean getIsOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsBinaryOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsPrimitiveOperator()
 	{
 		return true;
@@ -73,11 +76,13 @@ public class PtgIsect extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return " ";
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_ISECT_LENGTH;
@@ -90,6 +95,7 @@ public class PtgIsect extends GenericPtg implements Ptg
 	 * range is empty, the formula will return the error code “#NULL!” (for instance A1:A2 B3).
 	 * A1:B2 B2:C3 ==> B2
 	 */
+	@Override
 	public Ptg calculatePtg( Ptg[] form )
 	{
 		if( form.length != 2 )

@@ -107,6 +107,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 	// pointer to associated Txo, stores actual text + formatting runs
 	Txo txo = null;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -137,6 +138,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 		}
 	}
 
+	@Override
 	public void setSheet( Sheet bs )
 	{
 		super.setSheet( bs );

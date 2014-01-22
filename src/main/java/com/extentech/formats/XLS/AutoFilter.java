@@ -91,6 +91,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * initialize the AutoFilter record
 	 */
+	@Override
 	public void init()
 	{
 		super.init();
@@ -623,6 +624,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 	 *
 	 * @see com.extentech.formats.XLS.XLSRecord#preStream()
 	 */
+	@Override
 	public void preStream()
 	{
 		// no need to update unless things have changed ... this.update();
@@ -805,6 +807,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 	 * @return Object value
 	 * @see getVal2
 	 */
+	@Override
 	public Object getVal()
 	{
 		return doper1.toString();

@@ -133,6 +133,7 @@ public class SheetPr implements OOXMLElement
 		return sp;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -164,6 +165,7 @@ public class SheetPr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new SheetPr( this );
@@ -259,6 +261,7 @@ class TabColor implements OOXMLElement
 		return t;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -275,6 +278,7 @@ class TabColor implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new TabColor( this );
@@ -341,6 +345,7 @@ class OutlinePr implements OOXMLElement
 		return op;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -357,6 +362,7 @@ class OutlinePr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new OutlinePr( this );
@@ -432,6 +438,7 @@ class PageSetupPr implements OOXMLElement
 		return pr;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -449,6 +456,7 @@ class PageSetupPr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new PageSetupPr( this );

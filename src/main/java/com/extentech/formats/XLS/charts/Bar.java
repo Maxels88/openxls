@@ -60,6 +60,7 @@ public class Bar extends GenericChartObject implements ChartObject
 	protected short pcOverlap = 0;
 	protected short pcGap = 50;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -82,16 +83,19 @@ public class Bar extends GenericChartObject implements ChartObject
 	}
 
 	// 20070716 KSC: get/set methods for format options
+	@Override
 	public boolean isStacked()
 	{
 		return fStacked;
 	}
 
+	@Override
 	public boolean is100Percent()
 	{
 		return f100;
 	}
 
+	@Override
 	public boolean hasShadow()
 	{
 		return fHasShadow;
@@ -112,6 +116,7 @@ public class Bar extends GenericChartObject implements ChartObject
 	 *
 	 * @param bIsClustered
 	 */
+	@Override
 	public void setIsStacked( boolean bIsStacked )
 	{
 		fStacked = bIsStacked;
@@ -124,6 +129,7 @@ public class Bar extends GenericChartObject implements ChartObject
 		updateRecord();
 	}
 
+	@Override
 	public void setIs100Percent( boolean bOn )
 	{
 		f100 = bOn;
@@ -218,6 +224,7 @@ public class Bar extends GenericChartObject implements ChartObject
 	/**
 	 * Set specific options
 	 */
+	@Override
 	public boolean setChartOption( String op, String val )
 	{
 		boolean bHandled = false;
@@ -252,6 +259,7 @@ public class Bar extends GenericChartObject implements ChartObject
 	/**
 	 * look up bar-specific chart options such as "Gap" or "Overlap" setting
 	 */
+	@Override
 	public String getChartOption( String op )
 	{
 		if( op.equals( "Gap" ) )

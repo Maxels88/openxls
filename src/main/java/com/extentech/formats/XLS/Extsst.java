@@ -98,6 +98,7 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 		return true;
 	}
 
+	@Override
 	public void init()
 	{
 		debug = true;
@@ -265,6 +266,7 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 		}
 	}
 
+	@Override
 	public void preStream()
 	{
 		try

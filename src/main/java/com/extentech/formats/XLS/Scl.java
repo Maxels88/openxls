@@ -116,6 +116,7 @@ public final class Scl extends com.extentech.formats.XLS.XLSRecord
 		return ((float) num / (float) denum);
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();

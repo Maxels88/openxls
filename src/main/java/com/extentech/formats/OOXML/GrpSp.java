@@ -146,6 +146,7 @@ public class GrpSp implements OOXMLElement
 	/**
 	 * return grpSp element OOXML
 	 */
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -596,6 +597,7 @@ public class GrpSp implements OOXMLElement
 		}
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new GrpSp( this );
@@ -669,6 +671,7 @@ class NvGrpSpPr implements OOXMLElement
 		return grpsppr;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -679,6 +682,7 @@ class NvGrpSpPr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new NvGrpSpPr( this );
@@ -865,6 +869,7 @@ class GrpSpPr implements OOXMLElement
 		return g;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -891,6 +896,7 @@ class GrpSpPr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new GrpSpPr( this );
@@ -956,6 +962,7 @@ class CNvGrpSpPr implements OOXMLElement
 		return c;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -968,6 +975,7 @@ class CNvGrpSpPr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new CNvGrpSpPr( this );
@@ -1038,6 +1046,7 @@ class GrpSpLocks implements OOXMLElement
 		return g;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -1054,6 +1063,7 @@ class GrpSpLocks implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new GrpSpLocks( this );

@@ -39,6 +39,7 @@ public class NamingEnumerationImpl implements NamingEnumeration
 	/* (non-Javadoc)
 	 * @see javax.naming.NamingEnumeration#close()
 	 */
+	@Override
 	public void close() throws NamingException
 	{
 		e = null;
@@ -47,6 +48,7 @@ public class NamingEnumerationImpl implements NamingEnumeration
 	/* (non-Javadoc)
 	 * @see javax.naming.NamingEnumeration#hasMore()
 	 */
+	@Override
 	public boolean hasMore() throws NamingException
 	{
 		return e.hasMoreElements();
@@ -55,6 +57,7 @@ public class NamingEnumerationImpl implements NamingEnumeration
 	/* (non-Javadoc)
 	 * @see javax.naming.NamingEnumeration#next()
 	 */
+	@Override
 	public Object next() throws NamingException
 	{
 		return e.nextElement();
@@ -63,6 +66,7 @@ public class NamingEnumerationImpl implements NamingEnumeration
 	/* (non-Javadoc)
 	 * @see java.util.Enumeration#hasMoreElements()
 	 */
+	@Override
 	public boolean hasMoreElements()
 	{
 		return e.hasMoreElements();
@@ -71,6 +75,7 @@ public class NamingEnumerationImpl implements NamingEnumeration
 	/* (non-Javadoc)
 	 * @see java.util.Enumeration#nextElement()
 	 */
+	@Override
 	public Object nextElement()
 	{
 		return e.nextElement();

@@ -178,6 +178,7 @@ public class Fill implements OOXMLElement
 		return "FF" + rgbcolor;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		return getOOXML( false );
@@ -206,6 +207,7 @@ public class Fill implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Fill( this );
@@ -627,6 +629,7 @@ class PatternFill implements OOXMLElement
 		return p;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -697,6 +700,7 @@ class PatternFill implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new PatternFill( this );
@@ -1010,6 +1014,7 @@ class GradientFill implements OOXMLElement
 		return g;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -1034,6 +1039,7 @@ class GradientFill implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new GradientFill( this );
@@ -1114,6 +1120,7 @@ class FgColor implements OOXMLElement
 		return f;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -1130,6 +1137,7 @@ class FgColor implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new FgColor( this );
@@ -1297,6 +1305,7 @@ class BgColor implements OOXMLElement
 		return f;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -1313,6 +1322,7 @@ class BgColor implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new BgColor( this );
@@ -1458,6 +1468,7 @@ class Stop implements OOXMLElement
 		return s;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -1472,6 +1483,7 @@ class Stop implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Stop( this );

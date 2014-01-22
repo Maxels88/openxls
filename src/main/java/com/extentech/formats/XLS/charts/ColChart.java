@@ -42,6 +42,7 @@ public class ColChart extends ChartType
 	/**
 	 * @return truth of "Chart is Clustered"  (Bar/Col only)
 	 */
+	@Override
 	public boolean isClustered()
 	{
 		return (/*cf.isClustered());	*/ (!isStacked() && !is100PercentStacked()));
@@ -57,6 +58,7 @@ public class ColChart extends ChartType
 	 * @param seriescolors int[] of series or bar colors color ints
 	 * @return String svg
 	 */
+	@Override
 	public String getSVG( HashMap<String, Double> chartMetrics, HashMap<String, Object> axisMetrics, ChartSeries s )
 	{
 		double x = chartMetrics.get( "x" );    // + (!yAxisReversed?0:w);	// x is constant at x origin unless reversed
@@ -127,6 +129,7 @@ public class ColChart extends ChartType
 	 *
 	 * @return
 	 */
+	@Override
 	public StringBuffer getOOXML( String catAxisId, String valAxisId, String serAxisId )
 	{
 		StringBuffer cooxml = new StringBuffer();

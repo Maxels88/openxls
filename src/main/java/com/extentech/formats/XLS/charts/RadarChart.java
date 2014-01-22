@@ -70,6 +70,7 @@ public class RadarChart extends ChartType
 	 * @param seriescolors int[] of series or bar colors color ints
 	 * @return String svg
 	 */
+	@Override
 	public String getSVG( HashMap<String, Double> chartMetrics, HashMap<String, Object> axisMetrics, ChartSeries s )
 	{
 		double x = chartMetrics.get( "x" ); // + (!yAxisReversed?0:w); // x is
@@ -177,6 +178,7 @@ public class RadarChart extends ChartType
 	 *
 	 * @return
 	 */
+	@Override
 	public StringBuffer getOOXML( String catAxisId, String valAxisId, String serAxisId )
 	{
 		StringBuffer cooxml = new StringBuffer();

@@ -120,6 +120,7 @@ public class Chart extends GenericChartObject implements ChartObject
         return copy;
      }*/
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -1429,6 +1430,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	/**
 	 * @return truth of "Chart is Stacked"
 	 */
+	@Override
 	public boolean isStacked()
 	{
 		return isStacked( 0 );
@@ -1501,6 +1503,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 * @see ExtenXLS.handleChartElement
 	 * @see ChartHandle.getXML
 	 */
+	@Override
 	public boolean setChartOption( String op, String val )
 	{
 		dirtyflag = true;
@@ -1530,6 +1533,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 * @param op String option e.g. Shadow or Percentage
 	 * @return String value of option
 	 */
+	@Override
 	public String getChartOption( String op )
 	{
 		return ((ChartType) chartgroup.get( 0 )).getChartOption( op );
@@ -1802,6 +1806,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	/**
 	 * set the sheet for this chart plus its subrecords as well
 	 */
+	@Override
 	public void setSheet( Sheet b )
 	{
 		super.setSheet( b );

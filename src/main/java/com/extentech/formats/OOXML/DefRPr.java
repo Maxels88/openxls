@@ -212,6 +212,7 @@ public class DefRPr implements OOXMLElement
 		this.attrs = dp.attrs;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -257,6 +258,7 @@ public class DefRPr implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new DefRPr( this );

@@ -47,6 +47,7 @@ public class Pie extends GenericChartObject implements ChartObject
 	private boolean fHasShadow = false, fShowLdrLines = false;
 	protected short pcDonut = 0, anStart = 0;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -149,6 +150,7 @@ public class Pie extends GenericChartObject implements ChartObject
 	/**
 	 * @return String XML representation of this chart-type's options
 	 */
+	@Override
 	public String getOptionsXML()
 	{
 		StringBuffer sb = new StringBuffer();
@@ -170,6 +172,7 @@ public class Pie extends GenericChartObject implements ChartObject
 	/**
 	 * Handle setting options from XML in a generic manner
 	 */
+	@Override
 	public boolean setChartOption( String op, String val )
 	{
 		boolean bHandled = false;
@@ -196,6 +199,7 @@ public class Pie extends GenericChartObject implements ChartObject
 		return bHandled;
 	}
 
+	@Override
 	public String getChartOption( String op )
 	{
 		if( op.equals( "ShowLdrLines" ) )
@@ -212,6 +216,7 @@ public class Pie extends GenericChartObject implements ChartObject
 		}
 	}
 
+	@Override
 	public boolean hasShadow()
 	{
 		return fHasShadow;

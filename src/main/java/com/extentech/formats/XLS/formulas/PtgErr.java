@@ -61,6 +61,7 @@ public class PtgErr extends GenericPtg implements Ptg
 
 	private String errorValue = null;
 
+	@Override
 	public boolean getIsOperand()
 	{
 		return true;
@@ -83,11 +84,13 @@ public class PtgErr extends GenericPtg implements Ptg
 		return record[1];
 	}
 
+	@Override
 	public Object getValue()
 	{
 		return toString();
 	}
 
+	@Override
 	public void init( byte[] b )
 	{
 		ptgId = b[0];
@@ -166,6 +169,7 @@ public class PtgErr extends GenericPtg implements Ptg
 		return ERROR_NULL;
 	}
 
+	@Override
 	public int getLength()
 	{
 		return 2;

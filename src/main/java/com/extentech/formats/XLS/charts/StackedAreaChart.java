@@ -37,6 +37,7 @@ public class StackedAreaChart extends AreaChart
 		area = (Area) charttype;
 	}
 
+	@Override
 	public boolean isStacked()
 	{
 		return true;
@@ -52,6 +53,7 @@ public class StackedAreaChart extends AreaChart
 	 * @param seriescolors int[] of series or bar colors color ints
 	 * @return String svg
 	 */
+	@Override
 	public String getSVG( HashMap<String, Double> chartMetrics, HashMap<String, Object> axisMetrics, ChartSeries s )
 	{
 		double x = chartMetrics.get( "x" );

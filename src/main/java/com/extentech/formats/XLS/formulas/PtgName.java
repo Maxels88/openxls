@@ -52,6 +52,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 	short ilbl;
 	String name;
 
+	@Override
 	public boolean getIsOperand()
 	{
 
@@ -73,6 +74,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 		return n;
 	}
 
+	@Override
 	public void init( byte[] b )
 	{
 		ptgId = b[0];
@@ -165,16 +167,19 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 		return (int) ilbl;
 	}
 
+	@Override
 	public short getIlbl()
 	{
 		return ilbl;
 	}
 
+	@Override
 	public void storeName( String nm )
 	{
 		name = nm;
 	}
 
+	@Override
 	public void setIlbl( short i )
 	{
 		if( ilbl != i )
@@ -189,6 +194,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 	 * returns the string value of the name
 		@see com.extentech.formats.XLS.formulas.Ptg#getValue()
 	 */
+	@Override
 	public Object getValue()
 	{
 		Name n = getName();
@@ -225,6 +231,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 		return new String( "#NAME?" );
 	}
 
+	@Override
 	public String getTextString()
 	{
 		Name n = getName();
@@ -235,6 +242,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 		return n.getName();
 	}
 
+	@Override
 	public String getStoredName()
 	{
 		return name;
@@ -246,6 +254,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 		this.updateRecord();
 	}
 
+	@Override
 	public void updateRecord()
 	{
 		byte[] brow = ByteTools.cLongToLEBytes( ilbl );
@@ -264,6 +273,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 	 * Override due to mystery extra byte
 	 * occasionally found in ptgName recs.
 	 */
+	@Override
 	public int getLength()
 	{
 		if( record != null )
@@ -282,6 +292,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 		return "[Null]";
 	}
 
+	@Override
 	public Ptg[] getComponents()
 	{
 		FastAddVector v = new FastAddVector();
@@ -323,6 +334,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 	 *
 	 * @see com.extentech.formats.XLS.formulas.GenericPtg#getLocation()
 	 */
+	@Override
 	public String getLocation() throws FormulaNotFoundException
 	{
 		if( this.getName() != null )
@@ -339,6 +351,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 		return null;
 	}
 
+	@Override
 	public void addListener()
 	{
 		Name n = this.getName();

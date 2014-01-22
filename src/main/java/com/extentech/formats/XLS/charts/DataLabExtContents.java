@@ -54,6 +54,7 @@ public class DataLabExtContents extends GenericChartObject implements ChartObjec
 	private short grbit;
 	private boolean fSerName, fCatName, fValue, fPercent, fBubSizes;
 
+	@Override
 	public void init()
 	{
 		super.init();

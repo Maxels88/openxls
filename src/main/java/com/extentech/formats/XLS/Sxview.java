@@ -212,6 +212,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 		return sx;
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();

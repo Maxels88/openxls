@@ -215,6 +215,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	private double footerMargin = -1; // Footer margin (IEEE number)
 	private short copies = -1; // Number of copies
 
+	@Override
 	public void setSheet( Sheet sheet )
 	{
 		super.setSheet( sheet );
@@ -422,6 +423,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 		this.setGrbit();
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();

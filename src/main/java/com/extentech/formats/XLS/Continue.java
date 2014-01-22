@@ -154,6 +154,7 @@ public final class Continue extends com.extentech.formats.XLS.XLSRecord
 
 	byte[] deldata = null;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -175,6 +176,7 @@ public final class Continue extends com.extentech.formats.XLS.XLSRecord
 	public int grbitoff = 0;
 	private int continue_offset = -1;
 
+	@Override
 	public byte getByteAt( int off )
 	{
 		int s = off;
@@ -195,6 +197,7 @@ public final class Continue extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * Override this to not return the grbit as part of Continue data
 	 */
+	@Override
 	public byte[] getData()
 	{
 		if( getHasGrbit() && !streaming )
@@ -211,6 +214,7 @@ public final class Continue extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * set the streaming flag so we get the grbit in output
 	 */
+	@Override
 	public void preStream()
 	{
 		streaming = true;

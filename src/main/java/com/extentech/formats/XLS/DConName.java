@@ -63,6 +63,7 @@ public class DConName extends XLSRecord implements XLSConstants
 	private short cchFile;
 	private String namedRange = null;
 
+	@Override
 	public void init()
 	{
 		super.init();

@@ -83,6 +83,7 @@ public class DConBin extends XLSRecord implements XLSConstants
 	private byte nBuiltin;
 	private short cchFile;
 
+	@Override
 	public void init()
 	{
 		super.init();

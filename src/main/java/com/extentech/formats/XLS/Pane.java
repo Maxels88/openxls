@@ -66,6 +66,7 @@ public final class Pane extends com.extentech.formats.XLS.XLSRecord
 	boolean bFrozen;
 	Window2 win2;
 
+	@Override
 	public void init()
 	{
 		super.init();

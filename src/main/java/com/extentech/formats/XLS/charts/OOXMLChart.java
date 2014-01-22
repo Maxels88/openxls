@@ -234,6 +234,7 @@ public class OOXMLChart extends Chart
 	/**
 	 * remove the legend from the chart
 	 */
+	@Override
 	public void removeLegend()
 	{
 		showLegend( false, false );

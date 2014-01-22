@@ -34,6 +34,7 @@ public class ConeBarChart extends Bar3DChart
 		chartobj.chartType = CONEBARCHART;
 	}
 
+	@Override
 	public int getBarShape()
 	{
 		return defaultShape;

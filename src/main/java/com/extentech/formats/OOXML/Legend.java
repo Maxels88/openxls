@@ -166,6 +166,7 @@ public class Legend implements OOXMLElement
 	 *
 	 * @return
 	 */
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -199,6 +200,7 @@ public class Legend implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Legend( this );
@@ -319,6 +321,7 @@ class LegendEntry implements OOXMLElement
 		return le;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer tooxml = new StringBuffer();
@@ -336,6 +339,7 @@ class LegendEntry implements OOXMLElement
 		return tooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new LegendEntry( this );

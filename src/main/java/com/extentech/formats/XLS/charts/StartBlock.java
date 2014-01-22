@@ -107,6 +107,7 @@ public class StartBlock extends GenericChartObject implements ChartObject
 	short iObjectKind = 0;
 	public static final int CHART = 13, AXIS = 0, CHARTFORMAT = 5;
 
+	@Override
 	public void init()
 	{
 		super.init();

@@ -48,6 +48,7 @@ public class AxisLineFormat extends GenericChartObject implements ChartObject
 	private static final long serialVersionUID = 5243346695500373630L;
 	private short id = 0;
 
+	@Override
 	public void init()
 	{
 		super.init();

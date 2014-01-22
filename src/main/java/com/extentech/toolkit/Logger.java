@@ -166,6 +166,7 @@ public class Logger extends PrintStream implements LogOutputter
 	
 	/* ---------- LogOutputter methods ---------- */
 
+	@Override
 	public void log( String message )
 	{
 		if( null != targetLogger )
@@ -196,6 +197,7 @@ public class Logger extends PrintStream implements LogOutputter
 		}
 	}
 
+	@Override
 	public void log( String message, Exception ex, boolean trace )
 	{
 		if( null != targetLogger )
@@ -208,6 +210,7 @@ public class Logger extends PrintStream implements LogOutputter
 		}
 	}
 
+	@Override
 	public void log( String message, Exception ex )
 	{
 		if( null != targetLogger )

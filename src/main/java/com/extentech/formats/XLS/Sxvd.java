@@ -204,6 +204,7 @@ public class Sxvd extends XLSRecord
 	// flags:
 	boolean fDefault, fSum, fCounta, fAverage, fMax, fMin, fProduct, fCount, fStdev, fStdevp, fVariance, fVariancep;
 
+	@Override
 	public void init()
 	{
 		super.init();

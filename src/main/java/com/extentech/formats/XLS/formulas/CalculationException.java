@@ -139,6 +139,7 @@ public class CalculationException extends Exception
 	/**
 	 * Gets a human-readable message describing this error.
 	 */
+	@Override
 	public String getMessage()
 	{
 		switch( error )

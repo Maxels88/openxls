@@ -62,11 +62,13 @@ public class PtgAreaN extends PtgArea
 	 */
 	private static final long serialVersionUID = -8433468704529379504L;
 
+	@Override
 	public boolean getIsOperand()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsReference()
 	{
 		return true;
@@ -79,6 +81,7 @@ public class PtgAreaN extends PtgArea
 	/*
 	 Throw this data into two ptgref's
 	*/
+	@Override
 	public void populateVals()
 	{
 		byte[] temp1 = new byte[5];
@@ -129,6 +132,7 @@ public class PtgAreaN extends PtgArea
 	 *
 	 * @return
 	 */
+	@Override
 	public int[] getRowCol()
 	{
 		if( firstPtgN == null )
@@ -165,6 +169,7 @@ public class PtgAreaN extends PtgArea
 	 * update record bytes
 	 */
 	// 20060223 KSC
+	@Override
 	public void updateRecord()
 	{
 		byte[] first = firstPtgN.getRecord();
@@ -182,6 +187,7 @@ public class PtgAreaN extends PtgArea
 	/*
 	Returns the location of the Ptg as a string
 */
+	@Override
 	public String getLocation()
 	{
 		if( firstPtgN == null || lastPtgN == null )
@@ -202,6 +208,7 @@ public class PtgAreaN extends PtgArea
 	 * returns an array of the first and last addresses in the PtgAreaN
 	 */
 	// 20060223: KSC: customize from ptgArea
+	@Override
 	public int[] getIntLocation()
 	{
 		int[] returning = new int[4];
@@ -293,6 +300,7 @@ public class PtgAreaN extends PtgArea
 	/**
 	 * add "true" area to reference tracker i.e. entire range referenced by all shared formula members
 	 */
+	@Override
 	public void addToRefTracker()
 	{
 		int iParent = this.getParentRec().getOpcode();
@@ -309,6 +317,7 @@ public class PtgAreaN extends PtgArea
 	/**
 	 * remove "true" area from reference tracker i.e. entire range referenced by all shared formula members
 	 */
+	@Override
 	public void removeFromRefTracker()
 	{
 		int iParent = this.getParentRec().getOpcode();
@@ -324,6 +333,7 @@ public class PtgAreaN extends PtgArea
 		//parea= null;
 	}
 
+	@Override
 	public void close()
 	{
 		removeFromRefTracker();

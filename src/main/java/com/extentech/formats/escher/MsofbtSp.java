@@ -39,6 +39,7 @@ public class MsofbtSp extends EscherRecord
 		super( fbt, inst, version );
 	}
 
+	@Override
 	public byte[] getData()
 	{
 		byte[] idBytes, flagBytes;

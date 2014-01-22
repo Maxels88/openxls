@@ -153,6 +153,7 @@ public class Border implements OOXMLElement
 		return b;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -345,6 +346,7 @@ public class Border implements OOXMLElement
 		}
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new Border( this );
@@ -773,6 +775,7 @@ class BorderElement implements OOXMLElement
 		return b;
 	}
 
+	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
@@ -793,6 +796,7 @@ class BorderElement implements OOXMLElement
 		return ooxml.toString();
 	}
 
+	@Override
 	public OOXMLElement cloneElement()
 	{
 		return new BorderElement( this );

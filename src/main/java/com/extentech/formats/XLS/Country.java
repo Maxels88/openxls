@@ -42,6 +42,7 @@ public final class Country extends com.extentech.formats.XLS.XLSRecord
 
 	private static final long serialVersionUID = -4544323710670598072L;
 
+	@Override
 	public void init()
 	{
 		super.init();

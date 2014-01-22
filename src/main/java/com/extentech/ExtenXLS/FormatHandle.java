@@ -1093,6 +1093,7 @@ public class FormatHandle implements Handle, FormatConstants
 	 *
 	 * @return the copied FormatHandle
 	 */
+	@Override
 	public Object clone()
 	{
 		FormatHandle ret = null;
@@ -3310,6 +3311,7 @@ public class FormatHandle implements Handle, FormatConstants
 		wbh = null;
 	}
 
+	@Override
 	protected void finalize() throws Throwable
 	{
 		try

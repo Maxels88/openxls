@@ -101,6 +101,7 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 	 * location of the sharedformula.  This should be the same location referenced
 	 * in the PTGExp associated with these formulas as well
 	 */
+	@Override
 	public int getRowNumber()
 	{
 		return getFirstRow();
@@ -133,6 +134,7 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 
 	private Stack expression;
 
+	@Override
 	public void init()
 	{
 		super.init();
@@ -200,6 +202,7 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 	 * Associate this record with a worksheet.
 	 * init array refs as well
 	 */
+	@Override
 	public void setSheet( Sheet b )
 	{
 		this.worksheet = b;

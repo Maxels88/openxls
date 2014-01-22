@@ -45,6 +45,7 @@ public final class NineteenOhFour extends com.extentech.formats.XLS.XLSRecord
 	private static final long serialVersionUID = -4258740446375241600L;
 	boolean is1904 = false;
 
+	@Override
 	public void init()
 	{
 		super.init();

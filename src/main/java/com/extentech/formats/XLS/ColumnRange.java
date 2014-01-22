@@ -56,16 +56,19 @@ public interface ColumnRange
 			this.last = last;
 		}
 
+		@Override
 		public int getColFirst()
 		{
 			return first;
 		}
 
+		@Override
 		public int getColLast()
 		{
 			return last;
 		}
 
+		@Override
 		public boolean isSingleCol()
 		{
 			return (first == last);
@@ -83,6 +86,7 @@ public interface ColumnRange
 		 * within the cell collection.  If it turns out to be an issue (colinfos?) we should
 		 * separate this out.
 		 */
+		@Override
 		public int compare( ColumnRange r1, ColumnRange r2 )
 		{
 			boolean single1 = r1.isSingleCol();

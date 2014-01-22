@@ -43,16 +43,19 @@ public class PtgPercent extends GenericPtg implements Ptg
 	 */
 	private static final long serialVersionUID = -8559541841405018157L;
 
+	@Override
 	public boolean getIsOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsPrimitiveOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsUnaryOperator()
 	{
 		return true;
@@ -61,11 +64,13 @@ public class PtgPercent extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return "%";
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_PERCENT_LENGTH;
@@ -74,6 +79,7 @@ public class PtgPercent extends GenericPtg implements Ptg
 	/*  Operator specific calculate method, this one returns a single value sent to it.
 
    */
+	@Override
 	public Ptg calculatePtg( Ptg[] form )
 	{
 		// 20090202 KSC: Handle array formulas

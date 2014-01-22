@@ -53,6 +53,7 @@ public class Crn extends XLSRecord
 	private int rowIndex;
 	private ArrayList cachedValues = new ArrayList();
 
+	@Override
 	public void init()
 	{
 		super.init();

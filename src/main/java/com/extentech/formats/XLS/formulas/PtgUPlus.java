@@ -49,16 +49,19 @@ public class PtgUPlus extends GenericPtg implements Ptg
 		record[0] = 0x12;
 	}
 
+	@Override
 	public boolean getIsOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsPrimitiveOperator()
 	{
 		return true;
 	}
 
+	@Override
 	public boolean getIsUnaryOperator()
 	{
 		return true;
@@ -67,11 +70,13 @@ public class PtgUPlus extends GenericPtg implements Ptg
 	/**
 	 * return the human-readable String representation of
 	 */
+	@Override
 	public String getString()
 	{
 		return "+";
 	}
 
+	@Override
 	public int getLength()
 	{
 		return PTG_UPLUS_LENGTH;
@@ -80,6 +85,7 @@ public class PtgUPlus extends GenericPtg implements Ptg
 	/*  Operator specific calculate method, this one returns a single value sent to it.
 
    */
+	@Override
 	public Ptg calculatePtg( Ptg[] form )
 	{
 		// there should always be only one ptg in this, error if not.

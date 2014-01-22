@@ -98,6 +98,7 @@ public class QsiSXTag extends XLSRecord implements XLSConstants
 	private short flags, ver, cchName;
 	private String name;
 
+	@Override
 	public void init()
 	{
 		super.init();

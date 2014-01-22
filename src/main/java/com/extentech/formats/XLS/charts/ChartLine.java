@@ -63,6 +63,7 @@ public class ChartLine extends GenericChartObject implements ChartObject
 	public static byte TYPE_SERIESLINE = 2;
 	public static byte TYPE_LEADERLINE = 3;
 
+	@Override
 	public void init()
 	{
 		super.init();

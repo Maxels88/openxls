@@ -56,12 +56,14 @@ public final class DefaultRowHeight extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * init: save the default row height
 	 */
+	@Override
 	public void init()
 	{
 		super.init();
 		rwh = ByteTools.readShort( this.getData()[2], this.getData()[3] );
 	}
 
+	@Override
 	public void setWorkBook( WorkBook b )
 	{
 		super.setWorkBook( b );
@@ -88,6 +90,7 @@ public final class DefaultRowHeight extends com.extentech.formats.XLS.XLSRecord
 	/**
 	 * set the sheet's default row height in Excel units or twips
 	 */
+	@Override
 	public void setSheet( Sheet bs )
 	{
 		this.worksheet = bs;

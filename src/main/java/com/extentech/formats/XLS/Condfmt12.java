@@ -39,6 +39,7 @@ public class Condfmt12 extends XLSRecord
 	 */
 	private static final long serialVersionUID = 3251845433389628844L;
 
+	@Override
 	public void init()
 	{
 		Logger.logWarn( "Future conditional record type (condfmt12) found, This conditional format cannot be modified by ExtenXLS" );

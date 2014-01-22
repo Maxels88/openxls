@@ -38,6 +38,7 @@ public class StackedColumn extends ColChart
 		col = (Bar) charttype;
 	}
 
+	@Override
 	public boolean isStacked()
 	{
 		return true;
@@ -53,6 +54,7 @@ public class StackedColumn extends ColChart
 	 * @param seriescolors int[] of series or bar colors color ints
 	 * @return String svg
 	 */
+	@Override
 	public String getSVG( HashMap<String, Double> chartMetrics, HashMap<String, Object> axisMetrics, ChartSeries s )
 	{
 		double x = chartMetrics.get( "x" );    // + (!yAxisReversed?0:w);	// x is constant at x origin unless reversed
