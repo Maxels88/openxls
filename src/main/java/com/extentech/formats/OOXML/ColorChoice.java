@@ -95,28 +95,28 @@ public class ColorChoice implements OOXMLElement
 						lastTag.pop();
 						break;
 					}
-					else if( tnm.equals( "srgbClr" ) )
+					if( tnm.equals( "srgbClr" ) )
 					{
 						lastTag.push( tnm );
 						srgb = (SrgbClr) SrgbClr.parseOOXML( xpp, lastTag );
 						lastTag.pop();
 						break;
 					}
-					else if( tnm.equals( "sysClr" ) )
+					if( tnm.equals( "sysClr" ) )
 					{
 						lastTag.push( tnm );
 						sys = (SysClr) SysClr.parseOOXML( xpp, lastTag );
 						lastTag.pop();
 						break;
 					}
-					else if( tnm.equals( "scrgbClr" ) )
+					if( tnm.equals( "scrgbClr" ) )
 					{
 						lastTag.push( tnm );
 						scrgb = (ScrgbClr) ScrgbClr.parseOOXML( xpp, lastTag );
 						lastTag.pop();
 						break;
 					}
-					else if( tnm.equals( "prstClr" ) )
+					if( tnm.equals( "prstClr" ) )
 					{
 						lastTag.push( tnm );
 						p = (PrstClr) PrstClr.parseOOXML( xpp, lastTag );
@@ -182,7 +182,7 @@ public class ColorChoice implements OOXMLElement
 		{
 			return s.getColor();
 		}
-		else if( sys != null )
+		if( sys != null )
 		{
 			sys.getColor();
 		}

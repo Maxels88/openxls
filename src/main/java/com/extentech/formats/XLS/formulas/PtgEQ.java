@@ -155,7 +155,7 @@ public class PtgEQ extends GenericPtg implements Ptg
 			}
 			else if( (o[0] instanceof Double) && (o[1] instanceof Double) )
 			{
-				res = (Math.abs( (((Double) o[0]).doubleValue()) - ((Double) o[1]).doubleValue() )) < doublePrecision;    // compare equality to certain precision
+				res = (Math.abs( ((Double) o[0]) - (Double) o[1] )) < doublePrecision;    // compare equality to certain precision
 			}
 			else if( o[0].toString().equalsIgnoreCase( o[1].toString() ) )
 			{
@@ -198,8 +198,8 @@ public class PtgEQ extends GenericPtg implements Ptg
 					double fd = 0, sd = 0;
 					try
 					{
-						fd = new Double( firstOp.toString() ).doubleValue();
-						sd = new Double( secondOp.toString() ).doubleValue();
+						fd = new Double( firstOp.toString() );
+						sd = new Double( secondOp.toString() );
 						res = ((Math.abs( fd - sd )) <= doublePrecision);    // compare to certain precision instead of equality
 
 					}

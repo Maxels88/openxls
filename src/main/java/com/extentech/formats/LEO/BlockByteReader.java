@@ -110,7 +110,7 @@ public class BlockByteReader implements Serializable
 				byte[] junk = { 0x0, 0x0, 0x0, 0x0 };
 				return junk;
 			}
-			else if( (check + 4) > SIZE )
+			if( (check + 4) > SIZE )
 			{ // SPANNER!
 				Block bx = (Block) this.blockmap.get( block );
 				int l1 = ((SIZE * (block + 1)) - startpos);

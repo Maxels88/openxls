@@ -425,28 +425,28 @@ public class PtgMemFunc extends GenericPtg
 					if( refs.get( 0 ) instanceof Character )
 					{ // it's an operator
 						Character cOp = (Character) refs.get( 0 );
-						if( cOp.charValue() == ',' )
+						if( cOp == ',' )
 						{
 							PtgUnion pu = new PtgUnion();
 							cce += pu.getRecord().length;
 							newData = ByteTools.append( pu.getRecord(), newData );
 							//this.subexpression.add(pu);
 						}
-						else if( cOp.charValue() == ' ' )
+						else if( cOp == ' ' )
 						{
 							PtgIsect pi = new PtgIsect();
 							cce += pi.getRecord().length;
 							newData = ByteTools.append( pi.getRecord(), newData );
 							//this.subexpression.add(pi);
 						}
-						else if( cOp.charValue() == ':' )
+						else if( cOp == ':' )
 						{
 							PtgRange pr = new PtgRange();
 							cce += pr.getRecord().length;
 							newData = ByteTools.append( pr.getRecord(), newData );
 							//this.subexpression.add(pr);
 						}
-						else if( cOp.charValue() == ')' )
+						else if( cOp == ')' )
 						{
 							PtgParen pp = new PtgParen();
 							cce += pp.getRecord().length;
@@ -682,12 +682,12 @@ public class PtgMemFunc extends GenericPtg
 		if( finishRange )
 		{ // add ref to rest of range
 			// range op has more precedence than others ...
-			if( !ops.isEmpty() && (((Character) ops.peek()).charValue() == ':') && !refs.isEmpty() &&
+			if( !ops.isEmpty() && ((Character) ops.peek() == ':') && !refs.isEmpty() &&
 					(refs.peek() instanceof Character) )
 			{
 				while( refs.peek() instanceof Character )
 				{
-					if( ((Character) refs.peek()).charValue() != ':' )
+					if( (Character) refs.peek() != ':' )
 					{
 						ops.add( 0, refs.pop() );
 					}
@@ -729,10 +729,10 @@ public class PtgMemFunc extends GenericPtg
 	 */
 	private static Stack<Comparable> handleOpearatorPreference( Stack<Comparable> refs, Stack<Comparable> ops )
 	{
-		char lastOp = ((Character) ops.pop()).charValue();
+		char lastOp = (Character) ops.pop();
 		if( refs.peek() instanceof Character )
 		{
-			char curOp = ((Character) refs.pop()).charValue();
+			char curOp = (Character) refs.pop();
 			int group1 = rankPrecedence( lastOp );
 			int group2 = rankPrecedence( curOp );
 			if( group2 >= group1 )

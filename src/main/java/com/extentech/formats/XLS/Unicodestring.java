@@ -612,10 +612,7 @@ public final class Unicodestring implements XLSConstants, Serializable
 */
 				return new String( stringarray, UNICODEENCODING ); // defaultEncoding);
 			}
-			else
-			{
-				return new String( stringarray, DEFAULTENCODING );
-			}
+			return new String( stringarray, DEFAULTENCODING );
 		}
 		catch( UnsupportedEncodingException e )
 		{

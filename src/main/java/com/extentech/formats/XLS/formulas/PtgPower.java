@@ -102,7 +102,7 @@ public class PtgPower extends GenericPtg implements Ptg
 					return null;
 				}
 				//double returnVal = Math.pow(dub[0].doubleValue(), dub[1].doubleValue());
-				double returnVal = Math.pow( ((Double) o[0]).doubleValue(), ((Double) o[1]).doubleValue() );
+				double returnVal = Math.pow( (Double) o[0], (Double) o[1] );
 				// create a container ptg for these.
 				PtgNumber n = new PtgNumber( returnVal );
 				return n;

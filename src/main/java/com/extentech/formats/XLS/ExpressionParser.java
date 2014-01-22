@@ -1205,7 +1205,7 @@ public final class ExpressionParser implements java.io.Serializable
 			for( int i = 0; i < arrayLocs.size(); i++ )
 			{
 				Integer ingr = (Integer) arrayLocs.elementAt( i );
-				PtgArray parr = (PtgArray) stack.elementAt( ingr.intValue() );
+				PtgArray parr = (PtgArray) stack.elementAt( ingr );
 
 				// have to assume that remaining data all goes for this ptgarray
 				// since length is variable and can only be ascertained by parsing

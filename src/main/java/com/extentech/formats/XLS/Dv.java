@@ -250,7 +250,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 			Object o = f.calculateFormula();
 			if( o instanceof Boolean )
 			{
-				return ((Boolean) o).booleanValue();
+				return (Boolean) o;
 			}
 		}
 		catch( Exception e )
@@ -287,7 +287,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 			Object o = f.calculateFormula();
 			if( o instanceof Boolean )
 			{
-				return ((Boolean) o).booleanValue();
+				return (Boolean) o;
 			}
 		}
 		catch( Exception e )
@@ -324,7 +324,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 			Object o = f.calculateFormula();
 			if( o instanceof Boolean )
 			{
-				return ((Boolean) o).booleanValue();
+				return (Boolean) o;
 			}
 		}
 		catch( Exception e )
@@ -350,7 +350,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 			Object o = f.calculateFormula();
 			if( o instanceof Boolean )
 			{
-				return ((Boolean) o).booleanValue();
+				return (Boolean) o;
 			}
 		}
 		catch( Exception e )
@@ -376,7 +376,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 			Object o = f.calculateFormula();
 			if( o instanceof Boolean )
 			{
-				return ((Boolean) o).booleanValue();
+				return (Boolean) o;
 			}
 		}
 		catch( Exception e )
@@ -402,7 +402,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 			Object o = f.calculateFormula();
 			if( o instanceof Boolean )
 			{
-				return ((Boolean) o).booleanValue();
+				return (Boolean) o;
 			}
 		}
 		catch( Exception e )

@@ -134,7 +134,7 @@ public class ExcelTools implements java.io.Serializable
 		}
 
 		boolean isInteger = false;
-		if( (o instanceof Integer) || ((o instanceof Double) && (((Double) o).intValue() == ((Double) o).doubleValue())) )
+		if( (o instanceof Integer) || ((o instanceof Double) && (((Double) o).intValue() == (Double) o)) )
 		{
 			isInteger = true;
 		}
@@ -148,21 +148,18 @@ public class ExcelTools implements java.io.Serializable
 			if( isInteger )
 			{
 				return String.valueOf( Double.valueOf( o.toString() ).intValue() );
+			}    // general double numbers have default precision ...
+			try
+			{
+				double d = new Double( o.toString() );
+				return ExcelTools.getNumberAsString( Double.valueOf( o.toString() ) );    // handles default precision
 			}
-			else
-			{    // general double numbers have default precision ...
-				try
-				{
-					double d = new Double( o.toString() );
-					return ExcelTools.getNumberAsString( Double.valueOf( o.toString() ) );    // handles default precision
-				}
-				catch( NumberFormatException e )
-				{
-				}
-				return o.toString();
+			catch( NumberFormatException e )
+			{
 			}
+			return o.toString();
 		}
-		else if( pattern.equals( "000-00-0000" ) )
+		if( pattern.equals( "000-00-0000" ) )
 		{ // special case for SSN format ... sigh ...
 			try
 			{
@@ -1319,7 +1316,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 				{
 					exp = num.substring( i + 2, num.length() );
 				}
-				int expNum = Integer.valueOf( exp ).intValue();
+				int expNum = Integer.valueOf( exp );
 				outNumD = new CompatibleBigDecimal( outNumD.movePointRight( expNum ) );
 				// outNumD = outNumD.multiply(new CompatibleBigDecimal(Math.pow(10,
 				// expNum)));
@@ -1334,10 +1331,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 					{
 						return "-" + String.valueOf( Math.round( outNumD.doubleValue() ) );
 					}
-					else
-					{
-						return String.valueOf( Math.round( outNumD.doubleValue() ) );
-					}
+					return String.valueOf( Math.round( outNumD.doubleValue() ) );
 				}
 				Object[] args = new Object[0];
 				// args[0] = outNumD;

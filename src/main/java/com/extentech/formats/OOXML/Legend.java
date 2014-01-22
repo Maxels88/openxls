@@ -289,11 +289,11 @@ class LegendEntry implements OOXMLElement
 					String tnm = xpp.getName();
 					if( tnm.equals( "idx" ) )
 					{
-						idx = Integer.valueOf( xpp.getAttributeValue( 0 ) ).intValue();
+						idx = Integer.valueOf( xpp.getAttributeValue( 0 ) );
 					}
 					else if( tnm.equals( "delete" ) )
 					{
-						delete = Boolean.valueOf( xpp.getAttributeValue( 0 ) ).booleanValue();
+						delete = Boolean.valueOf( xpp.getAttributeValue( 0 ) );
 					}
 					else if( tnm.equals( "txPr" ) )
 					{

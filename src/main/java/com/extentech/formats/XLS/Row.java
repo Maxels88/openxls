@@ -395,10 +395,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 		{
 			return lastcell.getRecordIndex();
 		}
-		else
-		{
-			return this.getRecordIndex(); // empty row
-		}
+		return this.getRecordIndex(); // empty row
 	}
 
 	@Override

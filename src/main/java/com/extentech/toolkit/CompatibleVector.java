@@ -229,13 +229,13 @@ public class CompatibleVector extends Vector
 	 */
 	public boolean addOrderedDouble( Double obj )
 	{
-		double d = obj.doubleValue();
+		double d = obj;
 		try
 		{
 			for( int i = 0; i < super.size(); i++ )
 			{
 				Double dd = (Double) super.elementAt( i );
-				if( dd.doubleValue() > d )
+				if( dd > d )
 				{
 					super.insertElementAt( obj, i );
 					return true;

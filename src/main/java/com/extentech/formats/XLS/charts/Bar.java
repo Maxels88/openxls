@@ -266,14 +266,11 @@ public class Bar extends GenericChartObject implements ChartObject
 		{ // Bar
 			return String.valueOf( this.getGap() );
 		}
-		else if( op.equals( "Overlap" ) )
+		if( op.equals( "Overlap" ) )
 		{ // Bar
 //    		return String.valueOf(Math.abs(this.getOverlap()));		// KSC: TESTING:  OOXML apparently needs +100 pcOverlap NOT -100 ... WHY and TRUE FOR ALL CASES?????
 			return String.valueOf( this.getOverlap() );        // KSC: TESTING:  OOXML apparently needs +100 pcOverlap NOT -100 ... WHY and TRUE FOR ALL CASES?????
 		}
-		else
-		{
-			return super.getChartOption( op );
-		}
+		return super.getChartOption( op );
 	}
 }

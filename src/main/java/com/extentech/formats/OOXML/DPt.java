@@ -87,7 +87,7 @@ public class DPt implements OOXMLElement
 					{    // child element only contains 1 element
 						if( xpp.getAttributeCount() > 0 )
 						{
-							idx = Integer.valueOf( xpp.getAttributeValue( 0 ) ).intValue();
+							idx = Integer.valueOf( xpp.getAttributeValue( 0 ) );
 						}
 					}
 					else if( tnm.equals( "invertIfNegative" ) )
@@ -108,7 +108,7 @@ public class DPt implements OOXMLElement
 					{    // child element only contains 1 element
 						if( xpp.getAttributeCount() > 0 )
 						{
-							explosion = Integer.valueOf( xpp.getAttributeValue( 0 ) ).intValue();
+							explosion = Integer.valueOf( xpp.getAttributeValue( 0 ) );
 						}
 					}
 					else if( tnm.equals( "spPr" ) )

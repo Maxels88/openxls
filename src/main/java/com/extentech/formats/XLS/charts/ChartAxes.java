@@ -1096,11 +1096,8 @@ public class ChartAxes implements ChartConstants, Serializable
 		{
 			return h;
 		}
-		else
-		{
-			return retwidth;
-		}
-//		return offset + h;
+		return retwidth;
+		//		return offset + h;
 	}
 
 	/**
@@ -1237,10 +1234,7 @@ public class ChartAxes implements ChartConstants, Serializable
 					retLen = Math.max( len, retLen );
 					break;
 				}
-				else
-				{
-					lastSpace = s.toString().indexOf( ' ' );
-				}
+				lastSpace = s.toString().indexOf( ' ' );
 			}
 			s.replace( lastSpace, lastSpace + 1, "\n" );    // + str.substring(lastSpace+1));
 			str = s.toString();

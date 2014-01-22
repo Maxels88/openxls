@@ -95,10 +95,7 @@ public class NumberCellFormat extends NumberFormat implements CellFormat
 
 			return buffer.append( String.format( format, value ) );
 		}
-		else
-		{
-			throw new IllegalArgumentException( "unsupported input type" );
-		}
+		throw new IllegalArgumentException( "unsupported input type" );
 	}
 
 	@Override

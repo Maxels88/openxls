@@ -256,11 +256,11 @@ public class PtgRefN extends PtgRef
 			// 20090325 KSC: trap OOXML external reference link, if any
 			if( s[3] != null )
 			{
-				externalLink1 = Integer.valueOf( s[3].substring( 1, s[3].length() - 1 ) ).intValue();
+				externalLink1 = Integer.valueOf( s[3].substring( 1, s[3].length() - 1 ) );
 			}
 			if( s[4] != null )
 			{
-				externalLink2 = Integer.valueOf( s[4].substring( 1, s[4].length() - 1 ) ).intValue();
+				externalLink2 = Integer.valueOf( s[4].substring( 1, s[4].length() - 1 ) );
 			}
 
 		}

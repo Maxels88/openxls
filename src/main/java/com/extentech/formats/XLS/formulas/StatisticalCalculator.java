@@ -352,7 +352,7 @@ public class StatisticalCalculator
 		try
 		{
 			Double dd = new Double( String.valueOf( av.getValue() ) );
-			average = dd.doubleValue();
+			average = dd;
 		}
 		catch( NumberFormatException e )
 		{
@@ -376,7 +376,7 @@ public class StatisticalCalculator
 				if( resPtg.getValue() != null )
 				{
 					d = new Double( String.valueOf( resPtg.getValue() ) );
-					double dub = d.doubleValue();
+					double dub = d;
 					dub = average - dub;
 					dub = Math.abs( dub );
 					total += dub;
@@ -620,7 +620,7 @@ CONFIDENCE
 		try
 		{    // this method matches strings or numbers, here is where we differentiate
 			Double d = new Double( matchStr );
-			matchDub = d.doubleValue();
+			matchDub = d;
 		}
 		catch( Exception e )
 		{
@@ -641,7 +641,7 @@ CONFIDENCE
 						try
 						{
 							Double d = new Double( match2 );
-							double matchDub2 = d.doubleValue();
+							double matchDub2 = d;
 							if( matchDub == matchDub2 )
 							{
 								count++;
@@ -675,7 +675,7 @@ CONFIDENCE
 						try
 						{
 							Double d = new Double( match2 );
-							double matchDub2 = d.doubleValue();
+							double matchDub2 = d;
 							if( matchDub == matchDub2 )
 							{
 								count++;
@@ -861,7 +861,7 @@ FISHERINV
 		PtgNumber slp = (PtgNumber) calcSlope( p );
 		double slope = slp.getVal();
 		Ptg px = operands[0];
-		double knownX = new Double( String.valueOf( px.getValue() ) ).doubleValue();
+		double knownX = new Double( String.valueOf( px.getValue() ) );
 		double retval = (slope * knownX) + intercept;
 		return new PtgNumber( retval );
 	}
@@ -903,12 +903,12 @@ FISHERINV
 		{
 			for( int x = 0; x < binsArr.length; x++ )
 			{
-				if( dataArr[i] <= binsArr[x].doubleValue() )
+				if( dataArr[i] <= binsArr[x] )
 				{
 					retvals[x]++;
 					x = binsArr.length;
 				}
-				else if( dataArr[i] > binsArr[binsArr.length - 1].doubleValue() )
+				else if( dataArr[i] > binsArr[binsArr.length - 1] )
 				{
 					retvals[binsArr.length]++;
 					x = binsArr.length;
@@ -1058,7 +1058,7 @@ KURT
 			sortedValues.remove( sortedValues.size() - 1 );
 		}
 
-		return new PtgNumber( (dubRefs[k - 1]).doubleValue() );
+		return new PtgNumber( dubRefs[k - 1] );
 /*	 
 	 
 	 try {
@@ -1279,9 +1279,9 @@ LOGNORMDIST
 					{
 						d = new Double( String.valueOf( resPtg.getValue() ) );
 					}
-					if( d.doubleValue() > result )
+					if( d > result )
 					{
-						result = d.doubleValue();
+						result = d;
 					}
 				}
 				catch( NumberFormatException e )
@@ -1299,9 +1299,9 @@ LOGNORMDIST
 					{
 						d = new Double( String.valueOf( ov ) );
 					}
-					if( d.doubleValue() > result )
+					if( d > result )
 					{
-						result = d.doubleValue();
+						result = d;
 					}
 				}
 				catch( NumberFormatException e )
@@ -1347,11 +1347,11 @@ LOGNORMDIST
 				}
 				else if( o instanceof Boolean )
 				{
-					d = (((Boolean) o).booleanValue() ? 1 : 0);
+					d = ((Boolean) o ? 1 : 0);
 				}
 				else
 				{
-					d = new Double( o.toString() ).doubleValue();
+					d = new Double( o.toString() );
 				}
 				max = Math.max( max, d );
 			}
@@ -1401,15 +1401,15 @@ LOGNORMDIST
 			{
 				int firstValLoc = ((t.size()) / 2) - 1;
 				int lastValLoc = firstValLoc + 1;
-				double firstVal = dub[firstValLoc].doubleValue();
-				double lastVal = dub[lastValLoc].doubleValue();
+				double firstVal = dub[firstValLoc];
+				double lastVal = dub[lastValLoc];
 				retval = (firstVal + lastVal) / 2;
 			}
 			else
 			{
 				// it's odd
 				int firstValLoc = ((t.size() - 1) / 2);
-				double firstVal = dub[firstValLoc].doubleValue();
+				double firstVal = dub[firstValLoc];
 				retval = firstVal;
 			}
 			PtgNumber pnum = new PtgNumber( retval );
@@ -1450,9 +1450,9 @@ LOGNORMDIST
 					{
 						d = new Double( String.valueOf( resPtg.getValue() ) );
 						// 20090129 KSC; if (d.doubleValue() < result || result == -1){result = d.doubleValue();} // 20070215 KSC: only access d if not null!
-						if( d.doubleValue() < result )
+						if( d < result )
 						{
-							result = d.doubleValue();
+							result = d;
 						} // 20070215 KSC: only access d if not null!
 					}
 				}
@@ -1477,9 +1477,9 @@ LOGNORMDIST
 						}
 						d = new Double( String.valueOf( ov ) );
 						// 20090129 KSC; result is defaulted to max
-						if( d.doubleValue() < result )
+						if( d < result )
 						{
-							result = d.doubleValue();
+							result = d;
 						} // 20070215 KSC: only access d if not null!
 					}
 				}
@@ -1526,11 +1526,11 @@ LOGNORMDIST
 				}
 				else if( o instanceof Boolean )
 				{
-					d = (((Boolean) o).booleanValue() ? 1 : 0);
+					d = ((Boolean) o ? 1 : 0);
 				}
 				else
 				{
-					d = new Double( o.toString() ).doubleValue();
+					d = new Double( o.toString() );
 				}
 				min = Math.min( min, d );
 			}
@@ -1564,7 +1564,7 @@ LOGNORMDIST
 				{
 					int loc = vals.indexOf( d );
 					Double nums = (Double) occurences.get( loc );
-					Double newnum = nums.doubleValue() + 1;
+					Double newnum = nums + 1;
 					occurences.setElementAt( newnum, loc );
 				}
 				else
@@ -1583,11 +1583,11 @@ LOGNORMDIST
 		for( int i = 0; i < vals.size(); i++ )
 		{
 			Double size = (Double) occurences.elementAt( i );
-			if( size.doubleValue() > biggest )
+			if( size > biggest )
 			{
-				biggest = size.doubleValue();
+				biggest = size;
 				Double newhigh = (Double) vals.elementAt( i );
-				retval = newhigh.doubleValue();
+				retval = newhigh;
 			}
 		}
 		PtgNumber pnum = new PtgNumber( retval );
@@ -1648,19 +1648,16 @@ NEGBINOMDIST
 				double b = Math.exp( -exp );
 				return new PtgNumber( a * b );
 			}
-			else
-			{
-				// When cumulative = TRUE, the formula is the integral from negative infinity to x of the given formula.
-				// = the cumulative distribution function
-				Ptg[] o = { new PtgNumber( (x - mean) / (stddev * Math.sqrt( 2 )) ) };
-				Ptg erf = EngineeringCalculator.calcErf( o );
-				double cdf = 0.5 * (1 + erf.getDoubleVal());
-				return new PtgNumber( cdf );
+			// When cumulative = TRUE, the formula is the integral from negative infinity to x of the given formula.
+			// = the cumulative distribution function
+			Ptg[] o = { new PtgNumber( (x - mean) / (stddev * Math.sqrt( 2 )) ) };
+			Ptg erf = EngineeringCalculator.calcErf( o );
+			double cdf = 0.5 * (1 + erf.getDoubleVal());
+			return new PtgNumber( cdf );
 /*			 // try this:
 			 Ptg[] o= { new PtgNumber((x-mean)/(stddev))};
 			 return calcNormsdist(o);
 	*/
-			}
 		}
 		catch( Exception e )
 		{
@@ -2242,15 +2239,15 @@ PROB
 		}
 
 		float quartile = quart.floatValue();
-		if( quart.intValue() == 0 )
+		if( quart == 0 )
 		{    // return minimum value
-			return new PtgNumber( dub[0].doubleValue() );
+			return new PtgNumber( dub[0] );
 		}
-		else if( quart.intValue() == 4 )
+		if( quart == 4 )
 		{    // return maximum value
-			return new PtgNumber( dub[t.size() - 1].doubleValue() );
+			return new PtgNumber( dub[t.size() - 1] );
 		}
-		else if( (quart.intValue() > 4) || (quart.intValue() < 0) )
+		if( (quart > 4) || (quart < 0) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -2267,9 +2264,9 @@ PROB
 			String s = String.valueOf( kk );
 			String ss = s.substring( s.indexOf( "." ), s.length() );
 			ss = "0" + ss;
-			remainder = new Float( ss ).floatValue();
+			remainder = new Float( ss );
 			s = s.substring( 0, s.indexOf( "." ) );
-			k = Integer.valueOf( String.valueOf( s ) ).intValue();
+			k = Integer.valueOf( String.valueOf( s ) );
 		}
 		else
 		{
@@ -2279,8 +2276,8 @@ PROB
 		{
 			return new PtgErr( PtgErr.ERROR_VALUE );
 		}
-		double firstVal = dub[k - 1].doubleValue();
-		double secondVal = dub[k].doubleValue();
+		double firstVal = dub[k - 1];
+		double secondVal = dub[k];
 		double output = firstVal + (remainder * (secondVal - firstVal));
 		PtgNumber pn = new PtgNumber( output );
 		return pn;
@@ -2387,10 +2384,7 @@ PROB
 		{
 			return new PtgErr( PtgErr.ERROR_NA );
 		}
-		else
-		{
-			return new PtgInt( res );
-		}
+		return new PtgInt( res );
 
 	}
 
@@ -2500,7 +2494,7 @@ SKEW
 		}
 		try
 		{
-			return new PtgNumber( ((Double) sortedValues.get( k - 1 )).doubleValue() );
+			return new PtgNumber( (Double) sortedValues.get( k - 1 ) );
 		}
 		catch( Exception e )
 		{

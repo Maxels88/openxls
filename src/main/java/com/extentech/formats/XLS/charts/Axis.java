@@ -614,7 +614,7 @@ public class Axis extends GenericChartObject implements ChartObject
 					{
 						return alf;
 					}
-					else if( alf.getId() > type )
+					if( alf.getId() > type )
 					{
 						break;
 					}
@@ -671,7 +671,7 @@ public class Axis extends GenericChartObject implements ChartObject
 				{
 					return j;
 				}
-				else if( alf.getId() > type )
+				if( alf.getId() > type )
 				{
 					break;
 				}
@@ -751,10 +751,9 @@ public class Axis extends GenericChartObject implements ChartObject
 				{
 					return ((Series) s.get( 0 )).getSeriesFormatPattern();
 				}
-				else    // see if it's a value X axis with a custom 
-				{
-					return ((Series) s.get( 0 )).getCategoryFormatPattern();
-				}
+				// see if it's a value X axis with a custom
+
+				return ((Series) s.get( 0 )).getCategoryFormatPattern();
 			}
 		}
 		return "General";
@@ -917,32 +916,32 @@ public class Axis extends GenericChartObject implements ChartObject
 			this.setTitle( val );
 			return true;
 		}
-		else if( op.equalsIgnoreCase( "CatCross" ) )
+		if( op.equalsIgnoreCase( "CatCross" ) )
 		{
 			getCatserRange( true ).setCatCross( Integer.parseInt( val ) );
 			return true;
 		}
-		else if( op.equalsIgnoreCase( "LabelCross" ) )
+		if( op.equalsIgnoreCase( "LabelCross" ) )
 		{
 			getCatserRange( true ).setCatLabel( Integer.parseInt( val ) );
 			return true;
 		}
-		else if( op.equalsIgnoreCase( "Marks" ) )
+		if( op.equalsIgnoreCase( "Marks" ) )
 		{
 			getCatserRange( true ).setCatMark( Integer.parseInt( val ) );
 			return true;
 		}
-		else if( op.equalsIgnoreCase( "CrossBetween" ) )
+		if( op.equalsIgnoreCase( "CrossBetween" ) )
 		{
 			getCatserRange( true ).setCrossBetween( val.equals( "true" ) );
 			return true;
 		}
-		else if( op.equalsIgnoreCase( "CrossMax" ) )
+		if( op.equalsIgnoreCase( "CrossMax" ) )
 		{
 			getCatserRange( true ).setCrossMax( val.equals( "true" ) );
 			return true;
 		}
-		else if( op.equalsIgnoreCase( "MajorGridLines" ) )
+		if( op.equalsIgnoreCase( "MajorGridLines" ) )
 		{
 			if( val.equals( "false" ) )
 			{
@@ -1000,13 +999,13 @@ public class Axis extends GenericChartObject implements ChartObject
 		else if( op.equals( "AreaFg" ) )
 		{    // custom foreground on Wall, Side or Floor
 			AreaFormat af = (AreaFormat) Chart.findRec( chartArr, AreaFormat.class );
-			af.seticvFore( Integer.valueOf( val ).intValue() );
+			af.seticvFore( Integer.valueOf( val ) );
 			return true;
 		}
 		else if( op.equals( "AreaBg" ) )
 		{    // custom bg on Wall, SIde or Floor
 			AreaFormat af = (AreaFormat) Chart.findRec( chartArr, AreaFormat.class );
-			af.seticvBack( Integer.valueOf( val ).intValue() );
+			af.seticvBack( Integer.valueOf( val ) );
 			return true;
 		}
 		else if( linkedtd != null )
@@ -1177,24 +1176,24 @@ public class Axis extends GenericChartObject implements ChartObject
 		{                    // val= "b" (bottom) "l", "t", "r"   -->?????
 			return axPos;    // for now -- can't find matching Axis attribute	    	
 		}
-		else if( op.equals( "lblAlign" ) || op.equals( "lblOffset" ) )
+		if( op.equals( "lblAlign" ) || op.equals( "lblOffset" ) )
 		{
 			CatLab c = (CatLab) Chart.findRec( chartArr, CatLab.class );
 			if( c != null )
 			{
 				return ((CatLab) c).getOption( op );
 			}
-			return null;    // use defaults	    	
+			return null;    // use defaults
 		}
-		else if( op.equals( "crossesAt" ) ||        // specifies where axis crosses		  -- numCross or catCross
-				op.equals( "orientation" ) ||        // axis orientation minMax or maxMin  -- fReverse 
-				op.equals( "crosses" ) ||            // specifies how axis crosses it's perpendicular axis (val= max, min, autoZero)  -- fbetween + fMaxCross?/fAutoCross + fMaxCross	    		
+		if( op.equals( "crossesAt" ) ||        // specifies where axis crosses		  -- numCross or catCross
+				op.equals( "orientation" ) ||        // axis orientation minMax or maxMin  -- fReverse
+				op.equals( "crosses" ) ||            // specifies how axis crosses it's perpendicular axis (val= max, min, autoZero)  -- fbetween + fMaxCross?/fAutoCross + fMaxCross
 				op.equals( "max" ) ||                // axis max - valueRange only?
 				op.equals( "max" ) ||                // axis min- valueRange only?
 				op.equals( "tickLblSkip" ) ||    //val= how many tick labels to skip btwn label -- catLabel -- Catserrange only??
 				op.equals( "tickMarkSkip" ) ||    //val= how many tick marks to skip before next one is drawn -- catMark -- catsterrange only?
 				op.equals( "crossBetween" ) )
-		{    // value axis only -- val= between, midCat, crossBetween 	    										
+		{    // value axis only -- val= between, midCat, crossBetween
 			// logScale-- ValueRange
 			for( int i = 0; i < chartArr.size(); i++ )
 			{
@@ -1203,7 +1202,7 @@ public class Axis extends GenericChartObject implements ChartObject
 				{
 					return ((CatserRange) b).getOption( op );
 				}
-				else if( b instanceof ValueRange )
+				if( b instanceof ValueRange )
 				{
 					return ((ValueRange) b).getOption( op );
 				}
@@ -1247,10 +1246,10 @@ public class Axis extends GenericChartObject implements ChartObject
 					}
 					break;    // only need this per axis
 				}
-				else if( b instanceof ValueRange )
+				if( b instanceof ValueRange )
 				{
 					ValueRange v = (ValueRange) b;
-					if( wType == YAXIS )    // normal 
+					if( wType == YAXIS )    // normal
 					{
 						v.setMaxMin( yMax, yMin );    // must do first
 					}
@@ -1576,15 +1575,15 @@ public class Axis extends GenericChartObject implements ChartObject
 			{
 				return Axis.INVISIBLE;
 			}
-			else if( p.equals( "low" ) )
+			if( p.equals( "low" ) )
 			{
 				return Axis.LOW;
 			}
-			else if( p.equals( "high" ) )
+			if( p.equals( "high" ) )
 			{
 				return Axis.HIGH;
 			}
-			else if( p.equals( "nextTo" ) )
+			if( p.equals( "nextTo" ) )
 			{
 				return Axis.NEXTTO;
 			}
@@ -3014,15 +3013,15 @@ class Scaling implements OOXMLElement
 		{
 			return logBase;
 		}
-		else if( op.equals( "max" ) )
+		if( op.equals( "max" ) )
 		{
 			return max;
 		}
-		else if( op.equals( "min" ) )
+		if( op.equals( "min" ) )
 		{
 			return min;
 		}
-		else if( op.equals( "orientation" ) )
+		if( op.equals( "orientation" ) )
 		{
 			return orientation;
 		}

@@ -1330,7 +1330,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		{
 			return data.length + 4;
 		}
-		else if( this.databuf == null ) // a new rec
+		if( this.databuf == null ) // a new rec
 		{
 			return -1;
 		}

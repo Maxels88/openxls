@@ -177,10 +177,7 @@ public final class Labelsst extends XLSCellRecord
 		{
 			return unsharedstr.toString();
 		}
-		else
-		{
-			return this.getWorkBook().getSharedStringTable().getUStringAt( isst ).toCachingString();
-		}
+		return this.getWorkBook().getSharedStringTable().getUStringAt( isst ).toCachingString();
 	}
 
 	/**
@@ -194,7 +191,7 @@ public final class Labelsst extends XLSCellRecord
 		try
 		{
 			Integer i = Integer.valueOf( s );
-			return i.intValue();
+			return i;
 		}
 		catch( NumberFormatException n )
 		{
@@ -213,7 +210,7 @@ public final class Labelsst extends XLSCellRecord
 		try
 		{
 			Double d = new Double( s );
-			return d.doubleValue();
+			return d;
 		}
 		catch( NumberFormatException n )
 		{

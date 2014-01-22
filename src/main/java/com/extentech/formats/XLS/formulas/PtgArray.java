@@ -419,7 +419,7 @@ public class PtgArray extends GenericPtg implements Ptg
 		{    // number?
 			Double d = new Double( constVal );
 			thisElement[0] = 0x1;        // id for number value
-			byte[] b = ByteTools.toBEByteArray( d.doubleValue() );
+			byte[] b = ByteTools.toBEByteArray( d );
 			System.arraycopy( b, 0, thisElement, 1, b.length );
 			databytes = ByteTools.append( thisElement, databytes );
 		}
@@ -431,7 +431,7 @@ public class PtgArray extends GenericPtg implements Ptg
 				{
 					Boolean bb = Boolean.valueOf( constVal );
 					thisElement[0] = 0x4;        // id for boolean value
-					thisElement[1] = (byte) (bb.booleanValue() ? 1 : 0);
+					thisElement[1] = (byte) (bb ? 1 : 0);
 				}
 				else if( (constVal == null) || constVal.equals( "" ) )
 				{    // emtpy or null value
@@ -558,12 +558,12 @@ public class PtgArray extends GenericPtg implements Ptg
 			if( o instanceof Double )
 			{
 				Double d = (Double) o;
-				PtgNumber pnum = new PtgNumber( d.doubleValue() );
+				PtgNumber pnum = new PtgNumber( d );
 				retVals[i] = pnum;
 			}
 			else if( o instanceof Boolean )
 			{
-				PtgBool pb = new PtgBool( ((Boolean) o).booleanValue() );
+				PtgBool pb = new PtgBool( (Boolean) o );
 				retVals[i] = pb;
 			}
 			else

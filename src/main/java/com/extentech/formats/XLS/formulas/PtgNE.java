@@ -133,7 +133,7 @@ public class PtgNE extends GenericPtg implements Ptg
 				}
 				if( (o[0] instanceof Double) && (o[1] instanceof Double) )
 				{
-					res = (Math.abs( (((Double) o[0]).doubleValue()) - ((Double) o[1]).doubleValue() )) > doublePrecision;    // compare equality to certain precision
+					res = (Math.abs( ((Double) o[0]) - (Double) o[1] )) > doublePrecision;    // compare equality to certain precision
 				}
 				else if( !o[0].toString().equalsIgnoreCase( o[1].toString() ) )
 				{
@@ -145,50 +145,47 @@ public class PtgNE extends GenericPtg implements Ptg
 				}
 				PtgBool pboo = new PtgBool( res );
 				return pboo;
+			}    // handle array fomulas
+			String retArry = "";
+			int nArrays = java.lang.reflect.Array.getLength( o );
+			if( nArrays != 2 )
+			{
+				return new PtgErr( PtgErr.ERROR_VALUE );
 			}
-			else
-			{    // handle array fomulas
-				String retArry = "";
-				int nArrays = java.lang.reflect.Array.getLength( o );
-				if( nArrays != 2 )
+			int nVals = java.lang.reflect.Array.getLength( o[0] );    // use first array element to determine length of values as subsequent vals might not be arrays
+			for( int i = 0; i < (nArrays - 1); i += 2 )
+			{
+				res = false;
+				Object secondOp = null;
+				boolean comparitorIsArray = o[i + 1].getClass().isArray();
+				if( !comparitorIsArray )
 				{
-					return new PtgErr( PtgErr.ERROR_VALUE );
+					secondOp = o[i + 1];
 				}
-				int nVals = java.lang.reflect.Array.getLength( o[0] );    // use first array element to determine length of values as subsequent vals might not be arrays
-				for( int i = 0; i < (nArrays - 1); i += 2 )
+				for( int j = 0; j < nVals; j++ )
 				{
-					res = false;
-					Object secondOp = null;
-					boolean comparitorIsArray = o[i + 1].getClass().isArray();
-					if( !comparitorIsArray )
+					Object firstOp = Array.get( o[i], j );    // first array index j
+					if( comparitorIsArray )
 					{
-						secondOp = o[i + 1];
+						secondOp = Array.get( o[i + 1], j );    // second array index j
 					}
-					for( int j = 0; j < nVals; j++ )
-					{
-						Object firstOp = Array.get( o[i], j );    // first array index j
-						if( comparitorIsArray )
-						{
-							secondOp = Array.get( o[i + 1], j );    // second array index j
-						}
 
-						if( (firstOp instanceof Double) && (secondOp instanceof Double) )
-						{
-							res = (Math.abs( (((Double) firstOp).doubleValue()) - ((Double) secondOp).doubleValue() )) > doublePrecision;    // compare to certain precision instead of equality
-						}
-						else
-						{
-							res = firstOp.toString().equalsIgnoreCase( secondOp.toString() );
-						}
-						retArry = retArry + res + ",";
+					if( (firstOp instanceof Double) && (secondOp instanceof Double) )
+					{
+						res = (Math.abs( ((Double) firstOp) - (Double) secondOp )) > doublePrecision;    // compare to certain precision instead of equality
 					}
+					else
+					{
+						res = firstOp.toString().equalsIgnoreCase( secondOp.toString() );
+					}
+					retArry = retArry + res + ",";
 				}
-				retArry = "{" + retArry.substring( 0, retArry.length() - 1 ) + "}";
-				PtgArray pa = new PtgArray();
-				pa.setVal( retArry );
-				return pa;
-			}       
-		/*}catch(NumberFormatException e){	// shouldn't get here!! see new code above
+			}
+			retArry = "{" + retArry.substring( 0, retArry.length() - 1 ) + "}";
+			PtgArray pa = new PtgArray();
+			pa.setVal( retArry );
+			return pa;
+			/*}catch(NumberFormatException e){	// shouldn't get here!! see new code above
     		String[] s = getStringValuesFromPtgs(form);
     		if (s[0].equalsIgnoreCase(s[1]))return new PtgBool(false);
     		return new PtgBool(true);

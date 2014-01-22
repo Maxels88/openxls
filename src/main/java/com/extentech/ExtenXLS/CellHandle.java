@@ -2869,7 +2869,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 					if( obj instanceof Float )
 					{
 						Float f = (Float) obj;
-						mycell.setFloatVal( f.floatValue() );
+						mycell.setFloatVal( f );
 					}
 					else if( obj instanceof Integer )
 					{
@@ -3000,10 +3000,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		{
 			return begin_hidden_emptycell_xml + loc + end_hidden_emptycell_xml;
 		}
-		else
-		{
-			return begin_cell_xml + loc + end_emptycell_xml;
-		}
+		return begin_cell_xml + loc + end_emptycell_xml;
 	}
 
 	/**
@@ -3431,7 +3428,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 						if( s.indexOf( "Red" ) > -1 )
 						{
 							Double d = new Double( val.toString() );
-							if( d.doubleValue() < 0 )
+							if( d < 0 )
 							{
 								theCell.put( JSON_RED_FORMAT, "1" );
 								if( fmtd.indexOf( "-" ) == 0 )

@@ -380,26 +380,23 @@ public abstract class GenericPtg implements Ptg, Cloneable
 		{
 			return (Ptg) value;
 		}
-		else if( value instanceof Boolean )
+		if( value instanceof Boolean )
 		{
-			return new PtgBool( ((Boolean) value).booleanValue() );
+			return new PtgBool( (Boolean) value );
 		}
-		else if( value instanceof Integer )
+		if( value instanceof Integer )
 		{
-			return new PtgInt( ((Integer) value).intValue() );
+			return new PtgInt( (Integer) value );
 		}
-		else if( value instanceof Number )
+		if( value instanceof Number )
 		{
 			return new PtgNumber( ((Number) value).doubleValue() );
 		}
-		else if( value instanceof String )
+		if( value instanceof String )
 		{
 			return new PtgStr( (String) value );
 		}
-		else
-		{
-			return new PtgErr( PtgErr.ERROR_VALUE );
-		}
+		return new PtgErr( PtgErr.ERROR_VALUE );
 	}
 
 	/**
@@ -492,7 +489,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 						try
 						{
 							Double dd = new Double( pob.toString() );
-							return dd.doubleValue();
+							return dd;
 						}
 						catch( Exception e4 )
 						{// Logger.logWarn("Error in Ptg Calculator getting Double Value: " + e3);
@@ -506,7 +503,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 		{
 			Logger.logErr( "Unexpected Exception in PtgCalculator.getDoubleValue()", exp );
 		}
-		return d.doubleValue();
+		return d;
 	}
 
 	/**
@@ -665,19 +662,19 @@ public abstract class GenericPtg implements Ptg, Cloneable
 			}
 			else if( o instanceof Double )
 			{
-				returnDbl[i] = ((Double) o).doubleValue();
+				returnDbl[i] = (Double) o;
 			}
 			else if( o instanceof Integer )
 			{
-				returnDbl[i] = (double) ((Integer) o).intValue();
+				returnDbl[i] = (double) (Integer) o;
 			}
 			else if( o instanceof Boolean )
 			{    // Excel converts booleans to numbers in calculations 20090129 KSC
-				returnDbl[i] = (((Boolean) o).booleanValue() ? 1.0 : 0.0);
+				returnDbl[i] = ((Boolean) o ? 1.0 : 0.0);
 			}
 			else if( o instanceof PtgBool )
 			{
-				returnDbl[i] = (((Boolean) (((PtgBool) o).getValue())).booleanValue() ? 1.0 : 0.0);
+				returnDbl[i] = ((Boolean) (((PtgBool) o).getValue()) ? 1.0 : 0.0);
 			}
 			else if( o instanceof PtgErr )
 			{
@@ -687,7 +684,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 			{
 				String s = o.toString();
 				Double d = new Double( s );
-				returnDbl[i] = d.doubleValue();
+				returnDbl[i] = d;
 			}
 		}
 		return returnDbl;
@@ -704,7 +701,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	{
 		if( o instanceof Double )
 		{
-			return ((Double) o).doubleValue();
+			return (Double) o;
 		}
 		if( (o == null) || o.toString().equals( "" ) )
 		{
@@ -716,7 +713,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 			// otherwise, throw error
 			throw new NumberFormatException();
 		}
-		return new Double( o.toString() ).doubleValue();    // will throw NumberFormatException if cannot convert
+		return new Double( o.toString() );    // will throw NumberFormatException if cannot convert
 	}
 
 	/**
@@ -731,15 +728,15 @@ public abstract class GenericPtg implements Ptg, Cloneable
 		}
 		else if( o instanceof Double )
 		{
-			ret = ((Double) o).doubleValue();
+			ret = (Double) o;
 		}
 		else if( o instanceof Integer )
 		{
-			ret = (double) ((Integer) o).intValue();
+			ret = (double) (Integer) o;
 		}
 		else if( o instanceof Boolean )
 		{    // Excel converts booleans to numbers in calculations 20090129 KSC
-			ret = (((Boolean) o).booleanValue() ? 1.0 : 0.0);
+			ret = ((Boolean) o ? 1.0 : 0.0);
 		}
 		else if( o instanceof PtgErr )
 		{
@@ -767,7 +764,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 			if( ret == 0.0 )
 			{
 				Double d = new Double( s );
-				ret = d.doubleValue();
+				ret = d;
 			}
 		}
 		return ret;

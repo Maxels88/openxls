@@ -96,7 +96,7 @@ public class FormatCache
 		int findex = -1;
 		if( mpx.containsKey( f ) )
 		{
-			findex = ((Integer) mpx.get( f )).intValue();
+			findex = (Integer) mpx.get( f );
 		}
 		return findex;
 	}

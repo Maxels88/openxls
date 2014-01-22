@@ -121,67 +121,58 @@ public class PtgSub extends GenericPtg implements Ptg
 					{
 						return new PtgErr( PtgErr.ERROR_VALUE );
 					}
-					else if( this.parent_rec.getSheet().getWindow2().getShowZeroValues() )
+					if( this.parent_rec.getSheet().getWindow2().getShowZeroValues() )
 					{
 						return new PtgInt( 0 );
 					}
-					else
-					{
-						return new PtgStr( "" );
-					}
+					return new PtgStr( "" );
 				}
-				double returnVal = (((Double) o[0]).doubleValue() - ((Double) o[1]).doubleValue());
+				double returnVal = ((Double) o[0] - (Double) o[1]);
 				PtgNumber n = new PtgNumber( returnVal );
 				return n;
+			}    // handle array fomulas
+			String retArry = "";
+			int nArrays = java.lang.reflect.Array.getLength( o );
+			if( nArrays != 2 )
+			{
+				return new PtgErr( PtgErr.ERROR_VALUE );
 			}
-			else
-			{    // handle array fomulas
-				String retArry = "";
-				int nArrays = java.lang.reflect.Array.getLength( o );
-				if( nArrays != 2 )
+			int nVals = java.lang.reflect.Array.getLength( o[0] );    // use first array element to determine length of values as subsequent vals might not be arrays
+			for( int i = 0; i < (nArrays - 1); i += 2 )
+			{
+				Object secondOp = null;
+				boolean comparitorIsArray = o[i + 1].getClass().isArray();
+				if( !comparitorIsArray )
 				{
-					return new PtgErr( PtgErr.ERROR_VALUE );
+					secondOp = o[i + 1];
 				}
-				int nVals = java.lang.reflect.Array.getLength( o[0] );    // use first array element to determine length of values as subsequent vals might not be arrays
-				for( int i = 0; i < (nArrays - 1); i += 2 )
+				for( int j = 0; j < nVals; j++ )
 				{
-					Object secondOp = null;
-					boolean comparitorIsArray = o[i + 1].getClass().isArray();
-					if( !comparitorIsArray )
+					Object firstOp = Array.get( o[i], j );    // first array index j
+					if( comparitorIsArray )
 					{
-						secondOp = o[i + 1];
+						secondOp = Array.get( o[i + 1], j );    // second array index j
 					}
-					for( int j = 0; j < nVals; j++ )
+					if( !((firstOp instanceof Double) && (secondOp instanceof Double)) )
 					{
-						Object firstOp = Array.get( o[i], j );    // first array index j
-						if( comparitorIsArray )
+						if( this.parent_rec == null )
 						{
-							secondOp = Array.get( o[i + 1], j );    // second array index j
+							return new PtgErr( PtgErr.ERROR_VALUE );
 						}
-						if( !((firstOp instanceof Double) && (secondOp instanceof Double)) )
+						if( this.parent_rec.getSheet().getWindow2().getShowZeroValues() )
 						{
-							if( this.parent_rec == null )
-							{
-								return new PtgErr( PtgErr.ERROR_VALUE );
-							}
-							else if( this.parent_rec.getSheet().getWindow2().getShowZeroValues() )
-							{
-								return new PtgInt( 0 );
-							}
-							else
-							{
-								return new PtgStr( "" );
-							}
-						}    // 20081203 KSC: handle error's ala Excel
-						double retVal = ((Double) firstOp).doubleValue() - ((Double) secondOp).doubleValue();
-						retArry = retArry + retVal + ",";
-					}
+							return new PtgInt( 0 );
+						}
+						return new PtgStr( "" );
+					}    // 20081203 KSC: handle error's ala Excel
+					double retVal = (Double) firstOp - (Double) secondOp;
+					retArry = retArry + retVal + ",";
 				}
-				retArry = "{" + retArry.substring( 0, retArry.length() - 1 ) + "}";
-				PtgArray pa = new PtgArray();
-				pa.setVal( retArry );
-				return pa;
 			}
+			retArry = "{" + retArry.substring( 0, retArry.length() - 1 ) + "}";
+			PtgArray pa = new PtgArray();
+			pa.setVal( retArry );
+			return pa;
 		}
 		catch( NumberFormatException e )
 		{

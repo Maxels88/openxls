@@ -394,19 +394,16 @@ public class StringTool implements Serializable
 		{
 			return name;
 		}
-		else
+		char[] chars = name.toCharArray();
+		for( int i = 0; i < chars.length; i++ )
 		{
-			char[] chars = name.toCharArray();
-			for( int i = 0; i < chars.length; i++ )
+			if( chars[i] == '_' )
 			{
-				if( chars[i] == '_' )
-				{
-					chars[i + 1] = Character.toUpperCase( chars[i + 1] );
-				}
-				else
-				{
-					buf.append( chars[i] );
-				}
+				chars[i + 1] = Character.toUpperCase( chars[i + 1] );
+			}
+			else
+			{
+				buf.append( chars[i] );
 			}
 		}
 		return buf.toString();
@@ -604,38 +601,35 @@ public class StringTool implements Serializable
 		{
 			return originalText;
 		}
-		else
-		{
-			int nextidx = 0, lastidx = 0, pos = 0;
-			int textlen = replaceText.length();
-			int stringlen = originalText.length();
+		int nextidx = 0, lastidx = 0, pos = 0;
+		int textlen = replaceText.length();
+		int stringlen = originalText.length();
 
-			while( nextidx <= originalText.lastIndexOf( replaceText ) )
+		while( nextidx <= originalText.lastIndexOf( replaceText ) )
+		{
+			pos++;
+			nextidx = originalText.indexOf( replaceText, lastidx );
+			sb.append( originalText.substring( lastidx, nextidx ) );
+			if( pos > offset )
 			{
-				pos++;
-				nextidx = originalText.indexOf( replaceText, lastidx );
-				sb.append( originalText.substring( lastidx, nextidx ) );
-				if( pos > offset )
-				{
-					sb.append( replacementText );
-				}
-				else
-				{
-					sb.append( replaceText );
-				}
-				nextidx += textlen;
-				if( textlen == 0 )
-				{
-					break;// case of ""
-				}
-				lastidx = nextidx;
+				sb.append( replacementText );
 			}
-			if( nextidx < stringlen )
+			else
 			{
-				sb.append( originalText.substring( nextidx ) );
+				sb.append( replaceText );
 			}
-			return sb.toString();
+			nextidx += textlen;
+			if( textlen == 0 )
+			{
+				break;// case of ""
+			}
+			lastidx = nextidx;
 		}
+		if( nextidx < stringlen )
+		{
+			sb.append( originalText.substring( nextidx ) );
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -667,33 +661,30 @@ public class StringTool implements Serializable
 		{
 			return originalText;
 		}
-		else
+		if( (replaceText != null) && replaceText.equals( replacementText ) )
 		{
-			if( (replaceText != null) && replaceText.equals( replacementText ) )
-			{
-				return originalText; // avoid infinite loops
-			}
-			int nextidx = 0, lastidx = 0;
-			int textlen = replaceText.length();
-			int stringlen = originalText.length();
-			while( nextidx <= originalText.lastIndexOf( replaceText ) )
-			{
-				nextidx = originalText.indexOf( replaceText, lastidx );
-				sb.append( originalText.substring( lastidx, nextidx + offset ) );
-				sb.append( replacementText );
-				nextidx += textlen;
-				if( textlen == 0 )
-				{
-					break; // case of ""
-				}
-				lastidx = nextidx;
-			}
-			if( nextidx < stringlen )
-			{
-				sb.append( originalText.substring( nextidx ) );
-			}
-			return sb.toString();
+			return originalText; // avoid infinite loops
 		}
+		int nextidx = 0, lastidx = 0;
+		int textlen = replaceText.length();
+		int stringlen = originalText.length();
+		while( nextidx <= originalText.lastIndexOf( replaceText ) )
+		{
+			nextidx = originalText.indexOf( replaceText, lastidx );
+			sb.append( originalText.substring( lastidx, nextidx + offset ) );
+			sb.append( replacementText );
+			nextidx += textlen;
+			if( textlen == 0 )
+			{
+				break; // case of ""
+			}
+			lastidx = nextidx;
+		}
+		if( nextidx < stringlen )
+		{
+			sb.append( originalText.substring( nextidx ) );
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -736,29 +727,26 @@ public class StringTool implements Serializable
 		{
 			return "";
 		}
+		int begidx = originalText.indexOf( beginDelim ) + beginDelim.length();
+		int endidx = originalText.lastIndexOf( endDelim );
+		int holder = 0;
+		if( begidx < endidx )
+		{
+			sb.append( originalText.substring( begidx, endidx ) );
+		}
 		else
 		{
-			int begidx = originalText.indexOf( beginDelim ) + beginDelim.length();
-			int endidx = originalText.lastIndexOf( endDelim );
-			int holder = 0;
-			if( begidx < endidx )
+			while( (begidx > endidx) && (endidx > -1) )
+			{
+				holder = endidx;
+				endidx = originalText.lastIndexOf( endDelim, holder + 1 );
+			}
+			if( (begidx < endidx) && (endidx > -1) )
 			{
 				sb.append( originalText.substring( begidx, endidx ) );
 			}
-			else
-			{
-				while( (begidx > endidx) && (endidx > -1) )
-				{
-					holder = endidx;
-					endidx = originalText.lastIndexOf( endDelim, holder + 1 );
-				}
-				if( (begidx < endidx) && (endidx > -1) )
-				{
-					sb.append( originalText.substring( begidx, endidx ) );
-				}
-			}
-			return sb.toString();
 		}
+		return sb.toString();
 	}
 
 	/**
@@ -784,29 +772,26 @@ public class StringTool implements Serializable
 		{
 			return "";
 		}
+		int begidx = originalText.indexOf( beginDelim ) + beginDelim.length();
+		int endidx = originalText.indexOf( endDelim );
+		int holder = 0;
+		if( begidx < endidx )
+		{
+			sb.append( originalText.substring( begidx, endidx ) );
+		}
 		else
 		{
-			int begidx = originalText.indexOf( beginDelim ) + beginDelim.length();
-			int endidx = originalText.indexOf( endDelim );
-			int holder = 0;
-			if( begidx < endidx )
+			while( (begidx > endidx) && (endidx > -1) )
+			{
+				holder = endidx;
+				endidx = originalText.indexOf( endDelim, holder + 1 );
+			}
+			if( (begidx < endidx) && (endidx > -1) )
 			{
 				sb.append( originalText.substring( begidx, endidx ) );
 			}
-			else
-			{
-				while( (begidx > endidx) && (endidx > -1) )
-				{
-					holder = endidx;
-					endidx = originalText.indexOf( endDelim, holder + 1 );
-				}
-				if( (begidx < endidx) && (endidx > -1) )
-				{
-					sb.append( originalText.substring( begidx, endidx ) );
-				}
-			}
-			return sb.toString();
 		}
+		return sb.toString();
 	}
 
 	/**
@@ -834,35 +819,32 @@ public class StringTool implements Serializable
 		{
 			return originalText;
 		}
+		int begidx = originalText.indexOf( replaceBegin );
+		int endlen = replaceEnd.length();
+		int endidx = originalText.indexOf( replaceEnd ) + endlen;
+		int holder = 0;
+		if( begidx < endidx )
+
+		{
+			sb.append( originalText.substring( 0, begidx ) );
+			sb.append( replacementText );
+			sb.append( originalText.substring( endidx ) );
+		}
 		else
 		{
-			int begidx = originalText.indexOf( replaceBegin );
-			int endlen = replaceEnd.length();
-			int endidx = originalText.indexOf( replaceEnd ) + endlen;
-			int holder = 0;
-			if( begidx < endidx )
-
+			while( (begidx > endidx) && (endidx > -1) )
+			{
+				holder = endidx;
+				endidx = originalText.indexOf( replaceEnd, holder + 1 );
+			}
+			if( (begidx < endidx) && (endidx > -1) )
 			{
 				sb.append( originalText.substring( 0, begidx ) );
 				sb.append( replacementText );
-				sb.append( originalText.substring( endidx ) );
+				sb.append( originalText.substring( endidx + endlen ) );
 			}
-			else
-			{
-				while( (begidx > endidx) && (endidx > -1) )
-				{
-					holder = endidx;
-					endidx = originalText.indexOf( replaceEnd, holder + 1 );
-				}
-				if( (begidx < endidx) && (endidx > -1) )
-				{
-					sb.append( originalText.substring( 0, begidx ) );
-					sb.append( replacementText );
-					sb.append( originalText.substring( endidx + endlen ) );
-				}
-			}
-			return sb.toString();
 		}
+		return sb.toString();
 	}
 
 	public static String StripChars( String theFilter, String theString )

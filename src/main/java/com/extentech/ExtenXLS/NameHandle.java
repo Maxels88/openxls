@@ -321,7 +321,7 @@ public class NameHandle
 			throw new WorkBookException( "NamedRange.updateRow Object array failed: too many CellRanges.",
 			                             WorkBookException.RUNTIME_ERROR );
 		}
-		else if( rngs.length == 0 )
+		if( rngs.length == 0 )
 		{
 			throw new WorkBookException( "NamedRange.updateRow Object array failed: zero CellRanges", WorkBookException.RUNTIME_ERROR );
 		}
@@ -353,7 +353,7 @@ public class NameHandle
 			throw new WorkBookException( "NamedRange.updateRow Object array failed: too many CellRanges.",
 			                             WorkBookException.RUNTIME_ERROR );
 		}
-		else if( rngs.length == 0 )
+		if( rngs.length == 0 )
 		{
 			throw new WorkBookException( "NamedRange.updateRow Object array failed: zero CellRanges", WorkBookException.RUNTIME_ERROR );
 		}
@@ -400,7 +400,7 @@ public class NameHandle
 		{
 			throw new WorkBookException( "NamedRange.add Object array failed: too many CellRanges.", WorkBookException.RUNTIME_ERROR );
 		}
-		else if( rngs.length == 0 )
+		if( rngs.length == 0 )
 		{
 			throw new WorkBookException( "NamedRange.add Object array failed: zero CellRanges", WorkBookException.RUNTIME_ERROR );
 		}
@@ -451,10 +451,7 @@ public class NameHandle
 				this.remove();
 				throw new IllegalArgumentException( "Named Range References must include a Sheet name." );
 			}
-			else
-			{
-				strloc = this.get2DSheetName() + "!" + strloc;
-			}
+			strloc = this.get2DSheetName() + "!" + strloc;
 		}
 		try
 		{

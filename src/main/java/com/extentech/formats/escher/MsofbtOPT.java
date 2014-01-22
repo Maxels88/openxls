@@ -165,8 +165,8 @@ public class MsofbtOPT extends EscherRecord
 			{
 				Integer propId = ((Integer) k[i]);
 				Object[] o = (Object[]) props.get( propId );
-				boolean isComplex = ((Boolean) o[0]).booleanValue();
-				boolean isBid = ((Boolean) o[2]).booleanValue();
+				boolean isComplex = (Boolean) o[0];
+				boolean isBid = (Boolean) o[2];
 				int flag = 0;
 				if( isComplex )
 				{
@@ -179,7 +179,7 @@ public class MsofbtOPT extends EscherRecord
 				int dtx;
 				if( !isComplex )
 				{
-					dtx = ((Integer) o[1]).intValue();    // non-complex data is just an integer
+					dtx = (Integer) o[1];    // non-complex data is just an integer
 				}
 				else
 				{
@@ -188,8 +188,8 @@ public class MsofbtOPT extends EscherRecord
 					complexData = ByteTools.append( new byte[]{ 0, 0 }, complexData );
 				}
 				// the basic part of the property table
-				tmp[pos++] = ((byte) (0xFF & propId.intValue()));
-				tmp[pos++] = (byte) (flag | ((0x3F00 & propId.intValue()) >> 8));
+				tmp[pos++] = ((byte) (0xFF & propId));
+				tmp[pos++] = (byte) (flag | ((0x3F00 & propId) >> 8));
 				byte[] dtxBytes = ByteTools.cLongToLEBytes( dtx );
 				System.arraycopy( dtxBytes, 0, tmp, pos, 4 );
 				pos += 4;
@@ -310,9 +310,9 @@ public class MsofbtOPT extends EscherRecord
 		{
 			Integer propId = (Integer) ii.next();
 			Object[] o = (Object[]) props.get( propId );    // Object[]:  0= isComplex, 1= dtx (value or len of complex data -- filled in below), 2= isBid
-			if( ((Boolean) o[0]).booleanValue() )
+			if( (Boolean) o[0] )
 			{
-				int len = ((Integer) o[1]).intValue();
+				int len = (Integer) o[1];
 				if( len >= 2 )
 				{
 					// apparently each record is delimited by a double byte 0 -- so decrement by 2 here and increment pos by 2 below 
@@ -323,7 +323,7 @@ public class MsofbtOPT extends EscherRecord
 					                  0,
 					                  complexdata.length );    // get property data after main property table
 					props.put( propId, new Object[]{ o[0], complexdata, o[2] } );    //store complex data for later retrieval
-					if( propId.intValue() == MSODrawingConstants.msooptpibName )
+					if( propId == MSODrawingConstants.msooptpibName )
 					{ // = image name
 						try
 						{
@@ -334,7 +334,7 @@ public class MsofbtOPT extends EscherRecord
 							imageName = "Unnamed";
 						}
 					}
-					else if( propId.intValue() == MSODrawingConstants.msooptwzName )
+					else if( propId == MSODrawingConstants.msooptwzName )
 					{ // = shape name
 						try
 						{
@@ -345,7 +345,7 @@ public class MsofbtOPT extends EscherRecord
 							;
 						}
 					}
-					else if( propId.intValue() == MSODrawingConstants.msooptwzDescription )
+					else if( propId == MSODrawingConstants.msooptwzDescription )
 					{ // = Alternate Text
 						try
 						{
@@ -356,7 +356,7 @@ public class MsofbtOPT extends EscherRecord
 							;
 						}
 					}
-					else if( propId.intValue() == MSODrawingConstants.msooptFillBlipName )
+					else if( propId == MSODrawingConstants.msooptFillBlipName )
 					{    // = the comment, file name, or the full URL that is used as a fill
 						try
 						{

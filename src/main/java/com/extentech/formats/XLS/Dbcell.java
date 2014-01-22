@@ -116,7 +116,7 @@ public final class Dbcell extends com.extentech.formats.XLS.XLSRecord implements
 			// we don't want the last length, not needed, end of chain!
 			if( it.hasNext() )
 			{
-				short ns = s.shortValue();
+				short ns = s;
 				byte[] b = ByteTools.shortToLEBytes( ns );
 				newData[pointer++] = b[0];
 				newData[pointer++] = b[1];

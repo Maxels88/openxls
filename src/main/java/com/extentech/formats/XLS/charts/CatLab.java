@@ -119,16 +119,13 @@ public class CatLab extends GenericChartObject implements ChartObject
 			{
 				return "ctr";
 			}
-			else if( at == 1 )
+			if( at == 1 )
 			{
 				return "l";
 			}
-			else
-			{
-				return "r";
-			}
+			return "r";
 		}
-		else if( op.equals( "lblOffset" ) )    // 0-100
+		if( op.equals( "lblOffset" ) )    // 0-100
 		{
 			return Integer.toString( wOffset );
 		}

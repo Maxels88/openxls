@@ -185,7 +185,7 @@ public class PtgCalculator
 				}
 				if( d != null )
 				{
-					darr[i] = d.doubleValue();
+					darr[i] = d;
 				}
 			}
 			i++;
@@ -245,7 +245,7 @@ public class PtgCalculator
 				arr[i] = new double[s.length];
 				for( int j = 0; j < s.length; j++ )
 				{
-					arr[i][j] = new Double( s[j] ).doubleValue();
+					arr[i][j] = new Double( s[j] );
 				}
 			}
 		}
@@ -342,7 +342,7 @@ public class PtgCalculator
 			PtgBool b = (PtgBool) operand;
 			return b.getBooleanValue();
 		}
-		else if( operand instanceof PtgInt )
+		if( operand instanceof PtgInt )
 		{
 			PtgInt i = (PtgInt) operand;
 			return i.getBooleanVal();

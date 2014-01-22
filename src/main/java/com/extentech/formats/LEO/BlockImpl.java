@@ -160,14 +160,11 @@ public abstract class BlockImpl implements com.extentech.formats.LEO.Block, Comp
 		{
 			return BIGBLOCK.SIZE;
 		}
-		else if( this.getBlockType() == SMALL )
+		if( this.getBlockType() == SMALL )
 		{
 			return SMALLBLOCK.SIZE;
 		}
-		else
-		{
-			return 0;
-		}
+		return 0;
 	}
 
 	/**

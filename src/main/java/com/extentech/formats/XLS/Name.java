@@ -397,12 +397,12 @@ public final class Name extends XLSRecord
 			ret[0] = b;
 			return ret;
 		}
-		else if( ptga instanceof PtgArea3d )
+		if( ptga instanceof PtgArea3d )
 		{
 			PtgArea3d p3d = (PtgArea3d) ptga;
 			return p3d.getSheets( this.getWorkBook() );
 		}
-		else if( ptga instanceof PtgMemFunc )
+		if( ptga instanceof PtgMemFunc )
 		{
 			PtgMemFunc p = (PtgMemFunc) ptga;
 			return p.getSheets( this.getWorkBook() );
@@ -432,7 +432,7 @@ public final class Name extends XLSRecord
 		{
 			return "=" + this.getCachedOOXMLExpression();
 		}
-		else if( this.expression != null )
+		if( this.expression != null )
 		{
 			return FormulaParser.getExpressionString( this.expression );
 		}

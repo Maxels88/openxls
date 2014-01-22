@@ -53,19 +53,19 @@ public class XSLConverterTool
 		{
 			return "m/d/yy";
 		}
-		else if( ifmt.equals( "15" ) )
+		if( ifmt.equals( "15" ) )
 		{
 			return "d-mmm-yy";
 		}
-		else if( ifmt.equals( "16" ) )
+		if( ifmt.equals( "16" ) )
 		{
 			return "d-mmm";
 		}
-		else if( ifmt.equals( "17" ) )
+		if( ifmt.equals( "17" ) )
 		{
 			return "mmm-yy";
 		}
-		else if( ifmt.equals( "22" ) )
+		if( ifmt.equals( "22" ) )
 		{
 			return "m/d/yy h:mm";
 		}
@@ -85,26 +85,23 @@ public class XSLConverterTool
 		{
 			return "%m/%d/%Y";
 		}
-		else if( ifmt.equals( "15" ) )
+		if( ifmt.equals( "15" ) )
 		{
 			return "%d-%b-%y";
 		}
-		else if( ifmt.equals( "16" ) )
+		if( ifmt.equals( "16" ) )
 		{
 			return "%d-%b";
 		}
-		else if( ifmt.equals( "17" ) )
+		if( ifmt.equals( "17" ) )
 		{
 			return "%m-%y";
 		}
-		else if( ifmt.equals( "22" ) )
+		if( ifmt.equals( "22" ) )
 		{
 			return "%m/%d/%Y %h:%M";
 		}
-		else
-		{
-			return "%m/%d/%Y";
-		}
+		return "%m/%d/%Y";
 	}
 
 	/**

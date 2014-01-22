@@ -293,7 +293,7 @@ public final class ByteTools implements Serializable
 		try
 		{
 			Double dbl = dis.readDouble();
-			d = dbl.doubleValue();
+			d = dbl;
 		}
 		catch( java.io.IOException e )
 		{
@@ -322,7 +322,7 @@ public final class ByteTools implements Serializable
 		try
 		{
 			Long lg = dis.readLong();
-			l = lg.longValue();
+			l = lg;
 		}
 		catch( java.io.IOException e )
 		{

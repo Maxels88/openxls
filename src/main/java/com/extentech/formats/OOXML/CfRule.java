@@ -156,7 +156,7 @@ public class CfRule implements OOXMLElement
 		{
 			try
 			{
-				return Integer.valueOf( (String) this.attrs.get( "dxfId" ) ).intValue();
+				return Integer.valueOf( (String) this.attrs.get( "dxfId" ) );
 			}
 			catch( Exception e )
 			{

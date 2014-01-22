@@ -539,7 +539,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 				BSE[i] = new MsofbtBSE( MSODrawingConstants.MSOFBTBSE, Integer.parseInt( imageType.get( i ).toString() ), 2 );
 				BSE[i].setImageData( (byte[]) imageData.get( i ) );
 				BSE[i].setImageType( Integer.parseInt( imageType.get( i ).toString() ) );
-				BSE[i].setRefCount( ((Integer) cRef.get( i )).intValue() );        // 20071120 KSC: set the reference count for this image data
+				BSE[i].setRefCount( (Integer) cRef.get( i ) );        // 20071120 KSC: set the reference count for this image data
 				bos.write( BSE[i].toByteArray() );
 			}
 			imageBytes = bos.toByteArray();
@@ -954,7 +954,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( (idx >= 0) && (idx < cRef.size()) )
 		{
-			int cr = ((Integer) cRef.get( idx )).intValue() + 1;
+			int cr = (Integer) cRef.get( idx ) + 1;
 			cRef.remove( idx );
 			cRef.add( idx, cr );
 		} //else  20071126 KSC: it's OK, can have - indexes ... 
@@ -970,7 +970,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( (idx >= 0) && (idx < cRef.size()) )
 		{
-			return ((Integer) cRef.get( idx )).intValue();
+			return (Integer) cRef.get( idx );
 		}
 		//Logger.logErr("MSODrawingGroup: error encountered when returning Reference Count");
 		return -1;
@@ -985,7 +985,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( (idx >= 0) && (idx < cRef.size()) )
 		{
-			int cr = ((Integer) cRef.get( idx )).intValue() - 1;
+			int cr = (Integer) cRef.get( idx ) - 1;
 			cRef.remove( idx );
 			cRef.add( idx, cr );
 		}

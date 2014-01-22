@@ -499,10 +499,7 @@ class TreeList extends AbstractList
 			{
 				return insertOnLeft( indexRelativeToMe, obj );
 			}
-			else
-			{
-				return insertOnRight( indexRelativeToMe, obj );
-			}
+			return insertOnRight( indexRelativeToMe, obj );
 		}
 
 		private AVLNode insertOnLeft( int indexRelativeToMe, Object obj )

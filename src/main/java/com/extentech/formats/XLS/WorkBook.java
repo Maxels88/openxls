@@ -655,7 +655,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		Short res = (Short) formatlookup.get( pattern.toUpperCase() );
 		if( res != null )
 		{
-			return res.shortValue();
+			return res;
 		}
 		return -1;
 	}
@@ -1141,12 +1141,9 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		if( o != null )
 		{
 			Integer I = (Integer) o;
-			return I.intValue();
+			return I;
 		}
-		else
-		{
-			return -1;
-		}
+		return -1;
 	}
 
 	/**
@@ -1204,10 +1201,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				Logger.logWarn( "font " + t + " not found. Workbook contains only: " + fonts.size() + " defined fonts." );
 				return (Font) fonts.get( 0 );
 			}
-			else
-			{
-				return (Font) fonts.get( t );
-			}
+			return (Font) fonts.get( t );
 		}
 		return (Font) this.fonts.get( 0 );
 	}
@@ -1499,7 +1493,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		if( addtorec )
 		{
 
-			if( lbplypos.longValue() > 0 )
+			if( lbplypos > 0 )
 			{
 				streamer.addRecord( rec );
 			}
@@ -2102,16 +2096,13 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			Logger.logWarn( "WorkBook.addWorkSheet() attempting to add null sheet." );
 			return;
 		}
-		else
+		this.lastbound = sheet;
+		if( DEBUGLEVEL > 10 )
 		{
-			this.lastbound = sheet;
-			if( DEBUGLEVEL > 10 )
-			{
-				Logger.logInfo( "Workbook Adding Sheet: " + sheet.getSheetName() + ":" + String.valueOf( lbplypos ) );
-			}
-			workSheets.put( lbplypos, sheet );
-			boundsheets.add( sheet );
+			Logger.logInfo( "Workbook Adding Sheet: " + sheet.getSheetName() + ":" + String.valueOf( lbplypos ) );
 		}
+		workSheets.put( lbplypos, sheet );
+		boundsheets.add( sheet );
 	}
 
 	/**
@@ -3412,7 +3403,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				Object fontNum = localFonts.get( xmlFont );
 				if( fontNum != null )
 				{ // then get the fontnum in this book
-					localfNum = ((Integer) fontNum).intValue();
+					localfNum = (Integer) fontNum;
 				}
 				else
 				{ // it's a new font for this workbook, add it in
@@ -3442,7 +3433,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				}
 				else  // already exists in the destination
 				{
-					localNum = ((Integer) xfNum).intValue();
+					localNum = (Integer) xfNum;
 				}
 
 			}
@@ -3500,7 +3491,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			{
 				return cht;
 			}
-			else if( untitled && cname.equals( "" ) )
+			if( untitled && cname.equals( "" ) )
 			{
 				return cht;
 			}

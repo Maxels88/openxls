@@ -485,10 +485,7 @@ class HLinkStruct implements XLSConstants, Serializable
 		{
 			return url;
 		}
-		else
-		{
-			return url + "#" + textMark;
-		}
+		return url + "#" + textMark;
 	}
 
 	/**

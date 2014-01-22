@@ -78,7 +78,7 @@ public class GeomGroup implements OOXMLElement
 						lastTag.pop();
 						break;
 					}
-					else if( tnm.equals( "custGeom" ) )
+					if( tnm.equals( "custGeom" ) )
 					{
 						lastTag.push( tnm );
 						c = (CustGeom) CustGeom.parseOOXML( xpp, lastTag );

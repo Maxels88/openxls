@@ -177,11 +177,11 @@ class StrCache implements OOXMLElement
 					String tnm = xpp.getName();
 					if( tnm.equals( "ptCount" ) )
 					{
-						ptCount = Integer.valueOf( xpp.getAttributeValue( 0 ) ).intValue();
+						ptCount = Integer.valueOf( xpp.getAttributeValue( 0 ) );
 					}
 					else if( tnm.equals( "pt" ) )
 					{
-						idx = Integer.valueOf( xpp.getAttributeValue( 0 ) ).intValue();
+						idx = Integer.valueOf( xpp.getAttributeValue( 0 ) );
 						pt = com.extentech.formats.XLS.OOXMLAdapter.getNextText( xpp );
 					}
 				}

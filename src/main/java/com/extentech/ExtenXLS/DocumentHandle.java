@@ -240,10 +240,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 			{
 				return new WorkBookHandle( leo );
 			}
-			else
-			{
-				throw new WorkBookException( "input is LEO but no supported format detected", -1 );
-			}
+			throw new WorkBookException( "input is LEO but no supported format detected", -1 );
 		}
 
 		String headerString;
@@ -280,11 +277,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 				throw new WorkBookException( "Error encountered importing CSV: " + e.toString(), WorkBookException.ILLEGAL_INIT_ERROR );
 			}
 		}
-
-		else
-		{
-			throw new WorkBookException( "unknown file format", -1 );
-		}
+		throw new WorkBookException( "unknown file format", -1 );
 	}
 
 	/**
@@ -386,10 +379,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 		{
 			return name;
 		}
-		else
-		{
-			return "Untitled Document";
-		}
+		return "Untitled Document";
 	}
 
 	/**

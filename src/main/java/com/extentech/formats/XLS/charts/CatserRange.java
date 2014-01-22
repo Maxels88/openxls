@@ -203,7 +203,7 @@ public class CatserRange extends GenericChartObject implements ChartObject
 	{
 		if( op.equals( "crossesAt" ) )                // specifies where axis crosses (double value
 		{
-			catCross = Short.valueOf( val ).shortValue();
+			catCross = Short.valueOf( val );
 		}
 		else if( op.equals( "orientation" ) )
 		{    // axis orientation minMax or maxMin  -- fReverse

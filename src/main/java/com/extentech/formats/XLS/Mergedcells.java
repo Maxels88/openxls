@@ -247,10 +247,7 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 							{
 								continue;    // skip- already handled
 							}
-							else
-							{
-								aMul = (Mulblank) ch[t];
-							}
+							aMul = (Mulblank) ch[t];
 						}
 						ch[t].setMergeRange( cr );
 					}

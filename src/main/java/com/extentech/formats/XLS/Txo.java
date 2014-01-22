@@ -291,7 +291,7 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 					{
 						String ssz = section.substring( 4 );
 						ssz = ssz.substring( 0, ssz.indexOf( '"' ) );
-						sz = Integer.valueOf( ssz ).intValue();
+						sz = Integer.valueOf( ssz );
 					}
 					i += section.length();
 					if( (i < s.length()) && (s.charAt( i ) == '>') )

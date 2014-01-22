@@ -188,7 +188,7 @@ public class Color implements OOXMLElement
 							}
 							else if( n.equals( "tint" ) )
 							{
-								tint = new Double( val ).doubleValue();
+								tint = new Double( val );
 							}
 						}
 					}
@@ -438,7 +438,7 @@ public class Color implements OOXMLElement
 			}
 			else if( this.colortype == COLORTYPEINDEXED )
 			{    // indexed (corresponds to either our color int or a custom set of indexed colors
-				this.colorint = Integer.valueOf( this.colorval ).intValue();
+				this.colorint = Integer.valueOf( this.colorval );
 				if( (this.colorint == 64) && (type == FormatHandle.colorFONT) ) // means system foreground: Default foreground color. This is the window text color in the sheet display.
 				{
 					this.colorstr = FormatHandle.colorToHexString( FormatHandle.getColor( 0 ) );
@@ -499,7 +499,7 @@ public class Color implements OOXMLElement
 		String clr = "";
 		try
 		{
-			i = Integer.valueOf( colorval ).intValue();
+			i = Integer.valueOf( colorval );
 			clr = t.genericThemeClrs[i];
 		}
 		catch( Exception e )
@@ -789,10 +789,7 @@ class HSLColor
 		{
 			return a;
 		}
-		else
-		{
-			return b;
-		}
+		return b;
 	}
 
 	private int iMin( int a, int b )
@@ -801,10 +798,7 @@ class HSLColor
 		{
 			return a;
 		}
-		else
-		{
-			return b;
-		}
+		return b;
 	}
 
 	public void greyscale()

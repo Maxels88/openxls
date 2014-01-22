@@ -369,15 +369,12 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 				Logger.logInfo( "Resourceloader.getFilePathForResource(): Successfully obtained " + zipstring );
 			}
 			return zipstring;
+		} // file is not in a jar
+		if( DEBUG )
+		{
+			Logger.logErr( "ResourceLoader.getFilePathForResource(): File is not in jar:" + s );
 		}
-		else
-		{ // file is not in a jar
-			if( DEBUG )
-			{
-				Logger.logErr( "ResourceLoader.getFilePathForResource(): File is not in jar:" + s );
-			}
-			return s;
-		}
+		return s;
 	}
 
 	/**
@@ -522,14 +519,11 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 			}
 			return zipstring;
 		}
-		else
+		if( DEBUG )
 		{
-			if( DEBUG )
-			{
-				Logger.logInfo( "ResourceLoader() returning Final Working Directory Setting: " + s );
-			}
-			return s;
+			Logger.logInfo( "ResourceLoader() returning Final Working Directory Setting: " + s );
 		}
+		return s;
 	}
 
 	private static URLDecoder decodr = new URLDecoder();

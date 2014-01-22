@@ -89,10 +89,7 @@ public class DelimitedValuesParser
 				{
 					return current = Token.EOF;
 				}
-				else
-				{
-					return current = Token.VALUE;
-				}
+				return current = Token.VALUE;
 			}
 
 			if( read == delimiter )
@@ -111,10 +108,7 @@ public class DelimitedValuesParser
 					next = Token.NEWLINE;
 					return current = Token.VALUE;
 				}
-				else
-				{
-					return current = Token.NEWLINE;
-				}
+				return current = Token.NEWLINE;
 			}
 
 			value.append( (char) read );

@@ -1507,11 +1507,11 @@ public class CellRange implements Serializable
 		// trap OOXML external reference link, if any
 		if( s[3] != null )
 		{
-			externalLink1 = Integer.valueOf( s[3].substring( 1, s[3].length() - 1 ) ).intValue();
+			externalLink1 = Integer.valueOf( s[3].substring( 1, s[3].length() - 1 ) );
 		}
 		if( s[4] != null )
 		{
-			externalLink2 = Integer.valueOf( s[4].substring( 1, s[4].length() - 1 ) ).intValue();
+			externalLink2 = Integer.valueOf( s[4].substring( 1, s[4].length() - 1 ) );
 		}
 
 		return coords;
@@ -1867,7 +1867,7 @@ public class CellRange implements Serializable
 			this.mycolints = null;
 			return true;
 		}
-		else if( this.range != null )
+		if( this.range != null )
 		{// 20100106 KSC: handle ranges containing null cell[0] (i.e. ranges referencing cells not present and createBlanks==false)
 			if( this.DEBUG )
 			{

@@ -130,7 +130,7 @@ public class CalculationException extends Exception
 		{
 			if( error.equals( errorStrings[i][0] ) )
 			{
-				return new Byte( errorStrings[i][1] ).byteValue();
+				return new Byte( errorStrings[i][1] );
 			}
 		}
 		return 0;

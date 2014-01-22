@@ -751,12 +751,9 @@ public class PtgArea extends PtgRef implements Ptg
 				{
 					return sh1 + "!" + addr1 + ":" + addr2;
 				}
-				else
-				{
-					return sh1 + "!" + addr1;
-				}
+				return sh1 + "!" + addr1;
 			}
-			else if( sheetname != null )
+			if( sheetname != null )
 			{    // both sheets in sub-ptgs are null
 				sh1 = sheetname;
 				// 20090325 KSC: handle OOXML external references

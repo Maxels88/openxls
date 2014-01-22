@@ -1054,7 +1054,7 @@ public class WorkSheetHandle implements Handle
 		// 20080917 KSC: set cache setting via system property [BugTracker 1862]
 		if( System.getProperty( "com.extentech.ExtenXLS.cacheCellHandles" ) != null )
 		{
-			cache = Boolean.valueOf( (System.getProperty( "com.extentech.ExtenXLS.cacheCellHandles" )) ).booleanValue();
+			cache = Boolean.valueOf( (System.getProperty( "com.extentech.ExtenXLS.cacheCellHandles" )) );
 		}
 	}
 
@@ -1282,12 +1282,9 @@ public class WorkSheetHandle implements Handle
 		{
 			return insertRow( rownum, myr, ROW_INSERT_MULTI, shiftrows );
 		}
-		else
-		{
-			// essentially a high performance row insert for the bottom of the workbook, used frequently in streaming workbook insertion
-			Row newRow = mysheet.insertRow( rownum, ROW_INSERT_MULTI, shiftrows );
-			return true;
-		}
+		// essentially a high performance row insert for the bottom of the workbook, used frequently in streaming workbook insertion
+		Row newRow = mysheet.insertRow( rownum, ROW_INSERT_MULTI, shiftrows );
+		return true;
 
 	}
 
@@ -2078,10 +2075,7 @@ public class WorkSheetHandle implements Handle
 				return null;
 			}
 		}
-		else
-		{
-			return null;
-		}
+		return null;
 	}
 
 	/**
@@ -2251,10 +2245,7 @@ public class WorkSheetHandle implements Handle
 				return null;
 			}
 		}
-		else
-		{
-			return null;
-		}
+		return null;
 	}
 
 	/**
@@ -2472,7 +2463,7 @@ public class WorkSheetHandle implements Handle
 		else
 		{
 			Integer in = (Integer) dateFormats.get( fmt );
-			thisCell.setFormatId( in.intValue() );
+			thisCell.setFormatId( in );
 		}
 		//Logger.logInfo("Date added: " + thisCell.getFormattedStringVal());
 		return thisCell;
@@ -2699,13 +2690,10 @@ public class WorkSheetHandle implements Handle
 			{
 				return ret;
 			}
-			else
-			{
-				ret = new CellHandle( this.mysheet.getCell( row, col ), this.wbh );
-				ret.setWorkSheetHandle( this );
-				//	cellhandles.put(address,ret);
-				return ret;
-			}
+			ret = new CellHandle( this.mysheet.getCell( row, col ), this.wbh );
+			ret.setWorkSheetHandle( this );
+			//	cellhandles.put(address,ret);
+			return ret;
 		}
 		ret = new CellHandle( this.mysheet.getCell( row, col ), this.wbh );
 		ret.setWorkSheetHandle( this );

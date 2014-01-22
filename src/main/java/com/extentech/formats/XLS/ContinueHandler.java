@@ -340,7 +340,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 				return true;
 			}
 			// handle masked mso's which have continues separately
-			else if( (((Continue) rec).maskedMso != null) && ((((Continue) rec).maskedMso.getLength() - 4) > MAXRECLEN) )
+			if( (((Continue) rec).maskedMso != null) && ((((Continue) rec).maskedMso.getLength() - 4) > MAXRECLEN) )
 			{
 				((Continue) rec).maskedMso.setOpcode( CONTINUE );    // so can add the correct record to output
 				createBigRecContinues( ((Continue) rec).maskedMso, out, streamer );
@@ -389,11 +389,11 @@ public class ContinueHandler implements Serializable, XLSConstants
 		{
 			return createSstContinues( (Sst) rec, insertLoc );
 		}
-		else if( (datalen > MAXRECLEN) && (!(rec instanceof Continue)) )
+		if( (datalen > MAXRECLEN) && (!(rec instanceof Continue)) )
 		{
 			return createBigContinues( rec, insertLoc );
 		}
-		else if( rec instanceof Txo )
+		if( rec instanceof Txo )
 		{
 			return createTxoContinues( (Txo) rec );
 		}
@@ -428,26 +428,26 @@ public class ContinueHandler implements Serializable, XLSConstants
 		// create Continues, skip the first which is Sst recordbody
 		for( int i = 1; i <= numconts; i++ )
 		{ // start after the 1st continue length which is the Sst data body
-			if( continuesizes[i].intValue() == 0 )
+			if( continuesizes[i] == 0 )
 			{
 				break;
 			}
 			// numconts is one less than continuesizes, match continuesizes[1] with numconts[0]...
 			Byte thisgr = sstgrbits[i - 1];
-			dtapos += continuesizes[i - 1].intValue();
+			dtapos += continuesizes[i - 1];
 
 			// check for a grbit -- null grbit means Continue Breaks on a one-char UString
 			boolean hasGrbit = false;
 			if( thisgr != null )
 			{
-				hasGrbit = ((thisgr.byteValue() < 0x2) && (thisgr.byteValue() >= 0x0)); // Sst grbit is either 0h or 1h, otherwise it's String data
+				hasGrbit = ((thisgr < 0x2) && (thisgr >= 0x0)); // Sst grbit is either 0h or 1h, otherwise it's String data
 			}
-			if( continuesizes[i].intValue() == MAXRECLEN )
+			if( continuesizes[i] == MAXRECLEN )
 			{
 				hasGrbit = false; // this is a non-standard Sst Continue
 			}
 
-			sizer = continuesizes[i].intValue();
+			sizer = continuesizes[i];
 			if( i == numconts )
 			{
 				sizer = (datalen - dtapos);
@@ -465,7 +465,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 					Logger.logInfo( "New Continue. HAS grbit." );
 					Logger.logInfo( "Continue GRBIT: " + String.valueOf( thisgr ) );
 				}
-				continuedata[0] = thisgr.byteValue(); // set a grbit on the new Continue
+				continuedata[0] = thisgr; // set a grbit on the new Continue
 				System.arraycopy( dta, dtapos, continuedata, 1, continuedata.length - 1 );
 			}
 			else
@@ -485,7 +485,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 			}
 			insertLoc++;
 		}
-		int sstsize = continuesizes[0].intValue();
+		int sstsize = continuesizes[0];
 		trimRecSize( rec, sstsize );
 		return numconts;
 	}
@@ -532,7 +532,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 			Integer sstz = continuesizes[0];
 			if( sstz != null )
 			{
-				sstsize = sstz.intValue();
+				sstsize = sstz;
 			}
 			trimRecSize( rec, sstsize );
 		}
@@ -552,26 +552,26 @@ public class ContinueHandler implements Serializable, XLSConstants
 		// create Continues, skip the first which is Sst recordbody
 		for( int i = 1; i <= numconts; i++ )
 		{ // start after the 1st continue length which is the Sst data body
-			if( continuesizes[i].intValue() == 0 )
+			if( continuesizes[i] == 0 )
 			{
 				break;
 			}
 			// numconts is one less than continuesizes, match continuesizes[1] with numconts[0]...
 			Byte thisgr = sstgrbits[i - 1];
-			dtapos += continuesizes[i - 1].intValue();
+			dtapos += continuesizes[i - 1];
 
 			// check for a grbit -- null grbit means Continue Breaks on a one-char UString
 			boolean hasGrbit = false;
 			if( thisgr != null )
 			{
-				hasGrbit = ((thisgr.byteValue() < 0x2) && (thisgr.byteValue() >= 0x0)); // Sst grbit is either 0h or 1h, otherwise it's String data
+				hasGrbit = ((thisgr < 0x2) && (thisgr >= 0x0)); // Sst grbit is either 0h or 1h, otherwise it's String data
 			}
-			if( continuesizes[i].intValue() == MAXRECLEN )
+			if( continuesizes[i] == MAXRECLEN )
 			{
 				hasGrbit = false; // this is a non-standard Sst Continue
 			}
 
-			sizer = continuesizes[i].intValue();
+			sizer = continuesizes[i];
 			if( i == numconts )
 			{
 				sizer = (datalen - dtapos);
@@ -589,7 +589,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 					Logger.logInfo( "New Continue. HAS grbit." );
 					Logger.logInfo( "Continue GRBIT: " + String.valueOf( thisgr ) );
 				}
-				continuedata[0] = thisgr.byteValue(); // set a grbit on the new Continue
+				continuedata[0] = thisgr; // set a grbit on the new Continue
 				System.arraycopy( dta, dtapos, continuedata, 1, continuedata.length - 1 );
 			}
 			else

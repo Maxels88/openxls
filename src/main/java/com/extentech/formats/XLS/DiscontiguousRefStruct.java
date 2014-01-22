@@ -538,10 +538,7 @@ class refPtgs extends TreeMap implements Serializable
 //System.out.print(": Found ptg" + this.get((Integer)locs.get(key)));
 					return true;
 				}
-				else
-				{
-					break;    // shouldn't hit here
-				}
+				break;    // shouldn't hit here
 			}
 		}
 		// now see if test cell falls into any areas

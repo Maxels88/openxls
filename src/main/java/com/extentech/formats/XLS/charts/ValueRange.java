@@ -486,7 +486,7 @@ public class ValueRange extends GenericChartObject implements ChartObject
 		if( op.equals( "crossesAt" ) )
 		// specifies where axis crosses		  -- numCross or catCross
 		{
-			numCross = new Double( val ).doubleValue();
+			numCross = new Double( val );
 		}
 		else if( op.equals( "orientation" ) )
 		{    // axis orientation minMax or maxMin  -- fReverse
@@ -521,23 +521,23 @@ public class ValueRange extends GenericChartObject implements ChartObject
 		}
 		else if( op.equals( "max" ) )
 		{            // axis max - valueRange only?
-			numMax = new Double( val ).doubleValue();
+			numMax = new Double( val );
 			// turn off automatic scaling
 			grbit = (short) (grbit & 0xFD);    // turn off bit 2
 		}
 		else if( op.equals( "min" ) )
 		{            // axis min- valueRange only?
-			numMin = new Double( val ).doubleValue();
+			numMin = new Double( val );
 			// turn off automatic scaling
 			grbit = (short) (grbit & 0xFE);    // turn off bit 1
 		}
 		else if( op.equals( "majorUnit" ) )
 		{
-			numMajor = new Double( val ).doubleValue();
+			numMajor = new Double( val );
 		}
 		else if( op.equals( "minorUnit" ) )
 		{
-			numMinor = new Double( val ).doubleValue();
+			numMinor = new Double( val );
 		}
 		else
 		{

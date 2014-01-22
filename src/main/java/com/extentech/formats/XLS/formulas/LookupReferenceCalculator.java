@@ -94,7 +94,7 @@ public class LookupReferenceCalculator
 		{
 			rx1 = rx1.substring( 0, rx1.indexOf( "." ) );
 		}
-		int row = Integer.valueOf( rx1 ).intValue();
+		int row = Integer.valueOf( rx1 );
 		// deal with floating point refs
 		String cx1 = operands[1].getValue().toString();
 		if( cx1.indexOf( "." ) > -1 )
@@ -102,7 +102,7 @@ public class LookupReferenceCalculator
 			cx1 = cx1.substring( 0, cx1.indexOf( "." ) );
 		}
 
-		int col = Integer.valueOf( cx1 ).intValue();
+		int col = Integer.valueOf( cx1 );
 		int abs_num = 1;
 		boolean ref_style = true;
 		String sheettext = "";
@@ -110,7 +110,7 @@ public class LookupReferenceCalculator
 		{
 			if( operands[2].getValue() != null )
 			{ //checking for a ptgmissarg
-				abs_num = ((Integer) operands[2].getValue()).intValue();
+				abs_num = (Integer) operands[2].getValue();
 			}
 		}
 		if( operands.length > 3 )
@@ -118,7 +118,7 @@ public class LookupReferenceCalculator
 			if( operands[3].getValue() != null )
 			{ //checking for a ptgmissarg
 				Boolean b = Boolean.valueOf( String.valueOf( operands[3].getValue() ) );
-				ref_style = b.booleanValue();
+				ref_style = b;
 			}
 		}
 		if( operands.length > 4 )
@@ -213,7 +213,7 @@ public class LookupReferenceCalculator
 		try
 		{
 			Double dd = new Double( o.toString() ); // this can be non-integer, so truncate it if so...
-			double e = dd.doubleValue();
+			double e = dd;
 			int i = (int) e;
 			if( (i > (operands.length + 1)) || (i < 1) )
 			{
@@ -221,7 +221,7 @@ public class LookupReferenceCalculator
 			}
 			o = operands[i].getValue();
 			Double d = (Double) o;
-			return new PtgNumber( d.doubleValue() );
+			return new PtgNumber( d );
 		}
 		catch( Exception ex )
 		{
@@ -265,14 +265,14 @@ public class LookupReferenceCalculator
 					int[] loc = pa.getIntLocation();
 					return new PtgInt( loc[1] + 1 );
 				}
-				else if( operands[0] instanceof PtgRef )
+				if( operands[0] instanceof PtgRef )
 				{
 					PtgRef pref = (PtgRef) operands[0];
 					int loc = pref.getIntLocation()[1];
 					loc += 1;
 					return new PtgInt( loc );
 				}
-				else if( operands[0] instanceof PtgName )
+				if( operands[0] instanceof PtgName )
 				{    // table???
 					String range = ((PtgName) operands[0]).getName().getLocation();
 					int[] loc = ExcelTools.getRangeCoords( range );
@@ -323,7 +323,7 @@ public class LookupReferenceCalculator
 					int ncols = (loc[3] - loc[1]) + 1;
 					return new PtgInt( ncols );
 				}
-				else if( operands[0] instanceof PtgArray )
+				if( operands[0] instanceof PtgArray )
 				{
 					PtgArray parr = (PtgArray) operands[0];
 					return new PtgInt( parr.nc + 1 );
@@ -361,11 +361,11 @@ public class LookupReferenceCalculator
 				Object o = operands[3].getValue();
 				if( o instanceof Boolean )
 				{
-					sorted = ((Boolean) o).booleanValue();
+					sorted = (Boolean) o;
 				}
 				else if( o instanceof Integer )
 				{
-					sorted = (((Integer) o).intValue() != 0);
+					sorted = ((Integer) o != 0);
 				}
 			}
 		}
@@ -443,16 +443,13 @@ public class LookupReferenceCalculator
 				{
 					return valueComponents[i].getPtgVal();
 				}
-				else if( sorted && (val > match_num) )
+				if( sorted && (val > match_num) )
 				{
 					if( i == 0 )
 					{
 						return new PtgErr( PtgErr.ERROR_NA );
 					}
-					else
-					{
-						return valueComponents[i - 1].getPtgVal();
-					}
+					return valueComponents[i - 1].getPtgVal();
 				}
 			}
 
@@ -460,16 +457,10 @@ public class LookupReferenceCalculator
 			{
 				return valueComponents[lookupComponents.length - 1].getPtgVal();
 			}
-			else
-			{
-				return new PtgErr( PtgErr.ERROR_NA );
-			}
+			return new PtgErr( PtgErr.ERROR_NA );
 
 		}
-		else
-		{
-			//TODO: need to handle as string
-		}
+		//TODO: need to handle as string
 
 		return new PtgErr( PtgErr.ERROR_NULL );
 	}
@@ -639,7 +630,7 @@ public class LookupReferenceCalculator
 					int rr;
 					if( (rowref instanceof Integer) )
 					{
-						rr = ((Integer) rowref).intValue();
+						rr = (Integer) rowref;
 					}
 					else
 					{
@@ -654,7 +645,7 @@ public class LookupReferenceCalculator
 					int cr;
 					if( (colref instanceof Integer) )
 					{
-						cr = ((Integer) colref).intValue();
+						cr = (Integer) colref;
 					}
 					else
 					{
@@ -766,7 +757,7 @@ public class LookupReferenceCalculator
 				return refp;
 
 			}
-			else if( operands[0] instanceof PtgRef )
+			if( operands[0] instanceof PtgRef )
 			{
 				// check if the ptgRef value is a string representing a Named range
 				Object o = ((PtgRef) (operands[0])).getValue();
@@ -776,7 +767,7 @@ public class LookupReferenceCalculator
 				operands[0] = ps;
 				return calcIndirect( operands );
 			}
-			else if( operands[0] instanceof PtgName )
+			if( operands[0] instanceof PtgName )
 			{
 				return calcIndirect( ((PtgName) operands[0]).getComponents() );
 			}
@@ -829,87 +820,82 @@ public class LookupReferenceCalculator
 			{
 				return new PtgNumber( ((Number) retval).doubleValue() );
 			}
-			else if( retval instanceof Boolean )
+			if( retval instanceof Boolean )
 			{
-				return new PtgBool( ((Boolean) retval).booleanValue() );
+				return new PtgBool( (Boolean) retval );
 			}
-			else if( retval == null )
+			if( retval == null )
 			{
 				return new PtgErr( PtgErr.ERROR_NA );
 			}
-			else // assume string
-			{
-				return new PtgStr( retval.toString() );
-			}
-		}
-		else
-		{ //array form of lookup
+			// assume string
+
+			return new PtgStr( retval.toString() );
+		} //array form of lookup
 	/*
 		 *  The array form of LOOKUP looks in the first row or column of an array for the specified value
-    	 *  and returns a value from the same position in the last row or column of the array. 
-    	 *  Use this form of LOOKUP when the values that you want to match are in the first row 
-    	 *  or column of the array. Use the other form of LOOKUP when you want to specify the location 
+    	 *  and returns a value from the same position in the last row or column of the array.
+    	 *  Use this form of LOOKUP when the values that you want to match are in the first row
+    	 *  or column of the array. Use the other form of LOOKUP when you want to specify the location
     	 *  of the column or row.
 			In general, it's best to use the HLOOKUP or VLOOKUP function instead of the array form of LOOKUP. This form of LOOKUP is provided for compatibility with other spreadsheet programs.
-			
+
 		With the HLOOKUP and VLOOKUP functions, you can index down or across, but LOOKUP always selects the last value in the row or column.
-			
+
  */
-			try
+		try
+		{
+			Ptg[] array = ((PtgArray) operands[1]).getComponents();
+			int nrs = ((PtgArray) operands[1]).getNumberOfRows();
+			int ncs = ((PtgArray) operands[1]).getNumberOfColumns();
+			//If array covers an area that is wider than it is tall (more columns than rows), LOOKUP searches for the value of lookup_value in the first row.
+			//If an array is square or is taller than it is wide (more rows than columns), LOOKUP searches in the first column.
+			Object retval = null;
+			boolean found = false;
+			boolean rowbased = (ncs > nrs);
+			ncs++; // make 1-based
+			int i = 0;
+			for( int j = 0; (j < nrs) && !found; j++ )
 			{
-				Ptg[] array = ((PtgArray) operands[1]).getComponents();
-				int nrs = ((PtgArray) operands[1]).getNumberOfRows();
-				int ncs = ((PtgArray) operands[1]).getNumberOfColumns();
-				//If array covers an area that is wider than it is tall (more columns than rows), LOOKUP searches for the value of lookup_value in the first row.
-				//If an array is square or is taller than it is wide (more rows than columns), LOOKUP searches in the first column.
-				Object retval = null;
-				boolean found = false;
-				boolean rowbased = (ncs > nrs);
-				ncs++; // make 1-based
-				int i = 0;
-				for( int j = 0; (j < nrs) && !found; j++ )
+				int start = i;
+				for(; (i < (start + ncs)) && !found; i++ )
 				{
-					int start = i;
-					for(; (i < (start + ncs)) && !found; i++ )
+					if( Calculator.compareCellValue( array[i].getValue(), lookup, ">" ) )
 					{
-						if( Calculator.compareCellValue( array[i].getValue(), lookup, ">" ) )
-						{
-							found = true;
-							break;
-						}
-						// returns a value from the same position in the last row or column of the array
-						if( rowbased )
-						{
-							retval = array[i + ncs].getValue();
-						}
-						else
-						{
-							retval = array[i + 1].getValue();
-							i++;
-						}
+						found = true;
+						break;
+					}
+					// returns a value from the same position in the last row or column of the array
+					if( rowbased )
+					{
+						retval = array[i + ncs].getValue();
+					}
+					else
+					{
+						retval = array[i + 1].getValue();
+						i++;
 					}
 				}
-				if( retval instanceof Number )
-				{
-					return new PtgNumber( ((Number) retval).doubleValue() );
-				}
-				else if( retval instanceof Boolean )
-				{
-					return new PtgBool( ((Boolean) retval).booleanValue() );
-				}
-				else if( retval == null )
-				{
-					return new PtgErr( PtgErr.ERROR_NA );
-				}
-				else // assume string
-				{
-					return new PtgStr( retval.toString() );
-				}
 			}
-			catch( Exception e )
+			if( retval instanceof Number )
+			{
+				return new PtgNumber( ((Number) retval).doubleValue() );
+			}
+			if( retval instanceof Boolean )
+			{
+				return new PtgBool( (Boolean) retval );
+			}
+			if( retval == null )
 			{
 				return new PtgErr( PtgErr.ERROR_NA );
 			}
+			// assume string
+
+			return new PtgStr( retval.toString() );
+		}
+		catch( Exception e )
+		{
+			return new PtgErr( PtgErr.ERROR_NA );
 		}
 	}
 
@@ -963,7 +949,7 @@ public class LookupReferenceCalculator
 				Object o = operands[2].getValue();
 				if( o instanceof Integer )
 				{
-					matchType = ((Integer) o).intValue();
+					matchType = (Integer) o;
 				}
 				else
 				{
@@ -1061,15 +1047,15 @@ public class LookupReferenceCalculator
 				}
 				else if( v0 instanceof Boolean )
 				{
-					boolean bv0 = ((Boolean) v0).booleanValue();
+					boolean bv0 = (Boolean) v0;
 					// 1.6 only if (v1!=null) mType= (((Boolean) v0).compareTo((Boolean)v1)); 
 					if( v1 != null )
 					{
-						boolean bv1 = ((Boolean) v1).booleanValue();
+						boolean bv1 = (Boolean) v1;
 						mType = ((bv0 == bv1) ? 0 : ((!bv0 && bv1) ? -1 : +1));
 					}
 					// 1.6 only match= (((Boolean) v0).compareTo((Boolean)lookupValue));
-					boolean bv1 = ((Boolean) lookupValue).booleanValue();
+					boolean bv1 = (Boolean) lookupValue;
 					match = ((bv0 == bv1) ? 0 : ((!bv0 && bv1) ? -1 : +1));
 				}
 				else if( v0 instanceof String )
@@ -1242,19 +1228,16 @@ public class LookupReferenceCalculator
 			}
 			pa.setLocation( rc );
 			return pa;
+		} // it's a single reference
+		// If rows and cols offset reference over the edge of the worksheet, OFFSET returns the #REF! error value.
+		if( (rc[0] < 0) || (rc[1] < 0) )
+		{
+			return new PtgErr( PtgErr.ERROR_REF );
 		}
-		else
-		{ // it's a single reference
-			// If rows and cols offset reference over the edge of the worksheet, OFFSET returns the #REF! error value.
-			if( (rc[0] < 0) || (rc[1] < 0) )
-			{
-				return new PtgErr( PtgErr.ERROR_REF );
-			}
-			PtgRef pr = new PtgRef();
-			pr.setParentRec( ref.getParentRec() );
-			pr.setLocation( rc );
-			return pr;
-		}
+		PtgRef pr = new PtgRef();
+		pr.setParentRec( ref.getParentRec() );
+		pr.setLocation( rc );
+		return pr;
 	}
 
 	/**
@@ -1338,45 +1321,42 @@ public class LookupReferenceCalculator
 				{
 					return new PtgInt( (((PtgRef) operands[0]).getRowCol()[0]) + 1 );
 				}
-				else if( operands[0] instanceof PtgName )
+				if( operands[0] instanceof PtgName )
 				{    // table???
 					String range = ((PtgName) operands[0]).getName().getLocation();
 					return new PtgInt( ExcelTools.getRowColFromString( range )[0] + 1 );
 				}
 				return new PtgInt( (operands[0].getIntLocation()[0]) + 1 );
 			}
-			else
+			String retArry = "";
+			Ptg[] comps = null;
+			if( operands[0] instanceof PtgRef )
 			{
-				String retArry = "";
-				Ptg[] comps = null;
-				if( operands[0] instanceof PtgRef )
-				{
-					comps = operands[0].getComponents();
-				}
-				else if( operands[0] instanceof PtgName )
-				{    // table???
-					comps = ((PtgName) operands[0]).getComponents();
-				}
-				if( comps == null )
-				{
-					return new PtgInt( (((PtgRef) operands[0]).getRowCol()[0]) + 1 );
-				}
-				for( int i = 0; i < comps.length; i++ )
-				{
-					try
-					{
-						retArry = retArry + (((PtgRef) comps[i]).getIntLocation()[0] + 1) + ",";
-					}
-					catch( Exception e )
-					{
-						;
-					}
-				}
-				retArry = "{" + retArry.substring( 0, retArry.length() - 1 ) + "}";
-				PtgArray pa = new PtgArray();
-				pa.setVal( retArry );
-				return pa;
+				comps = operands[0].getComponents();
 			}
+			else if( operands[0] instanceof PtgName )
+			{    // table???
+				comps = ((PtgName) operands[0]).getComponents();
+			}
+			if( comps == null )
+			{
+				return new PtgInt( (((PtgRef) operands[0]).getRowCol()[0]) + 1 );
+			}
+			for( int i = 0; i < comps.length; i++ )
+			{
+				try
+				{
+					retArry = retArry + (((PtgRef) comps[i]).getIntLocation()[0] + 1) + ",";
+				}
+				catch( Exception e )
+				{
+					;
+				}
+			}
+			retArry = "{" + retArry.substring( 0, retArry.length() - 1 ) + "}";
+			PtgArray pa = new PtgArray();
+			pa.setVal( retArry );
+			return pa;
 		}
 		catch( Exception ex )
 		{
@@ -1540,7 +1520,7 @@ public class LookupReferenceCalculator
 			}
 			else    // assume int?
 			{
-				colNum = ((Integer) o).intValue() - 1; // reduce 1 for ordinal base off firstcol
+				colNum = (Integer) o - 1; // reduce 1 for ordinal base off firstcol
 			}
 			if( operands.length > 3 )
 			{
@@ -1550,12 +1530,12 @@ public class LookupReferenceCalculator
 					try
 					{
 						Boolean sort = (Boolean) vx;
-						rangeLookup = sort.booleanValue();
+						rangeLookup = sort;
 					}
 					catch( ClassCastException e )
 					{
 						Integer bool = (Integer) vx;
-						if( bool.intValue() == 0 )
+						if( bool == 0 )
 						{
 							rangeLookup = false;
 						}
@@ -1688,16 +1668,13 @@ public class LookupReferenceCalculator
 					{
 						return valueComponents[i].getPtgVal();
 					}
-					else if( rangeLookup && (val > match_num) )
+					if( rangeLookup && (val > match_num) )
 					{
 						if( i == 0 )
 						{
 							return new PtgErr( PtgErr.ERROR_NA );
 						}
-						else
-						{
-							return valueComponents[i - 1].getPtgVal();
-						}
+						return valueComponents[i - 1].getPtgVal();
 					}
 				}
 
@@ -1705,75 +1682,70 @@ public class LookupReferenceCalculator
 				{
 					return valueComponents[lookupComponents.length - 1].getPtgVal();
 				}
-				else
-				{
-					return new PtgErr( PtgErr.ERROR_NA );
-				}
+				return new PtgErr( PtgErr.ERROR_NA );
 			}
 
 			// It's a String
-			else
-			{
-				if( rangeLookup )
-				{    // approximate match
-					String match_str = lookup_value.getValue().toString();
-					int match_len = match_str.length();
-					for( int i = 0; i < lookupComponents.length; i++ )
+
+			if( rangeLookup )
+			{    // approximate match
+				String match_str = lookup_value.getValue().toString();
+				int match_len = match_str.length();
+				for( int i = 0; i < lookupComponents.length; i++ )
+				{
+					try
 					{
+						String val = lookupComponents[i].getValue().toString();
+						if( val.equalsIgnoreCase( match_str ) )
+						{// we found it
+							return valueComponents[i].getPtgVal();
+						}
+						if( (val.length() >= match_len) && val.substring( 0, match_len ).equalsIgnoreCase( match_str ) )
+						{ // matches up to length, but not all, return previous
+							return valueComponents[i - 1].getPtgVal();
+						}
+						if( ExcelTools.getIntVal( val.substring( 0, 1 ) ) > ExcelTools.getIntVal( match_str.substring( 0, 1 ) ) )
+						{
+							return valueComponents[i - 1].getPtgVal();
+						}
+						if( i == (lookupComponents.length - 1) )
+						{// we reached the last one so use this
+							return valueComponents[i].getPtgVal();
+						}
+					}
+					catch( Exception e )
+					{
+					} // 20070209 KSC: ignore errors in lookup cells
+				}
+			}
+			else
+			{ // unsorted
+				String match_str = lookup_value.getValue().toString();
+				for( int i = 0; i < lookupComponents.length; i++ )
+				{
+					try
+					{
+						String val = lookupComponents[i].getValue().toString();
 						try
 						{
-							String val = lookupComponents[i].getValue().toString();
 							if( val.equalsIgnoreCase( match_str ) )
 							{// we found it
 								return valueComponents[i].getPtgVal();
 							}
-							else if( (val.length() >= match_len) && val.substring( 0, match_len ).equalsIgnoreCase( match_str ) )
-							{ // matches up to length, but not all, return previous
-								return valueComponents[i - 1].getPtgVal();
-							}
-							else if( ExcelTools.getIntVal( val.substring( 0, 1 ) ) > ExcelTools.getIntVal( match_str.substring( 0, 1 ) ) )
-							{
-								return valueComponents[i - 1].getPtgVal();
-							}
-							else if( i == (lookupComponents.length - 1) )
-							{// we reached the last one so use this
-								return valueComponents[i].getPtgVal();
-							}
-						}
-						catch( Exception e )
-						{
-						} // 20070209 KSC: ignore errors in lookup cells
-					}
-				}
-				else
-				{ // unsorted
-					String match_str = lookup_value.getValue().toString();
-					for( int i = 0; i < lookupComponents.length; i++ )
-					{
-						try
-						{
-							String val = lookupComponents[i].getValue().toString();
-							try
-							{
-								if( val.equalsIgnoreCase( match_str ) )
-								{// we found it
-									return valueComponents[i].getPtgVal();
-								}
-								else if( i == (lookupComponents.length - 1) )
-								{// we reached the last one so error out
-									return new PtgErr( PtgErr.ERROR_NA );
-								}
-							}
-							catch( Exception e )
-							{
-								Logger.logErr( "LookupReferenceCalculator.calcVLookup error: " + e.toString() );
+							if( i == (lookupComponents.length - 1) )
+							{// we reached the last one so error out
 								return new PtgErr( PtgErr.ERROR_NA );
 							}
 						}
 						catch( Exception e )
 						{
-						} // 20070209 KSC: ignore errors in lookup cells
+							Logger.logErr( "LookupReferenceCalculator.calcVLookup error: " + e.toString() );
+							return new PtgErr( PtgErr.ERROR_NA );
+						}
 					}
+					catch( Exception e )
+					{
+					} // 20070209 KSC: ignore errors in lookup cells
 				}
 			}
 		}

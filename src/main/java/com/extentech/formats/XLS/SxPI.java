@@ -102,10 +102,7 @@ public class SxPI extends XLSRecord implements XLSConstants
 		{
 			return "SXPI - n: " + sxpis.length + ": " + Arrays.toString( sxpis );
 		}
-		else
-		{
-			return "SXPI - NULL";
-		}
+		return "SXPI - NULL";
 	}
 
 	/**

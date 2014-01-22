@@ -146,19 +146,16 @@ public class PtgExp extends GenericPtg implements Ptg
 			return retPtg;
 //			throw new UnsupportedOperationException (
 //					"Shared formulas must be instantiated for calculation");
+		}    // if it's an array formula, return ptg's as well
+		Array a = (Array) (f.getInternalRecords().get( 0 ));  // this.getParentRec().getSheet().getArrayFormula(getParentLocation());
+		Stack calcStack = a.getExpression();
+		Ptg[] retPtg = new Ptg[calcStack.size()];
+		for( int i = 0; i < calcStack.size(); i++ )
+		{
+			Ptg p = (Ptg) calcStack.get( i );
+			retPtg[i] = p;
 		}
-		else
-		{    // if it's an array formula, return ptg's as well
-			Array a = (Array) (f.getInternalRecords().get( 0 ));  // this.getParentRec().getSheet().getArrayFormula(getParentLocation());
-			Stack calcStack = a.getExpression();
-			Ptg[] retPtg = new Ptg[calcStack.size()];
-			for( int i = 0; i < calcStack.size(); i++ )
-			{
-				Ptg p = (Ptg) calcStack.get( i );
-				retPtg[i] = p;
-			}
-			return retPtg;
-		}
+		return retPtg;
 	}
 
 	@Override
@@ -237,12 +234,12 @@ public class PtgExp extends GenericPtg implements Ptg
 //		try{
 		if( o instanceof Integer )
 		{
-			return new PtgInt( ((Integer) o).intValue() );
+			return new PtgInt( (Integer) o );
 		}
 //			Double d = new Double(o.toString());
-		else if( o instanceof Double )
+		if( o instanceof Double )
 		{
-			return new PtgNumber( ((Double) o).doubleValue() );
+			return new PtgNumber( (Double) o );
 		}
 		//p = new PtgNumber(d.doubleValue());
 //		}catch(NumberFormatException e){
@@ -309,7 +306,7 @@ public class PtgExp extends GenericPtg implements Ptg
 					Array a = (Array) o;
 					return a.getFormulaString();
 				}
-				else if( o instanceof StringRec )
+				if( o instanceof StringRec )
 				{
 					//if this is a shared formula the attached string is the RESULT, not the formula string itself
 					if( ((Formula) this.getParentRec()).isSharedFormula() )

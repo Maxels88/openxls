@@ -802,12 +802,12 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 			}
 			else if( n.equalsIgnoreCase( "font-striken" ) )
 			{
-				boolean b = Boolean.valueOf( v ).booleanValue();
+				boolean b = Boolean.valueOf( v );
 				cx.setFontStriken( b );
 			}
 			else if( n.equalsIgnoreCase( "font-italic" ) )
 			{
-				boolean b = Boolean.valueOf( v ).booleanValue();
+				boolean b = Boolean.valueOf( v );
 				cx.setFontItalic( b );
 			}
 			else if( n.equalsIgnoreCase( "font-ColorIndex" ) )
@@ -1137,10 +1137,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 			{
 				return fill.getFgColorAsRGB( getWorkBook().getTheme() );
 			}
-			else
-			{
-				return fill.getBgColorAsRGB( getWorkBook().getTheme() );
-			}
+			return fill.getBgColorAsRGB( getWorkBook().getTheme() );
 		}
 		if( patternFillColorBack != -1 )
 		{
@@ -1464,10 +1461,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		{
 			return this.patternFillColorBack;
 		}
-		else
-		{
-			return this.patternFillColor;
-		}
+		return this.patternFillColor;
 	}
 
 	/**
@@ -2028,11 +2022,11 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 
 			try
 			{
-				d1 = new Double( val1.toString() ).doubleValue();
-				dX = new Double( valX.toString() ).doubleValue();
+				d1 = new Double( val1.toString() );
+				dX = new Double( valX.toString() );
 				if( this.cce2 > 0 )
 				{ // we have a second value
-					d2 = new Double( val2.toString() ).doubleValue();
+					d2 = new Double( val2.toString() );
 				}
 
 			}
@@ -2047,7 +2041,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 				case 0x0:    // No comparison (only valid for formula type, see above)
 					setFormulaRef( refcell );
 					val1 = this.getFormula1().calculateFormula();
-					return ((Boolean) val1).booleanValue();
+					return (Boolean) val1;
 
 				case 01:    // Between
 					// expression2 for the other bounds ... 
@@ -2065,7 +2059,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 					{
 						return false;
 					}
-					else if( dX > d1 )  // hmmm... d2 is where? an array?
+					if( dX > d1 )  // hmmm... d2 is where? an array?
 					{
 						return false;
 					}
@@ -2145,10 +2139,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		{
 			return 0x8;    // Less or equal
 		}
-		else
-		{
-			return 0x0;    // No comparison (only valid for formula type, see above)
-		}
+		return 0x0;    // No comparison (only valid for formula type, see above)
 	}
 
 	/**
@@ -2287,51 +2278,57 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		{
 			return 0x1;
 		}
-		else if( operator.equals( "greaterThan" ) )
+		if( operator.equals( "greaterThan" ) )
 		{
 			return 0x5;
 		}
-		else if( operator.equals( "notBetween" ) )
+		if( operator.equals( "notBetween" ) )
 		{
 			return 0x2;
 		}
-		else if( operator.equals( "lessThan" ) )
+		if( operator.equals( "lessThan" ) )
 		{
 			return 0x6;
 		}
-		else if( operator.equals( "equal" ) )
+		if( operator.equals( "equal" ) )
 		{
 			return 0x3;
 		}
-		else if( operator.equals( "greaterThanOrEqual" ) )
+		//noinspection ConfusingElseBranch
+		if( operator.equals( "greaterThanOrEqual" ) )
 		{
 			return 0x7;
 		}
-		else if( operator.equals( "notEqual" ) )
-		{
-			return 0x4;
-		}
-		else if( operator.equals( "lessThanOrEqual" ) )
-		{
-			return 0x8;
-		}
-		// NO EQUIVALENT IN 2003:  	beginsWith, containsText, endsWith, notContains
-		else if( operator.equals( "beginsWith" ) )
-		{
-			return 0x9;
-		}
-		else if( operator.equals( "endsWith" ) )
-		{
-			return 0xA;
-		}
-		else if( operator.equals( "containsText" ) )
-		{
-			return 0xB;
-		}
-		else if( operator.equals( "notContains" ) )
-		{
-			return 0xC;
-		}
+		//noinspection ConfusingElseBranch
+		if( operator.equals( "notEqual" ) )
+	{
+		return 0x4;
+	}
+	else //noinspection ConfusingElseBranch
+			if( operator.equals( "lessThanOrEqual" ) )
+	{
+		return 0x8;
+	}
+	// NO EQUIVALENT IN 2003:  	beginsWith, containsText, endsWith, notContains
+	else //noinspection ConfusingElseBranch
+			if( operator.equals( "beginsWith" ) )
+	{
+		return 0x9;
+	}
+	else //noinspection ConfusingElseBranch
+			if( operator.equals( "endsWith" ) )
+	{
+		return 0xA;
+	}
+	else //noinspection ConfusingElseBranch
+				if( operator.equals( "containsText" ) )
+	{
+		return 0xB;
+	}
+	else if( operator.equals( "notContains" ) )
+	{
+		return 0xC;
+	}
 		return 0;
 	}
 
@@ -2403,75 +2400,87 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		{
 			return 1;
 		}
-		else if( type.equals( "expression" ) )
+		if( type.equals( "expression" ) )
 		{
 			return 2;
 		}
 		// no equivalent in 2003: but must track for 2007 uses
-		else if( type.equals( "containsText" ) )
+		if( type.equals( "containsText" ) )
 		{
 			return 3;
 		}
-		else if( type.equals( "aboveAverage" ) )
+		if( type.equals( "aboveAverage" ) )
 		{
 			return 4;
 		}
-		else if( type.equals( "beginsWith" ) )
+		if( type.equals( "beginsWith" ) )
 		{
 			return 5;
 		}
-		else if( type.equals( "colorScale" ) )
+		//noinspection ConfusingElseBranch
+		if( type.equals( "colorScale" ) )
 		{
 			return 6;
 		}
-		else if( type.equals( "containsBlanks" ) )
-		{
-			return 7;
-		}
-		else if( type.equals( "containsErrors" ) )
-		{
-			return 8;
-		}
-		else if( type.equals( "dataBar" ) )
-		{
-			return 9;
-		}
-		else if( type.equals( "duplicateValues" ) )
-		{
-			return 10;
-		}
-		else if( type.equals( "endsWith" ) )
-		{
-			return 11;
-		}
-		else if( type.equals( "iconSet" ) )
-		{
-			return 12;
-		}
-		else if( type.equals( "notContainsBlanks" ) )
-		{
-			return 13;
-		}
-		else if( type.equals( "notContainsErrors" ) )
-		{
-			return 14;
-		}
-		else if( type.equals( "notContainsText" ) )
-		{
-			return 15;
-		}
-		else if( type.equals( "timePeriod" ) )
-		{
-			return 16;
-		}
-		else if( type.equals( "top10" ) )
-		{
-			return 17;
-		}
-		else if( type.equals( "uniqueValues" ) )
-		{
-			return 18;
-		}
+		//noinspection ConfusingElseBranch
+		if( type.equals( "containsBlanks" ) )
+	{
+		return 7;
+	}
+	else //noinspection ConfusingElseBranch
+			if( type.equals( "containsErrors" ) )
+	{
+		return 8;
+	}
+	else //noinspection ConfusingElseBranch
+				if( type.equals( "dataBar" ) )
+	{
+		return 9;
+	}
+	else //noinspection ConfusingElseBranch
+					if( type.equals( "duplicateValues" ) )
+	{
+		return 10;
+	}
+	else //noinspection ConfusingElseBranch
+					if( type.equals( "endsWith" ) )
+	{
+		return 11;
+	}
+	else //noinspection ConfusingElseBranch
+		if( type.equals( "iconSet" ) )
+	{
+		return 12;
+	}
+	else //noinspection ConfusingElseBranch
+			if( type.equals( "notContainsBlanks" ) )
+	{
+		return 13;
+	}
+	else //noinspection ConfusingElseBranch
+				if( type.equals( "notContainsErrors" ) )
+	{
+		return 14;
+	}
+	else //noinspection ConfusingElseBranch
+				if( type.equals( "notContainsText" ) )
+	{
+		return 15;
+	}
+	else //noinspection ConfusingElseBranch
+				if( type.equals( "timePeriod" ) )
+	{
+		return 16;
+	}
+	else //noinspection ConfusingElseBranch
+			if( type.equals( "top10" ) )
+	{
+		return 17;
+	}
+	else if( type.equals( "uniqueValues" ) )
+	{
+		return 18;
+	}
 		return 1;    // default to cellIs ????
 	}
 

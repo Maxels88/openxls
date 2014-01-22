@@ -439,7 +439,7 @@ public class ChartSeries implements ChartConstants, Serializable
 		for( int i = 0; i < series.size(); i++ )
 		{
 			Integer chart = (Integer) ((Object[]) series.get( i ))[1];
-			if( (nChart == -1) || (nChart == chart.intValue()) )
+			if( (nChart == -1) || (nChart == chart) )
 			{
 				Series s = (Series) ((Object[]) series.get( i ))[0];
 				retVec.add( s );
@@ -943,7 +943,7 @@ public class ChartSeries implements ChartConstants, Serializable
 						{    // OK, if have a pivot table source then the range referenced in f is only a SUBSET
 							// unclear if at any other time the range referenced is a subset ... [NOTE: in testing, only pivot charts hit]
 							// another assumption:  assume that range is only TRUNCATED -- in testing, true
-							int npoints = Integer.valueOf( xpp.getAttributeValue( 0 ) ).intValue();
+							int npoints = Integer.valueOf( xpp.getAttributeValue( 0 ) );
 							if( !ranges[idx].equals( "" ) && (ranges[idx].indexOf( "," ) == -1) )
 							{
 								try
@@ -1202,7 +1202,7 @@ public class ChartSeries implements ChartConstants, Serializable
 		ArrayList seriesmappings = new ArrayList();
 		for( int z = 0; z < series.size(); z++ )
 		{
-			int chartnumber = ((Integer) ((Object[]) series.get( z ))[1]).intValue();
+			int chartnumber = (Integer) ((Object[]) series.get( z ))[1];
 			if( chartnumber == thischartnumber )    // mappped to this chart
 			{
 				seriesmappings.add( z + 1 );
@@ -1211,7 +1211,7 @@ public class ChartSeries implements ChartConstants, Serializable
 		int[] mappings = new int[seriesmappings.size()];
 		for( int z = 0; z < seriesmappings.size(); z++ )
 		{
-			mappings[z] = ((Integer) seriesmappings.get( z )).intValue();
+			mappings[z] = (Integer) seriesmappings.get( z );
 		}
 		try
 		{

@@ -503,10 +503,7 @@ public class FormatHandle implements Handle, FormatConstants
 			{
 				return (String) patty;
 			}
-			else
-			{
-				return "M/d/yy h:mm";
-			}
+			return "M/d/yy h:mm";
 		}
 		if( patty != null )
 		{
@@ -728,10 +725,7 @@ public class FormatHandle implements Handle, FormatConstants
 		{
 			return this.getWorkBook().getColorTable()[x];
 		}
-		else
-		{
-			return this.getWorkBook().getColorTable()[0]; // black i'm afraid
-		}
+		return this.getWorkBook().getColorTable()[0]; // black i'm afraid
 	}
 
 	/**
@@ -891,10 +885,7 @@ public class FormatHandle implements Handle, FormatConstants
 		{
 			return this.getWorkBook().getColorTable()[x];
 		}
-		else
-		{
-			return this.getWorkBook().getColorTable()[0]; // black i'm afraid
-		}
+		return this.getWorkBook().getColorTable()[0]; // black i'm afraid
 
 	}
 
@@ -1738,10 +1729,8 @@ public class FormatHandle implements Handle, FormatConstants
 		}
 		// the swapping so use base
 		// method
-		else
-		{
-			return myxf.getBackgroundColor();
-		}
+
+		return myxf.getBackgroundColor();
 	}
 
 	/**
@@ -1757,10 +1746,7 @@ public class FormatHandle implements Handle, FormatConstants
 		{
 			return myxf.getForegroundColorHEX(); // this.getForegroundColor() does
 		}
-		else
-		{
-			return myxf.getBackgroundColorHEX();
-		}
+		return myxf.getBackgroundColorHEX();
 	}
 
 	/**

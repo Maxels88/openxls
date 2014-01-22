@@ -100,7 +100,7 @@ public class TextCalculator
 			return PtgCalculator.getError();
 		}
 		byte[] b = new byte[1];
-		b[0] = s.byteValue();
+		b[0] = s;
 		String str = "";
 		try
 		{
@@ -170,7 +170,7 @@ public class TextCalculator
 		}
 		;
 		Integer i = (int) b[0];
-		return new PtgInt( i.intValue() );
+		return new PtgInt( i );
 	}
 
 	/**
@@ -342,7 +342,7 @@ public class TextCalculator
 		if( operands.length == 3 )
 		{
 			Boolean boo = (Boolean) operands[2].getValue();
-			nocommas = boo.booleanValue();
+			nocommas = boo;
 		}
 		double dub = operands[0].getDoubleVal();
 		if( dub == Double.NaN )
@@ -893,7 +893,7 @@ public class TextCalculator
 				{
 					return new PtgStr( fmtx.format( new Float( res ) ) );
 				}
-				else if( res != null )
+				if( res != null )
 				{
 					return new PtgStr( fmtx.format( 0 ) );
 				}
@@ -972,7 +972,7 @@ public class TextCalculator
 			{
 				return new PtgStr( fmtx.format( new Float( res ) ) );
 			}
-			else if( res != null )
+			if( res != null )
 			{
 				return new PtgStr( fmtx.format( 0 ) );
 			}
@@ -1004,7 +1004,7 @@ public class TextCalculator
 		String res;
 		if( o instanceof Double )
 		{
-			res = ExcelTools.getNumberAsString( ((Double) o).doubleValue() );
+			res = ExcelTools.getNumberAsString( (Double) o );
 		}
 		else
 		{
@@ -1067,7 +1067,7 @@ public class TextCalculator
 				s = "0"; // Excel returns a zero for a blank value if VALUE is called upon it.
 			}
 			Double d = new Double( s );
-			return new PtgNumber( d.doubleValue() );
+			return new PtgNumber( d );
 		}
 		catch( NumberFormatException e )
 		{

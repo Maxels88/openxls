@@ -221,14 +221,14 @@ public class Pos extends GenericChartObject implements ChartObject
 		width and height of the legend, in points.*/
 			return new int[]{ x1, y1, x2, y2 };
 		}
-		else if( (rndTopLt == 5) && (rndTopRt == 2) )
+		if( (rndTopLt == 5) && (rndTopRt == 2) )
 		{
-    		/*The values of x1 and y1 specify the horizontal and vertical offsets of the legend's upper-left corner, 
-		relative to the upper-left corner of the chart area, in SPRC. The values of x2 and y2 MUST be ignored. 
+    		/*The values of x1 and y1 specify the horizontal and vertical offsets of the legend's upper-left corner,
+		relative to the upper-left corner of the chart area, in SPRC. The values of x2 and y2 MUST be ignored.
 		The size of the legend is determined by the application.*/
 			return new int[]{ x1, y1, 0, 0 };
 		}
-		else if( (rndTopLt == 3) && (rndTopRt == 2) )
+		if( (rndTopLt == 3) && (rndTopRt == 2) )
 		{
     		/*The values of x1, y1, x2 and y2 MUST be ignored. The legend is located inside a data table.*/
 			return null;
@@ -284,10 +284,7 @@ public class Pos extends GenericChartObject implements ChartObject
 		{
 			return (float) (val / 4000.0) * w;
 		}
-		else
-		{
-			return (float) (val / 4000.0) * h;
-		}
+		return (float) (val / 4000.0) * h;
 	}
 
 	/**
@@ -306,10 +303,7 @@ public class Pos extends GenericChartObject implements ChartObject
 		{
 			return (float) (val * 4000.0) / w;
 		}
-		else
-		{
-			return (float) (val * 4000.0) / h;
-		}
+		return (float) (val * 4000.0) / h;
 	}
 
 	/**
@@ -327,9 +321,6 @@ public class Pos extends GenericChartObject implements ChartObject
 		{
 			return (float) (val / 1000.0) * w;
 		}
-		else
-		{
-			return (float) (val / 1000.0) * h;
-		}
+		return (float) (val / 1000.0) * h;
 	}
 }

@@ -449,10 +449,7 @@ public class ImageHandle implements Serializable
 		{
 			return thisMsodrawing.getCoords();
 		}
-		else
-		{
-			return new short[]{ x, y, width, height };
-		}
+		return new short[]{ x, y, width, height };
 	}
 
 	/**

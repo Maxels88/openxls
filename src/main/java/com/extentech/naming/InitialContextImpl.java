@@ -72,11 +72,8 @@ public class InitialContextImpl implements javax.naming.Context
 		{
 			throw new NamingException( "Object " + propName + " already exists in NamingContext." );
 		}
-		else
-		{
-			env.put( propName, propVal );
-			return propVal;
-		}
+		env.put( propName, propVal );
+		return propVal;
 	}
 
 	// we use string to bind -- is that bad?

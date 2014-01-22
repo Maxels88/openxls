@@ -257,7 +257,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 					throw new InvalidRecordException( "WorkBookFactory.getWorkBook() Negative Reclen encountered pos:" + i + " opcode:0x" + Integer
 							.toHexString( opcode ) );
 				}
-				else if( (reclen + 1) > blen )
+				if( (reclen + 1) > blen )
 				{
 					throw new InvalidRecordException( "WorkBookFactory.getWorkBook() Reclen longer than data pos:" + i + " opcode:0x" + Integer
 							.toHexString( opcode ) );
@@ -309,10 +309,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 						this.fireProgressChanged();
 						return book;
 					}
-					else
-					{
-						// not used anymore ((XLSRecord)rec).resetCacheBytes();
-					}
+					// not used anymore ((XLSRecord)rec).resetCacheBytes();
 					// int reco = rec.getOffset() ;
 					// int recl = rec.getLength();
 					int thisrecpos = i + reclen + 4;

@@ -521,21 +521,18 @@ public class PtgRef extends GenericPtg implements Ptg
 		{
 			return ""; // no sheetname
 		}
-		else
+
+		//handle external references (OOXML-specific)
+		if( externalLink1 > 0 )
 		{
-
-			//handle external references (OOXML-specific)
-			if( externalLink1 > 0 )
+			if( sheetname.charAt( 0 ) == '\'' )
 			{
-				if( sheetname.charAt( 0 ) == '\'' )
-				{
-					sheetname = sheetname.substring( 1, sheetname.length() - 1 );
-				}
-				sheetname = "[" + externalLink1 + "]" + sheetname;
+				sheetname = sheetname.substring( 1, sheetname.length() - 1 );
 			}
-			sheetname = qualifySheetname( sheetname );
-
+			sheetname = "[" + externalLink1 + "]" + sheetname;
 		}
+		sheetname = qualifySheetname( sheetname );
+
 		return sheetname;
 	}
 
@@ -585,7 +582,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		{   // have to assume that it's a wholeRow even if 2007
 			return true;
 		}
-		else if( (colNew >= (MAXCOLS_BIFF8 - 1)) && !isExcel2007 )
+		if( (colNew >= (MAXCOLS_BIFF8 - 1)) && !isExcel2007 )
 		{
 			return true;
 		}
@@ -637,7 +634,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		{
 			return true;
 		}
-		else if( (rowNew >= (MAXROWS_BIFF8 - 1)) && !isExcel2007 )
+		if( (rowNew >= (MAXROWS_BIFF8 - 1)) && !isExcel2007 )
 		{
 			rowNew = -1;
 			return true;
@@ -719,7 +716,7 @@ public class PtgRef extends GenericPtg implements Ptg
 				if( Character.isDigit( addr.charAt( 0 ) ) )
 				{ //assume wholecol ref
 					col = MAXCOLS_BIFF8 - 1;
-					rw = Integer.valueOf( addr ).intValue() - 1;
+					rw = Integer.valueOf( addr ) - 1;
 					fColRel = false;
 					fRwRel = false;
 				}
@@ -746,11 +743,11 @@ public class PtgRef extends GenericPtg implements Ptg
 		// trap OOXML external reference link, if any
 		if( loc[3] != null )
 		{
-			externalLink1 = Integer.valueOf( loc[3].substring( 1, loc[3].length() - 1 ) ).intValue();
+			externalLink1 = Integer.valueOf( loc[3].substring( 1, loc[3].length() - 1 ) );
 		}
 		if( loc[4] != null )
 		{
-			externalLink2 = Integer.valueOf( loc[4].substring( 1, loc[4].length() - 1 ) ).intValue();
+			externalLink2 = Integer.valueOf( loc[4].substring( 1, loc[4].length() - 1 ) );
 		}
 		if( useReferenceTracker )
 		{
@@ -820,13 +817,10 @@ public class PtgRef extends GenericPtg implements Ptg
 					pe3.setLocation( s );
 					return pe3;
 				}
-				else
-				{
-					PtgRefErr pe = new PtgRefErr();
-					pe.setParentRec( parent );
-					pe.setLocation( s );
-					return pe;
-				}
+				PtgRefErr pe = new PtgRefErr();
+				pe.setParentRec( parent );
+				pe.setLocation( s );
+				return pe;
 			}
 			WorkBook bk = parent.getWorkBook();
 
@@ -1030,35 +1024,26 @@ public class PtgRef extends GenericPtg implements Ptg
 				retValue = f.calculateFormula();
 				return retValue;
 			}
-			else
+			if( refCell[0].getDataType().equals( "Float" ) )
 			{
-				if( refCell[0].getDataType().equals( "Float" ) )
-				{
-					retValue = refCell[0].getDblVal();
-					return retValue;
-				}
-				else
-				{
-					retValue = refCell[0].getInternalVal();
-					return retValue;
-				}
+				retValue = refCell[0].getDblVal();
+				return retValue;
 			}
+			retValue = refCell[0].getInternalVal();
+			return retValue;
 		}
-		else
+		try
 		{
-			try
+			if( !this.parent_rec.getSheet().getWindow2().getShowZeroValues() )
 			{
-				if( !this.parent_rec.getSheet().getWindow2().getShowZeroValues() )
-				{
-					return null;
-				}
+				return null;
 			}
-			catch( NullPointerException e )
-			{
-				// assume zero, which the vast majority of cases are
-			}
-			return 0;
 		}
+		catch( NullPointerException e )
+		{
+			// assume zero, which the vast majority of cases are
+		}
+		return 0;
 	}
 
 	/**
@@ -1092,21 +1077,18 @@ public class PtgRef extends GenericPtg implements Ptg
 			}
 			return CellFormatFactory.fromPatternString( cell.getXfRec().getFormatPattern() ).format( retValue );
 		}
-		else
+		try
 		{
-			try
+			if( !this.parent_rec.getSheet().getWindow2().getShowZeroValues() )
 			{
-				if( !this.parent_rec.getSheet().getWindow2().getShowZeroValues() )
-				{
-					return "";
-				}
+				return "";
 			}
-			catch( NullPointerException e )
-			{
-				// assume zero, which the vast majority of cases are
-			}
-			return "0";
 		}
+		catch( NullPointerException e )
+		{
+			// assume zero, which the vast majority of cases are
+		}
+		return "0";
 	}
 
 	/**
@@ -1410,10 +1392,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		{
 			return col + ((rw + 1) * MAXCOLS);
 		}
-		else
-		{
-			return col + (((MAXROWS - rw) + 1) * MAXCOLS);
-		}
+		return col + (((MAXROWS - rw) + 1) * MAXCOLS);
 	}
 
 	public static long getHashCode( int row, int col )

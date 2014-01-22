@@ -76,23 +76,24 @@ public class Calculator
 		{
 			return (compare == 0);
 		}
-		else if( op.equals( "<" ) )
+		if( op.equals( "<" ) )
 		{
 			return (compare > 0);
 		}
-		else if( op.equals( "<=" ) )
+		if( op.equals( "<=" ) )
 		{
 			return (compare >= 0);
 		}
-		else if( op.equals( ">" ) )
+		if( op.equals( ">" ) )
 		{
 			return (compare < 0);
 		}
-		else if( op.equals( ">=" ) )
+		//noinspection ConfusingElseBranch
+		if( op.equals( ">=" ) )
 		{
 			return (compare <= 0);
 		}
-		else if( op.equals( "<>" ) )
+		if( op.equals( "<>" ) )
 		{
 			return (compare != 0);
 		}
@@ -155,23 +156,24 @@ public class Calculator
 		{
 			return (compare == 0);
 		}
-		else if( op.equals( "<" ) )
+		if( op.equals( "<" ) )
 		{
 			return (compare > 0);
 		}
-		else if( op.equals( "<=" ) )
+		if( op.equals( "<=" ) )
 		{
 			return (compare >= 0);
 		}
-		else if( op.equals( ">" ) )
+		if( op.equals( ">" ) )
 		{
 			return (compare < 0);
 		}
-		else if( op.equals( ">=" ) )
+		//noinspection ConfusingElseBranch
+		if( op.equals( ">=" ) )
 		{
 			return (compare <= 0);
 		}
-		else if( op.equals( "<>" ) )
+		if( op.equals( "<>" ) )
 		{
 			return (compare != 0);
 		}
@@ -268,7 +270,7 @@ public class Calculator
 			{
 				break;
 			}
-			else if( (c == '*') || (c == '?') )
+			if( (c == '*') || (c == '?') )
 			{
 				break;
 			}
@@ -308,10 +310,7 @@ public class Calculator
 						pa.setLocation( pr[0].getLocation() );
 						return pa;
 					}
-					else
-					{
-						throw new IllegalArgumentException( "Expected a reference-type operand" );
-					}
+					throw new IllegalArgumentException( "Expected a reference-type operand" );
 				}
 				catch( Exception ex )
 				{

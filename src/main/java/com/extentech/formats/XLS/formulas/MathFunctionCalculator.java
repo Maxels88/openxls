@@ -500,7 +500,7 @@ public class MathFunctionCalculator
 		{
 			Double dub = new Double( String.valueOf( p.getValue() ) );
 //	    double result = Math.pow(d, dub.doubleValue());
-			BigDecimal result = new BigDecimal( Math.pow( d, dub.doubleValue() ) );
+			BigDecimal result = new BigDecimal( Math.pow( d, dub ) );
 			result.setScale( 15, BigDecimal.ROUND_HALF_UP );
 //	    PtgNumber pnum = new PtgNumber(result);
 			PtgNumber pnum = new PtgNumber( result.doubleValue() );
@@ -1780,10 +1780,7 @@ Returns a subtotal in a list or database
 					dim = 1;
 					continue;
 				}
-				else
-				{
-					return new PtgErr( PtgErr.ERROR_VALUE );
-				}
+				return new PtgErr( PtgErr.ERROR_VALUE );
 			}
 			if( dim == 0 )
 			{
@@ -1803,15 +1800,15 @@ Returns a subtotal in a list or database
 				Object o = ((Ptg[]) arrays.get( i ))[j].getValue();
 				if( o instanceof Double )
 				{
-					d = d * ((Double) o).doubleValue();
+					d = d * (Double) o;
 				}
 				else if( o instanceof Integer )
 				{
-					d = d * ((Integer) o).intValue();
+					d = d * (Integer) o;
 				}
 				else if( o instanceof Float )
 				{
-					d = d * ((Float) o).floatValue();
+					d = d * (Float) o;
 				}
 				else
 				{

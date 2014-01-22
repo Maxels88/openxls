@@ -592,7 +592,7 @@ public class FormulaHandle
 		else if( val instanceof Boolean )
 		{
 			ooxml.append( " t=\"b\"" );
-			if( ((Boolean) val).booleanValue() )
+			if( (Boolean) val )
 			{
 				val = "1";
 			}

@@ -88,7 +88,7 @@ public class FillGroup implements OOXMLElement
 						lastTag.pop();
 						break;
 					}
-					else if( tnm.equals( "noFill" ) )
+					if( tnm.equals( "noFill" ) )
 					{
 						// do nothing
 					}

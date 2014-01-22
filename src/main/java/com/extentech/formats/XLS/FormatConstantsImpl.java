@@ -41,9 +41,6 @@ public class FormatConstantsImpl implements FormatConstants
 		{
 			return FormatConstants.BUILTIN_FORMATS_JP;
 		}
-		else
-		{
-			return FormatConstants.BUILTIN_FORMATS;
-		}
+		return FormatConstants.BUILTIN_FORMATS;
 	}
 }

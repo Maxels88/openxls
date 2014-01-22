@@ -883,8 +883,8 @@ public class FinancialCalculator
 		{
 			debugOperands( operands, "COUPDAYSNC" );
 		}
-		long settlementDate = new Long( operands[0].getValue().toString() ).longValue();
-		long maturityDate = new Long( operands[1].getValue().toString() ).longValue();
+		long settlementDate = new Long( operands[0].getValue().toString() );
+		long maturityDate = new Long( operands[1].getValue().toString() );
 		int frequency = operands[2].getIntVal();
 		int basis = 0;
 		if( operands.length > 3 )
@@ -1359,10 +1359,10 @@ public class FinancialCalculator
 		}
 		double cost, salvage;
 		int life, period, month;
-		cost = new Double( String.valueOf( operands[0].getValue() ) ).doubleValue();
-		salvage = new Double( String.valueOf( operands[1].getValue() ) ).doubleValue();
-		life = Integer.valueOf( String.valueOf( operands[2].getValue() ) ).intValue();
-		period = Integer.valueOf( String.valueOf( operands[3].getValue() ) ).intValue();
+		cost = new Double( String.valueOf( operands[0].getValue() ) );
+		salvage = new Double( String.valueOf( operands[1].getValue() ) );
+		life = Integer.valueOf( String.valueOf( operands[2].getValue() ) );
+		period = Integer.valueOf( String.valueOf( operands[3].getValue() ) );
 		if( operands.length > 4 )
 		{
 			if( operands[4] instanceof PtgMissArg )
@@ -1371,7 +1371,7 @@ public class FinancialCalculator
 			}
 			else
 			{
-				month = Integer.valueOf( String.valueOf( operands[4].getValue() ) ).intValue();
+				month = Integer.valueOf( String.valueOf( operands[4].getValue() ) );
 			}
 		}
 		else
@@ -1439,16 +1439,16 @@ public class FinancialCalculator
 		}
 		double cost, salvage;
 		int life, period, factor;
-		cost = new Double( String.valueOf( operands[0].getValue() ) ).doubleValue();
-		salvage = new Double( String.valueOf( operands[1].getValue() ) ).doubleValue();
-		life = Integer.valueOf( String.valueOf( operands[2].getValue() ) ).intValue();
-		period = Integer.valueOf( String.valueOf( operands[3].getValue() ) ).intValue();
+		cost = new Double( String.valueOf( operands[0].getValue() ) );
+		salvage = new Double( String.valueOf( operands[1].getValue() ) );
+		life = Integer.valueOf( String.valueOf( operands[2].getValue() ) );
+		period = Integer.valueOf( String.valueOf( operands[3].getValue() ) );
 		factor = 2;
 		if( operands.length > 4 )
 		{
 			if( !(operands[4] instanceof PtgMissArg) )
 			{
-				factor = Integer.valueOf( String.valueOf( operands[4].getValue() ) ).intValue();
+				factor = Integer.valueOf( String.valueOf( operands[4].getValue() ) );
 			}
 		}
 		double salCost = salvage / cost;
@@ -2873,9 +2873,9 @@ public class FinancialCalculator
 			return perr;
 		}
 		double rate, nper, pv, fv, type;
-		rate = new Double( String.valueOf( operands[0].getValue() ) ).doubleValue();
-		nper = new Double( String.valueOf( operands[1].getValue() ) ).doubleValue();
-		pv = new Double( String.valueOf( operands[2].getValue() ) ).doubleValue();
+		rate = new Double( String.valueOf( operands[0].getValue() ) );
+		nper = new Double( String.valueOf( operands[1].getValue() ) );
+		pv = new Double( String.valueOf( operands[2].getValue() ) );
 		if( operands.length > 3 )
 		{
 			if( operands[3] instanceof PtgMissArg )
@@ -2884,7 +2884,7 @@ public class FinancialCalculator
 			}
 			else
 			{
-				fv = new Double( String.valueOf( operands[3].getValue() ) ).doubleValue();
+				fv = new Double( String.valueOf( operands[3].getValue() ) );
 			}
 		}
 		else
@@ -2899,7 +2899,7 @@ public class FinancialCalculator
 			}
 			else
 			{
-				type = new Double( String.valueOf( operands[4].getValue() ) ).doubleValue();
+				type = new Double( String.valueOf( operands[4].getValue() ) );
 			}
 		}
 		else
@@ -4233,11 +4233,8 @@ public class FinancialCalculator
 		{
 			return (trial);
 		}
-		else
-		{
-			return -1;
-		}
-/*			
+		return -1;
+		/*
 		MinYield = -1# 
 	      MaxYield = .Rate 
 	      If MaxYield = 0 Then MaxYield = 0.1 

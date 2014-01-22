@@ -386,11 +386,7 @@ public class DateConverter
 		{
 			return getDateFromNumber( ((Number) number).doubleValue() );
 		}
-
-		else
-		{
-			throw new ClassCastException( "passed object was not a number" );
-		}
+		throw new ClassCastException( "passed object was not a number" );
 	}
 
 	/**
@@ -431,11 +427,7 @@ public class DateConverter
 		{
 			return getCalendarFromNumber( ((Number) number).doubleValue() );
 		}
-
-		else
-		{
-			throw new ClassCastException( "passed object was not a number" );
-		}
+		throw new ClassCastException( "passed object was not a number" );
 	}
 
 	/**
@@ -595,8 +587,8 @@ public class DateConverter
 		StringTokenizer st = new StringTokenizer( dateStr, "/" );
 		try
 		{
-			m = Integer.valueOf( st.nextToken() ).intValue() - 1;
-			d = Integer.valueOf( st.nextToken() ).intValue();
+			m = Integer.valueOf( st.nextToken() ) - 1;
+			d = Integer.valueOf( st.nextToken() );
 			String s = st.nextToken();
 			int h, mn, sc;
 			h = mn = sc = 0;
@@ -608,18 +600,18 @@ public class DateConverter
 				String[] timetokens = time.split( ":" );
 				if( timetokens.length > 0 )
 				{
-					h = Integer.valueOf( timetokens[0] ).intValue();
+					h = Integer.valueOf( timetokens[0] );
 				}
 				if( timetokens.length > 1 )
 				{
-					mn = Integer.valueOf( timetokens[1] ).intValue();
+					mn = Integer.valueOf( timetokens[1] );
 				}
 				if( timetokens.length > 2 )
 				{
-					sc = Integer.valueOf( timetokens[2] ).intValue();
+					sc = Integer.valueOf( timetokens[2] );
 				}
 			}
-			y = Integer.valueOf( s ).intValue();
+			y = Integer.valueOf( s );
 			if( y < 100 )
 			{
 				y += 2000;

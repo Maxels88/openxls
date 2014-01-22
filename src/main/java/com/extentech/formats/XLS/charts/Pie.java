@@ -206,14 +206,11 @@ public class Pie extends GenericChartObject implements ChartObject
 		{ // Pie
 			return String.valueOf( this.showLdrLines() );
 		}
-		else if( op.equals( "donutSize" ) )
+		if( op.equals( "donutSize" ) )
 		{ // Pie
 			return String.valueOf( this.getDonutPercentage() );
 		}
-		else
-		{
-			return super.getChartOption( op );
-		}
+		return super.getChartOption( op );
 	}
 
 	@Override
@@ -245,7 +242,7 @@ public class Pie extends GenericChartObject implements ChartObject
 	{
 		try
 		{
-			pcDonut = Short.valueOf( val ).shortValue();
+			pcDonut = Short.valueOf( val );
 		}
 		catch( Exception e )
 		{

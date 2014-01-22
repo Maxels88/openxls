@@ -97,7 +97,7 @@ public class PtgPercent extends GenericPtg implements Ptg
 			}
 		}
 		// TODO: finish for Array formulas
-		double res = (((Double) o[0]).doubleValue()) / 100;
+		double res = ((Double) o[0]) / 100;
 		return new PtgNumber( res );
 	}
 

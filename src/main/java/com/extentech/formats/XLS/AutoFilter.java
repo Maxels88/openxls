@@ -423,7 +423,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 							insertionpoint = -1;    // so don't add below
 							break;
 						}
-						else if( val > maxVals[j] )
+						if( val > maxVals[j] )
 						{
 							if( (insertionpoint == -1) || (maxVals[j] < maxVals[insertionpoint]) )
 							{
@@ -517,7 +517,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 							insertionpoint = -1;    // so don't add below
 							break;
 						}
-						else if( val < minVals[j] )
+						if( val < minVals[j] )
 						{
 							if( (insertionpoint == -1) || (minVals[j] > minVals[insertionpoint]) )
 							{
@@ -583,16 +583,13 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 				}
 				return "Top " + wTop10 + " Items";
 			}
-			else
+			if( fPercent )
 			{
-				if( fPercent )
-				{
-					return "Bottom " + wTop10 + "%";
-				}
-				return "Bottom " + wTop10 + " Items";
+				return "Bottom " + wTop10 + "%";
 			}
+			return "Bottom " + wTop10 + " Items";
 		}
-		else if( !fSimple1 )
+		if( !fSimple1 )
 		{
 			op1 = doper1.getComparisonOperator();
 		}
@@ -602,7 +599,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 			{
 				return "Non Blanks";
 			}
-			else if( doper1 instanceof NoBlanksDoper )
+			if( doper1 instanceof NoBlanksDoper )
 			{
 				return "Blanks";
 			}
@@ -689,7 +686,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 		{
 			doperRec[0] = 0x8;
 			doperRec[2] = 0;    // fError
-			doperRec[3] = (byte) (((Boolean) val).booleanValue() ? 1 : 0);
+			doperRec[3] = (byte) ((Boolean) val ? 1 : 0);
 			doper1 = new ErrorDoper( doperRec );
 		}
 		else
@@ -700,7 +697,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 				double d = 0;
 				if( val instanceof Double )
 				{
-					d = ((Double) val).doubleValue();
+					d = (Double) val;
 				}
 				else if( val instanceof Integer )
 				{
@@ -765,7 +762,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 		{
 			doperRec[0] = 0x8;
 			doperRec[2] = 0;    // fError
-			doperRec[3] = (byte) (((Boolean) val).booleanValue() ? 1 : 0);
+			doperRec[3] = (byte) ((Boolean) val ? 1 : 0);
 			doper2 = new ErrorDoper( doperRec );
 		}
 		else
@@ -776,7 +773,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 				double d = 0;
 				if( val instanceof Double )
 				{
-					d = ((Double) val).doubleValue();
+					d = (Double) val;
 				}
 				else if( val instanceof Integer )
 				{

@@ -707,15 +707,15 @@ public final class FormulaParser
 		{
 			return 4;
 		}
-		else if( (curOp instanceof PtgAdd) || (curOp instanceof PtgSub) )
+		if( (curOp instanceof PtgAdd) || (curOp instanceof PtgSub) )
 		{
 			return 3;
 		}
-		else if( curOp instanceof PtgConcat )
+		if( curOp instanceof PtgConcat )
 		{
 			return 2;
 		}
-		else if( (curOp instanceof PtgEQ) || (curOp instanceof PtgNE) ||
+		if( (curOp instanceof PtgEQ) || (curOp instanceof PtgNE) ||
 				(curOp instanceof PtgLE) || (curOp instanceof PtgLT) ||
 				(curOp instanceof PtgGE) || (curOp instanceof PtgGT) )
 		{
@@ -920,7 +920,7 @@ public final class FormulaParser
 					PtgNumber pnum = (PtgNumber) pthing;
 					if( val.indexOf( "%" ) == -1 )
 					{
-						pnum.setVal( (new Double( val ).doubleValue()) );
+						pnum.setVal( (new Double( val )) );
 					}
 					else
 					{
@@ -930,12 +930,12 @@ public final class FormulaParser
 				else if( pthing instanceof PtgInt )
 				{
 					PtgInt pint = (PtgInt) pthing;
-					pint.setVal( (Integer.valueOf( val ).intValue()) );
+					pint.setVal( (Integer.valueOf( val )) );
 				}
 				else if( pthing instanceof PtgBool )
 				{
 					PtgBool pbool = (PtgBool) pthing;
-					pbool.setVal( Boolean.valueOf( val ).booleanValue() );
+					pbool.setVal( Boolean.valueOf( val ) );
 				}
 				else if( pthing instanceof PtgArray )
 				{
@@ -1100,7 +1100,7 @@ public final class FormulaParser
 						PtgNumber pnum = (PtgNumber) pthing;
 						if( val.indexOf( "%" ) == -1 )
 						{
-							pnum.setVal( (new Double( val ).doubleValue()) );
+							pnum.setVal( (new Double( val )) );
 						}
 						else
 						{
@@ -1110,12 +1110,12 @@ public final class FormulaParser
 					else if( pthing instanceof PtgInt )
 					{
 						PtgInt pint = (PtgInt) pthing;
-						pint.setVal( (Integer.valueOf( val ).intValue()) );
+						pint.setVal( (Integer.valueOf( val )) );
 					}
 					else if( pthing instanceof PtgBool )
 					{
 						PtgBool pbool = (PtgBool) pthing;
-						pbool.setVal( Boolean.valueOf( val ).booleanValue() );
+						pbool.setVal( Boolean.valueOf( val ) );
 					}
 					else if( pthing instanceof PtgArray )
 					{
@@ -1705,14 +1705,11 @@ public final class FormulaParser
 			try
 			{
 				Integer i = Integer.valueOf( ptg );
-				if( (i.intValue() >= 0) && (i.intValue() <= 65535) ) // PtgInts are UNSIGNED + <=65535
+				if( (i >= 0) && (i <= 65535) ) // PtgInts are UNSIGNED + <=65535
 				{
 					return "PtgInt";
 				}
-				else
-				{
-					return "PtgNumber";
-				}
+				return "PtgNumber";
 			}
 			catch( NumberFormatException e )
 			{
@@ -1756,10 +1753,7 @@ public final class FormulaParser
 				ExcelTools.getRowColFromString( ptg );    // if passes it's a PtgRef
 				return "PtgRef";
 			}
-			else
-			{
-				return "PtgName";
-			}
+			return "PtgName";
 		}
 		catch( IllegalArgumentException e )
 		{

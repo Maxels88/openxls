@@ -81,11 +81,11 @@ public class GenericChartObject extends XLSRecord implements ChartObject, ChartC
 		{ // Area, Bar, Pie, Line
 			return String.valueOf( isStacked() );
 		}
-		else if( op.equals( "Shadow" ) )
+		if( op.equals( "Shadow" ) )
 		{ // Pie, Area, Bar, Line, Radar, Scatter
 			return String.valueOf( hasShadow() );
 		}
-		else if( op.equals( "PercentageDisplay" ) )
+		if( op.equals( "PercentageDisplay" ) )
 		{ // Area, Bar,Line
 			return String.valueOf( is100Percent() );
 		}

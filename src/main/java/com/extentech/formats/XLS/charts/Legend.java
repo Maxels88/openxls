@@ -537,10 +537,9 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 			{
 				return f;
 			}
-			else    // shouldn't get here ...
-			{
-				return this.getParentChart().getDefaultFont();
-			}
+			// shouldn't get here ...
+
+			return this.getParentChart().getDefaultFont();
 		}
 		catch( NullPointerException e )
 		{

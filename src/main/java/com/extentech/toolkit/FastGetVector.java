@@ -83,13 +83,13 @@ public class FastGetVector extends ArrayList
 	 */
 	public boolean addOrderedDouble( Double obj )
 	{
-		double d = obj.doubleValue();
+		double d = obj;
 		try
 		{
 			for( int i = 0; i < super.size(); i++ )
 			{
 				Double dd = (Double) super.get( i );
-				if( dd.doubleValue() > d )
+				if( dd > d )
 				{
 					super.add( i, obj );
 					return true;

@@ -290,7 +290,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	{
 		if( op.equalsIgnoreCase( "Percentage" ) )
 		{
-			setPercentage( Short.valueOf( val ).shortValue() );
+			setPercentage( Short.valueOf( val ) );
 		}
 		else if( op.equalsIgnoreCase( "Shape" ) )
 		{
@@ -1032,13 +1032,13 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 			{ // pieformat
 				return String.valueOf( df.getPercentage() );
 			}
-			else if( op.equals( "ShowValueLabel" ) || // Attached Label Options
+			if( op.equals( "ShowValueLabel" ) || // Attached Label Options
 					op.equals( "ShowValueAsPercent" ) || op.equals( "ShowLabelAsPercent" ) || op.equals( "ShowLabel" ) || op.equals(
 					"ShowBubbleLabel" ) )
 			{
 				return df.getDataLabelType( op );
 			}
-			else if( op.equals( "ShowBubbleSizes" ) || // TextDisp options
+			if( op.equals( "ShowBubbleSizes" ) || // TextDisp options
 					op.equals( "ShowLabelPct" ) || op.equals( "ShowPct" ) || op.equals( "ShowCatLabel" ) ||
 					// op.equals("ShowValue") || unknown
 					op.equals( "Rotation" ) || op.equals( "Label" ) || op.equals( "TextRotation" ) )
@@ -1046,7 +1046,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 				TextDisp td = getDataLegendTextDisp( 0 );
 				return td.getChartOption( op );
 			}
-			else if( op.equals( "Perspective" ) || // ThreeD options
+			if( op.equals( "Perspective" ) || // ThreeD options
 					op.equals( "Cluster" ) || op.equals( "ThreeDScaling" ) || op.equals( "TwoDWalls" ) || op.equals( "PcGap" ) || op.equals(
 					"PcDepth" ) || op.equals( "PcHeight" ) || op.equals( "PcDist" ) || op.equals( "AnElev" ) || op.equals( "AnRot" ) )
 			{
@@ -1057,20 +1057,21 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 				}
 				return "";
 			}
-			else if( op.equals( "ThreeDBubbles" ) )
+			if( op.equals( "ThreeDBubbles" ) )
 			{
 				return String.valueOf( df.getHas3DBubbles() );
 			}
-			else if( op.equals( "ArShadow" ) )
+			if( op.equals( "ArShadow" ) )
 			{
 				return String.valueOf( df.getHasShadow() );
 			}
-			else if( op.equals( "SmoothLines" ) )
+			//noinspection ConfusingElseBranch
+			if( op.equals( "SmoothLines" ) )
 			{
 				return String.valueOf( df.getSmoothedLines() );
 				// TODO: FINSIH REST!
 			}
-			else if( op.equals( "AxisLabels" ) )
+			if( op.equals( "AxisLabels" ) )
 			{ // Radar, RadarArea
 			}
 			else if( op.equals( "BubbleSizeRatio" ) )

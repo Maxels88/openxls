@@ -428,11 +428,11 @@ public class Dval extends com.extentech.formats.XLS.XLSRecord
 							}
 							else if( n.equals( "xWindow" ) )
 							{
-								dval.setHorizontalPosition( Integer.valueOf( v ).intValue() );
+								dval.setHorizontalPosition( Integer.valueOf( v ) );
 							}
 							else if( n.equals( "yWindow" ) )
 							{
-								dval.setVerticalPosition( Integer.valueOf( v ).intValue() );
+								dval.setVerticalPosition( Integer.valueOf( v ) );
 							}
 						}
 					}

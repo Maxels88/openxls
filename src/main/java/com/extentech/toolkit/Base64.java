@@ -595,49 +595,46 @@ public class Base64
 		}   // end if: compress
 
 		// Else, don't compress. Better not to use streams at all then.
-		else
+
+		// Convert option to boolean in way that code likes it.
+		boolean breakLines = dontBreakLines == 0;
+
+		int len43 = (len * 4) / 3;
+		byte[] outBuff = new byte[(len43)                      // Main 4:3
+				+ (((len % 3) > 0) ? 4 : 0)      // Account for padding
+				+ (breakLines ? (len43 / MAX_LINE_LENGTH) : 0)]; // New lines
+		int d = 0;
+		int e = 0;
+		int len2 = len - 2;
+		int lineLength = 0;
+		for(; d < len2; d += 3, e += 4 )
 		{
-			// Convert option to boolean in way that code likes it.
-			boolean breakLines = dontBreakLines == 0;
+			encode3to4( source, d + off, 3, outBuff, e );
 
-			int len43 = (len * 4) / 3;
-			byte[] outBuff = new byte[(len43)                      // Main 4:3
-					+ (((len % 3) > 0) ? 4 : 0)      // Account for padding
-					+ (breakLines ? (len43 / MAX_LINE_LENGTH) : 0)]; // New lines
-			int d = 0;
-			int e = 0;
-			int len2 = len - 2;
-			int lineLength = 0;
-			for(; d < len2; d += 3, e += 4 )
+			lineLength += 4;
+			if( breakLines && (lineLength == MAX_LINE_LENGTH) )
 			{
-				encode3to4( source, d + off, 3, outBuff, e );
+				outBuff[e + 4] = NEW_LINE;
+				e++;
+				lineLength = 0;
+			}   // end if: end of line
+		}   // en dfor: each piece of array
 
-				lineLength += 4;
-				if( breakLines && (lineLength == MAX_LINE_LENGTH) )
-				{
-					outBuff[e + 4] = NEW_LINE;
-					e++;
-					lineLength = 0;
-				}   // end if: end of line
-			}   // en dfor: each piece of array
+		if( d < len )
+		{
+			encode3to4( source, d + off, len - d, outBuff, e );
+			e += 4;
+		}   // end if: some padding needed
 
-			if( d < len )
-			{
-				encode3to4( source, d + off, len - d, outBuff, e );
-				e += 4;
-			}   // end if: some padding needed
-
-			// Return value according to relevant encoding.
-			try
-			{
-				return new String( outBuff, 0, e, PREFERRED_ENCODING );
-			}   // end try
-			catch( java.io.UnsupportedEncodingException uue )
-			{
-				return new String( outBuff, 0, e );
-			}   // end catch
-
-		}   // end else: don't compress
+		// Return value according to relevant encoding.
+		try
+		{
+			return new String( outBuff, 0, e, PREFERRED_ENCODING );
+		}   // end try
+		catch( java.io.UnsupportedEncodingException uue )
+		{
+			return new String( outBuff, 0, e );
+		}   // end catch
 
 	}   // end encodeBytes
     
@@ -682,7 +679,7 @@ public class Base64
 		}
 
 		// Example: DkL=
-		else if( source[srcOffset + 3] == EQUALS_SIGN )
+		if( source[srcOffset + 3] == EQUALS_SIGN )
 		{
 			// Two ways to do the same thing. Don't know which way I like best.
 			//int outBuff =   ( ( DECODABET[ source[ srcOffset     ] ] << 24 ) >>>  6 )
@@ -696,32 +693,30 @@ public class Base64
 		}
 
 		// Example: DkLE
-		else
+
+		try
 		{
-			try
-			{
-				// Two ways to do the same thing. Don't know which way I like best.
-				//int outBuff =   ( ( DECODABET[ source[ srcOffset     ] ] << 24 ) >>>  6 )
-				//              | ( ( DECODABET[ source[ srcOffset + 1 ] ] << 24 ) >>> 12 )
-				//              | ( ( DECODABET[ source[ srcOffset + 2 ] ] << 24 ) >>> 18 )
-				//              | ( ( DECODABET[ source[ srcOffset + 3 ] ] << 24 ) >>> 24 );
-				int outBuff = ((DECODABET[source[srcOffset]] & 0xFF) << 18) | ((DECODABET[source[srcOffset + 1]] & 0xFF) << 12) | ((DECODABET[source[srcOffset + 2]] & 0xFF) << 6) | ((DECODABET[source[srcOffset + 3]] & 0xFF));
+			// Two ways to do the same thing. Don't know which way I like best.
+			//int outBuff =   ( ( DECODABET[ source[ srcOffset     ] ] << 24 ) >>>  6 )
+			//              | ( ( DECODABET[ source[ srcOffset + 1 ] ] << 24 ) >>> 12 )
+			//              | ( ( DECODABET[ source[ srcOffset + 2 ] ] << 24 ) >>> 18 )
+			//              | ( ( DECODABET[ source[ srcOffset + 3 ] ] << 24 ) >>> 24 );
+			int outBuff = ((DECODABET[source[srcOffset]] & 0xFF) << 18) | ((DECODABET[source[srcOffset + 1]] & 0xFF) << 12) | ((DECODABET[source[srcOffset + 2]] & 0xFF) << 6) | ((DECODABET[source[srcOffset + 3]] & 0xFF));
 
-				destination[destOffset] = (byte) (outBuff >> 16);
-				destination[destOffset + 1] = (byte) (outBuff >> 8);
-				destination[destOffset + 2] = (byte) (outBuff);
+			destination[destOffset] = (byte) (outBuff >> 16);
+			destination[destOffset + 1] = (byte) (outBuff >> 8);
+			destination[destOffset + 2] = (byte) (outBuff);
 
-				return 3;
-			}
-			catch( Exception e )
-			{
-				System.out.println( "" + source[srcOffset] + ": " + (DECODABET[source[srcOffset]]) );
-				System.out.println( "" + source[srcOffset + 1] + ": " + (DECODABET[source[srcOffset + 1]]) );
-				System.out.println( "" + source[srcOffset + 2] + ": " + (DECODABET[source[srcOffset + 2]]) );
-				System.out.println( "" + source[srcOffset + 3] + ": " + (DECODABET[source[srcOffset + 3]]) );
-				return -1;
-			}   //e nd catch
+			return 3;
 		}
+		catch( Exception e )
+		{
+			System.out.println( "" + source[srcOffset] + ": " + (DECODABET[source[srcOffset]]) );
+			System.out.println( "" + source[srcOffset + 1] + ": " + (DECODABET[source[srcOffset + 1]]) );
+			System.out.println( "" + source[srcOffset + 2] + ": " + (DECODABET[source[srcOffset + 2]]) );
+			System.out.println( "" + source[srcOffset + 3] + ": " + (DECODABET[source[srcOffset + 3]]) );
+			return -1;
+		}   //e nd catch
 	}   // end decodeToBytes
 
 	/**
@@ -1272,30 +1267,26 @@ public class Base64
 					lineLength = 0;
 					return '\n';
 				}   // end if
-				else
+
+				lineLength++;   // This isn't important when decoding
+				// but throwing an extra "if" seems
+				// just as wasteful.
+
+				int b = buffer[position++];
+
+				if( position >= bufferLength )
 				{
-					lineLength++;   // This isn't important when decoding
-					// but throwing an extra "if" seems
-					// just as wasteful.
+					position = -1;
+				}
 
-					int b = buffer[position++];
-
-					if( position >= bufferLength )
-					{
-						position = -1;
-					}
-
-					return b & 0xFF; // This is how you "cast" a byte that's
-					// intended to be unsigned.
-				}   // end else
+				return b & 0xFF; // This is how you "cast" a byte that's
+				// intended to be unsigned.
 			}   // end if: position >= 0
 
 			// Else error
-			else
-			{
-				// When JDK1.4 is more accepted, use an assertion here.
-				throw new java.io.IOException( "Error in Base64 code reading stream." );
-			}   // end else
+
+			// When JDK1.4 is more accepted, use an assertion here.
+			throw new java.io.IOException( "Error in Base64 code reading stream." );
 		}   // end read
 
 		/**

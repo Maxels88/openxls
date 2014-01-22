@@ -150,15 +150,15 @@ public abstract class ChartType implements ChartConstants, Serializable
 					}
 					return new ColChart( ch, cf, wb );
 				}
-				else if( barshape == SHAPECONE )
+				if( barshape == SHAPECONE )
 				{ // Cone chart	 always 3d
 					return new ConeChart( ch, cf, wb );
 				}
-				else if( barshape == SHAPECYLINDER )
+				if( barshape == SHAPECYLINDER )
 				{ // Cylinder chart always 3d
 					return new CylinderChart( ch, cf, wb );
 				}
-				else if( barshape == SHAPEPYRAMID )
+				if( barshape == SHAPEPYRAMID )
 				{    // Pyramid chart	alwasy 3d
 					return new PyramidChart( ch, cf, wb );
 				}
@@ -171,15 +171,15 @@ public abstract class ChartType implements ChartConstants, Serializable
 					}
 					return new BarChart( ch, cf, wb );
 				}
-				else if( barshape == SHAPECONE )
+				if( barshape == SHAPECONE )
 				{ // ConeBarchart	always 3d
 					return new ConeBarChart( ch, cf, wb );
 				}
-				else if( barshape == SHAPECYLINDER )
+				if( barshape == SHAPECYLINDER )
 				{ // CylinderBar chart	always 3d
 					return new CylinderBarChart( ch, cf, wb );
 				}
-				else if( barshape == SHAPEPYRAMID )
+				if( barshape == SHAPEPYRAMID )
 				{    // PyramidBar chart	always 3d
 					return new PyramidBarChart( ch, cf, wb );
 				}

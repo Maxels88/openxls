@@ -125,58 +125,55 @@ public final class PtgDiv extends GenericPtg implements Ptg
 				// create a container ptg for these.
 				PtgNumber n = new PtgNumber( returnVal );
 				return n;
+			}    // handle array formulas
+			String retArry = "";
+			int nArrays = java.lang.reflect.Array.getLength( o );
+			if( nArrays != 2 )
+			{
+				return new PtgErr( PtgErr.ERROR_VALUE );
 			}
-			else
-			{    // handle array formulas
-				String retArry = "";
-				int nArrays = java.lang.reflect.Array.getLength( o );
-				if( nArrays != 2 )
+			int nVals = java.lang.reflect.Array.getLength( o[0] );    // use first array element to determine length of values as subsequent vals might not be arrays
+			for( int i = 0; i < (nArrays - 1); i += 2 )
+			{
+				Object secondOp = null;
+				boolean comparitorIsArray = o[i + 1].getClass().isArray();
+				if( !comparitorIsArray )
 				{
-					return new PtgErr( PtgErr.ERROR_VALUE );
+					secondOp = o[i + 1];
 				}
-				int nVals = java.lang.reflect.Array.getLength( o[0] );    // use first array element to determine length of values as subsequent vals might not be arrays
-				for( int i = 0; i < (nArrays - 1); i += 2 )
+				for( int j = 0; j < nVals; j++ )
 				{
-					Object secondOp = null;
-					boolean comparitorIsArray = o[i + 1].getClass().isArray();
-					if( !comparitorIsArray )
+					Object firstOp = Array.get( o[i], j );    // first array index j
+					if( comparitorIsArray )
 					{
-						secondOp = o[i + 1];
+						secondOp = Array.get( o[i + 1], j );    // second array index j
 					}
-					for( int j = 0; j < nVals; j++ )
+					double o0 = 0, o1 = 0;
+					try
 					{
-						Object firstOp = Array.get( o[i], j );    // first array index j
-						if( comparitorIsArray )
-						{
-							secondOp = Array.get( o[i + 1], j );    // second array index j
-						}
-						double o0 = 0, o1 = 0;
-						try
-						{
-							o0 = getDoubleValue( firstOp, this.parent_rec );
-							o1 = getDoubleValue( secondOp, this.parent_rec );
-						}
-						catch( NumberFormatException e )
-						{
-							retArry = retArry + "#VALUE!" + ",";
-							continue;
-						}
-						if( o1 != 0 )
-						{
-							double retVal = o0 / o1;
-							retArry = retArry + retVal + ",";
-						}
-						else
-						{
-							retArry = retArry + "#DIV/0!" + ",";
-						}
+						o0 = getDoubleValue( firstOp, this.parent_rec );
+						o1 = getDoubleValue( secondOp, this.parent_rec );
+					}
+					catch( NumberFormatException e )
+					{
+						retArry = retArry + "#VALUE!" + ",";
+						continue;
+					}
+					if( o1 != 0 )
+					{
+						double retVal = o0 / o1;
+						retArry = retArry + retVal + ",";
+					}
+					else
+					{
+						retArry = retArry + "#DIV/0!" + ",";
 					}
 				}
-				retArry = "{" + retArry.substring( 0, retArry.length() - 1 ) + "}";
-				PtgArray pa = new PtgArray();
-				pa.setVal( retArry );
-				return pa;
 			}
+			retArry = "{" + retArry.substring( 0, retArry.length() - 1 ) + "}";
+			PtgArray pa = new PtgArray();
+			pa.setVal( retArry );
+			return pa;
 		}
 		catch( NumberFormatException e )
 		{

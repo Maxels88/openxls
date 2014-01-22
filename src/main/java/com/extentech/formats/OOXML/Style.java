@@ -188,7 +188,7 @@ class EffectRef implements OOXMLElement
 							String nm = xpp.getAttributeName( i );
 							if( nm.equals( "idx" ) )
 							{
-								idx = Integer.valueOf( xpp.getAttributeValue( i ) ).intValue();
+								idx = Integer.valueOf( xpp.getAttributeValue( i ) );
 							}
 						}
 					}
@@ -292,7 +292,7 @@ class FillRef implements OOXMLElement
 							String nm = xpp.getAttributeName( i );
 							if( nm.equals( "idx" ) )
 							{
-								idx = Integer.valueOf( xpp.getAttributeValue( i ) ).intValue();
+								idx = Integer.valueOf( xpp.getAttributeValue( i ) );
 							}
 						}
 					}
@@ -496,7 +496,7 @@ class lnRef implements OOXMLElement
 							String nm = xpp.getAttributeName( i );
 							if( nm.equals( "idx" ) )
 							{
-								idx = Integer.valueOf( xpp.getAttributeValue( i ) ).intValue();
+								idx = Integer.valueOf( xpp.getAttributeValue( i ) );
 							}
 						}
 					}

@@ -213,16 +213,13 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 			{
 				return parent_rec.getSheet(); // sheetless names belong to parent rec
 			}
-			else
+			if( b.getFactory().getDebugLevel() > 1 )    // 20080925 KSC
 			{
-				if( b.getFactory().getDebugLevel() > 1 )    // 20080925 KSC
-				{
-					Logger.logErr( "PtgRef3d.getSheet: Unresolved External or Deleted Sheet Reference Found" ); // [BUGTRACKER 1836] Claritas extenXLS22677.rec (Deleted Sheet/Named Range causes errant value in B3)
-				}
-				return null;    //20080805 KSC: Don't just return the 1st sheet, may be wrong, deleted, etc!
+				Logger.logErr( "PtgRef3d.getSheet: Unresolved External or Deleted Sheet Reference Found" ); // [BUGTRACKER 1836] Claritas extenXLS22677.rec (Deleted Sheet/Named Range causes errant value in B3)
 			}
+			return null;    //20080805 KSC: Don't just return the 1st sheet, may be wrong, deleted, etc!
 		}
-		else if( bsa == null )
+		if( bsa == null )
 		{
 			return null;
 		}

@@ -419,7 +419,7 @@ public class PivotTableDefinition implements OOXMLElement
 							}
 							else if( nm.equals( "x" ) ) // Specifies the item index in pivotFields collection in the PivotCache. Applies only non- OLAP PivotTables.
 							{
-								ptview.addPivotItem( axis, 0, Integer.valueOf( v ).intValue() );
+								ptview.addPivotItem( axis, 0, Integer.valueOf( v ) );
 							}
 						}
 					}
@@ -667,7 +667,7 @@ public class PivotTableDefinition implements OOXMLElement
 							else if( nm.equals( "r" ) )
 							{// Specifies the number of items to repeat from the previous row item. Note: The first item has no @r explicitly written. Since a default of "0" is specified in the schema, for any item
 								// whose @r is missing, a default value of "0" is implied.
-								repeat = Integer.valueOf( v ).intValue();
+								repeat = Integer.valueOf( v );
 								index += repeat;
 								nLines -= repeat;
 							}
@@ -696,7 +696,7 @@ public class PivotTableDefinition implements OOXMLElement
 					{
 						break;
 					}
-					else if( endname.equals( "i" ) )
+					if( endname.equals( "i" ) )
 					{
 						if( isRowItems )
 						{
@@ -819,7 +819,7 @@ public class PivotTableDefinition implements OOXMLElement
 		{
 			if( xpp.getAttributeCount() > 0 )
 			{
-				v = Integer.valueOf( xpp.getAttributeValue( 0 ) ).intValue();    // index
+				v = Integer.valueOf( xpp.getAttributeValue( 0 ) );    // index
 			}
 		}
 		catch( Exception e )
@@ -956,15 +956,15 @@ public class PivotTableDefinition implements OOXMLElement
 		{
 			return Sxvd.AXIS_ROW;
 		}
-		else if( axis.equals( "axisCol" ) )
+		if( axis.equals( "axisCol" ) )
 		{
 			return Sxvd.AXIS_COL;
 		}
-		else if( axis.equals( "axisPage" ) )
+		if( axis.equals( "axisPage" ) )
 		{
 			return Sxvd.AXIS_PAGE;
 		}
-		else if( axis.equals( "axisValues" ) )
+		if( axis.equals( "axisValues" ) )
 		{
 			return Sxvd.AXIS_DATA;
 		}

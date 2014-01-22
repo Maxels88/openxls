@@ -761,7 +761,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						else
 						{
 							o = ((Formula) c).calculateFormula();
-							if( (o instanceof Integer) || ((o instanceof Double) && (((Double) o).intValue() == ((Double) o).doubleValue())) )
+							if( (o instanceof Integer) || ((o instanceof Double) && (((Double) o).intValue() == (Double) o)) )
 							{
 								isInteger = true;
 							}
@@ -1558,7 +1558,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			{
 				continue;
 			}
-			else if( cell.getOpcode() == MULBLANK )
+			if( cell.getOpcode() == MULBLANK )
 			{
 				skipMulBlank = (Mulblank) cell;
 			}
@@ -2508,7 +2508,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		}
 		else if( obj instanceof Double )
 		{
-			rec = new NumberRec( ((Double) obj).doubleValue() );
+			rec = new NumberRec( (Double) obj );
 		}
 		else if( obj instanceof String )
 		{
@@ -2557,13 +2557,13 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		}
 		else if( obj instanceof Integer )
 		{
-			int l = ((Integer) obj).intValue();
+			int l = (Integer) obj;
 			rec = new NumberRec( l );
 
 		}
 		else if( obj instanceof Long )
 		{
-			long l = ((Long) obj).longValue();
+			long l = (Long) obj;
 			rec = new NumberRec( l );
 		}
 		else if( obj instanceof Boolean )
@@ -2574,7 +2574,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		}
 		else
 		{
-			double d = new Double( String.valueOf( obj ) ).doubleValue();        // 20080211 KSC: Double.valueOf(String.valueOf(obj)).doubleValue();       
+			double d = new Double( String.valueOf( obj ) );        // 20080211 KSC: Double.valueOf(String.valueOf(obj)).doubleValue();
 			rec = new NumberRec( d );
 		}
 		rec.setWorkBook( getWorkBook() );
@@ -3529,7 +3529,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			Object fontNum = localFonts.get( xmlFont );
 			if( fontNum != null )
 			{ // then get the fontnum in this book
-				fid = ((Integer) fontNum).intValue();
+				fid = (Integer) fontNum;
 			}
 			else
 			{ // it's a new font for this workbook, add it in
@@ -4066,7 +4066,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						idx--;
 						break;
 					}
-					else if( (((BiffRec) this.SheetRecs.get( idx + 1 )).getOpcode() == CONTINUE) && ((((Continue) this.SheetRecs.get( idx + 1 ))).maskedMso != null) )
+					if( (((BiffRec) this.SheetRecs.get( idx + 1 )).getOpcode() == CONTINUE) && ((((Continue) this.SheetRecs.get( idx + 1 ))).maskedMso != null) )
 					{
 						// idx++;
 						break;
@@ -4810,11 +4810,11 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						}
 						else if( n.equals( "defaultColWidth" ) )
 						{
-							this.setDefaultColumnWidth( new Float( v ).floatValue() );
+							this.setDefaultColumnWidth( new Float( v ) );
 						}
 						else if( n.equals( "defaultRowHeight" ) )
 						{
-							this.setDefaultRowHeight( new Double( v ).doubleValue() );
+							this.setDefaultRowHeight( new Double( v ) );
 						}
 					}
 				}
@@ -4885,15 +4885,15 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						String v = xpp.getAttributeValue( i );
 						if( nm.equals( "min" ) )
 						{
-							min = Integer.valueOf( v ).intValue();
+							min = Integer.valueOf( v );
 						}
 						else if( nm.equals( "max" ) )
 						{
-							max = Integer.valueOf( v ).intValue();
+							max = Integer.valueOf( v );
 						}
 						else if( nm.equals( "width" ) )
 						{
-							width = new Double( v ).doubleValue();
+							width = new Double( v );
 						}
 						else if( nm.equals( "hidden" ) )
 						{
@@ -4901,7 +4901,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						}
 						else if( nm.equals( "style" ) )    // customFormat?
 						{
-							style = Integer.valueOf( v ).intValue();
+							style = Integer.valueOf( v );
 						}
 					}
 					if( max > WorkBook.MAXCOLS )
@@ -4930,18 +4930,18 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						String v = xpp.getAttributeValue( i );
 						if( nm.equals( "r" ) )
 						{
-							int rownum = Integer.valueOf( v ).intValue() - 1;
+							int rownum = Integer.valueOf( v ) - 1;
 							r = this.insertRow( rownum,
 							                    false ); // now insertRow with no shift rows does NOT add a blank cell so no need to delete extra cell anymore
 							r.setIxfe( this.getWorkBook().getDefaultIxfe() );
 						}
 						else if( nm.equals( "ht" ) )
 						{
-							ht = (int) (new Double( v ).doubleValue() * OOXMLReader.rowHtFactor);
+							ht = (int) (new Double( v ) * OOXMLReader.rowHtFactor);
 						}
 						else if( nm.equals( "s" ) )
 						{   // customFormat?
-							ixfe = Integer.valueOf( v ).intValue();
+							ixfe = Integer.valueOf( v );
 						}
 						else if( nm.equals( "customFormat" ) )
 						{
@@ -4962,7 +4962,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						}
 						else if( nm.equals( "outlineLevel" ) )
 						{
-							r.setOutlineLevel( Integer.valueOf( v ).intValue() );
+							r.setOutlineLevel( Integer.valueOf( v ) );
 						}
 						else if( nm.equals( "customHeight" ) )
 						{
@@ -5006,7 +5006,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						}
 						else if( nm.equals( "s" ) )
 						{
-							formatId = Integer.valueOf( v ).intValue();   // save for setting later
+							formatId = Integer.valueOf( v );   // save for setting later
 						}
 						else if( nm.equals( "t" ) )
 						{
@@ -5079,7 +5079,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 							// the SST has already been populated, now we just need to add
 							// Labelsst recs and hook up with the isst.
 							Labelsst labl = Labelsst.getPrototype( null, bk.getWorkBook() );
-							labl.setIsst( Integer.valueOf( v ).intValue() );
+							labl.setIsst( Integer.valueOf( v ) );
 							labl.setIxfe( formatId );
 							this.addRecord( labl, rc );
 						}
@@ -5482,7 +5482,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 							this.createNote( addr, comment, (String) authors.get( authId ) );
 						}
 						addr = xpp.getAttributeValue( "", "ref" );
-						authId = Integer.valueOf( xpp.getAttributeValue( "", "authorId" ) ).intValue();
+						authId = Integer.valueOf( xpp.getAttributeValue( "", "authorId" ) );
 						comment = null;
 					}
 					else if( tnm.equals( "text" ) )
@@ -5604,11 +5604,11 @@ public final class Boundsheet extends XLSRecord implements Sheet
 									tnm = xpp.getName();    // Anchor
 									if( tnm.equals( "Row" ) )
 									{
-										r = Integer.valueOf( OOXMLReader.getNextText( xpp ) ).intValue();
+										r = Integer.valueOf( OOXMLReader.getNextText( xpp ) );
 									}
 									else if( tnm.equals( "Column" ) )
 									{
-										c = Integer.valueOf( OOXMLReader.getNextText( xpp ) ).intValue();
+										c = Integer.valueOf( OOXMLReader.getNextText( xpp ) );
 									}
 									else if( tnm.equals( "Visible" ) )
 									{
@@ -5623,7 +5623,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 										String[] s = sbounds.split( "," );
 										for( int i = 0; i < 8; i++ )
 										{
-											bounds[i] = Short.valueOf( s[i] ).shortValue();
+											bounds[i] = Short.valueOf( s[i] );
 										}
 									}
 								}

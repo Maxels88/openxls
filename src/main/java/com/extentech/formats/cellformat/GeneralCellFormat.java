@@ -62,11 +62,8 @@ public class GeneralCellFormat extends Format implements CellFormat
 				// it's an integer
 				return buffer.append( String.valueOf( num.longValue() ) );
 			}
-			else
-			{
-				// it's floating-point
-				return buffer.append( ExcelTools.getNumberAsString( num.doubleValue() ) );
-			}
+			// it's floating-point
+			return buffer.append( ExcelTools.getNumberAsString( num.doubleValue() ) );
 		}
 
 		return buffer.append( obj.toString() );

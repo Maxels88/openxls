@@ -123,7 +123,7 @@ public final class Continue extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( this.hasgrbit != null )
 		{
-			return hasgrbit.booleanValue();
+			return hasgrbit;
 		}
 
 		if( DEBUGLEVEL > 1 )

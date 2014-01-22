@@ -260,10 +260,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		{
 			return true;
 		}
-		else
-		{
-			return false;
-		}
+		return false;
 	}
 
 	public void setItalic( boolean b )
@@ -628,7 +625,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		{
 			return java.awt.Color.BLACK;
 		}
-		else if( this.icv > FormatHandle.COLORTABLE.length )
+		if( this.icv > FormatHandle.COLORTABLE.length )
 		{
 			return java.awt.Color.BLACK;
 		}
@@ -1024,7 +1021,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 			Logger.logErr( "Font.parseOOXML: " + e.toString() );
 		}
 		// for incremental styles, font size may not be set
-		int size = (sz == null) ? -1 : Font.PointsToFontHeight( new Double( sz ).doubleValue() );
+		int size = (sz == null) ? -1 : Font.PointsToFontHeight( new Double( sz ) );
 		Font f = new Font( name, 400, size );
 		if( c != null )
 		{

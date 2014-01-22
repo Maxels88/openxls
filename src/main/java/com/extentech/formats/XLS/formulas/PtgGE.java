@@ -141,7 +141,7 @@ public class PtgGE extends GenericPtg implements Ptg
 				if( (o[0] instanceof Double) && (o[1] instanceof Double) )
 				{
 					//if (dub[0].doubleValue() <= dub[1].doubleValue()){
-					if( ((Double) o[0]).doubleValue() >= ((Double) o[1]).doubleValue() )
+					if( (Double) o[0] >= (Double) o[1] )
 					{
 						res = true;
 					}
@@ -177,68 +177,65 @@ public class PtgGE extends GenericPtg implements Ptg
 				}
 
 				return new PtgBool( res );
-			}
-			else
-			{    // handle array fomulas
-				boolean res = false;
-				String retArry = "";
-				int nArrays = java.lang.reflect.Array.getLength( o );    // TODO: Should always be 2 ????????????????????
-				int nVals = java.lang.reflect.Array.getLength( o[0] );    // use first array element to determine length of values as subsequent vals might not be arrays
-				for( int i = 0; i < (nArrays - 1); i += 2 )
+			}    // handle array fomulas
+			boolean res = false;
+			String retArry = "";
+			int nArrays = java.lang.reflect.Array.getLength( o );    // TODO: Should always be 2 ????????????????????
+			int nVals = java.lang.reflect.Array.getLength( o[0] );    // use first array element to determine length of values as subsequent vals might not be arrays
+			for( int i = 0; i < (nArrays - 1); i += 2 )
+			{
+				res = false;
+				Object secondOp = null;
+				boolean comparitorIsArray = o[i + 1].getClass().isArray();
+				if( !comparitorIsArray )
 				{
-					res = false;
-					Object secondOp = null;
-					boolean comparitorIsArray = o[i + 1].getClass().isArray();
-					if( !comparitorIsArray )
-					{
-						secondOp = o[i + 1];
-					}
-					for( int j = 0; j < nVals; j++ )
-					{
-						Object firstOp = Array.get( o[i], j );    // first array index j
-						if( comparitorIsArray )
-						{
-							secondOp = Array.get( o[i + 1], j );    // second array index j
-						}
-
-						if( (firstOp instanceof Double) && (secondOp instanceof Double) )
-						{
-							res = ((Double) firstOp).compareTo( (Double) secondOp ) >= 0;
-						}
-						else
-						{ // string comparison?
-							// This is what Excel does ...
-							if( Formula.isErrorValue( o[0].toString() ) )
-							{
-								return new PtgErr( PtgErr.convertStringToLookupByte( o[0].toString() ) );
-							}
-							if( Formula.isErrorValue( o[1].toString() ) )
-							{
-								return new PtgErr( PtgErr.convertStringToLookupByte( o[1].toString() ) );
-							}
-							// KSC: ExcelTools.transformStringToIntVals does not work in all cases- think of date strings ...
-							res = (o[0].toString().compareTo( o[1].toString() ) >= 0);
-		/* KSC: ExcelTools.transformStringToIntVals does not work in all cases- think of date strings ...						
-							int[] i1 = ExcelTools.transformStringToIntVals(o[0].toString());
-							int[] i2 = ExcelTools.transformStringToIntVals(o[1].toString());
-							try {
-								res= true;
-								for(int k=0;k<i1.length && res;k++){
-									res= (i1[k] >= i2[k]);
-								}
-							} catch (ArrayIndexOutOfBoundsException e) {
-								res= false;
-							}*/
-						}
-						retArry = retArry + res + ",";
-					}
+					secondOp = o[i + 1];
 				}
-				retArry = "{" + retArry.substring( 0, retArry.length() - 1 ) + "}";
-				PtgArray pa = new PtgArray();
-				pa.setVal( retArry );
-				return pa;
+				for( int j = 0; j < nVals; j++ )
+				{
+					Object firstOp = Array.get( o[i], j );    // first array index j
+					if( comparitorIsArray )
+					{
+						secondOp = Array.get( o[i + 1], j );    // second array index j
+					}
+
+					if( (firstOp instanceof Double) && (secondOp instanceof Double) )
+					{
+						res = ((Double) firstOp).compareTo( (Double) secondOp ) >= 0;
+					}
+					else
+					{ // string comparison?
+						// This is what Excel does ...
+						if( Formula.isErrorValue( o[0].toString() ) )
+						{
+							return new PtgErr( PtgErr.convertStringToLookupByte( o[0].toString() ) );
+						}
+						if( Formula.isErrorValue( o[1].toString() ) )
+						{
+							return new PtgErr( PtgErr.convertStringToLookupByte( o[1].toString() ) );
+						}
+						// KSC: ExcelTools.transformStringToIntVals does not work in all cases- think of date strings ...
+						res = (o[0].toString().compareTo( o[1].toString() ) >= 0);
+	/* KSC: ExcelTools.transformStringToIntVals does not work in all cases- think of date strings ...
+						int[] i1 = ExcelTools.transformStringToIntVals(o[0].toString());
+						int[] i2 = ExcelTools.transformStringToIntVals(o[1].toString());
+						try {
+							res= true;
+							for(int k=0;k<i1.length && res;k++){
+								res= (i1[k] >= i2[k]);
+							}
+						} catch (ArrayIndexOutOfBoundsException e) {
+							res= false;
+						}*/
+					}
+					retArry = retArry + res + ",";
+				}
 			}
-		/* }catch(NumberFormatException e){ 20090203 KSC: Handled above
+			retArry = "{" + retArry.substring( 0, retArry.length() - 1 ) + "}";
+			PtgArray pa = new PtgArray();
+			pa.setVal( retArry );
+			return pa;
+			/* }catch(NumberFormatException e){ 20090203 KSC: Handled above
 			String[] s = getStringValuesFromPtgs(form);
 			if (s==null || s.length<2) { // 20081203 KSC: Handle errors ala Excel
 				if (!(s.length==1 && s[0].equals(PtgErr.ERROR_VALUE))) {

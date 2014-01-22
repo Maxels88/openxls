@@ -134,10 +134,7 @@ public class IndirectOutputStream extends OutputStream
 			{
 				return true;
 			}
-			else
-			{
-				throw new IOException( "sink not connected" );
-			}
+			throw new IOException( "sink not connected" );
 		}
 		return false;
 	}

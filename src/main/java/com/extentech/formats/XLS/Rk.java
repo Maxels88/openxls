@@ -343,10 +343,9 @@ public final class Rk extends XLSCellRecord implements Mulled
 			}
 			return mymul.getRecordIndex();
 		}
-		else // standalone RK
-		{
-			return super.getRecordIndex();
-		}
+		// standalone RK
+
+		return super.getRecordIndex();
 	}
 
 	/**
@@ -471,10 +470,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		{
 			return String.valueOf( RKint );
 		}
-		else
-		{
-			return ExcelTools.getNumberAsString( Rkdouble );
-		}
+		return ExcelTools.getNumberAsString( Rkdouble );
 	}
 
 	@Override
@@ -484,7 +480,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		{
 			if( s.indexOf( "." ) > -1 )
 			{
-				double f = new Double( s ).doubleValue();    // 20080211 KSC: Double.valueOf(s).doubleValue();
+				double f = new Double( s );    // 20080211 KSC: Double.valueOf(s).doubleValue();
 				this.setDoubleVal( f );
 			}
 			else

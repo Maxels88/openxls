@@ -67,7 +67,7 @@ public class CellComparator implements Comparator
 			}
 			return 0;
 		}
-		else if( cell1.isNumber() )
+		if( cell1.isNumber() )
 		{// get formula value if exists and is a numeric value
 			if( cellType2 == CellHandle.TYPE_FORMULA )
 			{
@@ -151,11 +151,11 @@ public class CellComparator implements Comparator
 					}
 					return 0;
 				}
-				else if( !(d1 == Double.NaN) )
+				if( !(d1 == Double.NaN) )
 				{
 					return 1;
 				}
-				else if( !(d2 == Double.NaN) )
+				if( !(d2 == Double.NaN) )
 				{
 					return -1;
 				}

@@ -3449,8 +3449,8 @@ public class ChartHandle implements ChartConstants
 			{
 			}
 			theChart.put( "type", chartObjectJSON.getJSONObject( "type" ) );
-			yMin = jMinMax[0].doubleValue();
-			yMax = jMinMax[1].doubleValue();
+			yMin = jMinMax[0];
+			yMax = jMinMax[1];
 			nSeries = jMinMax[2].intValue();
 
 			// Axes + Category Labels + Grid Lines  			
@@ -3590,8 +3590,8 @@ public class ChartHandle implements ChartConstants
 			// Retrieve Axis Scale info
 			double yMax = 0.0, yMin = 0.0;
 			int nSeries = 0;
-			yMin = jMinMax[0].doubleValue();
-			yMax = jMinMax[1].doubleValue();
+			yMin = jMinMax[0];
+			yMax = jMinMax[1];
 			nSeries = jMinMax[2].intValue();
 
 			int type = this.getChartType();    // necessary for parsing AXIS options: horizontal charts "switch" axes ...

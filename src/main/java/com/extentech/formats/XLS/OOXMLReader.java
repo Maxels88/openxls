@@ -200,7 +200,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 						try
 						{
 							String s = rId.substring( 3 );        // in form of "rIdXX" where XX is the sheet number
-							sheetnum = Integer.valueOf( s ).intValue() - 1;  // embed attribute, specifies rId, important in OOXML
+							sheetnum = Integer.valueOf( s ) - 1;  // embed attribute, specifies rId, important in OOXML
 						}
 						catch( Exception e )
 						{
@@ -514,11 +514,11 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 							}
 							else if( nm.equalsIgnoreCase( "SheetId" ) )
 							{
-								id = Integer.valueOf( v ).intValue() - 1;
+								id = Integer.valueOf( v ) - 1;
 							}
 							else if( nm.equalsIgnoreCase( "id" ) )    // rId
 							{
-								rId = Integer.valueOf( v.substring( 3 ) ).intValue() - 1;
+								rId = Integer.valueOf( v.substring( 3 ) ) - 1;
 							}
 							else if( nm.equals( "state" ) )
 							{
@@ -561,7 +561,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 							n = xpp.getAttributeName( i );
 							if( n.equalsIgnoreCase( "firstSheet" ) )
 							{
-								bk.getWorkBook().setFirstSheet( Integer.valueOf( xpp.getAttributeValue( i ) ).intValue() );
+								bk.getWorkBook().setFirstSheet( Integer.valueOf( xpp.getAttributeValue( i ) ) );
 							}
 							//else if (n.equalsIgnoreCase("activeTab"))
 							//bk.getWorkBook().setActiveTab(Integer.valueOf(xpp.getAttributeValue(i)).intValue());
@@ -867,7 +867,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 							String nm = xpp.getAttributeName( i );
 							if( nm.equals( "numFmtId" ) )
 							{
-								fmtId = Integer.valueOf( xpp.getAttributeValue( i ) ).intValue();
+								fmtId = Integer.valueOf( xpp.getAttributeValue( i ) );
 							}
 							else if( nm.equals( "formatCode" ) )
 							{
@@ -960,22 +960,22 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 				// all id's are 0-based
 				if( nm.equals( "fontId" ) )
 				{
-					f = Integer.valueOf( xpp.getAttributeValue( i ) ).intValue();
+					f = Integer.valueOf( xpp.getAttributeValue( i ) );
 				}
 				else if( nm.equals( "numFmtId" ) )
 				{
-					fmtId = Integer.valueOf( xpp.getAttributeValue( i ) ).intValue();
+					fmtId = Integer.valueOf( xpp.getAttributeValue( i ) );
 				}
 				else if( nm.equals( "fillId" ) )
 				{
-					fillId = Integer.valueOf( xpp.getAttributeValue( i ) ).intValue();
+					fillId = Integer.valueOf( xpp.getAttributeValue( i ) );
 				}
 				else if( nm.equals( "borderId" ) )
 				{
-					borderId = Integer.valueOf( xpp.getAttributeValue( i ) ).intValue();
+					borderId = Integer.valueOf( xpp.getAttributeValue( i ) );
 				}
 			}
-			f = ((Integer) fontmap.get( f )).intValue();  // FONT
+			f = (Integer) fontmap.get( f );  // FONT
 			Xf xf = null;
 			if( nXfs < bk.getWorkBook().getXfrecs().size() )    // either alter existing default xf or create new xf
 			{
@@ -994,7 +994,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 			{ // NUMBER FORMAT 0 is default
 				if( fmts.get( (Integer.valueOf( fmtId )) ) != null )  // map it
 				{
-					fmtId = ((Integer) (fmts.get( (Integer.valueOf( fmtId )) ))).intValue();
+					fmtId = (Integer) (fmts.get( (Integer.valueOf( fmtId )) ));
 				}
 				xf.setFormat( (short) fmtId );
 			}
@@ -1053,7 +1053,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 				}
 				else if( n.equals( "indent" ) )
 				{
-					xf.setIndent( Integer.valueOf( v ).intValue() );
+					xf.setIndent( Integer.valueOf( v ) );
 				}
 				else if( n.equals( "wrapText" ) )
 				{
@@ -1061,7 +1061,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 				}
 				else if( n.equals( "textRotation" ) )
 				{
-					xf.setRotation( Integer.valueOf( v ).intValue() );
+					xf.setRotation( Integer.valueOf( v ) );
 				}
 				else if( n.equals( "shrinkToFit" ) )
 				{
@@ -1069,7 +1069,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 				}
 				else if( n.equals( "readingOrder" ) )
 				{
-					xf.setRightToLeftReadingOrder( Integer.valueOf( v ).intValue() );
+					xf.setRightToLeftReadingOrder( Integer.valueOf( v ) );
 				}
 			}
 		}
@@ -1305,7 +1305,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 				int fmtid = 0;
 				try
 				{
-					fmtid = Integer.valueOf( s[7] ).intValue();
+					fmtid = Integer.valueOf( s[7] );
 				}
 				catch( Exception e )
 				{

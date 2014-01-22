@@ -148,10 +148,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 		{
 			return (String) getValue();
 		}
-		else
-		{
-			return "Uninitialized PtgNameX";
-		}
+		return "Uninitialized PtgNameX";
 	}
 
 	@Override

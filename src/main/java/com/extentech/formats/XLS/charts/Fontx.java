@@ -88,10 +88,7 @@ public class Fontx extends GenericChartObject implements ChartObject
 		{
 			return ifnt;
 		}
-		else
-		{
-			return (ifnt - n) + 1;
-		}
+		return (ifnt - n) + 1;
 	}
 
 	public void setIfnt( int id )

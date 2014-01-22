@@ -169,25 +169,25 @@ public class ThreeD extends GenericChartObject implements ChartObject
 		 */
 		if( op.equalsIgnoreCase( "Perspective" ) )
 		{ // specifies whether the 3-D plot area is rendered with a vanishing point.
-			fPerspective = Boolean.valueOf( val ).booleanValue();
+			fPerspective = Boolean.valueOf( val );
 			grbit = ByteTools.updateGrBit( grbit, fPerspective, 0 );
 			bHandled = true;
 		}
 		if( op.equalsIgnoreCase( "Cluster" ) )
 		{ // specifies whether data points are clustered together in a bar chart group
-			fCluster = Boolean.valueOf( val ).booleanValue();
+			fCluster = Boolean.valueOf( val );
 			grbit = ByteTools.updateGrBit( grbit, fCluster, 1 );
 			bHandled = true;
 		}
 		if( op.equalsIgnoreCase( "ThreeDScaling" ) )
 		{ // specifies whether the height of the 3-D plot area is automatically determined
-			f3dScaling = Boolean.valueOf( val ).booleanValue();
+			f3dScaling = Boolean.valueOf( val );
 			grbit = ByteTools.updateGrBit( grbit, f3dScaling, 2 );
 			bHandled = true;
 		}
 		if( op.equalsIgnoreCase( "TwoDWalls" ) )
 		{ // A bit that specifies whether the chart walls are rendered in 2-D
-			f2DWalls = Boolean.valueOf( val ).booleanValue();
+			f2DWalls = Boolean.valueOf( val );
 			grbit = ByteTools.updateGrBit( grbit, f2DWalls, 4 );
 			bHandled = true;
 		}

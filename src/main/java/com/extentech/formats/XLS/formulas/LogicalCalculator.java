@@ -61,7 +61,7 @@ public class LogicalCalculator
 			{
 				PtgBool bo = (PtgBool) alloperands[i];
 				Boolean bool = (Boolean) bo.getValue();
-				if( bool.booleanValue() == false )
+				if( bool == false )
 				{
 					return new PtgBool( false );
 				}
@@ -169,56 +169,50 @@ public class LogicalCalculator
 			{
 				return iftrue;
 			}
-			else
-			{
-				return iffalse;
-			}
+			return iffalse;
 		}
-		else
-		{
-			try
-			{    // see what type of operands iftrue and iffalse arrays are
-				String retArry = "";
-				Ptg[] p = ((PtgArray) determine).getComponents();
+		try
+		{    // see what type of operands iftrue and iffalse arrays are
+			String retArry = "";
+			Ptg[] p = ((PtgArray) determine).getComponents();
 //			boolean trueIsArray= iftrue instanceof
-				boolean res = true;
-				boolean trueValueIsArray = (iftrue instanceof PtgArray);
-				boolean falseValueIsArray = (iffalse instanceof PtgArray);
-				for( int i = 0; i < p.length; i++ )
+			boolean res = true;
+			boolean trueValueIsArray = (iftrue instanceof PtgArray);
+			boolean falseValueIsArray = (iffalse instanceof PtgArray);
+			for( int i = 0; i < p.length; i++ )
+			{
+				res = (p[i].toString().equalsIgnoreCase( "true" ));
+				if( res )
 				{
-					res = (p[i].toString().equalsIgnoreCase( "true" ));
-					if( res )
+					if( trueValueIsArray )
 					{
-						if( trueValueIsArray )
-						{
-							retArry = retArry + ((PtgArray) iftrue).arrVals.get( i ).toString() + ",";
-						}
-						else
-						{
-							retArry = retArry + iftrue + ",";
-						}
+						retArry = retArry + ((PtgArray) iftrue).arrVals.get( i ).toString() + ",";
 					}
 					else
-					{ // false
-						if( falseValueIsArray )
-						{
-							retArry = retArry + ((PtgArray) iffalse).arrVals.get( i ).toString() + ",";
-						}
-						else
-						{
-							retArry = retArry + iffalse + ",";
-						}
+					{
+						retArry = retArry + iftrue + ",";
 					}
 				}
-				retArry = "{" + retArry.substring( 0, retArry.length() - 1 ) + "}";
-				PtgArray pa = new PtgArray();
-				pa.setVal( retArry );
-				return pa;
+				else
+				{ // false
+					if( falseValueIsArray )
+					{
+						retArry = retArry + ((PtgArray) iffalse).arrVals.get( i ).toString() + ",";
+					}
+					else
+					{
+						retArry = retArry + iffalse + ",";
+					}
+				}
 			}
-			catch( Exception e )
-			{    // this should hit if iftrue and iffalse are array types .... TODO: handle!
-				return iffalse;
-			}
+			retArry = "{" + retArry.substring( 0, retArry.length() - 1 ) + "}";
+			PtgArray pa = new PtgArray();
+			pa.setVal( retArry );
+			return pa;
+		}
+		catch( Exception e )
+		{    // this should hit if iftrue and iffalse are array types .... TODO: handle!
+			return iffalse;
 		}
 	}
 
@@ -247,10 +241,7 @@ public class LogicalCalculator
 		{
 			return new PtgBool( true );
 		}
-		else
-		{
-			return new PtgBool( false );
-		}
+		return new PtgBool( false );
 	}
 
 	/**
@@ -299,34 +290,30 @@ public class LogicalCalculator
 			{
 				return operands[1];
 			}
+			// it's not; return calculated results of 1st operand
+
+			return operands[0];
+		}
+		Ptg[] components = operands[0].getComponents();
+		String retArray = "";
+		for( int i = 0; i < components.length; i++ )
+		{
+			Ptg[] test = new Ptg[1];
+			test[0] = components[i];
+			PtgBool ret = (PtgBool) InformationCalculator.calcIserror( test );
+			if( ret.getBooleanValue() )    // it's an error
+			{
+				retArray = retArray + operands[1] + ",";
+			}
 			else                        // it's not; return calculated results of 1st operand
 			{
-				return operands[0];
+				retArray = retArray + test[0] + ",";
 			}
 		}
-		else
-		{
-			Ptg[] components = operands[0].getComponents();
-			String retArray = "";
-			for( int i = 0; i < components.length; i++ )
-			{
-				Ptg[] test = new Ptg[1];
-				test[0] = components[i];
-				PtgBool ret = (PtgBool) InformationCalculator.calcIserror( test );
-				if( ret.getBooleanValue() )    // it's an error
-				{
-					retArray = retArray + operands[1] + ",";
-				}
-				else                        // it's not; return calculated results of 1st operand
-				{
-					retArray = retArray + test[0] + ",";
-				}
-			}
-			retArray = "{" + retArray.substring( 0, retArray.length() - 1 ) + "}";
-			PtgArray pa = new PtgArray();
-			pa.setVal( retArray );
-			return pa;
-		}
+		retArray = "{" + retArray.substring( 0, retArray.length() - 1 ) + "}";
+		PtgArray pa = new PtgArray();
+		pa.setVal( retArray );
+		return pa;
 	}
 
 }

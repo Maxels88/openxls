@@ -205,22 +205,19 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 			{
 				return new String( "#NAME?" );
 			}
-			else if( (p.length == 1) || !(this.parent_rec instanceof com.extentech.formats.XLS.Array) )
+			if( (p.length == 1) || !(this.parent_rec instanceof com.extentech.formats.XLS.Array) )
 			{    // usual case
 				return p[0].getValue();
+			} // multiple values; create an array
+			String retarry = "";
+			for( int i = 0; i < p.length; i++ )
+			{
+				retarry = retarry + p[i].getValue() + ",";
 			}
-			else
-			{ // multiple values; create an array
-				String retarry = "";
-				for( int i = 0; i < p.length; i++ )
-				{
-					retarry = retarry + p[i].getValue() + ",";
-				}
-				retarry = "{" + retarry.substring( 0, retarry.length() - 1 ) + "}";
-				PtgArray pa = new PtgArray();
-				pa.setVal( retarry );
-				return pa;
-			}
+			retarry = "{" + retarry.substring( 0, retarry.length() - 1 ) + "}";
+			PtgArray pa = new PtgArray();
+			pa.setVal( retarry );
+			return pa;
 		}
 		catch( Exception e )
 		{

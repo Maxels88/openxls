@@ -162,49 +162,49 @@ public class DLbls implements OOXMLElement
 					{
 						if( xpp.getAttributeCount() > 0 )
 						{
-							showVal = Integer.valueOf( xpp.getAttributeValue( 0 ) ).intValue();
+							showVal = Integer.valueOf( xpp.getAttributeValue( 0 ) );
 						}
 					}
 					else if( tnm.equals( "showLeaderLines" ) )
 					{
 						if( xpp.getAttributeCount() > 0 )
 						{
-							showLeaderLines = Integer.valueOf( xpp.getAttributeValue( 0 ) ).intValue();
+							showLeaderLines = Integer.valueOf( xpp.getAttributeValue( 0 ) );
 						}
 					}
 					else if( tnm.equals( "showLegendKey" ) )
 					{
 						if( xpp.getAttributeCount() > 0 )
 						{
-							showLegendKey = Integer.valueOf( xpp.getAttributeValue( 0 ) ).intValue();
+							showLegendKey = Integer.valueOf( xpp.getAttributeValue( 0 ) );
 						}
 					}
 					else if( tnm.equals( "showCatName" ) )
 					{
 						if( xpp.getAttributeCount() > 0 )
 						{
-							showCatName = Integer.valueOf( xpp.getAttributeValue( 0 ) ).intValue();
+							showCatName = Integer.valueOf( xpp.getAttributeValue( 0 ) );
 						}
 					}
 					else if( tnm.equals( "showSerName" ) )
 					{
 						if( xpp.getAttributeCount() > 0 )
 						{
-							showSerName = Integer.valueOf( xpp.getAttributeValue( 0 ) ).intValue();
+							showSerName = Integer.valueOf( xpp.getAttributeValue( 0 ) );
 						}
 					}
 					else if( tnm.equals( "showPercent" ) )
 					{
 						if( xpp.getAttributeCount() > 0 )
 						{
-							showPercent = Integer.valueOf( xpp.getAttributeValue( 0 ) ).intValue();
+							showPercent = Integer.valueOf( xpp.getAttributeValue( 0 ) );
 						}
 					}
 					else if( tnm.equals( "showBubbleSize" ) )
 					{
 						if( xpp.getAttributeCount() > 0 )
 						{
-							showBubbleSize = Integer.valueOf( xpp.getAttributeValue( 0 ) ).intValue();
+							showBubbleSize = Integer.valueOf( xpp.getAttributeValue( 0 ) );
 						}
 					}
 				}

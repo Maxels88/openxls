@@ -421,7 +421,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			this.initString( newStringBytes, pos, false );
 			return posEnd;
 		}
-		else if( posEnd == bufferBoundary )
+		if( posEnd == bufferBoundary )
 		{// string is on the boundary - easy!
 			if( (this.numconts == 0) || (this.numconts == this.contcounter) )
 			{
@@ -433,7 +433,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			byte[] newStringBytes = getData( uLen, pos, ustrStart, cchExtRst, runlen, doublebyte, false );
 			this.initString( newStringBytes, pos, false );
 
-			/* "If fHighByte is 0x1 and rgb is extended with a Continue record the break 
+			/* "If fHighByte is 0x1 and rgb is extended with a Continue record the break
 			   MUST occur at the double-byte character boundary."
 			*/  // because we ended on a string, there is no grbit on the next continue
 			if( this.continues.size() > this.currbound )
@@ -1113,7 +1113,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		{
 			for( int t = 0; t < cbounds.size(); t++ )
 			{
-				Logger.logInfo( ((Integer) cbounds.get( t )).intValue() + "," );
+				Logger.logInfo( (Integer) cbounds.get( t ) + "," );
 			}
 			Logger.logInfo( "" );
 		}
@@ -1121,7 +1121,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		{
 			for( int t = 0; t < sstgrbits.size(); t++ )
 			{
-				Logger.logInfo( "0x" + ((Byte) sstgrbits.get( t )).byteValue() + "," );
+				Logger.logInfo( "0x" + (Byte) sstgrbits.get( t ) + "," );
 			}
 			Logger.logInfo( "" );
 		}
@@ -1141,7 +1141,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		for( int i = 0; i < cbounds.size(); i++ )
 		{
 			Integer intgr = (Integer) cbounds.get( i );
-			contLens += intgr.intValue();
+			contLens += intgr;
 		}
 		if( ((datalen - 4) - contLens) > 8223 )
 		{
@@ -1356,25 +1356,22 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		{
 			return rec.continueDef;
 		}
-		else
+		Integer[] cbs = new Integer[rec.cbounds.size()];
+		Byte[] sstgrs = new Byte[rec.sstgrbits.size()];
+		for( int t = 0; t < cbs.length; t++ )
 		{
-			Integer[] cbs = new Integer[rec.cbounds.size()];
-			Byte[] sstgrs = new Byte[rec.sstgrbits.size()];
-			for( int t = 0; t < cbs.length; t++ )
-			{
-				cbs[t] = ((Integer) rec.cbounds.get( t ));
-			}
-
-			for( int t = 0; t < sstgrs.length; t++ )
-			{
-				sstgrs[t] = ((Byte) rec.sstgrbits.get( t ));
-			}
-
-			rec.continueDef = new Object[2];
-			rec.continueDef[0] = cbs;
-			rec.continueDef[1] = sstgrs;
-			return rec.continueDef;
+			cbs[t] = ((Integer) rec.cbounds.get( t ));
 		}
+
+		for( int t = 0; t < sstgrs.length; t++ )
+		{
+			sstgrs[t] = ((Byte) rec.sstgrbits.get( t ));
+		}
+
+		rec.continueDef = new Object[2];
+		rec.continueDef[0] = cbs;
+		rec.continueDef[1] = sstgrs;
+		return rec.continueDef;
 
 	}
 
@@ -1783,7 +1780,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			{
 				return -1;
 			}
-			return ((Integer) oo).intValue();
+			return (Integer) oo;
 		}
 
 		@Override
@@ -2055,7 +2052,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			Byte b = (Byte) sstgrbits.get( i );
 			if( b != null )
 			{
-				byte grbyte = b.byteValue();
+				byte grbyte = b;
 				if( (grbyte < 0x2) && (grbyte >= 0x0) ) // Sst grbit is either 0h
 				// or 1h, otherwise it's
 				// String data

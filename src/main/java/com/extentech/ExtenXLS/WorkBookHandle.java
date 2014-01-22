@@ -960,16 +960,9 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 			{
 				return name.endsWith( ".xltm" ) ? FORMAT_XLTM : FORMAT_XLSM;
 			}
-			else
-			{
-				return name.endsWith( ".xltx" ) ? FORMAT_XLTX : FORMAT_XLSX;
-			}
+			return name.endsWith( ".xltx" ) ? FORMAT_XLTX : FORMAT_XLSX;
 		}
-
-		else
-		{
-			return FORMAT_XLS;
-		}
+		return FORMAT_XLS;
 	}
 
 	/**
@@ -987,16 +980,9 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 			{
 				return path.endsWith( ".xltm" ) ? FORMAT_XLTM : FORMAT_XLSM;
 			}
-			else
-			{
-				return path.endsWith( ".xltx" ) ? FORMAT_XLTX : FORMAT_XLSX;
-			}
+			return path.endsWith( ".xltx" ) ? FORMAT_XLTX : FORMAT_XLSX;
 		}
-
-		else
-		{
-			return FORMAT_XLS;
-		}
+		return FORMAT_XLS;
 	}
 
 	@Override
@@ -1532,10 +1518,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 					throw new WorkBookException( "Error encountered importing CSV: " + e.toString(), WorkBookException.ILLEGAL_INIT_ERROR );
 				}
 			}
-			else
-			{
-				throw ifx;
-			}
+			throw ifx;
 
 		}
 		if( myLEOFile.hasWorkBook() )
@@ -1781,12 +1764,9 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		{
 			return (WorkSheetHandle) sheethandles.get( st.getSheetName() );
 		}
-		else
-		{
-			WorkSheetHandle shth = new WorkSheetHandle( st, this );
-			sheethandles.put( st.getSheetName(), shth );
-			return shth;
-		}
+		WorkSheetHandle shth = new WorkSheetHandle( st, this );
+		sheethandles.put( st.getSheetName(), shth );
+		return shth;
 	}
 
 	Hashtable sheethandles = new Hashtable();
@@ -1808,10 +1788,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 			{
 				return (WorkSheetHandle) sheethandles.get( handstr );
 			}
-			else
-			{
-				throw new WorkSheetNotFoundException( handstr + " not found" );
-			}
+			throw new WorkSheetNotFoundException( handstr + " not found" );
 		}
 		if( myfactory != null )
 		{
@@ -1823,10 +1800,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 				sheethandles.put( handstr, ret );
 				return ret;
 			}
-			else
-			{
-				throw new WorkSheetNotFoundException( handstr );
-			}
+			throw new WorkSheetNotFoundException( handstr );
 		}
 		throw new WorkSheetNotFoundException( "Cannot find WorkSheet " + handstr );
 	}

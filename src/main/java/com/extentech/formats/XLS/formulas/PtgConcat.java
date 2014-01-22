@@ -132,10 +132,7 @@ public class PtgConcat extends GenericPtg implements Ptg
 				PtgStr pstr = new PtgStr( returnVal );
 				return pstr;
 			}
-			else
-			{
-				return null;
-			}
+			return null;
 		}
 		catch( Exception e )
 		{    // handle error ala Excel

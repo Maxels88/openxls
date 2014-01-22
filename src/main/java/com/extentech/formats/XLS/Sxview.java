@@ -1452,23 +1452,23 @@ public class Sxview extends XLSRecord implements XLSConstants
 					}
 					break;
 				}
-				else if( (opcode == SXLI) && ((bropcode == SXDI) || (bropcode == SXPI) || (bropcode == SXIVD) || (bropcode == SXVDEX)) )
+				if( (opcode == SXLI) && ((bropcode == SXDI) || (bropcode == SXPI) || (bropcode == SXIVD) || (bropcode == SXVDEX)) )
 				{
 					break;
 				}
-				else if( (opcode == SXDI) && ((bropcode == SXPI) || (bropcode == SXIVD) || (bropcode == SXVDEX)) )
+				if( (opcode == SXDI) && ((bropcode == SXPI) || (bropcode == SXIVD) || (bropcode == SXVDEX)) )
 				{
 					break;
 				}
-				else if( (opcode == SXPI) && ((bropcode == SXIVD) || (bropcode == SXVDEX)) )
+				if( (opcode == SXPI) && ((bropcode == SXIVD) || (bropcode == SXVDEX)) )
 				{
 					break;
 				}
-				else if( (opcode == SXIVD) && (bropcode == SXVDEX) )
+				if( (opcode == SXIVD) && (bropcode == SXVDEX) )
 				{
 					break;
 				}
-				else if( (opcode == SXVD) && (bropcode == SXEX) )
+				if( (opcode == SXVD) && (bropcode == SXEX) )
 				{
 					break;
 				}
@@ -1490,7 +1490,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 					}
 					break;
 				}
-				else if( bropcode == SXVDEX )
+				if( bropcode == SXVDEX )
 				{
 					break;
 				}

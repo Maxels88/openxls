@@ -180,19 +180,19 @@ public class GrpSp implements OOXMLElement
 				{
 					return oe;
 				}
-				else if( (oe instanceof Pic) && (type == PIC) )
+				if( (oe instanceof Pic) && (type == PIC) )
 				{
 					return oe;
 				}
-				else if( (oe instanceof CxnSp) && (type == CXN) )
+				if( (oe instanceof CxnSp) && (type == CXN) )
 				{
 					return oe;
 				}
-				else if( (oe instanceof GraphicFrame) && (type == GRAPHICFRAME) )
+				if( (oe instanceof GraphicFrame) && (type == GRAPHICFRAME) )
 				{
 					return oe;
 				}
-				else if( oe instanceof GrpSp )
+				if( oe instanceof GrpSp )
 				{
 					return ((GrpSp) oe).getObject( type );
 				}
@@ -543,19 +543,19 @@ public class GrpSp implements OOXMLElement
 			{
 				return ((Sp) oe).getId();
 			}
-			else if( oe instanceof Pic )
+			if( oe instanceof Pic )
 			{
 				return ((Pic) oe).getId();
 			}
-			else if( oe instanceof GraphicFrame )
+			if( oe instanceof GraphicFrame )
 			{
 				return ((GraphicFrame) oe).getId();
 			}
-			else if( oe instanceof CxnSp )
+			if( oe instanceof CxnSp )
 			{
 				return ((CxnSp) oe).getId();
 			}
-			else if( oe instanceof GrpSp )
+			if( oe instanceof GrpSp )
 			{
 				return ((GrpSp) oe).getId();
 			}

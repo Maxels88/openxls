@@ -88,14 +88,14 @@ public class TextRun implements OOXMLElement
 						lastTag.pop();
 						break;
 					}
-					else if( tnm.equals( "br" ) )
+					if( tnm.equals( "br" ) )
 					{
 						lastTag.push( tnm );
 						brk = (Br) Br.parseOOXML( xpp, lastTag, bk );
 						lastTag.pop();
 						break;
 					}
-					else if( tnm.equals( "fld" ) )
+					if( tnm.equals( "fld" ) )
 					{
 						lastTag.push( tnm );
 						f = (Fld) Fld.parseOOXML( xpp, lastTag, bk );

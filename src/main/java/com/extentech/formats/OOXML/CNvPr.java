@@ -96,7 +96,7 @@ public class CNvPr implements OOXMLElement
 							String val = xpp.getAttributeValue( i );
 							if( nm.equals( "id" ) )
 							{
-								id = Integer.valueOf( val ).intValue();
+								id = Integer.valueOf( val );
 							}
 							else if( nm.equals( "name" ) )
 							{

@@ -72,7 +72,7 @@ public class EffectPropsGroup implements OOXMLElement
 						lastTag.pop();
 						break;
 					}
-					else if( tnm.equals( "effectLst" ) )
+					if( tnm.equals( "effectLst" ) )
 					{
 						lastTag.push( tnm );
 						el = (EffectLst) EffectLst.parseOOXML( xpp, lastTag );

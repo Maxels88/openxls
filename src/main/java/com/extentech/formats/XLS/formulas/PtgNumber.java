@@ -134,11 +134,11 @@ public class PtgNumber extends GenericPtg implements Ptg
 		{
 			percentage = true;
 			s = s.substring( 0, s.indexOf( "%" ) );
-			val = new Double( s ).doubleValue() / 100;
+			val = new Double( s ) / 100;
 		}
 		else
 		{
-			val = new Double( s ).doubleValue();
+			val = new Double( s );
 		}
 	}
 

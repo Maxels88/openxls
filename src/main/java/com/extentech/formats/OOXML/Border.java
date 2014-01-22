@@ -612,55 +612,55 @@ class BorderElement implements OOXMLElement
 		{
 			return -1;
 		}
-		else if( style.equals( "thin" ) )
+		if( style.equals( "thin" ) )
 		{
 			return 1;
 		}
-		else if( style.equals( "medium" ) )
+		if( style.equals( "medium" ) )
 		{
 			return 2;
 		}
-		else if( style.equals( "dashed" ) )
+		if( style.equals( "dashed" ) )
 		{
 			return 3;
 		}
-		else if( style.equals( "dotted" ) )
+		if( style.equals( "dotted" ) )
 		{
 			return 4;
 		}
-		else if( style.equals( "thick" ) )
+		if( style.equals( "thick" ) )
 		{
 			return 5;
 		}
-		else if( style.equals( "double" ) )
+		if( style.equals( "double" ) )
 		{
 			return 6;
 		}
-		else if( style.equals( "hair" ) )
+		if( style.equals( "hair" ) )
 		{
 			return 7;
 		}
-		else if( style.equals( "mediumDashed" ) )
+		if( style.equals( "mediumDashed" ) )
 		{
 			return 8;
 		}
-		else if( style.equals( "dashDot" ) )
+		if( style.equals( "dashDot" ) )
 		{
 			return 9;
 		}
-		else if( style.equals( "mediumDashDot" ) )
+		if( style.equals( "mediumDashDot" ) )
 		{
 			return 0xA;
 		}
-		else if( style.equals( "dashDotDot" ) )
+		if( style.equals( "dashDotDot" ) )
 		{
 			return 0xB;
 		}
-		else if( style.equals( "mediumDashDotDot" ) )
+		if( style.equals( "mediumDashDotDot" ) )
 		{
 			return 0xC;
 		}
-		else if( style.equals( "slantDashDot" ) )
+		if( style.equals( "slantDashDot" ) )
 		{
 			return 0xD;
 		}

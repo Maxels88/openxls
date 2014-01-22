@@ -549,7 +549,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 						{
 							return (MSODrawing) bs.getSheetRecs().get( idx - 1 );
 						}
-						else if( opcodenext == CONTINUE )
+						if( opcodenext == CONTINUE )
 						{// continue masking mso - AFTER object record
 							if( (idx + 5) < bs.getSheetRecs().size() )
 							{

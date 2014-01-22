@@ -192,7 +192,7 @@ public final class NumberRec extends XLSCellRecord
 	{
 //    	setNumberVal(d);	// original
 		// 20090708 KSC: handle casting issues by converting float to string first
-		setNumberVal( new Double( (new Float( d )).toString() ).doubleValue() );
+		setNumberVal( new Double( (new Float( d )).toString() ) );
 	}
 
 	public NumberRec()

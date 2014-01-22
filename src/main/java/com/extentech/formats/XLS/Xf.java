@@ -256,10 +256,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		{
 			return true;
 		}
-		else
-		{
-			return false;
-		}
+		return false;
 	}
 
 	// marginal!
@@ -554,16 +551,10 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 					{
 						return true;
 					}
-					else
-					{
-						return false;
-					}
+					return false;
 
 				}
-				else
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		// probably a built-in format that is not a currency format
@@ -1846,10 +1837,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 			xf.tableidx = wkbook.insertXf( xf );    // insert new xf into stream ...
 			return xf;
 		}
-		else
-		{
-			xf = Xf.cloneXf( xf, wkbook );
-		}
+		xf = Xf.cloneXf( xf, wkbook );
 		return xf;
 	}
 

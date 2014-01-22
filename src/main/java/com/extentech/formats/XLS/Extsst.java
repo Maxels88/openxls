@@ -217,7 +217,7 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 				}
 				Object[] grbits = mysst.getContinueDef( mysst, false );
 				Byte[] grbytes = (Byte[]) grbits[1];
-				if( (grbytes[whichContinue] != null) && ((grbytes[whichContinue].byteValue() == 0x0) || (grbytes[whichContinue].byteValue() == 0x1)) )
+				if( (grbytes[whichContinue] != null) && ((grbytes[whichContinue] == 0x0) || (grbytes[whichContinue] == 0x1)) )
 				{
 					contoff += (RecLen);
 					sstOffset += 5;

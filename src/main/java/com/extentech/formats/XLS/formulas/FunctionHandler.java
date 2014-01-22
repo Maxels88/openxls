@@ -70,7 +70,7 @@ public class FunctionHandler
 		{  // ptgfunc
 			return calculatePtgFunc( funk, funkId, operands );
 		}
-		else if( (funk.getOpcode() == 0x22) || (funk.getOpcode() == 0x42) || (funk.getOpcode() == 0x62) )
+		if( (funk.getOpcode() == 0x22) || (funk.getOpcode() == 0x42) || (funk.getOpcode() == 0x62) )
 		{ // ptgfuncvar
 			return calculatePtgFuncVar( funk, funkId, operands );
 		}
@@ -125,7 +125,7 @@ public class FunctionHandler
 				{
 					if( s.equalsIgnoreCase( FunctionConstants.jRecArr[y][0] ) )
 					{
-						funkId = Integer.valueOf( FunctionConstants.jRecArr[y][1] ).intValue();
+						funkId = Integer.valueOf( FunctionConstants.jRecArr[y][1] );
 						y = FunctionConstants.jRecArr.length;  // exit loop
 						foundit = true;
 					}
@@ -137,7 +137,7 @@ public class FunctionHandler
 				{    // Use FunctionConstants instead of PtFuncVar
 					if( s.equalsIgnoreCase( FunctionConstants.recArr[y][0] ) )
 					{
-						funkId = Integer.valueOf( FunctionConstants.recArr[y][1] ).intValue();
+						funkId = Integer.valueOf( FunctionConstants.recArr[y][1] );
 						y = FunctionConstants.recArr.length;    // exit loop
 					}
 				}

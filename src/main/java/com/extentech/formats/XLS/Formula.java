@@ -832,7 +832,7 @@ public final class Formula extends XLSCellRecord
 			else if( writeValue instanceof Boolean )
 			{
 				value[0] = (byte) 0x01;
-				value[2] = (((Boolean) writeValue).booleanValue() ? (byte) 0x01 : (byte) 0x00);
+				value[2] = ((Boolean) writeValue ? (byte) 0x01 : (byte) 0x00);
 			}
 			else if( writeValue instanceof CalculationException )
 			{
@@ -893,7 +893,7 @@ public final class Formula extends XLSCellRecord
 		Object obx = calculateFormula();
 		try
 		{
-			double tl = ((Double) obx).doubleValue();
+			double tl = (Double) obx;
 			if( tl > Integer.MAX_VALUE )
 			{
 				throw new NumberFormatException( "getIntVal: Formula value is larger than the maximum java signed int size" );
@@ -902,7 +902,7 @@ public final class Formula extends XLSCellRecord
 			{
 				throw new NumberFormatException( "getIntVal: Formula value is smaller than the minimum java signed int size" );
 			}
-			double db = ((Double) obx).doubleValue();
+			double db = (Double) obx;
 			int ret = ((Double) obx).intValue();
 			if( ((db - ret) > 0) && (DEBUGLEVEL > this.DEBUG_LOW) )
 			{
@@ -939,7 +939,7 @@ public final class Formula extends XLSCellRecord
 			{
 				throw new NumberFormatException( "Formula value is smaller than the minimum java signed int size" );
 			}
-			return Integer.valueOf( new Long( l ).toString() ).intValue();
+			return Integer.valueOf( new Long( l ).toString() );
 		}
 		catch( NumberFormatException ne )
 		{
@@ -959,7 +959,7 @@ public final class Formula extends XLSCellRecord
 		{
 			if( obx instanceof Float )
 			{
-				float d = ((Float) obx).floatValue();
+				float d = (Float) obx;
 				return d;
 			}
 		}
@@ -978,7 +978,7 @@ public final class Formula extends XLSCellRecord
 				s = "0";
 			}
 			Float d = new Float( s );
-			return d.floatValue();
+			return d;
 		}
 		catch( NumberFormatException ex )
 		{
@@ -999,7 +999,7 @@ public final class Formula extends XLSCellRecord
 		{
 			if( obx instanceof Boolean )
 			{
-				return ((Boolean) obx).booleanValue();
+				return (Boolean) obx;
 			}
 		}
 		catch( Exception e )
@@ -1031,7 +1031,7 @@ public final class Formula extends XLSCellRecord
 		{
 			if( obx instanceof Double )
 			{
-				double d = ((Double) obx).doubleValue();
+				double d = (Double) obx;
 				return d;
 			}
 		}
@@ -1050,7 +1050,7 @@ public final class Formula extends XLSCellRecord
 		try
 		{
 			Double d = new Double( s );
-			return d.doubleValue();
+			return d;
 		}
 		catch( NumberFormatException ex )
 		{
@@ -1087,15 +1087,12 @@ public final class Formula extends XLSCellRecord
 		{
 			if( obx instanceof Double )
 			{
-				double d = ((Double) obx).doubleValue();
+				double d = (Double) obx;
 				if( !Double.isNaN( d ) )
 				{
 					return Formula.getDoubleAsFormattedString( d );
 				}
-				else
-				{
-					return "NaN";
-				}
+				return "NaN";
 			}
 		}
 		catch( Exception e )

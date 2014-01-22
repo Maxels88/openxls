@@ -93,10 +93,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 		{
 			return new int[]{ rw, colFirst, rw, colLast };
 		}
-		else
-		{
-			return new int[]{ rw, col };
-		}
+		return new int[]{ rw, col };
 	}
 
 	/**

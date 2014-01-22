@@ -68,7 +68,7 @@ public final class TabID extends com.extentech.formats.XLS.XLSRecord
 		for( int i = 0; i < tabIDs.size(); i++ )
 		{
 			Short sh = (Short) tabIDs.get( i );
-			short newshort = sh.shortValue();
+			short newshort = sh;
 			if( newshort > largest )
 			{
 				largest = newshort;
@@ -88,7 +88,7 @@ public final class TabID extends com.extentech.formats.XLS.XLSRecord
 		for( int i = 0; i < tabIDs.size(); i++ )
 		{
 			Short sh = (Short) tabIDs.get( i );
-			short newshort = sh.shortValue();
+			short newshort = sh;
 			if( newshort > largest )
 			{
 				largest = newshort;
@@ -131,7 +131,7 @@ public final class TabID extends com.extentech.formats.XLS.XLSRecord
 		for( int i = 0; i < tabIDs.size(); i++ )
 		{
 			Short sh = (Short) tabIDs.get( i );
-			byte[] b = ByteTools.shortToLEBytes( sh.shortValue() );
+			byte[] b = ByteTools.shortToLEBytes( sh );
 			newbody[counter] = b[0];
 			newbody[counter + 1] = b[1];
 			counter += 2;

@@ -133,11 +133,11 @@ public class InformationCalculator
 				newref.fRwRel = false;
 				return new PtgStr( newref.getLocation() );
 			}
-			else if( type.equals( "col" ) )
+			if( type.equals( "col" ) )
 			{
 				return new PtgNumber( ref.getIntLocation()[1] + 1 );
 			}
-			else if( type.equals( "color" ) )
+			if( type.equals( "color" ) )
 			{    // The value 1 if the cell is formatted in color for negative values; otherwise returns 0 (zero).
 				String s = cell.getFormatPattern();
 				if( s.indexOf( ";[Red" ) > -1 )
@@ -146,11 +146,11 @@ public class InformationCalculator
 				}
 				return new PtgNumber( 0 );
 			}
-			else if( type.equals( "contents" ) )
+			if( type.equals( "contents" ) )
 			{// Value of the upper-left cell in reference; not a formula.
 				return new PtgStr( cell.getStringVal() );
 			}
-			else if( type.equals( "filename" ) )
+			if( type.equals( "filename" ) )
 			{
 				String f = cell.getWorkBook().getFileName();
 				String sh = cell.getSheet().getSheetName();
@@ -159,7 +159,7 @@ public class InformationCalculator
 				f += "]" + sh;
 				return new PtgStr( f );
 			}
-			else if( type.equals( "format" ) )
+			if( type.equals( "format" ) )
 			{    // Text value corresponding to the number format of the cell. The text values for the various formats are shown in the following table. Returns "-" at the end of the text value if the cell is formatted in color for negative values. Returns "()" at the end of the text value if the cell is formatted with parentheses for positive or all values.
 				String s = cell.getFormatPattern();
 				String ret = "G";    // default?
@@ -212,7 +212,7 @@ public class InformationCalculator
 				else if( s.equals( "0.00E+00" ) )
 				{
 					ret = "S2";
-//					   m/d/yy or m/d/yy h:mm or mm/dd/yy 	"D4"					   
+//					   m/d/yy or m/d/yy h:mm or mm/dd/yy 	"D4"
 				}
 				else if( s.equals( "m/d/yy" ) ||
 						s.equals( "m/d/yy h:mm" ) ||
@@ -255,7 +255,7 @@ public class InformationCalculator
 				}
 				return new PtgStr( ret );
 			}
-			else if( type.equals( "parentheses" ) )
+			if( type.equals( "parentheses" ) )
 			{
 				String s = cell.getFormatPattern();
 				if( s.startsWith( "(" ) )
@@ -264,10 +264,10 @@ public class InformationCalculator
 				}
 				return new PtgNumber( 0 );
 			}
-			else if( type.equals( "prefix" ) )
+			if( type.equals( "prefix" ) )
 			{
 				// TODO: THIS IS NOT CORRECT - EITHER INFORM USER OR ??
-// DOESN'T APPEAR TO MATCH EXCEL				   
+// DOESN'T APPEAR TO MATCH EXCEL
 				//Text value corresponding to the "label prefix" of the cell.
 				// Returns single quotation mark (') if the cell contains left-aligned text, double quotation mark (") if the cell contains right-aligned text,
 				// caret (^) if the cell contains centered text, backslash (\) if the cell contains fill-aligned text, and empty text ("") if the cell contains anything else.
@@ -290,7 +290,7 @@ public class InformationCalculator
 				}
 				return new PtgStr( "" );
 			}
-			else if( type.equals( "protect" ) )
+			if( type.equals( "protect" ) )
 			{
 				if( cell.getXfRec().isLocked() )
 				{
@@ -298,11 +298,11 @@ public class InformationCalculator
 				}
 				return new PtgNumber( 0 );
 			}
-			else if( type.equals( "row" ) )
+			if( type.equals( "row" ) )
 			{
 				return new PtgNumber( ref.getIntLocation()[0] + 1 );
 			}
-			else if( type.equals( "type" ) )
+			if( type.equals( "type" ) )
 			{
 				//Text value corresponding to the type of data in the cell.
 				// Returns "b" for blank if the cell is empty,
@@ -318,7 +318,7 @@ public class InformationCalculator
 				}
 				return new PtgStr( "v" );
 			}
-			else if( type.equals( "width" ) )
+			if( type.equals( "width" ) )
 			{
 				int n = 0;
 				n = cell.getSheet().getColInfo( cell.getColNumber() ).getColWidthInChars();
@@ -406,19 +406,19 @@ public class InformationCalculator
 		{
 			return new PtgStr( System.getProperty( "user.dir" ).toLowerCase() + "\\" );
 		}
-		else if( type_text.equals( "numfile" ) )    // number of active worksheets in the current workbook
-// TODO: what is correct definition of "Active Worksheets"  - hidden state doesn't seem to affect"		   
+		if( type_text.equals( "numfile" ) )    // number of active worksheets in the current workbook
+// TODO: what is correct definition of "Active Worksheets"  - hidden state doesn't seem to affect"
 		{
 			return new PtgNumber( operands[0].getParentRec().getWorkBook().getNumWorkSheets() );
 		}
-		else if( type_text.equals( "origin" ) )
+		if( type_text.equals( "origin" ) )
 		{		/* Returns the absolute cell reference of the top and leftmost
-	   											    cell visible in the window, based on the current scrolling 
-	   											    position, as text prepended with "$A:". 
-	   											    This value is intended for for Lotus 1-2-3 release 3.x compatibility. 
-	   											    The actual value returned depends on the current reference 
-	   											    style setting. Using D9 as an example, the return value would be: 
-	   											    A1 reference style   "$A:$D$9". 
+	   											    cell visible in the window, based on the current scrolling
+	   											    position, as text prepended with "$A:".
+	   											    This value is intended for for Lotus 1-2-3 release 3.x compatibility.
+	   											    The actual value returned depends on the current reference
+	   											    style setting. Using D9 as an example, the return value would be:
+	   											    A1 reference style   "$A:$D$9".
 													R1C1 reference style  "$A:R9C4"
 	    										*/
 // TODO: FINISH R1C1 reference style
@@ -434,7 +434,7 @@ public class InformationCalculator
 			cell = "$A:$" + cell;
 			return new PtgStr( cell );
 		}
-		else if( type_text.equals( "osversion" ) )
+		if( type_text.equals( "osversion" ) )
 		{    //Current operating system version, as text.
 			// see end of file for os info
 			String osversion = System.getProperty( "os.version" );
@@ -458,7 +458,7 @@ public class InformationCalculator
 			}
 			return new PtgStr( os );
 		}
-		else if( type_text.equals( "recalc" ) )
+		if( type_text.equals( "recalc" ) )
 		{    //Current recalculation mode; returns "Automatic" or "Manual".
 			if( operands[0].getParentRec().getWorkBook().getRecalculationMode() == 0 ) // manual
 			{
@@ -466,27 +466,24 @@ public class InformationCalculator
 			}
 			return new PtgStr( "Automatic" );
 		}
-		else if( type_text.equals( "release" ) )
+		if( type_text.equals( "release" ) )
 		{    //Version of Microsoft Excel, as text.
 			// TODO: Finish!  97= 8.0, 2000= 9.0, 2002 (XP)= 10.0, 2003= 11.0, 2007= 12.0
 			Logger.logWarn( "Worksheet Function INFO(\"release\") is not supported" );
 			return new PtgStr( "" );
 		}
-		else if( type_text.equals( "system" ) )        // Name of the operating environment: Macintosh = "mac" Windows = "pcdos"
+		if( type_text.equals( "system" ) )        // Name of the operating environment: Macintosh = "mac" Windows = "pcdos"
 		// TODO: linux?  ****************
 		{
 			if( System.getProperty( "os.name" ).indexOf( "Windows" ) >= 0 )
 			{
 				return new PtgStr( "pcdos" );
 			}
-			else
-			{
-				return new PtgStr( "mac" );
-			}
+			return new PtgStr( "mac" );
 		}
 		// In previous versions of Microsoft Office Excel, the "memavail", "memused", and "totmem" type_text values, returned memory information.
 		// These type_text values are no longer supported and now return a #N/A error value.
-		else if( type_text.equals( "memavail" ) ||
+		if( type_text.equals( "memavail" ) ||
 				type_text.equals( "memused" ) ||
 				type_text.equals( "totmem" ) )
 		{
@@ -598,25 +595,25 @@ public class InformationCalculator
 			{    // KSC: mod for different number types + mod typo
 				if( o instanceof Integer )
 				{
-					int s = ((Integer) o).intValue();
+					int s = (Integer) o;
 					if( s < 0 )
 					{
 						return new PtgBool( false );
 					}
 					return new PtgBool( ((s % 2) == 0) );
 				}
-				else if( o instanceof Float )
+				if( o instanceof Float )
 				{
-					float s = ((Float) o).floatValue();
+					float s = (Float) o;
 					if( s < 0 )
 					{
 						return new PtgBool( false );
 					}
 					return new PtgBool( ((s % 2) == 0) );
 				}
-				else if( o instanceof Double )
+				if( o instanceof Double )
 				{
-					double s = ((Double) o).doubleValue();
+					double s = (Double) o;
 					if( s < 0 )
 					{
 						return new PtgBool( false );
@@ -823,25 +820,25 @@ public class InformationCalculator
 			{    // KSC: mod for different number types + mod typo
 				if( o instanceof Integer )
 				{
-					int s = ((Integer) o).intValue();
+					int s = (Integer) o;
 					if( s < 0 )
 					{
 						return new PtgBool( false );
 					}
 					return new PtgBool( ((s % 2) != 0) );
 				}
-				else if( o instanceof Float )
+				if( o instanceof Float )
 				{
-					float s = ((Float) o).floatValue();
+					float s = (Float) o;
 					if( s < 0 )
 					{
 						return new PtgBool( false );
 					}
 					return new PtgBool( ((s % 2) != 0) );
 				}
-				else if( o instanceof Double )
+				if( o instanceof Double )
 				{
-					double s = ((Double) o).doubleValue();
+					double s = (Double) o;
 					if( s < 0 )
 					{
 						return new PtgBool( false );
@@ -901,12 +898,12 @@ public class InformationCalculator
 		if( (o instanceof Double) || (o instanceof Integer) || (o instanceof Float) || (o instanceof Long) )
 		{
 			Double d = new Double( o.toString() );
-			return new PtgNumber( d.doubleValue() );
+			return new PtgNumber( d );
 		}
 		if( o instanceof Boolean )
 		{
 			Boolean b = (Boolean) o;
-			boolean bo = b.booleanValue();
+			boolean bo = b;
 			if( bo )
 			{
 				return new PtgInt( 1 );
@@ -932,7 +929,7 @@ public class InformationCalculator
 		{
 			return new PtgNumber( 64 );    // avoid value calc for arrays
 		}
-		else if( operands[0] instanceof PtgErr )
+		if( operands[0] instanceof PtgErr )
 		{
 			return new PtgNumber( 16 );
 		}

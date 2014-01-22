@@ -276,23 +276,23 @@ public class Ln implements OOXMLElement
 			{
 				return 0;    // solid
 			}
-			else if( style.equals( "dash" ) ||
+			if( style.equals( "dash" ) ||
 					style.equals( "sysDash" ) ||
 					style.equals( "lgDash" ) )
 			{
 				return 1;
 			}
-			else if( style.equals( "sysDot" ) )
+			if( style.equals( "sysDot" ) )
 			{
 				return 2;
 			}
-			else if( style.equals( "dashDot" ) ||
+			if( style.equals( "dashDot" ) ||
 					style.equals( "sysDashDot" ) ||
 					style.equals( "lgDashDot" ) )
 			{
 				return 3;
 			}
-			else if( style.equals( "sysDashDashDot" ) || style.equals( "lgDashDotDot" ) )
+			if( style.equals( "sysDashDashDot" ) || style.equals( "lgDashDotDot" ) )
 			{
 				return 4;
 			}

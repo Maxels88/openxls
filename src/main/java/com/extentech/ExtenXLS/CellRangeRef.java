@@ -194,10 +194,7 @@ public class CellRangeRef implements Cloneable
 		{
 			return first_sheet.getSheetName();
 		}
-		else
-		{
-			return first_sheet_name;
-		}
+		return first_sheet_name;
 	}
 
 	/**
@@ -223,10 +220,7 @@ public class CellRangeRef implements Cloneable
 		{
 			return last_sheet.getSheetName();
 		}
-		else
-		{
-			return last_sheet_name;
-		}
+		return last_sheet_name;
 	}
 
 	/**

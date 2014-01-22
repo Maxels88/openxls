@@ -85,25 +85,25 @@ public class ObjectChoice implements OOXMLElement
 						c = (CxnSp) CxnSp.parseOOXML( xpp, lastTag, bk );
 						break;
 					}
-					else if( tnm.equals( "graphicFrame" ) )
+					if( tnm.equals( "graphicFrame" ) )
 					{    // graphic data usually chart
 						lastTag.push( tnm );
 						g = (GraphicFrame) GraphicFrame.parseOOXML( xpp, lastTag );
 						break;
 					}
-					else if( tnm.equals( "grpSp" ) )
+					if( tnm.equals( "grpSp" ) )
 					{    // group shape - combines one or more of sp/pic/graphicFrame/cxnSp
 						lastTag.push( tnm );
 						grp = (GrpSp) GrpSp.parseOOXML( xpp, lastTag, bk );
 						break;
 					}
-					else if( tnm.equals( "sp" ) )
+					if( tnm.equals( "sp" ) )
 					{        // shape
 						lastTag.push( tnm );
 						s = (Sp) Sp.parseOOXML( xpp, lastTag, bk );
 						break;
 					}
-					else if( tnm.equals( "pic" ) )
+					if( tnm.equals( "pic" ) )
 					{        // picture/image
 						lastTag.push( tnm );
 						p = (Pic) Pic.parseOOXML( xpp, lastTag, bk );
@@ -200,19 +200,19 @@ public class ObjectChoice implements OOXMLElement
 		{
 			return cxnSp.getName();
 		}
-		else if( sp != null )
+		if( sp != null )
 		{
 			return sp.getName();
 		}
-		else if( pic != null )
+		if( pic != null )
 		{
 			return pic.getName();
 		}
-		else if( graphicFrame != null )
+		if( graphicFrame != null )
 		{
 			return graphicFrame.getName();
 		}
-		else if( grpSp != null )
+		if( grpSp != null )
 		{
 			return grpSp.getName();
 		}
@@ -259,19 +259,19 @@ public class ObjectChoice implements OOXMLElement
 		{
 			return cxnSp.getDescr();
 		}
-		else if( sp != null )
+		if( sp != null )
 		{
 			return sp.getDescr();
 		}
-		else if( pic != null )
+		if( pic != null )
 		{
 			return pic.getDescr();
 		}
-		else if( graphicFrame != null )
+		if( graphicFrame != null )
 		{
 			return graphicFrame.getDescr();
 		}
-		else if( grpSp != null )
+		if( grpSp != null )
 		{
 			return grpSp.getDescr();
 		}
@@ -319,11 +319,11 @@ public class ObjectChoice implements OOXMLElement
 		{
 			return cxnSp.getMacro();
 		}
-		else if( graphicFrame != null )
+		if( graphicFrame != null )
 		{
 			return graphicFrame.getMacro();
 		}
-		else if( sp != null )
+		if( sp != null )
 		{
 			return sp.getMacro();
 		}
@@ -396,11 +396,11 @@ public class ObjectChoice implements OOXMLElement
 		{
 			return sp.getEmbed();    // embedded blip/pict
 		}
-		else if( pic != null )
+		if( pic != null )
 		{
 			return pic.getEmbed();    // embedded image
 		}
-		else if( grpSp != null )
+		if( grpSp != null )
 		{
 			return grpSp.getEmbed();    // group shape embedded image
 		}
@@ -418,11 +418,11 @@ public class ObjectChoice implements OOXMLElement
 		{
 			return sp.getLink();
 		}
-		else if( pic != null )
+		if( pic != null )
 		{
 			return pic.getLink();
 		}
-		else if( grpSp != null )
+		if( grpSp != null )
 		{
 			return grpSp.getLink();
 		}
@@ -495,7 +495,7 @@ public class ObjectChoice implements OOXMLElement
 		{
 			return graphicFrame.getChartRId();
 		}
-		else if( grpSp != null )
+		if( grpSp != null )
 		{
 			return grpSp.getChartRId();
 		}
@@ -542,19 +542,19 @@ public class ObjectChoice implements OOXMLElement
 		{
 			return sp.getId();    // embedded blip/pict
 		}
-		else if( pic != null )
+		if( pic != null )
 		{
 			return pic.getId();    // embedded image
 		}
-		else if( graphicFrame != null )
+		if( graphicFrame != null )
 		{
 			return graphicFrame.getId();    // chart
 		}
-		else if( cxnSp != null )
+		if( cxnSp != null )
 		{
 			return cxnSp.getId();
 		}
-		else if( grpSp != null )
+		if( grpSp != null )
 		{
 			return grpSp.getId();    // embedded image
 		}
@@ -573,7 +573,7 @@ public class ObjectChoice implements OOXMLElement
 		{
 			return pic.getSppr();
 		}
-		else if( grpSp != null )
+		if( grpSp != null )
 		{
 			return grpSp.getSppr();
 		}
@@ -591,19 +591,19 @@ public class ObjectChoice implements OOXMLElement
 		{
 			return cxnSp;
 		}
-		else if( graphicFrame != null )
+		if( graphicFrame != null )
 		{
 			return graphicFrame;
 		}
-		else if( pic != null )
+		if( pic != null )
 		{
 			return pic;
 		}
-		else if( sp != null )
+		if( sp != null )
 		{
 			return sp;
 		}
-		else if( grpSp != null )
+		if( grpSp != null )
 		{
 			return grpSp;
 		}
