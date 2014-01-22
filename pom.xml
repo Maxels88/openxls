@@ -1,0 +1,168 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.openxls</groupId>
+    <artifactId>openxls</artifactId>
+    <version>11.0-20131127</version>
+    <packaging>jar</packaging>
+
+    <name>OpenXLS Java Excel SDK</name>
+    <url>https://github.com/vertex-github/openxls</url>
+
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License (LGPL), Version 3+</name>
+            <url>https://www.gnu.org/licenses/lgpl.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>apache-log4j-extras</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20131018</version>
+        </dependency>
+
+        <dependency>
+            <groupId>xpp3</groupId>
+            <artifactId>xpp3</artifactId>
+            <version>1.1.4c</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <distributionManagement>
+    </distributionManagement>
+
+
+    <build>
+        <resources>
+            <resource>
+                <filtering>false</filtering>
+                <directory>${basedir}/src/main/resources</directory>
+            </resource>
+
+            <!-- turn filtering on only for certain resources -->
+            <resource>
+                <filtering>true</filtering>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>com/extentech/ExtenXLS/build.properties</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <executions>
+                            <execution>
+                                <id>default-javadoc</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <phase>package</phase>
+                                <configuration>
+                                    <encoding>ISO-8859-1</encoding>
+
+                                    <subpackages>
+                                        com.extentech.ExtenXLS
+                                    </subpackages>
+
+                                    <additionalparam>
+                                        <!-- individual classes for inclusion
+                                           - these have to be given as source files because
+                                           - there's no way to include only part of a package -->
+                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/CellNotFoundException.java
+                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/FormulaNotFoundException.java
+                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/FunctionNotSupportedException.java
+                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/RowNotFoundException.java
+                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/ColumnNotFoundException.java
+                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/FormulaNotFoundException.java
+                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/WorkSheetNotFoundException.java
+                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/CellTypeMismatchException.java
+                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/CellPositionConflictException.java
+                                        ${project.build.sourceDirectory}/com/extentech/toolkit/ByteTools.java
+                                        ${project.build.sourceDirectory}/com/extentech/toolkit/StringTool.java
+                                    </additionalparam>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>default-source</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+</project>
