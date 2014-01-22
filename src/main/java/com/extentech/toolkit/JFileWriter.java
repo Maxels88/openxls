@@ -93,7 +93,7 @@ public class JFileWriter
 			{
 				strt = (int) outputFile.length();
 			}
-			outputFile.write( bbuf, 0, (int) bbuf.length );
+			outputFile.write( bbuf, 0, bbuf.length );
 			outputFile.close();
 		}
 		catch( Exception e )

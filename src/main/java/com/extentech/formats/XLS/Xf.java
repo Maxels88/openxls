@@ -649,11 +649,11 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 			return pat;
 		}
 		String[][] fmts = FormatConstantsImpl.getBuiltinFormats();
-		for( int x = 0; x < fmts.length; x++ )
+		for( String[] fmt1 : fmts )
 		{
-			if( this.ifmt == Integer.parseInt( fmts[x][1], 16 ) )
+			if( this.ifmt == Integer.parseInt( fmt1[1], 16 ) )
 			{
-				pat = fmts[x][0];
+				pat = fmt1[0];
 				return pat;
 			}
 		}
@@ -711,7 +711,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setFormat( short ifm )
 	{
-		ifmt = (short) ifm;
+		ifmt = ifm;
 		byte[] nef = ByteTools.shortToLEBytes( ifmt );
 		this.getData()[2] = nef[0];
 		this.getData()[3] = nef[1];
@@ -937,12 +937,12 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	public void setBorderDiag( int t )
 	{
 		Iflag = 0;
-		Iflag |= ((short) icvTop);
-		Iflag |= ((short) icvBottom << 7);
+		Iflag |= icvTop;
+		Iflag |= (icvBottom << 7);
 		Iflag |= ((short) t << 14);
-		Iflag |= ((short) dgDiag << 21);
+		Iflag |= (dgDiag << 21);
 		Iflag |= ((short) mystery << 25);
-		Iflag |= ((short) fls << 26);
+		Iflag |= (fls << 26);
 		this.updatePattern();
 	}
 
@@ -1059,7 +1059,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	public void updateBorders()
 	{
 		short borderflag = 0;
-		borderflag = (short) dgLeft;
+		borderflag = dgLeft;
 		borderflag = (short) ((borderflag | ((dgRight) << 4)));
 		borderflag = (short) ((borderflag | ((dgTop) << 8)));
 		borderflag = (short) ((borderflag | ((dgBottom) << 12)));
@@ -1093,20 +1093,20 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	{
 		byte[] rkdata = this.getData();
 		short thisFlag = 0;
-		thisFlag |= ((short) icvLeft);
-		thisFlag |= ((short) icvRight << 7);
-		thisFlag |= ((short) grbitDiag << 14);
+		thisFlag |= icvLeft;
+		thisFlag |= (icvRight << 7);
+		thisFlag |= (grbitDiag << 14);
 		byte[] bytes = ByteTools.shortToLEBytes( thisFlag );
 		rkdata[12] = bytes[0];
 		rkdata[13] = bytes[1];
 
 		Iflag = 0;
-		Iflag |= ((short) icvTop);
-		Iflag |= ((short) icvBottom << 7);
-		Iflag |= ((short) icvDiag << 14);
-		Iflag |= ((short) dgDiag << 21);
+		Iflag |= icvTop;
+		Iflag |= (icvBottom << 7);
+		Iflag |= (icvDiag << 14);
+		Iflag |= (dgDiag << 21);
 		Iflag |= ((short) mystery << 25);
-		Iflag |= ((short) fls << 26);
+		Iflag |= (fls << 26);
 		byte[] nef = ByteTools.cLongToLEBytes( Iflag );
 		rkdata[14] = nef[0];
 		rkdata[15] = nef[1];
@@ -1133,7 +1133,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	{
 		icvColorFlag = 0;
 		icvColorFlag |= ((short) t);
-		icvColorFlag |= ((short) icvBack << 7);
+		icvColorFlag |= (icvBack << 7);
 		if( clr != null )
 		{
 			if( !clr.equals( FormatHandle.COLORTABLE[t] ) )
@@ -1170,7 +1170,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	public void setBackColor( int t, Color clr )
 	{
 		icvColorFlag = 0;
-		icvColorFlag |= ((short) icvFore);
+		icvColorFlag |= icvFore;
 		icvColorFlag |= ((short) t << 7);
 		if( clr != null )
 		{
@@ -1423,7 +1423,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public int getRightToLeftReadingOrder()
 	{
-		return (int) (iReadingOrder >> 6);
+		return iReadingOrder >> 6;
 	}
 
 	public int getHorizontalAlignment()

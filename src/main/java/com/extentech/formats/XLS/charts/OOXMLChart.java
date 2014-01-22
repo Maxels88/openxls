@@ -31,6 +31,7 @@ import com.extentech.formats.OOXML.Title;
 import com.extentech.formats.OOXML.TxPr;
 import com.extentech.toolkit.Logger;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -61,14 +62,14 @@ public class OOXMLChart extends Chart
 		for( Class obj = c.getClass(); !obj.equals( Object.class ); obj = obj.getSuperclass() )
 		{
 			java.lang.reflect.Field[] fields = obj.getDeclaredFields();
-			for( int i = 0; i < fields.length; i++ )
+			for( Field field : fields )
 			{
-				fields[i].setAccessible( true );
+				field.setAccessible( true );
 				try
 				{
 					// for each class/suerclass, copy all fields
 					// from this object to the clone
-					fields[i].set( this, fields[i].get( c ) );
+					field.set( this, field.get( c ) );
 				}
 				catch( IllegalArgumentException e )
 				{

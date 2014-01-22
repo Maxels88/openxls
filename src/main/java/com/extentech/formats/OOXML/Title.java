@@ -113,7 +113,7 @@ public class Title implements OOXMLElement
 					if( tnm.equals( "tx" ) )
 					{ // chart text
 						lastTag.push( tnm );
-						ct = (ChartText) ChartText.parseOOXML( xpp, lastTag, bk );
+						ct = ChartText.parseOOXML( xpp, lastTag, bk );
 					}
 					else if( tnm.equals( "manualLayout" ) )
 					{
@@ -397,11 +397,11 @@ class ChartText implements OOXMLElement
 		String face = "Arial";
 		if( textprops.get( "b" ) != null )
 		{
-			b = ("1".equals( (String) textprops.get( "b" ) ));
+			b = ("1".equals( textprops.get( "b" ) ));
 		}
 		if( textprops.get( "i" ) != null )
 		{
-			i = ("1".equals( (String) textprops.get( "i" ) ));
+			i = ("1".equals( textprops.get( "i" ) ));
 		}
 		if( textprops.get( "latin_typeface" ) != null )
 		{

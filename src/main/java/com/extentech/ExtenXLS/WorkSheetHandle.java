@@ -52,6 +52,7 @@ import com.extentech.formats.XLS.WorkSheetNotFoundException;
 import com.extentech.formats.XLS.XLSConstants;
 import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.formats.XLS.charts.Chart;
+import com.extentech.formats.XLS.charts.Series;
 import com.extentech.formats.XLS.formulas.GenericPtg;
 import com.extentech.formats.XLS.formulas.Ptg;
 import com.extentech.formats.XLS.formulas.PtgRef;
@@ -769,15 +770,15 @@ public class WorkSheetHandle implements Handle
 
 		// Delete chart series IF SERIES ARE ROW-BASED -- do before updateReferences
 		List charts = this.mysheet.getCharts();
-		for( int i = 0; i < charts.size(); i++ )
+		for( Object chart : charts )
 		{
 			String sht = GenericPtg.qualifySheetname( this.getSheetName() );
-			Chart c = (Chart) charts.get( i );
+			Chart c = (Chart) chart;
 			HashMap seriesmap = c.getSeriesPtgs();
 			Iterator ii = seriesmap.keySet().iterator();
 			while( ii.hasNext() )
 			{
-				com.extentech.formats.XLS.charts.Series s = (com.extentech.formats.XLS.charts.Series) ii.next();
+				Series s = (Series) ii.next();
 				Ptg[] ptgs = (Ptg[]) seriesmap.get( s );
 				PtgRef pr;
 				String cursheet;
@@ -829,9 +830,8 @@ public class WorkSheetHandle implements Handle
 		// Adjust image row so that height remains constant
 		int rnum = rownum + 1;
 		ImageHandle[] images = this.getImages();
-		for( int i = 0; i < images.length; i++ )
+		for( ImageHandle ih : images )
 		{
-			ImageHandle ih = images[i];
 			int row = ih.getRow();
 			// only move images whose top is >= rnum
 			if( row > rnum )
@@ -1007,7 +1007,7 @@ public class WorkSheetHandle implements Handle
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			BufferedOutputStream bufo = new BufferedOutputStream( baos );
 			obs = new ObjectOutputStream( bufo );
-			obs.writeObject( (Serializable) mysheet );
+			obs.writeObject( mysheet );
 			bufo.flush();
 			b = baos.toByteArray();
 		}
@@ -1588,9 +1588,9 @@ public class WorkSheetHandle implements Handle
 			Mulblank aMul = null;        // KSC: Mulblank handling
 			short c = -1;                // ""
 			String sheetname = GenericPtg.qualifySheetname( this.toString() );
-			for( int i = 0; i < copyRowCells.length; i++ )
+			for( Object copyRowCell1 : copyRowCells )
 			{
-				BiffRec copyRowCell = (BiffRec) copyRowCells[i];
+				BiffRec copyRowCell = (BiffRec) copyRowCell1;
 				if( copyRowCell.getOpcode() == XLSConstants.MULBLANK )
 				{
 					if( copyRowCell == aMul )
@@ -1701,9 +1701,8 @@ public class WorkSheetHandle implements Handle
 		ImageHandle[] images = mysheet.getImages();
 		if( images != null )
 		{
-			for( int i = 0; i < images.length; i++ )
+			for( ImageHandle ih : images )
 			{
-				ImageHandle ih = images[i];
 				int row = ih.getRow();
 				// only move images whose top is >= copyRow
 				if( row >= rownum )
@@ -1717,9 +1716,9 @@ public class WorkSheetHandle implements Handle
 		}
 		// Insert chart series IF SERIES ARE ROW-BASED			
 		List charts = this.mysheet.getCharts();
-		for( int i = 0; i < charts.size(); i++ )
+		for( Object chart : charts )
 		{
-			Chart c = (Chart) charts.get( i );
+			Chart c = (Chart) chart;
 			ReferenceTracker.insertChartSeries( c, GenericPtg.qualifySheetname( this.getSheetName() ), rownum );
 			// also shift charts down [BugTracker 2858]
 			int row = c.getRow0();
@@ -1808,14 +1807,14 @@ public class WorkSheetHandle implements Handle
 		ImageHandle[] extracted = getImages();
 
 		// extract and output images
-		for( int tx = 0; tx < extracted.length; tx++ )
+		for( ImageHandle anExtracted : extracted )
 		{
-			String n = extracted[tx].getName();
+			String n = anExtracted.getName();
 			if( n.equals( "" ) )
 			{
-				n = "image" + extracted[tx].getMsodrawing().getImageIndex();
+				n = "image" + anExtracted.getMsodrawing().getImageIndex();
 			}
-			String imgname = n + "." + extracted[tx].getType();
+			String imgname = n + "." + anExtracted.getType();
 			if( DEBUGLEVEL > 0 )
 			{
 				Logger.logInfo( "Successfully extracted: " + outdir + imgname );
@@ -1823,7 +1822,7 @@ public class WorkSheetHandle implements Handle
 			try
 			{
 				FileOutputStream outimg = new FileOutputStream( outdir + imgname );
-				extracted[tx].write( outimg );
+				anExtracted.write( outimg );
 				outimg.flush();
 				outimg.close();
 			}
@@ -1844,9 +1843,9 @@ public class WorkSheetHandle implements Handle
 	{
 		ArrayList charts = (ArrayList) this.mysheet.getCharts();
 		String sheetname = this.getSheetName();
-		for( int i = 0; i < charts.size(); i++ )
+		for( Object chart : charts )
 		{
-			ChartHandle ch = new ChartHandle( (Chart) charts.get( i ), this.getWorkBook() );
+			ChartHandle ch = new ChartHandle( (Chart) chart, this.getWorkBook() );
 			String fname = sheetname + "_Chart" + ch.getId() + ".svg";
 			try
 			{

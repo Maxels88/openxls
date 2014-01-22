@@ -79,22 +79,22 @@ public class Style implements OOXMLElement
 					if( tnm.equals( "effectRef" ) )
 					{
 						lastTag.push( tnm );
-						er = (EffectRef) EffectRef.parseOOXML( xpp, lastTag, bk );
+						er = EffectRef.parseOOXML( xpp, lastTag, bk );
 					}
 					else if( tnm.equals( "fontRef" ) )
 					{
 						lastTag.push( tnm );
-						fr = (FontRef) FontRef.parseOOXML( xpp, lastTag, bk );
+						fr = FontRef.parseOOXML( xpp, lastTag, bk );
 					}
 					else if( tnm.equals( "fillRef" ) )
 					{
 						lastTag.push( tnm );
-						flr = (FillRef) FillRef.parseOOXML( xpp, lastTag, bk );
+						flr = FillRef.parseOOXML( xpp, lastTag, bk );
 					}
 					else if( tnm.equals( "lnRef" ) )
 					{
 						lastTag.push( tnm );
-						lr = (lnRef) lnRef.parseOOXML( xpp, lastTag, bk );
+						lr = lnRef.parseOOXML( xpp, lastTag, bk );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )

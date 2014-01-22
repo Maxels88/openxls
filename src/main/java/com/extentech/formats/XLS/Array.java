@@ -157,15 +157,15 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 		// this length is NOT included in cce 		
 		int posExtraData = cce + 14;
 		int len = this.getData().length;
-		for( int i = 0; i < expression.size(); i++ )
+		for( Object anExpression : expression )
 		{
-			if( expression.get( i ) instanceof PtgArray )
+			if( anExpression instanceof PtgArray )
 			{
 				try
 				{
 					byte[] b = new byte[(len - posExtraData)];
 					System.arraycopy( this.getData(), posExtraData, b, 0, len - posExtraData );
-					PtgArray pa = (PtgArray) expression.get( i );
+					PtgArray pa = (PtgArray) anExpression;
 					posExtraData += pa.setArrVals( b );
 				}
 				catch( Exception e )
@@ -173,11 +173,11 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 					Logger.logErr( "Array: error getting Constants " + e.getLocalizedMessage() );
 				}
 			}
-			else if( expression.get( i ) instanceof PtgMemArea )
+			else if( anExpression instanceof PtgMemArea )
 			{
 				try
 				{
-					PtgMemArea pm = (PtgMemArea) expression.get( i );
+					PtgMemArea pm = (PtgMemArea) anExpression;
 					byte[] b = new byte[pm.getnTokens() + 8];
 					System.arraycopy( pm.getRecord(), 0, b, 0, 7 );
 					System.arraycopy( this.getData(), posExtraData, b, 7, pm.getnTokens() );

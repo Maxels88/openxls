@@ -264,9 +264,9 @@ obj.ftCmo.getRec()[17]= (byte)0x02;
 
 		// retrieve all subrecord data and append to Object record
 		byte[] newdata = obj.getData();
-		for( int i = 0; i < subrecords.size(); i++ )
+		for( Object subrecord : subrecords )
 		{
-			Obj.SubRecord sr = (Obj.SubRecord) subrecords.get( i );
+			SubRecord sr = (SubRecord) subrecord;
 			newdata = ByteTools.append( sr.getRec(), newdata );
 		}
 		// add ending ftEnd subrecord

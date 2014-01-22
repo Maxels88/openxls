@@ -316,7 +316,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 			// set the row...
 			System.arraycopy( this.getBytesAt( 0, 2 ), 0, newblank, 0, 2 );
 			// set the col...
-			System.arraycopy( ByteTools.shortToLEBytes( (short) colFirst ), 0, newblank, 2, 2 );
+			System.arraycopy( ByteTools.shortToLEBytes( colFirst ), 0, newblank, 2, 2 );
 			// set the ixfe
 			System.arraycopy( rgixfe, 0, newblank, 4, 2 );
 			Blank b = new Blank( newblank );

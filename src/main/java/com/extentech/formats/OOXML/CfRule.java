@@ -128,16 +128,16 @@ public class CfRule implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( ">" );
 		if( formulas != null )
 		{
-			for( int j = 0; j < formulas.size(); j++ )
+			for( String formula : formulas )
 			{
-				ooxml.append( "<formula>" + OOXMLAdapter.stripNonAsciiRetainQuote( (String) formulas.get( j ) ) + "</formula>" );
+				ooxml.append( "<formula>" + OOXMLAdapter.stripNonAsciiRetainQuote( formula ) + "</formula>" );
 			}
 		}
 		// TODO: finish children dataBar, colorScale, iconSet
@@ -156,7 +156,7 @@ public class CfRule implements OOXMLElement
 		{
 			try
 			{
-				return Integer.valueOf( (String) this.attrs.get( "dxfId" ) );
+				return Integer.valueOf( this.attrs.get( "dxfId" ) );
 			}
 			catch( Exception e )
 			{
@@ -203,7 +203,7 @@ public class CfRule implements OOXMLElement
 		// valid only when type=="cellIs"
 		if( attrs != null )
 		{
-			return (String) attrs.get( "operator" );
+			return attrs.get( "operator" );
 		}
 		return null;
 	}
@@ -213,7 +213,7 @@ public class CfRule implements OOXMLElement
 		String type = null;
 		if( attrs != null )
 		{
-			type = (String) attrs.get( "type" );
+			type = attrs.get( "type" );
 		}
 		if( type == null )
 		{
@@ -232,7 +232,7 @@ public class CfRule implements OOXMLElement
 	{
 		if( attrs != null )
 		{
-			return (String) attrs.get( "text" );
+			return attrs.get( "text" );
 		}
 		return null;
 	}
@@ -241,7 +241,7 @@ public class CfRule implements OOXMLElement
 	{
 		if( (formulas != null) && (formulas.size() > 0) )
 		{
-			return (String) formulas.get( 0 );
+			return formulas.get( 0 );
 		}
 		return null;
 	}
@@ -250,7 +250,7 @@ public class CfRule implements OOXMLElement
 	{
 		if( (formulas != null) && (formulas.size() > 1) )
 		{
-			return (String) formulas.get( 1 );
+			return formulas.get( 1 );
 		}
 		return null;
 	}

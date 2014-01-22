@@ -253,7 +253,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 		         /* If Formula Attached String was a continue, Formula cachedValue WAS NOT init-ed. Do here.*/
 				if( continued.getOpcode() == STRINGREC )
 				{
-					this.book.lastFormula.setCachedValue( ((StringRec) continued).getStringVal() );
+					this.book.lastFormula.setCachedValue( continued.getStringVal() );
 				}
 				continued = null;
 			}
@@ -293,7 +293,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 	{
 		if( data.length > 3 )
 		{
-			int id = (((0xFF & (byte) data[3]) << 8) | (0xFF & data[2]));
+			int id = (((0xFF & data[3]) << 8) | (0xFF & data[2]));
 			return (((id == MSODrawingConstants.MSOFBTSPCONTAINER) ||
 					(id == MSODrawingConstants.MSOFBTSOLVERCONTAINER) ||
 					(id == MSODrawingConstants.MSOFBTSPGRCONTAINER) ||
@@ -800,9 +800,9 @@ public class ContinueHandler implements Serializable, XLSConstants
 			ContinueHandler.writeRec( rec, out, streamer );
 			// and now the restof the recs
 			Continue[] myconts = getContinues( dta, MAXRECLEN, book );
-			for( int x = 0; x < myconts.length; x++ )
+			for( Continue mycont : myconts )
 			{
-				ContinueHandler.writeRec( myconts[x], out, streamer );
+				ContinueHandler.writeRec( mycont, out, streamer );
 			}
 		}
 		else

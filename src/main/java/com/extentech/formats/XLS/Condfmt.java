@@ -225,7 +225,7 @@ public final class Condfmt extends com.extentech.formats.XLS.XLSRecord
 		outdata[offset++] = tmp[0];
 		outdata[offset++] = tmp[1];
 
-		tmp = ByteTools.shortToLEBytes( (short) grbit );
+		tmp = ByteTools.shortToLEBytes( grbit );
 		outdata[offset++] = tmp[0];
 		outdata[offset++] = tmp[1];
 
@@ -359,9 +359,9 @@ public final class Condfmt extends com.extentech.formats.XLS.XLSRecord
 								condfmt = bs.createCondfmt( "", wb );    //(Condfmt) Condfmt.getPrototype();
 								condfmt.initializeReferences();
 								String[] ranges = StringTool.splitString( v, " " );
-								for( int z = 0; z < ranges.length; z++ )
+								for( String range : ranges )
 								{
-									condfmt.addCellRange( bs.getSheetName() + "!" + ranges[z] );
+									condfmt.addCellRange( bs.getSheetName() + "!" + range );
 								}
 							}
 							else if( n.equals( "pivot" ) )
@@ -556,9 +556,9 @@ public final class Condfmt extends com.extentech.formats.XLS.XLSRecord
 		}
 		if( cfRules != null )
 		{
-			for( int i = 0; i < cfRules.size(); i++ )
+			for( Object cfRule : cfRules )
 			{
-				ooxml.append( ((Cf) cfRules.get( i )).getOOXML( bk, priority[0]++, dxfs ) );
+				ooxml.append( ((Cf) cfRule).getOOXML( bk, priority[0]++, dxfs ) );
 			}
 		}
 		ooxml.append( "</conditionalFormatting>" );
@@ -586,9 +586,9 @@ public final class Condfmt extends com.extentech.formats.XLS.XLSRecord
 		refs = null;
 		if( cfRules != null )
 		{
-			for( int i = 0; i < cfRules.size(); i++ )
+			for( Object cfRule : cfRules )
 			{
-				Cf cf = (Cf) cfRules.get( i );
+				Cf cf = (Cf) cfRule;
 				cf.close();
 				cf = null;
 

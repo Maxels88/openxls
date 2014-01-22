@@ -650,9 +650,9 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 			tmp[0] = (byte) cRangeList.size();
 			;
 			recbytes = ByteTools.append( tmp, recbytes );
-			for( int i = 0; i < cRangeList.size(); i++ )
+			for( Object aCRangeList : cRangeList )
 			{
-				tmp = ((PtgArea) cRangeList.get( i )).getRecord();
+				tmp = ((PtgArea) aCRangeList).getRecord();
 				byte[] tmp2 = new byte[8];
 				tmp[0] = 0;
 				System.arraycopy( tmp, 0, tmp2, 0, tmp2.length );
@@ -670,11 +670,11 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		{
 			tmp[0] = (byte) ooxmlranges.length;
 			recbytes = ByteTools.append( tmp, recbytes );
-			for( int i = 0; i < ooxmlranges.length; i++ )
+			for( String ooxmlrange : ooxmlranges )
 			{
-				Ptg/*Ref*/ p = PtgRef.createPtgRefFromString( this.getSheet().getSheetName() + "!" + ooxmlranges[i], this );
+				Ptg/*Ref*/ p = PtgRef.createPtgRefFromString( this.getSheet().getSheetName() + "!" + ooxmlrange, this );
 				tmp = p.getRecord();
-		            /* replace with above PtgArea pa= new PtgArea();
+			        /* replace with above PtgArea pa= new PtgArea();
                     try {
                         pa.setParentRec(this);
                         pa.setLocation(this.getSheet().getSheetName() + "!" + ooxmlranges[i]);
@@ -1012,7 +1012,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setFirstCond( String firstCond )
 	{
-		this.firstCond = FormulaParser.getPtgsFromFormulaString( (XLSRecord) this, firstCond );
+		this.firstCond = FormulaParser.getPtgsFromFormulaString( this, firstCond );
 		dirtyflag = true;
 	}
 
@@ -1054,7 +1054,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setSecondCond( String secondCond )
 	{
-		this.secondCond = FormulaParser.getPtgsFromFormulaString( (XLSRecord) this, secondCond );
+		this.secondCond = FormulaParser.getPtgsFromFormulaString( this, secondCond );
 		dirtyflag = true;
 	}
 
@@ -1228,9 +1228,9 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 	{
 		// FIX broken COLROW
 		int[] rc = ExcelTools.getRowColFromString( celladdy );
-		for( int i = 0; i < cRangeList.size(); i++ )
+		for( Object aCRangeList : cRangeList )
 		{
-			if( ((PtgArea) cRangeList.get( i )).contains( rc ) )
+			if( ((PtgArea) aCRangeList).contains( rc ) )
 			{
 				return true;
 			}

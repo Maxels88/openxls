@@ -87,7 +87,7 @@ public class AutoFilter implements OOXMLElement
 						{
 							f = new ArrayList<FilterColumn>();
 						}
-						f.add( (FilterColumn) FilterColumn.parseOOXML( xpp ) );
+						f.add( FilterColumn.parseOOXML( xpp ) );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -121,9 +121,9 @@ public class AutoFilter implements OOXMLElement
 		ooxml.append( ">" );
 		if( filterColumns != null )
 		{
-			for( int i = 0; i < filterColumns.size(); i++ )
+			for( FilterColumn filterColumn : filterColumns )
 			{
-				ooxml.append( ((FilterColumn) filterColumns.get( i )).getOOXML() );
+				ooxml.append( filterColumn.getOOXML() );
 			}
 		}
 		ooxml.append( "</autoFilter>" );
@@ -187,7 +187,7 @@ class FilterColumn implements OOXMLElement
 					}
 					else if( tnm.equals( "colorFilter" ) )
 					{
-						filter = (ColorFilter) ColorFilter.parseOOXML( xpp );
+						filter = ColorFilter.parseOOXML( xpp );
 					}
 					else if( tnm.equals( "customFilters" ) )
 					{
@@ -233,8 +233,8 @@ class FilterColumn implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( ">" );
@@ -346,7 +346,7 @@ class ColorFilter implements OOXMLElement
 		while( i.hasNext() )
 		{
 			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );
@@ -433,8 +433,8 @@ class DynamicFilter implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );
@@ -520,8 +520,8 @@ class IconFilter implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );
@@ -581,7 +581,7 @@ class CustomFilters implements OOXMLElement
 					}
 					else if( tnm.equals( "customFilter" ) )
 					{    // 1-2
-						custfilter[idx++] = (CustomFilter) CustomFilter.parseOOXML( xpp );
+						custfilter[idx++] = CustomFilter.parseOOXML( xpp );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -708,8 +708,8 @@ class CustomFilter implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );
@@ -793,8 +793,8 @@ class Top10 implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );
@@ -888,7 +888,7 @@ class Filters implements OOXMLElement
 		while( i.hasNext() )
 		{
 			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( ">" );

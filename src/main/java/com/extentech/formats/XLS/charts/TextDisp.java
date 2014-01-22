@@ -178,9 +178,9 @@ public class TextDisp extends GenericChartObject implements ChartObject
 	 */
 	public int getType()
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b.getOpcode() == OBJECTLINK )
 			{
 				return ((ObjectLink) b).getType();
@@ -227,9 +227,9 @@ public class TextDisp extends GenericChartObject implements ChartObject
 	public int getFontId()
 	{
 		int ret = 0;
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b.getOpcode() == FONTX )
 			{
 				ret = ((Fontx) b).getIfnt();
@@ -244,9 +244,9 @@ public class TextDisp extends GenericChartObject implements ChartObject
 	 */
 	public void setFontId( int id )
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b.getOpcode() == FONTX )
 			{
 				((Fontx) b).setIfnt( id );
@@ -339,9 +339,9 @@ public class TextDisp extends GenericChartObject implements ChartObject
 	{
 		if( op.equalsIgnoreCase( "Label" ) )
 		{
-			for( int i = 0; i < chartArr.size(); i++ )
+			for( XLSRecord aChartArr : chartArr )
 			{
-				BiffRec b = (BiffRec) chartArr.get( i );
+				BiffRec b = aChartArr;
 				if( b.getOpcode() == SERIESTEXT )
 				{
 					SeriesText st = (SeriesText) b;
@@ -388,9 +388,9 @@ public class TextDisp extends GenericChartObject implements ChartObject
 	 */
 	protected boolean isChartTitle()
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b.getOpcode() == OBJECTLINK )
 			{
 				ObjectLink ol = (ObjectLink) b;
@@ -402,9 +402,9 @@ public class TextDisp extends GenericChartObject implements ChartObject
 
 	protected boolean isXAxisLabel()
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b.getOpcode() == OBJECTLINK )
 			{
 				ObjectLink ol = (ObjectLink) b;
@@ -416,9 +416,9 @@ public class TextDisp extends GenericChartObject implements ChartObject
 
 	protected boolean isYAxisLabel()
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b.getOpcode() == OBJECTLINK )
 			{
 				ObjectLink ol = (ObjectLink) b;
@@ -433,9 +433,9 @@ public class TextDisp extends GenericChartObject implements ChartObject
 	 */
 	protected boolean isZAxisLabel()
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b.getOpcode() == OBJECTLINK )
 			{
 				ObjectLink ol = (ObjectLink) b;
@@ -452,9 +452,9 @@ public class TextDisp extends GenericChartObject implements ChartObject
 	 */
 	public String toString()
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b.getOpcode() == SERIESTEXT )
 			{
 				SeriesText st = (SeriesText) b;
@@ -470,9 +470,9 @@ public class TextDisp extends GenericChartObject implements ChartObject
 	 */
 	public void setText( String newText )
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b.getOpcode() == SERIESTEXT )
 			{
 				SeriesText st = (SeriesText) b;
@@ -532,7 +532,7 @@ public class TextDisp extends GenericChartObject implements ChartObject
 		// add seriestext rec, if necessary
 		if( type != ObjectLink.TYPE_DATAPOINTS )
 		{
-			SeriesText st = (SeriesText) SeriesText.getPrototype( text );
+			SeriesText st = SeriesText.getPrototype( text );
 			td.addChartRecord( st );
 		}
 		// add objectlink rec
@@ -681,7 +681,7 @@ public class TextDisp extends GenericChartObject implements ChartObject
 			fh = (float) fx.getFontHeightInPoints();
 		}
 		float x = (float) (chartMetrics.get( "x" ) + (chartMetrics.get( "w" ) / 2));
-		float y = (float) (chartMetrics.get( "TITLEOFFSET" ).floatValue() + fh) / 2;
+		float y = (chartMetrics.get( "TITLEOFFSET" ).floatValue() + fh) / 2;
 		Frame f = (Frame) Chart.findRec( this.chartArr, Frame.class );
 		if( f != null )
 		{

@@ -217,9 +217,9 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 	private ArrayList getExternalRefType( String type, List externalOOXML )
 	{
 		ArrayList refs = new ArrayList();
-		for( int i = 0; i < externalOOXML.size(); i++ )
+		for( Object anExternalOOXML : externalOOXML )
 		{
-			String[] s = (String[]) externalOOXML.get( i );
+			String[] s = (String[]) anExternalOOXML;
 			if( (s != null) && (s.length >= 0) )
 			{   // id, dir, filename, rId [, extra info [, embedded file info]]
 				if( s[0].equalsIgnoreCase( type ) )
@@ -242,9 +242,9 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 	private void writeExternalOOXML( WorkBookHandle bk ) throws IOException
 	{
 		List externalOOXML = bk.getWorkBook().getOOXMLObjects();
-		for( int i = 0; i < externalOOXML.size(); i++ )
+		for( Object anExternalOOXML : externalOOXML )
 		{
-			String[] s = (String[]) externalOOXML.get( i );
+			String[] s = (String[]) anExternalOOXML;
 			if( (s != null) && (s.length >= 3) )
 			{   // id, dir, filename, rid, [extra info], [embedded information]
 				String type = s[EX_TYPE];
@@ -252,7 +252,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 						type.equals( "exprops" ) ||
 						type.equals( "custprops" ) ||
 						type.equals( "connections" ) ||
-                           /* type.equals("calc") || 20081122 KSC: Skip calcChain for now as will error if problems with formulas*/
+	                       /* type.equals("calc") || 20081122 KSC: Skip calcChain for now as will error if problems with formulas*/
 						type.equals( "externalLink" ) ||
 						type.equals( "theme" ) ||
 						type.equals( "vba" ) )
@@ -294,9 +294,9 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 				String[] embeds = StringTool.splitString( s[EX_EMBEDINFO].substring( 1, s[EX_EMBEDINFO].length() - 1 ), "," );
 				if( embeds != null )
 				{  // EMBEDINFO as: type/path/filename these are usually activeXBinary
-					for( int i = 0; i < embeds.length; i++ )
+					for( String embed : embeds )
 					{
-						String pp = embeds[i].trim();    // original path + filename
+						String pp = embed.trim();    // original path + filename
 						String typ = pp.substring( 0, pp.indexOf( "/" ) );
 						pp = pp.substring( pp.indexOf( "/" ) + 1 );
 						String pth = pp.substring( 0, pp.lastIndexOf( "/" ) + 1 );
@@ -348,9 +348,9 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 			ooxml.append( "<" + xmlElement + "s>" );
 			ooxml.append( "\r\n" );
 		}
-		for( int i = 0; i < refs.size(); i++ )
+		for( Object ref : refs )
 		{
-			String[] s = (String[]) refs.get( i );
+			String[] s = (String[]) ref;
 			if( (s.length > EX_EXTRAINFO) && (s[EX_EXTRAINFO] != null) )
 			{   // add associated info, if any 
 				ooxml.append( "<" + xmlElement + " " + s[EX_EXTRAINFO] + " r:id=\"rId" + (shContentList.size() + 1) + "\"/>" );
@@ -442,38 +442,34 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		ct.append( "<Default Extension=\"vml\" ContentType=\"application/vnd.openxmlformats-officedocument.vmlDrawing\"/>" );
 		ct.append( "\r\n" );
 		// write ALL content lists here     
-		for( int i = 0; i < mainContentList.size(); i++ )
+		for( Object aMainContentList : mainContentList )
 		{
-			ct.append( "<Override PartName=\"" + ((String[]) mainContentList.get( i ))[0] + "\" ContentType=\"" + getContentType( ((String[]) mainContentList
-					.get( i ))[1] ) + "\"/>" );
+			ct.append( "<Override PartName=\"" + ((String[]) aMainContentList)[0] + "\" ContentType=\"" + getContentType( ((String[]) aMainContentList)[1] ) + "\"/>" );
 			ct.append( "\r\n" );
 		}
-		for( int i = 0; i < wbContentList.size(); i++ )
+		for( Object aWbContentList : wbContentList )
 		{
-			ct.append( "<Override PartName=\"" + ((String[]) wbContentList.get( i ))[0] + "\" ContentType=\"" + getContentType( ((String[]) wbContentList
-					.get( i ))[1] ) + "\"/>" );
+			ct.append( "<Override PartName=\"" + ((String[]) aWbContentList)[0] + "\" ContentType=\"" + getContentType( ((String[]) aWbContentList)[1] ) + "\"/>" );
 			ct.append( "\r\n" );
 		}
          /* printerSettings and vmlDrawing files are not included in Content_Types.xml - rather, they are handled via <Default Extension> element*/
          /* same goes for images */
-		for( int i = 0; i < sheetsContentList.size(); i++ )
+		for( Object aSheetsContentList : sheetsContentList )
 		{
-			if( !((((String[]) sheetsContentList.get( i ))[1]).equals( "printerSettings" ) ||
-					(((String[]) sheetsContentList.get( i ))[1]).equals( "vmldrawing" ) ||
-					(((String[]) sheetsContentList.get( i ))[1]).equals( "hyperlink" ) ||
-					(((String[]) sheetsContentList.get( i ))[1]).equals( "image" )) )
+			if( !((((String[]) aSheetsContentList)[1]).equals( "printerSettings" ) ||
+					(((String[]) aSheetsContentList)[1]).equals( "vmldrawing" ) ||
+					(((String[]) aSheetsContentList)[1]).equals( "hyperlink" ) ||
+					(((String[]) aSheetsContentList)[1]).equals( "image" )) )
 			{
-				ct.append( "<Override PartName=\"" + ((String[]) sheetsContentList.get( i ))[0] + "\" ContentType=\"" + getContentType( ((String[]) sheetsContentList
-						.get( i ))[1] ) + "\"/>" );
+				ct.append( "<Override PartName=\"" + ((String[]) aSheetsContentList)[0] + "\" ContentType=\"" + getContentType( ((String[]) aSheetsContentList)[1] ) + "\"/>" );
 				ct.append( "\r\n" );
 			}
 		}
-		for( int i = 0; i < drContentList.size(); i++ )
+		for( Object aDrContentList : drContentList )
 		{
-			if( !((String[]) drContentList.get( i ))[1].equals( "image" ) )  /* image files not included in Content_Type - rather, they are handled via <Default Extension> element*/
+			if( !((String[]) aDrContentList)[1].equals( "image" ) )  /* image files not included in Content_Type - rather, they are handled via <Default Extension> element*/
 			{
-				ct.append( "<Override PartName=\"" + ((String[]) drContentList.get( i ))[0] + "\" ContentType=\"" + getContentType( ((String[]) drContentList
-						.get( i ))[1] ) + "\"/>" );
+				ct.append( "<Override PartName=\"" + ((String[]) aDrContentList)[0] + "\" ContentType=\"" + getContentType( ((String[]) aDrContentList)[1] ) + "\"/>" );
 			}
 			ct.append( "\r\n" );
 		}
@@ -640,9 +636,9 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		{
 			stylesooxml.append( "<numFmts count=\"" + numfmts.size() + "\">" );
 			stylesooxml.append( "\r\n" );
-			for( int i = 0; i < numfmts.size(); i++ )
+			for( Object numfmt : numfmts )
 			{
-				stylesooxml.append( (String) numfmts.get( i ) );
+				stylesooxml.append( (String) numfmt );
 				stylesooxml.append( "\r\n" );
 			}
 			stylesooxml.append( "</numFmts>" );
@@ -652,9 +648,9 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		// fonts element
 		stylesooxml.append( "<fonts count=\"" + fonts.size() + "\">" );
 		stylesooxml.append( "\r\n" );
-		for( int i = 0; i < fonts.size(); i++ )
+		for( Object font : fonts )
 		{
-			stylesooxml.append( (String) fonts.get( i ) );
+			stylesooxml.append( (String) font );
 			stylesooxml.append( "\r\n" );
 		}
 		stylesooxml.append( "</fonts>" );
@@ -663,9 +659,9 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		// fill patterns element - always has two defaults
 		stylesooxml.append( "<fills count=\"" + fills.size() + "\">" );
 		stylesooxml.append( "\r\n" );
-		for( int i = 0; i < fills.size(); i++ )
+		for( Object fill : fills )
 		{
-			stylesooxml.append( (String) fills.get( i ) );
+			stylesooxml.append( (String) fill );
 			stylesooxml.append( "\r\n" );
 		}
 		stylesooxml.append( "</fills>" );
@@ -674,9 +670,9 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		//borders element - has one default
 		stylesooxml.append( "<borders count=\"" + borders.size() + "\">" );
 		stylesooxml.append( "\r\n" );
-		for( int i = 0; i < borders.size(); i++ )
+		for( Object border : borders )
 		{
-			stylesooxml.append( (String) borders.get( i ) );
+			stylesooxml.append( (String) border );
 			stylesooxml.append( "\r\n" );
 		}
 		stylesooxml.append( "</borders>" );
@@ -685,12 +681,12 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		// cellXfs
 		stylesooxml.append( "<cellXfs count=\"" + cellxfs.size() + "\">" );
 		stylesooxml.append( "\r\n" );
-		for( int i = 0; i < cellxfs.size(); i++ )
+		for( Object cellxf : cellxfs )
 		{
 			// xfId= 0 based index of an xf record contained in cellStyleXfs corresponding to the
 			// cell style applied to the cell (only for celLXfs, not cellStyleXfs)
 			stylesooxml.append( "<xf " );
-			int[] refs = (int[]) cellxfs.get( i );
+			int[] refs = (int[]) cellxf;
 			// all id refs are 0-based
 			int ftId = refs[0];    // font ref
 			int fId = refs[1];     // fill ref
@@ -801,9 +797,9 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 			if( dxfs.size() > 0 )
 			{
 				stylesooxml.append( "<dxfs count=\"" + dxfs.size() + "\">" );
-				for( int i = 0; i < dxfs.size(); i++ )
+				for( Object dxf : dxfs )
 				{
-					stylesooxml.append( ((Dxf) dxfs.get( i )).getOOXML() );
+					stylesooxml.append( ((Dxf) dxf).getOOXML() );
 				}
 				stylesooxml.append( "</dxfs>" );
 			}
@@ -1032,17 +1028,17 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		{
 			writer.write( "<definedNames>" );
 			writer.write( "\r\n" );
-			for( int i = 0; i < names.length; i++ )
+			for( Name name : names )
 			{
-				String s = stripNonAsciiRetainQuote( names[i].getExpressionString().substring( 1 ) ).toString(); //avoid "="
+				String s = stripNonAsciiRetainQuote( name.getExpressionString().substring( 1 ) ).toString(); //avoid "="
 				if( (s != null) && (s.length() != 0) && !s.startsWith( "#REF!" ) )
 				{
-					if( !names[i].isBuiltIn() )
+					if( !name.isBuiltIn() )
 					{
-						writer.write( ("<definedName name=\"" + stripNonAscii( names[i].toString() ) + "\"") );
-						if( names[i].getItab() > 0 )
+						writer.write( ("<definedName name=\"" + stripNonAscii( name.toString() ) + "\"") );
+						if( name.getItab() > 0 )
 						{
-							writer.write( (" localSheetId=\"" + (names[i].getItab() - 1) + "\">") );
+							writer.write( (" localSheetId=\"" + (name.getItab() - 1) + "\">") );
 						}
 						else
 						{
@@ -1052,10 +1048,10 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 					else
 					{
 						//if (names[i].getBuiltInType()==Name.PRINT_TITLES) { // must set localsheetid
-						writer.write( ("<definedName name=\"" + builtInNames[names[i].getBuiltInType()] + "\"") );
-						if( names[i].getItab() > 0 )
+						writer.write( ("<definedName name=\"" + builtInNames[name.getBuiltInType()] + "\"") );
+						if( name.getItab() > 0 )
 						{
-							writer.write( (" localSheetId=\"" + (names[i].getItab() - 1) + "\">") );
+							writer.write( (" localSheetId=\"" + (name.getItab() - 1) + "\">") );
 						}
 						else
 						{
@@ -1328,9 +1324,8 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		// SHEETxx.XML
 		this.writeSheetPrefix( sheet, bk, id );
 		RowHandle[] rows = sheet.getRows();
-		for( int xd = 0; xd < rows.length; xd++ )
+		for( RowHandle row : rows )
 		{
-			RowHandle row = rows[xd];
 			try
 			{ // note: row #, col #'s are 1-based, sst and style index are 0-based
 				this.writeRow( row, hyperlinks );
@@ -1385,9 +1380,9 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 			List condfmts = sheet.getMysheet().getConditionalFormats();
 			int[] priority = new int[1];
 			priority[0] = 1;
-			for( int i = 0; i < condfmts.size(); i++ )
+			for( Object condfmt : condfmts )
 			{
-				String cfmt = ((Condfmt) condfmts.get( i )).getOOXML( bk, priority );
+				String cfmt = ((Condfmt) condfmt).getOOXML( bk, priority );
 				writer.write( cfmt );
 				writer.write( "\r\n" );
 			}
@@ -1402,9 +1397,9 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		{
 			writer.write( "<hyperlinks>" );
 			writer.write( "\r\n" );
-			for( int i = 0; i < hyperlinks.size(); i++ )
+			for( Object hyperlink : hyperlinks )
 			{
-				String[] s = (String[]) hyperlinks.get( i );
+				String[] s = (String[]) hyperlink;
 				if( !s[2].equals( "" ) ) // has a description
 				{
 					writer.write( "<hyperlink ref=\"" + s[0] + "\" r:id=\"rId" + (shContentList.size() + 1) + "\" display=\"" + s[2] + "\"/>" );
@@ -1480,18 +1475,18 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		{
 			StringBuffer mc = new StringBuffer();
 			int cnt = 0;
-			for( int i = 0; i < mcs.size(); i++ )
+			for( Object mc1 : mcs )
 			{
-				CellRange[] cr = ((Mergedcells) mcs.get( i )).getMergedRanges();
+				CellRange[] cr = ((Mergedcells) mc1).getMergedRanges();
 				if( cr != null )
 				{
-					for( int j = 0; j < cr.length; j++ )
+					for( CellRange aCr : cr )
 					{
-						String rng = cr[j].getRange();
+						String rng = aCr.getRange();
 						if( rng != null )
 						{
 							int z = rng.indexOf( "!" ); // strip sheetname
-							mc.append( "<mergeCell ref=\"" + cr[j].getRange().substring( z + 1 ) + "\"/>" );
+							mc.append( "<mergeCell ref=\"" + aCr.getRange().substring( z + 1 ) + "\"/>" );
 							mc.append( "\r\n" );
 							cnt++;
 						}
@@ -1560,15 +1555,15 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		// Cell element <c
 		CellHandle ch[] = row.getCells();
 		// iterate cells and output xml
-		for( int j = 0; j < ch.length; j++ )
+		for( CellHandle aCh : ch )
 		{
-			int styleId = ch[j].getCell().getIxfe();
-			int dataType = ch[j].getCellType();
-			if( ch[j].hasHyperlink() )
+			int styleId = aCh.getCell().getIxfe();
+			int dataType = aCh.getCellType();
+			if( aCh.hasHyperlink() )
 			{   // save; hyperlinks go after sheetData
-				hyperlinks.add( new String[]{ ch[j].getCellAddress(), ch[j].getURL(), ch[j].getURLDescription() } );
+				hyperlinks.add( new String[]{ aCh.getCellAddress(), aCh.getURL(), aCh.getURLDescription() } );
 			}
-			writer.write( ("<c r=\"" + ch[j].getCellAddress() + "\"") );
+			writer.write( ("<c r=\"" + aCh.getCellAddress() + "\"") );
 			if( styleId > 0 )
 			{
 				writer.write( (" s=\"" + styleId + "\"") );
@@ -1576,10 +1571,10 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 			switch( dataType )
 			{
 				case CellHandle.TYPE_STRING:
-					String s = ch[j].getStringVal();
+					String s = aCh.getStringVal();
 					boolean isErrVal = false;
 					if( (s.indexOf( "#" ) == 0) )
-					{   // 20090521 KSC: must test if it's an error string value                           
+					{   // 20090521 KSC: must test if it's an error string value
 						isErrVal = (Collections.binarySearch( Arrays.asList( new String[]{
 								"#DIV/0!", "#N/A", "#NAME?", "#NULL!", "#NUM!", "#REF!", "#VALUE!"
 						} ), s.trim() ) > -1);
@@ -1588,11 +1583,11 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 					{
 						writer.write( " t=\"s\">" );
 						// 20090520 KSC: can't use only string value as intra-cell formatting is possible zip.write("<v>" + ssts.indexOf(stripNonAscii(ch[j].getStringVal())) + "</v>");
-						int v = ((Labelsst) ch[j].getCell()).isst; // use isst instead of a lookup -- MUCHMUCHMUCH faster!
+						int v = ((Labelsst) aCh.getCell()).isst; // use isst instead of a lookup -- MUCHMUCHMUCH faster!
 						writer.write( ("<v>" + v + "</v>") );
 					}
 					else
-					{// it's an error value, must have type of "e" 
+					{// it's an error value, must have type of "e"
 						writer.write( " t=\"e\">" );
 						writer.write( ("<v>" + s + "</v>") );
 					}
@@ -1600,13 +1595,13 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 				case CellHandle.TYPE_DOUBLE:
 				case CellHandle.TYPE_FP:
 				case CellHandle.TYPE_INT:
-					writer.write( (" t=\"n\"><v>" + ch[j].getVal() + "</v>") );
+					writer.write( (" t=\"n\"><v>" + aCh.getVal() + "</v>") );
 					break;
 				case CellHandle.TYPE_FORMULA:
 					FormulaHandle fh;
 					try
 					{
-						fh = ch[j].getFormulaHandle();
+						fh = aCh.getFormulaHandle();
 						writer.write( fh.getOOXML() );
 					}
 					catch( FormulaNotFoundException e )
@@ -1615,7 +1610,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 					}
 					break;
 				case CellHandle.TYPE_BOOLEAN:
-					writer.write( (" t=\"b\"><v>" + ch[j].getIntVal() + "</v>") );
+					writer.write( (" t=\"b\"><v>" + aCh.getIntVal() + "</v>") );
 					break;
 				case CellHandle.TYPE_BLANK:
 					writer.write( ">" );
@@ -1725,10 +1720,10 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		if( imz.length > 0 )
 		{
 			// For each image, create a Drawing reference in sheet xml + write imageOOXML to drawingX.xml
-			for( int i = 0; i < imz.length; i++ )
+			for( ImageHandle anImz : imz )
 			{
 				// obtain image OOXML + write image file to ZIP
-				drawing.append( getImageOOXML( imz[i] ) );
+				drawing.append( getImageOOXML( anImz ) );
 				drawing.append( "\r\n" );
 			}
 		}
@@ -1738,39 +1733,39 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		if( charts.size() > 0 )
 		{
 			// for each chart, create a chart.xml + trap references for drawingX.xml.rels 
-			for( int i = 0; i < charts.size(); i++ )
+			for( Object chart : charts )
 			{
 				try
 				{   // obtain image OOXML + write image file to ZIP
-					Chart c = (Chart) charts.get( i );
+					Chart c = (Chart) chart;
 					drawing.append( getChartDrawingOOXML( new ChartHandle( c, bk ) ) );
 					drawing.append( "\r\n" );
 					if( c instanceof OOXMLChart )
 					{
-						ArrayList chartEmbeds = ((OOXMLChart) charts.get( i )).getChartEmbeds();
+						ArrayList chartEmbeds = ((OOXMLChart) chart).getChartEmbeds();
 						if( chartEmbeds != null )
 						{
 							int origDrawingId = drawingId;            // id for THIS CURRENT DRAWING ML describing this chart(s), etc.
 							ArrayList chContentList = new ArrayList();
-							for( int j = 0; j < chartEmbeds.size(); j++ )
+							for( Object chartEmbed : chartEmbeds )
 							{
 								// obtain external drawingml file(s) which define shape and write to zip
-								String[] embed = (String[]) chartEmbeds.get( j );
+								String[] embed = (String[]) chartEmbed;
 								if( embed[0].equals( "userShape" ) )
 								{
 									drawingId += (nUserShapes + 1);    // id for USER SHAPES drawingml 
-									String f = (String) embed[1];
+									String f = embed[1];
 									nUserShapes++;    // keep track of increment 
 									writeExOOXMLFile( new String[]{ embed[0], drawingDir + "/", f }, chContentList );
 								}
 								else if( embed[0].equals( "image" ) )
 								{
-									String f = (String) embed[1];
+									String f = embed[1];
 									writeExOOXMLFile( new String[]{ embed[0], mediaDir + "/", f }, chContentList );
 								}
 								else if( embed[0].equals( "themeOverride" ) )
 								{
-									String f = (String) embed[1];
+									String f = embed[1];
 									writeExOOXMLFile( new String[]{ embed[0], themeDir + "/", f }, chContentList );
 								}
 							}
@@ -1906,18 +1901,18 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		comments.append( "<comments xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\">\r\n<authors>" );
 		// run thru 1x to get authors
 		ArrayList authors = new ArrayList();
-		for( int i = 0; i < nh.length; i++ )
+		for( CommentHandle aNh1 : nh )
 		{
-			if( !authors.contains( nh[i].getAuthor() ) )
+			if( !authors.contains( aNh1.getAuthor() ) )
 			{
-				comments.append( "\r\n<author>" + OOXMLAdapter.stripNonAscii( nh[i].getAuthor() ) + "</author>" );
-				authors.add( nh[i].getAuthor() );
+				comments.append( "\r\n<author>" + OOXMLAdapter.stripNonAscii( aNh1.getAuthor() ) + "</author>" );
+				authors.add( aNh1.getAuthor() );
 			}
 		}
 		comments.append( "\r\n</authors>\r\n<commentList>" );
-		for( int i = 0; i < nh.length; i++ )
+		for( CommentHandle aNh : nh )
 		{
-			comments.append( "\r\n" + nh[i].getOOXML( authors.indexOf( nh[i].getAuthor() ) ) );
+			comments.append( "\r\n" + aNh.getOOXML( authors.indexOf( aNh.getAuthor() ) ) );
 		}
 		comments.append( "\r\n</commentList>\r\n</comments>" );
 		addDeferredFile( comments, "xl/comments" + (++commentsId) + ".xml" );
@@ -1976,13 +1971,13 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 					            "<v:path gradientshapeok=\"t\" o:connecttype=\"rect\"/>" +
 					            "</v:shapetype>" );
 
-			for( int i = 0; i < nh.length; i++ )
+			for( CommentHandle aNh : nh )
 			{
-				boolean hidden = nh[i].getIsHidden();
-				int row = nh[i].getRowNum();
-				int col = nh[i].getColNum();
-				short[] bounds = nh[i].getTextBoxBounds();
-				int spid = nh[i].getInternalNoteRec().getSPID();
+				boolean hidden = aNh.getIsHidden();
+				int row = aNh.getRowNum();
+				int col = aNh.getColNum();
+				short[] bounds = aNh.getTextBoxBounds();
+				int spid = aNh.getInternalNoteRec().getSPID();
 				vml.append( "<v:shape id=\"_x0000_s" + spid + "\"" +  /* id of text box = id of mso */
 						            " type=\"#_x0000_t202\"" +                           /* type of text box */
 						            " style=\"position:absolute;" +
@@ -2036,9 +2031,9 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 			if( embeds != null )
 			{
 				ArrayList vmlContentList = new ArrayList();
-				for( int i = 0; i < embeds.length; i++ )
+				for( String embed : embeds )
 				{
-					String pp = embeds[i].trim();   // file on disk or saved filename
+					String pp = embed.trim();   // file on disk or saved filename
 					String typ = pp.substring( 0, pp.indexOf( "/" ) );
 					pp = pp.substring( pp.indexOf( "/" ) + 1 );
 					int z = pp.lastIndexOf( "/" ) + 1;

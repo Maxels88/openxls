@@ -220,8 +220,8 @@ public class DefRPr implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( ">" );

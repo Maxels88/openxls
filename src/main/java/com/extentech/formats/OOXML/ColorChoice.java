@@ -91,35 +91,35 @@ public class ColorChoice implements OOXMLElement
 					if( tnm.equals( "schemeClr" ) )
 					{
 						lastTag.push( tnm );
-						s = (SchemeClr) SchemeClr.parseOOXML( xpp, lastTag, bk );
+						s = SchemeClr.parseOOXML( xpp, lastTag, bk );
 						lastTag.pop();
 						break;
 					}
 					if( tnm.equals( "srgbClr" ) )
 					{
 						lastTag.push( tnm );
-						srgb = (SrgbClr) SrgbClr.parseOOXML( xpp, lastTag );
+						srgb = SrgbClr.parseOOXML( xpp, lastTag );
 						lastTag.pop();
 						break;
 					}
 					if( tnm.equals( "sysClr" ) )
 					{
 						lastTag.push( tnm );
-						sys = (SysClr) SysClr.parseOOXML( xpp, lastTag );
+						sys = SysClr.parseOOXML( xpp, lastTag );
 						lastTag.pop();
 						break;
 					}
 					if( tnm.equals( "scrgbClr" ) )
 					{
 						lastTag.push( tnm );
-						scrgb = (ScrgbClr) ScrgbClr.parseOOXML( xpp, lastTag );
+						scrgb = ScrgbClr.parseOOXML( xpp, lastTag );
 						lastTag.pop();
 						break;
 					}
 					if( tnm.equals( "prstClr" ) )
 					{
 						lastTag.push( tnm );
-						p = (PrstClr) PrstClr.parseOOXML( xpp, lastTag );
+						p = PrstClr.parseOOXML( xpp, lastTag );
 						lastTag.pop();
 						break;
 					}

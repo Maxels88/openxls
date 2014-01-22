@@ -113,9 +113,9 @@ public class Frame extends GenericChartObject implements ChartObject
 	 */
 	public void setBgColor( int bg )
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b instanceof AreaFormat )
 			{
 				((AreaFormat) b).seticvFore( bg );

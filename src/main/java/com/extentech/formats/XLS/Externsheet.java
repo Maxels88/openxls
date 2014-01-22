@@ -467,7 +467,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 
 		this.cXTI++;
 		this.update();
-		return (short) this.cXTI;
+		return this.cXTI;
 	}
 
 	/**

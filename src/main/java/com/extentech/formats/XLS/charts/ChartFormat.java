@@ -144,9 +144,9 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	{
 		if( chartType != ChartConstants.BUBBLECHART )
 		{
-			for( int i = 0; i < chartArr.size(); i++ )
+			for( XLSRecord aChartArr : chartArr )
 			{
-				BiffRec b = (BiffRec) chartArr.get( i );
+				BiffRec b = aChartArr;
 				if( b.getOpcode() == THREED )
 				{
 					return true;
@@ -234,9 +234,9 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 */
 	public String getThreeDXML()
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b.getOpcode() == THREED )
 			{
 				return ((ThreeD) b).getOptionsXML();
@@ -351,10 +351,10 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 		{ // add ThreeD rec
 			for( int i = 0; i < this.chartArr.size(); i++ )
 			{
-				BiffRec b = (BiffRec) this.chartArr.get( i );
+				BiffRec b = this.chartArr.get( i );
 				if( b.getOpcode() == CHARTFORMATLINK )
 				{
-					if( ((i + 1) < chartArr.size()) && (((BiffRec) this.chartArr.get( i + 1 )).getOpcode() == SERIESLIST) )
+					if( ((i + 1) < chartArr.size()) && (this.chartArr.get( i + 1 ).getOpcode() == SERIESLIST) )
 					{
 						i++;    // rare that SeriesList record appears
 					}
@@ -688,7 +688,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 		// goes After DropBar or legend or 3d (or CFL)
 		for( int i = chartArr.size() - 1; i >= 1; i-- )
 		{
-			BiffRec br = (BiffRec) chartArr.get( i );
+			BiffRec br = chartArr.get( i );
 			short op = br.getOpcode();
 			if( (op == DROPBAR) || (op == LEGEND) || (op == THREED) || (op == CHARTFORMATLINK) )
 			{
@@ -744,7 +744,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 		{
 			while( i < chartArr.size() )
 			{
-				if( ((BiffRec) chartArr.get( i )).getOpcode() == CHARTLINE )
+				if( chartArr.get( i ).getOpcode() == CHARTLINE )
 				{
 					ChartLine cl = (ChartLine) chartArr.get( i );
 					if( cl.getLineType() == id )
@@ -790,7 +790,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 			// add dropbar records to subarray
 			for( int i = chartArr.size() - 1; i >= 0; i-- )
 			{
-				BiffRec br = (BiffRec) chartArr.get( i );
+				BiffRec br = chartArr.get( i );
 				short op = br.getOpcode();
 				if( (op == SERIESLIST) || (op == LEGEND) || (op == THREED) || (op == CHARTFORMATLINK) )
 				{
@@ -964,7 +964,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 		StringBuffer sb = new StringBuffer();
 		for( int i = 0; i < chartArr.size(); i++ )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = chartArr.get( i );
 			if( b instanceof ChartObject )
 			{
 				ChartObject co = (ChartObject) b;
@@ -980,7 +980,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 					}
 					for( int z = 0; z < df.chartArr.size(); z++ )
 					{
-						b = (BiffRec) df.chartArr.get( z );
+						b = df.chartArr.get( z );
 						if( b instanceof PieFormat )
 						{
 							sb.append( ((PieFormat) b).getOptionsXML() );

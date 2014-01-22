@@ -68,14 +68,14 @@ public class EffectPropsGroup implements OOXMLElement
 					if( tnm.equals( "effectDag" ) )
 					{
 						lastTag.push( tnm );
-						ed = (EffectDag) EffectDag.parseOOXML( xpp, lastTag );
+						ed = EffectDag.parseOOXML( xpp, lastTag );
 						lastTag.pop();
 						break;
 					}
 					if( tnm.equals( "effectLst" ) )
 					{
 						lastTag.push( tnm );
-						el = (EffectLst) EffectLst.parseOOXML( xpp, lastTag );
+						el = EffectLst.parseOOXML( xpp, lastTag );
 						lastTag.pop();
 						break;
 					}
@@ -196,8 +196,8 @@ class EffectDag implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( ">" );

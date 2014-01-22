@@ -47,7 +47,7 @@ public class Calculator
 		{
 			if( o instanceof Boolean )        // TODO: 1.5 use Boolean.compareTo
 			{
-				compare = ((Boolean) o).toString().compareTo( Boolean.valueOf( c.getBooleanVal() ).toString() );
+				compare = o.toString().compareTo( Boolean.valueOf( c.getBooleanVal() ).toString() );
 			}
 			else if( o instanceof String )
 			{
@@ -111,7 +111,7 @@ public class Calculator
 		{
 			if( val instanceof Boolean )    // TODO: 1.5 use Boolean.compareTo
 			{
-				compare = (Boolean.valueOf( compareval ).toString()).compareTo( ((Boolean) val).toString() );
+				compare = (Boolean.valueOf( compareval ).toString()).compareTo( val.toString() );
 			}
 			else if( val instanceof String )
 			{

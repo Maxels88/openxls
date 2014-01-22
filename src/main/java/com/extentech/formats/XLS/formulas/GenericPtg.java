@@ -285,9 +285,9 @@ public abstract class GenericPtg implements Ptg, Cloneable
 			}
 			else if( this.getIsControl() )
 			{
-				for( int x = 0; x < numvars; x++ )
+				for( Ptg var : vars )
 				{
-					out.append( vars[x].getTextString() );
+					out.append( var.getTextString() );
 				}
 			}
 			else
@@ -571,7 +571,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 			}
 			if( pthings[t] instanceof PtgArray )
 			{
-				obar[t] = ((PtgArray) pthings[t]).getComponents();    // get all items in array as Ptgs
+				obar[t] = pthings[t].getComponents();    // get all items in array as Ptgs
 				Object v = null;
 				try
 				{
@@ -602,7 +602,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 				}
 				else if( pval instanceof Name )
 				{    // then get it's components ...
-					obar[t] = ((PtgName) pthings[t]).getComponents();
+					obar[t] = pthings[t].getComponents();
 					Object v = null;
 					try
 					{
@@ -624,11 +624,11 @@ public abstract class GenericPtg implements Ptg, Cloneable
 					{
 						if( pval instanceof CalculationException )
 						{
-							obar[t] = ((CalculationException) pval).toString();
+							obar[t] = pval.toString();
 						}
 						else
 						{
-							obar[t] = (String) pval;
+							obar[t] = pval;
 						}
 					}
 				}
@@ -666,7 +666,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 			}
 			else if( o instanceof Integer )
 			{
-				returnDbl[i] = (double) (Integer) o;
+				returnDbl[i] = (double) o;
 			}
 			else if( o instanceof Boolean )
 			{    // Excel converts booleans to numbers in calculations 20090129 KSC
@@ -732,7 +732,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 		}
 		else if( o instanceof Integer )
 		{
-			ret = (double) (Integer) o;
+			ret = (double) o;
 		}
 		else if( o instanceof Boolean )
 		{    // Excel converts booleans to numbers in calculations 20090129 KSC

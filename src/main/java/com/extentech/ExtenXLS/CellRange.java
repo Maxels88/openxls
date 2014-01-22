@@ -211,11 +211,11 @@ public class CellRange implements Serializable
 
 	public void clearFormats()
 	{
-		for( int idx = 0; idx < cells.length; idx++ )
+		for( CellHandle cell : cells )
 		{
-			if( cells[idx] != null )
+			if( cell != null )
 			{
-				cells[idx].clearFormats();
+				cell.clearFormats();
 			}
 		}
 	}
@@ -225,11 +225,11 @@ public class CellRange implements Serializable
 	 */
 	public void clearContents()
 	{
-		for( int idx = 0; idx < cells.length; idx++ )
+		for( CellHandle cell : cells )
 		{
-			if( cells[idx] != null )
+			if( cell != null )
 			{
-				cells[idx].clearContents();
+				cell.clearContents();
 			}
 		}
 	}
@@ -240,11 +240,11 @@ public class CellRange implements Serializable
 	 */
 	public void clear()
 	{
-		for( int idx = 0; idx < cells.length; idx++ )
+		for( CellHandle cell : cells )
 		{
-			if( cells[idx] != null )
+			if( cell != null )
 			{
-				cells[idx].clear();
+				cell.clear();
 			}
 		}
 	}
@@ -256,11 +256,11 @@ public class CellRange implements Serializable
 	 */
 	public void removeCells()
 	{
-		for( int idx = 0; idx < cells.length; idx++ )
+		for( CellHandle cell : cells )
 		{
-			if( cells[idx] != null )
+			if( cell != null )
 			{
-				cells[idx].remove( true );
+				cell.remove( true );
 			}
 		}
 	}
@@ -273,10 +273,10 @@ public class CellRange implements Serializable
 	public void unMergeCells() throws Exception
 	{
 		BiffRec[] mycells = this.getCellRecs();
-		for( int t = 0; t < mycells.length; t++ )
+		for( BiffRec mycell : mycells )
 		{
-			mycells[t].setMergeRange( null ); // unset the range of merged cells
-			mycells[t].getXfRec().setMerged( false );
+			mycell.setMergeRange( null ); // unset the range of merged cells
+			mycell.getXfRec().setMerged( false );
 		}
 		Mergedcells mc = this.getSheet().getSheet().getMergedCellsRec();
 		if( mc != null )
@@ -295,9 +295,9 @@ public class CellRange implements Serializable
 	public void setFormatID( int fmtID ) throws Exception
 	{
 		BiffRec[] mycells = this.getCellRecs();
-		for( int t = 0; t < mycells.length; t++ )
+		for( BiffRec mycell : mycells )
 		{
-			mycells[t].setXFRecord( fmtID );
+			mycell.setXFRecord( fmtID );
 		}
 	}
 
@@ -309,9 +309,9 @@ public class CellRange implements Serializable
 	public void setURL( String url ) throws Exception
 	{
 		BiffRec[] mycells = this.getCellRecs();
-		for( int t = 0; t < mycells.length; t++ )
+		for( BiffRec mycell : mycells )
 		{
-			new CellHandle( mycells[t], this.mybook ).setURL( url );
+			new CellHandle( mycell, this.mybook ).setURL( url );
 		}
 	}
 
@@ -383,15 +383,15 @@ public class CellRange implements Serializable
 	private void mergeCellsKeepFollowingCells()
 	{
 		BiffRec[] mycells = this.getCellRecs();
-		for( int t = 0; t < mycells.length; t++ )
+		for( BiffRec mycell : mycells )
 		{
-			mycells[t].setMergeRange( this ); // set the range of merged cells
-			Xf r = mycells[t].getXfRec();
+			mycell.setMergeRange( this ); // set the range of merged cells
+			Xf r = mycell.getXfRec();
 			if( r == null )
 			{
 				fmtr = new FormatHandle( this.getWorkBook() );
 				fmtr.addCellRange( this );
-				r = mycells[t].getXfRec();
+				r = mycell.getXfRec();
 			}
 			r.setMerged( true );
 		}
@@ -1073,9 +1073,8 @@ public class CellRange implements Serializable
 		{
 		}
 		ArrayList<ArrayList> outputCols = new ArrayList<ArrayList>();
-		for( int i = 0; i < sortRow.size(); i++ )
+		for( CellHandle cell : sortRow )
 		{
-			CellHandle cell = sortRow.get( i );
 			ArrayList cells = null;
 			try
 			{
@@ -1091,9 +1090,9 @@ public class CellRange implements Serializable
 		for( int i = coords[1]; i <= coords[3]; i++ )
 		{
 			ArrayList cells = outputCols.get( i - coords[1] );
-			for( int x = 0; x < cells.size(); x++ )
+			for( Object cell1 : cells )
 			{
-				CellHandle cell = (CellHandle) cells.get( x );
+				CellHandle cell = (CellHandle) cell1;
 				Boundsheet bs = this.getSheet().getBoundsheet();
 				cell.getCell().setCol( (short) i );
 				bs.addCell( (CellRec) cell.getCell() );
@@ -1186,9 +1185,9 @@ public class CellRange implements Serializable
 			e1.printStackTrace();
 		}
 		ArrayList<ArrayList<CellHandle>> outputRows = new ArrayList<ArrayList<CellHandle>>();
-		for( int i = 0; i < sortCol.size(); i++ )
+		for( Object aSortCol : sortCol )
 		{
-			CellHandle cell = (CellHandle) sortCol.get( i );
+			CellHandle cell = (CellHandle) aSortCol;
 			ArrayList<CellHandle> cells = null;
 			try
 			{
@@ -1204,9 +1203,9 @@ public class CellRange implements Serializable
 		for( int i = coords[0]; i <= coords[2]; i++ )
 		{
 			ArrayList cells = outputRows.get( i - coords[0] );
-			for( int x = 0; x < cells.size(); x++ )
+			for( Object cell1 : cells )
 			{
-				CellHandle cell = (CellHandle) cells.get( x );
+				CellHandle cell = (CellHandle) cell1;
 				Boundsheet bs = this.getSheet().getBoundsheet();
 				cell.getCell().setRowNumber( i - 1 );
 				bs.addCell( (CellRec) cell.getCell() );
@@ -1244,9 +1243,9 @@ public class CellRange implements Serializable
 		CellHandle[] cx = this.getCells();
 		sb.append( "\r\n" );
 		// append cellxml
-		for( int t = 0; t < cx.length; t++ )
+		for( CellHandle aCx : cx )
 		{
-			sb.append( cx[t].getXML() );
+			sb.append( aCx.getXML() );
 			sb.append( "\r\n" );
 		}
 		sb.append( xmlResponsePost );
@@ -1311,9 +1310,9 @@ public class CellRange implements Serializable
 	{
 		this.setWorkBook( newcells[0].getWorkBook() );
 		this.sheet = newcells[0].getWorkSheetHandle();
-		for( int x = 0; x < newcells.length; x++ )
+		for( CellHandle newcell : newcells )
 		{
-			this.addCellToRange( newcells[x] );
+			this.addCellToRange( newcell );
 		}
 		this.init();
 	}
@@ -1333,9 +1332,9 @@ public class CellRange implements Serializable
 		this.createBlanks = createblanks;
 		this.setWorkBook( newcells[0].getWorkBook() );
 		this.sheet = newcells[0].getWorkSheetHandle();
-		for( int x = 0; x < newcells.length; x++ )
+		for( CellHandle newcell : newcells )
 		{
-			this.addCellToRange( newcells[x] );
+			this.addCellToRange( newcell );
 		}
 		this.init();
 	}
@@ -1807,29 +1806,29 @@ public class CellRange implements Serializable
 	public void setBorder( int width, int linestyle, java.awt.Color colr )
 	{
 		CellHandle[] ch = getCells();
-		for( int t = 0; t < ch.length; t++ )
+		for( CellHandle aCh : ch )
 		{
-			int[] coords = getEdgePositions( ch[t], width );
+			int[] coords = getEdgePositions( aCh, width );
 			// create Excel border -- top, left, bottom, right
 			if( coords[0] > 0 )
 			{
-				ch[t].setTopBorderLineStyle( (short) linestyle );
-				ch[t].setBorderTopColor( colr );
+				aCh.setTopBorderLineStyle( (short) linestyle );
+				aCh.setBorderTopColor( colr );
 			}
 			if( coords[1] > 0 )
 			{
-				ch[t].setLeftBorderLineStyle( (short) linestyle );
-				ch[t].setBorderLeftColor( colr );
+				aCh.setLeftBorderLineStyle( (short) linestyle );
+				aCh.setBorderLeftColor( colr );
 			}
 			if( coords[2] > 0 )
 			{
-				ch[t].setBottomBorderLineStyle( (short) linestyle );
-				ch[t].setBorderBottomColor( colr );
+				aCh.setBottomBorderLineStyle( (short) linestyle );
+				aCh.setBorderBottomColor( colr );
 			}
 			if( coords[3] > 0 )
 			{
-				ch[t].setRightBorderLineStyle( (short) linestyle );
-				ch[t].setBorderRightColor( colr );
+				aCh.setRightBorderLineStyle( (short) linestyle );
+				aCh.setBorderRightColor( colr );
 			}
 		}
 	}
@@ -1854,9 +1853,8 @@ public class CellRange implements Serializable
 			firstcellcol = cells[0].getColNum();
 			lastcellrow = cells[0].getRowNum() + 1;
 			lastcellcol = cells[0].getColNum();
-			for( int t = 0; t < cells.length; t++ )
+			for( CellHandle cx : cells )
 			{
-				CellHandle cx = cells[t];
 				// 20090901 KSC: apparently can be null
 				if( cx != null )
 				{
@@ -2187,11 +2185,11 @@ public class CellRange implements Serializable
 			JSONArray rangeArray = new JSONArray();
 			// should this possibly be full
 			CellHandle[] cells = this.getCells();
-			for( int j = 0; j < cells.length; j++ )
+			for( CellHandle cell : cells )
 			{
 				JSONObject result = new JSONObject();
-				String addy = cells[j].getCellAddress();
-				String val = cells[j].getVal().toString();
+				String addy = cell.getCellAddress();
+				String val = cell.getVal().toString();
 				result.put( JSON_LOCATION, addy );
 				result.put( JSON_CELL_VALUE, val );
 				rangeArray.put( result );
@@ -2218,9 +2216,8 @@ public class CellRange implements Serializable
 		{
 			theRange.put( JSON_RANGE, getRange() );
 			CellHandle[] chandles = getCells();
-			for( int i = 0; i < chandles.length; i++ )
+			for( CellHandle thisCell : chandles )
 			{
-				CellHandle thisCell = chandles[i];
 				JSONObject result = new JSONObject();
 
 				result.put( JSON_CELL, thisCell.getJSONObject() );
@@ -2254,11 +2251,11 @@ public class CellRange implements Serializable
 		{
 			throw new RowNotFoundException( "Error getting internal coordinates for CellRange" + e );
 		}
-		for( int i = 0; i < cells.length; i++ )
+		for( CellHandle cell : cells )
 		{
-			if( (cells[i].getColNum() >= coords[1]) && (cells[i].getColNum() <= coords[3]) )
+			if( (cell.getColNum() >= coords[1]) && (cell.getColNum() <= coords[3]) )
 			{
-				al.add( cells[i] );
+				al.add( cell );
 			}
 		}
 		return al;
@@ -2286,11 +2283,11 @@ public class CellRange implements Serializable
 		{
 			throw new ColumnNotFoundException( "Error getting internal coordinates for CellRange" + e );
 		}
-		for( int i = 0; i < cells.length; i++ )
+		for( CellHandle cell : cells )
 		{
-			if( (cells[i].getRowNum() >= coords[0]) && (cells[i].getRowNum() <= coords[2]) )
+			if( (cell.getRowNum() >= coords[0]) && (cell.getRowNum() <= coords[2]) )
 			{
-				al.add( cells[i] );
+				al.add( cell );
 			}
 		}
 		return al;
@@ -2317,9 +2314,9 @@ public class CellRange implements Serializable
 	public void removeBorder()
 	{
 		CellHandle[] ch = getCells();
-		for( int t = 0; t < ch.length; t++ )
+		for( CellHandle aCh : ch )
 		{
-			ch[t].removeBorder();
+			aCh.removeBorder();
 		}
 	}
 
@@ -2331,10 +2328,10 @@ public class CellRange implements Serializable
 	public void setInnerBorderBottom( int linestyle, java.awt.Color colr )
 	{
 		CellHandle[] ch = getCells();
-		for( int t = 0; t < ch.length; t++ )
+		for( CellHandle aCh : ch )
 		{
-			ch[t].setBottomBorderLineStyle( (short) linestyle );
-			ch[t].setBorderBottomColor( colr );
+			aCh.setBottomBorderLineStyle( (short) linestyle );
+			aCh.setBorderBottomColor( colr );
 		}
 	}
 
@@ -2346,10 +2343,10 @@ public class CellRange implements Serializable
 	public void setInnerBorderRight( int linestyle, java.awt.Color colr )
 	{
 		CellHandle[] ch = getCells();
-		for( int t = 0; t < ch.length; t++ )
+		for( CellHandle aCh : ch )
 		{
-			ch[t].setRightBorderLineStyle( (short) linestyle );
-			ch[t].setBorderRightColor( colr );
+			aCh.setRightBorderLineStyle( (short) linestyle );
+			aCh.setBorderRightColor( colr );
 		}
 	}
 
@@ -2361,10 +2358,10 @@ public class CellRange implements Serializable
 	public void setInnerBorderLeft( int linestyle, java.awt.Color colr )
 	{
 		CellHandle[] ch = getCells();
-		for( int t = 0; t < ch.length; t++ )
+		for( CellHandle aCh : ch )
 		{
-			ch[t].setLeftBorderLineStyle( (short) linestyle );
-			ch[t].setBorderLeftColor( colr );
+			aCh.setLeftBorderLineStyle( (short) linestyle );
+			aCh.setBorderLeftColor( colr );
 		}
 	}
 
@@ -2376,10 +2373,10 @@ public class CellRange implements Serializable
 	public void setInnerBorderTop( int linestyle, java.awt.Color colr )
 	{
 		CellHandle[] ch = getCells();
-		for( int t = 0; t < ch.length; t++ )
+		for( CellHandle aCh : ch )
 		{
-			ch[t].setTopBorderLineStyle( (short) linestyle );
-			ch[t].setBorderTopColor( colr );
+			aCh.setTopBorderLineStyle( (short) linestyle );
+			aCh.setBorderTopColor( colr );
 		}
 	}
 
@@ -2391,10 +2388,10 @@ public class CellRange implements Serializable
 	public void setInnerBorderSurround( int linestyle, java.awt.Color colr )
 	{
 		CellHandle[] ch = getCells();
-		for( int t = 0; t < ch.length; t++ )
+		for( CellHandle aCh : ch )
 		{
-			ch[t].setBorderColor( colr );
-			ch[t].setBorderLineStyle( (short) linestyle );
+			aCh.setBorderColor( colr );
+			aCh.setBorderLineStyle( (short) linestyle );
 		}
 	}
 

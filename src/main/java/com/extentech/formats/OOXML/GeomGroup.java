@@ -74,14 +74,14 @@ public class GeomGroup implements OOXMLElement
 					if( tnm.equals( "prstGeom" ) )
 					{
 						lastTag.push( tnm );
-						p = (PrstGeom) PrstGeom.parseOOXML( xpp, lastTag );
+						p = PrstGeom.parseOOXML( xpp, lastTag );
 						lastTag.pop();
 						break;
 					}
 					if( tnm.equals( "custGeom" ) )
 					{
 						lastTag.push( tnm );
-						c = (CustGeom) CustGeom.parseOOXML( xpp, lastTag );
+						c = CustGeom.parseOOXML( xpp, lastTag );
 						lastTag.pop();
 						break;
 					}
@@ -269,12 +269,12 @@ class CustGeom implements OOXMLElement
 					if( tnm.equals( "pathLst" ) )
 					{        // REQ
 						lastTag.push( tnm );
-						p = (PathLst) PathLst.parseOOXML( xpp, lastTag );
+						p = PathLst.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "gdLst" ) )
 					{
 						lastTag.push( tnm );
-						g = (GdLst) GdLst.parseOOXML( xpp, lastTag );
+						g = GdLst.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "avLst" ) )
 					{
@@ -284,12 +284,12 @@ class CustGeom implements OOXMLElement
 					else if( tnm.equals( "cxnLst" ) )
 					{
 						lastTag.push( tnm );
-						cx = (CxnLst) CxnLst.parseOOXML( xpp, lastTag );
+						cx = CxnLst.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "rect" ) )
 					{
 						lastTag.push( tnm );
-						r = (Rect) Rect.parseOOXML( xpp, lastTag );
+						r = Rect.parseOOXML( xpp, lastTag );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -399,7 +399,7 @@ class PathLst implements OOXMLElement
 					else if( tnm.equals( "path" ) )
 					{        // get one or more path children
 						lastTag.push( tnm );
-						p.add( (Path) Path.parseOOXML( xpp, lastTag ) );
+						p.add( Path.parseOOXML( xpp, lastTag ) );
 
 					}
 				}
@@ -432,16 +432,16 @@ class PathLst implements OOXMLElement
 		Iterator<String> ii = attrs.keySet().iterator();
 		while( ii.hasNext() )
 		{
-			String key = (String) ii.next();
-			String val = (String) attrs.get( key );
+			String key = ii.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( ">" );
 		if( path != null )
 		{
-			for( int i = 0; i < path.size(); i++ )
+			for( Path aPath : path )
 			{
-				ooxml.append( ((Path) path.get( i )).getOOXML() );
+				ooxml.append( aPath.getOOXML() );
 			}
 		}
 		ooxml.append( "</a:pathLst>" );
@@ -532,8 +532,8 @@ class Path implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );
@@ -616,9 +616,9 @@ class GdLst implements OOXMLElement
 		ooxml.append( "<a:gdLst>" );
 		if( gds != null )
 		{
-			for( int i = 0; i < gds.size(); i++ )
+			for( Gd gd : gds )
 			{
-				ooxml.append( ((Gd) gds.get( i )).getOOXML() );
+				ooxml.append( gd.getOOXML() );
 			}
 		}
 		ooxml.append( "</a:gdLst>" );
@@ -725,8 +725,8 @@ class Rect implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );
@@ -783,7 +783,7 @@ class CxnLst implements OOXMLElement
 						{
 							cxns = new ArrayList<Cxn>();
 						}
-						cxns.add( (Cxn) Cxn.parseOOXML( xpp, lastTag ) );
+						cxns.add( Cxn.parseOOXML( xpp, lastTag ) );
 
 					}
 				}
@@ -814,9 +814,9 @@ class CxnLst implements OOXMLElement
 		ooxml.append( "<a:cxnLst>" );
 		if( cxns != null )
 		{
-			for( int i = 0; i < cxns.size(); i++ )
+			for( Cxn cxn : cxns )
 			{
-				ooxml.append( ((Cxn) cxns.get( i )).getOOXML() );
+				ooxml.append( cxn.getOOXML() );
 			}
 		}
 		ooxml.append( "</a:cxnLst>" );
@@ -882,7 +882,7 @@ class Cxn implements OOXMLElement
 					else if( tnm.equals( "pos" ) )
 					{
 						lastTag.push( tnm );
-						p = (Pos) Pos.parseOOXML( xpp, lastTag );
+						p = Pos.parseOOXML( xpp, lastTag );
 
 					}
 				}
@@ -915,8 +915,8 @@ class Cxn implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( ">" );
@@ -1009,8 +1009,8 @@ class Pos implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );

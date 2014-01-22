@@ -165,9 +165,8 @@ public class LineChart extends ChartType
 			if( markers[i] > 0 )
 			{
 				String[] markerpoints = points.split( " " );
-				for( int j = 0; j < markerpoints.length; j++ )
+				for( String markerpoint : markerpoints )
 				{
-					String markerpoint = markerpoints[j];
 					String[] xy = markerpoint.split( "," );
 					double xx = Double.valueOf( xy[0] );
 					double yy = Double.valueOf( xy[1] );

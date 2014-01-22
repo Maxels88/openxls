@@ -78,7 +78,7 @@ public class OneCellAnchor implements OOXMLElement
 					if( tnm.equals( "from" ) )
 					{
 						lastTag.push( tnm );
-						f = (From) From.parseOOXML( xpp, lastTag );
+						f = From.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "ext" ) )
 					{

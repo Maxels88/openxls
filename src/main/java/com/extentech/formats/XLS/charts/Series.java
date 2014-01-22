@@ -163,9 +163,9 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	public Ai getSeriesValueAi()
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec br = (BiffRec) chartArr.get( i );
+			BiffRec br = aChartArr;
 			if( br.getOpcode() == AI )
 			{
 				Ai thisAi = (Ai) br;
@@ -217,11 +217,11 @@ public final class Series extends GenericChartObject implements ChartObject
 	{
 		int ifmt = getSeriesNumberFormat();
 		String[][] fmts = FormatConstantsImpl.getBuiltinFormats();
-		for( int x = 0; x < fmts.length; x++ )
+		for( String[] fmt1 : fmts )
 		{
-			if( ifmt == Integer.parseInt( fmts[x][1], 16 ) )
+			if( ifmt == Integer.parseInt( fmt1[1], 16 ) )
 			{
-				return fmts[x][0];
+				return fmt1[0];
 			}
 		}
 		// custom??
@@ -260,11 +260,11 @@ public final class Series extends GenericChartObject implements ChartObject
 	{
 		int ifmt = getCategoryNumberFormat();
 		String[][] fmts = FormatConstantsImpl.getBuiltinFormats();
-		for( int x = 0; x < fmts.length; x++ )
+		for( String[] fmt1 : fmts )
 		{
-			if( ifmt == Integer.parseInt( fmts[x][1], 16 ) )
+			if( ifmt == Integer.parseInt( fmt1[1], 16 ) )
 			{
-				return fmts[x][0];
+				return fmt1[0];
 			}
 		}
 		// custom??
@@ -328,7 +328,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	{
 		for( int i = 0; i < chartArr.size(); i++ )
 		{
-			BiffRec br = (BiffRec) chartArr.get( i );
+			BiffRec br = chartArr.get( i );
 			if( br.getOpcode() == AI )
 			{
 				Ai thisAi = (Ai) br;
@@ -387,7 +387,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	{
 		for( int i = 0; i < chartArr.size(); i++ )
 		{
-			BiffRec br = (BiffRec) chartArr.get( i );
+			BiffRec br = chartArr.get( i );
 			if( br.getOpcode() == AI )
 			{
 				Ai thisAi = (Ai) br;
@@ -419,9 +419,9 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	public Ai getLegendAi()
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec br = (BiffRec) chartArr.get( i );
+			BiffRec br = aChartArr;
 			if( br.getOpcode() == AI )
 			{
 				Ai thisAi = (Ai) br;
@@ -437,9 +437,9 @@ public final class Series extends GenericChartObject implements ChartObject
 	public Ai getBubbleValueAi()
 	{
 //    	if (hasBubbleSizes()) {
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec br = (BiffRec) chartArr.get( i );
+			BiffRec br = aChartArr;
 			if( br.getOpcode() == AI )
 			{
 				Ai thisAi = (Ai) br;
@@ -571,9 +571,9 @@ public final class Series extends GenericChartObject implements ChartObject
 		Vector ser = parentChart.getAllSeries();    // get ALL series
 		int yi = -1;        // Changed from 0
 		int iss = -1;    // ""
-		for( int i = 0; i < ser.size(); i++ )
+		for( Object aSer : ser )
 		{
-			Series srs = (Series) ser.get( i );
+			Series srs = (Series) aSer;
 			int newYi = srs.getSeriesIndex();
 			int newIss = srs.getSeriesNumber();
 			if( newYi > yi )
@@ -603,9 +603,9 @@ public final class Series extends GenericChartObject implements ChartObject
 		{    // 20070709 KSC: will be 0 if adding new blank chart
 			Series s = (Series) ser.get( 0 );
 			ArrayList cr = s.getChartRecords();
-			for( int i = 0; i < cr.size(); i++ )
+			for( Object aCr : cr )
 			{
-				BiffRec b = (BiffRec) cr.get( i );
+				BiffRec b = (BiffRec) aCr;
 				if( b.getOpcode() == SERTOCRT )
 				{
 					SerToCrt stcc = (SerToCrt) b;
@@ -676,9 +676,9 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	public Ai getCategoryValueAi()
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec br = (BiffRec) chartArr.get( i );
+			BiffRec br = aChartArr;
 			if( br.getOpcode() == AI )
 			{
 				Ai thisAi = (Ai) br;
@@ -1323,9 +1323,9 @@ public final class Series extends GenericChartObject implements ChartObject
 		ooxml.append( "\r\n" );
 
 		Ai seriesAi = null;
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec br = (BiffRec) chartArr.get( i );
+			BiffRec br = aChartArr;
 			if( br.getOpcode() == AI )
 			{
 				Ai thisAi = (Ai) br;
@@ -1422,9 +1422,9 @@ public final class Series extends GenericChartObject implements ChartObject
 	{
 		StringBuffer ooxml = new StringBuffer();
 		Ai bubbleAi = null;
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec br = (BiffRec) chartArr.get( i );
+			BiffRec br = aChartArr;
 			if( br.getOpcode() == AI )
 			{
 				Ai thisAi = (Ai) br;

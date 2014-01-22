@@ -1848,9 +1848,9 @@ public class FinancialCalculator
 		}
 		// references ...
 		double result = 1.0;
-		for( int i = 0; i < schedule.length; i++ )
+		for( Ptg aSchedule : schedule )
 		{
-			result *= principal + schedule[i].getDoubleVal();
+			result *= principal + aSchedule.getDoubleVal();
 		}
 		PtgNumber pnum = new PtgNumber( result );
 		if( DEBUG )
@@ -2067,9 +2067,9 @@ public class FinancialCalculator
 		// (= positive values)
 		double outflow = 0.0, inflow = 0.0;
 		// get outflow (- values)
-		for( int i = 0; i < n; i++ )
+		for( Ptg param : params )
 		{
-			double val = params[i].getDoubleVal();
+			double val = param.getDoubleVal();
 			if( val < 0 )
 			{
 				outflow += Math.abs( val );
@@ -3876,9 +3876,9 @@ public class FinancialCalculator
 		// positive values)
 		double outflow = 0.0, inflow = 0.0;
 		// get outflow (- values)
-		for( int i = 0; i < values.length; i++ )
+		for( Ptg value : values )
 		{
-			double val = values[i].getDoubleVal();
+			double val = value.getDoubleVal();
 			if( val < 0 )
 			{
 				outflow += Math.abs( val );
@@ -4003,9 +4003,9 @@ public class FinancialCalculator
 		// positive values)
 		double outflow = 0.0, inflow = 0.0;
 		// get outflow (- values)
-		for( int i = 0; i < values.length; i++ )
+		for( Ptg value : values )
 		{
-			double val = values[i].getDoubleVal();
+			double val = value.getDoubleVal();
 			if( val < 0 )
 			{
 				outflow += Math.abs( val );

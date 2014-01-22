@@ -89,9 +89,9 @@ public class Window1 extends com.extentech.formats.XLS.XLSRecord
 		mybs = bs;
 		int t = mybs.getSheetNum();
 		Boundsheet[] bounds = this.getWorkBook().getWorkSheets();
-		for( int i = 0; i < bounds.length; i++ )
+		for( Boundsheet bound : bounds )
 		{
-			bounds[i].getWindow2().setSelected( false );
+			bound.getWindow2().setSelected( false );
 		}
 		mybs.getWindow2().setSelected( true );
 		byte[] mydata = this.getData();
@@ -157,7 +157,7 @@ public class Window1 extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit &= ~0x20;
 		}
-		byte[] b = ByteTools.shortToLEBytes( (short) grbit );
+		byte[] b = ByteTools.shortToLEBytes( grbit );
 		this.getData()[8] = b[0];
 		this.getData()[9] = b[1];
 	}

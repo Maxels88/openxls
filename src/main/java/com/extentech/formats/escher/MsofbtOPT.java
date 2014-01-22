@@ -161,9 +161,9 @@ public class MsofbtOPT extends EscherRecord
 			Arrays.sort( k );
 
 			// write out properties in (numerical) order
-			for( int i = 0; i < k.length; i++ )
+			for( Object aK : k )
 			{
-				Integer propId = ((Integer) k[i]);
+				Integer propId = ((Integer) aK);
 				Object[] o = (Object[]) props.get( propId );
 				boolean isComplex = (Boolean) o[0];
 				boolean isBid = (Boolean) o[2];

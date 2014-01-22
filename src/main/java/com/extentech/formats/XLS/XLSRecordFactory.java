@@ -120,7 +120,7 @@ public class XLSRecordFactory implements XLSConstants
 	// 20060504 KSC: add separate array for unary prefix operators: 
 	//				 maps regular operator to unary pseudo version located in ptgLookup below 
 	public static Object[][] ptgPrefixOperators = {
-			{ (Object) "+", "u+" }, { (Object) "-", "u-" },
+			{ "+", "u+" }, { "-", "u-" },
 			// should $ be in here???
 	};
 
@@ -425,13 +425,13 @@ public class XLSRecordFactory implements XLSConstants
 	 */
 	public static Ptg getPtgRecord( String name ) throws InvalidRecordException
 	{
-		for( int t = 0; t < ptgLookup.length; t++ )
+		for( String[] aPtgLookup : ptgLookup )
 		{
-			if( ((String) ptgLookup[t][0]).equalsIgnoreCase( name ) )
+			if( aPtgLookup[0].equalsIgnoreCase( name ) )
 			{
 				try
 				{
-					String classname = ptgLookup[t][1];
+					String classname = aPtgLookup[1];
 					return (Ptg) Class.forName( "com.extentech.formats.XLS.formulas." + classname ).newInstance();
 				}
 				catch( Exception e )

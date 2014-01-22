@@ -66,9 +66,9 @@ public class RootStorage extends com.extentech.formats.LEO.Storage
 		{
 			myblocks = new ArrayList( bs.length );
 		}
-		for( int d = 0; d < bs.length; d++ )
+		for( Block b1 : bs )
 		{
-			this.addBlock( bs[d] );
+			this.addBlock( b1 );
 		}
 	}
 

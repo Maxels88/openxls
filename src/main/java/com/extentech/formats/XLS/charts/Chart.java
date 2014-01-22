@@ -337,14 +337,14 @@ public class Chart extends GenericChartObject implements ChartObject
 		BiffRec[] bArr = new BiffRec[chartRecs.size()];
 		bArr = (BiffRec[]) chartRecs.toArray( bArr );
 		this.initChartObject( this, bArr );
-		for( int i = 0; i < initobs.size(); i++ )
+		for( Object initob : initobs )
 		{
-			BiffRec[] ios = (BiffRec[]) initobs.get( i );
+			BiffRec[] ios = (BiffRec[]) initob;
 			chartgroup.add( ChartType.createChartTypeObject( (GenericChartObject) ios[0], (ChartFormat) ios[1], this.getWorkBook() ) );
 			Legend l = (Legend) Chart.findRec( ((ChartFormat) ios[1]).chartArr, Legend.class );
 			if( l != null )
 			{
-				((ChartType) chartgroup.get( chartgroup.size() - 1 )).addLegend( l );
+				chartgroup.get( chartgroup.size() - 1 ).addLegend( l );
 			}
 		}
 		initobs = new ArrayList();    // clear out 
@@ -406,7 +406,7 @@ public class Chart extends GenericChartObject implements ChartObject
 						}
 						try
 						{
-							((GenericChartObject) co).setParentChart( this );
+							co.setParentChart( this );
 						}
 						catch( Exception e )
 						{
@@ -441,7 +441,7 @@ public class Chart extends GenericChartObject implements ChartObject
 		int offset = 0;
 		for( int i = startLoc + 2; i < cRecs.length; i++ )
 		{
-			BiffRec b = (BiffRec) cRecs[i];
+			BiffRec b = cRecs[i];
 			if( b.getOpcode() == BEGIN )
 			{
 				offset++;
@@ -474,7 +474,7 @@ public class Chart extends GenericChartObject implements ChartObject
 		{
 			for( int i = 0; i < nCharts; i++ )
 			{
-				chartseries.updateSeriesMappings( ((ChartType) chartgroup.get( i )).getSeriesList(),
+				chartseries.updateSeriesMappings( chartgroup.get( i ).getSeriesList(),
 				                                  i );    // if has multiple or overlay charts, update series mappings
 			}
 			outputVec.addAll( this.getRecordArray() );
@@ -490,9 +490,9 @@ public class Chart extends GenericChartObject implements ChartObject
 		}
 		if( !true )
 		{
-			for( int i = 0; i < outputVec.size(); i++ )
+			for( Object anOutputVec : outputVec )
 			{
-				XLSRecord rec = (XLSRecord) outputVec.get( i );
+				XLSRecord rec = (XLSRecord) anOutputVec;
 				Logger.logInfo( "rec:" + rec.toString() + "" );
 				Logger.logInfo( ByteTools.getByteDump( rec.getData(), 0 ) );
 				Logger.logInfo( "-------------------------------------------------" );
@@ -564,7 +564,7 @@ public class Chart extends GenericChartObject implements ChartObject
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			BufferedOutputStream bufo = new BufferedOutputStream( baos );
 			obs = new ObjectOutputStream( bufo );
-			obs.writeObject( (Serializable) this );
+			obs.writeObject( this );
 			bufo.flush();
 			b = baos.toByteArray();
 		}
@@ -649,11 +649,11 @@ public class Chart extends GenericChartObject implements ChartObject
 		Vector serieslist = this.getAllSeries( -1 );
 		int nSeries = serieslist.size();
 		int nPoints = 0;
-		for( int i = 0; i < serieslist.size(); i++ )
+		for( Object aSerieslist : serieslist )
 		{
 			try
 			{
-				Series s = (Series) serieslist.get( i );
+				Series s = (Series) aSerieslist;
 				int[] coords = ExcelTools.getRangeCoords( s.getSeriesValueAi().getDefinition() );
 				if( coords[3] > coords[1] )
 				{
@@ -830,7 +830,7 @@ public class Chart extends GenericChartObject implements ChartObject
 		int nSeries = -1;
 		for( int i = 0; i < chartArr.size(); i++ )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = chartArr.get( i );
 			if( b.getOpcode() == SERIES )
 			{
 				nSeries++;
@@ -840,7 +840,7 @@ public class Chart extends GenericChartObject implements ChartObject
 					// now adjust series number for all subsequent Series
 					for( int j = i; j < chartArr.size(); j++ )
 					{
-						b = (BiffRec) chartArr.get( j );
+						b = chartArr.get( j );
 						if( b.getOpcode() == SERIES )
 						{
 							Series s = (Series) b;
@@ -1024,7 +1024,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	{
 		for( int i = 0; i < chartArr.size(); i++ )
 		{
-			if( ((BiffRec) chartArr.get( i )).getOpcode() == DEFAULTTEXT )
+			if( chartArr.get( i ).getOpcode() == DEFAULTTEXT )
 			{
 				if( ((DefaultText) chartArr.get( i )).getType() == 2 )
 				{// correct code???? 2 or 3 ?? 
@@ -1049,9 +1049,9 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public void setDefaultFont( int type, int fontId )
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b.getOpcode() == TEXTDISP )
 			{
 				//xxxxx            
@@ -1067,9 +1067,9 @@ public class Chart extends GenericChartObject implements ChartObject
 	public ArrayList getFontxRecs()
 	{
 		ArrayList ret = new ArrayList();
-		for( int i = 0; i < chartRecs.size(); i++ )
+		for( Object chartRec : chartRecs )
 		{
-			BiffRec b = (BiffRec) chartRecs.get( i );
+			BiffRec b = (BiffRec) chartRec;
 			if( b.getOpcode() == FONTX )
 			{
 				ret.add( b );
@@ -1084,9 +1084,9 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public void resetFonts()
 	{
-		for( int i = 0; i < chartRecs.size(); i++ )
+		for( Object chartRec : chartRecs )
 		{
-			BiffRec b = (BiffRec) chartRecs.get( i );
+			BiffRec b = (BiffRec) chartRec;
 			if( b.getOpcode() == FONTX )
 			{
 				((Fontx) b).setIfnt( 0 );
@@ -1124,7 +1124,7 @@ public class Chart extends GenericChartObject implements ChartObject
 			{
 				for( int j = 0; j < s.chartArr.size(); j++ )
 				{
-					if( ((BiffRec) s.chartArr.get( j )).getOpcode() == AI )
+					if( s.chartArr.get( j ).getOpcode() == AI )
 					{
 						((Ai) s.chartArr.get( j )).populateForTransfer( this.getSheet().getSheetName() );
 					}
@@ -1152,7 +1152,7 @@ public class Chart extends GenericChartObject implements ChartObject
 			{
 				for( int j = 0; j < s.chartArr.size(); j++ )
 				{
-					if( ((BiffRec) s.chartArr.get( j )).getOpcode() == AI )
+					if( s.chartArr.get( j ).getOpcode() == AI )
 					{
 						((Ai) s.chartArr.get( j )).updateSheetRef( newSheetName,
 						                                           origWorkBook );    // 20080630 KSC: add sheet name for lookup
@@ -1204,7 +1204,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public int getChartType()
 	{
-		return ((ChartType) chartgroup.get( 0 )).getChartType();
+		return chartgroup.get( 0 ).getChartType();
 	}
 
 	/**
@@ -1215,7 +1215,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public int getChartType( int nChart )
 	{
-		return ((ChartType) chartgroup.get( nChart )).getChartType();
+		return chartgroup.get( nChart ).getChartType();
 	}
 
 	/**
@@ -1229,7 +1229,7 @@ public class Chart extends GenericChartObject implements ChartObject
 		int[] charttypes = new int[nCharts];    // max        	
 		for( int i = 0; i < nCharts; i++ )
 		{
-			charttypes[i] = ((ChartType) chartgroup.get( i )).getChartType();
+			charttypes[i] = chartgroup.get( i ).getChartType();
 		}
 		return charttypes;
 	}
@@ -1252,7 +1252,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public ChartType getChartObject()
 	{
-		return ((ChartType) chartgroup.get( 0 ));
+		return chartgroup.get( 0 );
 	}
 
 	/**
@@ -1262,7 +1262,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public ChartType getChartObject( int nChart )
 	{
-		return ((ChartType) chartgroup.get( nChart ));
+		return chartgroup.get( nChart );
 	}
 
 	/**
@@ -1327,7 +1327,7 @@ public class Chart extends GenericChartObject implements ChartObject
 		}
 		else
 		{
-			cf = ((ChartType) chartgroup.get( nChart )).cf;
+			cf = chartgroup.get( nChart ).cf;
 		}
 		return cf;
 	}
@@ -1413,7 +1413,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public boolean isThreeD( int nChart )
 	{
-		return ((ChartType) chartgroup.get( nChart )).isThreeD();
+		return chartgroup.get( nChart ).isThreeD();
 	}
 
 	/**
@@ -1424,7 +1424,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public ThreeD getThreeDRec( int nChart )
 	{
-		return ((ChartType) chartgroup.get( nChart )).getThreeDRec( false );
+		return chartgroup.get( nChart ).getThreeDRec( false );
 	}
 
 	/**
@@ -1442,7 +1442,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public boolean isStacked( int nChart )
 	{
-		return ((ChartType) chartgroup.get( nChart )).isStacked();
+		return chartgroup.get( nChart ).isStacked();
 	}
 
 	/**
@@ -1463,7 +1463,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public boolean is100PercentStacked( int nChart )
 	{
-		return ((ChartType) chartgroup.get( nChart )).is100PercentStacked();
+		return chartgroup.get( nChart ).is100PercentStacked();
 	}
 
 	/**
@@ -1480,7 +1480,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public boolean isClustered( int nChart )
 	{
-		return ((ChartType) chartgroup.get( nChart )).isClustered();
+		return chartgroup.get( nChart ).isClustered();
 	}
 
 	/**
@@ -1491,7 +1491,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public String getChartOptionsXML( int nChart )
 	{
-		return ((ChartType) chartgroup.get( nChart )).getChartOptionsXML();
+		return chartgroup.get( nChart ).getChartOptionsXML();
 	}
 
 	/**
@@ -1523,7 +1523,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	public boolean setChartOption( String op, String val, int nChart )
 	{
 		dirtyflag = true;
-		return ((ChartType) chartgroup.get( nChart )).setChartOption( op, val );
+		return chartgroup.get( nChart ).setChartOption( op, val );
 	}
 
 	/**
@@ -1536,7 +1536,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	@Override
 	public String getChartOption( String op )
 	{
-		return ((ChartType) chartgroup.get( 0 )).getChartOption( op );
+		return chartgroup.get( 0 ).getChartOption( op );
 	}
 
 	/**
@@ -1557,7 +1557,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public String getThreeDXML( int nChart )
 	{
-		return ((ChartType) chartgroup.get( nChart )).getThreeDXML();
+		return chartgroup.get( nChart ).getThreeDXML();
 	}
 
 	/**
@@ -1580,7 +1580,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public ThreeD initThreeD( int nChart, int chartType )
 	{
-		return ((ChartType) chartgroup.get( nChart )).initThreeD( chartType );
+		return chartgroup.get( nChart ).initThreeD( chartType );
 	}
 
 	/**
@@ -1648,9 +1648,9 @@ public class Chart extends GenericChartObject implements ChartObject
 	{
 		HashMap fonts = new HashMap();
 		int maxFont = 5;
-		for( int i = 0; i < chartRecs.size(); i++ )
+		for( Object chartRec : chartRecs )
 		{
-			BiffRec b = (BiffRec) chartRecs.get( i );
+			BiffRec b = (BiffRec) chartRec;
 			if( b.getOpcode() == FONTX )
 			{
 				int fontId = ((Fontx) b).getIfnt();        //((TextDisp) b).getFontId();
@@ -1682,12 +1682,12 @@ public class Chart extends GenericChartObject implements ChartObject
 		StringBuffer sb = new StringBuffer();
 		for( int i = 0; i < chartArr.size(); i++ )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = chartArr.get( i );
 			if( b.getOpcode() == DEFAULTTEXT )
 			{
 				sb.append( " Default" + ((DefaultText) b).getType() + "=\"" );
 				i++;
-				b = (BiffRec) chartArr.get( i );
+				b = chartArr.get( i );
 				if( b.getOpcode() == TEXTDISP )
 				{ // should!!
 					TextDisp td = (TextDisp) b;
@@ -1721,9 +1721,9 @@ public class Chart extends GenericChartObject implements ChartObject
 	{
 		if( type.equalsIgnoreCase( "Title" ) )
 		{
-			for( int i = 0; i < chartArr.size(); i++ )
+			for( XLSRecord aChartArr : chartArr )
 			{
-				BiffRec b = (BiffRec) chartArr.get( i );
+				BiffRec b = aChartArr;
 				if( b.getOpcode() == TEXTDISP )
 				{    // should be the title
 					TextDisp td = (TextDisp) b;
@@ -1740,13 +1740,13 @@ public class Chart extends GenericChartObject implements ChartObject
 			type = type.substring( 7 );
 			for( int i = 0; i < chartArr.size(); i++ )
 			{
-				BiffRec b = (BiffRec) chartArr.get( i );
+				BiffRec b = chartArr.get( i );
 				if( b.getOpcode() == DEFAULTTEXT )
 				{
 					if( ((DefaultText) b).getType() == Integer.parseInt( type ) )
 					{
 						i++;
-						b = (BiffRec) chartArr.get( i );
+						b = chartArr.get( i );
 						if( b.getOpcode() == TEXTDISP )
 						{    // should be!!
 							TextDisp td = (TextDisp) b;
@@ -1767,9 +1767,9 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public void setTitleFont( int fontId )
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b.getOpcode() == TEXTDISP )
 			{
 				TextDisp td = (TextDisp) b;
@@ -1814,9 +1814,9 @@ public class Chart extends GenericChartObject implements ChartObject
 		{
 			this.msodrawobj.setSheet( b );
 		}
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			((XLSRecord) chartArr.get( i )).setSheet( b );
+			aChartArr.setSheet( b );
 		}
 	}
 
@@ -2019,7 +2019,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public void showLegend( boolean bShow, boolean vertical )
 	{
-		((ChartType) chartgroup.get( 0 )).showLegend( bShow, vertical );
+		chartgroup.get( 0 ).showLegend( bShow, vertical );
 	}
 
 	/**
@@ -2037,7 +2037,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public Legend getLegend()
 	{
-		return ((ChartType) chartgroup.get( 0 )).getDataLegend();
+		return chartgroup.get( 0 ).getDataLegend();
 	}
 
 	/**
@@ -2055,7 +2055,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	protected int getDataLabel()
 	{
-		return ((ChartType) chartgroup.get( 0 )).getDataLabel();
+		return chartgroup.get( 0 ).getDataLabel();
 
 	}
 
@@ -2147,7 +2147,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public boolean hasDataLegend()
 	{
-		return (((ChartType) chartgroup.get( 0 )).getDataLegend() != null);
+		return (chartgroup.get( 0 ).getDataLegend() != null);
 	}
 
 	public MSODrawing getMsodrawobj()
@@ -2180,9 +2180,9 @@ public class Chart extends GenericChartObject implements ChartObject
 	 */
 	public static BiffRec findRec( ArrayList chartArr, Class c )
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( Object aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = (BiffRec) aChartArr;
 			if( b.getClass() == c )
 			{
 				return b;
@@ -2303,13 +2303,13 @@ public class Chart extends GenericChartObject implements ChartObject
 //System.out.println("Before Adjustments:  x:" + chartMetrics.get("x") + " w:" + chartMetrics.get("w") + " cw:" + chartMetrics.get("canvasw") + " y:" + chartMetrics.get("y") + " h:" + chartMetrics.get("h") + " ch:" + chartMetrics.get("canvash"));				
 				// now adjust plot area coordinates based on canvas w, h, title and label offsets, and legend box, if any
 				chartMetrics.put( "x",
-				                  (Double) chartMetrics.get( "x" ) + (Double) this.getAxes().axisMetrics.get( "YAXISLABELOFFSET" ) + (Double) this
+				                  chartMetrics.get( "x" ) + (Double) this.getAxes().axisMetrics.get( "YAXISLABELOFFSET" ) + (Double) this
 						                  .getAxes().axisMetrics.get( "YAXISTITLEOFFSET" ) );
-				chartMetrics.put( "y", (Double) chartMetrics.get( "y" ) + chartMetrics.get( "TITLEOFFSET" ) );
+				chartMetrics.put( "y", chartMetrics.get( "y" ) + chartMetrics.get( "TITLEOFFSET" ) );
 				// TODO: seems that w is different doesn't need decrementing by x?? check out ...				
-				chartMetrics.put( "w", (Double) chartMetrics.get( "w" ) - (Double) this.getAxes().axisMetrics.get( "YAXISLABELOFFSET" ) );
+				chartMetrics.put( "w", chartMetrics.get( "w" ) - (Double) this.getAxes().axisMetrics.get( "YAXISLABELOFFSET" ) );
 				chartMetrics.put( "h",
-				                  (Double) chartMetrics.get( "canvash" ) - (Double) chartMetrics.get( "y" ) - (Double) this.getAxes().axisMetrics
+				                  chartMetrics.get( "canvash" ) - chartMetrics.get( "y" ) - (Double) this.getAxes().axisMetrics
 						                  .get( "XAXISLABELOFFSET" ) - (Double) this.getAxes().axisMetrics.get( "XAXISTITLEOFFSET" ) - 10 );
 //System.out.println("After Adjustments:   x:" + chartMetrics.get("x") + " w:" + chartMetrics.get("w") + " cw:" + chartMetrics.get("canvasw") + " y:" + chartMetrics.get("y") + " h:" + chartMetrics.get("h") + " ch:" + chartMetrics.get("canvash"));				
 
@@ -2333,7 +2333,7 @@ public class Chart extends GenericChartObject implements ChartObject
 					if( this.getAxes().hasAxis( XAXIS ) && (ldist > 0) )    // pie, donut, don't
 					// ensure distance between legend box and edge of plot area remains the same
 					{
-						chartMetrics.put( "w", lcoords[0] - (Double) chartMetrics.get( "x" ) - ldist );
+						chartMetrics.put( "w", lcoords[0] - chartMetrics.get( "x" ) - ldist );
 					}
 //System.out.println("Adjusted LCoords:  " + Arrays.toString(lcoords)); 				
 
@@ -2343,7 +2343,7 @@ public class Chart extends GenericChartObject implements ChartObject
 					double w = chartMetrics.get( "w" ) + chartMetrics.get( "x" );
 					if( w > cw )
 					{
-						chartMetrics.put( "w", (Double) chartMetrics.get( "canvasw" ) - (Double) chartMetrics.get( "x" ) - 10 );
+						chartMetrics.put( "w", chartMetrics.get( "canvasw" ) - chartMetrics.get( "x" ) - 10 );
 					}
 				}
 

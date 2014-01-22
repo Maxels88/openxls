@@ -315,7 +315,7 @@ public class SheetProtectionManager extends ProtectionManager implements Seriali
 		{
 			objprotect = new ObjProtect();
 			objprotect.setLocked( true );
-			sheet.insertSheetRecordAt( objprotect, ((scenprotect != null) ? (BiffRec) scenprotect : (BiffRec) protect).getRecordIndex() + 1 );
+			sheet.insertSheetRecordAt( objprotect, ((scenprotect != null) ? scenprotect : protect).getRecordIndex() + 1 );
 		}
 	}
 

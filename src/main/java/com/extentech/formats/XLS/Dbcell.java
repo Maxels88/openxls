@@ -161,7 +161,7 @@ public final class Dbcell extends com.extentech.formats.XLS.XLSRecord implements
 	{
 		if( rwct > 0 )
 		{
-			Row rw1 = (Row) this.myrows[0];
+			Row rw1 = this.myrows[0];
 			int i = rw1.getOffset();
 			int y = this.getOffset();
 			return y - i;

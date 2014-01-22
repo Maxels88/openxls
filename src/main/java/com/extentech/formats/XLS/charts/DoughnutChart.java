@@ -169,9 +169,9 @@ public class DoughnutChart extends ChartType
 		{    // for each series
 			double[] curseries = (double[]) series.get( i );        // series data points
 			double total = 0.0;
-			for( int j = 0; j < curseries.length; j++ )
+			for( double cursery : curseries )
 			{    // get total in order to calculate percentages
-				total += curseries[j];
+				total += cursery;
 			}
 			if( dls.length == 1 )
 			{    // no seriess-specific data labels; expand to entire series for loop below

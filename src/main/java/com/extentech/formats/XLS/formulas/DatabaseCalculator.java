@@ -987,11 +987,11 @@ class DB
 		int nCols = 0, nRows = 0, maxRows = 0;
 
 		// allocate the empty table for the dbrange
-		for( int i = 0; i < dbrange.length; i++ )
+		for( Ptg aDbrange1 : dbrange )
 		{
-			if( dbrange[i] instanceof PtgRef )
+			if( aDbrange1 instanceof PtgRef )
 			{
-				PtgRef pref = (PtgRef) dbrange[i];
+				PtgRef pref = (PtgRef) aDbrange1;
 				int[] loc = pref.getIntLocation();
 //				 TODO: check rc sanity here
 				if( loc[1] != prevCol )
@@ -1017,9 +1017,9 @@ class DB
 		prevCol = -1;
 		nCols = -1;
 		nRows = -1;
-		for( int i = 0; i < dbrange.length; i++ )
+		for( Ptg aDbrange : dbrange )
 		{
-			PtgRef db1 = (PtgRef) dbrange[i];
+			PtgRef db1 = (PtgRef) aDbrange;
 			int[] loc = db1.getIntLocation();
 			Object vs = null;    // 20081120 KSC: Must distinguish between blanks and 0's
 			if( !db1.isBlank() )
@@ -1311,7 +1311,7 @@ class Criteria extends DB
 		{
 			String valcheck = curRow[t].getValue().toString();
 			// for each value check all the criteria
-			for( int x = 0; x < rows.length; x++ )
+			for( Ptg[] row : rows )
 			{
 				List r = this.getCriteria( db.colHeaders[t] );
 				Iterator tx = r.iterator();
@@ -1360,10 +1360,8 @@ class Criteria extends DB
 		{
 			critRowMatch = true; // reset
 			// for each row of criteria, iterate criteria cols
-			for( int rs = 0; rs < this.colHeaders.length; rs++ )
+			for( String critField : this.colHeaders )
 			{
-				String critField = this.colHeaders[rs];
-
 				List r = this.getCriteria( x, critField );
 				Iterator tx = r.iterator();
 				int dv = db.getCol( critField );
@@ -1506,13 +1504,13 @@ class Criteria extends DB
 		}
 
 		List crits = new Vector();
-		for( int x = 0; x < rows.length; x++ )
+		for( Ptg[] row : rows )
 		{
 			for( int t = 0; t < colHeaders.length; t++ )
 			{
 				if( colHeaders[t].equals( field ) )
 				{
-					crits.add( rows[x][t] );
+					crits.add( row[t] );
 				}
 			}
 		}

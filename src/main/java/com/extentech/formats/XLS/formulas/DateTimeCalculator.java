@@ -65,7 +65,7 @@ public class DateTimeCalculator
 		}
 		else if( op instanceof PtgName )
 		{
-			o = ((PtgName) op).getValue();    //getComponents()[0];
+			o = op.getValue();    //getComponents()[0];
 			o = op.getValue();
 			if( o instanceof String )
 			{
@@ -447,10 +447,10 @@ public class DateTimeCalculator
 			{
 				if( operands[2] instanceof PtgRef )
 				{
-					Ptg[] dts = ((PtgRef) operands[2]).getComponents();
-					for( int i = 0; i < dts.length; i++ )
+					Ptg[] dts = operands[2].getComponents();
+					for( Ptg dt : dts )
 					{
-						holidays.add( getDateFromPtg( dts[i] ) );
+						holidays.add( getDateFromPtg( dt ) );
 					}
 				}
 				else  // assume it's a string or a number rep of a date
@@ -469,9 +469,9 @@ public class DateTimeCalculator
 					// check if on a holidays
 					if( holidays.size() > 0 )
 					{
-						for( int i = 0; i < holidays.size(); i++ )
+						for( Object holiday : holidays )
 						{
-							if( startDate.equals( ((Calendar) holidays.get( i )) ) )
+							if( startDate.equals( holiday ) )
 							{
 								OKtoIncrement = false;
 								break;
@@ -671,10 +671,10 @@ public class DateTimeCalculator
 			{    // holidays
 				if( operands[2] instanceof PtgRef )
 				{
-					Ptg[] dts = ((PtgRef) operands[2]).getComponents();
-					for( int i = 0; i < dts.length; i++ )
+					Ptg[] dts = operands[2].getComponents();
+					for( Ptg dt1 : dts )
 					{
-						holidays.add( getDateFromPtg( dts[i] ) );
+						holidays.add( getDateFromPtg( dt1 ) );
 					}
 				}
 				else  // assume it's a string or a number rep of a date
@@ -691,9 +691,9 @@ public class DateTimeCalculator
 					// check if on a holidays
 					if( holidays.size() > 0 )
 					{
-						for( int i = 0; i < holidays.size(); i++ )
+						for( Object holiday : holidays )
 						{
-							if( dt.equals( ((Calendar) holidays.get( i )) ) )
+							if( dt.equals( holiday ) )
 							{
 								OKtoIncrement = false;
 								break;

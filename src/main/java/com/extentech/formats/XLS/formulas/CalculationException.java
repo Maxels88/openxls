@@ -126,11 +126,11 @@ public class CalculationException extends Exception
 		{
 			return 0;    // unknown
 		}
-		for( int i = 0; i < errorStrings.length; i++ )
+		for( String[] errorString : errorStrings )
 		{
-			if( error.equals( errorStrings[i][0] ) )
+			if( error.equals( errorString[0] ) )
 			{
-				return new Byte( errorStrings[i][1] );
+				return new Byte( errorString[1] );
 			}
 		}
 		return 0;

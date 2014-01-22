@@ -787,9 +787,8 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 		}
 
 		// traverse thru stream list, ensuring required records are present; create if not
-		for( int i = 0; i < opcodes.length; i++ )
+		for( Short op : opcodes )
 		{
-			short op = opcodes[i];
 			R r = map.get( op );
 			if( !r.isPresent && r.isRequired )
 			{
@@ -824,9 +823,9 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 				r.recordPos = rec.getRecordIndex();
 
 				// now must adjust ensuing record positions to account for inserted record
-				for( int zz = 0; zz < opcodes.length; zz++ )
+				for( Short opcode : opcodes )
 				{
-					R nextR = map.get( opcodes[zz] );
+					R nextR = map.get( opcode );
 					if( nextR.isPresent && !r.equals( nextR ) && (nextR.recordPos >= r.recordPos) )
 					{
 						nextR.recordPos++;
@@ -875,7 +874,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 						// TODO: this is ugly - do a different way ...
 						for( int zz = 0; zz < r.altPrecedor.length; zz++ )
 						{
-							R newR = (R) map.get( r.altPrecedor[zz] );
+							R newR = map.get( r.altPrecedor[zz] );
 							if( r.recordPos > newR.recordPos )
 							{
 								lastR = newR;
@@ -913,10 +912,10 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 							} while( recToMove.getOpcode() == op );
 
 							// after moved all the records necessary, adjust record positions
-							for( int jj = 0; jj < opcodes.length; jj++ )
+							for( Short opcode : opcodes )
 							{
-								R nextR = map.get( opcodes[jj] );
-								if( nextR.isPresent && (nextR.recordPos >= origRecPos) && (nextR.recordPos <= r.recordPos) && (opcodes[jj] != op) )
+								R nextR = map.get( opcode );
+								if( nextR.isPresent && (nextR.recordPos >= origRecPos) && (nextR.recordPos <= r.recordPos) && (opcode != op) )
 								{
 									nextR.recordPos -= recsMovedCount;
 								}

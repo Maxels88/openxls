@@ -366,15 +366,15 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 			v.add( br );
 			if( br instanceof Formula )
 			{
-				((Formula) br).preStream();    // must do now so can ensure internal records are properly set
+				br.preStream();    // must do now so can ensure internal records are properly set
 				Collection itx = ((Formula) br).getInternalRecords();
 				BiffRec[] brints = (BiffRec[]) itx.toArray( new BiffRec[itx.size()] );
-				for( int x = 0; x < brints.length; x++ )
+				for( BiffRec brint : brints )
 				{
 					//Don't allow dupes!
-					if( !v.contains( brints[x] ) )
+					if( !v.contains( brint ) )
 					{
-						v.add( brints[x] );
+						v.add( brint );
 					}
 				}
 			}

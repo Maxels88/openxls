@@ -196,16 +196,16 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		{
 			if( mulblankcolnum == -1 )
 			{ // init
-				mulblankcolnum = (short) ((Mulblank) mycell).getColNumber();
+				mulblankcolnum = mycell.getColNumber();
 				((Mulblank) mycell).setCurrentCell( mulblankcolnum );
-				((Mulblank) mycell).getIxfe(); // ensure myxf is set to correct
+				mycell.getIxfe(); // ensure myxf is set to correct
 				// xf for the given cell in the
 				// set of mulblanks
 			}
 			else if( mulblankcolnum != mycell.getColNumber() )
 			{
 				((Mulblank) mycell).setCurrentCell( mulblankcolnum );
-				((Mulblank) mycell).getIxfe(); // ensure myxf is set to correct
+				mycell.getIxfe(); // ensure myxf is set to correct
 				// xf for the given cell in the
 				// set of mulblanks
 			}
@@ -940,7 +940,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		int sz = 12;
 		try
 		{
-			sz = (int) this.getFontSize();
+			sz = this.getFontSize();
 		}
 		catch( Exception e )
 		{
@@ -999,9 +999,9 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	{
 		// this needs significant cleanup. We should not have to iterate notes
 		ArrayList notes = mycell.getSheet().getNotes();
-		for( int i = 0; i < notes.size(); i++ )
+		for( Object note : notes )
 		{
-			Note n = (Note) notes.get( i );
+			Note n = (Note) note;
 			if( n.getCellAddressWithSheet().equals( this.getCellAddressWithSheet() ) )
 			{
 				return new CommentHandle( n );
@@ -1729,11 +1729,11 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		}
 		ConditionalFormatHandle[] cfs = sh.getConditionalFormatHandles();
 		ArrayList cfhandles = new ArrayList();
-		for( int i = 0; i < cfs.length; i++ )
+		for( ConditionalFormatHandle cf : cfs )
 		{
-			if( cfs[i].contains( this ) )
+			if( cf.contains( this ) )
 			{
-				cfhandles.add( cfs[i] );
+				cfhandles.add( cf );
 			}
 		}
 		ConditionalFormatHandle[] c = new ConditionalFormatHandle[cfhandles.size()];
@@ -1842,7 +1842,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public FormulaHandle getFormulaHandle() throws FormulaNotFoundException
 	{
-		Formula f = (Formula) mycell.getFormulaRec();
+		Formula f = mycell.getFormulaRec();
 		if( f == null )
 		{
 			throw new FormulaNotFoundException( "No Formula for: " + getCellAddress() );
@@ -2896,7 +2896,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 			{
 				if( mycell instanceof Boolerr )
 				{
-					((Boolerr) mycell).setBooleanVal( ((Boolean) obj).booleanValue() );
+					mycell.setBooleanVal( ((Boolean) obj).booleanValue() );
 				}
 				else
 				{
@@ -2968,7 +2968,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 
 			mycell.myxf.setSheet( null );
 			mycell.getWorkBook().getStreamer().addRecordAt( mycell.myxf, insertIdx + 1 );
-			mycell.getWorkBook().addRecord( (BiffRec) mycell.myxf, false );
+			mycell.getWorkBook().addRecord( mycell.myxf, false );
 			// update the pointer
 			int xfe = mycell.myxf.getIdx();
 			mycell.setIxfe( xfe );

@@ -351,9 +351,9 @@ public final class Hlink extends XLSRecord
 			CellRange cr = new CellRange( wbook.getWorkSheet( this.getSheet().getSheetName() ), cellcoords );
 			cr.setWorkBook( wbook );
 			BiffRec[] ch = cr.getCellRecs();
-			for( int t = 0; t < ch.length; t++ )
+			for( BiffRec aCh : ch )
 			{
-				ch[t].setHyperlink( this );
+				aCh.setHyperlink( this );
 			}
 		}
 		catch( Exception e )

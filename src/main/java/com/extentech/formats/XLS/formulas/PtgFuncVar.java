@@ -163,7 +163,7 @@ public class PtgFuncVar extends GenericPtg implements Ptg
 	{
 		if( (vars != null) && (vars[0] instanceof PtgNameX) )
 		{
-			return ((PtgNameX) vars[0]).toString() + "(";
+			return vars[0].toString() + "(";
 		}
 		return "(";
 	}
@@ -207,7 +207,7 @@ public class PtgFuncVar extends GenericPtg implements Ptg
 			fprompt = true;
 		}
 		cargs = (byte) (cargs & 0x7f);
-		iftab = (short) ByteTools.readShort( record[2], record[3] );
+		iftab = ByteTools.readShort( record[2], record[3] );
 		if( (iftab & 0x8000) == 0x8000 )
 		{ // is fCE set?
 			fCE = true;

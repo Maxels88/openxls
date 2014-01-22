@@ -95,9 +95,9 @@ public class StackedColumn extends ColChart
 			int n = series.size();
 			int nSeries = ((double[]) series.get( 0 )).length;
 			totalperseries = new double[nSeries];
-			for( int i = 0; i < n; i++ )
+			for( Object sery : series )
 			{
-				double[] seriesy = (double[]) series.get( i );
+				double[] seriesy = (double[]) sery;
 				for( int j = 0; j < seriesy.length; j++ )
 				{
 					double yval = seriesy[j];

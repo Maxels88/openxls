@@ -221,10 +221,10 @@ public class DataFormat extends GenericChartObject implements ChartObject
 		if( af == null )
 		{
 			af = (AreaFormat) AreaFormat.getPrototype( 0 );
-			this.addChartRecord( (LineFormat) LineFormat.getPrototype() );
+			this.addChartRecord( LineFormat.getPrototype() );
 			this.addChartRecord( af );
-			this.addChartRecord( (PieFormat) PieFormat.getPrototype() );
-			this.addChartRecord( (MarkerFormat) MarkerFormat.getPrototype() );
+			this.addChartRecord( PieFormat.getPrototype() );
+			this.addChartRecord( MarkerFormat.getPrototype() );
 		}
 		return af;
 	}
@@ -756,10 +756,10 @@ public class DataFormat extends GenericChartObject implements ChartObject
 			af = (AreaFormat) AreaFormat.getPrototype( 0 );
 			// NOTE: below list of records is what has been observed in Excel 2003 chart files -
 			// unsure if need marker format always ?
-			this.addChartRecord( (LineFormat) LineFormat.getPrototype() );
+			this.addChartRecord( LineFormat.getPrototype() );
 			this.addChartRecord( af );
-			this.addChartRecord( (PieFormat) PieFormat.getPrototype() );
-			this.addChartRecord( (MarkerFormat) MarkerFormat.getPrototype() );
+			this.addChartRecord( PieFormat.getPrototype() );
+			this.addChartRecord( MarkerFormat.getPrototype() );
 		}
 		return af;
 	}

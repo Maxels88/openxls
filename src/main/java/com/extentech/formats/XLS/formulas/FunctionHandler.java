@@ -54,11 +54,11 @@ public class FunctionHandler
 		XLSRecord bpar = funk.getParentRec();
 		if( bpar != null )
 		{
-			for( int t = 0; t < ptgs.length; t++ )
+			for( Ptg ptg : ptgs )
 			{
-				if( ptgs[t].getParentRec() == null )
+				if( ptg.getParentRec() == null )
 				{
-					ptgs[t].setParentRec( bpar );
+					ptg.setParentRec( bpar );
 				}
 			}
 		}
@@ -1353,7 +1353,7 @@ public class FunctionHandler
 				}
 				else
 				{
-					s = new String( Integer.toHexString( (int) functionId ) );
+					s = new String( Integer.toHexString( functionId ) );
 				}
 				//throw new FunctionNotSupportedException( (!.equals(""))?FunctionConstants.getFunctionString((short)funkId).substring(0, ):Integer.toHexString((int)funkId));
 				throw new FunctionNotSupportedException( s );    // 20081118 KSC: add a little more info ...

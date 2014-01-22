@@ -323,9 +323,9 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 		streamer.addRecordAt( this, index );
 		// also need msymystery record + msoselection ...
 		Boundsheet[] b = this.getWorkBook().getWorkSheets();
-		for( int i = 0; i < b.length; i++ )
+		for( Boundsheet aB : b )
 		{
-			int z = b[i].getIndexOf( PHONETIC );
+			int z = aB.getIndexOf( PHONETIC );
 			if( z == -1 )
 			{
 				Phonetic p = new Phonetic();
@@ -333,7 +333,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 				p.setOpcode( XLSRecord.PHONETIC );
 				p.setDebugLevel( this.DEBUGLEVEL );
 				p.setStreamer( this.getStreamer() );
-				b[i].insertSheetRecordAt( p, b[i].getIndexOf( SELECTION ) + 1 );
+				aB.insertSheetRecordAt( p, aB.getIndexOf( SELECTION ) + 1 );
 			}
 /* truly necessary???    		if (i==0) { // msodrawingselection only for 1st sheet???????
          		Msodrawingselection msoSelection = new Msodrawingselection();

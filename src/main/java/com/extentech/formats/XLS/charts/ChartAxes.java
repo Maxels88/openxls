@@ -103,9 +103,9 @@ public class ChartAxes implements ChartConstants, Serializable
 	 */
 	public boolean hasAxis( int axisType )
 	{
-		for( int i = 0; i < axes.size(); i++ )
+		for( Object axe : axes )
 		{
-			if( ((Axis) axes.get( i )).getAxis() == axisType )
+			if( ((Axis) axe).getAxis() == axisType )
 			{
 				return true;
 			}
@@ -138,11 +138,11 @@ public class ChartAxes implements ChartConstants, Serializable
 	 */
 	private Axis getAxis( int axisType, boolean bCreateIfNecessary )
 	{
-		for( int i = 0; i < axes.size(); i++ )
+		for( Object axe : axes )
 		{
-			if( ((Axis) axes.get( i )).getAxis() == axisType )
+			if( ((Axis) axe).getAxis() == axisType )
 			{
-				return ((Axis) axes.get( i ));
+				return ((Axis) axe);
 			}
 		}
 		if( bCreateIfNecessary )
@@ -1111,23 +1111,23 @@ public class ChartAxes implements ChartConstants, Serializable
 	{
 		double retWidth = 0;
 		String[] slines = s.split( "\n" );
-		for( int i = 0; i < slines.length; i++ )
+		for( String sline : slines )
 		{
 			double width;
 			if( rot == 0 )
 			{
-				width = StringTool.getApproximateStringWidth( f, CellFormatFactory.fromPatternString( null ).format( slines[i] ) );
+				width = StringTool.getApproximateStringWidth( f, CellFormatFactory.fromPatternString( null ).format( sline ) );
 				height.set( (int) Math.ceil( f.getSize() * 3 ) ); // width of the font + padding
 			}
 			else if( Math.abs( rot ) == 90 )
 			{
 				width = Math.ceil( f.getSize() * 2 ); // width of the font + padding
 				height.set( (int) Math.max( height.intValue(), StringTool.getApproximateStringWidth( f, CellFormatFactory.fromPatternString(
-						null ).format( slines[i] ) ) ) );
+						null ).format( sline ) ) ) );
 			}
 			else
 			{ // 45
-				width = StringTool.getApproximateStringWidth( f, CellFormatFactory.fromPatternString( null ).format( slines[i] ) );
+				width = StringTool.getApproximateStringWidth( f, CellFormatFactory.fromPatternString( null ).format( sline ) );
 				width = Math.ceil( width * (Math.cos( Math.toRadians( rot ) )) );
 				height.set( (int) Math.ceil( width * (Math.sin( Math.toRadians( rot ) )) ) );
 			}
@@ -1148,13 +1148,12 @@ public class ChartAxes implements ChartConstants, Serializable
 	{
 		double retWidth = 0;
 		String[] slines = s.split( "\n" );
-		for( int i = 0; i < slines.length; i++ )
+		for( String sline : slines )
 		{
 			double width;
 			if( Math.abs( rot ) == 90 )
 			{    // means VERTICAL orientation - default
-				height.set( (int) StringTool.getApproximateStringWidth( f,
-				                                                        CellFormatFactory.fromPatternString( null ).format( slines[i] ) ) );
+				height.set( (int) StringTool.getApproximateStringWidth( f, CellFormatFactory.fromPatternString( null ).format( sline ) ) );
 				width = Math.ceil( f.getSize() * 2 ); // width of the font + padding
 			}
 			else if( rot == 0 )
@@ -1162,11 +1161,11 @@ public class ChartAxes implements ChartConstants, Serializable
 				height.set( (int) Math.ceil( f.getSize() * 3 ) ); // width of font
 				width = Math.max( height.intValue(), StringTool.getApproximateStringWidth( f,
 				                                                                           CellFormatFactory.fromPatternString( null )
-				                                                                                            .format( slines[i] ) ) );
+				                                                                                            .format( sline ) ) );
 			}
 			else
 			{ // 45
-				width = StringTool.getApproximateStringWidth( f, CellFormatFactory.fromPatternString( null ).format( slines[i] ) );
+				width = StringTool.getApproximateStringWidth( f, CellFormatFactory.fromPatternString( null ).format( sline ) );
 				width = Math.ceil( width * (Math.cos( Math.toRadians( rot ) )) );
 				height.set( (int) Math.ceil( width * (Math.sin( Math.toRadians( rot ) )) ) );
 			}

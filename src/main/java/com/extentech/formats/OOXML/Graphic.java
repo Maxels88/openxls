@@ -70,7 +70,7 @@ public class Graphic implements OOXMLElement
 					if( tnm.equals( "graphicData" ) )
 					{
 						lastTag.push( tnm );
-						g = (GraphicData) GraphicData.parseOOXML( xpp, lastTag );
+						g = GraphicData.parseOOXML( xpp, lastTag );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )

@@ -287,16 +287,15 @@ public class CompatibleVector extends Vector
 
 	public void addAll( CompatibleVector cv )
 	{
-		for( int i = 0; i < cv.size(); i++ )
+		for( Object b : cv )
 		{
-			Object b = cv.get( i );
 			if( b instanceof CompatibleVectorHints )
 			{
 				this.add( (CompatibleVectorHints) b );
 			}
 			else
 			{
-				this.add( (Object) b );
+				this.add( b );
 			}
 		}
 	}

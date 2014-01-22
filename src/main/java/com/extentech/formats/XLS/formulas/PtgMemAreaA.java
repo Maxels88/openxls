@@ -112,7 +112,7 @@ public class PtgMemAreaA extends PtgMemArea
 				res += ",";
 			}
 		}
-		Object o = (Object) res;
+		Object o = res;
 		return o;
 	}
 

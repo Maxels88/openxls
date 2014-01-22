@@ -125,7 +125,7 @@ public class LookupReferenceCalculator
 		{
 			if( operands[4].getValue() != null )
 			{ //checking for a ptgmissarg
-				sheettext = (String) operands[4].getValue() + "!";
+				sheettext = operands[4].getValue() + "!";
 			}
 		}
 		String loc = "";
@@ -557,12 +557,12 @@ public class LookupReferenceCalculator
 		{
 			if( operands.length > 1 )
 			{
-				Ptg rowrefp = (Ptg) operands[1];
+				Ptg rowrefp = operands[1];
 				rowref = rowrefp.getValue();
 			}
 			if( operands.length > 2 )
 			{
-				Ptg colrefp = (Ptg) operands[2];
+				Ptg colrefp = operands[2];
 				colref = colrefp.getValue();
 			}
 			if( operands.length > 3 )
@@ -584,7 +584,7 @@ public class LookupReferenceCalculator
 			}
 			else if( o instanceof PtgMemFunc )
 			{
-				Ptg[] ps = ((PtgMemFunc) o).getComponents();
+				Ptg[] ps = o.getComponents();
 				areanum--;
 				if( (areanum >= 0) && (areanum < ps.length) )
 				{
@@ -599,7 +599,7 @@ public class LookupReferenceCalculator
 			}
 			else if( o instanceof PtgArray )
 			{
-				Ptg[] ps = ((PtgArray) o).getComponents();
+				Ptg[] ps = o.getComponents();
 				areanum--;
 				if( (areanum >= 0) && (areanum < ps.length) )
 				{
@@ -680,7 +680,7 @@ public class LookupReferenceCalculator
 					refp.setLocation( dims );
 					if( o instanceof PtgArea3d )
 					{
-						((PtgRef3d) refp).setLocation( ((PtgArea3d) o).getSheetName() + "!" + ExcelTools.formatLocation( dims ) );
+						refp.setLocation( ((PtgArea3d) o).getSheetName() + "!" + ExcelTools.formatLocation( dims ) );
 					}
 					else
 					{
@@ -760,7 +760,7 @@ public class LookupReferenceCalculator
 			if( operands[0] instanceof PtgRef )
 			{
 				// check if the ptgRef value is a string representing a Named range
-				Object o = ((PtgRef) (operands[0])).getValue();
+				Object o = operands[0].getValue();
 				PtgStr ps = new PtgStr( o.toString() );
 				ps.setParentRec( operands[0].getParentRec() );
 				operands = new Ptg[1];
@@ -769,7 +769,7 @@ public class LookupReferenceCalculator
 			}
 			if( operands[0] instanceof PtgName )
 			{
-				return calcIndirect( ((PtgName) operands[0]).getComponents() );
+				return calcIndirect( operands[0].getComponents() );
 			}
 		}
 		catch( Exception e )
@@ -845,7 +845,7 @@ public class LookupReferenceCalculator
  */
 		try
 		{
-			Ptg[] array = ((PtgArray) operands[1]).getComponents();
+			Ptg[] array = operands[1].getComponents();
 			int nrs = ((PtgArray) operands[1]).getNumberOfRows();
 			int ncs = ((PtgArray) operands[1]).getNumberOfColumns();
 			//If array covers an area that is wider than it is tall (more columns than rows), LOOKUP searches for the value of lookup_value in the first row.
@@ -985,19 +985,19 @@ public class LookupReferenceCalculator
 				// PtgMystery is return from PtgMemFunc/MemArrays
 				ArrayList ptgs = new ArrayList();
 				Ptg[] p = ((PtgMystery) lookupArray).vars;
-				for( int j = 0; j < p.length; j++ )
+				for( Ptg aP : p )
 				{
-					if( p[j] instanceof PtgArea )
+					if( aP instanceof PtgArea )
 					{
-						Ptg[] pa = p[j].getComponents();
-						for( int k = 0; k < pa.length; k++ )
+						Ptg[] pa = aP.getComponents();
+						for( Ptg aPa : pa )
 						{
-							ptgs.add( pa[k] );
+							ptgs.add( aPa );
 						}
 					}
 					else
 					{
-						ptgs.add( p[j] );
+						ptgs.add( aP );
 					}
 				}
 				values = new Ptg[ptgs.size()];
@@ -1258,9 +1258,9 @@ public class LookupReferenceCalculator
 		{
 			Ptg[] arr = operands[0].getComponents();
 			//it's a list of values, convert to row-based
-			for( int i = 0; i < arr.length; i++ )
+			for( Ptg anArr : arr )
 			{
-				retArray = retArray + arr[i].getValue().toString() + ";";
+				retArray = retArray + anArr.getValue().toString() + ";";
 			}
 			retArray = "{" + retArray.substring( 0, retArray.length() - 1 ) + "}";
 			ret.setVal( retArray );
@@ -1336,17 +1336,17 @@ public class LookupReferenceCalculator
 			}
 			else if( operands[0] instanceof PtgName )
 			{    // table???
-				comps = ((PtgName) operands[0]).getComponents();
+				comps = operands[0].getComponents();
 			}
 			if( comps == null )
 			{
 				return new PtgInt( (((PtgRef) operands[0]).getRowCol()[0]) + 1 );
 			}
-			for( int i = 0; i < comps.length; i++ )
+			for( Ptg comp : comps )
 			{
 				try
 				{
-					retArry = retArry + (((PtgRef) comps[i]).getIntLocation()[0] + 1) + ",";
+					retArry = retArry + (((PtgRef) comp).getIntLocation()[0] + 1) + ",";
 				}
 				catch( Exception e )
 				{
@@ -1393,7 +1393,7 @@ public class LookupReferenceCalculator
 			}
 			else if( operands[0] instanceof PtgName )
 			{
-				int[] rc = ExcelTools.getRangeCoords( ((PtgName) operands[0]).getLocation() );
+				int[] rc = ExcelTools.getRangeCoords( operands[0].getLocation() );
 				rsz = rc[2] - rc[0];
 				rsz++; // inclusive
 			}
@@ -1405,7 +1405,7 @@ public class LookupReferenceCalculator
 			}
 			else if( operands[0] instanceof PtgMemFunc )
 			{
-				Ptg[] p = ((PtgMemFunc) operands[0]).getComponents();
+				Ptg[] p = operands[0].getComponents();
 				if( (p != null) && (p.length > 0) )
 				{
 					int[] rc0 = p[0].getIntLocation();

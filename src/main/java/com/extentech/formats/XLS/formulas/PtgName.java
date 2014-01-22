@@ -210,9 +210,9 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 				return p[0].getValue();
 			} // multiple values; create an array
 			String retarry = "";
-			for( int i = 0; i < p.length; i++ )
+			for( Ptg aP : p )
 			{
-				retarry = retarry + p[i].getValue() + ",";
+				retarry = retarry + aP.getValue() + ",";
 			}
 			retarry = "{" + retarry.substring( 0, retarry.length() - 1 ) + "}";
 			PtgArray pa = new PtgArray();
@@ -297,9 +297,9 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 		Ptg[] pcomps = p.getComponents();
 		if( pcomps != null )
 		{
-			for( int x = 0; x < pcomps.length; x++ )
+			for( Ptg pcomp : pcomps )
 			{
-				v.add( pcomps[x] );
+				v.add( pcomp );
 			}
 		}
 		else

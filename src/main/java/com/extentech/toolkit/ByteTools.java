@@ -167,11 +167,11 @@ public final class ByteTools implements Serializable
 		// Deal with null input correctly
 		if( src == null )
 		{
-			return (byte[]) dest.clone();
+			return dest.clone();
 		}
 		if( dest == null )
 		{
-			return (byte[]) src.clone();
+			return src.clone();
 		}
 
 		int srclen = src.length;
@@ -348,9 +348,9 @@ public final class ByteTools implements Serializable
 
 		byte[] outbytes = new byte[buflen];
 		int pos = 0;
-		for( int i = 0; i < records.size(); i++ )
+		for( Object record : records )
 		{
-			byte[] stream = (byte[]) records.get( i );
+			byte[] stream = (byte[]) record;
 			outbytes = append( stream, outbytes, pos );
 			pos += stream.length;
 		}
@@ -506,7 +506,7 @@ public final class ByteTools implements Serializable
 		}
 		low = low & 0xffff;
 		high = high & 0xffff;
-		return (int) ((low << 16) | high);
+		return (low << 16) | high;
 	}
 
 	/**

@@ -23,6 +23,7 @@
 package com.extentech.formats.XLS.formulas;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /*
   Computes the intersection of the two top operands.  Essentially
@@ -124,13 +125,13 @@ public class PtgIsect extends GenericPtg implements Ptg
 				{
 					if( !((PtgArea) p).wholeCol || ((PtgArea) p).wholeRow )
 					{
-						Ptg[] pc = ((PtgArea) p).getComponents();
+						Ptg[] pc = p.getComponents();
 						if( pc != null )
 						{
-							for( int j = 0; j < pc.length; j++ )
+							for( Ptg aPc : pc )
 							{
-								((PtgRef) pc[j]).setSheetName( ((PtgArea) p).getSheetName() );
-								a.add( pc[j] );
+								((PtgRef) aPc).setSheetName( ((PtgArea) p).getSheetName() );
+								a.add( aPc );
 							}
 						}
 					}
@@ -149,24 +150,24 @@ public class PtgIsect extends GenericPtg implements Ptg
 				}
 				else if( p instanceof PtgName )
 				{
-					Ptg[] pc = ((PtgName) p).getComponents();
-					for( int j = 0; j < pc.length; j++ )
+					Ptg[] pc = p.getComponents();
+					for( Ptg aPc : pc )
 					{
-						a.add( pc[j] );
+						a.add( aPc );
 					}
 				}
 				else if( p instanceof PtgStr )
 				{
 					String[] comps = (p.toString()).split( "," );
-					for( int j = 0; j < comps.length; j++ )
+					for( String comp : comps )
 					{
-						if( comps[j].indexOf( ":" ) == -1 )
+						if( comp.indexOf( ":" ) == -1 )
 						{
-							if( !comps[j].equals( "#REF!" ) && !comps[j].equals( "#NULL!" ) )
+							if( !comp.equals( "#REF!" ) && !comp.equals( "#NULL!" ) )
 							{
 								PtgRef3d pr = new PtgRef3d( false );
 								pr.setParentRec( this.getParentRec() );
-								pr.setLocation( comps[j] );
+								pr.setLocation( comp );
 								a.add( pr );
 							}
 							else
@@ -180,14 +181,14 @@ public class PtgIsect extends GenericPtg implements Ptg
 						{
 							PtgArea3d pa = new PtgArea3d( false );
 							pa.setParentRec( this.getParentRec() );
-							pa.setLocation( comps[j] );
+							pa.setLocation( comp );
 							Ptg[] pcs = pa.getComponents();
 							if( pcs != null )
 							{
-								for( int k = 0; k < pcs.length; k++ )
+								for( Ptg pc : pcs )
 								{
-									((PtgRef) pcs[k]).setSheetName( pa.getSheetName() );
-									a.add( pcs[k] );
+									((PtgRef) pc).setSheetName( pa.getSheetName() );
+									a.add( pc );
 								}
 							}
 						}
@@ -196,12 +197,12 @@ public class PtgIsect extends GenericPtg implements Ptg
 				else if( p instanceof PtgArray )
 				{
 					// parse array components and create refs
-					Ptg[] pc = ((PtgArray) p).getComponents();
+					Ptg[] pc = p.getComponents();
 					if( pc != null )
 					{
-						for( int j = 0; j < pc.length; j++ )
+						for( Ptg aPc : pc )
 						{
-							String loc = ((PtgStr) pc[j]).toString();
+							String loc = aPc.toString();
 							if( loc.indexOf( ":" ) == -1 )
 							{
 								if( loc.indexOf( "!" ) == -1 )
@@ -226,10 +227,10 @@ public class PtgIsect extends GenericPtg implements Ptg
 								pa.setParentRec( this.getParentRec() );
 								pa.setLocation( loc );
 								Ptg[] pcs = pa.getComponents();
-								for( int k = 0; k < pcs.length; k++ )
+								for( Ptg pc1 : pcs )
 								{
-									((PtgRef) pcs[k]).setSheetName( pa.getSheetName() );
-									a.add( pcs[k] );
+									((PtgRef) pc1).setSheetName( pa.getSheetName() );
+									a.add( pc1 );
 								}
 							}
 						}
@@ -242,19 +243,19 @@ public class PtgIsect extends GenericPtg implements Ptg
 				else
 				{        // if an intermediary value returned from PtgRange, PtgUnion or PtgIsect, will be a GenericPtg which holds intermediary values in its vars array
 					Ptg[] pc = ((GenericPtg) p).vars;
-					for( int j = 0; j < pc.length; j++ )
+					for( Ptg aPc : pc )
 					{
-						if( (pc[j] instanceof PtgArea) & !(pc[j] instanceof PtgAreaErr3d) )
+						if( (aPc instanceof PtgArea) & !(aPc instanceof PtgAreaErr3d) )
 						{
-							Ptg[] pa = pc[j].getComponents();
-							for( int k = 0; k < pa.length; k++ )
+							Ptg[] pa = aPc.getComponents();
+							for( Ptg aPa : pa )
 							{
-								a.add( pa[k] );
+								a.add( aPa );
 							}
 						}
 						else
 						{
-							a.add( pc[j] );
+							a.add( aPc );
 						}
 					}
 				}
@@ -271,15 +272,15 @@ public class PtgIsect extends GenericPtg implements Ptg
 			// For performance reasons, instantiate a PtgMystery as a lightweight GenericPtg which holds intermediary values in it's vars
 			GenericPtg retp = new PtgMystery();
 			ArrayList retptgs = new ArrayList();
-			for( int k = 0; k < first.size(); k++ )
+			for( Object aFirst : first )
 			{
-				PtgRef pr = (PtgRef) first.get( k );
+				PtgRef pr = (PtgRef) aFirst;
 				int[] rc = pr.getIntLocation();
 				for( int m = 0; m < last.size(); m++ )
 				{
 					PtgRef pc = (PtgRef) last.get( m );
 					int[] rc2 = pc.getIntLocation();
-					if( java.util.Arrays.equals( rc, rc2 ) )
+					if( Arrays.equals( rc, rc2 ) )
 					{
 						retptgs.add( pc );
 						last.remove( m );

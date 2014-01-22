@@ -277,7 +277,7 @@ public class FormulaHandle
 			{
 				if( locptgs[x] instanceof PtgName )
 				{//avoid NumberFormatExceptions on parsing missing Named Ranges
-					ret[x] = ((PtgName) locptgs[x]).getLocation();
+					ret[x] = locptgs[x].getLocation();
 				}
 				else
 				{
@@ -412,9 +412,9 @@ public class FormulaHandle
 		String[] celladdys = fmh.getRanges();
 
 		// iterate
-		for( int x = 0; x < celladdys.length; x++ )
+		for( String celladdy : celladdys )
 		{
-			String[] s = ExcelTools.stripSheetNameFromRange( celladdys[x] );
+			String[] s = ExcelTools.stripSheetNameFromRange( celladdy );
 			String sh = s[0];        // sheet portion of address,if any
 			String range = s[1];    // range or single address
 			int rangeIdx = range.indexOf( ":" );
@@ -466,9 +466,9 @@ public class FormulaHandle
 			{
 				newAddress = sh + "!" + newAddress;
 			}
-			if( !fmh.changeFormulaLocation( celladdys[x], newAddress ) )
+			if( !fmh.changeFormulaLocation( celladdy, newAddress ) )
 			{
-				Logger.logErr( "Could not change Formula Reference: " + celladdys[x] + " to: " + newAddress );
+				Logger.logErr( "Could not change Formula Reference: " + celladdy + " to: " + newAddress );
 			}
 		}
 		return;

@@ -252,7 +252,7 @@ public final class ExpressionParser implements java.io.Serializable
 					}
 					int x = i;
 					x += 1; // move past the opcode to the cch
-					ptgLen = (int) (function[x] & 0xff); // this is the cch
+					ptgLen = function[x] & 0xff; // this is the cch
 					short theGrbit = function[x + 1];// this is the grbit;
 					if( (theGrbit & 0x1) == 0x1 )
 					{
@@ -1389,7 +1389,7 @@ public final class ExpressionParser implements java.io.Serializable
 			}
 			else if( o instanceof Ptg )
 			{
-				if( ((Ptg) o).equals( ptg ) )
+				if( o.equals( ptg ) )
 				{
 					return i;
 				}
@@ -1440,10 +1440,10 @@ public final class ExpressionParser implements java.io.Serializable
 				else if( part instanceof PtgMemFunc )
 				{
 					//Ptg[] p= getCellRangePtgs(((PtgMemFunc)part).getSubExpression());
-					Ptg[] p = ((PtgMemFunc) part).getComponents();
-					for( int z = 0; z < p.length; z++ )
+					Ptg[] p = part.getComponents();
+					for( Ptg aP : p )
 					{
-						ret.add( p[z] );
+						ret.add( aP );
 					}
 				}
 				else

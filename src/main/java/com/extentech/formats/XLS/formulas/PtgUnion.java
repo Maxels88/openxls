@@ -134,24 +134,24 @@ public class PtgUnion extends GenericPtg implements Ptg
 				}
 				else if( p instanceof PtgName )
 				{
-					Ptg[] pc = ((PtgName) p).getComponents();
-					for( int j = 0; j < pc.length; j++ )
+					Ptg[] pc = p.getComponents();
+					for( Ptg aPc : pc )
 					{
-						a.add( pc[j] );
+						a.add( aPc );
 					}
 				}
 				else if( p instanceof PtgStr )
 				{
 					String[] comps = (p.toString()).split( "," );
-					for( int j = 0; j < comps.length; j++ )
+					for( String comp : comps )
 					{
-						if( comps[j].indexOf( ":" ) == -1 )
+						if( comp.indexOf( ":" ) == -1 )
 						{
-							if( !comps[j].equals( "#REF!" ) && !comps[j].equals( "#NULL!" ) )
+							if( !comp.equals( "#REF!" ) && !comp.equals( "#NULL!" ) )
 							{
 								PtgRef3d pr = new PtgRef3d( false );
 								pr.setParentRec( this.getParentRec() );
-								pr.setLocation( comps[j] );
+								pr.setLocation( comp );
 								a.add( pr );
 							}
 							else
@@ -165,14 +165,14 @@ public class PtgUnion extends GenericPtg implements Ptg
 						{
 							PtgArea3d pa = new PtgArea3d( false );
 							pa.setParentRec( this.getParentRec() );
-							pa.setLocation( comps[j] );
+							pa.setLocation( comp );
 							Ptg[] pcs = pa.getComponents();
 							if( pcs != null )
 							{
-								for( int k = 0; k < pcs.length; k++ )
+								for( Ptg pc : pcs )
 								{
-									((PtgRef) pcs[k]).setSheetName( pa.getSheetName() );
-									a.add( pcs[k] );
+									((PtgRef) pc).setSheetName( pa.getSheetName() );
+									a.add( pc );
 								}
 							}
 						}
@@ -181,10 +181,10 @@ public class PtgUnion extends GenericPtg implements Ptg
 				else if( p instanceof PtgArray )
 				{
 					// parse array components and create refs
-					Ptg[] pc = ((PtgArray) p).getComponents();
-					for( int j = 0; j < pc.length; j++ )
+					Ptg[] pc = p.getComponents();
+					for( Ptg aPc : pc )
 					{
-						String loc = ((PtgStr) pc[j]).toString();
+						String loc = aPc.toString();
 						if( !loc.startsWith( "#" ) )
 						{ // skip errors -- TODO: IS THIS CORRECT?
 							if( loc.indexOf( ":" ) == -1 )
@@ -223,19 +223,19 @@ public class PtgUnion extends GenericPtg implements Ptg
 				else
 				{        // if an intermediary value returned from PtgRange, PtgUnion or PtgIsect, will be a GenericPtg which holds intermediary values in its vars array
 					Ptg[] pc = ((GenericPtg) p).vars;
-					for( int j = 0; j < pc.length; j++ )
+					for( Ptg aPc : pc )
 					{
-						if( (pc[j] instanceof PtgArea) & !(pc[j] instanceof PtgAreaErr3d) )
+						if( (aPc instanceof PtgArea) & !(aPc instanceof PtgAreaErr3d) )
 						{
-							Ptg[] pa = pc[j].getComponents();
-							for( int k = 0; k < pa.length; k++ )
+							Ptg[] pa = aPc.getComponents();
+							for( Ptg aPa : pa )
 							{
-								a.add( pa[k] );
+								a.add( aPa );
 							}
 						}
 						else
 						{
-							a.add( pc[j] );
+							a.add( aPc );
 						}
 					}
 				}
@@ -252,13 +252,13 @@ public class PtgUnion extends GenericPtg implements Ptg
 			// For performance reasons, instantiate a PtgMystery as a lightweight GenericPtg which holds intermediary values in it's vars
 			GenericPtg retp = new PtgMystery();
 			ArrayList retptgs = new ArrayList();
-			for( int k = 0; k < first.size(); k++ )
+			for( Object aFirst : first )
 			{
-				retptgs.add( (PtgRef) first.get( k ) );
+				retptgs.add( aFirst );
 			}
-			for( int k = 0; k < last.size(); k++ )
+			for( Object aLast : last )
 			{
-				retptgs.add( (PtgRef) last.get( k ) );
+				retptgs.add( aLast );
 			}
 			Ptg[] ptgs = new Ptg[retptgs.size()];
 			retptgs.toArray( ptgs );

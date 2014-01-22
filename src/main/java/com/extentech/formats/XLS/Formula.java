@@ -857,10 +857,10 @@ public final class Formula extends XLSCellRecord
 
 		// Expression Ptgs (rgce)
 		int offset = 22;
-		for( int idx = 0; idx < ptgdata.length; idx++ )
+		for( byte[] aPtgdata : ptgdata )
 		{
-			System.arraycopy( ptgdata[idx], 0, newdata, offset, ptgdata[idx].length );
-			offset += ptgdata[idx].length;
+			System.arraycopy( aPtgdata, 0, newdata, offset, aPtgdata.length );
+			offset += aPtgdata.length;
 		}
 
 		// Expression Extra Data (rgb)
@@ -1557,7 +1557,7 @@ public final class Formula extends XLSCellRecord
 				GenericPtg p = (GenericPtg) expression.pop();
 				if( p instanceof PtgRef )
 				{
-					((PtgRef) p).close();
+					p.close();
 				}
 /*	        	else if (p instanceof PtgExp ) {
 	        		Ptg[] ptgs= ((PtgExp)p).getConvertedExpression(); 

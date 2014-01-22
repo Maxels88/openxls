@@ -88,10 +88,10 @@ public class ColHandle
 		// KSC: make more betta :)
 		double w = 0;
 		CellHandle[] cxt = this.getCells();
-		for( int t = 0; t < cxt.length; t++ )
+		for( CellHandle aCxt : cxt )
 		{
-			String s = cxt[t].getFormattedStringVal();    //StringVal();
-			FormatHandle fh = cxt[t].getFormatHandle();
+			String s = aCxt.getFormattedStringVal();    //StringVal();
+			FormatHandle fh = aCxt.getFormatHandle();
 			Font ef = fh.getFont();
 			int style = java.awt.Font.PLAIN;
 			if( ef.getBold() )
@@ -105,7 +105,7 @@ public class ColHandle
 			int h = (int) ef.getFontHeightInPoints();
 			java.awt.Font f = new java.awt.Font( ef.getFontName(), style, h );
 			double newW = 0;
-			if( !cxt[t].getFormatHandle().getWrapText() ) // normal case, no wrap
+			if( !aCxt.getFormatHandle().getWrapText() ) // normal case, no wrap
 			{
 				newW = StringTool.getApproximateStringWidth( f, s );
 			}
@@ -166,10 +166,10 @@ public class ColHandle
 		}
 
 		myCol.setColWidthInChars( newWidth );
-		for( int z = 0; z < iAdjust.size(); z++ )
+		for( Object anIAdjust : iAdjust )
 		{
-			ImageHandle ih = images[((int[]) iAdjust.get( z ))[0]];
-			ih.setWidth( ((int[]) iAdjust.get( z ))[1] );
+			ImageHandle ih = images[((int[]) anIAdjust)[0]];
+			ih.setWidth( ((int[]) anIAdjust)[1] );
 		}
 	}
 
@@ -211,10 +211,10 @@ public class ColHandle
 		lastsz = newWidth;
 		myCol.setColWidth( newWidth );
 		// now adjust any of the images that we noted above
-		for( int z = 0; z < iAdjust.size(); z++ )
+		for( Object anIAdjust : iAdjust )
 		{
-			ImageHandle ih = images[((int[]) iAdjust.get( z ))[0]];
-			ih.setWidth( ((int[]) iAdjust.get( z ))[1] );
+			ImageHandle ih = images[((int[]) anIAdjust)[0]];
+			ih.setWidth( ((int[]) anIAdjust)[1] );
 		}
 	}
 
@@ -265,7 +265,7 @@ public class ColHandle
 			Colinfo c = sheet.getColInfo( col );
 			if( c != null )
 			{
-				w = (int) c.getColWidth();
+				w = c.getColWidth();
 			}
 		}
 		catch( Exception e )
@@ -390,12 +390,12 @@ public class ColHandle
 	public boolean containsMergeRange()
 	{
 		RowHandle[] r = mySheet.getRows();
-		for( int i = 0; i < r.length; i++ )
+		for( RowHandle aR : r )
 		{
 			BiffRec b;
 			try
 			{
-				b = r[i].myRow.getCell( (short) this.getColFirst() );
+				b = aR.myRow.getCell( (short) this.getColFirst() );
 				if( (b != null) && (b.getMergeRange() != null) )
 				{
 					return true;

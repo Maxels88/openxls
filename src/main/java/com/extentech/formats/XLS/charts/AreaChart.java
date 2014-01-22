@@ -61,9 +61,9 @@ public class AreaChart extends ChartType
 		JSONArray seriesCOLORS = new JSONArray();
 		try
 		{
-			for( int i = 0; i < series.length; i++ )
+			for( ChartSeriesHandle sery : series )
 			{
-				JSONArray seriesvals = CellRange.getValuesAsJSON( series[i].getSeriesRange(), wbh );
+				JSONArray seriesvals = CellRange.getValuesAsJSON( sery.getSeriesRange(), wbh );
 				// must trap min and max for axis tick and units
 				double sum = 0.0;    // for area-type charts, ymax is the sum of all points in same series
 				nSeries = Math.max( nSeries, seriesvals.length() );
@@ -81,7 +81,7 @@ public class AreaChart extends ChartType
 					}
 				}
 				seriesJSON.put( seriesvals );
-				seriesCOLORS.put( FormatConstants.SVGCOLORSTRINGS[series[i].getSeriesColor()] );
+				seriesCOLORS.put( FormatConstants.SVGCOLORSTRINGS[sery.getSeriesColor()] );
 			}
 			chartObjectJSON.put( "Series", seriesJSON );
 			chartObjectJSON.put( "SeriesFills", seriesCOLORS );

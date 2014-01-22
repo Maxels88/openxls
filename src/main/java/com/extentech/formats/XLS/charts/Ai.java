@@ -132,9 +132,9 @@ public final class Ai extends GenericChartObject implements ChartObject
 		if( "".equals( boundName ) )
 		{
 			this.origSheetName = origSheetName;    // 20080708 KSC: trap original sheet name for updateSheetRefs comparison
-			for( int t = 0; t < expression.size(); t++ )
+			for( Object anExpression : expression )
 			{
-				Ptg p = (Ptg) expression.get( t );
+				Ptg p = (Ptg) anExpression;
 				if( p instanceof PtgArea3d )
 				{
 					PtgArea3d pt = (PtgArea3d) p;
@@ -284,9 +284,9 @@ public final class Ai extends GenericChartObject implements ChartObject
 		byte[] dt = this.getData();
 		int pos = 8;
 
-		for( int t = 0; t < expression.size(); t++ )
+		for( Object anExpression : expression )
 		{
-			Ptg p = (Ptg) expression.get( t );
+			Ptg p = (Ptg) anExpression;
 			if( p instanceof PtgArea3d )
 			{
 				PtgArea3d pt = (PtgArea3d) p;
@@ -350,9 +350,9 @@ public final class Ai extends GenericChartObject implements ChartObject
 	 */
 	public void setExternsheetRef( int oldRef, int newRef ) throws WorkSheetNotFoundException
 	{
-		for( int t = 0; t < expression.size(); t++ )
+		for( Object anExpression : expression )
 		{
-			Ptg p = (Ptg) expression.get( t );
+			Ptg p = (Ptg) anExpression;
 			if( p instanceof PtgArea3d )
 			{
 				PtgArea3d pt = (PtgArea3d) p;
@@ -460,11 +460,11 @@ public final class Ai extends GenericChartObject implements ChartObject
 				}
 				catch( Exception e )
 				{ // 20080123 KSC: if links arent there, fix == try to make an External ref
-					for( int t = 0; t < expression.size(); t++ )
+					for( Object anExpression : expression )
 					{
-						if( expression.get( t ) instanceof PtgArea3d )
+						if( anExpression instanceof PtgArea3d )
 						{
-							PtgArea3d p = (PtgArea3d) expression.get( t );
+							PtgArea3d p = (PtgArea3d) anExpression;
 							Logger.logWarn( "External References are unsupported: External reference found in Chart: " + p.getSheetName() );
 							p.setSheetName( boundName );    // set external reference to original boundsheet name
 							p.setExternalReference( origWorkBookName );
@@ -515,14 +515,14 @@ public final class Ai extends GenericChartObject implements ChartObject
 		StringBuffer sb = new StringBuffer();
 		Ptg[] ep = new Ptg[expression.size()];
 		ep = (Ptg[]) expression.toArray( ep );
-		for( int t = 0; t < ep.length; t++ )
+		for( Ptg anEp : ep )
 		{
-			if( !(ep[t] instanceof PtgParen) )    // 20091019 KSC: if complex series, will have a PtgParen after PtgMemFunc;
+			if( !(anEp instanceof PtgParen) )    // 20091019 KSC: if complex series, will have a PtgParen after PtgMemFunc;
 /*				if (ep[t] instanceof PtgMemFunc)
 					sb.append("(" + ep[t].getString() + ")");
 				else*/
 			{
-				sb.append( ep[t].getString() );
+				sb.append( anEp.getString() );
 			}
 		}
 		return sb.toString();
@@ -603,7 +603,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 	public boolean changeAiLocation( Ptg p, String newLoc )
 	{
 		String[] aiLocs = StringTool.splitString( newLoc, "," );
-		for( int i = 0; i < aiLocs.length; i++ )
+		for( String aiLoc : aiLocs )
 		{
 			try
 			{    // NOTE: Ai has only 1 expression OR 2: 1= PtgMemFunc 2=PtgParen
@@ -613,11 +613,11 @@ public final class Ai extends GenericChartObject implements ChartObject
 					try
 					{    // must find particular ptg in PtgMemFunc's subexression to reset
 						// APPARENTLY WE DO NOT NEED TO UDPATE PTGMEMFUNC SUBEXPRESSION EXPLICITLY
-						//int z= ExpressionParser.getExpressionLocByPtg(p, ((PtgMemFunc) expression.get(0)).getSubExpression());						
+						//int z= ExpressionParser.getExpressionLocByPtg(p, ((PtgMemFunc) expression.get(0)).getSubExpression());
 //						Stack subexp= ((PtgMemFunc) expression.get(0)).getSubExpression();
 //						for (int z= 0; z < subexp.size(); z++) {
 //							if (p.equals(subexp.get(z))) {
-						p.setLocation( aiLocs[i] );    // updates ref. tracker
+						p.setLocation( aiLoc );    // updates ref. tracker
 //								((PtgMemFunc) expression.get(0)).getSubExpression().set(z, p);	// update expression with new Ptg
 //							}
 //						}
@@ -629,13 +629,13 @@ public final class Ai extends GenericChartObject implements ChartObject
 				}
 				else
 				{
-					p.setLocation( aiLocs[i] );    // updates ref. tracker
+					p.setLocation( aiLoc );    // updates ref. tracker
 					expression.set( 0, p );    // update expression with new Ptg
 					if( this.getType() == Ai.TYPE_TEXT )
 					{    // must reset text for SeriesText as well
 						try
 						{
-							Object o = ((PtgRef) p).getValue();
+							Object o = p.getValue();
 							this.setText( o.toString() );
 						}
 						catch( Exception e )
@@ -815,7 +815,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 				GenericPtg p = (GenericPtg) expression.pop();
 				if( p instanceof PtgRef )
 				{
-					((PtgRef) p).close();
+					p.close();
 				}
 				else
 				{

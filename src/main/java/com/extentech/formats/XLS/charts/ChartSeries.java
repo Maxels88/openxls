@@ -325,9 +325,9 @@ public class ChartSeries implements ChartConstants, Serializable
 		{
 			// scale is SUM of values, yMax is maximum total per series point
 			double[] sum = new double[nseries];
-			for( int i = 0; i < seriesvalues.size(); i++ )
+			for( Object seriesvalue : seriesvalues )
 			{
-				double[] seriesv = (double[]) seriesvalues.get( i );
+				double[] seriesv = (double[]) seriesvalue;
 				for( int j = 0; j < seriesv.length; j++ )
 				{
 					sum[j] = sum[j] + seriesv[j];
@@ -358,9 +358,9 @@ public class ChartSeries implements ChartConstants, Serializable
 	public boolean changeSeriesRange( String originalrange, String newrange )
 	{
 		boolean changed = false;
-		for( int i = 0; i < series.size(); i++ )
+		for( Object[] sery : series )
 		{
-			Series s = (Series) ((Object[]) series.get( i ))[0];
+			Series s = (Series) sery[0];
 			Ai ai = s.getSeriesValueAi();
 			if( ai != null )
 			{
@@ -436,12 +436,12 @@ public class ChartSeries implements ChartConstants, Serializable
     	}
 */
 		Vector retVec = new Vector();
-		for( int i = 0; i < series.size(); i++ )
+		for( Object[] sery : series )
 		{
-			Integer chart = (Integer) ((Object[]) series.get( i ))[1];
+			Integer chart = (Integer) sery[1];
 			if( (nChart == -1) || (nChart == chart) )
 			{
-				Series s = (Series) ((Object[]) series.get( i ))[0];
+				Series s = (Series) sery[0];
 				retVec.add( s );
 			}
 		}
@@ -474,11 +474,11 @@ public class ChartSeries implements ChartConstants, Serializable
 		ArrayList<XLSRecord> chartArr = s.getParentChart().chartArr;
 		for( int i = 0; i < chartArr.size(); i++ )
 		{
-			BiffRec br = (BiffRec) chartArr.get( i );
+			BiffRec br = chartArr.get( i );
 			BiffRec br2 = null;
 			if( i < (chartArr.size() - 1) )
 			{
-				br2 = (BiffRec) chartArr.get( i + 1 );
+				br2 = chartArr.get( i + 1 );
 			}
 			if( (br != null) && (((br.getOpcode() == XLSConstants.SERIES) && (br2.getOpcode() != XLSConstants.SERIES)) || ((br.getOpcode() == XLSConstants.FRAME) && (br2
 					.getOpcode() == XLSConstants.SHTPROPS))) )
@@ -515,7 +515,7 @@ public class ChartSeries implements ChartConstants, Serializable
 	{
 		for( int z = 0; z < series.size(); z++ )
 		{
-			Series ss = (Series) ((Object[]) series.get( z ))[0];
+			Series ss = (Series) series.get( z )[0];
 			if( ss.equals( seriestodelete ) )
 			{
 				series.remove( z );
@@ -534,9 +534,9 @@ public class ChartSeries implements ChartConstants, Serializable
 	public Series getSeries( String seriesName, int nChart )
 	{
 		Vector seriesperchart = this.getAllSeries( nChart );
-		for( int i = 0; i < seriesperchart.size(); i++ )
+		for( Object aSeriesperchart : seriesperchart )
 		{
-			Series s = (Series) seriesperchart.get( i );
+			Series s = (Series) aSeriesperchart;
 			if( s.getLegendText().equalsIgnoreCase( seriesName ) )
 			{
 				return s;
@@ -555,9 +555,9 @@ public class ChartSeries implements ChartConstants, Serializable
 	public boolean changeCategoryRange( String originalrange, String newrange )
 	{
 		boolean changed = false;
-		for( int i = 0; i < series.size(); i++ )
+		for( Object[] sery : series )
 		{
-			Series s = (Series) ((Object[]) series.get( i ))[0];
+			Series s = (Series) sery[0];
 			Ai ai = s.getCategoryValueAi();
 			if( ai.toString().equalsIgnoreCase( originalrange ) )
 			{
@@ -577,9 +577,9 @@ public class ChartSeries implements ChartConstants, Serializable
 	public boolean changeTextValue( String originalval, String newval )
 	{
 		boolean changed = false;
-		for( int i = 0; i < series.size(); i++ )
+		for( Object[] sery : series )
 		{
-			Series s = (Series) ((Object[]) series.get( i ))[0];
+			Series s = (Series) sery[0];
 			Ai ai = s.getCategoryValueAi();
 			if( ai.getText().equals( originalval ) )
 			{
@@ -668,20 +668,20 @@ public class ChartSeries implements ChartConstants, Serializable
 	public Ptg[] getCellRangePtgs()
 	{
 		CompatibleVector locptgs = new CompatibleVector();
-		for( int i = 0; i < series.size(); i++ )
+		for( Object[] sery : series )
 		{
-			Series s = (Series) ((Object[]) series.get( i ))[0];
+			Series s = (Series) sery[0];
 			for( int j = 0; j < s.chartArr.size(); j++ )
 			{
-				BiffRec br = (BiffRec) s.chartArr.get( j );
+				BiffRec br = s.chartArr.get( j );
 				if( br.getOpcode() == XLSConstants.AI )
 				{
 					try
 					{
 						Ptg[] ps = ((Ai) br).getCellRangePtgs();
-						for( int t = 0; t < ps.length; t++ )
+						for( Ptg p : ps )
 						{
-							locptgs.add( ps[t] );
+							locptgs.add( p );
 						}
 					}
 					catch( Exception e )
@@ -701,12 +701,12 @@ public class ChartSeries implements ChartConstants, Serializable
 	public HashMap getSeriesPtgs()
 	{
 		HashMap seriesPtgs = new HashMap();
-		for( int i = 0; i < series.size(); i++ )
+		for( Object[] sery : series )
 		{
-			Series s = (Series) ((Object[]) series.get( i ))[0];
+			Series s = (Series) sery[0];
 			for( int j = 0; j < s.chartArr.size(); j++ )
 			{
-				BiffRec br = (BiffRec) s.chartArr.get( j );
+				BiffRec br = s.chartArr.get( j );
 				if( br.getOpcode() == XLSConstants.AI )
 				{
 					if( ((Ai) br).getType() == Ai.TYPE_VALS )
@@ -735,13 +735,13 @@ public class ChartSeries implements ChartConstants, Serializable
 	 */
 	public void addSeriesMapping( int nCharts, int[] seriesList )
 	{
-		for( int i = 0; i < seriesList.length; i++ )
+		for( int aSeriesList : seriesList )
 		{
 			try
 			{
-				int idx = seriesList[i] - 1;
+				int idx = aSeriesList - 1;
 				// ALL series in chart MAPPED to chart that "owns" it            			
-				Series s = (Series) ((Object[]) series.get( idx ))[0];
+				Series s = (Series) series.get( idx )[0];
 				series.add( idx, new Object[]{ s, nCharts } );
 			}
 			catch( ArrayIndexOutOfBoundsException ae )
@@ -785,7 +785,7 @@ public class ChartSeries implements ChartConstants, Serializable
 		int[] markers = new int[series.size()];
 		for( int i = 0; i < series.size(); i++ )
 		{
-			Series s = (Series) ((Object[]) series.get( i ))[0];
+			Series s = (Series) series.get( i )[0];
 			markers[i] = s.getMarkerFormat();
 		}
 		return markers;
@@ -880,7 +880,7 @@ public class ChartSeries implements ChartConstants, Serializable
 							dpts = new ArrayList();
 						}
 						lastTag.push( tnm );                // keep track of element hierarchy
-						dpts.add( (DPt) DPt.parseOOXML( xpp, lastTag, wbh ).cloneElement() );
+						dpts.add( DPt.parseOOXML( xpp, lastTag, wbh ).cloneElement() );
 					}
 					else if( tnm.equals( "spPr" ) )
 					{    // series spPr
@@ -1049,9 +1049,9 @@ public class ChartSeries implements ChartConstants, Serializable
 						}
 						if( dpts != null )
 						{
-							for( int z = 0; z < dpts.size(); z++ )
+							for( Object dpt : dpts )
 							{
-								s.addDpt( (DPt) dpts.get( z ) );
+								s.addDpt( (DPt) dpt );
 							}
 						}
 						if( m != null )
@@ -1139,9 +1139,9 @@ public class ChartSeries implements ChartConstants, Serializable
 			if( s.getDPt() != null )
 			{
 				DPt[] datapoints = s.getDPt();
-				for( int z = 0; z < datapoints.length; z++ )
+				for( DPt datapoint : datapoints )
 				{
-					ooxml.append( datapoints[z].getOOXML() );
+					ooxml.append( datapoint.getOOXML() );
 				}
 			}
 			if( s.getDLbls() != null )
@@ -1202,7 +1202,7 @@ public class ChartSeries implements ChartConstants, Serializable
 		ArrayList seriesmappings = new ArrayList();
 		for( int z = 0; z < series.size(); z++ )
 		{
-			int chartnumber = (Integer) ((Object[]) series.get( z ))[1];
+			int chartnumber = (Integer) series.get( z )[1];
 			if( chartnumber == thischartnumber )    // mappped to this chart
 			{
 				seriesmappings.add( z + 1 );
@@ -1236,7 +1236,7 @@ public class ChartSeries implements ChartConstants, Serializable
 		{    // handled differently
 			if( series.size() > 0 )
 			{
-				Series s = (Series) ((Object[]) series.get( 0 ))[0];
+				Series s = (Series) series.get( 0 )[0];
 				int[] dls = s.getDataLabelsPIE( defaultDL );
 				if( dls == null )
 				{
@@ -1248,7 +1248,7 @@ public class ChartSeries implements ChartConstants, Serializable
 		int[] datalabels = new int[series.size()];
 		for( int i = 0; i < series.size(); i++ )
 		{
-			Series s = (Series) ((Object[]) series.get( i ))[0];
+			Series s = (Series) series.get( i )[0];
 			datalabels[i] = s.getDataLabel();
 			datalabels[i] |= defaultDL; // if no per-series setting use overall chart setting
 		}

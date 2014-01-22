@@ -104,13 +104,13 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 
 	protected void parseGrbit()
 	{
-		byte[] grbytes = ByteTools.shortToLEBytes( (short) grbit );
-		fAutoPosition = (((byte) grbytes[0] & 0x01) == 0x01);
-		fAutoSeries = (((byte) grbytes[0] & 0x02) == 0x02);
-		fAutoPosX = (((byte) grbytes[0] & 0x04) == 0x04);
-		fAutoPosY = (((byte) grbytes[0] & 0x08) == 0x08);
-		fVert = (((byte) grbytes[0] & 0x10) == 0x10);
-		fWasDataTable = (((byte) grbytes[0] & 0x20) == 0x20);
+		byte[] grbytes = ByteTools.shortToLEBytes( grbit );
+		fAutoPosition = ((grbytes[0] & 0x01) == 0x01);
+		fAutoSeries = ((grbytes[0] & 0x02) == 0x02);
+		fAutoPosX = ((grbytes[0] & 0x04) == 0x04);
+		fAutoPosY = ((grbytes[0] & 0x08) == 0x08);
+		fVert = ((grbytes[0] & 0x10) == 0x10);
+		fWasDataTable = ((grbytes[0] & 0x20) == 0x20);
 	}
 
 	public void setIsDataTable( boolean isDataTable )
@@ -350,15 +350,15 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 			double legendsWidth = 0;
 			java.awt.Font jf = new java.awt.Font( f.getFontName(), f.getFontWeight(), (int) f.getFontHeightInPoints() );
 			int extras = (((chartType == ChartConstants.LINECHART) || (chartType == ChartConstants.RADARCHART)) ? 15 : 5);    // pad for legend symbols, etc	-
-			for( int i = 0; i < legends.length; i++ )
+			for( String legend : legends )
 			{
 				if( fVert )
 				{
-					legendsWidth = Math.max( legendsWidth, StringTool.getApproximateStringWidth( jf, " " + legends[i] + " " ) );
+					legendsWidth = Math.max( legendsWidth, StringTool.getApproximateStringWidth( jf, " " + legend + " " ) );
 				}
 				else
 				{
-					legendsWidth += StringTool.getApproximateStringWidth( jf, " " + legends[i] + " " ) + extras;
+					legendsWidth += StringTool.getApproximateStringWidth( jf, " " + legend + " " ) + extras;
 				}
 			}
 			if( !fVert )
@@ -455,7 +455,7 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 		Pos p = (Pos) Chart.findRec( this.chartArr, Pos.class );
 		int[] coords = p.getLegendCoords();
 		int[] retcoords = new int[6];
-		int fh = (int) (f.getSize());    //*1.2);	// a little padding
+		int fh = f.getSize();    //*1.2);	// a little padding
 		retcoords[4] = f.getSize();    // store font height
 		retcoords[5] = this.getLegendPosition();    // store legend position
 
@@ -480,9 +480,9 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 		else
 		{
 			double len = 0;
-			for( int i = 0; i < legends.length; i++ )
+			for( String legend : legends )
 			{
-				len = Math.max( len, StringTool.getApproximateStringWidth( f, legends[i] ) );
+				len = Math.max( len, StringTool.getApproximateStringWidth( f, legend ) );
 			}
 			retcoords[2] = (int) Math.ceil( len );
 			retcoords[2] += 15 + (((charttype == ChartConstants.LINECHART) || (charttype == ChartConstants.RADARCHART)) ? 25 : 5);    // pad for legend symbols, etc	-

@@ -55,11 +55,11 @@ public class LogicalCalculator
 	{
 		boolean b = true;
 		Ptg[] alloperands = PtgCalculator.getAllComponents( operands );
-		for( int i = 0; i < alloperands.length; i++ )
+		for( Ptg alloperand : alloperands )
 		{
-			if( alloperands[i] instanceof PtgBool )
+			if( alloperand instanceof PtgBool )
 			{
-				PtgBool bo = (PtgBool) alloperands[i];
+				PtgBool bo = (PtgBool) alloperand;
 				Boolean bool = (Boolean) bo.getValue();
 				if( bool == false )
 				{
@@ -69,7 +69,7 @@ public class LogicalCalculator
 			else
 			{
 				// probably a ref, hopefully to a bool
-				String s = String.valueOf( alloperands[i].getValue() );
+				String s = String.valueOf( alloperand.getValue() );
 				if( s.equalsIgnoreCase( "false" ) )
 				{
 					return new PtgBool( false );
@@ -174,7 +174,7 @@ public class LogicalCalculator
 		try
 		{    // see what type of operands iftrue and iffalse arrays are
 			String retArry = "";
-			Ptg[] p = ((PtgArray) determine).getComponents();
+			Ptg[] p = determine.getComponents();
 //			boolean trueIsArray= iftrue instanceof
 			boolean res = true;
 			boolean trueValueIsArray = (iftrue instanceof PtgArray);
@@ -252,9 +252,9 @@ public class LogicalCalculator
 		Ptg[] alloperands = PtgCalculator.getAllComponents( operands );
 // KSC: TESTING	
 //System.out.print("\tOR " + operands[0].toString() + " " + operands[1].toString() + "? ");
-		for( int i = 0; i < alloperands.length; i++ )
+		for( Ptg alloperand : alloperands )
 		{
-			if( String.valueOf( alloperands[i].getValue() ).equalsIgnoreCase( "true" ) )
+			if( String.valueOf( alloperand.getValue() ).equalsIgnoreCase( "true" ) )
 			{
 				return new PtgBool( true );
 			}
@@ -296,10 +296,10 @@ public class LogicalCalculator
 		}
 		Ptg[] components = operands[0].getComponents();
 		String retArray = "";
-		for( int i = 0; i < components.length; i++ )
+		for( Ptg component : components )
 		{
 			Ptg[] test = new Ptg[1];
-			test[0] = components[i];
+			test[0] = component;
 			PtgBool ret = (PtgBool) InformationCalculator.calcIserror( test );
 			if( ret.getBooleanValue() )    // it's an error
 			{

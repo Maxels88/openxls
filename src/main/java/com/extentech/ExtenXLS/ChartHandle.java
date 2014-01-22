@@ -196,7 +196,7 @@ public class ChartHandle implements ChartConstants
 			int nSeries = jsonDataRange.getJSONArray( "Series" ).length();
 			for( int i = 0; i < nSeries; i++ )
 			{
-				JSONObject series = (JSONObject) ((JSONArray) jsonDataRange.getJSONArray( "Series" )).get( i );
+				JSONObject series = (JSONObject) jsonDataRange.getJSONArray( "Series" ).get( i );
 				String serrange = series.get( "v" ).toString();
 				if( !serrange.startsWith( sheet ) )
 				{
@@ -395,12 +395,12 @@ public class ChartHandle implements ChartConstants
 	public ChartSeriesHandle getChartSeriesHandle( String seriesRange )
 	{
 		ChartSeriesHandle[] series = this.getAllChartSeriesHandles();
-		for( int i = 0; i < series.length; i++ )
+		for( ChartSeriesHandle sery : series )
 		{
-			String sr = series[i].getSeriesRange();
+			String sr = sery.getSeriesRange();
 			if( seriesRange.equalsIgnoreCase( sr ) )
 			{
-				return series[i];
+				return sery;
 			}
 		}
 		return null;
@@ -1674,9 +1674,9 @@ public class ChartHandle implements ChartConstants
 	{
 		// first, remove all existing series
 		Vector v = mychart.getAllSeries();
-		for( int i = 0; i < v.size(); i++ )
+		for( Object aV : v )
 		{
-			mychart.removeSeries( (Series) v.get( i ) );
+			mychart.removeSeries( (Series) aV );
 		}
 		try
 		{
@@ -1812,9 +1812,8 @@ public class ChartHandle implements ChartConstants
 	{
 		ChartSeriesHandle[] handles = this.getAllChartSeriesHandles( nChart );
 
-		for( int i = 0; i < handles.length; i++ )
+		for( ChartSeriesHandle theHandle : handles )
 		{
-			ChartSeriesHandle theHandle = handles[i];
 			// update the series
 			String seriesRange = theHandle.getSeriesRange();
 			String[] s = ExcelTools.stripSheetNameFromRange( seriesRange );
@@ -1840,7 +1839,7 @@ public class ChartHandle implements ChartConstants
 			s = ExcelTools.stripSheetNameFromRange( seriesRange );
 			sheetnm = s[0];
 			seriesRange = s[1];
-		    /*
+			/*
             sheetnm = seriesRange.substring(0, seriesRange.indexOf("!"));
             seriesRange = seriesRange.substring( seriesRange.indexOf("!")+1,  seriesRange.length());
             // Strip 2nd sheet ref, if any 20080213 KSC
@@ -2277,19 +2276,19 @@ public class ChartHandle implements ChartConstants
 		// Source Data
 		sb.append( t( 2 ) + "<SourceData>\n" );
 		ChartSeriesHandle[] series = this.getAllChartSeriesHandles();
-		for( int i = 0; i < series.length; i++ )
+		for( ChartSeriesHandle sery : series )
 		{
-			sb.append( t( 3 ) + "<Series Legend=\"" + series[i].getSeriesLegendReference() + "\"" );
-			sb.append( " Range=\"" + series[i].getSeriesRange() + "\"" );
-			sb.append( " Category=\"" + series[i].getCategoryRange() + "\"" );
-			if( series[i].hasBubbleSizes() )
+			sb.append( t( 3 ) + "<Series Legend=\"" + sery.getSeriesLegendReference() + "\"" );
+			sb.append( " Range=\"" + sery.getSeriesRange() + "\"" );
+			sb.append( " Category=\"" + sery.getCategoryRange() + "\"" );
+			if( sery.hasBubbleSizes() )
 			{
-				sb.append( " Bubbles=\"" + series[i].getBubbleSizes() + "\"" );
+				sb.append( " Bubbles=\"" + sery.getBubbleSizes() + "\"" );
 			}
-			sb.append( " TypeX=\"" + series[i].getCategoryDataType() + "\"" );
-			sb.append( " TypeY=\"" + series[i].getSeriesDataType() + "\"" );
-			// controls shape of complex datapoints such as pyramid, cylinder, cone + stacked 3d bars  
-			sb.append( " Shape=\"" + series[i].getShape() + "\"" );
+			sb.append( " TypeX=\"" + sery.getCategoryDataType() + "\"" );
+			sb.append( " TypeY=\"" + sery.getSeriesDataType() + "\"" );
+			// controls shape of complex datapoints such as pyramid, cylinder, cone + stacked 3d bars
+			sb.append( " Shape=\"" + sery.getShape() + "\"" );
 			sb.append( "/>\n" );
 		}
 		sb.append( t( 2 ) + "</SourceData>\n" );
@@ -2358,9 +2357,9 @@ public class ChartHandle implements ChartConstants
 			if( chartEmbeds != null )
 			{
 				int j = 0;
-				for( int i = 0; i < chartEmbeds.size(); i++ )
+				for( Object chartEmbed : chartEmbeds )
 				{
-					if( ((String[]) chartEmbeds.get( i ))[0].equals( "userShape" ) )
+					if( ((String[]) chartEmbed)[0].equals( "userShape" ) )
 					{
 						j++;
 						cooxml.append( "<c:userShapes r:id=\"rId" + j + "\"/>" );
@@ -2530,7 +2529,7 @@ public class ChartHandle implements ChartConstants
 					}
 					else if( tnm.equals( "spPr" ) )
 					{ // shape properties -- can be for plot area or chart space 
-						String parent = (String) lastTag.get( lastTag.size() - 2 );
+						String parent = lastTag.get( lastTag.size() - 2 );
 						if( parent.equals( "plotArea" ) )
 						{
 							thischart.setSpPr( 0, (SpPr) SpPr.parseOOXML( xpp, lastTag, this.wbh ).cloneElement() );
@@ -2667,11 +2666,11 @@ public class ChartHandle implements ChartConstants
 		ChartSeriesHandle[] series = this.getAllChartSeriesHandles();
 		int nSeries = series.length;
 		int nPoints = 0;
-		for( int i = 0; i < series.length; i++ )
+		for( ChartSeriesHandle sery : series )
 		{
 			try
 			{
-				int[] coords = ExcelTools.getRangeCoords( series[i].getSeriesRange() );
+				int[] coords = ExcelTools.getRangeCoords( sery.getSeriesRange() );
 				if( coords[3] > coords[1] )
 				{
 					nPoints = Math.max( nPoints, (coords[3] - coords[1]) + 1 );    // c1-c0
@@ -3492,9 +3491,9 @@ public class ChartHandle implements ChartConstants
 				short s = this.mychart.getLegend().getLegendPosition();
 				String[] legends = this.mychart.getLegends( -1 ); // -1 is flag for all rather than for a specific chart
 				String l = "";
-				for( int i = 0; i < legends.length; i++ )
+				for( String legend : legends )
 				{
-					l += legends[i] + ",";
+					l += legend + ",";
 				}
 				if( l.length() > 0 )
 				{

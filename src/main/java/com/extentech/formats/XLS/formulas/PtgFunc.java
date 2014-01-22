@@ -306,7 +306,7 @@ public class PtgFunc extends GenericPtg implements Ptg
 		switch( iftab )
 		{
 			case FunctionConstants.xlfRows:
-				for( int i = 0; i < vars.length; i++ )
+				for( Ptg var : vars )
 				{
 					if( vars[0] instanceof PtgRef )
 					{

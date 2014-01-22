@@ -68,11 +68,11 @@ public class ConditionalFormatHandle implements Handle
 	public ConditionalFormatRule evaluate( CellHandle refcell )
 	{
 		ConditionalFormatRule[] rules = this.getRules();
-		for( int i = 0; i < rules.length; i++ )
+		for( ConditionalFormatRule rule : rules )
 		{
-			if( rules[i].evaluate( refcell ) )
+			if( rule.evaluate( refcell ) )
 			{
-				return rules[i];
+				return rule;
 			}
 		}
 		return null;

@@ -55,19 +55,19 @@ public class StatisticalCalculator
 	{
 		Vector vect = new Vector();
 
-		for( int i = 0; i < operands.length; i++ )
+		for( Ptg operand : operands )
 		{
-			Ptg[] pthings = operands[i].getComponents(); // optimized -- do it once!! -jm
+			Ptg[] pthings = operand.getComponents(); // optimized -- do it once!! -jm
 			if( pthings != null )
 			{
-				for( int z = 0; z < pthings.length; z++ )
+				for( Ptg pthing : pthings )
 				{
-					vect.add( pthings[z] );
+					vect.add( pthing );
 				}
 			}
 			else
 			{
-				Ptg p = operands[i];
+				Ptg p = operand;
 				vect.add( p );
 			}
 		}
@@ -301,9 +301,9 @@ public class StatisticalCalculator
 			// At this point we have a collection of all the cells that pass (or their corresponding cell in sum_range);
 			// Now we sum up the values of these cells and return
 			double result = 0.0;
-			for( int i = 0; i < passesList.size(); i++ )
+			for( Object aPassesList : passesList )
 			{
-				Ptg cell = (Ptg) passesList.get( i );
+				Ptg cell = (Ptg) aPassesList;
 				try
 				{
 					result += cell.getDoubleVal();
@@ -368,9 +368,8 @@ public class StatisticalCalculator
 		int count = 0;
 		Double d;
 		Ptg[] alloperands = PtgCalculator.getAllComponents( operands );
-		for( int i = 0; i < alloperands.length; i++ )
+		for( Ptg resPtg : alloperands )
 		{
-			Ptg resPtg = alloperands[i];
 			try
 			{  // some fields may be text, so handle gracefully
 				if( resPtg.getValue() != null )
@@ -409,9 +408,8 @@ public class StatisticalCalculator
 	{
 		Ptg[] alloperands = PtgCalculator.getAllComponents( operands );
 		double total = 0;
-		for( int i = 0; i < alloperands.length; i++ )
+		for( Ptg p : alloperands )
 		{
-			Ptg p = alloperands[i];
 			try
 			{
 				Object ov = p.getValue();
@@ -486,16 +484,16 @@ CONFIDENCE
 			return new PtgErr( PtgErr.ERROR_NA );//20090130 KSC: propagate error
 		}
 		double xstat = 0;
-		for( int i = 0; i < xVals.length; i++ )
+		for( double xVal : xVals )
 		{
-			xstat += Math.pow( (xVals[i] - xMean), 2 );
+			xstat += Math.pow( (xVal - xMean), 2 );
 		}
 		xstat = xstat / xVals.length;
 		xstat = Math.sqrt( xstat );
 		double ystat = 0;
-		for( int i = 0; i < yVals.length; i++ )
+		for( double yVal : yVals )
 		{
-			ystat += Math.pow( (yVals[i] - yMean), 2 );
+			ystat += Math.pow( (yVal - yMean), 2 );
 		}
 		ystat = ystat / yVals.length;
 		ystat = Math.sqrt( ystat );
@@ -520,14 +518,14 @@ CONFIDENCE
 	protected static Ptg calcCount( Ptg[] operands )
 	{
 		int count = 0;
-		for( int i = 0; i < operands.length; i++ )
+		for( Ptg operand : operands )
 		{
-			Ptg[] pref = operands[i].getComponents(); // optimized -- do it once!! -jm
+			Ptg[] pref = operand.getComponents(); // optimized -- do it once!! -jm
 			if( pref != null )
-			{ // it is some sort of range  
-				for( int z = 0; z < pref.length; z++ )
+			{ // it is some sort of range
+				for( Ptg aPref : pref )
 				{
-					Object o = pref[z].getValue();
+					Object o = aPref.getValue();
 					if( o != null )
 					{
 						try
@@ -543,7 +541,7 @@ CONFIDENCE
 			}
 			else
 			{  // it's a single ptgref
-				Object o = operands[i].getValue();
+				Object o = operand.getValue();
 				if( o != null )
 				{
 					try
@@ -571,13 +569,13 @@ CONFIDENCE
 	{
 		Ptg[] allops = PtgCalculator.getAllComponents( operands );
 		int count = 0;
-		for( int i = 0; i < allops.length; i++ )
+		for( Ptg allop : allops )
 		{
 		   /* 20081120 KSC: blnaks are handled differently as Excel counts blank cells as 0's
 		   Object o = allops[i].getValue();
 		   if (o != null) count++;
 		   */
-			if( !allops[i].isBlank() )
+			if( !allop.isBlank() )
 			{
 				count++;
 			}
@@ -593,9 +591,9 @@ CONFIDENCE
 	{
 		Ptg[] allops = PtgCalculator.getAllComponents( operands );
 		int count = 0;
-		for( int i = 0; i < allops.length; i++ )
+		for( Ptg allop : allops )
 		{
-			if( allops[i].isBlank() )    // 20081112 KSC: was Object o = getValue(); if (o==null) count++;
+			if( allop.isBlank() )    // 20081112 KSC: was Object o = getValue(); if (o==null) count++;
 			{
 				count++;
 			}
@@ -627,12 +625,12 @@ CONFIDENCE
 			donumber = false;
 		}
 		double count = 0;
-		Ptg[] pref = (Ptg[]) operands[0].getComponents(); // optimize by doing it one time!!! this thing gets slow....-jm
+		Ptg[] pref = operands[0].getComponents(); // optimize by doing it one time!!! this thing gets slow....-jm
 		if( pref != null )
 		{ // it is some sort of range  
-			for( int z = 0; z < pref.length; z++ )
+			for( Ptg aPref : pref )
 			{
-				Object o = pref[z].getValue();
+				Object o = aPref.getValue();
 				if( o != null )
 				{
 					String match2 = o.toString();
@@ -877,9 +875,8 @@ FISHERINV
 		Ptg[] firstArr = PtgCalculator.getAllComponents( operands[0] );
 		Ptg[] secondArr = PtgCalculator.getAllComponents( operands[1] );
 		CompatibleVector t = new CompatibleVector();
-		for( int i = 0; i < secondArr.length; i++ )
+		for( Ptg p : secondArr )
 		{
-			Ptg p = secondArr[i];
 			try
 			{
 				Double d = new Double( String.valueOf( p.getValue() ) );
@@ -899,16 +896,16 @@ FISHERINV
 		}
 		t.toArray( binsArr );
 		int[] retvals = new int[secondArr.length + 1];
-		for( int i = 0; i < dataArr.length; i++ )
+		for( double aDataArr : dataArr )
 		{
 			for( int x = 0; x < binsArr.length; x++ )
 			{
-				if( dataArr[i] <= binsArr[x] )
+				if( aDataArr <= binsArr[x] )
 				{
 					retvals[x]++;
 					x = binsArr.length;
 				}
-				else if( dataArr[i] > binsArr[binsArr.length - 1] )
+				else if( aDataArr > binsArr[binsArr.length - 1] )
 				{
 					retvals[binsArr.length]++;
 					x = binsArr.length;
@@ -918,9 +915,9 @@ FISHERINV
 		// keep the original locations, so we can put the end result array in the correct order.
 		// not used!	double[] originalLocs = PtgCalculator.getDoubleValueArray(secondArr);
 		String ret = "{";
-		for( int i = 0; i < retvals.length; i++ )
+		for( int retval : retvals )
 		{
-			ret += retvals[i] + ",";
+			ret += retval + ",";
 		}
 		ret = ret.substring( 0, ret.length() - 1 ); // get rid of final comma
 		ret += "}";
@@ -972,14 +969,14 @@ HYPGEOMDIST
 			return new PtgErr( PtgErr.ERROR_NA );//20090130 KSC: propagate error
 		}
 		double sumXVals = 0;
-		for( int i = 0; i < xvals.length; i++ )
+		for( double xval1 : xvals )
 		{
-			sumXVals += xvals[i];
+			sumXVals += xval1;
 		}
 		double sumYVals = 0;
-		for( int i = 0; i < yvals.length; i++ )
+		for( double yval : yvals )
 		{
-			sumYVals += yvals[i];
+			sumYVals += yval;
 		}
 		double sumXYVals = 0;
 		for( int i = 0; i < yvals.length; i++ )
@@ -987,9 +984,9 @@ HYPGEOMDIST
 			sumXYVals += xvals[i] * yvals[i];
 		}
 		double sqrXVals = 0;
-		for( int i = 0; i < xvals.length; i++ )
+		for( double xval : xvals )
 		{
-			sqrXVals += xvals[i] * xvals[i];
+			sqrXVals += xval * xval;
 		}
 		double toparg = (sumXVals * sumXYVals) - (sumYVals * sqrXVals);
 		double bottomarg = (sumXVals * sumXVals) - (sqrXVals * xvals.length);
@@ -1037,9 +1034,8 @@ KURT
 		}
 
 		CompatibleVector sortedValues = new CompatibleVector();
-		for( int i = 0; i < array.length; i++ )
+		for( Ptg p : array )
 		{
-			Ptg p = array[i];
 			try
 			{
 				Double d = new Double( String.valueOf( p.getValue() ) );
@@ -1267,9 +1263,9 @@ LOGNORMDIST
 	{
 		double result = java.lang.Double.MIN_VALUE;        // 20090129 KSC -1;
 		Double d = null;
-		for( int i = 0; i < operands.length; i++ )
+		for( Ptg operand : operands )
 		{
-			Ptg[] pthings = operands[i].getComponents(); // optimized -- do it once!! -jm
+			Ptg[] pthings = operand.getComponents(); // optimized -- do it once!! -jm
 			if( pthings != null )
 			{
 				Ptg resPtg = StatisticalCalculator.calcMax( pthings );
@@ -1291,7 +1287,7 @@ LOGNORMDIST
 			}
 			else
 			{
-				Ptg p = operands[i];
+				Ptg p = operand;
 				try
 				{
 					Object ov = p.getValue();
@@ -1335,9 +1331,9 @@ LOGNORMDIST
 			return new PtgNumber( 0 );
 		}
 		double max = Double.MIN_VALUE;
-		for( int i = 0; i < alloperands.length; i++ )
+		for( Ptg alloperand : alloperands )
 		{
-			Object o = alloperands[i].getValue();
+			Object o = alloperand.getValue();
 			try
 			{
 				double d = Double.MIN_VALUE;
@@ -1378,9 +1374,8 @@ LOGNORMDIST
 		Ptg[] alloperands = PtgCalculator.getAllComponents( operands );
 		CompatibleVector t = new CompatibleVector();
 		double retval = 0;
-		for( int i = 0; i < alloperands.length; i++ )
+		for( Ptg p : alloperands )
 		{
-			Ptg p = alloperands[i];
 			try
 			{
 				Double d = new Double( String.valueOf( p.getValue() ) );
@@ -1434,9 +1429,9 @@ LOGNORMDIST
 	{
 		double result = java.lang.Double.MAX_VALUE;
 		Double d = null;
-		for( int i = 0; i < operands.length; i++ )
+		for( Ptg operand : operands )
 		{
-			Ptg[] pthings = operands[i].getComponents(); // optimized -- do it once!! -jm
+			Ptg[] pthings = operand.getComponents(); // optimized -- do it once!! -jm
 			if( pthings != null )
 			{
 				Ptg resPtg = StatisticalCalculator.calcMin( pthings );
@@ -1465,7 +1460,7 @@ LOGNORMDIST
 			}
 			else
 			{
-				Ptg p = operands[i];
+				Ptg p = operand;
 				try
 				{
 					Object ov = p.getValue();
@@ -1514,9 +1509,9 @@ LOGNORMDIST
 			return new PtgNumber( 0 );
 		}
 		double min = Double.MAX_VALUE;
-		for( int i = 0; i < alloperands.length; i++ )
+		for( Ptg alloperand : alloperands )
 		{
-			Object o = alloperands[i].getValue();
+			Object o = alloperand.getValue();
 			try
 			{
 				double d = Double.MAX_VALUE;
@@ -1554,9 +1549,8 @@ LOGNORMDIST
 		Vector vals = new Vector();
 		Vector occurences = new Vector();
 		double retval = 0;
-		for( int i = 0; i < alloperands.length; i++ )
+		for( Ptg p : alloperands )
 		{
-			Ptg p = alloperands[i];
 			try
 			{
 				Double d = new Double( String.valueOf( p.getValue() ) );
@@ -2210,9 +2204,8 @@ PROB
 		Ptg[] allVals = PtgCalculator.getAllComponents( aveoperands );
 		CompatibleVector t = new CompatibleVector();
 		double retval = 0;
-		for( int i = 0; i < allVals.length; i++ )
+		for( Ptg p : allVals )
 		{
-			Ptg p = allVals[i];
 			try
 			{
 				Double d = new Double( String.valueOf( p.getValue() ) );
@@ -2252,7 +2245,7 @@ PROB
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
 		// find the kth smallest
-		float kk = (float) (quartile / 4);
+		float kk = quartile / 4;
 		kk = (dub.length - 1) * kk;
 		kk++;
 		// truncate k, but keep the remainder.
@@ -2345,9 +2338,8 @@ PROB
 		Ptg[] refs = PtgCalculator.getAllComponents( aveoperands );
 		CompatibleVector retList = new CompatibleVector();
 		double retval = 0;
-		for( int i = 0; i < refs.length; i++ )
+		for( Ptg p : refs )
 		{
-			Ptg p = refs[i];
 			try
 			{
 				Double d = new Double( String.valueOf( p.getValue() ) );
@@ -2425,14 +2417,14 @@ SKEW
 			return new PtgErr( PtgErr.ERROR_NA );//20090130 KSC: propagate error
 		}
 		double sumXVals = 0;
-		for( int i = 0; i < xvals.length; i++ )
+		for( double xval1 : xvals )
 		{
-			sumXVals += xvals[i];
+			sumXVals += xval1;
 		}
 		double sumYVals = 0;
-		for( int i = 0; i < yvals.length; i++ )
+		for( double yval : yvals )
 		{
-			sumYVals += yvals[i];
+			sumYVals += yval;
 		}
 		double sumXYVals = 0;
 		for( int i = 0; i < yvals.length; i++ )
@@ -2440,9 +2432,9 @@ SKEW
 			sumXYVals += xvals[i] * yvals[i];
 		}
 		double sqrXVals = 0;
-		for( int i = 0; i < xvals.length; i++ )
+		for( double xval : xvals )
 		{
-			sqrXVals += xvals[i] * xvals[i];
+			sqrXVals += xval * xval;
 		}
 		double toparg = (sumXVals * sumYVals) - (sumXYVals * yvals.length);
 		double bottomarg = (sumXVals * sumXVals) - (sqrXVals * xvals.length);
@@ -2479,9 +2471,8 @@ SKEW
 		}
 
 		CompatibleVector sortedValues = new CompatibleVector();
-		for( int i = 0; i < array.length; i++ )
+		for( Ptg p : array )
 		{
-			Ptg p = array[i];
 			try
 			{
 				Double d = new Double( String.valueOf( p.getValue() ) );
@@ -2523,11 +2514,11 @@ STANDARDIZE
 			return new PtgErr( PtgErr.ERROR_NA );//20090130 KSC: propagate error
 		}
 		double sqrDev = 0;
-		for( int i = 0; i < allVals.length; i++ )
+		for( double allVal : allVals )
 		{
 			PtgNumber p = (PtgNumber) calcAverage( operands );
 			double ave = p.getVal();
-			sqrDev += Math.pow( (allVals[i] - ave), 2 );
+			sqrDev += Math.pow( (allVal - ave), 2 );
 		}
 		double retval = Math.sqrt( sqrDev / (allVals.length - 1) );
 		return new PtgNumber( retval );
@@ -2618,7 +2609,7 @@ TINV
 		}
 
 		String retval = "";
-		for( int i = 0; i < newXs.length; i++ )
+		for( Ptg newX : newXs )
 		{
 			//forecast[0] = newXs[i];
 			PtgNumber p = (PtgNumber) calcForecast( forecast );
@@ -2654,11 +2645,11 @@ TTEST
 			return new PtgErr( PtgErr.ERROR_NA );//20090130 KSC: propagate error
 		}
 		double sqrDev = 0;
-		for( int i = 0; i < allVals.length; i++ )
+		for( double allVal : allVals )
 		{
 			PtgNumber p = (PtgNumber) calcAverage( operands );
 			double ave = p.getVal();
-			sqrDev += Math.pow( (allVals[i] - ave), 2 );
+			sqrDev += Math.pow( (allVal - ave), 2 );
 		}
 		double retval = (sqrDev / (allVals.length - 1));
 		return new PtgNumber( retval );
@@ -2682,11 +2673,11 @@ VARA
 			return new PtgErr( PtgErr.ERROR_NA );//20090130 KSC: propagate error
 		}
 		double sqrDev = 0;
-		for( int i = 0; i < allVals.length; i++ )
+		for( double allVal : allVals )
 		{
 			PtgNumber p = (PtgNumber) calcAverage( operands );
 			double ave = p.getVal();
-			sqrDev += Math.pow( (allVals[i] - ave), 2 );
+			sqrDev += Math.pow( (allVal - ave), 2 );
 		}
 		double retval = (sqrDev / allVals.length);
 		return new PtgNumber( retval );

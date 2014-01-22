@@ -120,7 +120,7 @@ public class Dval extends com.extentech.formats.XLS.XLSRecord
 	public void setGrbit()
 	{
 		byte[] data = this.getData();
-		byte[] b = ByteTools.shortToLEBytes( (short) grbit );
+		byte[] b = ByteTools.shortToLEBytes( grbit );
 		System.arraycopy( b, 0, data, 0, 2 );
 		this.setData( data );
 	}
@@ -366,9 +366,9 @@ public class Dval extends com.extentech.formats.XLS.XLSRecord
 		{
 			cellAddress = cellAddress.substring( cellAddress.indexOf( "!" ) );
 		}
-		for( int i = 0; i < dvRecs.size(); i++ )
+		for( Object dvRec : dvRecs )
 		{
-			Dv d = (Dv) dvRecs.get( i );
+			Dv d = (Dv) dvRec;
 			if( d.isInRange( cellAddress ) )
 			{
 				return d;
@@ -483,9 +483,9 @@ public class Dval extends com.extentech.formats.XLS.XLSRecord
 				ooxml.append( " yWindow=\"" + this.getVerticalPosition() + "\"" );
 			}
 			ooxml.append( ">" );
-			for( int i = 0; i < this.dvRecs.size(); i++ )
+			for( Object dvRec : this.dvRecs )
 			{
-				ooxml.append( ((Dv) dvRecs.get( i )).getOOXML() );
+				ooxml.append( ((Dv) dvRec).getOOXML() );
 			}
 			ooxml.append( "</dataValidations>" );
 		}

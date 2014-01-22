@@ -1645,9 +1645,9 @@ public final class FormulaParser
 		}
 
 		// loop through the possible operator ptg's and get locations & length of them		
-		for( int j = 0; j < locs.size(); j++ )
+		for( Object loc : locs )
 		{
-			s = (String) locs.get( j );
+			s = (String) loc;
 			if( s.startsWith( "\"" ) || s.startsWith( "'" ) )
 			{
 				retVect.add( s );    // quoted strings

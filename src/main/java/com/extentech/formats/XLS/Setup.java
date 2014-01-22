@@ -496,7 +496,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	{
 		copies = c;
 		byte[] data = this.getData();
-		byte[] b = ByteTools.shortToLEBytes( (short) copies );
+		byte[] b = ByteTools.shortToLEBytes( copies );
 		System.arraycopy( b, 0, data, 32, 2 );
 		this.setData( data );
 		setInitialized( true );
@@ -517,7 +517,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	{
 		fitHeight = f;
 		byte[] data = this.getData();
-		byte[] b = ByteTools.shortToLEBytes( (short) fitHeight );
+		byte[] b = ByteTools.shortToLEBytes( fitHeight );
 		System.arraycopy( b, 0, data, 8, 2 );
 		this.setData( data );
 	}
@@ -537,7 +537,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	{
 		fitWidth = f;
 		byte[] data = this.getData();
-		byte[] b = ByteTools.shortToLEBytes( (short) fitWidth );
+		byte[] b = ByteTools.shortToLEBytes( fitWidth );
 		System.arraycopy( b, 0, data, 6, 2 );
 		this.setData( data );
 
@@ -598,7 +598,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	{
 		pageStart = p;
 		byte[] data = this.getData();
-		byte[] b = ByteTools.shortToLEBytes( (short) pageStart );
+		byte[] b = ByteTools.shortToLEBytes( pageStart );
 		System.arraycopy( b, 0, data, 4, 2 );
 		this.setData( data );
 	}
@@ -618,7 +618,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	{
 		paperSize = p;
 		byte[] data = this.getData();
-		byte[] b = ByteTools.shortToLEBytes( (short) paperSize );
+		byte[] b = ByteTools.shortToLEBytes( paperSize );
 		System.arraycopy( b, 0, data, 0, 2 );
 		this.setData( data );
 		setInitialized( true );
@@ -639,7 +639,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	{
 		resolution = r;
 		byte[] data = this.getData();
-		byte[] b = ByteTools.shortToLEBytes( (short) resolution );
+		byte[] b = ByteTools.shortToLEBytes( resolution );
 		System.arraycopy( b, 0, data, 12, 2 );
 		this.setData( data );
 		setInitialized( true );
@@ -660,7 +660,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	{
 		scale = s;
 		byte[] data = this.getData();
-		byte[] b = ByteTools.shortToLEBytes( (short) scale );
+		byte[] b = ByteTools.shortToLEBytes( scale );
 		System.arraycopy( b, 0, data, 2, 2 );
 		this.setData( data );
 		setInitialized( true );
@@ -681,7 +681,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	{
 		verticalResolution = v;
 		byte[] data = this.getData();
-		byte[] b = ByteTools.shortToLEBytes( (short) verticalResolution );
+		byte[] b = ByteTools.shortToLEBytes( verticalResolution );
 		System.arraycopy( b, 0, data, 14, 2 );
 		this.setData( data );
 		setInitialized( true );

@@ -70,7 +70,7 @@ public class P implements OOXMLElement
 					if( tnm.equals( "pPr" ) )
 					{        // paragraph-level text props
 						lastTag.push( tnm );
-						ppr = (PPr) PPr.parseOOXML( xpp, lastTag, bk );
+						ppr = PPr.parseOOXML( xpp, lastTag, bk );
 					}
 					else if( tnm.equals( "r" ) ||
 							tnm.equals( "br" ) ||
@@ -82,7 +82,7 @@ public class P implements OOXMLElement
 					else if( tnm.equals( "endParaRPr" ) )
 					{
 						lastTag.push( tnm );
-						ep = (EndParaRPr) EndParaRPr.parseOOXML( xpp, lastTag, bk );
+						ep = EndParaRPr.parseOOXML( xpp, lastTag, bk );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -316,8 +316,8 @@ class PPr implements OOXMLElement
 			Iterator<String> i = attrs.keySet().iterator();
 			while( i.hasNext() )
 			{
-				String key = (String) i.next();
-				String val = (String) attrs.get( key );
+				String key = i.next();
+				String val = attrs.get( key );
 				ooxml.append( " " + key + "=\"" + val + "\"" );
 			}
 		}
@@ -547,8 +547,8 @@ class EndParaRPr implements OOXMLElement
 			Iterator<String> i = attrs.keySet().iterator();
 			while( i.hasNext() )
 			{
-				String key = (String) i.next();
-				String val = (String) attrs.get( key );
+				String key = i.next();
+				String val = attrs.get( key );
 				ooxml.append( " " + key + "=\"" + val + "\"" );
 			}
 		}

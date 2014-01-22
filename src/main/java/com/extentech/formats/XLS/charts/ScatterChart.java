@@ -61,9 +61,9 @@ public class ScatterChart extends ChartType
 		try
 		{
 			// must trap min and max for axis tick and units
-			for( int i = 0; i < series.length; i++ )
+			for( ChartSeriesHandle sery1 : series )
 			{
-				JSONArray seriesvals = CellRange.getValuesAsJSON( series[i].getSeriesRange(), wbh );
+				JSONArray seriesvals = CellRange.getValuesAsJSON( sery1.getSeriesRange(), wbh );
 				nSeries = Math.max( nSeries, seriesvals.length() );
 				for( int j = 0; j < seriesvals.length(); j++ )
 				{
@@ -77,7 +77,7 @@ public class ScatterChart extends ChartType
 						;
 					}
 				}
-				if( !series[i].hasBubbleSizes() )
+				if( !sery1.hasBubbleSizes() )
 				{
 					seriesJSON.put( seriesvals );
 				}
@@ -85,17 +85,17 @@ public class ScatterChart extends ChartType
 				{
 					bHasBubbles = true;
 				}
-				seriesCOLORS.put( FormatConstants.SVGCOLORSTRINGS[series[i].getSeriesColor()] );
+				seriesCOLORS.put( FormatConstants.SVGCOLORSTRINGS[sery1.getSeriesColor()] );
 			}
 			if( bHasBubbles )
 			{
 				// 20080423 KSC: Go thru a second time, after obtaining yMax and yMin, for bubble sizes ...
-				for( int i = 0; i < series.length; i++ )
+				for( ChartSeriesHandle sery : series )
 				{
 					JSONArray bubbles = new JSONArray();
-					JSONArray seriesvals = CellRange.getValuesAsJSON( series[i].getSeriesRange(), wbh );
-					JSONArray catvals = CellRange.getValuesAsJSON( series[i].getCategoryRange(), wbh );
-					JSONArray bubblesizes = CellRange.getValuesAsJSON( series[i].getBubbleSizes(), wbh );
+					JSONArray seriesvals = CellRange.getValuesAsJSON( sery.getSeriesRange(), wbh );
+					JSONArray catvals = CellRange.getValuesAsJSON( sery.getCategoryRange(), wbh );
+					JSONArray bubblesizes = CellRange.getValuesAsJSON( sery.getBubbleSizes(), wbh );
 					for( int j = 0; j < catvals.length(); j++ )
 					{
 						JSONObject jo = new JSONObject();
@@ -293,9 +293,8 @@ public class ScatterChart extends ChartType
 			if( markers[i] > 0 )
 			{
 				String[] markerpoints = points.split( " " );
-				for( int j = 0; j < markerpoints.length; j++ )
+				for( String markerpoint : markerpoints )
 				{
-					String markerpoint = markerpoints[j];
 					String[] xy = markerpoint.split( "," );
 					double xx = Double.valueOf( xy[0] );
 					double yy = Double.valueOf( xy[1] );

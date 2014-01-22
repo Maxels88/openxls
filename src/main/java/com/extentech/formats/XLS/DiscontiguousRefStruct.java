@@ -55,15 +55,15 @@ public class DiscontiguousRefStruct implements Serializable
 	{
 		this.parentRec = parentRec;
 		String[] refs = ranges.split( "," );
-		for( int i = 0; i < refs.length; i++ )
+		for( String ref : refs )
 		{
 			try
 			{
-				if( !refs[i].equals( "" ) )
+				if( !ref.equals( "" ) )
 				{
 /* KSC: try to decrease processing time by using refPtgs treemap         			SqRef pref = new SqRef(refs[i],parentRec);
         			sqrefs.add(pref);*/
-					allrefs.add( refs[i], parentRec );
+					allrefs.add( ref, parentRec );
 				}
 			}
 			catch( NumberFormatException e )
@@ -552,7 +552,7 @@ class refPtgs extends TreeMap implements Serializable
 				long testkey = ((long[]) key)[0];
 				double firstkey = testkey / SECONDPTGFACTOR;
 				double secondkey = (testkey % SECONDPTGFACTOR);
-				if( ((long) firstkey <= (long) loc) && ((long) secondkey >= (long) loc) )
+				if( ((long) firstkey <= loc) && ((long) secondkey >= loc) )
 				{
 					int col0 = (int) firstkey % XLSRecord.MAXCOLS;
 					int col1 = (int) secondkey % XLSRecord.MAXCOLS;

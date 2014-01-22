@@ -23,6 +23,7 @@
 package com.extentech.formats.XLS.charts;
 
 import com.extentech.formats.XLS.BiffRec;
+import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.toolkit.ByteTools;
 
 /**
@@ -84,9 +85,9 @@ public class AxisParent extends GenericChartObject implements ChartObject
 	 */
 	protected ChartFormat getChartFormat( int nChart, boolean addNew )
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b.getOpcode() == CHARTFORMAT )
 			{
 				ChartFormat cf = (ChartFormat) b;
@@ -174,7 +175,7 @@ public class AxisParent extends GenericChartObject implements ChartObject
 		// Remove axis
 		for( int i = 0; i < chartArr.size(); i++ )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = chartArr.get( i );
 			if( b.getOpcode() == AXIS )
 			{
 				if( ((Axis) b).getAxis() == axisType )
@@ -188,7 +189,7 @@ public class AxisParent extends GenericChartObject implements ChartObject
 		// Remove TextDisp assoc with Axis
 		for( int i = 0; i < chartArr.size(); i++ )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = chartArr.get( i );
 			if( b.getOpcode() == TEXTDISP )
 			{
 				TextDisp td = (TextDisp) b;
@@ -210,7 +211,7 @@ public class AxisParent extends GenericChartObject implements ChartObject
 		boolean remove = false;
 		for( int i = 0; i < chartArr.size(); i++ )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = chartArr.get( i );
 			if( b.getOpcode() == AXIS )
 			{
 				remove = true;
@@ -242,9 +243,9 @@ public class AxisParent extends GenericChartObject implements ChartObject
 		boolean bHasLabel = false;
 		StringBuffer sb = new StringBuffer();
 		int tdType = TextDisp.convertType( axis );
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b.getOpcode() == AXIS )
 			{
 				if( ((Axis) b).getAxis() == axis )
@@ -304,7 +305,7 @@ public class AxisParent extends GenericChartObject implements ChartObject
 		int tdType = TextDisp.convertType( axisType );
 		for( int i = 0; (i < chartArr.size()) && (td == null); i++ )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = chartArr.get( i );
 			if( b.getOpcode() == AXIS )
 			{
 				lastAxis = i;
@@ -355,9 +356,9 @@ public class AxisParent extends GenericChartObject implements ChartObject
 	 */
 	public String getPlotAreaBgColor()
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b instanceof Frame )
 			{
 				return ((Frame) b).getBgColor();
@@ -373,9 +374,9 @@ public class AxisParent extends GenericChartObject implements ChartObject
 	 */
 	public void setPlotAreaBgColor( int bg )
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b instanceof Frame )
 			{
 				((Frame) b).setBgColor( bg );
@@ -392,9 +393,9 @@ public class AxisParent extends GenericChartObject implements ChartObject
 	 */
 	public void setPlotAreaBorder( int lw, int lclr )
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			if( b instanceof Frame )
 			{
 				((Frame) b).addBox( lw, lclr, -1 );

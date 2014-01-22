@@ -87,11 +87,11 @@ public abstract class GenericRecycleBin extends java.lang.Thread implements Map,
 	{
 		Recyclable[] rs = new Recyclable[active.size()];
 		active.copyInto( rs );
-		for( int t = 0; t < rs.length; t++ )
+		for( Recyclable r : rs )
 		{
 			try
 			{
-				Recyclable rb = rs[t];
+				Recyclable rb = r;
 				if( !rb.inUse() )
 				{
 					// recycle it

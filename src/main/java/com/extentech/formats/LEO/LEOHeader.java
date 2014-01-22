@@ -348,7 +348,7 @@ public class LEOHeader implements Serializable
 	{
 		int pos = DIFATPOSITION;
 		data.position( pos );
-		for( int i = 0; i < FAT.length; i++ )
+		for( int aFAT : FAT )
 		{
 			if( (FAT.length * 4) >= (this.data.limit() - 4) )
 			{
@@ -357,7 +357,7 @@ public class LEOHeader implements Serializable
 			}
 			else
 			{
-				data.putInt( (FAT[i] - 1) );    // todo: why decrement here?  necessitates an increment in LEOFile.writeBytes
+				data.putInt( (aFAT - 1) );    // todo: why decrement here?  necessitates an increment in LEOFile.writeBytes
 			}
 		}
 		// fill rest with -1's === Empty Sector denotation		

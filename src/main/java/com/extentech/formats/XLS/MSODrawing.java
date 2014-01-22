@@ -770,7 +770,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 
 					case MSODrawingConstants.MSOFBTCLIENTANCHOR:        // Anchor or location for a shape 
 						// udpate bounds
-						System.arraycopy( ByteTools.shortToLEBytes( (short) clientAnchorFlag ), 0, data, 0, 2 );
+						System.arraycopy( ByteTools.shortToLEBytes( clientAnchorFlag ), 0, data, 0, 2 );
 						System.arraycopy( ByteTools.shortToLEBytes( bounds[0] ), 0, data, 2, 2 );
 						System.arraycopy( ByteTools.shortToLEBytes( bounds[1] ), 0, data, 4, 2 );
 						System.arraycopy( ByteTools.shortToLEBytes( bounds[2] ), 0, data, 6, 2 );
@@ -1078,7 +1078,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 
 					case MSODrawingConstants.MSOFBTCLIENTANCHOR:        // Anchor or location for a shape 
 						// udpate bounds
-						System.arraycopy( ByteTools.shortToLEBytes( (short) clientAnchorFlag ), 0, data, 0, 2 );
+						System.arraycopy( ByteTools.shortToLEBytes( clientAnchorFlag ), 0, data, 0, 2 );
 						System.arraycopy( ByteTools.shortToLEBytes( bounds[0] ), 0, data, 2, 2 );
 						System.arraycopy( ByteTools.shortToLEBytes( bounds[1] ), 0, data, 4, 2 );
 						System.arraycopy( ByteTools.shortToLEBytes( bounds[2] ), 0, data, 6, 2 );
@@ -1521,7 +1521,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 
 	public void setBounds( short[] b )
 	{
-		bounds = (short[]) b.clone();
+		bounds = b.clone();
 		origHeight = calcHeight();    // 20090831 KSC
 		updateClientAnchorRecord( bounds );
 	}
@@ -1746,7 +1746,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 			else
 			{
 				row = i;
-				rowOffset = (short) Math.round( (256 * ((double) (y - z) / getRowHeight( i ))) );
+				rowOffset = (short) Math.round( (256 * ((y - z) / getRowHeight( i ))) );
 				z = y;
 			}
 		}
@@ -1912,7 +1912,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 			else
 			{        // height is met; see what offset into row i is necessary
 				row1 = i;
-				rowOff1 = (short) Math.round( (256 * ((double) (h - y) / rh)) );
+				rowOff1 = (short) Math.round( (256 * ((h - y) / rh)) );
 				y = h;    // exit loop
 			}
 		}
@@ -2190,7 +2190,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				try
 				{
-					bos.write( ByteTools.shortToLEBytes( (short) clientAnchorFlag ) );
+					bos.write( ByteTools.shortToLEBytes( clientAnchorFlag ) );
 					bos.write( ByteTools.shortToLEBytes( bounds[0] ) );
 					bos.write( ByteTools.shortToLEBytes( bounds[1] ) );
 					bos.write( ByteTools.shortToLEBytes( bounds[2] ) );

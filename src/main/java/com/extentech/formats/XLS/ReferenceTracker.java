@@ -259,9 +259,9 @@ public class ReferenceTracker
 				{
 					// add all formulas that refer
 					ArrayList list = (ArrayList) (nameRefs.get( theName )); // gets the ptgname
-					for( int i = 0; i < list.size(); i++ )
+					for( Object aList : list )
 					{
-						BiffRec ptgParent = ((Ptg) list.get( i )).getParentRec();
+						BiffRec ptgParent = ((Ptg) aList).getParentRec();
 						if( ptgParent.getOpcode() == XLSConstants.NAME )
 						{
 							continue; // a Named Range referencing another named range ... will be caught later
@@ -270,8 +270,8 @@ public class ReferenceTracker
 						if( affectedCellHandles.get( adr ) == null )
 						{
 							ReferenceTracker.addRec( ptgParent, affectedCellHandles );
-							affectedCellHandles = (HashMap) clearAffectedFormulaCells( ptgParent,
-							                                                           affectedCellHandles ); // recurse parent formula and get cells it affects
+							affectedCellHandles = clearAffectedFormulaCells( ptgParent,
+							                                                 affectedCellHandles ); // recurse parent formula and get cells it affects
 						}
 					}
 				}
@@ -289,7 +289,7 @@ public class ReferenceTracker
 					if( !affectedCellHandles.containsKey( adr ) )
 					{
 						ReferenceTracker.addRec( f, affectedCellHandles );
-						affectedCellHandles = (HashMap) clearAffectedFormulaCells( f,
+						affectedCellHandles = clearAffectedFormulaCells( f,
 						                                                           affectedCellHandles );    // recurse parent formula and get cells it affects
 					}
 				}
@@ -302,7 +302,7 @@ public class ReferenceTracker
 					if( !affectedCellHandles.containsKey( adr ) )
 					{
 						ReferenceTracker.addRec( br, affectedCellHandles );
-						affectedCellHandles = (HashMap) clearAffectedFormulaCells( br,
+						affectedCellHandles = clearAffectedFormulaCells( br,
 						                                                           affectedCellHandles );    // recurse parent formula and get cells it affects
 					}
 				} // ignore no sheet
@@ -536,7 +536,7 @@ public class ReferenceTracker
 			String sheetname = "";
 			try
 			{
-				sheetname = ((PtgRef) pr).getSheetName();
+				sheetname = pr.getSheetName();
 				sheetname = GenericPtg.qualifySheetname( sheetname );
 			}
 			catch( Exception ex )
@@ -674,11 +674,11 @@ public class ReferenceTracker
 			{
 				Mergedcells mrg = (Mergedcells) itx.next();
 				CellRange[] rngs = mrg.getMergedRanges();
-				for( int j = 0; j < rngs.length; j++ )
+				for( CellRange rng : rngs )
 				{
 					try
 					{
-						int[] rc = rngs[j].getRangeCoords();
+						int[] rc = rng.getRangeCoords();
 						rc[0]--;
 						rc[2]--;    // 1-based ...?
 						boolean isRange = (rc.length > 2);
@@ -703,7 +703,7 @@ public class ReferenceTracker
 						if( bUpdated )
 						{
 							String newrange = thissheet + "!" + ExcelTools.formatLocation( rc );
-							rngs[j].setRange( newrange );
+							rng.setRange( newrange );
 						}
 					}
 					catch( CellNotFoundException e )
@@ -852,9 +852,9 @@ public class ReferenceTracker
 						{
 							// add all formulas that refer
 							ArrayList list = (ArrayList) (rt.nameRefs.get( theName )); // gets the ptgname
-							for( int i = 0; i < list.size(); i++ )
+							for( Object aList : list )
 							{
-								BiffRec ptgParent = ((Ptg) list.get( i )).getParentRec();
+								BiffRec ptgParent = ((Ptg) aList).getParentRec();
 								if( ptgParent.getOpcode() == XLSConstants.NAME )
 								{
 									continue; // a Named Range referencing another named range ... will be caught later
@@ -903,11 +903,11 @@ public class ReferenceTracker
 		{
 			com.extentech.formats.XLS.charts.Series s = (com.extentech.formats.XLS.charts.Series) ii.next();
 			Ptg[] ptgs = (Ptg[]) seriesmap.get( s );
-			for( int i = 0; i < ptgs.length; i++ )
+			for( Ptg ptg : ptgs )
 			{
 				try
 				{
-					pr = (PtgRef) ptgs[i];
+					pr = (PtgRef) ptg;
 					cursheet = pr.getSheetName();
 					rc = pr.getIntLocation();
 				}
@@ -1026,11 +1026,11 @@ public class ReferenceTracker
 			String sheet = newcell.getWorkSheetName();
 			boolean isExcel2007 = newcell.getWorkBook().getWorkBook().getIsExcel2007();
 			Ptg[] locptgs = newcell.getFormulaHandle().getFormulaRec().getCellRangePtgs();
-			for( int t = 0; t < locptgs.length; t++ )
+			for( Ptg locptg : locptgs )
 			{
-				if( locptgs[t] instanceof PtgRef )
+				if( locptg instanceof PtgRef )
 				{
-					PtgRef pr = (PtgRef) locptgs[t];
+					PtgRef pr = (PtgRef) locptg;
 					shiftPtg( pr, sheet, newrownum, offset, isExcel2007, shiftRow );
 				}
 			}
@@ -1208,7 +1208,7 @@ class TrackedPtgs extends TreeMap
 					long testkey= ((long[])keys[i])[0];*/
 					double firstkey = testkey / SECONDPTGFACTOR;
 					double secondkey = (testkey % SECONDPTGFACTOR);
-					if( ((long) firstkey <= (long) loc) && ((long) secondkey >= (long) loc) )
+					if( ((long) firstkey <= loc) && ((long) secondkey >= loc) )
 					{
 						int col0 = (int) firstkey % XLSRecord.MAXCOLS;
 						int col1 = (int) secondkey % XLSRecord.MAXCOLS;

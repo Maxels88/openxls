@@ -170,9 +170,9 @@ public class PieChart extends ChartType
 			double[] oneseries = (double[]) series.get( 0 );    //FOR PIE CHARTS ONLY 1 SERIES VALUE POINTS ARE USED **********************************
 			String[] curranges = (String[]) s.getSeriesRanges().get( 0 );
 			double total = 0.0;
-			for( int j = 0; j < oneseries.length; j++ )
+			for( double onesery : oneseries )
 			{    // get total in order to calculate percentages
-				total += oneseries[j];
+				total += onesery;
 			}
 			if( dls.length == 1 )
 			{    // no series-specific data labels; expand to entire series for loop below

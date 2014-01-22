@@ -86,41 +86,41 @@ public class GrpSp implements OOXMLElement
 					if( tnm.equals( "nvGrpSpPr" ) )
 					{
 						lastTag.push( tnm );
-						nvpr = (NvGrpSpPr) NvGrpSpPr.parseOOXML( xpp, lastTag );
+						nvpr = NvGrpSpPr.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "grpSpPr" ) )
 					{
 						lastTag.push( tnm );
-						sppr = (GrpSpPr) GrpSpPr.parseOOXML( xpp, lastTag, bk );
+						sppr = GrpSpPr.parseOOXML( xpp, lastTag, bk );
 						// choice of: 0 or more below:
 					}
 					else if( tnm.equals( "sp" ) )
 					{
 						lastTag.push( tnm );
-						choice.add( (Sp) Sp.parseOOXML( xpp, lastTag, bk ) );
+						choice.add( Sp.parseOOXML( xpp, lastTag, bk ) );
 					}
 					else if( tnm.equals( "grpSp" ) )
 					{
 						if( nvpr != null )
 						{ // if not the initial start attribute, this is a child
 							lastTag.push( tnm );
-							choice.add( (GrpSp) GrpSp.parseOOXML( xpp, lastTag, bk ) );
+							choice.add( GrpSp.parseOOXML( xpp, lastTag, bk ) );
 						}
 					}
 					else if( tnm.equals( "graphicFrame" ) )
 					{
 						lastTag.push( tnm );
-						choice.add( (GraphicFrame) GraphicFrame.parseOOXML( xpp, lastTag ) );
+						choice.add( GraphicFrame.parseOOXML( xpp, lastTag ) );
 					}
 					else if( tnm.equals( "cxnSp" ) )
 					{
 						lastTag.push( tnm );
-						choice.add( (CxnSp) CxnSp.parseOOXML( xpp, lastTag, bk ) );
+						choice.add( CxnSp.parseOOXML( xpp, lastTag, bk ) );
 					}
 					else if( tnm.equals( "pic" ) )
 					{
 						lastTag.push( tnm );
-						choice.add( (Pic) Pic.parseOOXML( xpp, lastTag, bk ) );
+						choice.add( Pic.parseOOXML( xpp, lastTag, bk ) );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -155,9 +155,9 @@ public class GrpSp implements OOXMLElement
 		ooxml.append( sppr.getOOXML() );
 		if( choice != null )
 		{
-			for( int i = 0; i < choice.size(); i++ )
+			for( OOXMLElement aChoice : choice )
 			{
-				ooxml.append( ((OOXMLElement) choice.get( i )).getOOXML() );
+				ooxml.append( aChoice.getOOXML() );
 			}
 		}
 		ooxml.append( "</xdr:grpSp>" );
@@ -173,9 +173,8 @@ public class GrpSp implements OOXMLElement
 	{
 		if( choice != null )
 		{
-			for( int i = 0; i < choice.size(); i++ )
+			for( OOXMLElement oe : choice )
 			{
-				OOXMLElement oe = (OOXMLElement) choice.get( i );
 				if( (oe instanceof Sp) && (type == SP) )
 				{
 					return oe;
@@ -538,7 +537,7 @@ public class GrpSp implements OOXMLElement
 		if( choice != null )
 		{
 			// get the first??
-			OOXMLElement oe = (OOXMLElement) choice.get( 0 );
+			OOXMLElement oe = choice.get( 0 );
 			if( oe instanceof Sp )
 			{
 				return ((Sp) oe).getId();
@@ -573,7 +572,7 @@ public class GrpSp implements OOXMLElement
 		if( choice != null )
 		{
 			// get the first??
-			OOXMLElement oe = (OOXMLElement) choice.get( 0 );
+			OOXMLElement oe = choice.get( 0 );
 			if( oe instanceof Sp )
 			{
 				((Sp) oe).setId( id );
@@ -648,7 +647,7 @@ class NvGrpSpPr implements OOXMLElement
 					else if( tnm.equals( "cNvGrpSpPr" ) )
 					{
 						lastTag.push( tnm );
-						cgrpsppr = (CNvGrpSpPr) CNvGrpSpPr.parseOOXML( xpp, lastTag );
+						cgrpsppr = CNvGrpSpPr.parseOOXML( xpp, lastTag );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -939,7 +938,7 @@ class CNvGrpSpPr implements OOXMLElement
 					if( tnm.equals( "grpSpLocks" ) )
 					{
 						lastTag.push( tnm );
-						gsl = (GrpSpLocks) GrpSpLocks.parseOOXML( xpp, lastTag );
+						gsl = GrpSpLocks.parseOOXML( xpp, lastTag );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -1055,8 +1054,8 @@ class GrpSpLocks implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );

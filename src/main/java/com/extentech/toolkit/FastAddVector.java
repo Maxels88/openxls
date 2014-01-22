@@ -138,9 +138,9 @@ public class FastAddVector extends SpecialArrayList implements java.io.Serializa
 	 */
 	public void copyInto( Object[] obar )
 	{
-		for( int x = 0; x < obar.length; x++ )
+		for( Object anObar : obar )
 		{
-			super.add( obar[x] );
+			super.add( anObar );
 		}
 	}
 

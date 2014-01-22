@@ -110,12 +110,12 @@ public class Fill implements OOXMLElement
 					String tnm = xpp.getName();
 					if( tnm.equals( "patternFill" ) )
 					{
-						p = (PatternFill) PatternFill.parseOOXML( xpp, isDxf, bk );
+						p = PatternFill.parseOOXML( xpp, isDxf, bk );
 
 					}
 					else if( tnm.equals( "gradientFill" ) )
 					{
-						g = (GradientFill) GradientFill.parseOOXML( xpp, bk );
+						g = GradientFill.parseOOXML( xpp, bk );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -583,11 +583,11 @@ class PatternFill implements OOXMLElement
 					}
 					else if( tnm.equals( "fgColor" ) )
 					{
-						fg = (FgColor) FgColor.parseOOXML( xpp );
+						fg = FgColor.parseOOXML( xpp );
 					}
 					else if( tnm.equals( "bgColor" ) )
 					{
-						bg = (BgColor) BgColor.parseOOXML( xpp );
+						bg = BgColor.parseOOXML( xpp );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -992,7 +992,7 @@ class GradientFill implements OOXMLElement
 						{
 							stops = new ArrayList<Stop>();
 						}
-						stops.add( (Stop) Stop.parseOOXML( xpp, bk ) );
+						stops.add( Stop.parseOOXML( xpp, bk ) );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -1023,16 +1023,16 @@ class GradientFill implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( ">" );
 		if( stops != null )
 		{
-			for( int j = 0; j < stops.size(); j++ )
+			for( Stop stop : stops )
 			{
-				ooxml.append( ((Stop) stops.get( j )).getOOXML() );
+				ooxml.append( stop.getOOXML() );
 			}
 		}
 		ooxml.append( "</gradientFill>" );
@@ -1129,8 +1129,8 @@ class FgColor implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );
@@ -1154,12 +1154,12 @@ class FgColor implements OOXMLElement
 	 */
 	protected String getColorAsRGB( Theme t )
 	{
-		String val = (String) attrs.get( "rgb" );
+		String val = attrs.get( "rgb" );
 		if( val != null )
 		{
 			return val;
 		}
-		val = (String) attrs.get( "indexed" );
+		val = attrs.get( "indexed" );
 		if( val != null )
 		{
 			if( Integer.parseInt( val ) == 64 ) // default fg color
@@ -1168,12 +1168,12 @@ class FgColor implements OOXMLElement
 			}
 			return Color.parseColor( val, Color.COLORTYPEINDEXED, FormatHandle.colorFOREGROUND, t );
 		}
-		val = (String) attrs.get( "theme" );
+		val = attrs.get( "theme" );
 		if( val != null )
 		{
 			return Color.parseColor( val, Color.COLORTYPETHEME, FormatHandle.colorFOREGROUND, t );
 		}
-		val = (String) attrs.get( "auto" );
+		val = attrs.get( "auto" );
 		if( val != null )
 		{
 			return "#000000";
@@ -1197,22 +1197,22 @@ class FgColor implements OOXMLElement
 	 */
 	protected int getColorAsInt( Theme t )
 	{
-		String val = (String) attrs.get( "auto" );
+		String val = attrs.get( "auto" );
 		if( val != null )
 		{
 			return 0;
 		}
-		val = (String) attrs.get( "rgb" );
+		val = attrs.get( "rgb" );
 		if( val != null )
 		{
 			return Color.parseColorInt( val, Color.COLORTYPERGB, FormatHandle.colorFOREGROUND, t );
 		}
-		val = (String) attrs.get( "indexed" );
+		val = attrs.get( "indexed" );
 		if( val != null )
 		{
 			return Integer.valueOf( val );
 		}
-		val = (String) attrs.get( "theme" );
+		val = attrs.get( "theme" );
 		if( val != null )
 		{
 			return Color.parseColorInt( val, Color.COLORTYPETHEME, FormatHandle.colorFOREGROUND, t );
@@ -1314,8 +1314,8 @@ class BgColor implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );
@@ -1335,12 +1335,12 @@ class BgColor implements OOXMLElement
 	 */
 	protected String getColorAsRGB( Theme t )
 	{
-		String val = (String) attrs.get( "rgb" );
+		String val = attrs.get( "rgb" );
 		if( val != null )
 		{
 			return val;
 		}
-		val = (String) attrs.get( "indexed" );
+		val = attrs.get( "indexed" );
 		if( val != null )
 		{
 			if( Integer.parseInt( val ) == 65 ) // default bg color
@@ -1349,7 +1349,7 @@ class BgColor implements OOXMLElement
 			}
 			return Color.parseColor( val, Color.COLORTYPEINDEXED, FormatHandle.colorBACKGROUND, t );
 		}
-		val = (String) attrs.get( "theme" );
+		val = attrs.get( "theme" );
 		if( val != null )
 		{
 			return Color.parseColor( val, Color.COLORTYPETHEME, FormatHandle.colorBACKGROUND, t );
@@ -1371,17 +1371,17 @@ class BgColor implements OOXMLElement
 	 */
 	protected int getColorAsInt( Theme t )
 	{
-		String val = (String) attrs.get( "rgb" );
+		String val = attrs.get( "rgb" );
 		if( val != null )
 		{
 			return Color.parseColorInt( val, Color.COLORTYPERGB, FormatHandle.colorBACKGROUND, t );
 		}
-		val = (String) attrs.get( "indexed" );
+		val = attrs.get( "indexed" );
 		if( val != null )
 		{
 			return Integer.valueOf( val );
 		}
-		val = (String) attrs.get( "theme" );
+		val = attrs.get( "theme" );
 		if( val != null )
 		{
 			return Color.parseColorInt( val, Color.COLORTYPETHEME, FormatHandle.colorBACKGROUND, t );

@@ -207,7 +207,7 @@ public final class Name extends XLSRecord
 		Iterator i = ilblListeners.iterator();
 		while( i.hasNext() )
 		{
-			((IlblListener) i.next()).setIlbl( (short) (ilbl) );
+			((IlblListener) i.next()).setIlbl( ilbl );
 		}
 	}
 
@@ -596,11 +596,11 @@ public final class Name extends XLSRecord
 				try
 				{
 					BiffRec[] b = ((PtgRef) ptga).getRefCells();
-					for( int i = 0; i < b.length; i++ )
+					for( BiffRec aB : b )
 					{
-						if( b[i] != null )
+						if( aB != null )
 						{
-							this.getWorkBook().getRefTracker().clearAffectedFormulaCells( b[i] );
+							this.getWorkBook().getRefTracker().clearAffectedFormulaCells( aB );
 						}
 					}
 				}
@@ -711,9 +711,9 @@ public final class Name extends XLSRecord
 	public void setExternsheetRef( int x )
 	{
 		// TODO: this doesn't account for formula expressions ...
-		for( int t = 0; t < expression.size(); t++ )
+		for( Object anExpression : expression )
 		{
-			Ptg p = (Ptg) expression.get( t );
+			Ptg p = (Ptg) anExpression;
 			if( p instanceof PtgArea3d )
 			{
 				if( DEBUGLEVEL > 1 )
@@ -797,7 +797,7 @@ public final class Name extends XLSRecord
 			cch = (byte) modnamelen;
 			if( !isuni )
 			{
-				newbytes[3] = (byte) cch;
+				newbytes[3] = cch;
 			}
 			else
 			{
@@ -1258,11 +1258,11 @@ public final class Name extends XLSRecord
 		{
 			if( ptga instanceof PtgRef )
 			{
-				((PtgRef) ptga).close();
+				ptga.close();
 			}
 			else
 			{
-				((GenericPtg) ptga).close();
+				ptga.close();
 			}
 			ptga = null;
 		}
@@ -1273,7 +1273,7 @@ public final class Name extends XLSRecord
 				GenericPtg p = (GenericPtg) expression.pop();
 				if( p instanceof PtgRef )
 				{
-					((PtgRef) p).close();
+					p.close();
 				}
 				else
 				{

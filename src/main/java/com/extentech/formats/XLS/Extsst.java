@@ -186,12 +186,12 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 			Unicodestring str;
 			if( t == totissts )
 			{
-				str = (Unicodestring) mysst.getUStringAt( totstrs - 1 );
+				str = mysst.getUStringAt( totstrs - 1 );
 			}
 			else
 			{
 				// get the data
-				str = (Unicodestring) mysst.getUStringAt( ctr );
+				str = mysst.getUStringAt( ctr );
 			}
 			ctr += newdsst;
 

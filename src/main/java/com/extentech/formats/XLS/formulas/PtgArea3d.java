@@ -504,7 +504,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 			lastPtg.formulaRow = ((Shrfmla) parent_rec).getLastRow();
 			lastPtg.formulaCol = ((Shrfmla) parent_rec).getLastCol();
 		}
-		((PtgArea) this).hashcode = super.getHashCode();
+		this.hashcode = super.getHashCode();
 	}
 
 	/**
@@ -629,7 +629,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 			firstPtg.setParentRec( this.getParentRec() );
 		}
 		firstPtg.sheetname = sheetname;
-		((PtgRef3d) firstPtg).setLocation( firstcell );
+		firstPtg.setLocation( firstcell );
 		((PtgRef3d) firstPtg).setIxti( this.ixti );
 
 		if( lastPtg == null )
@@ -638,7 +638,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 			lastPtg.setParentRec( this.getParentRec() );
 		}
 		lastPtg.sheetname = sheetname2;
-		((PtgRef3d) lastPtg).setLocation( lastcell );
+		lastPtg.setLocation( lastcell );
 		((PtgRef3d) lastPtg).setIxti( this.ixti );
 
 		this.setWholeRowCol();
@@ -859,7 +859,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 					// cache these suckers!
 					Ptg pref = new PtgRef3d( false );
 					pref.setParentRec( parent_rec );    // must set parentrec before setLocation
-					((PtgRef3d) pref).setLocation( loc );
+					pref.setLocation( loc );
 					components.add( pref );
 				}
 			}
@@ -917,7 +917,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 		{
 			for( int i = 0; i < comps.length; i++ )
 			{
-				((GenericPtg) comps[i]).close();
+				comps[i].close();
 				comps[i] = null;
 			}
 		}

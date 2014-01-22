@@ -102,15 +102,15 @@ public class SheetPr implements OOXMLElement
 					}
 					else if( tnm.equals( "pageSetUpPr" ) )
 					{ // Page setup properties of the worksheet
-						pr = (PageSetupPr) PageSetupPr.parseOOXML( xpp );
+						pr = PageSetupPr.parseOOXML( xpp );
 					}
 					else if( tnm.equals( "outlinePr" ) )
 					{
-						op = (OutlinePr) OutlinePr.parseOOXML( xpp );
+						op = OutlinePr.parseOOXML( xpp );
 					}
 					else if( tnm.equals( "tabColor" ) )
 					{
-						tab = (TabColor) TabColor.parseOOXML( xpp );
+						tab = TabColor.parseOOXML( xpp );
 
 					}
 				}
@@ -142,8 +142,8 @@ public class SheetPr implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 
@@ -180,7 +180,7 @@ public class SheetPr implements OOXMLElement
 	{
 		if( attrs != null )
 		{
-			return (String) attrs.get( "codeName" );
+			return attrs.get( "codeName" );
 		}
 		return null;
 	}
@@ -270,8 +270,8 @@ class TabColor implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );
@@ -354,8 +354,8 @@ class OutlinePr implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );

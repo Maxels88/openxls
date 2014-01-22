@@ -500,13 +500,13 @@ public class InformationCalculator
 	protected static Ptg calcIsBlank( Ptg[] operands )
 	{
 		Ptg[] allops = PtgCalculator.getAllComponents( operands );
-		for( int i = 0; i < allops.length; i++ )
+		for( Ptg allop : allops )
 		{
 			// 20081120 KSC: blanks are handled differently now as Excel counts blank cells as 0's
 			/*Object o = allops[i].getValue();
 			if (o != null) return new PtgBool(false);
 			*/
-			if( !allops[i].isBlank() )
+			if( !allop.isBlank() )
 			{
 				return new PtgBool( false );
 			}
@@ -530,9 +530,9 @@ public class InformationCalculator
 		String[] errorstr = { "#N/A", "#VALUE!", "#REF!", "#DIV/0!", "#NUM!", "#NAME?", "#NULL!" };
 		Object o = operands[0].getValue();
 		String opval = o.toString();
-		for( int i = 0; i < errorstr.length; i++ )
+		for( String anErrorstr : errorstr )
 		{
-			if( opval.equalsIgnoreCase( errorstr[i] ) )
+			if( opval.equalsIgnoreCase( anErrorstr ) )
 			{
 				return new PtgBool( true );
 			}
@@ -553,9 +553,9 @@ public class InformationCalculator
 		}
 		Object o = operands[0].getValue();
 		String opval = o.toString();
-		for( int i = 0; i < errorstr.length; i++ )
+		for( String anErrorstr : errorstr )
 		{
-			if( opval.equalsIgnoreCase( errorstr[i] ) )
+			if( opval.equalsIgnoreCase( anErrorstr ) )
 			{
 				return new PtgBool( true );
 			}

@@ -238,9 +238,9 @@ public class StringTool implements Serializable
 	public static String arrayToString( Object[] objs )
 	{
 		StringBuffer ret = new StringBuffer( "[" );
-		for( int x = 0; x < objs.length; x++ )
+		for( Object obj : objs )
 		{
-			ret.append( objs[x].toString() );
+			ret.append( obj.toString() );
 			ret.append( ", " );
 		}
 		ret.setLength( ret.length() - 1 );
@@ -1495,19 +1495,19 @@ public class StringTool implements Serializable
 		if( s.length > 1 )
 		{
 			pattern = "";
-			for( int i = 0; i < s.length; i++ )
+			for( String value : s )
 			{
-				int zz = s[i].indexOf( "]" );
+				int zz = value.indexOf( "]" );
 				if( zz != -1 )
 				{
 					String term = "";
-					if( s[i].charAt( 0 ) == '$' )
+					if( value.charAt( 0 ) == '$' )
 					{
-						term = s[i].substring( 1, zz );    // skip first $
+						term = value.substring( 1, zz );    // skip first $
 					}
 					else
 					{
-						term = s[i].substring( 0, zz );
+						term = value.substring( 0, zz );
 					}
 					if( term.indexOf( "-" ) != -1 )  // extract character TODO: locale specifics
 					{
@@ -1518,7 +1518,7 @@ public class StringTool implements Serializable
 						pattern += term;
 					}
 				}
-				pattern += s[i].substring( zz + 1 );
+				pattern += value.substring( zz + 1 );
 			}
 		}
 		return pattern;
@@ -1557,18 +1557,18 @@ public class StringTool implements Serializable
 		if( s.length > 1 )
 		{
 			pattern = "";
-			for( int i = 0; i < s.length; i++ )
+			for( String value : s )
 			{
-				int zz = s[i].indexOf( "]" );
+				int zz = value.indexOf( "]" );
 				if( zz != -1 )
 				{
-					String term = s[i].substring( 1, zz );    // skip first $
+					String term = value.substring( 1, zz );    // skip first $
 					if( term.indexOf( "-" ) != -1 )
 					{ // extract character TODO: locale specifics
 						pattern += term.substring( 0, term.indexOf( "-" ) );
 					}
 				}
-				pattern += s[i].substring( zz + 1 );
+				pattern += value.substring( zz + 1 );
 			}
 		}
 		return pattern;

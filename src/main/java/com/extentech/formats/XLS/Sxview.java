@@ -252,7 +252,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 			itblAutoFmt = ByteTools.readShort( this.getByteAt( 38 ), this.getByteAt( 39 ) );
 			cchName = ByteTools.readShort( this.getByteAt( 40 ), this.getByteAt( 41 ) );
 			cchData = ByteTools.readShort( this.getByteAt( 42 ), this.getByteAt( 43 ) );
-			int fullnamelen = (int) ((int) cchName) + ((int) cchData);
+			int fullnamelen = (int) cchName + ((int) cchData);
 			rgch = new byte[fullnamelen];
 			int pos = 44;
 			if( cchName > 0 )
@@ -373,7 +373,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 		// remove ALL field-related records
 		for( int i = 0; i < subRecs.size(); i++ )
 		{
-			BiffRec br = ((BiffRec) subRecs.get( i ));
+			BiffRec br = subRecs.get( i );
 			if( br.getOpcode() != SXEX )
 			{
 				this.getSheet().removeRecFromVec( br );
@@ -1277,7 +1277,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 		// find SXADDL_SxView_SxDID record and set PivotTableView name - must match this view tablename
 		for( int i = subRecs.size() - 1; i > 0; i-- )
 		{
-			BiffRec br = ((BiffRec) subRecs.get( i ));
+			BiffRec br = subRecs.get( i );
 			if( br.getOpcode() == SXADDL )
 			{
 				if( ((SxAddl) br).getRecordId() == SxAddl.SxcView.sxdId )
@@ -1367,9 +1367,8 @@ public class Sxview extends XLSRecord implements XLSConstants
 	private BiffRec getSubRec( int opcode, int index )
 	{
 		int j = 0;
-		for( int i = 0; i < subRecs.size(); i++ )
+		for( BiffRec br : subRecs )
 		{
-			BiffRec br = subRecs.get( i );
 			if( br.getOpcode() == opcode )
 			{
 				if( (index == -1) || (j++ == index) )

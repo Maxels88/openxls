@@ -103,7 +103,7 @@ public class GraphicFrame implements OOXMLElement
 					else if( tnm.equals( "nvGraphicFramePr" ) )
 					{
 						lastTag.push( tnm );
-						gfp = (NvGraphicFramePr) NvGraphicFramePr.parseOOXML( xpp, lastTag );
+						gfp = NvGraphicFramePr.parseOOXML( xpp, lastTag );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -135,8 +135,8 @@ public class GraphicFrame implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( ">" );
@@ -161,7 +161,7 @@ public class GraphicFrame implements OOXMLElement
 	{
 		if( attrs.get( "macro" ) != null )
 		{
-			return (String) attrs.get( "macro" );
+			return attrs.get( "macro" );
 		}
 		return null;
 	}
@@ -356,7 +356,7 @@ class NvGraphicFramePr implements OOXMLElement
 					if( tnm.equals( "cNvGraphicFramePr" ) )
 					{
 						lastTag.push( tnm );
-						nvpr = (CNvGraphicFramePr) CNvGraphicFramePr.parseOOXML( xpp, lastTag );
+						nvpr = CNvGraphicFramePr.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "cNvPr" ) )
 					{

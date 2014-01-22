@@ -336,7 +336,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		{
 			return this.originalOffset;
 		}
-		return (int) offset;
+		return offset;
 	}
 
 	/** Get the blocks containing this Consumer's data
@@ -685,7 +685,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public void setWorkBook( WorkBook wk )
 	{
-		wkbook = (WorkBook) wk;
+		wkbook = wk;
 	}
 
 	@Override
@@ -696,7 +696,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 			wkbook = worksheet.getWorkBook();
 		}
 
-		return (WorkBook) wkbook;
+		return wkbook;
 	}
 
 	/**
@@ -705,7 +705,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public void setCol( short i )
 	{
-		byte[] c = ByteTools.shortToLEBytes( (short) i );
+		byte[] c = ByteTools.shortToLEBytes( i );
 		System.arraycopy( c, 0, getData(), 2, 2 );
 		col = i;
 	}

@@ -24,6 +24,7 @@ package com.extentech.formats.LEO;
 
 import com.extentech.formats.XLS.BiffRec;
 import com.extentech.formats.XLS.WorkBookException;
+import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.formats.XLS.XLSRecordFactory;
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.CompatibleVector;
@@ -82,9 +83,9 @@ public class StorageTable implements Serializable
 		}
 		directoryHashtable = new Hashtable( 100, 0.9f );
 
-		for( int i = 0; i < directoryVector.size(); i++ )
+		for( Object aDirectoryVector : directoryVector )
 		{
-			Storage s = (Storage) directoryVector.get( i );
+			Storage s = (Storage) aDirectoryVector;
 			s.close();
 		}
 		directoryVector.clear();
@@ -298,9 +299,9 @@ public class StorageTable implements Serializable
 				System.arraycopy( miniStream.getBytes(), 0, b, 0, miniStreamSize );
 				Block[] miniStreamBlocks = BlockFactory.getBlocksFromByteArray( b, Block.SMALL );
 				ArrayList miniStreamBlockList = new ArrayList();
-				for( int i = 0; i < miniStreamBlocks.length; i++ )
+				for( Block miniStreamBlock : miniStreamBlocks )
 				{    // should equal sbbsize
-					miniStreamBlockList.add( miniStreamBlocks[i] );
+					miniStreamBlockList.add( miniStreamBlock );
 				}
 				return miniStreamBlockList;
 			}
@@ -365,9 +366,9 @@ public class StorageTable implements Serializable
 		else
 		{
 			directoryVector.add( insertIdx, rec );
-			for( int i = 0; i < directoryVector.size(); i++ )
+			for( Object aDirectoryVector : directoryVector )
 			{    // adjust prev, next, child ids if necessary
-				Storage s = (Storage) directoryVector.get( i );
+				Storage s = (Storage) aDirectoryVector;
 				if( s.getChildStorageID() >= insertIdx )
 				{
 					s.setChildStorageID( s.getChildStorageID() + 1 );
@@ -651,9 +652,9 @@ public class StorageTable implements Serializable
 	public void DEBUG()
 	{
 		System.out.println( "DIRECTORY CONTENTS:" );
-		for( int i = 0; i < directoryVector.size(); i++ )
+		for( Object aDirectoryVector : directoryVector )
 		{
-			Storage s = (Storage) directoryVector.get( i );
+			Storage s = (Storage) aDirectoryVector;
 			String n = s.getName();
 			Logger.logInfo( "Storage: " + n + " storageType: " + s.getStorageType() + " directoryColor:" + s.getDirectoryColor() +
 					                " prevSID:" + s.getPrevStorageID() + " nextSID:" + s.getNextStorageID() + " childSID:" + s.getChildStorageID() + " sz:" + s
@@ -674,15 +675,13 @@ public class StorageTable implements Serializable
 				if( s.myblocks != null )
 				{
 					int zz = 0;
-					if( (s.myblocks.get( zz ) instanceof com.extentech.formats.LEO.BIGBLOCK) )
+					if( (s.myblocks.get( zz ) instanceof BIGBLOCK) )
 					{
-						System.out.println( "BLOCK 1:\t" + zz + "-" + Arrays.toString( ((com.extentech.formats.LEO.BIGBLOCK) s.myblocks.get(
-								zz )).getBytes() ) );
+						System.out.println( "BLOCK 1:\t" + zz + "-" + Arrays.toString( ((BIGBLOCK) s.myblocks.get( zz )).getBytes() ) );
 					}
 					else
 					{
-						System.out.println( "BLOCK 1:\t" + zz + "-" + Arrays.toString( ((com.extentech.formats.LEO.SMALLBLOCK) s.myblocks.get(
-								zz )).getBytes() ) );
+						System.out.println( "BLOCK 1:\t" + zz + "-" + Arrays.toString( ((SMALLBLOCK) s.myblocks.get( zz )).getBytes() ) );
 					}
 				}
 			}
@@ -694,7 +693,7 @@ public class StorageTable implements Serializable
 			{
 				BlockByteReader bytes = s.getBlockReader();
 				int len = bytes.getLength();
-				BiffRec rec = new com.extentech.formats.XLS.XLSRecord();        // 4 bytes are header ...
+				BiffRec rec = new XLSRecord();        // 4 bytes are header ...
 				rec.setByteReader( bytes );
 				rec.setLength( len );
 				int slen = ByteTools.readInt( rec.getBytesAt( 24, 4 ) );    // actually position 28
@@ -713,15 +712,13 @@ public class StorageTable implements Serializable
 				{
 					for( int zz = 0; zz < s.myblocks.size(); zz++ )
 					{
-						if( (s.myblocks.get( zz ) instanceof com.extentech.formats.LEO.BIGBLOCK) )
+						if( (s.myblocks.get( zz ) instanceof BIGBLOCK) )
 						{
-							System.out.println( "\t" + zz + "-" + Arrays.toString( ((com.extentech.formats.LEO.BIGBLOCK) s.myblocks.get( zz ))
-									                                                       .getBytes() ) );
+							System.out.println( "\t" + zz + "-" + Arrays.toString( ((BIGBLOCK) s.myblocks.get( zz )).getBytes() ) );
 						}
 						else
 						{
-							System.out.println( "\t" + zz + "-" + Arrays.toString( ((com.extentech.formats.LEO.SMALLBLOCK) s.myblocks.get(
-									zz )).getBytes() ) );
+							System.out.println( "\t" + zz + "-" + Arrays.toString( ((SMALLBLOCK) s.myblocks.get( zz )).getBytes() ) );
 						}
 					}
 				}
@@ -747,15 +744,13 @@ public class StorageTable implements Serializable
 				{
 					for( int zz = 0; zz < s.myblocks.size(); zz++ )
 					{
-						if( (s.myblocks.get( zz ) instanceof com.extentech.formats.LEO.BIGBLOCK) )
+						if( (s.myblocks.get( zz ) instanceof BIGBLOCK) )
 						{
-							System.out.println( "\t" + zz + "-" + Arrays.toString( ((com.extentech.formats.LEO.BIGBLOCK) s.myblocks.get( zz ))
-									                                                       .getBytes() ) );
+							System.out.println( "\t" + zz + "-" + Arrays.toString( ((BIGBLOCK) s.myblocks.get( zz )).getBytes() ) );
 						}
 						else
 						{
-							System.out.println( "\t" + zz + "-" + Arrays.toString( ((com.extentech.formats.LEO.SMALLBLOCK) s.myblocks.get(
-									zz )).getBytes() ) );
+							System.out.println( "\t" + zz + "-" + Arrays.toString( ((SMALLBLOCK) s.myblocks.get( zz )).getBytes() ) );
 						}
 					}
 				}

@@ -109,11 +109,11 @@ public class BrowserLauncher
 				// If we haven't found a browser yet, try some possible ones
 				if( browser == null )
 				{
-					for( int idx = 0; idx < browsers.length; idx++ )
+					for( String browser1 : browsers )
 					{
-						if( Runtime.getRuntime().exec( new String[]{ "which", browsers[idx] } ).waitFor() == 0 )
+						if( Runtime.getRuntime().exec( new String[]{ "which", browser1 } ).waitFor() == 0 )
 						{
-							browser = browsers[idx];
+							browser = browser1;
 						}
 					}
 

@@ -245,7 +245,7 @@ public class FormatHandle implements Handle, FormatConstants
 			try
 			{
 				int[] rc = cx.getEncompassingRange();
-				c = new CellHandle( cx.getSheet().getCell( rc[0], rc[1] ), (WorkBookHandle) book );
+				c = new CellHandle( cx.getSheet().getCell( rc[0], rc[1] ), book );
 			}
 			catch( Exception e )
 			{
@@ -543,17 +543,17 @@ public class FormatHandle implements Handle, FormatConstants
 	 */
 	public static String convertFormatString( String pattern )
 	{
-		String ret = (String) numericFormatMap.get( pattern );
+		String ret = numericFormatMap.get( pattern );
 		if( ret != null )
 		{
 			return ret;
 		}
-		ret = (String) currencyFormatMap.get( pattern );
+		ret = currencyFormatMap.get( pattern );
 		if( ret != null )
 		{
 			return ret;
 		}
-		ret = (String) dateFormatMap.get( pattern );
+		ret = dateFormatMap.get( pattern );
 		if( ret != null )
 		{
 			return ret;
@@ -1303,9 +1303,9 @@ public class FormatHandle implements Handle, FormatConstants
 	public void addCellRange( CellRange cr )
 	{
 		CellHandle[] crcells = cr.getCells();
-		for( int t = 0; t < crcells.length; t++ )
+		for( CellHandle crcell : crcells )
 		{
-			addCell( crcells[t] );
+			addCell( crcell );
 		}
 	}
 
@@ -1316,9 +1316,9 @@ public class FormatHandle implements Handle, FormatConstants
 	 */
 	public void addCellArray( CellHandle[] crcells )
 	{
-		for( int t = 0; t < crcells.length; t++ )
+		for( CellHandle crcell : crcells )
 		{
-			addCell( crcells[t] );
+			addCell( crcell );
 		}
 	}
 
@@ -1343,7 +1343,7 @@ public class FormatHandle implements Handle, FormatConstants
 		while( itx.hasNext() )
 		{
 			addCell( (BiffRec) itx.next() );
-			mycells.add( (BiffRec) itx.next() );
+			mycells.add( itx.next() );
 		}
 	}
 
@@ -3206,9 +3206,9 @@ public class FormatHandle implements Handle, FormatConstants
 				}
 			}
 
-			for( int i = 0; i < mycells.size(); i++ )
+			for( Object mycell : mycells )
 			{
-				((BiffRec) mycells.get( i )).setXFRecord( xfe ); // make sure all linked cells are updated as well
+				((BiffRec) mycell).setXFRecord( xfe ); // make sure all linked cells are updated as well
 			}
 			if( mycol != null )
 			{

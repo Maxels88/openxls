@@ -84,7 +84,7 @@ public class CxnSp implements OOXMLElement
 					else if( tnm.equals( "nvCxnSpPr" ) )
 					{
 						lastTag.push( tnm );
-						nvc = (NvCxnSpPr) NvCxnSpPr.parseOOXML( xpp, lastTag );
+						nvc = NvCxnSpPr.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "spPr" ) )
 					{
@@ -127,8 +127,8 @@ public class CxnSp implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( ">" );
@@ -216,7 +216,7 @@ public class CxnSp implements OOXMLElement
 	{
 		if( attrs.get( "macro" ) != null )
 		{
-			return (String) attrs.get( "macro" );
+			return attrs.get( "macro" );
 		}
 		return null;
 	}

@@ -115,9 +115,9 @@ public class PtgMemFunc extends GenericPtg
 	public byte[] getRecord()
 	{
 		int len = 0;
-		for( int i = 0; i < subexpression.size(); i++ )
+		for( Object aSubexpression1 : subexpression )
 		{
-			Ptg p = (Ptg) subexpression.get( i );
+			Ptg p = (Ptg) aSubexpression1;
 			len += p.getRecord().length;
 		}
 		byte[] b = new byte[len + 3];
@@ -126,9 +126,9 @@ public class PtgMemFunc extends GenericPtg
 		b[1] = leng[0];
 		b[2] = leng[1];
 		int offset = 3;
-		for( int i = 0; i < subexpression.size(); i++ )
+		for( Object aSubexpression : subexpression )
 		{
-			Ptg p = (Ptg) subexpression.get( i );
+			Ptg p = (Ptg) aSubexpression;
 			System.arraycopy( p.getRecord(), 0, b, offset, p.getRecord().length );
 			offset += p.getRecord().length;
 		}
@@ -163,9 +163,9 @@ public class PtgMemFunc extends GenericPtg
 				return null;
 			}
 			double result = 0.0;
-			for( int i = 0; i < dub.length; i++ )
+			for( double aDub : dub )
 			{
-				result += dub[i];
+				result += aDub;
 			}
 			return result;
 		}
@@ -192,9 +192,9 @@ public class PtgMemFunc extends GenericPtg
 		}
 		FastAddVector v = new FastAddVector();
 		Ptg[] allComponents = this.getComponents();
-		for( int i = 0; i < allComponents.length; i++ )
+		for( Ptg allComponent : allComponents )
 		{
-			PtgRef p = (PtgRef) allComponents[i];
+			PtgRef p = (PtgRef) allComponent;
 //			 TODO: check rc sanity here
 			int[] x = p.getIntLocation();
 			if( x[1] == colNum )
@@ -220,37 +220,37 @@ public class PtgMemFunc extends GenericPtg
 		if( (o != null) && (o instanceof Ptg[]) )
 		{
 			// Firstly: take subexpression and remove reference-tracked elements; calcualted elements are ref-tracked below
-			for( int i = 0; i < subexpression.size(); i++ )
+			for( Object aSubexpression : subexpression )
 			{
 				try
 				{
-					((PtgRef) subexpression.get( i )).removeFromRefTracker();
+					((PtgRef) aSubexpression).removeFromRefTracker();
 				}
 				catch( Exception e )
 				{
 				}
 			}
 			ptgs = (Ptg[]) o;
-			for( int i = 0; i < ptgs.length; i++ )
+			for( Ptg ptg : ptgs )
 			{
 				try
 				{
-					if( !refsheets.contains( ((PtgRef) ptgs[i]).getSheetName() ) )
+					if( !refsheets.contains( ((PtgRef) ptg).getSheetName() ) )
 					{
-						refsheets.add( ((PtgRef) ptgs[i]).getSheetName() );
+						refsheets.add( ((PtgRef) ptg).getSheetName() );
 					}
-					((PtgRef) ptgs[i]).addToRefTracker();
-					if( (ptgs[i] instanceof PtgArea) & !(ptgs[i] instanceof PtgAreaErr3d) )
+					((PtgRef) ptg).addToRefTracker();
+					if( (ptg instanceof PtgArea) & !(ptg instanceof PtgAreaErr3d) )
 					{
-						Ptg[] p = ptgs[i].getComponents();
-						for( int j = 0; j < p.length; j++ )
+						Ptg[] p = ptg.getComponents();
+						for( Ptg aP : p )
 						{
-							components.add( p[j] );
+							components.add( aP );
 						}
 					}
 					else
 					{
-						components.add( ptgs[i] );
+						components.add( ptg );
 					}
 				}
 				catch( Exception e )
@@ -261,11 +261,11 @@ public class PtgMemFunc extends GenericPtg
 		}
 		else
 		{    // often a single reference surrounded by parens
-			for( int i = 0; i < subexpression.size(); i++ )
+			for( Object aSubexpression : subexpression )
 			{
 				try
 				{
-					PtgRef pr = (PtgRef) subexpression.get( i );
+					PtgRef pr = (PtgRef) aSubexpression;
 					if( !refsheets.contains( pr.getSheetName() ) )
 					{
 						refsheets.add( pr.getSheetName() );
@@ -273,9 +273,9 @@ public class PtgMemFunc extends GenericPtg
 					if( pr instanceof PtgArea )
 					{
 						Ptg[] pa = pr.getComponents();
-						for( int j = 0; j < pa.length; j++ )
+						for( Ptg aPa : pa )
 						{
-							components.add( pa[j] );
+							components.add( aPa );
 						}
 					}
 					else
@@ -583,7 +583,7 @@ public class PtgMemFunc extends GenericPtg
 						range = null;
 						ref = "";
 						finishRange = false;
-						ops.push( (char) c );
+						ops.push( c );
 					}
 					else if( refs.isEmpty() )
 					{    // no operands yet - put in 1st
@@ -592,7 +592,7 @@ public class PtgMemFunc extends GenericPtg
 							refs.push( ref );
 						}
 						ref = "";
-						ops.push( (char) c );
+						ops.push( c );
 					}
 					else
 					{    // have all we need to process
@@ -605,7 +605,7 @@ public class PtgMemFunc extends GenericPtg
 							refs.push( ops.pop() );
 						}
 						ref = "";    // handle case of two spaces ... unfortunately
-						ops.push( (char) c );
+						ops.push( c );
 					}
 					lastOp = c;
 				}
@@ -621,7 +621,7 @@ public class PtgMemFunc extends GenericPtg
 						}
 						else
 						{ // happens in cases such as (opopop):ref:ref
-							ops.push( (char) c );
+							ops.push( c );
 						}
 						ref = "";
 					}
@@ -629,7 +629,7 @@ public class PtgMemFunc extends GenericPtg
 					{    // it's a named range
 						refs.push( ref );
 						ref = "";
-						ops.push( (char) c );
+						ops.push( c );
 						finishRange = false;    // it's not a regular range
 					}
 				}
@@ -823,7 +823,7 @@ public class PtgMemFunc extends GenericPtg
 				Boundsheet[] sheets = new Boundsheet[this.refsheets.size()];
 				for( int i = 0; i < sheets.length; i++ )
 				{
-					sheets[i] = b.getWorkSheetByName( (String) refsheets.get( i ) );
+					sheets[i] = b.getWorkSheetByName( refsheets.get( i ) );
 				}
 				return sheets;
 			}
@@ -841,15 +841,15 @@ public class PtgMemFunc extends GenericPtg
 	{
 		if( ptgs != null )
 		{
-			for( int i = 0; i < ptgs.length; i++ )
+			for( Ptg ptg : ptgs )
 			{
-				if( ptgs[i] instanceof PtgRef )
+				if( ptg instanceof PtgRef )
 				{
-					((PtgRef) ptgs[i]).close();
+					ptg.close();
 				}
 				else
 				{
-					((GenericPtg) ptgs[i]).close();
+					ptg.close();
 				}
 			}
 		}

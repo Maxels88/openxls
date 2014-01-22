@@ -104,9 +104,9 @@ public class LEOFile implements Serializable
 		}
 		if( bigBlocks != null )
 		{
-			for( int i = 0; i < bigBlocks.size(); i++ )
+			for( Object bigBlock : bigBlocks )
 			{
-				BlockImpl b = (BlockImpl) bigBlocks.get( i );
+				BlockImpl b = (BlockImpl) bigBlock;
 				b.close();
 			}
 			bigBlocks.clear();
@@ -802,9 +802,9 @@ public class LEOFile implements Serializable
 			sbidx[i] = -1;  // init sbidx index
 		}
 		int z = 0;
-		for( int i = 0; i < storages.size(); i++ )
+		for( Object storage : storages )
 		{
-			Storage thisStore = (Storage) storages.get( i );
+			Storage thisStore = (Storage) storage;
 			if( thisStore.getBlockType() == Block.SMALL )
 			{
 				//since these are static blocks we can copy original data
@@ -842,7 +842,7 @@ public class LEOFile implements Serializable
 	 */
 	final static void initSmallBlockIndex( int[] newidx, Block b )
 	{
-		while( b.hasNext() && !(b == (Block) b.next()) )
+		while( b.hasNext() && !(b == b.next()) )
 		{
 			int origps = b.getBlockIndex();
 			if( origps < 0 )
@@ -1225,9 +1225,9 @@ public class LEOFile implements Serializable
 	public final static void getBytes( Block[] outblocks, OutputStream out )
 	{
 		List blxt = new ArrayList();
-		for( int tx = 0; tx < outblocks.length; tx++ )
+		for( Block outblock : outblocks )
 		{
-			blxt.add( outblocks[tx] );
+			blxt.add( outblock );
 		}
 		getBytes( blxt, out );
 	}

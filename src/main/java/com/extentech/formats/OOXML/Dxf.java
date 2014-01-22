@@ -98,7 +98,7 @@ public class Dxf implements OOXMLElement
 					String tnm = xpp.getName();
 					if( tnm.equals( "font" ) )
 					{
-						fnt = (Font) Font.parseOOXML( xpp, bk );
+						fnt = Font.parseOOXML( xpp, bk );
 					}
 					else if( tnm.equals( "numFmt" ) )
 					{
@@ -480,7 +480,7 @@ public class Dxf implements OOXMLElement
 	 */
 	public void setFont( Font f )
 	{
-		this.font = (Font) f;
+		this.font = f;
 	}
 
 	/**

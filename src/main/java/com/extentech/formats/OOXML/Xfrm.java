@@ -95,7 +95,7 @@ class Xfrm implements OOXMLElement
 					else if( tnm.equals( "off" ) )
 					{
 						lastTag.push( tnm );
-						o = (Off) Off.parseOOXML( xpp, lastTag );
+						o = Off.parseOOXML( xpp, lastTag );
 						//o.setNS("a");
 					}
 					else if( tnm.equals( "ext" ) )
@@ -136,8 +136,8 @@ class Xfrm implements OOXMLElement
 			Iterator<String> i = attrs.keySet().iterator();
 			while( i.hasNext() )
 			{
-				String key = (String) i.next();
-				String val = (String) attrs.get( key );
+				String key = i.next();
+				String val = attrs.get( key );
 				ooxml.append( " " + key + "=\"" + val + "\"" );
 			}
 		}
@@ -243,8 +243,8 @@ class Off implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );

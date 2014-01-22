@@ -75,7 +75,7 @@ public class StrRef implements OOXMLElement
 					else if( tnm.equals( "strCache" ) )
 					{
 						lastTag.push( tnm );
-						s = (StrCache) StrCache.parseOOXML( xpp, lastTag );
+						s = StrCache.parseOOXML( xpp, lastTag );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )

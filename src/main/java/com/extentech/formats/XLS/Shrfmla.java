@@ -90,22 +90,22 @@ public final class Shrfmla extends XLSRecord
 
 	public int getFirstRow()
 	{
-		return (int) rwFirst;
+		return rwFirst;
 	}
 
 	public int getLastRow()
 	{
-		return (int) rwLast;
+		return rwLast;
 	}
 
 	public int getFirstCol()
 	{
-		return (int) colFirst;
+		return colFirst;
 	}
 
 	public int getLastCol()
 	{
-		return (int) colLast;
+		return colLast;
 	}
 
 	/**
@@ -134,15 +134,15 @@ public final class Shrfmla extends XLSRecord
 				}
 			}
 		}
-		for( int i = 0; i < ptgcache.length; i++ )
+		for( Ptg aPtgcache1 : ptgcache )
 		{
-			if( ptgcache[i] instanceof PtgRefN )
+			if( aPtgcache1 instanceof PtgRefN )
 			{
-				((PtgRefN) ptgcache[i]).removeFromRefTracker();
+				((PtgRefN) aPtgcache1).removeFromRefTracker();
 			}
 			else
 			{
-				((PtgAreaN) ptgcache[i]).removeFromRefTracker();
+				((PtgAreaN) aPtgcache1).removeFromRefTracker();
 			}
 		}
 		Iterator<Formula> ii = members.iterator();
@@ -156,15 +156,15 @@ public final class Shrfmla extends XLSRecord
 		}
 		setFirstRow( rwFirst + shiftamount );
 		setLastRow( rwLast + shiftamount );
-		for( int i = 0; i < ptgcache.length; i++ )
+		for( Ptg aPtgcache : ptgcache )
 		{
-			if( ptgcache[i] instanceof PtgRefN )
+			if( aPtgcache instanceof PtgRefN )
 			{
-				((PtgRefN) ptgcache[i]).addToRefTracker();
+				((PtgRefN) aPtgcache).addToRefTracker();
 			}
 			else
 			{
-				((PtgAreaN) ptgcache[i]).addToRefTracker();
+				((PtgAreaN) aPtgcache).addToRefTracker();
 			}
 		}
 	}
@@ -216,9 +216,9 @@ public final class Shrfmla extends XLSRecord
 		}
 		// Cache Relative Ptgs for quickness of access
 		ArrayList<Ptg> ptgs = new ArrayList();
-		for( int idx = 0; idx < expression.size(); idx++ )
+		for( Object anExpression : expression )
 		{
-			Ptg ptg = (Ptg) expression.get( idx );
+			Ptg ptg = (Ptg) anExpression;
 			if( ptg instanceof PtgRefN )
 			{
 				ptgs.add( ptg );
@@ -264,9 +264,9 @@ public final class Shrfmla extends XLSRecord
 	public static Stack convertStack( Stack in, Formula f )
 	{
 		Stack out = new Stack();
-		for( int idx = 0; idx < in.size(); idx++ )
+		for( Object anIn : in )
 		{
-			Ptg ptg = (Ptg) in.get( idx );
+			Ptg ptg = (Ptg) anIn;
 			// convert the Ptg if necessary, otherwise clone it
 			if( ptg instanceof PtgRefN )
 			{
@@ -482,11 +482,11 @@ public final class Shrfmla extends XLSRecord
 			int[] frc = new int[2];
 			frc[0] = f.getRowNumber();
 			frc[1] = f.getColNumber();
-			for( int i = 0; i < ptgcache.length; i++ )
+			for( Ptg aPtgcache : ptgcache )
 			{
-				if( ptgcache[i] instanceof PtgRefN )
+				if( aPtgcache instanceof PtgRefN )
 				{
-					int[] refrc = ((PtgRefN) ptgcache[i]).getRealRowCol();
+					int[] refrc = ((PtgRefN) aPtgcache).getRealRowCol();
 					if( ((refrc[0] + frc[0]) == rc[0]) && ((adjustCol( refrc[1] + frc[1], isExcel2007 )) == rc[1]) )
 					{
 						return f;
@@ -494,7 +494,7 @@ public final class Shrfmla extends XLSRecord
 				}
 				else
 				{    // it's a PtgAreaN
-					int[] refrc = ((PtgAreaN) ptgcache[i]).getRealRowCol();
+					int[] refrc = ((PtgAreaN) aPtgcache).getRealRowCol();
 					refrc[0] += frc[0];
 					refrc[2] += frc[1];
 					refrc[1] = adjustCol( refrc[1] + frc[0], isExcel2007 );
@@ -543,7 +543,7 @@ public final class Shrfmla extends XLSRecord
 				GenericPtg p = (GenericPtg) expression.pop();
 				if( p instanceof PtgRef )
 				{
-					((PtgRef) p).close();
+					p.close();
 				}
 				else
 				{

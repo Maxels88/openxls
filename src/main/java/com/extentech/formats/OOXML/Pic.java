@@ -100,12 +100,12 @@ public class Pic implements OOXMLElement
 					else if( tnm.equals( "nvPicPr" ) )
 					{
 						lastTag.push( tnm );
-						nv = (NvPicPr) NvPicPr.parseOOXML( xpp, lastTag );
+						nv = NvPicPr.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "blipFill" ) )
 					{
 						lastTag.push( tnm );
-						bf = (BlipFill) BlipFill.parseOOXML( xpp, lastTag );
+						bf = BlipFill.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "spPr" ) )
 					{
@@ -150,8 +150,8 @@ public class Pic implements OOXMLElement
 			Iterator<String> i = attrs.keySet().iterator();
 			while( i.hasNext() )
 			{
-				String key = (String) i.next();
-				String val = (String) attrs.get( key );
+				String key = i.next();
+				String val = attrs.get( key );
 				ooxml.append( " " + key + "=\"" + val + "\"" );
 			}
 		}
@@ -322,7 +322,7 @@ public class Pic implements OOXMLElement
 	{
 		if( attrs.get( "macro" ) != null )
 		{
-			return (String) attrs.get( "macro" );
+			return attrs.get( "macro" );
 		}
 		return null;
 	}
@@ -429,7 +429,7 @@ class NvPicPr implements OOXMLElement
 					else if( tnm.equals( "cNvPicPr" ) )
 					{
 						lastTag.push( tnm );
-						ppr = (CNvPicPr) CNvPicPr.parseOOXML( xpp, lastTag );
+						ppr = CNvPicPr.parseOOXML( xpp, lastTag );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )

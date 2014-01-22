@@ -334,7 +334,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 		this.sheetname = this.getSheetName();
 
 		rw = readRow( record[3], record[4] );
-		short column = (short) ByteTools.readShort( record[5], record[6] );
+		short column = ByteTools.readShort( record[5], record[6] );
 		if( (column & 0x8000) == 0x8000 )
 		{ // is the Row relative?
 			fRwRel = true;
@@ -354,7 +354,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 		col = (short) (column & 0x3fff);
 		setRelativeRowCol();  // set formulaRow/Col for relative references if necessary
 		this.getIntLocation();    // sets the wholeRow and/or wholeCol flag for certain refs
-		((PtgRef) this).hashcode = super.getHashCode();
+		this.hashcode = super.getHashCode();
 	}
 
 	/**

@@ -111,7 +111,7 @@ public final class Layout implements OOXMLElement
 					if( tnm.equals( "manualLayout" ) )
 					{
 						lastTag.push( tnm );
-						ml = (ManualLayout) ManualLayout.parseOOXML( xpp, lastTag );
+						ml = ManualLayout.parseOOXML( xpp, lastTag );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )

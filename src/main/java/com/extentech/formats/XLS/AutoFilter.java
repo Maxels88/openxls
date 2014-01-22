@@ -169,25 +169,25 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 		switch( doperBytes[0] )
 		{
 			case 0x0:
-				retDoper = (Doper) new UnusedDoper( doperBytes );
+				retDoper = new UnusedDoper( doperBytes );
 				break;
 			case 0x2:
-				retDoper = (Doper) new RKDoper( doperBytes );
+				retDoper = new RKDoper( doperBytes );
 				break;
 			case 0x4:
-				retDoper = (Doper) new IEEEDoper( doperBytes );
+				retDoper = new IEEEDoper( doperBytes );
 				break;
 			case 0x6:
-				retDoper = (Doper) new StringDoper( doperBytes );
+				retDoper = new StringDoper( doperBytes );
 				break;
 			case 0x8:
-				retDoper = (Doper) new ErrorDoper( doperBytes );
+				retDoper = new ErrorDoper( doperBytes );
 				break;
 			case 0xC:
-				retDoper = (Doper) new AllBlanksDoper( doperBytes );
+				retDoper = new AllBlanksDoper( doperBytes );
 				break;
 			case 0xE:
-				retDoper = (Doper) new NoBlanksDoper( doperBytes );
+				retDoper = new NoBlanksDoper( doperBytes );
 				break;
 		}
 		return retDoper;
@@ -457,9 +457,9 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 		}
 		// get master list of non-hidden rows
 		String nonhiddenIdxs = "";
-		for( int i = 0; i < top10.size(); i++ )
+		for( Object aTop10 : top10 )
 		{
-			nonhiddenIdxs += (String) top10.get( i );
+			nonhiddenIdxs += (String) aTop10;
 		}
 		// now that have list of rows which SHOULDN'T be hidden, set all else to hidden
 		for( int j = 1; j < rows.length; j++ )
@@ -551,9 +551,9 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 		}
 		// get master list of non-hidden rows
 		String nonhiddenIdxs = "";
-		for( int i = 0; i < bottomN.size(); i++ )
+		for( Object aBottomN : bottomN )
 		{
-			nonhiddenIdxs += (String) bottomN.get( i );
+			nonhiddenIdxs += (String) aBottomN;
 		}
 		// now that have list of rows which SHOULDN'T be hidden, set all else to hidden
 		for( int j = 1; j < rows.length; j++ )

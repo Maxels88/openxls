@@ -544,7 +544,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		if( bHasBorderBlock )
 		{
 			newdata = ByteTools.append( new byte[8], newdata );
-			b = ByteTools.shortToLEBytes( (short) borderLineStylesFlag );
+			b = ByteTools.shortToLEBytes( borderLineStylesFlag );
 			System.arraycopy( b, 0, newdata, pos, 2 );
 			pos += 2;
 			b = ByteTools.cLongToLEBytes( borderLineColorsFlag );
@@ -641,18 +641,18 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	{
 		String[] toks = StringTool.getTokensUsingDelim( style, ";" );
 		// iterate styles, set values
-		for( int t = 0; t < toks.length; t++ )
+		for( String tok : toks )
 		{
-			int pos = toks[t].indexOf( ":" );
+			int pos = tok.indexOf( ":" );
 			String n = "";
 // TODO: border line sizes, interpret border line styles
-// TODO: handle vertical, horizontal alignment, number format ...    		
+// TODO: handle vertical, horizontal alignment, number format ...
 			if( pos > 0 )
 			{
-				n = toks[t].substring( 0, pos );
+				n = tok.substring( 0, pos );
 			}
 
-			String v = toks[t].substring( toks[t].indexOf( ":" ) + 1 );
+			String v = tok.substring( tok.indexOf( ":" ) + 1 );
 			n = StringTool.strip( n, '"' );
 			v = StringTool.strip( v, '#' );
 			n = StringTool.allTrim( n );

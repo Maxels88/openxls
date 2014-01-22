@@ -185,9 +185,9 @@ public class TextCalculator
 		}
 		Ptg[] allops = PtgCalculator.getAllComponents( operands );
 		String s = "";
-		for( int i = 0; i < allops.length; i++ )
+		for( Ptg allop : allops )
 		{
-			s += allops[i].getValue().toString();
+			s += allop.getValue().toString();
 		}
 		Ptg str = new PtgStr( s );
 		str.setParentRec( operands[0].getParentRec() );

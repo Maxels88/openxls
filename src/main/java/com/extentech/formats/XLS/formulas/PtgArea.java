@@ -842,9 +842,8 @@ public class PtgArea extends PtgRef implements Ptg
 		String retstr = null;
 		String array = "";
 		boolean isArray = (this.parent_rec instanceof Array);
-		for( int t = 0; t < refCell.length; t++ )
+		for( BiffRec cel : refCell )
 		{
-			BiffRec cel = refCell[t];
 			if( cel == null )
 			{ // 20090203 KSC
 				continue;
@@ -852,7 +851,7 @@ public class PtgArea extends PtgRef implements Ptg
 
 			try
 			{
-				Formula f = (Formula) cel.getFormulaRec();
+				Formula f = cel.getFormulaRec();
 				if( f != null )
 				{
 					Object oby = f.calculateFormula();
@@ -1000,9 +999,9 @@ public class PtgArea extends PtgRef implements Ptg
 	{
 		FastAddVector v = new FastAddVector();
 		Ptg[] allComponents = this.getComponents();
-		for( int i = 0; i < allComponents.length; i++ )
+		for( Ptg allComponent : allComponents )
 		{
-			PtgRef p = (PtgRef) allComponents[i];
+			PtgRef p = (PtgRef) allComponent;
 //			 TODO: check rc sanity here
 			int[] x = p.getRealIntLocation();
 			if( x[0] == rowNum )
@@ -1135,7 +1134,7 @@ public class PtgArea extends PtgRef implements Ptg
 					Row r = bs.getRowByNumber( rowpos );
 					if( r != null )
 					{
-						refCell[rowctr] = (BiffRec) r.getCell( (short) (startcol) );
+						refCell[rowctr] = r.getCell( (short) (startcol) );
 					}
 					rowctr++;
 					if( rowpos < endrow )

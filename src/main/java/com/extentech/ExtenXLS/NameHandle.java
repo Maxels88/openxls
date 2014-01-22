@@ -270,9 +270,9 @@ public class NameHandle
 		{
 			CellHandle[] cells = getCells();
 
-			for( int i = 0; i < cells.length; i++ )
+			for( CellHandle cell : cells )
 			{
-				retXML.append( "\t\t" + cells[i].getXML() + "\n" );
+				retXML.append( "\t\t" + cell.getXML() + "\n" );
 			}
 		}
 		catch( CellNotFoundException ex )
@@ -296,9 +296,9 @@ public class NameHandle
 		try
 		{
 			CellHandle[] cs = this.getCells();
-			for( int t = 0; t < cs.length; t++ )
+			for( CellHandle c : cs )
 			{
-				cs[t].setFormatId( i );
+				c.setFormatId( i );
 			}
 		}
 		catch( CellNotFoundException ex )
@@ -333,7 +333,7 @@ public class NameHandle
 		RowHandle[] rx = rngs[0].getRows();
 		boolean found = false;
 		// iterate, find, update
-		for( int t = 0; t < rx.length; t++ )
+		for( RowHandle aRx : rx )
 		{
 
 		}
@@ -365,10 +365,10 @@ public class NameHandle
 		RowHandle[] rx = rngs[0].getRows();
 		boolean found = false;
 		// iterate, find, update
-		for( int t = 0; t < rx.length; t++ )
+		for( RowHandle aRx : rx )
 		{
 
-			CellHandle[] cx = rx[t].getCells();
+			CellHandle[] cx = aRx.getCells();
 			if( cx.length > idxcol )
 			{
 				if( cx[idxcol].getStringVal().equalsIgnoreCase( objarr[idxcol].toString() ) )
@@ -643,23 +643,23 @@ public class NameHandle
 			CellRange[] rngz = this.getCellRanges();
 			if( rngz != null )
 			{
-				for( int t = 0; t < rngz.length; t++ )
+				for( CellRange aRngz : rngz )
 				{
 					try
 					{
-						CellHandle[] cells = rngz[t].getCells();
+						CellHandle[] cells = aRngz.getCells();
 						// for(int b = (cells.length-1);b>=0;b--)cellhandles.add(cells[b]);
-						for( int b = 0; b < cells.length; b++ )
+						for( CellHandle cell : cells )
 						{
-							if( cells[b] != null )
+							if( cell != null )
 							{
-								cellhandles.add( cells[b] );
+								cellhandles.add( cell );
 							}
 						}
 					}
 					catch( Exception ex )
 					{
-						Logger.logWarn( "Could not get cells for range: " + rngz[t] );
+						Logger.logWarn( "Could not get cells for range: " + aRngz );
 					}
 				}
 			}
@@ -864,9 +864,8 @@ public class NameHandle
 		try
 		{
 			CellHandle[] chandles = getCells();
-			for( int i = 0; i < chandles.length; i++ )
+			for( CellHandle thisCell : chandles )
 			{
-				CellHandle thisCell = chandles[i];
 				JSONObject result = new JSONObject();
 
 				result.put( JSON_CELL, thisCell.getJSONObject() );

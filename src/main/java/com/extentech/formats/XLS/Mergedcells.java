@@ -134,9 +134,9 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 		{
 			Logger.logInfo( "updating Mergedcell with " + nummerges + " merges." );
 		}
-		for( int t = 0; t < ranges.size(); t++ )
+		for( Object range : ranges )
 		{
-			CellRange thisrng = (CellRange) ranges.get( t );
+			CellRange thisrng = (CellRange) range;
 // why call this now??? much overhead ...			if(!thisrng.update())
 // note: range is updated upon setRange ...			
 //				return;
@@ -236,20 +236,20 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 				ranges.add( cr );
 				BiffRec[] ch = cr.getCellRecs();
 				Mulblank aMul = null;
-				for( int t = 0; t < ch.length; t++ )
+				for( BiffRec aCh : ch )
 				{
 					// set the range of merged cells
-					if( ch[t] != null )
+					if( aCh != null )
 					{
-						if( ch[t].getOpcode() == MULBLANK )
+						if( aCh.getOpcode() == MULBLANK )
 						{
-							if( aMul == (Mulblank) ch[t] )
+							if( aMul == aCh )
 							{
 								continue;    // skip- already handled
 							}
-							aMul = (Mulblank) ch[t];
+							aMul = (Mulblank) aCh;
 						}
-						ch[t].setMergeRange( cr );
+						aCh.setMergeRange( cr );
 					}
 				}
 			}

@@ -127,7 +127,7 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 		if( DEBUGLEVEL > 5 )
 		{
 			Logger.logInfo( "Col: " + ExcelTools.getAlphaVal( colFirst ) + "-" + ExcelTools.getAlphaVal( colLast ) + "  ixfe: " + String.valueOf(
-					(int) ixfe ) + " width: " + colWidth );
+					ixfe ) + " width: " + colWidth );
 		}
 	}
 
@@ -225,7 +225,7 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 	{
 		byte[] cl = ByteTools.shortToLEBytes( (short) x );
 		System.arraycopy( cl, 0, this.getData(), 4, 2 );
-		colWidth = (int) ByteTools.readUnsignedShort( this.getData()[4], this.getData()[5] );
+		colWidth = ByteTools.readUnsignedShort( this.getData()[4], this.getData()[5] );
 		// 20060609 KSC: APPEARS THAT grbit=0 means default column width so must set to either 2 or 6 ---
 		// there is NO documentation on this!
 		if( grbit == 0 )
@@ -322,7 +322,7 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 	private void decodeGrbit()
 	{
 		byte[] grbytes = ByteTools.shortToLEBytes( grbit );
-		if( ((byte) grbytes[0] & 0x1) == 0x1 )
+		if( (grbytes[0] & 0x1) == 0x1 )
 		{
 			hidden = true;
 		}
@@ -330,7 +330,7 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 		{
 			hidden = false;
 		}
-		if( ((byte) grbytes[1] & 0x10) == 0x10 )
+		if( (grbytes[1] & 0x10) == 0x10 )
 		{
 			collapsed = true;
 		}
@@ -442,7 +442,8 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 
 	public String toString()
 	{
-		return "ColInfo: " + ExcelTools.getAlphaVal( colFirst ) + "-" + ExcelTools.getAlphaVal( colLast ) + "  ixfe: " + String.valueOf( (int) ixfe ) + " width: " + colWidth;
+		return "ColInfo: " + ExcelTools.getAlphaVal( colFirst ) + "-" + ExcelTools.getAlphaVal( colLast ) + "  ixfe: " + String.valueOf(
+				ixfe ) + " width: " + colWidth;
 	}
 
 	@Override

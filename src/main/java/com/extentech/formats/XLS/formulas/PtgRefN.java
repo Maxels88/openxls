@@ -414,7 +414,7 @@ public class PtgRefN extends PtgRef
 			i[3] -= MAXCOLS_BIFF8;
 		}
 
-		PtgArea parea = new PtgArea( i, (XLSRecord) sh, true );
+		PtgArea parea = new PtgArea( i, sh, true );
 		return parea;
 	}
 

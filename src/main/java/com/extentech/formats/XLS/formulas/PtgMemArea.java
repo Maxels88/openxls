@@ -152,9 +152,9 @@ public class PtgMemArea extends GenericPtg
 	{
 		short cce = 0;
 		// first count # refs (excluding ptgUnion, range, etc )
-		for( int i = 0; i < subexpression.size(); i++ )
+		for( Object aSubexpression : subexpression )
 		{
-			Ptg p = (Ptg) subexpression.get( i );
+			Ptg p = (Ptg) aSubexpression;
 			if( p instanceof PtgRef )
 			{
 				cce++;
@@ -218,33 +218,33 @@ public class PtgMemArea extends GenericPtg
 				if( (o != null) && (o instanceof Ptg[]) )
 				{
 					ptgs = (Ptg[]) o;
-					for( int i = 0; i < ptgs.length; i++ )
+					for( Ptg ptg : ptgs )
 					{
-						if( !refsheets.contains( ((PtgRef) ptgs[i]).getSheetName() ) )
+						if( !refsheets.contains( ((PtgRef) ptg).getSheetName() ) )
 						{
-							refsheets.add( ((PtgRef) ptgs[i]).getSheetName() );
+							refsheets.add( ((PtgRef) ptg).getSheetName() );
 						}
-						if( ptgs[i] instanceof PtgArea )
+						if( ptg instanceof PtgArea )
 						{
-							Ptg[] p = ptgs[i].getComponents();
-							for( int j = 0; j < p.length; j++ )
+							Ptg[] p = ptg.getComponents();
+							for( Ptg aP : p )
 							{
-								components.add( p[j] );
+								components.add( aP );
 							}
 						}
 						else
 						{
-							components.add( ptgs[i] );
+							components.add( ptg );
 						}
 					}
 				}
 				else
 				{    // often a single reference surrounded by parens
-					for( int i = 0; i < subexpression.size(); i++ )
+					for( Object aSubexpression : subexpression )
 					{
 						try
 						{
-							PtgRef pr = (PtgRef) subexpression.get( i );
+							PtgRef pr = (PtgRef) aSubexpression;
 							if( !refsheets.contains( pr.getSheetName() ) )
 							{
 								refsheets.add( pr.getSheetName() );
@@ -252,9 +252,9 @@ public class PtgMemArea extends GenericPtg
 							if( pr instanceof PtgArea )
 							{
 								Ptg[] pa = pr.getComponents();
-								for( int j = 0; j < pa.length; j++ )
+								for( Ptg aPa : pa )
 								{
-									components.add( pa[j] );
+									components.add( aPa );
 								}
 							}
 							else
@@ -290,9 +290,9 @@ public class PtgMemArea extends GenericPtg
 	public byte[] getRecord()
 	{
 		int len = 0;
-		for( int i = 0; i < subexpression.size(); i++ )
+		for( Object aSubexpression1 : subexpression )
 		{
-			Ptg p = (Ptg) subexpression.get( i );
+			Ptg p = (Ptg) aSubexpression1;
 			len += p.getRecord().length;
 		}
 		cce = len;
@@ -303,9 +303,9 @@ public class PtgMemArea extends GenericPtg
 		rec[5] = b[0];
 		rec[6] = b[1];
 		int offset = 7;
-		for( int i = 0; i < subexpression.size(); i++ )
+		for( Object aSubexpression : subexpression )
 		{
-			Ptg p = (Ptg) subexpression.get( i );
+			Ptg p = (Ptg) aSubexpression;
 			System.arraycopy( p.getRecord(), 0, rec, offset, p.getRecord().length );
 			offset += p.getRecord().length;
 		}
@@ -384,9 +384,9 @@ public class PtgMemArea extends GenericPtg
 				return null;
 			}
 			double result = 0.0;
-			for( int i = 0; i < dub.length; i++ )
+			for( double aDub : dub )
 			{
-				result += dub[i];
+				result += aDub;
 			}
 			return result;
 		}

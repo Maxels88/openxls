@@ -132,7 +132,7 @@ public class PivotTableDefinition implements OOXMLElement
 						}
 // KSC: TESTING!!!
 						cacheId = "0";
-						short cid = (short) (Integer.valueOf( cacheId ).shortValue());
+						short cid = Integer.valueOf( cacheId ).shortValue();
 						SxStreamID ptstream = bk.getWorkBook().getPivotStream( cid + 1 );
 						ptview = sheet.addPivotTable( ptstream.getCellRange().toString(), bk, cid + 1, tablename );
 						ptview.setDataName( "Values" );    // default
@@ -223,17 +223,17 @@ public class PivotTableDefinition implements OOXMLElement
 				else if( nm.equalsIgnoreCase( "firstDataCol" ) ) // req
 				// Specifies the first column of the PivotTable data, relative to the top left cell in the ref value.
 				{
-					ptview.setColFirstData( (short) (Integer.valueOf( v ).shortValue()) );
+					ptview.setColFirstData( Integer.valueOf( v ).shortValue() );
 				}
 				else if( nm.equalsIgnoreCase( "firstDataRow" ) ) // req
 				// Specifies the first row of the PivotTable data, relative to the top left cell in the ref value.
 				{
-					ptview.setRwFirstData( (short) (Integer.valueOf( v ).shortValue()) );
+					ptview.setRwFirstData( Integer.valueOf( v ).shortValue() );
 				}
 				else if( nm.equalsIgnoreCase( "firstHeaderRow" ) ) // req
 				// Specifies the first row of the PivotTable header relative to the top left cell in the ref value.
 				{
-					ptview.setRwFirstHead( (short) (Integer.valueOf( v ).shortValue()) );
+					ptview.setRwFirstHead( Integer.valueOf( v ).shortValue() );
 				}
 				else if( nm.equalsIgnoreCase( "rowPageCount" ) ) // def= 0
 				// Specifies the number of rows per page for this PivotTable that the filter area will occupy. By default there is a

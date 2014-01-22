@@ -26,6 +26,8 @@ import com.extentech.formats.LEO.BIGBLOCK;
 import com.extentech.formats.LEO.Block;
 import com.extentech.formats.LEO.LEOFile;
 import com.extentech.formats.LEO.Storage;
+import com.extentech.formats.XLS.charts.ChartObject;
+import com.extentech.formats.XLS.charts.SeriesText;
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.FastAddVector;
 import com.extentech.toolkit.Logger;
@@ -351,7 +353,7 @@ public class ByteStreamer implements Serializable, XLSConstants
 		int recpos = 0, recctr = 0, dlen = 0;
 
 		// get a private list of the records
-		AbstractList rex = (AbstractList) new FastAddVector( records.size() );
+		AbstractList rex = new FastAddVector( records.size() );
 		rex.addAll( records );
 
 		// first pass -- prepare SST
@@ -592,16 +594,16 @@ public class ByteStreamer implements Serializable, XLSConstants
 			int ctr = 0;
 			ctr = ByteStreamer.writeRecs( recs, writer, ctr, 0 );
 			List sheets = this.workbook.getSheetVect();
-			for( int i = 0; i < sheets.size(); i++ )
+			for( Object sheet : sheets )
 			{
 				if( bWriteSheetRecs )
 				{
-					ArrayList lst = (ArrayList) ((Boundsheet) sheets.get( i )).assembleSheetRecs();
+					ArrayList lst = (ArrayList) ((Boundsheet) sheet).assembleSheetRecs();
 					ctr = ByteStreamer.writeRecs( lst, writer, ctr, 0 );
 				}
 				else
 				{
-					ctr = ByteStreamer.writeRecs( (ArrayList) ((Boundsheet) sheets.get( i )).getSheetRecs(), writer, ctr, 0 );
+					ctr = ByteStreamer.writeRecs( (ArrayList) ((Boundsheet) sheet).getSheetRecs(), writer, ctr, 0 );
 				}
 			}
 			writer.flush();
@@ -623,11 +625,11 @@ public class ByteStreamer implements Serializable, XLSConstants
 	public static int writeRecs( ArrayList recArr, BufferedWriter writer, int ctr, int level )
 	{
 		String tabs = "\t\t\t\t\t\t\t\t\t\t";
-		for( int i = 0; i < recArr.size(); i++ )
+		for( Object aRecArr : recArr )
 		{
 			try
 			{
-				BiffRec b = (BiffRec) recArr.get( i );
+				BiffRec b = (BiffRec) aRecArr;
 				if( b == null )
 				{
 					break;
@@ -635,9 +637,9 @@ public class ByteStreamer implements Serializable, XLSConstants
 				writer.write( tabs.substring( 0, level ) + b.getClass().toString().substring( b.getClass()
 				                                                                               .toString()
 				                                                                               .lastIndexOf( '.' ) + 1 ) );
-				if( b instanceof com.extentech.formats.XLS.charts.SeriesText )
+				if( b instanceof SeriesText )
 				{
-					writer.write( "\t[" + ((com.extentech.formats.XLS.charts.SeriesText) b).toString() + "]" );
+					writer.write( "\t[" + b.toString() + "]" );
 				}
 				else if( b instanceof Continue )
 				{
@@ -655,7 +657,7 @@ public class ByteStreamer implements Serializable, XLSConstants
 				}
 				else if( b instanceof MSODrawing )
 				{
-					writer.write( "\t[" + ((MSODrawing) b).toString() + "]" );
+					writer.write( "\t[" + b.toString() + "]" );
 //					writer.write("\t[" + ByteTools.getByteDump(b.getData(), 0).substring(11)+ "]");
 					writer.write( ((MSODrawing) b).debugOutput() );
 					writer.write( "\t[" + ByteTools.getByteDump( b.getData(), 0 ).substring( 11 ) + "]" );
@@ -666,16 +668,16 @@ public class ByteStreamer implements Serializable, XLSConstants
 				}
 				else if( b instanceof MSODrawingGroup )
 				{
-					writer.write( "\t[" + ((MSODrawingGroup) b).toString() + "]" );
+					writer.write( "\t[" + b.toString() + "]" );
 //					writer.write("\t[" + ByteTools.getByteDump(b.getData(), 0).substring(11)+ "]");
 				}
 				else if( b instanceof Label )
 				{
-					writer.write( "\t[" + ((Label) b).getStringVal() + "]" );
+					writer.write( "\t[" + b.getStringVal() + "]" );
 				}
 				else if( b instanceof Mulblank )
 				{
-					writer.write( "\t[" + ((Mulblank) b).getCellAddress() + "]" );
+					writer.write( "\t[" + b.getCellAddress() + "]" );
 				}
 				else if( b instanceof Name )
 				{
@@ -691,20 +693,20 @@ public class ByteStreamer implements Serializable, XLSConstants
 				}
 				else if( b instanceof Sst )
 				{
-					writer.write( "\t[" + ((Sst) b).toString() + "]" );
+					writer.write( "\t[" + b.toString() + "]" );
 				}
 				else if( b instanceof Pls )
 				{
-					writer.write( "\t[" + ((Pls) b).toString() + "]" );
+					writer.write( "\t[" + b.toString() + "]" );
 				}
 				else if( b instanceof Supbook )
 				{
-					writer.write( "\t[" + ((Supbook) b).toString() + "]" );
+					writer.write( "\t[" + b.toString() + "]" );
 //					writer.write("\t[" + ByteTools.getByteDump(b.getData(), 0).substring(11)+ "]");
 				}
 				else if( b instanceof Crn )
 				{
-					writer.write( "\t[" + ((Crn) b).toString() + "]" );
+					writer.write( "\t[" + b.toString() + "]" );
 				}
 				else if( (b instanceof Formula) || (b instanceof Rk) || (b instanceof NumberRec) || (b instanceof Blank) || (b instanceof Labelsst) )
 				{
@@ -718,9 +720,9 @@ public class ByteStreamer implements Serializable, XLSConstants
 					                                                                   .substring( 11 ) + "]" );
 				}
 				writer.newLine();
-				if( b instanceof com.extentech.formats.XLS.charts.ChartObject )
+				if( b instanceof ChartObject )
 				{
-					writeRecs( ((com.extentech.formats.XLS.charts.ChartObject) b).getChartRecords(), writer, ctr, level + 1 );
+					writeRecs( ((ChartObject) b).getChartRecords(), writer, ctr, level + 1 );
 				}
 			}
 			catch( Exception e )

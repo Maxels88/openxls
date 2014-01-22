@@ -84,7 +84,7 @@ public class FillGroup implements OOXMLElement
 					if( tnm.equals( "solidFill" ) )
 					{
 						lastTag.push( tnm );
-						sf = (SolidFill) SolidFill.parseOOXML( xpp, lastTag, bk );
+						sf = SolidFill.parseOOXML( xpp, lastTag, bk );
 						lastTag.pop();
 						break;
 					}
@@ -95,28 +95,28 @@ public class FillGroup implements OOXMLElement
 					else if( tnm.equals( "gradFill" ) )
 					{
 						lastTag.push( tnm );
-						gpf = (GradFill) GradFill.parseOOXML( xpp, lastTag, bk );
+						gpf = GradFill.parseOOXML( xpp, lastTag, bk );
 						lastTag.pop();
 						break;
 					}
 					else if( tnm.equals( "grpFill" ) )
 					{
 						lastTag.push( tnm );
-						grpf = (GrpFill) GrpFill.parseOOXML( xpp, lastTag );
+						grpf = GrpFill.parseOOXML( xpp, lastTag );
 						lastTag.pop();
 						break;
 					}
 					else if( tnm.equals( "pattFill" ) )
 					{
 						lastTag.push( tnm );
-						pf = (PattFill) PattFill.parseOOXML( xpp, lastTag, bk );
+						pf = PattFill.parseOOXML( xpp, lastTag, bk );
 						lastTag.pop();
 						break;
 					}
 					else if( tnm.equals( "blipFill" ) )
 					{
 						lastTag.push( tnm );
-						bf = (BlipFill) BlipFill.parseOOXML( xpp, lastTag );
+						bf = BlipFill.parseOOXML( xpp, lastTag );
 						lastTag.pop();
 						break;
 					}
@@ -318,12 +318,12 @@ class GradFill implements OOXMLElement
 					else if( tnm.equals( "tileRect" ) )
 					{
 						lastTag.push( tnm );
-						tr = (TileRect) TileRect.parseOOXML( xpp, lastTag );
+						tr = TileRect.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "gsLst" ) )
 					{
 						lastTag.push( tnm );
-						g = (GsLst) GsLst.parseOOXML( xpp, lastTag, bk );
+						g = GsLst.parseOOXML( xpp, lastTag, bk );
 						/*
 						 * } else if (tnm.equals("lin") || tnm.equals("path")) {
 						 * lastTag.push(tnm); sp= (shadeProps)
@@ -360,8 +360,8 @@ class GradFill implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( ">" );
@@ -458,17 +458,17 @@ class BlipFill implements OOXMLElement
 					else if( tnm.equals( "blip" ) )
 					{
 						lastTag.push( tnm );
-						b = (Blip) Blip.parseOOXML( xpp, lastTag );
+						b = Blip.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "srcRect" ) )
 					{
 						lastTag.push( tnm );
-						s = (SrcRect) SrcRect.parseOOXML( xpp, lastTag );
+						s = SrcRect.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "stretch" ) || tnm.equals( "tile" ) )
 					{
 						lastTag.push( tnm );
-						f = (FillMode) FillMode.parseOOXML( xpp, lastTag );
+						f = FillMode.parseOOXML( xpp, lastTag );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -506,8 +506,8 @@ class BlipFill implements OOXMLElement
 			Iterator<String> i = attrs.keySet().iterator();
 			while( i.hasNext() )
 			{
-				String key = (String) i.next();
-				String val = (String) attrs.get( key );
+				String key = i.next();
+				String val = attrs.get( key );
 				ooxml.append( " " + key + "=\"" + val + "\"" );
 			}
 		}
@@ -754,12 +754,12 @@ class PattFill implements OOXMLElement
 					else if( tnm.equals( "bgClr" ) )
 					{
 						lastTag.push( tnm );
-						bg = (BgClr) BgClr.parseOOXML( xpp, lastTag, bk );
+						bg = BgClr.parseOOXML( xpp, lastTag, bk );
 					}
 					else if( tnm.equals( "fgClr" ) )
 					{
 						lastTag.push( tnm );
-						fg = (FgClr) FgClr.parseOOXML( xpp, lastTag, bk );
+						fg = FgClr.parseOOXML( xpp, lastTag, bk );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -1108,8 +1108,8 @@ class Blip implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		// TODO: HANDLE CHILDREN
@@ -1132,7 +1132,7 @@ class Blip implements OOXMLElement
 	{
 		if( (attrs != null) && (attrs.get( "r:embed" ) != null) )
 		{
-			return (String) attrs.get( "r:embed" );
+			return attrs.get( "r:embed" );
 		}
 		return null;
 	}
@@ -1146,7 +1146,7 @@ class Blip implements OOXMLElement
 	{
 		if( (attrs != null) && (attrs.get( "link" ) != null) )
 		{
-			return (String) attrs.get( "link" );
+			return attrs.get( "link" );
 		}
 		return null;
 	}
@@ -1243,8 +1243,8 @@ class TileRect implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );
@@ -1334,8 +1334,8 @@ class SrcRect implements OOXMLElement
 			Iterator<String> i = attrs.keySet().iterator();
 			while( i.hasNext() )
 			{
-				String key = (String) i.next();
-				String val = (String) attrs.get( key );
+				String key = i.next();
+				String val = attrs.get( key );
 				ooxml.append( " " + key + "=\"" + val + "\"" );
 			}
 		}
@@ -1424,7 +1424,7 @@ class FillRect implements OOXMLElement
 		while( i.hasNext() )
 		{
 			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );
@@ -1543,8 +1543,8 @@ class FillMode implements OOXMLElement
 			Iterator<String> i = attrs.keySet().iterator();
 			while( i.hasNext() )
 			{
-				String key = (String) i.next();
-				String val = (String) attrs.get( key );
+				String key = i.next();
+				String val = attrs.get( key );
 				ooxml.append( " " + key + "=\"" + val + "\"" );
 			}
 		}
@@ -1602,7 +1602,7 @@ class GsLst implements OOXMLElement
 					if( tnm.equals( "gs" ) )
 					{
 						lastTag.push( tnm );
-						g.add( (Gs) Gs.parseOOXML( xpp, lastTag, bk ) );
+						g.add( Gs.parseOOXML( xpp, lastTag, bk ) );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -1633,9 +1633,9 @@ class GsLst implements OOXMLElement
 		if( !gs.isEmpty() )
 		{
 			ooxml.append( ">" );
-			for( int i = 0; i < gs.size(); i++ )
+			for( Gs g : gs )
 			{
-				ooxml.append( ((Gs) gs.get( i )).getOOXML() );
+				ooxml.append( g.getOOXML() );
 			}
 			ooxml.append( "</a:gsLst>" );
 		}

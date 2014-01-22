@@ -159,9 +159,9 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 		try
 		{
 			// parse content list for <elementName, target's path, rId>
-			for( int i = 0; i < cl.size(); i++ )
+			for( Object aCl : cl )
 			{
-				String[] c = (String[]) cl.get( i );
+				String[] c = (String[]) aCl;
 
 				if( DEBUG )
 				{
@@ -228,7 +228,8 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 								sheet.getMysheet().parseSheetElements( bk,
 								                                       zip,
 								                                       parseRels( wrapInputStream( wrapInputStream( zip.getInputStream(
-										                                       target ) ) ) ), p,
+										                                       target ) ) ) ),
+								                                       p,
 								                                       externalDir,
 								                                       formulas,
 								                                       hyperlinks,
@@ -841,7 +842,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 					String tnm = xpp.getName();
 					if( tnm.equals( "font" ) )
 					{
-						Font f = (Font) Font.parseOOXML( xpp, bk );
+						Font f = Font.parseOOXML( xpp, bk );
 						int idx = FormatHandle.addFont( f, bk );
 						fontmap.add( idx );
 					}
@@ -975,7 +976,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 					borderId = Integer.valueOf( xpp.getAttributeValue( i ) );
 				}
 			}
-			f = (Integer) fontmap.get( f );  // FONT
+			f = fontmap.get( f );  // FONT
 			Xf xf = null;
 			if( nXfs < bk.getWorkBook().getXfrecs().size() )    // either alter existing default xf or create new xf
 			{
@@ -1006,7 +1007,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 			}
 			if( fillId > 0 )
 			{    // FILL 0 is default
-				xf.setFill( (Fill) fills.get( fillId ) );
+				xf.setFill( fills.get( fillId ) );
 			}
 			// is xf 15 the default? (will happen if converted from xls) ******* very important to avoid unnecessary blank creation *******
 			// see TestCorruption.TestStackOverflow
@@ -1164,9 +1165,9 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 	void addNames( WorkBookHandle bk, ArrayList namedRanges )
 	{
 		// now input named ranges before processing sheet data 
-		for( int j = 0; j < namedRanges.size(); j++ )
+		for( Object namedRange : namedRanges )
 		{
-			String[] s = (String[]) namedRanges.get( j );
+			String[] s = (String[]) namedRange;
 			if( !(s[0].equals( "" ) && s[2].equals( "" )) )
 			{
 				try
@@ -1281,9 +1282,9 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 		// after sheets, now can input formulas
 		WorkSheetHandle sheet = null;
 		HashMap sharedFormulas = new HashMap();
-		for( int j = 0; j < formulas.size(); j++ )
+		for( Object formula : formulas )
 		{
-			String[] s = (String[]) formulas.get( j );
+			String[] s = (String[]) formula;
 			//formulas:  0=sheetname, 1= cell address, 2=formula including =, 3=shared formula index, 4=array refs, 5=formula type, 6=calculate always flag, 7=format id, 8=cached value
 			if( (s[0].equals( "" ) || s[1].equals( "" )) || (s.length < 8) )
 			{
@@ -1345,7 +1346,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 
 				if( fType.equals( "array" ) )
 				{
-                      /*
+	                  /*
                        * For a multi-cell formula, the r attribute of the top-left cell 
                        * of the range 1 of cells to which that formula applies
                          shall designate the range of cells to which that formula applies
@@ -1584,9 +1585,9 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 	 */
 	private Object lookupRid( ArrayList lst, String rid )
 	{
-		for( int i = 0; i < lst.size(); i++ )
+		for( Object aLst : lst )
 		{
-			Object[] o = (Object[]) lst.get( i );
+			Object[] o = (Object[]) aLst;
 			if( rid.equals( o[0] ) )
 			{
 				return (o[1]);

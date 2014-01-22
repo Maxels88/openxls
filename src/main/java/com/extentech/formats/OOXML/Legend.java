@@ -98,7 +98,7 @@ public class Legend implements OOXMLElement
 					else if( tnm.equals( "legendEntry" ) )
 					{
 						lastTag.push( tnm );
-						le = (LegendEntry) LegendEntry.parseOOXML( xpp, lastTag, bk );
+						le = LegendEntry.parseOOXML( xpp, lastTag, bk );
 					}
 					else if( tnm.equals( "spPr" ) )
 					{

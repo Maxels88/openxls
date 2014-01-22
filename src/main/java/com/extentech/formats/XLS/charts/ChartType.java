@@ -32,6 +32,7 @@ import com.extentech.formats.XLS.Label;
 import com.extentech.formats.XLS.MSODrawing;
 import com.extentech.formats.XLS.Obj;
 import com.extentech.formats.XLS.WorkBook;
+import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.formats.cellformat.CellFormatFactory;
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.Logger;
@@ -199,7 +200,7 @@ public abstract class ChartType implements ChartConstants, Serializable
 				}
 				return new PieChart( ch, cf, wb );
 			case ChartConstants.AREACHART:
-				if( ((Area) ch).isStacked() )
+				if( ch.isStacked() )
 				{
 					return new StackedAreaChart( ch, cf, wb );
 				}
@@ -1774,11 +1775,11 @@ public abstract class ChartType implements ChartConstants, Serializable
 				                                                                               .lastIndexOf( '.' ) + 1 ) );
 				if( b instanceof com.extentech.formats.XLS.charts.SeriesText )
 				{
-					writer.write( "\t[" + ((com.extentech.formats.XLS.charts.SeriesText) b).toString() + "]" );
+					writer.write( "\t[" + b.toString() + "]" );
 				}
 				else if( b instanceof MSODrawing )
 				{
-					writer.write( "\t[" + ((MSODrawing) b).toString() + "]" );
+					writer.write( "\t[" + b.toString() + "]" );
 					//								writer.write("\t[" + ByteTools.getByteDump(b.getData(), 0).substring(11)+ "]");
 					writer.write( ((MSODrawing) b).debugOutput() );
 					writer.write( "\t[" + ByteTools.getByteDump( b.getData(), 0 ).substring( 11 ) + "]" );
@@ -1789,7 +1790,7 @@ public abstract class ChartType implements ChartConstants, Serializable
 				}
 				else if( b instanceof Label )
 				{
-					writer.write( "\t[" + ((Label) b).getStringVal() + "]" );
+					writer.write( "\t[" + b.getStringVal() + "]" );
 				}
 				else // all else, write bytes
 				{
@@ -1803,9 +1804,9 @@ public abstract class ChartType implements ChartConstants, Serializable
 					if( ((GenericChartObject) b).chartArr.size() > 0 )
 					{
 						ArrayList<com.extentech.formats.XLS.XLSRecord> chartArr = ((GenericChartObject) b).chartArr;
-						for( int i = 0; i < chartArr.size(); i++ )
+						for( XLSRecord aChartArr : chartArr )
 						{
-							writeRecs( (BiffRec) chartArr.get( i ), writer, level + 1 );
+							writeRecs( aChartArr, writer, level + 1 );
 
 						}
 					}
@@ -1825,15 +1826,15 @@ public abstract class ChartType implements ChartConstants, Serializable
 			util u = new util();
 
 			java.util.Vector v = this.getParentChart().getAllSeries();
-			for( int i = 0; i < v.size(); i++ )
+			for( Object aV : v )
 			{
-				u.writeRecs( (BiffRec) v.get( i ), writer, 0 );
+				u.writeRecs( (BiffRec) aV, writer, 0 );
 			}
 			writer.newLine();
 			ArrayList<com.extentech.formats.XLS.XLSRecord> chartArr = this.cf.chartArr;
-			for( int i = 0; i < chartArr.size(); i++ )
+			for( XLSRecord aChartArr : chartArr )
 			{
-				u.writeRecs( (BiffRec) chartArr.get( i ), writer, 0 );
+				u.writeRecs( aChartArr, writer, 0 );
 			}
 
 			writer.flush();

@@ -350,7 +350,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	public void setGrbit()
 	{
 		byte[] data = this.getData();
-		byte[] b = ByteTools.shortToLEBytes( (short) grbit );
+		byte[] b = ByteTools.shortToLEBytes( grbit );
 		System.arraycopy( b, 0, data, 2, 2 );
 		this.setData( data );
 
@@ -1032,15 +1032,15 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 			f.setUnderlined( true );
 			if( u instanceof String )
 			{
-				if( ((String) u).equals( "double" ) )
+				if( u.equals( "double" ) )
 				{
 					f.setUnderlineStyle( (byte) 2 );
 				}
-				else if( ((String) u).equals( "singleAccounting" ) )
+				else if( u.equals( "singleAccounting" ) )
 				{
 					f.setUnderlineStyle( (byte) 0x21 );
 				}
-				else if( ((String) u).equals( "doubleAccounting" ) )
+				else if( u.equals( "doubleAccounting" ) )
 				{
 					f.setUnderlineStyle( (byte) 0x22 );
 				}

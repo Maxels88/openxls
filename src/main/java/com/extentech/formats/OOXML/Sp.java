@@ -101,7 +101,7 @@ public class Sp implements OOXMLElement
 					else if( tnm.equals( "nvSpPr" ) )
 					{        // non-visual shape props
 						lastTag.push( tnm );
-						nvsp = (NvSpPr) NvSpPr.parseOOXML( xpp, lastTag );
+						nvsp = NvSpPr.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "spPr" ) )
 					{        // shape properties
@@ -149,8 +149,8 @@ public class Sp implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( ">" );
@@ -181,7 +181,7 @@ public class Sp implements OOXMLElement
 	{
 		if( attrs.get( "macro" ) != null )
 		{
-			return (String) attrs.get( "macro" );
+			return attrs.get( "macro" );
 		}
 		return null;
 	}
@@ -379,7 +379,7 @@ class NvSpPr implements OOXMLElement
 					else if( tnm.equals( "cNvSpPr" ) )
 					{
 						lastTag.push( tnm );
-						cnvsp = (CNvSpPr) CNvSpPr.parseOOXML( xpp, lastTag );
+						cnvsp = CNvSpPr.parseOOXML( xpp, lastTag );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -555,7 +555,7 @@ class CNvSpPr implements OOXMLElement
 					else if( tnm.equals( "spLocks" ) )
 					{
 						lastTag.push( tnm );
-						sp = (SpLocks) SpLocks.parseOOXML( xpp, lastTag );
+						sp = SpLocks.parseOOXML( xpp, lastTag );
 
 					}
 				}
@@ -677,8 +677,8 @@ class SpLocks implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );

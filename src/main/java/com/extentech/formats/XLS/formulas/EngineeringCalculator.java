@@ -1404,7 +1404,7 @@ public class EngineeringCalculator
 				Ptg result2 = calcErf( new Ptg[]{ operands[1] } );
 				if( result2 instanceof PtgNumber )
 				{
-					result = ((PtgNumber) result2).getDoubleVal() - result;
+					result = result2.getDoubleVal() - result;
 				}
 				else
 				{

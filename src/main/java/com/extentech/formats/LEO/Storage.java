@@ -126,9 +126,9 @@ public class Storage extends BlockByteReader
 	public void setBlocks( Block[] blks )
 	{
 		myblocks = new ArrayList();
-		for( int t = 0; t < blks.length; t++ )
+		for( Block blk : blks )
 		{
-			this.addBlock( blks[t] );
+			this.addBlock( blk );
 		}
 	}
 
@@ -446,9 +446,9 @@ public class Storage extends BlockByteReader
 		{
 			myblocks = new ArrayList( bs.length );
 		}
-		for( int d = 0; d < bs.length; d++ )
+		for( Block b : bs )
 		{
-			this.addBlock( bs[d] );
+			this.addBlock( b );
 		}
 	}
 
@@ -468,9 +468,9 @@ public class Storage extends BlockByteReader
 		{
 			myblocks = new ArrayList( bs.length );
 		}
-		for( int d = 0; d < bs.length; d++ )
+		for( Block b1 : bs )
 		{
-			this.addBlock( bs[d] );
+			this.addBlock( b1 );
 		}
 	}
 
@@ -495,9 +495,9 @@ public class Storage extends BlockByteReader
 		{
 			myblocks = new ArrayList( bs.length );
 		}
-		for( int d = 0; d < bs.length; d++ )
+		for( Block b1 : bs )
 		{
-			this.addBlock( bs[d] );
+			this.addBlock( b1 );
 		}
 	}
 
@@ -518,9 +518,9 @@ public class Storage extends BlockByteReader
 		{
 			myblocks = new ArrayList( bs.length );
 		}
-		for( int d = 0; d < bs.length; d++ )
+		for( Block b1 : bs )
 		{
-			this.addBlock( bs[d] );
+			this.addBlock( b1 );
 		}
 	}
 
@@ -544,9 +544,9 @@ public class Storage extends BlockByteReader
 				newbytes = ByteTools.append( b, newbytes );
 			}
 			Block[] smallblocks = BlockFactory.getBlocksFromByteArray( newbytes, Block.SMALL );
-			for( int i = 0; i < smallblocks.length; i++ )
+			for( Block smallblock : smallblocks )
 			{
-				this.addBlock( smallblocks[i] );
+				this.addBlock( smallblock );
 			}
 			this.setBlockType( Block.SMALL );
 		}
@@ -559,9 +559,9 @@ public class Storage extends BlockByteReader
 				newbytes = ByteTools.append( b, newbytes );
 			}
 			Block[] blocks = BlockFactory.getBlocksFromByteArray( newbytes, Block.BIG );
-			for( int i = 0; i < blocks.length; i++ )
+			for( Block block : blocks )
 			{
-				this.addBlock( blocks[i] );
+				this.addBlock( block );
 			}
 			this.setBlockType( Block.BIG );
 		}

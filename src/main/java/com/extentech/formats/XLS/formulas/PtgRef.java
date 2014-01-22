@@ -257,7 +257,7 @@ public class PtgRef extends GenericPtg implements Ptg
 	protected void populateVals()
 	{
 		rw = readRow( record[1], record[2] );
-		short column = (short) ByteTools.readShort( record[3], record[4] );
+		short column = ByteTools.readShort( record[3], record[4] );
 		if( (column & 0x8000) == 0x8000 )
 		{ // is the Row relative?
 			fRwRel = true;
@@ -1020,7 +1020,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		{
 			if( refCell[0].getFormulaRec() != null )
 			{
-				Formula f = (Formula) refCell[0].getFormulaRec();
+				Formula f = refCell[0].getFormulaRec();
 				retValue = f.calculateFormula();
 				return retValue;
 			}
@@ -1061,7 +1061,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		{
 			if( cell.getFormulaRec() != null )
 			{
-				Formula f = (Formula) cell.getFormulaRec();
+				Formula f = cell.getFormulaRec();
 				retValue = f.calculateFormula();
 			}
 			else

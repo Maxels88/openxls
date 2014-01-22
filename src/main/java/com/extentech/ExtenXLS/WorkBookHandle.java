@@ -243,17 +243,17 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	{
 		CellHandle[] cx = getCells();
 		int foundcount = 0;
-		for( int t = 0; t < cx.length; t++ )
+		for( CellHandle aCx : cx )
 		{
-			if( !(cx[t].getCell() instanceof Formula) )
+			if( !(aCx.getCell() instanceof Formula) )
 			{
 				// find the string
-				if( !cx[t].isNumber() )
+				if( !aCx.isNumber() )
 				{
-					String v = cx[t].getStringVal();
+					String v = aCx.getStringVal();
 					if( v.indexOf( searchfor ) > -1 )
 					{
-						cx[t].setVal( StringTool.replaceText( v, searchfor, replacewith ) );
+						aCx.setVal( StringTool.replaceText( v, searchfor, replacewith ) );
 						foundcount++;
 					}
 				}
@@ -546,9 +546,9 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 			try
 			{
 				ImageHandle[] r = this.getWorkSheet( t ).getImages();
-				for( int x = 0; x < r.length; x++ )
+				for( ImageHandle aR : r )
 				{
-					ret.add( r[x] );
+					ret.add( aR );
 				}
 			}
 			catch( Exception ex )
@@ -574,11 +574,11 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 			try
 			{
 				ImageHandle[] r = this.getWorkSheet( t ).getImages();
-				for( int x = 0; x < r.length; x++ )
+				for( ImageHandle aR : r )
 				{
-					if( r[x].getName().equals( imagename ) )
+					if( aR.getName().equals( imagename ) )
 					{
-						return r[x];
+						return aR;
 					}
 				}
 			}
@@ -1827,7 +1827,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	@Override
 	public com.extentech.formats.XLS.WorkBook getWorkBook()
 	{
-		return (com.extentech.formats.XLS.WorkBook) this.mybook;
+		return this.mybook;
 	}
 
 	/**
@@ -1958,9 +1958,9 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		if( wsh != null )
 		{
 			List mc = wsh.getMysheet().getMergedCellsRecs();
-			for( int i = 0; i < mc.size(); i++ )
+			for( Object aMc : mc )
 			{
-				Mergedcells mrg = (Mergedcells) mc.get( i );
+				Mergedcells mrg = (Mergedcells) aMc;
 				if( mrg != null )
 				{
 					mrg.initCells( this );
@@ -2001,9 +2001,9 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	public void markFormulasDirty()
 	{
 		Formula[] formulas = mybook.getFormulas();
-		for( int idx = 0; idx < formulas.length; idx++ )
+		for( Formula formula : formulas )
 		{
-			formulas[idx].clearCachedValue();
+			formula.clearCachedValue();
 		}
 	}
 
@@ -2025,12 +2025,12 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		int calcmode = mybook.getCalcMode();
 		mybook.setCalcMode( CALCULATE_AUTO );    // ensure referenced functions are calcualted as necesary!
 		Formula[] formulas = mybook.getFormulas();
-		for( int idx = 0; idx < formulas.length; idx++ )
+		for( Formula formula : formulas )
 		{
 			try
 			{
-				formulas[idx].clearCachedValue();
-				formulas[idx].calculate();
+				formula.clearCachedValue();
+				formula.calculate();
 			}
 			catch( FunctionNotSupportedException fe )
 			{
@@ -2069,11 +2069,11 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		WorkSheetHandle[] ws = this.getWorkSheets();
 		try
 		{
-			for( int x = 0; x < ws.length; x++ )
+			for( WorkSheetHandle w : ws )
 			{
 				try
 				{
-					ws[x].remove();
+					w.remove();
 				}
 				catch( WorkBookException e )
 				{
@@ -2279,9 +2279,9 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	{
 		sourceSheet.getSheet().populateForTransfer();   // copy all formatting + images for this sheet
 		List chts = sourceSheet.getSheet().getCharts();
-		for( int i = 0; i < chts.size(); i++ )
+		for( Object cht : chts )
 		{
-			Chart cxi = (Chart) chts.get( i );
+			Chart cxi = (Chart) cht;
 			cxi.populateForTransfer();
 		}
 		byte[] bao = sourceSheet.getSerialBytes();
@@ -2293,9 +2293,9 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 			if( wsh != null )
 			{
 				List mc = wsh.getMysheet().getMergedCellsRecs();
-				for( int i = 0; i < mc.size(); i++ )
+				for( Object aMc : mc )
 				{
-					Mergedcells mrg = (Mergedcells) mc.get( i );
+					Mergedcells mrg = (Mergedcells) aMc;
 					if( mrg != null )
 					{
 						mrg.initCells( this );

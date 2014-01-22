@@ -558,7 +558,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			byte b0 = this.thiscont.getByteAt( start++ );
 			byte b1 = this.thiscont.getByteAt( start++ );
 			byte b2 = this.thiscont.getByteAt( start++ );
-			ret[0] = (short) ByteTools.readShort( b0, b1 );
+			ret[0] = ByteTools.readShort( b0, b1 );
 			ret[1] = (short) b2;
 		}
 		catch( Exception e )
@@ -989,7 +989,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 	private int putString( Unicodestring newString )
 	{
 		++retpos;
-		((SstArrayList) stringvector).put( (Object) newString, retpos );
+		((SstArrayList) stringvector).put( newString, retpos );
 		return retpos;
 	}
 
@@ -1111,17 +1111,17 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		}
 		if( (DEBUGLEVEL > 15) && (cbounds != null) )
 		{
-			for( int t = 0; t < cbounds.size(); t++ )
+			for( Object cbound : cbounds )
 			{
-				Logger.logInfo( (Integer) cbounds.get( t ) + "," );
+				Logger.logInfo( cbound + "," );
 			}
 			Logger.logInfo( "" );
 		}
 		if( (DEBUGLEVEL > 150) && (sstgrbits != null) )
 		{
-			for( int t = 0; t < sstgrbits.size(); t++ )
+			for( Object sstgrbit : sstgrbits )
 			{
-				Logger.logInfo( "0x" + (Byte) sstgrbits.get( t ) + "," );
+				Logger.logInfo( "0x" + sstgrbit + "," );
 			}
 			Logger.logInfo( "" );
 		}
@@ -1138,9 +1138,9 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 	private boolean sanityCheck( int realLen )
 	{
 		long contLens = 0;
-		for( int i = 0; i < cbounds.size(); i++ )
+		for( Object cbound : cbounds )
 		{
-			Integer intgr = (Integer) cbounds.get( i );
+			Integer intgr = (Integer) cbound;
 			contLens += intgr;
 		}
 		if( ((datalen - 4) - contLens) > 8223 )
@@ -1637,7 +1637,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		// but only if we're not ignoring dupes
 		if( this.getWorkBook().isSharedupes() )
 		{
-			retpos = ((SstArrayList) stringvector).indexOf( s );
+			retpos = stringvector.indexOf( s );
 			if( retpos > -1 )
 			{
 				Unicodestring str = (Unicodestring) stringvector.get( retpos );
@@ -1747,9 +1747,9 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 	{
 		StringBuffer sb = new StringBuffer();
 		sb.append( "cstTotal:" + cstTotal + " cstUnique:" + cstUnique + " numConts:" + numconts );
-		for( int i = 0; i < stringvector.size(); i++ )
+		for( Object aStringvector : stringvector )
 		{
-			sb.append( "\n " + stringvector.get( i ) );
+			sb.append( "\n " + aStringvector );
 		}
 		return sb.toString();
 	}
@@ -2031,9 +2031,9 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 	public ArrayList getAllStrings()
 	{
 		ArrayList al = new ArrayList( stringvector.size() );
-		for( int i = 0; i < stringvector.size(); i++ )
+		for( Object aStringvector : stringvector )
 		{
-			al.add( stringvector.get( i ).toString() );
+			al.add( aStringvector.toString() );
 		}
 		return al;
 	}

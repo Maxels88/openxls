@@ -185,9 +185,8 @@ public class GenericChartObject extends XLSRecord implements ChartObject, ChartC
 	@Override
 	public void close()
 	{
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord r : chartArr )
 		{
-			XLSRecord r = (XLSRecord) chartArr.get( i );
 			r.close();
 		}
 		chartArr.clear();

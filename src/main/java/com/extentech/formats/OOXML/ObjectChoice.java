@@ -94,7 +94,7 @@ public class ObjectChoice implements OOXMLElement
 					if( tnm.equals( "grpSp" ) )
 					{    // group shape - combines one or more of sp/pic/graphicFrame/cxnSp
 						lastTag.push( tnm );
-						grp = (GrpSp) GrpSp.parseOOXML( xpp, lastTag, bk );
+						grp = GrpSp.parseOOXML( xpp, lastTag, bk );
 						break;
 					}
 					if( tnm.equals( "sp" ) )

@@ -454,12 +454,12 @@ return WorkBookHandle.simpledateformat.format(d);*/
 		String[][] fmtlist = { { "$", "," }, { ",", "," }, { "%", "," } };
 
 		// strip the formatting
-		for( int t = 0; t < fmtlist.length; t++ )
+		for( String[] aFmtlist : fmtlist )
 		{
-			if( input.indexOf( fmtlist[t][0] ) > -1 )
+			if( input.indexOf( aFmtlist[0] ) > -1 )
 			{ // contains!
-				String converted = StringTool.replaceText( input, fmtlist[t][0], "" ); // strip first token (ie: '$')
-				converted = StringTool.replaceText( converted, fmtlist[t][1], "" ); // strip
+				String converted = StringTool.replaceText( input, aFmtlist[0], "" ); // strip first token (ie: '$')
+				converted = StringTool.replaceText( converted, aFmtlist[1], "" ); // strip
 				// second
 				// token
 				// (ie: ',')

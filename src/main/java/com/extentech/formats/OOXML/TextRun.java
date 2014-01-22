@@ -84,21 +84,21 @@ public class TextRun implements OOXMLElement
 					if( tnm.equals( "r" ) )
 					{
 						lastTag.push( tnm );
-						run = (r) r.parseOOXML( xpp, lastTag, bk );
+						run = r.parseOOXML( xpp, lastTag, bk );
 						lastTag.pop();
 						break;
 					}
 					if( tnm.equals( "br" ) )
 					{
 						lastTag.push( tnm );
-						brk = (Br) Br.parseOOXML( xpp, lastTag, bk );
+						brk = Br.parseOOXML( xpp, lastTag, bk );
 						lastTag.pop();
 						break;
 					}
 					if( tnm.equals( "fld" ) )
 					{
 						lastTag.push( tnm );
-						f = (Fld) Fld.parseOOXML( xpp, lastTag, bk );
+						f = Fld.parseOOXML( xpp, lastTag, bk );
 						lastTag.pop();
 						break;
 					}
@@ -237,7 +237,7 @@ class r implements OOXMLElement
 					else if( tnm.equals( "rPr" ) )
 					{    // text run properties
 						lastTag.push( tnm );
-						rp = (RPr) RPr.parseOOXML( xpp, lastTag, bk );
+						rp = RPr.parseOOXML( xpp, lastTag, bk );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -328,7 +328,7 @@ class Br implements OOXMLElement
 					if( tnm.equals( "rPr" ) )
 					{    // text run properties
 						lastTag.push( tnm );
-						rp = (RPr) RPr.parseOOXML( xpp, lastTag, bk );
+						rp = RPr.parseOOXML( xpp, lastTag, bk );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -458,12 +458,12 @@ class Fld implements OOXMLElement
 					else if( tnm.equals( "rPr" ) )
 					{    // text run properties
 						lastTag.push( tnm );
-						rp = (RPr) RPr.parseOOXML( xpp, lastTag, bk );
+						rp = RPr.parseOOXML( xpp, lastTag, bk );
 					}
 					else if( tnm.equals( "pPr" ) )
 					{    // text field properties
 						lastTag.push( tnm );
-						p = (PPr) PPr.parseOOXML( xpp, lastTag, bk );
+						p = PPr.parseOOXML( xpp, lastTag, bk );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -618,8 +618,8 @@ class RPr implements OOXMLElement
 			Iterator<String> i = attrs.keySet().iterator();
 			while( i.hasNext() )
 			{
-				String key = (String) i.next();
-				String val = (String) attrs.get( key );
+				String key = i.next();
+				String val = attrs.get( key );
 				ooxml.append( " " + key + "=\"" + val + "\"" );
 			}
 		}

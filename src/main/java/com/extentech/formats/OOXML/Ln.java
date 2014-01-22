@@ -129,22 +129,22 @@ public class Ln implements OOXMLElement
 							tnm.equals( "miter" ) )
 					{
 						lastTag.push( tnm );
-						join = (JoinGroup) JoinGroup.parseOOXML( xpp, lastTag );
+						join = JoinGroup.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "prstDash" ) || tnm.equals( "custDash" ) )
 					{
 						lastTag.push( tnm );
-						dash = (DashGroup) DashGroup.parseOOXML( xpp, lastTag );
+						dash = DashGroup.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "headEnd" ) )
 					{
 						lastTag.push( tnm );
-						h = (HeadEnd) HeadEnd.parseOOXML( xpp, lastTag );
+						h = HeadEnd.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "tailEnd" ) )
 					{
 						lastTag.push( tnm );
-						t = (TailEnd) TailEnd.parseOOXML( xpp, lastTag );
+						t = TailEnd.parseOOXML( xpp, lastTag );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -176,8 +176,8 @@ public class Ln implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( ">" );
@@ -237,7 +237,7 @@ public class Ln implements OOXMLElement
 		// Specifies the width to be used for the underline stroke.
 		// If this attribute is omitted, then a value of 0 is assumed.
 		{
-			return Integer.valueOf( (String) attrs.get( "w" ) ) / 12700; // 1 pt = 12700 EMUs.
+			return Integer.valueOf( attrs.get( "w" ) ) / 12700; // 1 pt = 12700 EMUs.
 		}
 		return 0;    // default
 	}
@@ -336,7 +336,7 @@ class DashGroup implements OOXMLElement
 					if(/*tnm.equals("custDash") ||*/
 							tnm.equals( "prstDash" ) )
 					{
-						p = (PrstDash) PrstDash.parseOOXML( xpp, lastTag );
+						p = PrstDash.parseOOXML( xpp, lastTag );
 						break;
 					}
 				}

@@ -408,11 +408,11 @@ public class PivotTableHandle
 		{
 			CellRange newr = new CellRange( worksheet, coords, true );
 			CellHandle[] ch = newr.getCells();
-			for( int r = 0; r < ch.length; r++ )
+			for( CellHandle aCh : ch )
 			{
-				if( ch[r] != null )
+				if( aCh != null )
 				{
-					ch[r].remove( true );
+					aCh.remove( true );
 				}
 			}
 		}

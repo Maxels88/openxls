@@ -361,7 +361,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		Iterator ir = imageMap.keySet().iterator();
 		while( ir.hasNext() )
 		{
-			im.add( (ImageHandle) ir.next() );
+			im.add( ir.next() );
 		}
 		return im;
 
@@ -1198,9 +1198,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		if( r != null )
 		{
 			Object[] cells = r.getCellArray();
-			for( int x = 0; x < cells.length; x++ )
+			for( Object cell : cells )
 			{ // adjust cell's in row
-				this.removeCell( (BiffRec) cells[x] );
+				this.removeCell( (BiffRec) cell );
 			}
 			rows.remove( rownum );
 			this.removeRecFromVec( r );
@@ -1373,7 +1373,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 
 		for( int t = 0; t < rx.length; t++ )
 		{
-			int opcode = ((BiffRec) rx[t]).getOpcode();    // Handle continues masking mso's 
+			int opcode = rx[t].getOpcode();    // Handle continues masking mso's
 			if( (opcode != MSODRAWING) && !((opcode == CONTINUE) && (((Continue) rx[t]).maskedMso != null)) )
 			{
 				this.removeRecFromVec( rx[t] );
@@ -1758,7 +1758,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 
 					for( int t = startrow; t >= rownum; t-- )
 					{        // traverse from last row to current
-						Row rowtoshift = (Row) rows.get( t );
+						Row rowtoshift = rows.get( t );
 						if( rowtoshift != null )
 						{
 							try
@@ -2063,9 +2063,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{
 			return 0;
 		}
-		for( int i = 0; i < rws.length; i++ )
+		for( Object rw1 : rws )
 		{
-			Row r = (Row) rows.get( (Integer) rws[i] );
+			Row r = rows.get( rw1 );
 			counter += r.getNumberOfCells();
 		}
 		return counter;
@@ -2081,7 +2081,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		FastAddVector retvec = new FastAddVector();
 		for( int x = 0; x < this.getRealMaxCol(); x++ )
 		{
-			String c = (String) ExcelTools.getAlphaVal( x );
+			String c = ExcelTools.getAlphaVal( x );
 			retvec.add( c );
 		}
 		return retvec;
@@ -2165,7 +2165,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	@Override
 	public Row getRowByNumber( int r )
 	{
-		return (Row) rows.get( r );
+		return rows.get( r );
 	}
 
 	/**
@@ -2179,7 +2179,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		FastAddVector rownames = new FastAddVector();
 		while( iter.hasNext() )
 		{
-			rownames.add( rownames.size(), (Integer) iter.next() );
+			rownames.add( rownames.size(), iter.next() );
 		}
 		return rownames;
 	}
@@ -2570,7 +2570,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{
 			// Logger.logErr("Adding Boolean Not Implemented");
 			rec = Boolerr.getPrototype();
-			((Boolerr) rec).setBooleanVal( ((Boolean) obj).booleanValue() );
+			rec.setBooleanVal( ((Boolean) obj).booleanValue() );
 		}
 		else
 		{
@@ -2612,7 +2612,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{
 
 			Row ro = null;
-			ro = (Row) rows.get( rc[0] );
+			ro = rows.get( rc[0] );
 			if( ro == null )
 			{
 				ro = this.addNewRow( rec );
@@ -2754,7 +2754,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public void moveCell( String startaddr, String endaddr )
 	{
-		BiffRec c = (BiffRec) getCell( startaddr );
+		BiffRec c = getCell( startaddr );
 		if( c.getOpcode() == WorkBookFactory.RK )
 		{
 			try
@@ -2879,11 +2879,11 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	{
 		ArrayList retlist = new ArrayList();
 		Name[] ns = this.getWorkBook().getNames();
-		for( int i = 0; i < ns.length; i++ )
+		for( Name n : ns )
 		{
-			if( ns[i].isBuiltIn() && ((ns[i].getIxals() == (this.getSheetNum() + 1)) || (ns[i].getItab() == (this.getSheetNum() + 1))) )
+			if( n.isBuiltIn() && ((n.getIxals() == (this.getSheetNum() + 1)) || (n.getItab() == (this.getSheetNum() + 1))) )
 			{
-				retlist.add( ns[i] );
+				retlist.add( n );
 			}
 		}
 		return retlist;
@@ -2898,9 +2898,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	protected Name getPrintAreaNameRec( byte type )
 	{
 		ArrayList names = this.getBuiltInNames();
-		for( int i = 0; i < names.size(); i++ )
+		for( Object name : names )
 		{
-			Name n = (Name) names.get( i );
+			Name n = (Name) name;
 			if( n.getBuiltInType() == type )
 			{
 				return n;
@@ -2932,9 +2932,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{
 			String ret = "";
 			Stack s = n.getExpression();
-			for( int x = 0; x < s.size(); x++ )
+			for( Object value : s )
 			{
-				Ptg p = (Ptg) s.get( x );
+				Ptg p = (Ptg) value;
 /*                    if (p instanceof PtgArea3d) {// can be other than ptgarea ...
                         ((PtgRef)p).clearLocationCache();// why??
                         return p.toString();
@@ -2957,9 +2957,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		if( n != null )
 		{
 			Stack s = n.getExpression();
-			for( int x = 0; x < s.size(); x++ )
+			for( Object value : s )
 			{
-				Ptg p = (Ptg) s.get( x );
+				Ptg p = (Ptg) value;
 				return p.toString();
 			}
 		}
@@ -3114,7 +3114,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		int idx = this.getIndexOf( NOTE );
 		while( idx > -1 )
 		{
-			notes.add( (Note) SheetRecs.get( idx++ ) );
+			notes.add( SheetRecs.get( idx++ ) );
 			if( ((BiffRec) SheetRecs.get( idx )).getOpcode() != NOTE )
 			{
 				break;
@@ -3353,11 +3353,11 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		// add the charts to the boundsheet, as they are stored in the workbook normally.  (why?)
 		charts.clear();
 		Chart[] chts = this.getWorkBook().getCharts();
-		for( int i = 0; i < chts.length; i++ )
+		for( Chart cht : chts )
 		{
-			if( chts[i].getSheet().equals( this ) )
+			if( cht.getSheet().equals( this ) )
 			{
-				charts.add( chts[i] );
+				charts.add( cht );
 			}
 		}
 	}
@@ -3465,9 +3465,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				localFonts = (HashMap) this.getWorkBook().getFontRecsAsXML();    // fonts in this workbook
 			}
 			List recs = destChart.getXLSrecs();
-			for( int i = 0; i < recs.size(); i++ )
+			for( Object rec1 : recs )
 			{
-				XLSRecord rec = (XLSRecord) recs.get( i );
+				XLSRecord rec = (XLSRecord) rec1;
 				rec.setWorkBook( wkbook );
 				rec.setSheet( this );
 				if( rec.getOpcode() == MSODRAWING )
@@ -3552,25 +3552,25 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	{
 		this.getSheetHash();
 		BiffRec[] recs = this.getCells();
-		for( int i = 0; i < recs.length; i++ )
+		for( BiffRec rec : recs )
 		{
-			if( recs[i].getOpcode() == XLSConstants.LABELSST )
+			if( rec.getOpcode() == XLSConstants.LABELSST )
 			{
-				Labelsst mylabel = (Labelsst) recs[i];
+				Labelsst mylabel = (Labelsst) rec;
 				mylabel.initUnsharedString();
 			}
 		}
 		transferXfs = this.getWorkBook().getXfrecs();
-		for( int i = 0; i < transferXfs.size(); i++ )
+		for( Object transferXf : transferXfs )
 		{
-			Xf x = (Xf) transferXfs.get( i );
+			Xf x = (Xf) transferXf;
 			x.populateForTransfer();
 		}
 
 		transferFonts = this.getWorkBook().getFontRecs();
-		for( int i = 0; i < transferFonts.size(); i++ )
+		for( Object transferFont : transferFonts )
 		{
-			Font x = (Font) transferFonts.get( i );
+			Font x = (Font) transferFont;
 			x.getData();
 		}
 	}
@@ -3784,9 +3784,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{
 			address = this.getSheetName() + "!" + address;
 		}
-		for( int i = 0; i < notes.size(); i++ )
+		for( Object note : notes )
 		{
-			Note n = (Note) notes.get( i );
+			Note n = (Note) note;
 			if( n.getCellAddressWithSheet().equals( address ) )
 			{
 				n.setText( txt );
@@ -3912,7 +3912,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		msodg.addMsodrawingrec( msoDrawing ); // add the new drawing rec to the msodrawinggroup set of recs
 
 		// object record which defines a basic note
-		Obj obj = (Obj) Obj.getBasicObjRecord( Obj.otNote, ++this.lastObjId );    // create a note object     
+		Obj obj = Obj.getBasicObjRecord( Obj.otNote, ++this.lastObjId );    // create a note object
 		this.SheetRecs.add( insertIndex++, obj );
 
 		// now add attached text-type mso, specifying the shape has attached text
@@ -4004,7 +4004,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		msoDrawing.createDropDownListStyle( colNum );    // create the records necessary to define the dropdown box symbol at the desired column
 
 		// object record which defines a basic dropdown list
-		Obj obj = (Obj) Obj.getBasicObjRecord( Obj.otDropdownlist, ++this.lastObjId );    // create a drop-down object record for each
+		Obj obj = Obj.getBasicObjRecord( Obj.otDropdownlist, ++this.lastObjId );    // create a drop-down object record for each
 		int objID = obj.getObjId();
 
 		// insert new mso + obj records into sheet
@@ -4132,7 +4132,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		idx = this.getIndexOf( NOTE );
 		while( (idx < this.SheetRecs.size()) && (((BiffRec) this.SheetRecs.get( idx )).getOpcode() == NOTE) )
 		{
-			if( ((Note) this.SheetRecs.get( idx )).equals( n ) )
+			if( this.SheetRecs.get( idx ).equals( n ) )
 			{
 				this.SheetRecs.remove( idx );
 				break; // we're done
@@ -4232,7 +4232,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				msoDrawing.createDropDownListStyle( j );    // create the records necessary to define the dropdown box symbol
 
 				// object record which defines a basic dropdown list
-				Obj obj = (Obj) Obj.getBasicObjRecord( Obj.otDropdownlist,
+				Obj obj = Obj.getBasicObjRecord( Obj.otDropdownlist,
 				                                       ++this.lastObjId );    // create a drop-down object record for each
 
 				// insert new mso + obj records into sheet
@@ -4287,7 +4287,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		// finally, must set all rows to NOT hidden - I believe Excel does this when AutoFilters are turned off
 		for( int i = 0; i < rows.size(); i++ )
 		{
-			((Row) rows.get( i )).setHidden( false );
+			rows.get( i ).setHidden( false );
 		}
 	}
 
@@ -4342,7 +4342,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{
 			try
 			{
-				((Row) rows.get( i )).setHidden( false );
+				rows.get( i ).setHidden( false );
 			}
 			catch( NullPointerException e )
 			{
@@ -5310,9 +5310,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 
 		try
 		{
-			for( int i = 0; i < cl.size(); i++ )
+			for( Object aCl : cl )
 			{
-				String[] c = (String[]) cl.get( i );
+				String[] c = (String[]) aCl;
 				String ooxmlElement = c[0];
 
 				//if(DEBUG)
@@ -5355,16 +5355,16 @@ public final class Boundsheet extends XLSRecord implements Sheet
 					{
 						this.addOOXMLShape( vml );
 					}
-                /**/
+	            /**/
 				}
 				else if( ooxmlElement.equals( "hyperlink" ) )
 				{      // hyperlinks
-					c = (String[]) cl.get( i );    // don't strip path
-					for( int j = 0; j < hyperlinks.size(); j++ )
+					c = (String[]) aCl;    // don't strip path
+					for( Object hyperlink1 : hyperlinks )
 					{
-						if( rId.equals( ((String[]) hyperlinks.get( j ))[0] ) )
+						if( rId.equals( ((String[]) hyperlink1)[0] ) )
 						{
-							String[] h = (String[]) hyperlinks.get( j );
+							String[] h = (String[]) hyperlink1;
 							try
 							{    // target= cl[2], ref= h[1], desc= h[2]
 								bk.getWorkSheet( this.getSheetName() ).getCell( h[1] ).setURL( rId,
@@ -5489,7 +5489,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 					{
 						// read in text element
 						lastTag.push( tnm );
-						Text t = (Text) Text.parseOOXML( xpp, lastTag, bk );
+						Text t = Text.parseOOXML( xpp, lastTag, bk );
 						// don't reset state vars as can there can be more
 						comment = t.getCommentWithFormatting();
 					}
@@ -5557,9 +5557,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			FastAddVector nhs = new FastAddVector();
 			{
 				CommentHandle[] anhs = bk.getWorkSheet( this.getSheetName() ).getCommentHandles();
-				for( int i = 0; i < anhs.length; i++ )
+				for( CommentHandle anh : anhs )
 				{
-					nhs.add( anhs[i] );
+					nhs.add( anh );
 				}
 			}
 			while( eventType != XmlPullParser.END_DOCUMENT )
@@ -5755,9 +5755,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 								{ // chart file has embeds - usually drawing ml which defines userShapes                                	
 //xxx TODO: REFACTOR to get these specifics out                                 	
 									ArrayList chartEmbeds = OOXMLReader.parseRels( OOXMLReader.wrapInputStream( zip.getInputStream( rels ) ) );
-									for( int i = 0; i < chartEmbeds.size(); i++ )
+									for( Object chartEmbed : chartEmbeds )
 									{
-										String[] dr = (String[]) chartEmbeds.get( i );
+										String[] dr = (String[]) chartEmbed;
 										if( dr[0].equals( "userShape" ) )
 										{ // should!
 											dr[1] = dr[1].substring( dr[1].lastIndexOf( "/" ) + 1 );
@@ -5895,7 +5895,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		Iterator ii = rows.keySet().iterator();
 		while( ii.hasNext() )
 		{
-			Row r = (Row) rows.get( ii.next() );
+			Row r = rows.get( ii.next() );
 			r.close();
 		}
 		rows.clear();
@@ -6028,9 +6028,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			myidx.close();
 			myidx = null;
 		}
-		for( int i = 0; i < printRecs.size(); i++ )
+		for( Object printRec : printRecs )
 		{
-			XLSRecord r = (XLSRecord) printRecs.get( i );
+			XLSRecord r = (XLSRecord) printRec;
 			r.close();
 		}
 		printRecs.clear();

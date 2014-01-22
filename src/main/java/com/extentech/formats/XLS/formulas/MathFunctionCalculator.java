@@ -63,9 +63,9 @@ public class MathFunctionCalculator
 		{
 			return PtgCalculator.getNAError();
 		}
-		for( int i = 0; i < dub.length; i++ )
+		for( double aDub : dub )
 		{
-			result += dub[i];
+			result += aDub;
 		}
 		return new PtgNumber( result );
 	}
@@ -1626,9 +1626,9 @@ Returns a subtotal in a list or database
 				// At this point we have a collection of all the cells that pass (or their corresponding cell in sum_range);
 				// Now we sum up the values of these cells and return
 				double ret = 0.0;
-				for( int i = 0; i < passesList.size(); i++ )
+				for( Object aPassesList : passesList )
 				{
-					Ptg cell = (Ptg) passesList.get( i );
+					Ptg cell = (Ptg) aPassesList;
 					try
 					{
 						ret += cell.getDoubleVal();
@@ -1732,9 +1732,9 @@ Returns a subtotal in a list or database
 			// At this point we have a collection of all the cells that pass (or their corresponding cell in sum_range);
 			// Now we sum up the values of these cells and return
 			double ret = 0.0;
-			for( int i = 0; i < passesList.size(); i++ )
+			for( Object aPassesList : passesList )
 			{
-				Ptg cell = (Ptg) passesList.get( i );
+				Ptg cell = (Ptg) aPassesList;
 				try
 				{
 					ret += cell.getDoubleVal();
@@ -1765,16 +1765,16 @@ Returns a subtotal in a list or database
 		double res = 0;
 		int dim = 0;    // all arrays must have same dimension see below
 		ArrayList arrays = new ArrayList();
-		for( int i = 0; i < operands.length; i++ )
+		for( Ptg operand : operands )
 		{
-			if( operands[i] instanceof PtgErr )
+			if( operand instanceof PtgErr )
 			{
 				return new PtgErr( PtgErr.ERROR_NA );    // it's what excel does
 			}
-			Ptg[] a = operands[i].getComponents();
+			Ptg[] a = operand.getComponents();
 			if( a == null )
 			{
-				arrays.add( operands[i] );
+				arrays.add( operand );
 				if( dim == 0 )
 				{
 					dim = 1;
@@ -1795,9 +1795,9 @@ Returns a subtotal in a list or database
 		for( int j = 0; j < dim; j++ )
 		{
 			double d = 1;
-			for( int i = 0; i < arrays.size(); i++ )
+			for( Object array : arrays )
 			{
-				Object o = ((Ptg[]) arrays.get( i ))[j].getValue();
+				Object o = ((Ptg[]) array)[j].getValue();
 				if( o instanceof Double )
 				{
 					d = d * (Double) o;

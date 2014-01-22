@@ -238,10 +238,10 @@ public class RowHandle
 			}
 		}
 		myRow.setRowHeight( newHeight );
-		for( int z = 0; z < iAdjust.size(); z++ )
+		for( Object anIAdjust : iAdjust )
 		{
-			ImageHandle ih = images[((int[]) iAdjust.get( z ))[0]];
-			ih.setHeight( ((int[]) iAdjust.get( z ))[1] );
+			ImageHandle ih = images[((int[]) anIAdjust)[0]];
+			ih.setHeight( ((int[]) anIAdjust)[1] );
 		}
 
 	}
@@ -255,11 +255,11 @@ public class RowHandle
 	public boolean containsVerticalMergeRange()
 	{
 		CellHandle[] c = this.getCells();
-		for( int i = 0; i < c.length; i++ )
+		for( CellHandle aC : c )
 		{
-			if( c[i].getMergedCellRange() != null )
+			if( aC.getMergedCellRange() != null )
 			{
-				CellRange cr = c[i].getMergedCellRange();
+				CellRange cr = aC.getMergedCellRange();
 				try
 				{
 					if( cr.getRows().length > 1 )
@@ -456,10 +456,10 @@ public class RowHandle
 					{
 						Mulblank mb = (Mulblank) thisCell.getCell();
 						ArrayList<Integer> columns = mb.getColReferences();
-						for( int x = 0; x < columns.size(); x++ )
+						for( Integer column : columns )
 						{
-							thisCell.setBlankRef( columns.get( x ) );
-							thisCell.getCell().setCol( columns.get( x ).shortValue() );
+							thisCell.setBlankRef( column );
+							thisCell.getCell().setCol( column.shortValue() );
 							JSONObject result = new JSONObject();
 							thisCell.getCellAddress();
 							Object v = "";

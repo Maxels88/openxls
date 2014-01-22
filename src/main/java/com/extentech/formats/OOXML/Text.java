@@ -184,9 +184,9 @@ public class Text implements OOXMLElement
 				 */
 				int begIdx = 0;
 				ooxml.append( "<r>" );    // new rich text run
-				for( int j = 0; j < runs.size(); j++ )
+				for( Object run : runs )
 				{
-					short[] idxs = (short[]) runs.get( j );
+					short[] idxs = (short[]) run;
 					if( idxs[0] > begIdx )
 					{
 						ooxml.append( ("<t xml:space=\"preserve\">" + OOXMLAdapter.stripNonAscii( s.substring( begIdx,

@@ -166,24 +166,24 @@ public class Axis extends GenericChartObject implements ChartObject
 		switch( wType )
 		{
 			case XAXIS:
-				a.addChartRecord( (CatserRange) CatserRange.getPrototype() );
-				a.addChartRecord( (Axcent) Axcent.getPrototype() );
-				a.addChartRecord( (Tick) Tick.getPrototype() );
+				a.addChartRecord( CatserRange.getPrototype() );
+				a.addChartRecord( Axcent.getPrototype() );
+				a.addChartRecord( Tick.getPrototype() );
 				break;
 			case YAXIS:
 			case XVALAXIS:
-				a.addChartRecord( (ValueRange) ValueRange.getPrototype() );
-				a.addChartRecord( (Tick) Tick.getPrototype() );
+				a.addChartRecord( ValueRange.getPrototype() );
+				a.addChartRecord( Tick.getPrototype() );
 				AxisLineFormat alf = (AxisLineFormat) AxisLineFormat.getPrototype();
 				alf.setId( AxisLineFormat.ID_MAJOR_GRID );    // default has major gridlines
 				a.addChartRecord( alf );
-				a.addChartRecord( (LineFormat) LineFormat.getPrototype() );
+				a.addChartRecord( LineFormat.getPrototype() );
 				break;
 			case ZAXIS:
 				// KSC: TODO: Set CatserRange options correctly when get def!!! **********
 				CatserRange c = (CatserRange) CatserRange.getPrototype();
 				a.addChartRecord( c );
-				a.addChartRecord( (Tick) Tick.getPrototype() );    // TODO: Tick should have 
+				a.addChartRecord( Tick.getPrototype() );    // TODO: Tick should have
 				break;
 		}
 		return a;
@@ -200,9 +200,9 @@ public class Axis extends GenericChartObject implements ChartObject
 		// Axis 0: CatserRange, Axcent, Tick [AxisLineFormat, LineFormat, AreaFormat] 					last 3 recs are for 3d formatting	
 		// Axis 1: ValueRange, Tick, AxisLineFormat, LineFormat [AreaFormat, LineFormat, AreaFormat]		"	"
 		// Axis 2: [CatserRange, Tick]		Z axis, for surface charts (only??)
-		for( int i = 0; i < chartArr.size(); i++ )
+		for( XLSRecord aChartArr : chartArr )
 		{
-			BiffRec b = (BiffRec) chartArr.get( i );
+			BiffRec b = aChartArr;
 			// Handle subordinate record options here rather than in the specific rec
 			if( b instanceof CatserRange )
 			{
@@ -312,7 +312,7 @@ public class Axis extends GenericChartObject implements ChartObject
 					break;
 				}
 				x++;
-				if( ((BiffRec) ap.chartArr.get( x )).getOpcode() != TEXTDISP )
+				if( ap.chartArr.get( x ).getOpcode() != TEXTDISP )
 				{
 					break;
 				}
@@ -629,7 +629,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		j = 1;
 		for(; j < chartArr.size(); j++ )
 		{
-			BiffRec b = (BiffRec) chartArr.get( j );
+			BiffRec b = chartArr.get( j );
 			if( (b.getOpcode() == AREAFORMAT) ||
 					(b.getOpcode() == GELFRAME) ||
 					(b.getOpcode() == 2213) || (b.getOpcode() == 2212) || (b.getOpcode() == 2206) )	/* CtrlMlFrt */
@@ -790,9 +790,9 @@ public class Axis extends GenericChartObject implements ChartObject
 			// min, max
 			// minorTicks, majorTicks, microTicks (true/false)
 			// minorTickStep, majorTickStep, microTickStep (#)
-			for( int i = 0; i < chartArr.size(); i++ )
+			for( XLSRecord aChartArr : chartArr )
 			{
-				BiffRec b = (BiffRec) chartArr.get( i );
+				BiffRec b = aChartArr;
 				if( b instanceof CatserRange )
 				{
 					CatserRange c = ((CatserRange) b);
@@ -1129,9 +1129,9 @@ public class Axis extends GenericChartObject implements ChartObject
 		{        // valuerange, caterrange options	-- crosses, crossBetween, crossesAt, tickMarkSkip (cat only), tickLblSkip (cat only), majorUnit (val only), minorUnit (val only)  
 // KSC: TESTING
 //Logger.logInfo("Setting option: " + op + "=" + val);
-			for( int i = 0; i < chartArr.size(); i++ )
+			for( XLSRecord aChartArr : chartArr )
 			{
-				BiffRec b = (BiffRec) chartArr.get( i );
+				BiffRec b = aChartArr;
 				if( b instanceof CatserRange )
 				{
 					if( ((CatserRange) b).setOption( op, val ) )
@@ -1181,7 +1181,7 @@ public class Axis extends GenericChartObject implements ChartObject
 			CatLab c = (CatLab) Chart.findRec( chartArr, CatLab.class );
 			if( c != null )
 			{
-				return ((CatLab) c).getOption( op );
+				return c.getOption( op );
 			}
 			return null;    // use defaults
 		}
@@ -1195,9 +1195,9 @@ public class Axis extends GenericChartObject implements ChartObject
 				op.equals( "crossBetween" ) )
 		{    // value axis only -- val= between, midCat, crossBetween
 			// logScale-- ValueRange
-			for( int i = 0; i < chartArr.size(); i++ )
+			for( XLSRecord aChartArr : chartArr )
 			{
-				BiffRec b = (BiffRec) chartArr.get( i );
+				BiffRec b = aChartArr;
 				if( b instanceof CatserRange )
 				{
 					return ((CatserRange) b).getOption( op );
@@ -1231,9 +1231,9 @@ public class Axis extends GenericChartObject implements ChartObject
 		JSONObject axisOptions = new JSONObject();
 		try
 		{
-			for( int i = 0; i < chartArr.size(); i++ )
+			for( XLSRecord aChartArr : chartArr )
 			{
-				BiffRec b = (BiffRec) chartArr.get( i );
+				BiffRec b = aChartArr;
 				if( b instanceof CatserRange )
 				{
 					CatserRange c = ((CatserRange) b);
@@ -1726,7 +1726,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	 */
 	private void parseGridlinesOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
 	{
-		String endTag = (String) lastTag.peek();
+		String endTag = lastTag.peek();
 		this.setOption( endTag, "true" );
 		try
 		{
@@ -2494,11 +2494,11 @@ public class Axis extends GenericChartObject implements ChartObject
 		{ // shouldn't
 			double xmin = Double.MAX_VALUE, xmax = Double.MIN_VALUE;
 			boolean TEXTUALXAXIS = true;
-			for( int j = 0; j < categories.length; j++ )
+			for( Object category : categories )
 			{
 				try
 				{
-					double d = new Double( categories[j].toString() );
+					double d = new Double( category.toString() );
 					xmax = Math.max( xmax, d );
 					xmin = Math.min( xmin, d );
 					TEXTUALXAXIS = false;        // if ANY category val is a double, assume it's a normal xyvalue axis  
@@ -2703,7 +2703,7 @@ public class Axis extends GenericChartObject implements ChartObject
 					x0 = x;    // + (!yAxisReversed?0:ci.w);	// draw y axis tick marks + y axis labels (= categories) 
 					y0 = y + (!xAxisReversed ? h : 0);    // starts at bottom, goes up to top unless reversed
 					int k = 0;    // axis label index
-					for( int i = 0; i < categories.length; i++ )
+					for( Object category : categories )
 					{    // traverse Y axis, spacing category labels (x is constant, y is segmented)
 						x1 = x0 - 5 * rfY;// Major tick Marks
 						if( showMajorTicks )
@@ -2715,13 +2715,13 @@ public class Axis extends GenericChartObject implements ChartObject
 						if( !yAxisReversed )
 						{
 							svg.append( "<text id='yaxislabels" + (k++) + "' x='" + (x0 - 8) + "' y='" + y1 +
-									            "' style='text-anchor: end;' direction='rtl' dominant-baseline='text-before-edge' " + labelFontSVG + ">" + categories[i]
+									            "' style='text-anchor: end;' direction='rtl' dominant-baseline='text-before-edge' " + labelFontSVG + ">" + category
 									.toString() + "</text>\r\n" );
 						}
 						else
 						{
 							svg.append( "<text id='yaxislabels" + (k++) + "' x='" + (x0 + w + 8) + "' y='" + (y1 + 4) +
-									            "' style='text-anchor: start;' alignment-baseline='text-after-edge' " + labelFontSVG + ">" + categories[i]
+									            "' style='text-anchor: start;' alignment-baseline='text-after-edge' " + labelFontSVG + ">" + category
 									.toString() + "</text>\r\n" );
 						}
 						y0 -= inc * rfX;
@@ -2887,9 +2887,9 @@ public class Axis extends GenericChartObject implements ChartObject
 			svg.append( "<text id='xaxislabels" + (m++) + "' x='" + x0 + "' y='" + y0 +
 					            ((labelRot == 0) ? "" : ("' transform='rotate(" + labelRot + ", " + (x0) + " , " + (y0) + ")")) +
 					            "' style='text-anchor: middle;' alignment-baseline='text-after-edge' " + labelfontSVG + ">" );
-			for( int z = 0; z < s.length; z++ )
+			for( String value : s )
 			{
-				svg.append( "<tspan x='" + (x0) + "' dy='" + (fh * 1.4) + "'>" + s[z] + "</tspan>\r\n" );
+				svg.append( "<tspan x='" + (x0) + "' dy='" + (fh * 1.4) + "'>" + value + "</tspan>\r\n" );
 			}
 			svg.append( "</text>\r\n" );
 		}

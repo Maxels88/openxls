@@ -246,23 +246,23 @@ public class WorkBookAssembler implements XLSConstants
 		// insert charts that are new, either from transfers, insertions, etc
 		Chart[] chts = thissheet.getWorkBook().getCharts();
 		chartInsert = insertValidx;
-		for( int i = 0; i < chts.length; i++ )
+		for( Chart cht : chts )
 		{
-			if( !insertedCharts.contains( chts[i].getTitle() ) && chts[i].getSheet().equals( thissheet ) )
+			if( !insertedCharts.contains( cht.getTitle() ) && cht.getSheet().equals( thissheet ) )
 			{
 				// if it's a chart only sheet, insertValidx will be '0' here, put it at the end of the current recordset
 				if( insertValidx == 0 )
 				{
 					insertValidx = addVec.size();
 				}
-				List l = chts[i].assembleChartRecords();
-				if( chts[i].getObj() != null )
+				List l = cht.assembleChartRecords();
+				if( cht.getObj() != null )
 				{
-					l.add( 0, chts[i].getObj() );
+					l.add( 0, cht.getObj() );
 				}
-				if( chts[i].getMsodrawobj() != null )
+				if( cht.getMsodrawobj() != null )
 				{
-					l.add( 0, chts[i].getMsodrawobj() );
+					l.add( 0, cht.getMsodrawobj() );
 				}
 				int spid = 0;
 				boolean isHeader = false;

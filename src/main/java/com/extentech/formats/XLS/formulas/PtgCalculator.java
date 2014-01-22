@@ -119,20 +119,20 @@ public class PtgCalculator
 		// we don't know the size ahead of time, so use a vector for now.
 		CompatibleVector cv = new CompatibleVector();
 
-		for( int i = 0; i < operands.length; i++ )
+		for( Ptg operand : operands )
 		{
 			// is it multidimensional?
-			Ptg[] pthings = operands[i].getComponents(); // optimized -- do it once!  -jm
+			Ptg[] pthings = operand.getComponents(); // optimized -- do it once!  -jm
 			if( pthings != null )
 			{
-				for( int x = 0; x < pthings.length; x++ )
+				for( Ptg pthing : pthings )
 				{
-					cv.add( pthings[x] );
+					cv.add( pthing );
 				}
 			}
 			else
 			{
-				cv.add( operands[i] );
+				cv.add( operand );
 			}
 		}
 
@@ -235,7 +235,7 @@ public class PtgCalculator
 		}
 		else
 		{ // should be an array
-			String arrStr = ((PtgArray) operand).toString().substring( 1 );
+			String arrStr = operand.toString().substring( 1 );
 			arrStr = arrStr.substring( 0, arrStr.length() - 1 );
 			String[] rows = arrStr.split( ";" );
 			arr = new double[rows.length][];
@@ -299,19 +299,19 @@ public class PtgCalculator
 		}
 
 		FastAddVector v = new FastAddVector();
-		for( int i = 0; i < operands.length; i++ )
+		for( Ptg operand : operands )
 		{
-			Ptg[] pthings = operands[i].getComponents(); // optimized -- do it once!  -jm
+			Ptg[] pthings = operand.getComponents(); // optimized -- do it once!  -jm
 			if( pthings != null )
 			{
-				for( int x = 0; x < pthings.length; x++ )
+				for( Ptg pthing : pthings )
 				{
-					v.add( pthings[x] );
+					v.add( pthing );
 				}
 			}
 			else
 			{
-				v.add( operands[i] );
+				v.add( operand );
 			}
 		}
 		Ptg[] res = new Ptg[v.size()];

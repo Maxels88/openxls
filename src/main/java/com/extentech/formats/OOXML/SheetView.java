@@ -91,11 +91,11 @@ public class SheetView implements OOXMLElement
 					}
 					else if( tnm.equals( "pane" ) )
 					{
-						p = (Pane) Pane.parseOOXML( xpp );
+						p = Pane.parseOOXML( xpp );
 					}
 					else if( tnm.equals( "selection" ) )
 					{
-						selections.add( (Selection) Selection.parseOOXML( xpp ) );
+						selections.add( Selection.parseOOXML( xpp ) );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -126,7 +126,7 @@ public class SheetView implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
+			String key = i.next();
 			String val = (String) attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
@@ -137,9 +137,9 @@ public class SheetView implements OOXMLElement
 		}
 		if( selections.size() > 0 )
 		{
-			for( int j = 0; j < selections.size(); j++ )
+			for( Selection selection : selections )
 			{
-				ooxml.append( ((Selection) selections.get( j )).getOOXML() );
+				ooxml.append( selection.getOOXML() );
 			}
 		}
 		ooxml.append( "</sheetView>" );
@@ -278,8 +278,8 @@ class Pane implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );
@@ -363,8 +363,8 @@ class Selection implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( "/>" );

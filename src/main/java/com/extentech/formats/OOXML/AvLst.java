@@ -107,9 +107,9 @@ public class AvLst implements OOXMLElement
 		ooxml.append( "<a:avLst>" );
 		if( gds != null )
 		{
-			for( int i = 0; i < gds.size(); i++ )
+			for( Object gd : gds )
 			{
-				ooxml.append( ((Gd) gds.get( i )).getOOXML() );
+				ooxml.append( ((Gd) gd).getOOXML() );
 			}
 		}
 		ooxml.append( "</a:avLst>" );

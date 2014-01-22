@@ -100,12 +100,12 @@ public class TwoCellAnchor implements OOXMLElement
 					else if( tnm.equals( "from" ) )
 					{
 						lastTag.push( tnm );
-						f = (From) From.parseOOXML( xpp, lastTag );
+						f = From.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "to" ) )
 					{
 						lastTag.push( tnm );
-						t = (To) To.parseOOXML( xpp, lastTag );
+						t = To.parseOOXML( xpp, lastTag );
 					}
 					else if( tnm.equals( "cxnSp" ) ||
 							tnm.equals( "graphicFrame" ) ||

@@ -140,7 +140,7 @@ public class ChartLine extends GenericChartObject implements ChartObject
 	public void parseOOXML( XmlPullParser xpp, Stack<String> lastTag, ChartFormat cf, WorkBookHandle bk )
 	{
 		this.cf = cf;
-		String endTag = (String) lastTag.peek();
+		String endTag = lastTag.peek();
 		try
 		{
 			int eventType = xpp.getEventType();

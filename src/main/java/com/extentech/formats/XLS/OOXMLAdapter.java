@@ -427,9 +427,9 @@ public class OOXMLAdapter implements OOXMLConstants
 	private boolean hasObject( WorkBookHandle bk, String type )
 	{
 		List externalOOXML = bk.getWorkBook().getOOXMLObjects();
-		for( int i = 0; i < externalOOXML.size(); i++ )
+		for( Object anExternalOOXML : externalOOXML )
 		{
-			String[] s = (String[]) externalOOXML.get( i );
+			String[] s = (String[]) anExternalOOXML;
 			if( (s != null) && (s.length == 3) )
 			{   // id, dir, filename
 				if( s[0].equalsIgnoreCase( type ) )
@@ -452,9 +452,9 @@ public class OOXMLAdapter implements OOXMLConstants
 		if( bk instanceof WorkBookHandle )
 		{
 			List externalOOXML = ((WorkBookHandle) bk).getWorkBook().getOOXMLObjects();
-			for( int i = 0; i < externalOOXML.size(); i++ )
+			for( Object anExternalOOXML : externalOOXML )
 			{
-				String[] s = (String[]) externalOOXML.get( i );
+				String[] s = (String[]) anExternalOOXML;
 				if( (s != null) && (s.length == 3) )
 				{   // id, dir, filename
 					if( s[0].equalsIgnoreCase( "vba" ) || s[0].equalsIgnoreCase( "macro" ) )
@@ -518,11 +518,11 @@ public class OOXMLAdapter implements OOXMLConstants
 	 */
 	protected String getContentType( String type )
 	{
-		for( int i = 0; i < contentTypes.length; i++ )
+		for( String[] contentType : contentTypes )
 		{
-			if( contentTypes[i][0].equalsIgnoreCase( type ) )
+			if( contentType[0].equalsIgnoreCase( type ) )
 			{
-				return contentTypes[i][1];
+				return contentType[1];
 			}
 		}
 		return "UNKNOWN TYPE " + type;
@@ -537,11 +537,11 @@ public class OOXMLAdapter implements OOXMLConstants
 	 */
 	protected String getRelationshipType( String type )
 	{
-		for( int i = 0; i < relsContentTypes.length; i++ )
+		for( String[] relsContentType : relsContentTypes )
 		{
-			if( relsContentTypes[i][0].equalsIgnoreCase( type ) )
+			if( relsContentType[0].equalsIgnoreCase( type ) )
 			{
-				return relsContentTypes[i][1];
+				return relsContentType[1];
 			}
 		}
 		return "UNKNOWN TYPE " + type;
@@ -556,11 +556,11 @@ public class OOXMLAdapter implements OOXMLConstants
 	 */
 	protected static String getRelationshipTypeAbbrev( String type )
 	{
-		for( int i = 0; i < relsContentTypes.length; i++ )
+		for( String[] relsContentType : relsContentTypes )
 		{
-			if( relsContentTypes[i][1].equalsIgnoreCase( type ) )
+			if( relsContentType[1].equalsIgnoreCase( type ) )
 			{
-				return relsContentTypes[i][0];
+				return relsContentType[0];
 			}
 		}
 		return "UNKNOWN TYPE " + type;
@@ -929,9 +929,9 @@ The preceding code points ranges contain the following controls which are only v
 	 */
 	protected static String getFilename( ArrayList contentList, String rId )
 	{
-		for( int j = 0; j < contentList.size(); j++ )
+		for( Object aContentList : contentList )
 		{
-			String[] s = (String[]) contentList.get( j );
+			String[] s = (String[]) aContentList;
 			if( s[2].equals( rId ) )
 			{
 				return s[1];
@@ -961,9 +961,9 @@ The preceding code points ranges contain the following controls which are only v
 		if( f.isDirectory() )
 		{
 			String[] children = f.list();
-			for( int i = 0; i < children.length; i++ )
+			for( String aChildren : children )
 			{
-				boolean success = deleteDir( new File( f, children[i] ) );
+				boolean success = deleteDir( new File( f, aChildren ) );
 				if( !success )
 				{
 					//return false;
@@ -1124,9 +1124,9 @@ class intArray
 		{
 			return true;
 		}
-		for( int i = 0; i < a.length; i++ )
+		for( int anA : a )
 		{
-			if( a[i] != 0 )
+			if( anA != 0 )
 			{
 				return false;
 			}

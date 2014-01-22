@@ -445,7 +445,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		{
 			return (double) RKint;
 		}
-		return (double) Rkdouble;
+		return Rkdouble;
 	}
 
 	@Override
@@ -537,12 +537,12 @@ public final class Rk extends XLSCellRecord implements Mulled
 	{
 		try
 		{
-			this.setRKVal( (double) f );
+			this.setRKVal( f );
 		}
 		catch( Exception x )
 		{
 			Logger.logWarn( "Rk.setDoubleVal() problem.  Fallback to floating point Number." );
-			Rk.convertRkToNumber( this, (double) f );
+			Rk.convertRkToNumber( this, f );
 		}
 	}
 
@@ -696,7 +696,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		if( this.Rkdouble != d )
 		{
 			Logger.logWarn( "Rk.setRKVal() problem.  Fallback to floating point Number." );
-			Rk.convertRkToNumber( this, (double) d );
+			Rk.convertRkToNumber( this, d );
 		}
 	}
 

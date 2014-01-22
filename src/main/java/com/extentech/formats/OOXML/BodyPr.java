@@ -77,7 +77,7 @@ public class BodyPr implements OOXMLElement
 					else if( tnm.equals( "prstTxWarp" ) )
 					{
 						lastTag.push( tnm );
-						txwarp = (PrstTxWarp) PrstTxWarp.parseOOXML( xpp, lastTag );
+						txwarp = PrstTxWarp.parseOOXML( xpp, lastTag );
 					}
 				}
 				else if( eventType == XmlPullParser.END_TAG )
@@ -148,8 +148,8 @@ public class BodyPr implements OOXMLElement
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )
 		{
-			String key = (String) i.next();
-			String val = (String) attrs.get( key );
+			String key = i.next();
+			String val = attrs.get( key );
 			ooxml.append( " " + key + "=\"" + val + "\"" );
 		}
 		ooxml.append( ">" );

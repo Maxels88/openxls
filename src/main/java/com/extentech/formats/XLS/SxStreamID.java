@@ -114,9 +114,9 @@ public class SxStreamID extends XLSRecord implements XLSConstants
 	 */
 	public CellRange getCellRange()
 	{
-		for( int i = 0; i < subRecs.size(); i++ )
+		for( Object subRec : subRecs )
 		{
-			BiffRec br = (BiffRec) subRecs.get( i );
+			BiffRec br = (BiffRec) subRec;
 			if( br.getOpcode() == SXVS )
 			{
 				if( ((SxVS) br).getSourceType() != SxVS.TYPE_SHEET )
@@ -150,9 +150,9 @@ public class SxStreamID extends XLSRecord implements XLSConstants
 	 */
 	public void setCellRange( CellRange cr )
 	{
-		for( int i = 0; i < subRecs.size(); i++ )
+		for( Object subRec : subRecs )
 		{
-			BiffRec br = (BiffRec) subRecs.get( i );
+			BiffRec br = (BiffRec) subRec;
 			if( br.getOpcode() == SXVS )
 			{
 				if( ((SxVS) br).getSourceType() != SxVS.TYPE_SHEET )
@@ -186,9 +186,9 @@ public class SxStreamID extends XLSRecord implements XLSConstants
 	 */
 	public void setCellRange( String cr )
 	{
-		for( int i = 0; i < subRecs.size(); i++ )
+		for( Object subRec : subRecs )
 		{
-			BiffRec br = (BiffRec) subRecs.get( i );
+			BiffRec br = (BiffRec) subRec;
 			if( br.getOpcode() == SXVS )
 			{
 				if( ((SxVS) br).getSourceType() != SxVS.TYPE_SHEET )
