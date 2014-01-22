@@ -302,7 +302,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		msoDrawing.setCoords( im.getCoords() );
 
 		im.setMsgdrawing( msoDrawing );        // 20070924 KSC: link 2 actual msodrawing that describes this image for setting bounds, etc.
-		int insertIndex = -1;
+		int insertIndex;
 		Obj obj = (Obj) Obj.getPrototype();
 		// now add to proper place in stream
 		if( msodg != null )
@@ -580,7 +580,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 
 	public int getIndexOfMsodrawingselection()
 	{
-		BiffRec rec = null;
+		BiffRec rec;
 
 		int size = SheetRecs.size();
 		int foundIndex = -1;
@@ -598,7 +598,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 
 	public int getIndexOfWindow2()
 	{
-		BiffRec rec = null;
+		BiffRec rec;
 		int size = SheetRecs.size();
 		int foundIndex = -1;
 		for( int i = 0; i < size; i++ )
@@ -615,7 +615,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 
 	public int getIndexOfDimensions()
 	{
-		BiffRec rec = null;
+		BiffRec rec;
 		int size = SheetRecs.size();
 		int foundIndex = -1;
 		for( int i = 0; i < size; i++ )
@@ -633,7 +633,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	// Generic getIndexOf - replace specific hardocoded cases ...
 	public int getIndexOf( short opc )
 	{
-		BiffRec rec = null;
+		BiffRec rec;
 
 		int size = SheetRecs.size();
 		int foundIndex = -1;
@@ -656,7 +656,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public BiffRec getSheetRec( short opc )
 	{
-		BiffRec rec = null;
+		BiffRec rec;
 
 		int size = SheetRecs.size();
 		int foundIndex = -1;
@@ -746,7 +746,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			{
 				for( int j = 0; j < lastcol; j++ )
 				{
-					BiffRec c = null;
+					BiffRec c;
 					try
 					{
 						// Look for the cell and output 
@@ -1104,7 +1104,8 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		}
 		else if( rec instanceof Mulblank )
 		{    // KSC: Added
-			removerec = ((Mulblank) rec).removeCell( rec.getColNumber() );
+			Mulblank mulblank = (Mulblank) rec;
+			removerec = mulblank.removeCell( rec.getColNumber() );
 		}
 		if( removerec )
 		{
@@ -1923,7 +1924,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public Array getArrayFormula( String addr )
 	{
-		Array form = null;
+		Array form;
 		for( int i = 0; i < arrayformulas.size(); i++ )
 		{
 			form = (Array) arrayformulas.get( i );
@@ -2409,7 +2410,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{
 			input = StringTool.allTrim( input );
 		}
-		String p = ""; // the format pattern
+		String p; // the format pattern
 		boolean matched = false;
 
 		for( NumberAsStringFormat fmts : NumberAsStringFormat.values() )
@@ -2497,7 +2498,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			BiffRec cx = this.getCell(rc[0],rc[1]);
 			this.removeCell(cx);
 		}catch(CellNotFoundException e){}*/
-		XLSRecord rec = null;
+		XLSRecord rec;
 		if( obj == null )
 		{
 			rec = new Blank();
@@ -2611,7 +2612,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		if( !this.fastCellAdds )
 		{
 
-			Row ro = null;
+			Row ro;
 			ro = rows.get( rc[0] );
 			if( ro == null )
 			{
@@ -3257,7 +3258,8 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	{
 
 		cch = (byte) newname.length();
-		byte[] namebytes = newname.getBytes();
+		byte[] namebytes;
+		newname.getBytes();
 		// if (!ByteTools.isUnicode(namebytes)){
 		if( !ByteTools.isUnicode( newname ) )
 		{
@@ -3309,8 +3311,8 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	public byte[] getSheetBytes() throws IOException
 	{
 		this.setLocalRecs();
-		ObjectOutputStream obs = null;
-		byte[] b = null;
+		ObjectOutputStream obs;
+		byte[] b;
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		obs = new ObjectOutputStream( baos );

@@ -25,7 +25,8 @@ package com.extentech.formats.XLS;
 import com.extentech.ExtenXLS.CellRange;
 import com.extentech.ExtenXLS.ExcelTools;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -50,10 +51,10 @@ import java.util.ArrayList;
 
 public final class Mulblank extends XLSCellRecord /*implements Mul*/
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Mulblank.class );
 	private static final long serialVersionUID = 2707362447402042745L;
 
-	short colFirst, colLast; // the colFirst/ColLast indexes determine
+	private short colFirst, colLast; // the colFirst/ColLast indexes determine
 	byte[] rgixfe;
 
 	public String toString()
@@ -129,8 +130,8 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 	@Override
 	public void init()
 	{
-		Logger.logInfo( "MulBlank: " + System.identityHashCode( this ) );
-		Logger.logInfo( "MulBlank::init()" );
+		log.info( "MulBlank: " + System.identityHashCode( this ) );
+		log.info( "MulBlank::init()" );
 
 		data = getData();
 		super.init();
@@ -138,7 +139,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 		{
 			if( DEBUGLEVEL > -1 )
 			{
-				Logger.logInfo( "no data in MULBLANK" );
+				log.info( "no data in MULBLANK" );
 			}
 		}
 		else
@@ -151,7 +152,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 			col = -1;    // flag that this rec hasn't been referred to one cell
 			colLast = ByteTools.readShort( this.getByteAt( this.reclen - 2 ), this.getByteAt( this.reclen - 1 ) );
 
-			Logger.logInfo( "colFirst: " + colFirst + ", colLast: " + colLast );
+			log.info( "colFirst: " + colFirst + ", colLast: " + colLast );
 			//			Sometimes colFirst & colLast are reversed... WTFM$? -jm
 			if( colLast < colFirst )
 			{
@@ -162,14 +163,14 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 			}
 			if( DEBUGLEVEL > 5 )
 			{
-				Logger.logInfo( "INFO: MULBLANK range: " + colFirst + ":" + colLast );
+				log.info( "INFO: MULBLANK range: " + colFirst + ":" + colLast );
 			}
 			int numblanks = (colLast - colFirst) + 1;
 //			blanks = new ArrayList();
 			if( numblanks < 1 )
 			{
-				Logger.logWarn( "WARNING: could not parse Mulblank record: numblanks reported  as:" + numblanks );
-				//Logger.logInfo((numblanks >> 12)*-1); ha!
+				log.warn( "WARNING: could not parse Mulblank record: numblanks reported  as:" + numblanks );
+				//log.info((numblanks >> 12)*-1); ha!
 				return;
 			}
 			rgixfe = this.getBytesAt( 4, numblanks * 2 );
@@ -207,24 +208,28 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 	 *
 	 * @param c
 	 */
+/*
 	public void setColFirst( int c )
 	{
-		Logger.logInfo( "MulBlank: " + System.identityHashCode( this ) );
-		Logger.logInfo( "Mulblank::setColFirst: " + c );
+		log.info( "MulBlank: " + System.identityHashCode( this ) );
+		log.info( "Mulblank::setColFirst: " + c );
 		colFirst = (short) c;
 	}
+*/
 
 	/**
 	 * sets the last column of the range of blank cells referenced by this Mulblank
 	 *
 	 * @param c
 	 */
+/*
 	public void setColLast( int c )
 	{
-		Logger.logInfo( "MulBlank: " + System.identityHashCode( this ) );
-		Logger.logInfo( "Mulblank::setColLast: " + c );
+		log.info( "MulBlank: " + System.identityHashCode( this ) );
+		log.info( "Mulblank::setColLast: " + c );
 		colLast = (short) c;
 	}
+*/
 
 	/**
 	 * return sthe first column of the range of blank cells referenced by this Mulblank
@@ -302,7 +307,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 			}
 			catch( Exception e )
 			{
-				Logger.logInfo( "initializing Mulblank failed: " + e );
+				log.info( "initializing Mulblank failed: " + e );
 			}
 			col = c;    // the blank to remove
 		}
