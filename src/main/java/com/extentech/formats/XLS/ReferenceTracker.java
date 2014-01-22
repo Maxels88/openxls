@@ -276,7 +276,7 @@ public class ReferenceTracker
 					}
 				}
 			}
-			else if( op == XLSConstants.CONDFMT || op == XLSConstants.AI )
+			else if( (op == XLSConstants.CONDFMT) || (op == XLSConstants.AI) )
 			{    // ignore since these records are not themselves referenced
 			}
 			else if( op == XLSConstants.SHRFMLA )
@@ -410,7 +410,7 @@ public class ReferenceTracker
 		{
 			return ptgRef;
 		}
-		if( ptgRef instanceof PtgAreaErr3d || ptgRef instanceof PtgRefErr3d || ptgRef instanceof PtgRefErr )
+		if( (ptgRef instanceof PtgAreaErr3d) || (ptgRef instanceof PtgRefErr3d) || (ptgRef instanceof PtgRefErr) )
 		{
 			return ptgRef;
 		}
@@ -527,7 +527,7 @@ public class ReferenceTracker
 	 */
 	public void updateInRefTracker( PtgRef pr, XLSRecord parent )
 	{
-		if( pr instanceof PtgRefErr || pr instanceof PtgRefErr3d )
+		if( (pr instanceof PtgRefErr) || (pr instanceof PtgRefErr3d) )
 		{
 			return;
 		}
@@ -612,7 +612,7 @@ public class ReferenceTracker
 
 		String sheetname = GenericPtg.qualifySheetname( thissheet.getSheetName() );
 		TrackedPtgs trackedptgs = (TrackedPtgs) thissheet.getWorkBook().getRefTracker().sheetMap.get( sheetname );
-		if( trackedptgs == null || trackedptgs.size() == 0 )
+		if( (trackedptgs == null) || (trackedptgs.size() == 0) )
 		{
 			return;
 		}
@@ -620,15 +620,15 @@ public class ReferenceTracker
 
 		ptgs = trackedptgs.toArray();
 
-		int i = (shiftamount > 0 ? ptgs.length - 1 : 0);
-		int end = (shiftamount > 0 ? 0 : ptgs.length);
-		int inc = (shiftamount > 0 ? -1 : +1);
+		int i = ((shiftamount > 0) ? (ptgs.length - 1) : 0);
+		int end = ((shiftamount > 0) ? 0 : ptgs.length);
+		int inc = ((shiftamount > 0) ? -1 : +1);
 		boolean done = false;
 		while( !done )
 		{
 			Ptg p = (Ptg) ptgs[i];
 			// skip these
-			if( p instanceof PtgRefErr || p instanceof PtgRefErr3d )  // these shouldn't be in the reference tracker ...
+			if( (p instanceof PtgRefErr) || (p instanceof PtgRefErr3d) )  // these shouldn't be in the reference tracker ...
 			{
 				continue;
 			}
@@ -694,7 +694,7 @@ public class ReferenceTracker
 								}
 								bUpdated = true;
 							}
-							else if( isRange && rc[2] >= start )
+							else if( isRange && (rc[2] >= start) )
 							{ // expand
 								rc[2] += shiftamount;
 								bUpdated = true;
@@ -752,10 +752,10 @@ public class ReferenceTracker
 			{
 				return false;    // if absolute don't shift (except for names and ai/charting refs, which should expand or shift in all cases)
 			}
-			if( (rc[0] + 1) == start && isRange )
+			if( ((rc[0] + 1) == start) && isRange )
 			{ // expand don't shift
 				rc[2] += shiftamount;
-				if( isAi && rc[1] != rc[3] )    // Series in ROWS get shifted, not expanded ...
+				if( isAi && (rc[1] != rc[3]) )    // Series in ROWS get shifted, not expanded ...
 				{
 					rc[0] += shiftamount;
 				}
@@ -770,17 +770,17 @@ public class ReferenceTracker
 				}
 				bUpdated = true;
 			}
-			else if( isRange && (rc[2] + 1) >= start )
+			else if( isRange && ((rc[2] + 1) >= start) )
 			{ // expand
 				rc[2] += shiftamount;
-				if( isAi && rc[1] != rc[3] )    // Series in ROWS get shifted, not expanded ...
+				if( isAi && (rc[1] != rc[3]) )    // Series in ROWS get shifted, not expanded ...
 				{
 					rc[0] += shiftamount;
 				}
 				bUpdated = true;
 			}
 			// SHIFTING EXCEPTION: if the parent formula cell is located ON the shifting row, do not shift 
-			if( bUpdated && iParent == XLSConstants.FORMULA && ptgref.getParentRec().getRowNumber() == start - 1 )
+			if( bUpdated && (iParent == XLSConstants.FORMULA) && (ptgref.getParentRec().getRowNumber() == (start - 1)) )
 			{
 				bUpdated = false;
 			}
@@ -800,7 +800,7 @@ public class ReferenceTracker
 				}
 				bUpdated = true;
 			}
-			else if( isRange && (rc[3] + 1) >= start )
+			else if( isRange && ((rc[3] + 1) >= start) )
 			{
 				rc[3] += shiftamount;
 				bUpdated = true;
@@ -815,7 +815,7 @@ public class ReferenceTracker
 				{
 					rc[0] = XLSConstants.MAXROWS - 1;
 				}
-				if( isRange && rc[2] >= XLSConstants.MAXROWS )
+				if( isRange && (rc[2] >= XLSConstants.MAXROWS) )
 				{
 					rc[2] = XLSConstants.MAXROWS - 1;
 				}
@@ -826,13 +826,13 @@ public class ReferenceTracker
 				{
 					rc[0] = XLSConstants.MAXROWS_BIFF8 - 1;
 				}
-				if( isRange && rc[2] >= XLSConstants.MAXROWS_BIFF8 )
+				if( isRange && (rc[2] >= XLSConstants.MAXROWS_BIFF8) )
 				{
 					rc[2] = XLSConstants.MAXROWS_BIFF8 - 1;
 				}
 			}
 			String newaddr = ExcelTools.formatLocation( rc, ptgref.isRowRel(), ptgref.isColRel() );
-			if( isRange && newaddr.indexOf( ":" ) == -1 ) // handle special case of SHOULD be a range but 1st and last match
+			if( isRange && (newaddr.indexOf( ":" ) == -1) ) // handle special case of SHOULD be a range but 1st and last match
 			{
 				newaddr = newaddr + ":" + newaddr;
 			}
@@ -927,7 +927,7 @@ public class ReferenceTracker
 						}
 						// Adjust Series/Values Rane
 						String newseries = ExcelTools.formatLocation( rc, pr.isRowRel(), pr.isColRel() );
-						if( isRange && newseries.indexOf( ":" ) == -1 ) // handle special case of SHOULD be a range but 1st and last match
+						if( isRange && (newseries.indexOf( ":" ) == -1) ) // handle special case of SHOULD be a range but 1st and last match
 						{
 							newseries = newseries + ":" + newseries;
 						}
@@ -943,7 +943,7 @@ public class ReferenceTracker
 						// Adjust Bubble Range if present
 						Ai bubble = s.getBubbleValueAi();
 						String bubbleRange = "";
-						if( bubble != null && !bubble.getDefinition().equals( "" ) )
+						if( (bubble != null) && !bubble.getDefinition().equals( "" ) )
 						{
 							rc = ExcelTools.getRowColFromString( bubble.getDefinition() );
 							if( rc[0] == rownum )
@@ -1080,7 +1080,7 @@ public class ReferenceTracker
 class TrackedPtgs extends TreeMap
 {
 	private static final long serialVersionUID = 1L;
-	static final long SECONDPTGFACTOR = (((long) XLSRecord.MAXCOLS + (long) XLSRecord.MAXROWS * XLSRecord.MAXCOLS));
+	static final long SECONDPTGFACTOR = (((long) XLSRecord.MAXCOLS + ((long) XLSRecord.MAXROWS * XLSRecord.MAXCOLS)));
 
 	/**
 	 * set the custom Comparitor for tracked Ptgs
@@ -1169,7 +1169,7 @@ class TrackedPtgs extends TreeMap
 		// first see if have tracked ptgs at the test location -- match all regardless of parent rec ...
 		Object key;
 		Map m = Collections.synchronizedMap( this.subMap( getKey( loc, 0 ), getKey( loc + 1, 0 ) ) );        // +1 for max parent
-		if( m != null && m.size() > 0 )
+		if( (m != null) && (m.size() > 0) )
 		{
 			Iterator ii = m.keySet().iterator();
 			while( ii.hasNext() )
@@ -1208,7 +1208,7 @@ class TrackedPtgs extends TreeMap
 					long testkey= ((long[])keys[i])[0];*/
 					double firstkey = testkey / SECONDPTGFACTOR;
 					double secondkey = (testkey % SECONDPTGFACTOR);
-					if( (long) firstkey <= (long) loc && (long) secondkey >= (long) loc )
+					if( ((long) firstkey <= (long) loc) && ((long) secondkey >= (long) loc) )
 					{
 						int col0 = (int) firstkey % XLSRecord.MAXCOLS;
 						int col1 = (int) secondkey % XLSRecord.MAXCOLS;

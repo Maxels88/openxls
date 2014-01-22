@@ -114,9 +114,9 @@ public class Text implements OOXMLElement
 		            	 } 
 		            	 */
 						eventType = xpp.next();
-						while( eventType != XmlPullParser.END_DOCUMENT &&
-								eventType != XmlPullParser.END_TAG &&
-								eventType != XmlPullParser.TEXT )
+						while( (eventType != XmlPullParser.END_DOCUMENT) &&
+								(eventType != XmlPullParser.END_TAG) &&
+								(eventType != XmlPullParser.TEXT) )
 						{
 							eventType = xpp.next();
 						}
@@ -126,7 +126,7 @@ public class Text implements OOXMLElement
 						}
 					}
 				}
-				else if( eventType == XmlPullParser.END_TAG && xpp.getName().equals( "text" ) )
+				else if( (eventType == XmlPullParser.END_TAG) && xpp.getName().equals( "text" ) )
 				{
 					str = Sst.createUnicodeString( s,
 					                               formattingRuns,
@@ -166,7 +166,7 @@ public class Text implements OOXMLElement
 			ArrayList runs = str.getFormattingRuns();
 			if( runs == null )
 			{    // no intra-string formatting
-				if( s.indexOf( " " ) == 0 || s.lastIndexOf( " " ) == s.length() - 1 )
+				if( (s.indexOf( " " ) == 0) || (s.lastIndexOf( " " ) == (s.length() - 1)) )
 				{
 					ooxml.append( "<t xml:space=\"preserve\">" + s + "</t>" );
 				}

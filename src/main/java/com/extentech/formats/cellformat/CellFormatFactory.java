@@ -34,7 +34,7 @@ public class CellFormatFactory
 
 	public static CellFormat fromPatternString( String pattern )
 	{
-		if( null == pattern || "".equals( pattern ) || "General".equalsIgnoreCase( pattern ) )
+		if( (null == pattern) || "".equals( pattern ) || "General".equalsIgnoreCase( pattern ) )
 		{
 			return new GeneralCellFormat();
 		}
@@ -60,7 +60,7 @@ public class CellFormatFactory
 		String positive, negative, zero, string;
 		positive = StringTool.convertPatternFromExcelToStringFormatter( pats[0], false );
 
-		negative = StringTool.convertPatternFromExcelToStringFormatter( pats[pats.length > 1 ? 1 : 0], true );
+		negative = StringTool.convertPatternFromExcelToStringFormatter( pats[((pats.length > 1) ? 1 : 0)], true );
 
 		if( pats.length > 2 )
 		{

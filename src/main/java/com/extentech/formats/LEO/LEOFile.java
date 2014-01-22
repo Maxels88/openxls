@@ -271,7 +271,7 @@ public class LEOFile implements Serializable
 		{
 			directories.initDirectories( bigBlocks, FAT );
 // KSC: TESTING: XLS-97            
-			if( DEBUG || DEBUGLEVEL > 200 )
+			if( DEBUG || (DEBUGLEVEL > 200) )
 			{
 				directories.DEBUG();
 			}
@@ -406,7 +406,7 @@ public class LEOFile implements Serializable
 		int nFAT = storageTotal * 4;
 		nFAT /= BIGBLOCK.SIZE;
 		float realnum = ((float) (storageTotal * 4) / BIGBLOCK.SIZE);
-		if( (realnum - nFAT) > 0 || (nFAT > MAXDIFATLEN) )
+		if( ((realnum - nFAT) > 0) || (nFAT > MAXDIFATLEN) )
 		{
 			nFAT++;
 		}
@@ -514,7 +514,7 @@ public class LEOFile implements Serializable
 		while( e.hasMoreElements() )
 		{
 			Storage thisStore = (Storage) e.nextElement();
-			if( thisStore != book && thisStore != rootStore )
+			if( (thisStore != book) && (thisStore != rootStore) )
 			{ // && thisStore!=encryptionInfo?
 				storages.add( thisStore );
 				if( thisStore.getBlockType() == Block.SMALL )
@@ -630,7 +630,7 @@ public class LEOFile implements Serializable
 				if( blks != null )
 				{
 					nstr.setStartBlock( blockpos );    // start of block chain
-					for( int i = 0; i < blks.length - 1; i++ )
+					for( int i = 0; i < (blks.length - 1); i++ )
 					{    // -1 to trap last block with special end-of-block flag (-2)
 						FAT[blockpos++] = blockpos;    // start of this store's blocks as indexed in block index
 					}
@@ -647,7 +647,7 @@ public class LEOFile implements Serializable
 		// handle rootstorage blocks = data of all other directory storages
 		rootStore.setBytes( directories.rebuildRootStore() );    // now rebuild rootstore from all other storages
 		rootstart = blockpos;
-		for( int i = 0; i < rootStore.getBlockVect().size() - 1; i++ )
+		for( int i = 0; i < (rootStore.getBlockVect().size() - 1); i++ )
 		{
 			FAT[blockpos++] = blockpos;
 		}
@@ -750,7 +750,7 @@ public class LEOFile implements Serializable
 				int len = xbytes.length - i;
 
 				// handle eob
-				if( len > BIGBLOCK.SIZE - 4 )
+				if( len > (BIGBLOCK.SIZE - 4) )
 				{
 					len = BIGBLOCK.SIZE - 4;
 				}
@@ -759,7 +759,7 @@ public class LEOFile implements Serializable
 
 				// handle eob
 				counter++;
-				if( len == BIGBLOCK.SIZE - 4 )
+				if( len == (BIGBLOCK.SIZE - 4) )
 				{
 					bl.putInt( xbbpos + counter );
 				}
@@ -810,7 +810,7 @@ public class LEOFile implements Serializable
 				//since these are static blocks we can copy original data
 				thisStore.setStartBlock( z );    // set start position of miniFATs as may have changed
 				// keep length as that hasn't changed
-				for( int j = 0; j < thisStore.getBlockVect().size() - 1; j++ )
+				for( int j = 0; j < (thisStore.getBlockVect().size() - 1); j++ )
 				{
 					sbidx[z++] = z;
 				}

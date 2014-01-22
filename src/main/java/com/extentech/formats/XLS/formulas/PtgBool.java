@@ -68,7 +68,7 @@ public class PtgBool extends GenericPtg implements Ptg
 	@Override
 	public Object getValue()
 	{
-		Boolean b = Boolean.valueOf( val );
+		Boolean b = val;
 		return b;
 	}
 

@@ -84,12 +84,12 @@ public class MarkerFormat extends GenericChartObject implements ChartObject
 	{
 		super.init();
 		byte[] data = this.getData();
-		rgbFore = new java.awt.Color( (data[0] < 0 ? 255 + data[0] : data[0]),
-		                              (data[1] < 0 ? 255 + data[1] : data[1]),
-		                              (data[2] < 0 ? 255 + data[2] : data[2]) );
-		rgbBack = new java.awt.Color( (data[4] < 0 ? 255 + data[4] : data[4]),
-		                              (data[5] < 0 ? 255 + data[5] : data[5]),
-		                              (data[6] < 0 ? 255 + data[6] : data[6]) );
+		rgbFore = new java.awt.Color( ((data[0] < 0) ? (255 + data[0]) : data[0]),
+		                              ((data[1] < 0) ? (255 + data[1]) : data[1]),
+		                              ((data[2] < 0) ? (255 + data[2]) : data[2]) );
+		rgbBack = new java.awt.Color( ((data[4] < 0) ? (255 + data[4]) : data[4]),
+		                              ((data[5] < 0) ? (255 + data[5]) : data[5]),
+		                              ((data[6] < 0) ? (255 + data[6]) : data[6]) );
 		imk = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
 		grbit = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );
 		icvFore = ByteTools.readShort( this.getByteAt( 12 ), this.getByteAt( 13 ) );

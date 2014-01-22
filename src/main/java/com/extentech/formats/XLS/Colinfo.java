@@ -271,7 +271,7 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 		for( int i = 0; i < this.colFirst; i++ )
 		{
 			Colinfo r = this.getSheet().getColInfo( i );
-			if( r != null && r.getOutlineLevel() == this.getOutlineLevel() )
+			if( (r != null) && (r.getOutlineLevel() == this.getOutlineLevel()) )
 			{
 				r.setHidden( b );
 			}

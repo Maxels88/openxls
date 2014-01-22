@@ -211,8 +211,8 @@ public final class Rk extends XLSCellRecord implements Mulled
 		// num = num >>> 1;
 
 		// check what the RK type bits are
-		int bitset = l & 1 << 0;
-		int bitset2 = l & 1 << 1;
+		int bitset = l & (1 << 0);
+		int bitset2 = l & (1 << 1);
 		// add them to get the type
 		rkType = bitset + bitset2;
 		double d = 1.0;
@@ -365,8 +365,8 @@ public final class Rk extends XLSCellRecord implements Mulled
 		num = ByteTools.readInt( num2, num1 );
 
 		// check what the RK type bits are
-		int bitset = num & 1 << 0;
-		int bitset2 = num & 1 << 1;
+		int bitset = num & (1 << 0);
+		int bitset2 = num & (1 << 1);
 		// add them to get the type
 		int rkType = bitset + bitset2;
 
@@ -612,7 +612,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		}
 		// Can d be represented by a 30 bit integer? RK Type = 2 (RK_INT)
 		// ORIGINAL -- else if ((l>>>30) ==0 && ((d%1)==0)){
-		else if( ((l << 2) >>> 30) == 0 && ((d % 1) == 0) )
+		else if( (((l << 2) >>> 30) == 0) && ((d % 1) == 0) )
 		{
 			long lo = (long) d;
 			lo = (lo << 2);
@@ -651,7 +651,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 			rkbytes[3] = doublebytes[4];
 			rkbytes[4] = RK_INT_100;
 		}
-		if( rkbytes[4] != -1 && d != Rk.parseRkNumber( rkbytes ) )    // if it was processed as an RK, ensure results are accurate
+		if( (rkbytes[4] != -1) && (d != Rk.parseRkNumber( rkbytes )) )    // if it was processed as an RK, ensure results are accurate
 		{
 			throw new RuntimeException( d + " could not be translated to Rk value" );
 		}

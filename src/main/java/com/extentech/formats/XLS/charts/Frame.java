@@ -223,8 +223,8 @@ public class Frame extends GenericChartObject implements ChartObject
 			lineSVG = lf.getSVG();
 		}
 
-		float x = coords[0] - coords[2] / 2;    // apparently coords are center-point; adjust
-		float y = coords[1] - coords[3] / 2;
+		float x = coords[0] - (coords[2] / 2);    // apparently coords are center-point; adjust
+		float y = coords[1] - (coords[3] / 2);
 		svg.append( "<rect x='" + x + "' y='" + y + "' width='" + coords[2] + "' height='" + coords[3] +
 				            "' fill='" + bgclr + "' fill-opacity='1' " + lineSVG + "/>\r\n" );
 

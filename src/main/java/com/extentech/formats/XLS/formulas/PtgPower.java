@@ -96,7 +96,7 @@ public class PtgPower extends GenericPtg implements Ptg
 			{
 				//double[] dub = super.getValuesFromPtgs(form);
 				// there should always be only two ptg's in this, error if not.
-				if( o == null || o.length != 2 )
+				if( (o == null) || (o.length != 2) )
 				{
 					Logger.logWarn( "calculating formula failed, wrong number of values in PtgPower" );
 					return null;

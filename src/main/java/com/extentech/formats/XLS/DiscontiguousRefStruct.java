@@ -313,7 +313,7 @@ public class DiscontiguousRefStruct implements Serializable
 		public SqRef( String range, XLSRecord parentRec )
 		{
 			// add handling for different ref types, for now utilize a PtgArea
-			if( range != null && !range.equals( "" ) )
+			if( (range != null) && !range.equals( "" ) )
 			{
 				myPtg = new PtgArea( range, parentRec );
 				myPtg.addToRefTracker();
@@ -418,7 +418,7 @@ public class DiscontiguousRefStruct implements Serializable
 class refPtgs extends TreeMap implements Serializable
 {
 	private static final long serialVersionUID = -7923448634000437926L;
-	static final long SECONDPTGFACTOR = (((long) XLSRecord.MAXCOLS + (long) XLSRecord.MAXROWS * XLSRecord.MAXCOLS));
+	static final long SECONDPTGFACTOR = (((long) XLSRecord.MAXCOLS + ((long) XLSRecord.MAXROWS * XLSRecord.MAXCOLS)));
 
 	/**
 	 * set the custom Comparitor for tracked Ptgs
@@ -499,7 +499,7 @@ class refPtgs extends TreeMap implements Serializable
 	public boolean add( String range, XLSRecord parentRec )
 	{
 		// add handling for different ref types, for now utilize a PtgArea
-		if( range != null && !range.equals( "" ) )
+		if( (range != null) && !range.equals( "" ) )
 		{
 			PtgArea pa = new PtgArea( range, parentRec );
 			pa.addToRefTracker();
@@ -526,7 +526,7 @@ class refPtgs extends TreeMap implements Serializable
 		long loc = PtgRef.getHashCode( rc[0], rc[1] );    // get location in hashcode notation
 		Map m = this.subMap( getKey( loc, 0 ), getKey( loc + 1, 0 ) );    // +1 for max parent
 		Object key;
-		if( m != null && m.size() > 0 )
+		if( (m != null) && (m.size() > 0) )
 		{
 			Iterator ii = m.keySet().iterator();
 			while( ii.hasNext() )
@@ -555,7 +555,7 @@ class refPtgs extends TreeMap implements Serializable
 				long testkey = ((long[]) key)[0];
 				double firstkey = testkey / SECONDPTGFACTOR;
 				double secondkey = (testkey % SECONDPTGFACTOR);
-				if( (long) firstkey <= (long) loc && (long) secondkey >= (long) loc )
+				if( ((long) firstkey <= (long) loc) && ((long) secondkey >= (long) loc) )
 				{
 					int col0 = (int) firstkey % XLSRecord.MAXCOLS;
 					int col1 = (int) secondkey % XLSRecord.MAXCOLS;

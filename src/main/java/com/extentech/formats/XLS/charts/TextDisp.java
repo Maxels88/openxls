@@ -146,9 +146,9 @@ public class TextDisp extends GenericChartObject implements ChartObject
 		at = data[0];
 		vat = data[1];
 		wBkgMode = ByteTools.readShort( data[2], data[3] );
-		rgbText = new java.awt.Color( (data[4] < 0 ? 255 + data[4] : data[4]),
-		                              (data[5] < 0 ? 255 + data[5] : data[5]),
-		                              (data[6] < 0 ? 255 + data[6] : data[6]) );
+		rgbText = new java.awt.Color( ((data[4] < 0) ? (255 + data[4]) : data[4]),
+		                              ((data[5] < 0) ? (255 + data[5]) : data[5]),
+		                              ((data[6] < 0) ? (255 + data[6]) : data[6]) );
 //		rgbText= ByteTools.readInt(this.getBytesAt(4, 4));
 		x = ByteTools.readInt( this.getBytesAt( 8, 4 ) );
 		y = ByteTools.readInt( this.getBytesAt( 12, 4 ) );
@@ -680,7 +680,7 @@ public class TextDisp extends GenericChartObject implements ChartObject
 		{
 			fh = (float) fx.getFontHeightInPoints();
 		}
-		float x = (float) (chartMetrics.get( "x" ) + chartMetrics.get( "w" ) / 2);
+		float x = (float) (chartMetrics.get( "x" ) + (chartMetrics.get( "w" ) / 2));
 		float y = (float) (chartMetrics.get( "TITLEOFFSET" ).floatValue() + fh) / 2;
 		Frame f = (Frame) Chart.findRec( this.chartArr, Frame.class );
 		if( f != null )

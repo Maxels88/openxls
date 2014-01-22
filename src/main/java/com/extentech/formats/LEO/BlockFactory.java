@@ -104,7 +104,7 @@ public class BlockFactory
 
 			size = SIZE;
 			// make simpler:
-			if( blen - pos < size )
+			if( (blen - pos) < size )
 			{
 				size = (blen - pos);
 			}
@@ -165,7 +165,7 @@ public class BlockFactory
 */
 			size = SIZE;
 			// make it simpler:
-			if( bbuf.length - pos < size )
+			if( (bbuf.length - pos) < size )
 			{
 				size = (bbuf.length - pos);    // account for leftovers (Block padding)
 			}

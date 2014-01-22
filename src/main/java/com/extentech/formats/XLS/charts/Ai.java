@@ -686,7 +686,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 		catch( Exception e )
 		{
 		}
-		if( z == -1 && newLoc.equals( "" ) )
+		if( (z == -1) && newLoc.equals( "" ) )
 		{// no reference -- happens on legends, category ai's ...
 			this.getData()[1] = 1;    // text reference rather than worksheet reference
 			return false;

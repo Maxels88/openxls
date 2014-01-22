@@ -150,7 +150,7 @@ public class Fill implements OOXMLElement
 		{
 			return rgbcolor;
 		}
-		if( rgbcolor.indexOf( "FF" ) == 0 && rgbcolor.length() == 8 )
+		if( (rgbcolor.indexOf( "FF" ) == 0) && (rgbcolor.length() == 8) )
 		{
 			return "#" + rgbcolor.substring( 2, rgbcolor.length() );
 		}
@@ -171,7 +171,7 @@ public class Fill implements OOXMLElement
 		{
 			return "FF" + rgbcolor.substring( 1, rgbcolor.length() );
 		}
-		if( rgbcolor.indexOf( "FF" ) == 0 && rgbcolor.length() == 8 )
+		if( (rgbcolor.indexOf( "FF" ) == 0) && (rgbcolor.length() == 8) )
 		{
 			return rgbcolor;
 		}
@@ -237,12 +237,12 @@ public class Fill implements OOXMLElement
 			// storage
 		}
 		int fg = xf.getForegroundColor();
-		if( fg > -1 && fg != 64 )
+		if( (fg > -1) && (fg != 64) )
 		{
 			ooxml.append( "<fgColor rgb=\"" + FormatHandle.colorToHexString( FormatHandle.COLORTABLE[fg] ).substring( 1 ) + "\"/>" );
 		}
 		int bg = xf.getBackgroundColor();
-		if( bg > -1 && bg != 64 )
+		if( (bg > -1) && (bg != 64) )
 		{
 			ooxml.append( "<bgColor rgb=\"" + FormatHandle.colorToHexString( FormatHandle.COLORTABLE[bg] ).substring( 1 ) + "\"/>" );
 		}
@@ -269,12 +269,12 @@ public class Fill implements OOXMLElement
 		{
 			ooxml.append( "<patternFill>" );
 		}
-		if( fg > -1 && fg != 64 )
+		if( (fg > -1) && (fg != 64) )
 		{
 			ooxml.append( "<fgColor rgb=\"" + FormatHandle.colorToHexString( FormatHandle.COLORTABLE[fg] ).substring( 1 ) + "\"/>" );
 			ooxml.append( "\r\n" );
 		}
-		if( bg > -1 && bg != 64 )
+		if( (bg > -1) && (bg != 64) )
 		{
 			ooxml.append( "<bgColor rgb=\"" + FormatHandle.colorToHexString( FormatHandle.COLORTABLE[bg] ).substring( 1 ) + "\"/>" );
 			ooxml.append( "\r\n" );
@@ -506,13 +506,13 @@ class PatternFill implements OOXMLElement
 	public PatternFill( String patternType, int fg, int bg )
 	{
 		this.patternType = patternType;
-		if( fg > -1 && fg != 64 )
+		if( (fg > -1) && (fg != 64) )
 		{
 			HashMap<String, String> attrs = new HashMap<String, String>();
 			attrs.put( "rgb", "FF" + FormatHandle.colorToHexString( FormatHandle.COLORTABLE[fg] ).substring( 1 ) );
 			this.fgColor = new FgColor( attrs );
 		}
-		if( bg > -1 && bg != 65 )
+		if( (bg > -1) && (bg != 65) )
 		{
 			HashMap<String, String> attrs = new HashMap<String, String>();
 			attrs.put( "rgb", "FF" + FormatHandle.colorToHexString( FormatHandle.COLORTABLE[bg] ).substring( 1 ) );
@@ -523,7 +523,7 @@ class PatternFill implements OOXMLElement
 	public PatternFill( String patternType, int fg, String fgCustom, int bg, String bgCustom )
 	{
 		this.patternType = patternType;
-		if( fg > 0 || fgCustom != null )
+		if( (fg > 0) || (fgCustom != null) )
 		{ // 64= default fg color
 			HashMap<String, String> attrs = new HashMap<String, String>();
 			if( fgCustom == null )
@@ -536,7 +536,7 @@ class PatternFill implements OOXMLElement
 			}
 			this.fgColor = new FgColor( attrs );
 		}
-		if( bg > -1 || bgCustom != null )
+		if( (bg > -1) || (bgCustom != null) )
 		{ // 65= default bg color
 			HashMap<String, String> attrs = new HashMap<String, String>();
 			if( bgCustom == null )
@@ -791,11 +791,11 @@ class PatternFill implements OOXMLElement
 	public static String translateIndexedFillPattern( int pattern )
 	{
 		String newPattern = null;
-		if( pattern == OOXMLConstants.patternFill.length + 1 )// special code
+		if( pattern == (OOXMLConstants.patternFill.length + 1) )// special code
 		{
 			newPattern = null;
 		}
-		else if( pattern >= 0 && pattern < OOXMLConstants.patternFill.length )
+		else if( (pattern >= 0) && (pattern < OOXMLConstants.patternFill.length) )
 		{
 			newPattern = OOXMLConstants.patternFill[pattern];
 		}
@@ -857,7 +857,7 @@ class PatternFill implements OOXMLElement
 	 */
 	public void setFgColor( int t, String colorString )
 	{
-		if( t > 0 || colorString != null )
+		if( (t > 0) || (colorString != null) )
 		{ // 64= default fg color
 			HashMap<String, String> attrs = new HashMap<String, String>();
 			if( colorString == null )
@@ -922,7 +922,7 @@ class PatternFill implements OOXMLElement
 	 */
 	public void setBgColor( int t, String colorString )
 	{
-		if( t > 0 || colorString != null )
+		if( (t > 0) || (colorString != null) )
 		{    // 65= default bg color
 			HashMap<String, String> attrs = new HashMap<String, String>();
 			if( colorString == null )

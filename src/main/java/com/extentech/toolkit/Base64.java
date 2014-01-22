@@ -316,7 +316,7 @@ public class Base64
 		// significant bytes passed in the array.
 		// We have to shift left 24 in order to flush out the 1's that appear
 		// when Java treats a value as negative that is cast from a byte to an int.
-		int inBuff = (numSigBytes > 0 ? ((source[srcOffset] << 24) >>> 8) : 0) | (numSigBytes > 1 ? ((source[srcOffset + 1] << 24) >>> 16) : 0) | (numSigBytes > 2 ? ((source[srcOffset + 2] << 24) >>> 24) : 0);
+		int inBuff = ((numSigBytes > 0) ? ((source[srcOffset] << 24) >>> 8) : 0) | ((numSigBytes > 1) ? ((source[srcOffset + 1] << 24) >>> 16) : 0) | ((numSigBytes > 2) ? ((source[srcOffset + 2] << 24) >>> 24) : 0);
 
 		switch( numSigBytes )
 		{
@@ -600,9 +600,9 @@ public class Base64
 			// Convert option to boolean in way that code likes it.
 			boolean breakLines = dontBreakLines == 0;
 
-			int len43 = len * 4 / 3;
+			int len43 = (len * 4) / 3;
 			byte[] outBuff = new byte[(len43)                      // Main 4:3
-					+ ((len % 3) > 0 ? 4 : 0)      // Account for padding
+					+ (((len % 3) > 0) ? 4 : 0)      // Account for padding
 					+ (breakLines ? (len43 / MAX_LINE_LENGTH) : 0)]; // New lines
 			int d = 0;
 			int e = 0;
@@ -613,7 +613,7 @@ public class Base64
 				encode3to4( source, d + off, 3, outBuff, e );
 
 				lineLength += 4;
-				if( breakLines && lineLength == MAX_LINE_LENGTH )
+				if( breakLines && (lineLength == MAX_LINE_LENGTH) )
 				{
 					outBuff[e + 4] = NEW_LINE;
 					e++;
@@ -736,7 +736,7 @@ public class Base64
 	 */
 	public static byte[] decode( byte[] source, int off, int len )
 	{
-		int len34 = len * 3 / 4;
+		int len34 = (len * 3) / 4;
 		byte[] outBuff = new byte[len34]; // Upper limit on size of output
 		int outBuffPosn = 0;
 
@@ -745,7 +745,7 @@ public class Base64
 		int i = 0;
 		byte sbiCrop = 0;
 		byte sbiDecode = 0;
-		for( i = off; i < off + len; i++ )
+		for( i = off; i < (off + len); i++ )
 		{
 			sbiCrop = (byte) (source[i] & 0x7f); // Only the low seven bits
 			sbiDecode = DECODABET[sbiCrop];
@@ -807,7 +807,7 @@ public class Base64
 
 		// Check to see if it's gzip-compressed
 		// GZIP Magic Two-Byte Number: 0x8b1f (35615)
-		if( bytes != null && bytes.length >= 4 )
+		if( (bytes != null) && (bytes.length >= 4) )
 		{
 
 			int head = ((int) bytes[0] & 0xff) | ((bytes[1] << 8) & 0xff00);
@@ -1230,7 +1230,7 @@ public class Base64
 						do
 						{
 							b = in.read();
-						} while( b >= 0 && DECODABET[b & 0x7f] <= WHITE_SPACE_ENC );
+						} while( (b >= 0) && (DECODABET[b & 0x7f] <= WHITE_SPACE_ENC) );
 
 						if( b < 0 )
 						{
@@ -1267,7 +1267,7 @@ public class Base64
 					return -1;
 				}
 
-				if( encode && breakLines && lineLength >= MAX_LINE_LENGTH )
+				if( encode && breakLines && (lineLength >= MAX_LINE_LENGTH) )
 				{
 					lineLength = 0;
 					return '\n';
@@ -1436,7 +1436,7 @@ public class Base64
 					out.write( encode3to4( b4, buffer, bufferLength ) );
 
 					lineLength += 4;
-					if( breakLines && lineLength >= MAX_LINE_LENGTH )
+					if( breakLines && (lineLength >= MAX_LINE_LENGTH) )
 					{
 						out.write( NEW_LINE );
 						lineLength = 0;

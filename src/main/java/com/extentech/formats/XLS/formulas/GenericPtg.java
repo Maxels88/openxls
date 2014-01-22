@@ -277,7 +277,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 				for( int x = 0; x < numvars; x++ )
 				{
 					out.append( vars[x].getTextString() );
-					if( x + 1 < numvars )
+					if( (x + 1) < numvars )
 					{
 						out.append( this.getString() );
 					}
@@ -294,7 +294,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 			{
 				for( int x = 0; x < vars.length; x++ )
 				{
-					if( !(x == 0 && vars[x] instanceof PtgNameX) )
+					if( !((x == 0) && (vars[x] instanceof PtgNameX)) )
 					{    // KSC: added to skip External name reference for Add-in Formulas
 						String part = vars[x].getTextString();
 						// 20060408 KSC: added quoting in PtgStr.getTextString
@@ -472,20 +472,20 @@ public abstract class GenericPtg implements Ptg, Cloneable
 			try
 			{
 				Float f = (Float) pob;
-				d = new Double( f.doubleValue() );
+				d = f.doubleValue();
 			}
 			catch( ClassCastException e2 )
 			{
 				try
 				{
 					Integer in = (Integer) pob;
-					d = new Double( in.doubleValue() );
+					d = in.doubleValue();
 				}
 				catch( Exception e3 )
 				{
-					if( pob == null || pob.toString().equals( "" ) )
+					if( (pob == null) || pob.toString().equals( "" ) )
 					{
-						d = new Double( 0 );
+						d = (double) 0;
 					}
 					else
 					{
@@ -621,7 +621,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 				{    // it's a single value
 					try
 					{
-						obar[t] = new Double( getDoubleValueFromObject( pval ) );
+						obar[t] = getDoubleValueFromObject( pval );
 					}
 					catch( NumberFormatException e )
 					{
@@ -706,10 +706,10 @@ public abstract class GenericPtg implements Ptg, Cloneable
 		{
 			return ((Double) o).doubleValue();
 		}
-		if( o == null || o.toString().equals( "" ) )
+		if( (o == null) || o.toString().equals( "" ) )
 		{
 			// empty string is interpreted as 0 if show zero values
-			if( parent != null && parent.getSheet().getWindow2().getShowZeroValues() )
+			if( (parent != null) && parent.getSheet().getWindow2().getShowZeroValues() )
 			{
 				return 0.0;
 			}
@@ -878,13 +878,13 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 */
 	public static final String qualifySheetname( String s )
 	{
-		if( s == null || s.equals( "" ) )
+		if( (s == null) || s.equals( "" ) )
 		{
 			return s;
 		}
 		try
 		{
-			if( s.charAt( 0 ) != '\'' && (s.indexOf( ' ' ) > -1 || s.indexOf( '&' ) > -1 || s.indexOf( ',' ) > -1 || s.indexOf( '(' ) > -1) )
+			if( (s.charAt( 0 ) != '\'') && ((s.indexOf( ' ' ) > -1) || (s.indexOf( '&' ) > -1) || (s.indexOf( ',' ) > -1) || (s.indexOf( '(' ) > -1)) )
 			{
 				if( s.indexOf( "'" ) == -1 )    // normal case of no embedded ' s
 				{
@@ -921,12 +921,12 @@ public abstract class GenericPtg implements Ptg, Cloneable
 			}
 			s = "$" + s;
 			i = 1;
-			while( i < s.length() && !Character.isDigit( s.charAt( i++ ) ) )
+			while( (i < s.length()) && !Character.isDigit( s.charAt( i++ ) ) )
 			{
 				;
 			}
 			i--;
-			if( i > 0 && i < s.length() )
+			if( (i > 0) && (i < s.length()) )
 			{
 				s = s.substring( 0, i ) + "$" + s.substring( i );
 			}
@@ -953,10 +953,10 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	 */
 	public int readRow( byte b0, byte b1 )
 	{
-		if( (parent_rec != null && !parent_rec.getWorkBook().getIsExcel2007()) )
+		if( ((parent_rec != null) && !parent_rec.getWorkBook().getIsExcel2007()) )
 		{
 			int rw = com.extentech.toolkit.ByteTools.readInt( b0, b1, (byte) 0, (byte) 0 );
-			if( rw >= MAXROWS_BIFF8 - 1 || rw < 0 || this instanceof PtgRefN )    // PtgRefN's are ALWAYS relative and therefore never over 32xxx
+			if( (rw >= (MAXROWS_BIFF8 - 1)) || (rw < 0) || (this instanceof PtgRefN) )    // PtgRefN's are ALWAYS relative and therefore never over 32xxx
 			{
 				rw = ByteTools.readShort( b0, b1 );
 			}

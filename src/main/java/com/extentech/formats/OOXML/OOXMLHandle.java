@@ -65,7 +65,7 @@ public class OOXMLHandle
 
 			java.io.File fout = new java.io.File( path );
 			File dirs = fout.getParentFile();
-			if( dirs != null && !dirs.exists() )
+			if( (dirs != null) && !dirs.exists() )
 			{
 				dirs.mkdirs();
 			}

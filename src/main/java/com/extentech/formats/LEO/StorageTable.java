@@ -201,7 +201,7 @@ public class StorageTable implements Serializable
 				// also sets miniFAT ... ugly, I know ...
 				miniStream = this.initMiniStream( blockvect,
 				                                  FAT );    // grab the mini stream (short sector container) (if any), indexed by miniFAT
-				if( LEOFile.DEBUG && miniFAT != null )
+				if( LEOFile.DEBUG && (miniFAT != null) )
 				{
 					Logger.logInfo( "miniFAT: " + Arrays.toString( miniFAT ) );
 				}
@@ -346,7 +346,7 @@ public class StorageTable implements Serializable
 	void addStorage( Storage rec, int insertIdx )
 	{
 		String nm = rec.getName();
-		if( directoryHashtable.get( nm ) != null && !nm.equals( "" ) )
+		if( (directoryHashtable.get( nm ) != null) && !nm.equals( "" ) )
 		{
 /*	KSC: with 2012 code changes, this breaks output:
  * 		if (LEOFile.DEBUG)
@@ -410,8 +410,8 @@ public class StorageTable implements Serializable
 		if( LEOFile.DEBUG )
 		{
 			Logger.logInfo( "Initializing Storage: " + name + " Retrieving Data." +
-					                " Size: " + String.valueOf( recsize ) + " type: " + String.valueOf( blocktype ) + " startidx: " + rec.getStartBlock() + (rec
-					.getBlockType() == Block.SMALL ? " MiniFAT" : "") );
+					                " Size: " + String.valueOf( recsize ) + " type: " + String.valueOf( blocktype ) + " startidx: " + rec.getStartBlock() + ((rec
+					.getBlockType() == Block.SMALL) ? " MiniFAT" : "") );
 		}
 		rec.setBlockType( blocktype );
 		if( ("Root Entry").equals( name ) ) // ksc: shouldn't!
@@ -727,7 +727,7 @@ public class StorageTable implements Serializable
 				}
 				BlockByteReader bytes = s.getBlockReader();
 				int len = bytes.getLength();
-				for( int z = 0; z <= len - 4; )
+				for( int z = 0; z <= (len - 4); )
 				{
 					byte[] headerbytes = bytes.getHeaderBytes( z );
 					short opcode = ByteTools.readShort( headerbytes[0], headerbytes[1] );

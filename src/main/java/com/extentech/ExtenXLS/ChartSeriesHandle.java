@@ -173,7 +173,7 @@ public class ChartSeriesHandle
 	 */
 	public void setBubbleRange( String bubbleSizes )
 	{
-		if( bubbleSizes != null && !bubbleSizes.equals( "" ) )
+		if( (bubbleSizes != null) && !bubbleSizes.equals( "" ) )
 		{
 			myseries.getParentChart().setMetricsDirty();
 			Ai ai = myseries.getBubbleValueAi();

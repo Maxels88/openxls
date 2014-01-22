@@ -487,7 +487,7 @@ public final class Shrfmla extends XLSRecord
 				if( ptgcache[i] instanceof PtgRefN )
 				{
 					int[] refrc = ((PtgRefN) ptgcache[i]).getRealRowCol();
-					if( (refrc[0] + frc[0]) == rc[0] && (adjustCol( refrc[1] + frc[1], isExcel2007 )) == rc[1] )
+					if( ((refrc[0] + frc[0]) == rc[0]) && ((adjustCol( refrc[1] + frc[1], isExcel2007 )) == rc[1]) )
 					{
 						return f;
 					}
@@ -499,10 +499,10 @@ public final class Shrfmla extends XLSRecord
 					refrc[2] += frc[1];
 					refrc[1] = adjustCol( refrc[1] + frc[0], isExcel2007 );
 					refrc[3] = adjustCol( refrc[3] + frc[0], isExcel2007 );
-					if( refrc[0] <= rc[0] &&
-							refrc[1] <= rc[1] &&
-							refrc[2] >= rc[0] &&
-							refrc[3] >= rc[1] )
+					if( (refrc[0] <= rc[0]) &&
+							(refrc[1] <= rc[1]) &&
+							(refrc[2] >= rc[0]) &&
+							(refrc[3] >= rc[1]) )
 					{
 						return f;
 					}
@@ -521,7 +521,7 @@ public final class Shrfmla extends XLSRecord
 	 */
 	private int adjustCol( int c, boolean isExcel2007 )
 	{
-		if( c >= MAXCOLS_BIFF8 && !isExcel2007 )
+		if( (c >= MAXCOLS_BIFF8) && !isExcel2007 )
 		{
 			c -= MAXCOLS_BIFF8;
 		}

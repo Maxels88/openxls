@@ -594,7 +594,7 @@ class BorderElement implements OOXMLElement
 		{
 			return 1;
 		}
-		if( st == 6 || st == 8 || st == 0xC )
+		if( (st == 6) || (st == 8) || (st == 0xC) )
 		{
 			return 3;
 		}
@@ -608,7 +608,7 @@ class BorderElement implements OOXMLElement
 	 */
 	public int getBorderStyle()
 	{
-		if( style == null || style.equals( "none" ) )
+		if( (style == null) || style.equals( "none" ) )
 		{
 			return -1;
 		}
@@ -700,7 +700,7 @@ class BorderElement implements OOXMLElement
 	public BorderElement( String style, String val, String borderElement, WorkBookHandle bk )
 	{
 		this.style = style;
-		if( style != null && val != null )
+		if( (style != null) && (val != null) )
 		{
 			this.color = new Color( "color", false, Color.COLORTYPERGB, val, 0.0, (short) 0, bk.getWorkBook().getTheme() );
 		}
@@ -717,7 +717,7 @@ class BorderElement implements OOXMLElement
 	public BorderElement( String style, int val, String borderElement, WorkBookHandle bk )
 	{
 		this.style = style;
-		if( style != null && val != -1 )
+		if( (style != null) && (val != -1) )
 		{
 			this.color = new Color( "color",
 			                        false,

@@ -58,14 +58,14 @@ public class MsofbtDgg extends EscherRecord
 		byte[] spidMaxBytes, cidclBytes, cspSavedBytes, cdgSavedBytes;
 //		spidMaxBytes = ByteTools.cLongToLEBytes(spidMax+numShapes);	20071113 KSC: can't assume this
 		spidMaxBytes = ByteTools.cLongToLEBytes( spidMax );
-		numIdClusters = (int) (spidMax / 1024) + ((spidMax % 1024 != 0) ? 1 : 0);    // 20080903 KSC: # id clusters is based upon # shapes used
+		numIdClusters = (int) (spidMax / 1024) + (((spidMax % 1024) != 0) ? 1 : 0);    // 20080903 KSC: # id clusters is based upon # shapes used
 		cidclBytes = ByteTools.cLongToLEBytes( numIdClusters );
 		cspSavedBytes = ByteTools.cLongToLEBytes( numShapes );
 		cdgSavedBytes = ByteTools.cLongToLEBytes( numDrawings );
 
 		// new code
 		int lenOfFIDCL = numIdClusters - 1;
-		byte[] retBytes = new byte[16 + lenOfFIDCL * 8];            // HOLDS initial info plus FIDCL array of 8 bytes*numIdClusters
+		byte[] retBytes = new byte[16 + (lenOfFIDCL * 8)];            // HOLDS initial info plus FIDCL array of 8 bytes*numIdClusters
 		System.arraycopy( spidMaxBytes, 0, retBytes, 0, 4 );
 		System.arraycopy( cidclBytes, 0, retBytes, 4, 4 );
 		System.arraycopy( cspSavedBytes, 0, retBytes, 8, 4 );

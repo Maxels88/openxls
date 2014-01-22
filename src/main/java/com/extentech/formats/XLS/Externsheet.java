@@ -109,7 +109,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 			return null;
 		}
 
-		if( cLoc > rgs.size() - 1 )
+		if( cLoc > (rgs.size() - 1) )
 		{
 			cLoc = rgs.size() - 1;
 		}
@@ -143,7 +143,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 			catch( WorkSheetNotFoundException e )
 			{
 				// don't error out on the external workbook sheet references
-				if( DEBUGLEVEL > 1 && t != 65535 && !rg.bIsExternal ) // 20080306 KSC: add external check ...
+				if( (DEBUGLEVEL > 1) && (t != 65535) && !rg.bIsExternal ) // 20080306 KSC: add external check ...
 				{
 					Logger.logWarn( "Attempt to access Externsheet reference for sheet failed: " + e );
 				}
@@ -164,7 +164,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		{
 			return null;
 		}
-		if( cLoc > rgs.size() - 1 )
+		if( cLoc > (rgs.size() - 1) )
 		{
 			cLoc = rgs.size() - 1;
 		}
@@ -449,7 +449,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		while( it.hasNext() )
 		{
 			rgxti rg = (rgxti) it.next();
-			if( rg.sheet1num == sheetRef && rg.sheet2num == sheetRef && rg.sbs == sbRef )
+			if( (rg.sheet1num == sheetRef) && (rg.sheet2num == sheetRef) && (rg.sbs == sbRef) )
 			{
 				return (short) i;
 			}
@@ -490,7 +490,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 			int first = rg.sheet1num;   // 20080306 KSC: getSheet1Num();
 			int last = rg.sheet2num;    // getSheet2Num();
 
-			if( first == firstBound && last == lastBound && rg.sb.isGlobalRecord() )
+			if( (first == firstBound) && (last == lastBound) && rg.sb.isGlobalRecord() )
 			{
 				return i;
 			}
@@ -584,7 +584,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		for( int i = 0; i < rgs.size(); i++ )
 		{
 			rgxti thisXti = (rgxti) rgs.elementAt( i );
-			if( thisXti.sheet1num == (short) 0xFFFE && thisXti.sheet2num == (short) 0xFFFE )
+			if( (thisXti.sheet1num == (short) 0xFFFE) && (thisXti.sheet2num == (short) 0xFFFE) )
 			{
 				return i;
 			}
@@ -618,7 +618,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		for( int i = 0; i < rgs.size(); i++ )
 		{
 			rgxti thisXti = (rgxti) rgs.elementAt( i );
-			if( thisXti.sheet1num/*getSheet1Num()*/ == 0xFFFF && thisXti.sheet2num/*getSheet2Num()*/ == 0xFFFF )
+			if( (thisXti.sheet1num == 0xFFFF) && (thisXti.sheet2num == 0xFFFF) )
 			{
 				return i;
 			}

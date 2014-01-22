@@ -173,7 +173,7 @@ public class CellRange implements Serializable
 		createBlanks = create;
 
 		sheet = source.getFirstSheet();
-		if( sheet == null || source.isMultiSheet() )
+		if( (sheet == null) || source.isMultiSheet() )
 		{
 			throw new IllegalArgumentException( "the source range must have a single resolved sheet" );
 		}
@@ -410,7 +410,7 @@ public class CellRange implements Serializable
 	 */
 	public int getWidth()
 	{
-		return lastcellcol - firstcellcol + 1;
+		return (lastcellcol - firstcellcol) + 1;
 	}
 
 	/**
@@ -418,7 +418,7 @@ public class CellRange implements Serializable
 	 */
 	public int getHeight()
 	{
-		return lastcellrow - firstcellrow + 1;
+		return (lastcellrow - firstcellrow) + 1;
 	}
 
 	/**
@@ -629,11 +629,11 @@ public class CellRange implements Serializable
 	public boolean contains( int[] rc )
 	{
 		boolean ret = true;
-		if( rc[0] + 1 < firstcellrow )
+		if( (rc[0] + 1) < firstcellrow )
 		{
 			ret = false;
 		}
-		if( rc[0] + 1 > lastcellrow )
+		if( (rc[0] + 1) > lastcellrow )
 		{
 			ret = false;
 		}
@@ -844,7 +844,7 @@ public class CellRange implements Serializable
 			return true;
 		}*/
 
-		if( this.parent != null && this.parent.getOpcode() == XLSConstants.NAME )
+		if( (this.parent != null) && (this.parent.getOpcode() == XLSConstants.NAME) )
 		{
 			((Name) parent).setLocation( this.range );    // ensure named range expression is updated, as well as any formula references are cleared of cache
 		}
@@ -943,7 +943,7 @@ public class CellRange implements Serializable
 			}
 			else
 			{
-				if( value2 - value1 != incAmount )
+				if( (value2 - value1) != incAmount )
 				{
 					throw new Exception( "Inconsistent values across increment" );
 				}
@@ -1383,7 +1383,7 @@ public class CellRange implements Serializable
 		temprange = s[1];
 		// qualify sheet and reset range - necessary if sheetname with spaces is used in formula parsing 
 		sheetname = GenericPtg.qualifySheetname( s[0] );
-		if( sheetname != null && !sheetname.equals( "" ) )
+		if( (sheetname != null) && !sheetname.equals( "" ) )
 		{
 			if( s[2] == null )
 			{
@@ -1485,15 +1485,15 @@ public class CellRange implements Serializable
 		coords[2] = lastcellrow - 1;
 		coords[3] = lastcellcol;
 		coords[4] = numcells;
-		if( firstcellrow < 0 && lastcellrow < 0 || firstcellcol < 0 || lastcellcol < 0 )
+		if( ((firstcellrow < 0) && (lastcellrow < 0)) || (firstcellcol < 0) || (lastcellcol < 0) )
 		{
 			// not an error if it is a whole column or whole row range
-			if( firstcellcol == -1 && lastcellcol == -1 )
+			if( (firstcellcol == -1) && (lastcellcol == -1) )
 			{
 				// what should numcells be for wholerow?
 				wholeRow = true;
 			}
-			else if( firstcellrow == -1 && lastcellrow == -1 )
+			else if( (firstcellrow == -1) && (lastcellrow == -1) )
 			{
 				// what should numcells be for wholecol?
 				wholeCol = true;
@@ -1696,7 +1696,7 @@ public class CellRange implements Serializable
 	public void initCells( boolean createBlanks )
 	{
 		// If we don't need to do anything, return
-		if( initializeCells == true && (createBlanks ? this.createBlanks : true) )
+		if( (initializeCells == true) && (createBlanks ? this.createBlanks : true) )
 		{
 			return;
 		}
@@ -2079,7 +2079,7 @@ public class CellRange implements Serializable
 		}
 
 		// if increment is set, ensure the value can be incremented
-		if( !Double.isNaN( increment ) && !(copy_contents && value instanceof Number) )
+		if( !Double.isNaN( increment ) && !(copy_contents && (value instanceof Number)) )
 		{
 			throw new IllegalArgumentException( "cannot increment unless filling with a numeric value" );
 		}
@@ -2256,7 +2256,7 @@ public class CellRange implements Serializable
 		}
 		for( int i = 0; i < cells.length; i++ )
 		{
-			if( cells[i].getColNum() >= coords[1] && cells[i].getColNum() <= coords[3] )
+			if( (cells[i].getColNum() >= coords[1]) && (cells[i].getColNum() <= coords[3]) )
 			{
 				al.add( cells[i] );
 			}
@@ -2288,7 +2288,7 @@ public class CellRange implements Serializable
 		}
 		for( int i = 0; i < cells.length; i++ )
 		{
-			if( cells[i].getRowNum() >= coords[0] && cells[i].getRowNum() <= coords[2] )
+			if( (cells[i].getRowNum() >= coords[0]) && (cells[i].getRowNum() <= coords[2]) )
 			{
 				al.add( cells[i] );
 			}

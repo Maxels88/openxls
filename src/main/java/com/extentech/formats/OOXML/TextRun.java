@@ -201,7 +201,7 @@ class r implements OOXMLElement
 	@Override
 	public String getOOXML()
 	{
-		if( t == null || t.equals( "" ) )
+		if( (t == null) || t.equals( "" ) )
 		{
 			return "";
 		}
@@ -394,7 +394,7 @@ class Fld implements OOXMLElement
 	@Override
 	public String getOOXML()
 	{
-		if( t == null || t.equals( "" ) )
+		if( (t == null) || t.equals( "" ) )
 		{
 			return "";
 		}

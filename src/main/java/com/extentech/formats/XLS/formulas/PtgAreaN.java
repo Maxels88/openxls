@@ -117,7 +117,7 @@ public class PtgAreaN extends PtgArea
 		lastPtgN = new PtgRefN( false );
 		lastPtgN.setParentRec( parent_rec );
 		lastPtgN.init( temp2 );
-		if( parent_rec != null && parent_rec instanceof Shrfmla )
+		if( (parent_rec != null) && (parent_rec instanceof Shrfmla) )
 		{
 			// 20060301 KSC: init sets formula row to 1st row for a shared formula; adjust here
 			lastPtgN.setFormulaRow( ((Shrfmla) parent_rec).getLastRow() );
@@ -190,10 +190,10 @@ public class PtgAreaN extends PtgArea
 	@Override
 	public String getLocation()
 	{
-		if( firstPtgN == null || lastPtgN == null )
+		if( (firstPtgN == null) || (lastPtgN == null) )
 		{
 			this.populateVals();
-			if( firstPtgN == null || lastPtgN == null ) // we tried
+			if( (firstPtgN == null) || (lastPtgN == null) ) // we tried
 			{
 				throw new AssertionError( "PtgAreaN.getLocation null ptgs" );
 			}
@@ -282,13 +282,11 @@ public class PtgAreaN extends PtgArea
 			i[3] = lastPtgN.col;
 		}
 
-		if( i[1] >= MAXCOLS_BIFF8 && !this.parent_rec.getWorkBook()
-		                                             .getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
+		if( (i[1] >= MAXCOLS_BIFF8) && !this.parent_rec.getWorkBook().getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
 		{
 			i[1] -= MAXCOLS_BIFF8;
 		}
-		if( i[3] >= MAXCOLS_BIFF8 && !this.parent_rec.getWorkBook()
-		                                             .getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
+		if( (i[3] >= MAXCOLS_BIFF8) && !this.parent_rec.getWorkBook().getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
 		{
 			i[3] -= MAXCOLS_BIFF8;
 		}

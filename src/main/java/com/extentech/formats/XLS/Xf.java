@@ -425,7 +425,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		mystery = (byte) ((Iflag & 0x3800000) >> 25);
 		fls = (short) ((Iflag & 0xFC000000) >> 26); // fill pattern
 
-		if( DEBUGLEVEL > 5 && icvTop > 0 )
+		if( (DEBUGLEVEL > 5) && (icvTop > 0) )
 		{
 			Logger.logInfo( "Xf The cell outline is true" );
 		}
@@ -498,7 +498,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		}
 
 		// check for string patterns that only exist within date records (as far as we know, may need refining)
-		if( myfmt.indexOf( "mm" ) > -1 || myfmt.indexOf( "yy" ) > -1 || myfmt.indexOf( "dd" ) > -1 )
+		if( (myfmt.indexOf( "mm" ) > -1) || (myfmt.indexOf( "yy" ) > -1) || (myfmt.indexOf( "dd" ) > -1) )
 		{
 			return true;
 		}
@@ -1069,9 +1069,9 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	{
 		short borderflag = 0;
 		borderflag = (short) dgLeft;
-		borderflag = (short) ((borderflag | (dgRight) << 4));
-		borderflag = (short) ((borderflag | (dgTop) << 8));
-		borderflag = (short) ((borderflag | (dgBottom) << 12));
+		borderflag = (short) ((borderflag | ((dgRight) << 4)));
+		borderflag = (short) ((borderflag | ((dgTop) << 8)));
+		borderflag = (short) ((borderflag | ((dgBottom) << 12)));
 		//byte[] rkdata = this.getData();
 		byte[] bords = ByteTools.shortToLEBytes( borderflag );
 		this.getData()[10] = bords[0];
@@ -1271,7 +1271,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		setToCellXF();
 		byte[] rkdata = this.getData();
 		byte used_attrib = rkdata[9];
-		byte borderFlag = (byte) ((dgBottom > 0 || dgTop > 0 || dgLeft > 0 || dgRight > 0 || dgDiag > 0) ? 1 : 0);    // if border is set
+		byte borderFlag = (byte) (((dgBottom > 0) || (dgTop > 0) || (dgLeft > 0) || (dgRight > 0) || (dgDiag > 0)) ? 1 : 0);    // if border is set
 		if( borderFlag == 1 )
 		{
 			used_attrib = (byte) (used_attrib | 0x20);    // set bit # 6
@@ -1280,7 +1280,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		{
 			used_attrib = (byte) (used_attrib & 0xDF);    // clear it
 		}
-		if( cIndent != 0 || iReadingOrder != 0 || alc != 0 || alcV != 0 || fWrap != 0 || trot != 0 )    // set bit # 5
+		if( (cIndent != 0) || (iReadingOrder != 0) || (alc != 0) || (alcV != 0) || (fWrap != 0) || (trot != 0) )    // set bit # 5
 		{
 			used_attrib = (byte) (used_attrib | 0x10);
 		}
@@ -1290,31 +1290,31 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		}
 
 		rkdata[9] = used_attrib;
-		fAtrNum = (short) ((used_attrib & 0x04) == 0x04 ? 1 : 0);
-		fAtrFnt = (short) ((used_attrib & 0x08) == 0x08 ? 1 : 0);
-		fAtrAlc = (short) ((used_attrib & 0x10) == 0x10 ? 1 : 0);
-		fAtrBdr = (short) ((used_attrib & 0x20) == 0x20 ? 1 : 0);
-		fAtrPat = (short) ((used_attrib & 0x40) == 0x40 ? 1 : 0);
-		fAtrProt = (short) ((used_attrib & 0x80) == 0x80 ? 1 : 0);
+		fAtrNum = (short) (((used_attrib & 0x04) == 0x04) ? 1 : 0);
+		fAtrFnt = (short) (((used_attrib & 0x08) == 0x08) ? 1 : 0);
+		fAtrAlc = (short) (((used_attrib & 0x10) == 0x10) ? 1 : 0);
+		fAtrBdr = (short) (((used_attrib & 0x20) == 0x20) ? 1 : 0);
+		fAtrPat = (short) (((used_attrib & 0x40) == 0x40) ? 1 : 0);
+		fAtrProt = (short) (((used_attrib & 0x80) == 0x80) ? 1 : 0);
 
 		// must set color flag for borders or Excel will not like [BugTracker 2861]
-		if( dgTop > 0 && icvTop == 0 )
+		if( (dgTop > 0) && (icvTop == 0) )
 		{
 			icvTop = 64;
 		}
-		if( dgBottom > 0 && icvBottom == 0 )
+		if( (dgBottom > 0) && (icvBottom == 0) )
 		{
 			icvBottom = 64;
 		}
-		if( dgRight > 0 && icvRight == 0 )
+		if( (dgRight > 0) && (icvRight == 0) )
 		{
 			icvRight = 64;
 		}
-		if( dgLeft > 0 && icvLeft == 0 )
+		if( (dgLeft > 0) && (icvLeft == 0) )
 		{
 			icvLeft = 64;
 		}
-		if( dgDiag > 0 && icvDiag == 0 )
+		if( (dgDiag > 0) && (icvDiag == 0) )
 		{
 			icvDiag = 64;
 		}
@@ -1330,7 +1330,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		{// must set to cell xf (fStyle==0) as changes will not show [BugTracker 2861]
 			fStyle = 0;
 			byte flag = (byte) fLocked;
-			flag = (byte) ((flag | (fHidden) << 1));
+			flag = (byte) ((flag | ((fHidden) << 1)));
 			this.getData()[4] = flag;
 			this.getData()[5] = 0;   // upper bits are style parent rec index
 		}
@@ -1375,7 +1375,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		byte b = (byte) (this.getData()[8] & 0xF0);
 		b |= (cIndent);    // 1st 4 bits
 		this.getData()[8] = b;
-		if( alc != FormatConstants.ALIGN_LEFT || alc != FormatConstants.ALIGN_RIGHT )    // indent only valid for Left and Right (apparently
+		if( (alc != FormatConstants.ALIGN_LEFT) || (alc != FormatConstants.ALIGN_RIGHT) )    // indent only valid for Left and Right (apparently
 		{
 			setHorizontalAlignment( FormatConstants.ALIGN_LEFT );
 		}

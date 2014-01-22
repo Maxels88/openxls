@@ -144,7 +144,7 @@ public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 				}
 				else
 				{    // unicode
-					byte[] f = this.getBytesAt( pos, ln * 2 - 1 );
+					byte[] f = this.getBytesAt( pos, (ln * 2) - 1 );
 					filename = new String( f, "UTF-16LE" );
 					pos += ln * 2 - 1;
 				}
@@ -244,7 +244,7 @@ public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 		int n = 2;    //4;	// number of encoding chars
 		byte[] f = externalWorkbook.getBytes();
 		int ln = f.length + 1;
-		byte[] dta = new byte[4 + n + ln - 1];
+		byte[] dta = new byte[(4 + n + ln) - 1];
 		System.arraycopy( ByteTools.shortToLEBytes( (short) 0 ), 0, dta, 0, 2 );   // cstab
 		System.arraycopy( ByteTools.shortToLEBytes( (short) ln ), 0, dta, 2, 2 );  // ln
 		int pos = 4;
@@ -304,7 +304,7 @@ public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public String getExternalSheetName( int i )
 	{
-		if( i < 0 || i > tabs.size() - 1 )
+		if( (i < 0) || (i > (tabs.size() - 1)) )
 		{
 			return "#REF";
 		}

@@ -88,7 +88,7 @@ public class PtgPercent extends GenericPtg implements Ptg
 		{
 			//double[] dub = super.getValuesFromPtgs(form);
 			// there should always be only two ptg's in this, error if not.
-			if( o == null || o.length != 1 )
+			if( (o == null) || (o.length != 1) )
 			{
 				// there should always be only one ptg in this, error if not.
 				//if (form.length != 1){

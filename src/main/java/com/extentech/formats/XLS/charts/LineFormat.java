@@ -82,9 +82,9 @@ public class LineFormat extends GenericChartObject implements ChartObject
 	{
 		super.init();
 		byte[] data = this.getData();
-		rgb = new java.awt.Color( (data[0] < 0 ? 255 + data[0] : data[0]),
-		                          (data[1] < 0 ? 255 + data[1] : data[1]),
-		                          (data[2] < 0 ? 255 + data[2] : data[2]) );
+		rgb = new java.awt.Color( ((data[0] < 0) ? (255 + data[0]) : data[0]),
+		                          ((data[1] < 0) ? (255 + data[1]) : data[1]),
+		                          ((data[2] < 0) ? (255 + data[2]) : data[2]) );
 		lnx = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
 		we = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
 		grbit = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
@@ -166,7 +166,7 @@ public class LineFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setLineColor( int clr )
 	{
-		if( clr > -1 && clr < this.getColorTable().length )
+		if( (clr > -1) && (clr < this.getColorTable().length) )
 		{
 			icv = (short) clr;
 			rgb = this.getColorTable()[clr];

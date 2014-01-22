@@ -300,7 +300,7 @@ public class PivotTableDefinition implements OOXMLElement
 							}
 							else if( nm.equalsIgnoreCase( "dataField" ) )
 							{    // Specifies a boolean value that indicates whether this field appears in the data region of the PivotTable.
-								if( v.equals( "1" ) && curAxis == null )
+								if( v.equals( "1" ) && (curAxis == null) )
 								{
 									curAxis = ptview.addPivotFieldToAxis( axisLookup( "axisValues" ), fcount++ );        // DATA axis
 								}
@@ -675,7 +675,7 @@ public class PivotTableDefinition implements OOXMLElement
 							{// Specifies the type of the item. Value of 'default' indicates a grand total as the last row item value
 								// default= data, avg, blank, count, countA, data, grand, max, min, product, stdDev, stdDevP, sum, var, varP
 								type = Enum.valueOf( enumType, "_" + v ).ordinal();
-								if( type != 0 || type != 0xE )
+								if( (type != 0) || (type != 0xE) )
 								{
 //									index++;	stil confused on this ...
 									nLines--;

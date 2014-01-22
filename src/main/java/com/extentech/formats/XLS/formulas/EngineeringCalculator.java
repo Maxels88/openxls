@@ -74,7 +74,7 @@ public class EngineeringCalculator
 		}
 		// must det. manually if binary string is negative because parseInt does not
 		// handle two's complement input!!!
-		boolean bIsNegative = (bString.length() == 10 && bString.substring( 0, 1 ).equalsIgnoreCase( "1" ));
+		boolean bIsNegative = ((bString.length() == 10) && bString.substring( 0, 1 ).equalsIgnoreCase( "1" ));
 
 		int dec = 0;
 		try
@@ -126,7 +126,7 @@ public class EngineeringCalculator
 		}
 		// must det. manually if binary string is negative because parseInt does not
 		// handle two's complement input!!!
-		boolean bIsNegative = (bString.length() == 10 && bString.substring( 0, 1 ).equalsIgnoreCase( "1" ));
+		boolean bIsNegative = ((bString.length() == 10) && bString.substring( 0, 1 ).equalsIgnoreCase( "1" ));
 
 		long dec;
 		String hString;
@@ -193,7 +193,7 @@ public class EngineeringCalculator
 		}
 		// must det. manually if binary string is negative because parseInt does not
 		// handle two's complement input!!!
-		boolean bIsNegative = (bString.length() == 10 && bString.substring( 0, 1 ).equalsIgnoreCase( "1" ));
+		boolean bIsNegative = ((bString.length() == 10) && bString.substring( 0, 1 ).equalsIgnoreCase( "1" ));
 
 		int dec;
 		String oString;
@@ -274,7 +274,7 @@ public class EngineeringCalculator
 
 		if( imaginary != 0 )
 		{
-			complexString += (Math.abs( imaginary ) != 1 ? String.valueOf( imaginary ) : "") + suffix;
+			complexString += ((Math.abs( imaginary ) != 1) ? String.valueOf( imaginary ) : "") + suffix;
 		}
 
 		if( complexString.equals( "" ) )
@@ -661,7 +661,7 @@ public class EngineeringCalculator
 		}
 
 		// DISTANCE conversion
-		if( j == -1 && (i = findUnits( fromUnits, distanceUnits )) >= 0 )
+		if( (j == -1) && ((i = findUnits( fromUnits, distanceUnits )) >= 0) )
 		{
 			j = findUnits( toUnits, distanceUnits );
 			if( j > -1 )
@@ -730,7 +730,7 @@ public class EngineeringCalculator
 		}
 
 		// TIME conversion
-		if( j == -1 && (i = findUnits( fromUnits, timeUnits )) >= 0 )
+		if( (j == -1) && ((i = findUnits( fromUnits, timeUnits )) >= 0) )
 		{
 			j = findUnits( toUnits, timeUnits );
 			if( j > -1 )
@@ -780,7 +780,7 @@ public class EngineeringCalculator
 		}
 
 		// PRESSURE conversion
-		if( j == -1 && (i = findUnits( fromUnits, pressureUnits )) >= 0 )
+		if( (j == -1) && ((i = findUnits( fromUnits, pressureUnits )) >= 0) )
 		{
 			j = findUnits( toUnits, pressureUnits );
 			if( j > -1 )
@@ -818,7 +818,7 @@ public class EngineeringCalculator
 		}
 
 		// FORCE conversion
-		if( j == -1 && (i = findUnits( fromUnits, forceUnits )) >= 0 )
+		if( (j == -1) && ((i = findUnits( fromUnits, forceUnits )) >= 0) )
 		{
 			j = findUnits( toUnits, forceUnits );
 			if( j > -1 )
@@ -856,7 +856,7 @@ public class EngineeringCalculator
 		}
 
 		// ENERGY conversion
-		if( j == -1 && (i = findUnits( fromUnits, energyUnits )) >= 0 )
+		if( (j == -1) && ((i = findUnits( fromUnits, energyUnits )) >= 0) )
 		{
 			j = findUnits( toUnits, energyUnits );
 			if( j > -1 )
@@ -930,7 +930,7 @@ public class EngineeringCalculator
 		}
 
 		// POWER conversion
-		if( j == -1 && (i = findUnits( fromUnits, powerUnits )) >= 0 )
+		if( (j == -1) && ((i = findUnits( fromUnits, powerUnits )) >= 0) )
 		{
 			j = findUnits( toUnits, powerUnits );
 			if( j > -1 )
@@ -962,7 +962,7 @@ public class EngineeringCalculator
 		}
 
 		// MAGNETISM conversion
-		if( j == -1 && (i = findUnits( fromUnits, magnetismUnits )) >= 0 )
+		if( (j == -1) && ((i = findUnits( fromUnits, magnetismUnits )) >= 0) )
 		{
 			j = findUnits( toUnits, magnetismUnits );
 			if( j > -1 )
@@ -994,7 +994,7 @@ public class EngineeringCalculator
 		}
 
 		// TEMPERATURE conversion
-		if( j == -1 && (i = findUnits( fromUnits, temperatureUnits )) >= 0 )
+		if( (j == -1) && ((i = findUnits( fromUnits, temperatureUnits )) >= 0) )
 		{
 			j = findUnits( toUnits, temperatureUnits );
 			if( j > -1 )
@@ -1032,7 +1032,7 @@ public class EngineeringCalculator
 		}
 
 		// LIQUID MEASURE conversion
-		if( j == -1 && (i = findUnits( fromUnits, liquidMeasureUnits )) >= 0 )
+		if( (j == -1) && ((i = findUnits( fromUnits, liquidMeasureUnits )) >= 0) )
 		{
 			j = findUnits( toUnits, liquidMeasureUnits );
 			if( j > -1 )
@@ -1134,7 +1134,7 @@ public class EngineeringCalculator
 			places = operands[1].getIntVal();
 		}
 
-		if( dec < -512 || dec > 511 || places < 0 )
+		if( (dec < -512) || (dec > 511) || (places < 0) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -1181,7 +1181,7 @@ public class EngineeringCalculator
 		{
 			places = operands[1].getIntVal();
 		}
-		if( dec < -549755813888L || dec > 549755813887L || places < 0 )
+		if( (dec < -549755813888L) || (dec > 549755813887L) || (places < 0) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -1228,7 +1228,7 @@ public class EngineeringCalculator
 		{
 			places = operands[1].getIntVal();
 		}
-		if( dec < -536870912L || dec > 536870911L || places < 0 )
+		if( (dec < -536870912L) || (dec > 536870911L) || (places < 0) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -1307,7 +1307,7 @@ public class EngineeringCalculator
 		}
 		t = 1.0 / t;
 		double tt = Math.exp( -x2 ) / Math.sqrt( Math.PI );
-		return (1 - tt * t);
+		return (1 - (tt * t));
 	}
 
 	/**
@@ -1374,7 +1374,7 @@ public class EngineeringCalculator
 				double r = 0;
 				for( int i = 0, n = 0; n < 12; i++, n++ )
 				{
-					double factor = 2.0 * n + 1.0;
+					double factor = (2.0 * n) + 1.0;
 					double z = Math.pow( limit, factor );
 					double zz = (MathFunctionCalculator.factorial( n ) * factor);
 					double zzz = z / zz;
@@ -1662,7 +1662,7 @@ public class EngineeringCalculator
 		{
 			erfo = erf;
 			ak *= -x * x / k;
-			an = ak / (2.0 * k + 1.0);
+			an = ak / ((2.0 * k) + 1.0);
 			erf += an;
 		} while( !hasConverged( erf, erfo, eps, ++k, kmax ) );
 		return TSQPI * erf;
@@ -1734,7 +1734,7 @@ public class EngineeringCalculator
 		};
 	         /*  constant for A&S 7.1.26 */
 		final double p = .3275911;
-		double erf, r = 0, t = 1.0 / (1 + p * x);
+		double erf, r = 0, t = 1.0 / (1 + (p * x));
 		for( int i = 4; i >= 0; i-- )
 		{
 			r = a[i] + r * t;
@@ -1933,7 +1933,7 @@ public class EngineeringCalculator
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
 
-		if( dec < -512 /*0xFFFFFFFE00*/ || dec > 0x1FF || places < 0 )
+		if( (dec < -512) || (dec > 0x1FF) || (places < 0) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -2045,7 +2045,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
-		if( dec < -536870912L /*0xFFE0000000*/ || dec > 0x1FFFFFFF || places < 0 )
+		if( (dec < -536870912L) || (dec > 0x1FFFFFFF) || (places < 0) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -2095,8 +2095,8 @@ public class EngineeringCalculator
 				{
 					c.suffix = complexNumber.substring( i - 1, i );
 					i -= 2;
-					while( i >= 0 && !(complexNumber.substring( i, i + 1 ).equals( "+" ) || complexNumber.substring( i, i + 1 )
-					                                                                                     .equals( "-" )) )
+					while( (i >= 0) && !(complexNumber.substring( i, i + 1 ).equals( "+" ) || complexNumber.substring( i, i + 1 ).equals(
+							"-" )) )
 					{
 						i--;
 					}
@@ -2290,9 +2290,9 @@ public class EngineeringCalculator
 		}
 
 		String congugate;
-		if( c.real != 0 && c.imaginary != 0 )
+		if( (c.real != 0) && (c.imaginary != 0) )
 		{
-			congugate = imGetExcelStr( c.real ) + (c.imaginary < 0 ? "+" : "-") + imGetExcelStr( Math.abs( c.imaginary ) ) + c.suffix;
+			congugate = imGetExcelStr( c.real ) + ((c.imaginary < 0) ? "+" : "-") + imGetExcelStr( Math.abs( c.imaginary ) ) + c.suffix;
 		}
 		else if( c.real == 0 )
 		{
@@ -2390,8 +2390,8 @@ public class EngineeringCalculator
 		}
 
 		double divisor = Math.pow( c2.real, 2 ) + Math.pow( c2.imaginary, 2 );
-		double a = c1.real * c2.real + c1.imaginary * c2.imaginary;
-		double b = c1.imaginary * c2.real - c1.real * c2.imaginary;
+		double a = (c1.real * c2.real) + (c1.imaginary * c2.imaginary);
+		double b = (c1.imaginary * c2.real) - (c1.real * c2.imaginary);
 		double c = a / divisor;
 		double d = b / divisor;
 
@@ -3025,7 +3025,7 @@ public class EngineeringCalculator
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
 
-		if( dec < -512 /*7777777000*/ || dec > 0777 || places < 0 )
+		if( (dec < -512) || (dec > 0777) || (places < 0) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}

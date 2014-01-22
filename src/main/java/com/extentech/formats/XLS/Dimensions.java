@@ -128,8 +128,7 @@ public class Dimensions extends com.extentech.formats.XLS.XLSRecord
 	public void setColLast( int c )
 	{
 		c++;
-		if( c >= MAXCOLS_BIFF8 && // warn about maxcols
-				!this.wkbook.getIsExcel2007() )
+		if( (c >= MAXCOLS_BIFF8) && !this.wkbook.getIsExcel2007() )
 		{
 			Logger.logWarn( "Dimensions.setColLast column: " + c + " is incompatible with pre Excel2007 versions." );
 		}

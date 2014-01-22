@@ -532,7 +532,7 @@ public final class ExpressionParser implements java.io.Serializable
 						System.arraycopy( function, (i), b, 0, ptgLen );
 					}
 					pa.init( b );    //setArrVals(b);	// 20090820 KSC: b represents base record not array values
-					Integer ingr = Integer.valueOf( stack.size() );    // constant value array for PtgArray appears at end of stack see hasArrays below
+					Integer ingr = stack.size();    // constant value array for PtgArray appears at end of stack see hasArrays below
 					arrayLocs.add( ingr );
 					stack.push( pa );
 					break;
@@ -720,7 +720,7 @@ public final class ExpressionParser implements java.io.Serializable
 					pr3.addToRefTracker();
 					stack.push( pr3 );
 					// if an External Link i.e. defined in another workbook, flag formula as such
-					if( pr3.isExternalLink() && p.getOpcode() == XLSConstants.FORMULA )
+					if( pr3.isExternalLink() && (p.getOpcode() == XLSConstants.FORMULA) )
 					{
 						((Formula) p).setIsExternalRef( true );
 					}
@@ -778,7 +778,7 @@ public final class ExpressionParser implements java.io.Serializable
 					PtgFuncVar ptfv = new PtgFuncVar();
 					ptgLen = ptfv.getLength();
 					b = new byte[ptgLen];
-					if( (ptgLen) + (i) <= function.length )
+					if( ((ptgLen) + (i)) <= function.length )
 					{
 						System.arraycopy( function, (i), b, 0, ptgLen );
 					}
@@ -1195,7 +1195,7 @@ public final class ExpressionParser implements java.io.Serializable
 			}
 			i += ptgLen;
 		}
-		if( hasArrays && rec instanceof Formula )
+		if( hasArrays && (rec instanceof Formula) )
 		{    // Array Recs handle extra data differently
 			// array data is appended to end of expression
 			// for each array in the function list,
@@ -1433,7 +1433,7 @@ public final class ExpressionParser implements java.io.Serializable
 					ref.setLocation( lox );
 					ret.add( ref );
 				}
-				else if( part instanceof PtgRefErr || part instanceof PtgAreaErr3d )
+				else if( (part instanceof PtgRefErr) || (part instanceof PtgAreaErr3d) )
 				{
 					ret.add( "#REF!" );
 				}

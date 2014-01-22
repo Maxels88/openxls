@@ -172,7 +172,7 @@ public class BubbleChart extends ChartType
 				{
 					xval = seriesx[j];
 				}
-				double cx = x + xval * xfactor;
+				double cx = x + (xval * xfactor);
 				double cy = (y + h) - (seriesy[j] * yfactor);
 				double r = seriesy[j + nseries] * bfactor;
 //System.out.println("x: " + xval + " val: " + seriesy[j] + " size: " + seriesy[j+nseries]);				
@@ -187,7 +187,7 @@ public class BubbleChart extends ChartType
 				String l = getSVGDataLabels( dls, axisMetrics, seriesy[j + nseries], 0, i, legends, categories[j].toString() );
 				if( l != null )
 				{
-					labels += "<text x='" + (r + 10 + (x) + xval * xfactor) + "' y='" + (((y + h) - (seriesy[j] * yfactor))) + "' " + this.getDataLabelFontSVG() + ">" + l + "</text>\r\n";
+					labels += "<text x='" + (r + 10 + (x) + (xval * xfactor)) + "' y='" + (((y + h) - (seriesy[j] * yfactor))) + "' " + this.getDataLabelFontSVG() + ">" + l + "</text>\r\n";
 				}
 			}
 			// labels after lines and markers  

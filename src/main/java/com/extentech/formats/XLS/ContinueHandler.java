@@ -89,7 +89,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 				Logger.logInfo( "Next OPCODE IS CONTINUE: " + Integer.toHexString( nextOpcode ) );
 			}
 		}
-		if( nextOpcode == CONTINUE && opcode != CONTINUE )
+		if( (nextOpcode == CONTINUE) && (opcode != CONTINUE) )
 		{ // the continued rec
 			if( continued != null )
 			{
@@ -126,7 +126,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 		{ // add to the continued rec
 			splitContRec = rec;
 			rec.init();
-			if( continued == null && lastCont == null )
+			if( (continued == null) && (lastCont == null) )
 			{
 				//This is a use case where a chart is in the middle of an Obj, PLS, or Txo record.  A continue
 				// record appears at the end of the last chart EOF, and needs to remain inorder to not cause corruption
@@ -294,10 +294,10 @@ public class ContinueHandler implements Serializable, XLSConstants
 		if( data.length > 3 )
 		{
 			int id = (((0xFF & (byte) data[3]) << 8) | (0xFF & data[2]));
-			return ((id == MSODrawingConstants.MSOFBTSPCONTAINER ||
-					id == MSODrawingConstants.MSOFBTSOLVERCONTAINER ||
-					id == MSODrawingConstants.MSOFBTSPGRCONTAINER ||
-					id == MSODrawingConstants.MSOFBTCLIENTTEXTBOX));
+			return (((id == MSODrawingConstants.MSOFBTSPCONTAINER) ||
+					(id == MSODrawingConstants.MSOFBTSOLVERCONTAINER) ||
+					(id == MSODrawingConstants.MSOFBTSPGRCONTAINER) ||
+					(id == MSODrawingConstants.MSOFBTCLIENTTEXTBOX)));
 		}
 		return false;
 	}
@@ -340,7 +340,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 				return true;
 			}
 			// handle masked mso's which have continues separately
-			else if( ((Continue) rec).maskedMso != null && (((((Continue) rec).maskedMso.getLength() - 4) > MAXRECLEN)) )
+			else if( (((Continue) rec).maskedMso != null) && ((((Continue) rec).maskedMso.getLength() - 4) > MAXRECLEN) )
 			{
 				((Continue) rec).maskedMso.setOpcode( CONTINUE );    // so can add the correct record to output
 				createBigRecContinues( ((Continue) rec).maskedMso, out, streamer );
@@ -381,7 +381,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 
 		//Logger.logInfo("ContinueHandler creating output continues for: " + rec.toString() + " datalen: " + datalen);
 		// if greater than 8023, we need Continues
-		if( rec instanceof Obj || rec instanceof MSODrawing || rec instanceof MSODrawingGroup )
+		if( (rec instanceof Obj) || (rec instanceof MSODrawing) || (rec instanceof MSODrawingGroup) )
 		{
 			return createObjContinues( rec );
 		}
@@ -665,7 +665,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 		for( int i = 0; i < numconts; i++ )
 		{
 			// if this is the last Continue rec it is probably shorter than CONTINUESIZE
-			if( datalen - boundaries[i] < MAXRECLEN )
+			if( (datalen - boundaries[i]) < MAXRECLEN )
 			{
 				sizer = (datalen - boundaries[i]);
 			}
@@ -694,7 +694,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 		for( int i = 0; i < numconts; i++ )
 		{
 			// if this is the last Continue rec it is probably shorter than CONTINUESIZE
-			if( datalen - boundaries[i] < MAXRECLEN )
+			if( (datalen - boundaries[i]) < MAXRECLEN )
 			{
 				sizer = (datalen - boundaries[i]);
 			}
@@ -838,7 +838,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 		for( int i = 0; i < numconts; i++ )
 		{
 			// if this is the last Continue rec it is probably shorter than CONTINUESIZE
-			if( datalen - boundaries[i] < MAXRECLEN )
+			if( (datalen - boundaries[i]) < MAXRECLEN )
 			{
 				sizer = (datalen - boundaries[i]);
 			}

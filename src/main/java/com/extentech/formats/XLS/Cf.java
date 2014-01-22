@@ -1234,15 +1234,15 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		}
 		if( borderLineStylesRight >= 0 )
 		{
-			borderLineStylesFlag = (short) ((borderLineStylesFlag | (borderLineStylesRight) << 4));
+			borderLineStylesFlag = (short) ((borderLineStylesFlag | ((borderLineStylesRight) << 4)));
 		}
 		if( borderLineStylesTop >= 0 )
 		{
-			borderLineStylesFlag = (short) ((borderLineStylesFlag | (borderLineStylesTop) << 8));
+			borderLineStylesFlag = (short) ((borderLineStylesFlag | ((borderLineStylesTop) << 8)));
 		}
 		if( borderLineStylesBottom >= 0 )
 		{
-			borderLineStylesFlag = (short) ((borderLineStylesFlag | (borderLineStylesBottom) << 12));
+			borderLineStylesFlag = (short) ((borderLineStylesFlag | ((borderLineStylesBottom) << 12)));
 		}
 /*
         byte[] data = this.getData();
@@ -1295,9 +1295,9 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 
 		borderLineColorsFlag = 0;
 		borderLineColorsFlag = (borderLineColorsFlag | borderLineColorLeft);
-		borderLineColorsFlag = ((borderLineColorsFlag | (borderLineColorRight) << 7));
-		borderLineColorsFlag = ((borderLineColorsFlag | (borderLineColorTop) << 16));
-		borderLineColorsFlag = ((borderLineColorsFlag | (borderLineColorBottom) << 23));
+		borderLineColorsFlag = ((borderLineColorsFlag | ((borderLineColorRight) << 7)));
+		borderLineColorsFlag = ((borderLineColorsFlag | ((borderLineColorTop) << 16)));
+		borderLineColorsFlag = ((borderLineColorsFlag | ((borderLineColorBottom) << 23)));
 /*        
         byte[] data = this.getData();
         byte[] updated = ByteTools.cLongToLEBytes( borderLineColorsFlag);
@@ -2234,7 +2234,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public Formula getFormula2()
 	{
-		if( formula2 == null && cce2 > 0 )
+		if( (formula2 == null) && (cce2 > 0) )
 		{ // hasn't been set
 			formula2 = new Formula();
 			formula2.setWorkBook( this.getWorkBook() );
@@ -2841,7 +2841,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 				ooxml.append( " type=\"uniqueValues\"" );
 				break;
 		}
-		if( this.ct == 3 && containsText != null )// containsText	- shouldn't be null!
+		if( (this.ct == 3) && (containsText != null) )// containsText	- shouldn't be null!
 		{
 			ooxml.append( " text=\"" + containsText + "\"" );
 		}

@@ -77,7 +77,7 @@ public final class CalcMode extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setRecalculationMode( int mode )
 	{
-		if( mode >= 0 && mode <= 2 )
+		if( (mode >= 0) && (mode <= 2) )
 		{
 			if( mode == 2 )
 			{

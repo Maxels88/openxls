@@ -170,7 +170,7 @@ public class GenericChartObject extends XLSRecord implements ChartObject, ChartC
 				outputArr.add( b );    // 20070712 KSC: missed some recs!
 			}
 
-			if( i == chartArr.size() - 1 )
+			if( i == (chartArr.size() - 1) )
 			{
 				End e = (End) End.getPrototype();
 				outputArr.add( e );

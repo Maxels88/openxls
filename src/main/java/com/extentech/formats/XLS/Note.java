@@ -380,11 +380,11 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 				{
 					Obj o = ((Obj) bs.getSheetRecs().get( idx ));
 					// if it's of type Note + has the same id, this is it
-					if( o.getObjType() == 0x19 && o.getObjId() == this.id )
+					if( (o.getObjType() == 0x19) && (o.getObjId() == this.id) )
 					{ // got it!
 						// now find the next TXO
 						idx++;
-						while( idx < bs.getSheetRecs().size() && (((BiffRec) bs.getSheetRecs().get( idx ))).getOpcode() != TXO )
+						while( (idx < bs.getSheetRecs().size()) && ((((BiffRec) bs.getSheetRecs().get( idx ))).getOpcode() != TXO) )
 						{
 							idx++;
 						}
@@ -540,7 +540,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 				{
 					Obj o = ((Obj) bs.getSheetRecs().get( idx ));
 					// if it's of type Note + has the same id, this is it
-					if( o.getObjType() == 0x19 && o.getObjId() == this.id )
+					if( (o.getObjType() == 0x19) && (o.getObjId() == this.id) )
 					{ // got it!
 						// first check if this is one of the odd configurations
 						int opcodeprev = ((BiffRec) bs.getSheetRecs().get( idx - 1 )).getOpcode();
@@ -551,7 +551,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 						}
 						else if( opcodenext == CONTINUE )
 						{// continue masking mso - AFTER object record
-							if( idx + 5 < bs.getSheetRecs().size() )
+							if( (idx + 5) < bs.getSheetRecs().size() )
 							{
 								return (((Continue) bs.getSheetRecs()
 								                      .get( idx + 5 ))).maskedMso;    // the 1st mso is actually at position 5: Obj (note)/Continue/Txo/Continue/Continue/Continue

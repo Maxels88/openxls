@@ -579,7 +579,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 	 */
 	Continue getContinue( int t )
 	{
-		if( t - 1 == datalen )
+		if( (t - 1) == datalen )
 		{
 			return (Continue) this.continues.get( this.continues.size() - 1 );
 		}
@@ -675,7 +675,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		if( runlen > 0 )
 		{
 			currpos -= runlen;
-			if( !bfoundBreak && currpos <= bufferBoundary )
+			if( !bfoundBreak && (currpos <= bufferBoundary) )
 			{ // check against japanese!
 				if( DEBUGLEVEL > 5 )
 				{
@@ -692,7 +692,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 
 		// otherwise the break is in unicode stringdata part
 		currpos = pos + ustrStart;
-		if( !bfoundBreak && currpos < bufferBoundary )
+		if( !bfoundBreak && (currpos < bufferBoundary) )
 		{
 			if( ustrLen.intValue() == 0 )
 			{ // a ONE BYTE String on the boundary! Add the grbit back to the Continue
@@ -722,7 +722,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			if( doublebyte && (b == 0x0) )
 			{ // it is in doublebytes but it really should be compressed
 				int preBoundaryBytes = bufferBoundary - pos - ustrStart;
-				int postBoundaryBytes = pos + ustrStart + ustrLen.intValue() - bufferBoundary;
+				int postBoundaryBytes = (pos + ustrStart + ustrLen.intValue()) - bufferBoundary;
 				postBoundaryBytes = postBoundaryBytes / 2;
 				ustrLen.set( preBoundaryBytes + postBoundaryBytes );
 				bUnCompress1 = true; // dunno what this means but it works ...
@@ -730,7 +730,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			else if( !doublebyte && (b == 0x1) )
 			{ // string portion on prevouos boundary should be uncompressed/converted to doublebyte
 				int preBoundaryBytes = bufferBoundary - pos - ustrStart;
-				int postBoundaryBytes = pos + ustrStart + ustrLen.intValue() - bufferBoundary;
+				int postBoundaryBytes = (pos + ustrStart + ustrLen.intValue()) - bufferBoundary;
 				postBoundaryBytes = postBoundaryBytes * 2;
 				ustrLen.set( preBoundaryBytes + postBoundaryBytes );
 				bUnCompress = true;
@@ -798,7 +798,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			{ // Expand the second string bytes
 				string2ByteLength *= 2;
 				string2bytes = new byte[string2ByteLength];
-				for( int t = 0; t < string2ByteLength / 2; t++ )
+				for( int t = 0; t < (string2ByteLength / 2); t++ )
 				{
 					string2bytes[(t * 2)] = this.thiscont.getByteAt( t + this.thiscont.getContinueOffset() );
 				}
@@ -818,7 +818,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			string2bytes = new byte[blen];
 			while( blen > 0 )
 			{                // loop thru ensuing continues until correct length is read in
-				int curlen = Math.min( start + thiscont.getLength() - thiscont.grbitoff, blen );
+				int curlen = Math.min( (start + thiscont.getLength()) - thiscont.grbitoff, blen );
 				if( !bUnCompress1 )
 				{
 					byte[] tmp = thiscont.getBytesAt( start + thiscont.grbitoff, curlen );
@@ -828,7 +828,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 				{ // Expand the second string bytes - NOTE: This has not been hit so hasn't been tested ...
 					curlen *= 2;
 					byte[] tmp = new byte[curlen];
-					for( int t = 0; t < curlen / 2; t++ )
+					for( int t = 0; t < (curlen / 2); t++ )
 					{
 						tmp[(t * 2)] = this.thiscont.getByteAt( t + this.thiscont.getContinueOffset() );
 					}
@@ -839,7 +839,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 				{
 					this.thiscont.predecessor.setData( null );
 				}
-				if( curlen >= thiscont.getLength() - thiscont.grbitoff )
+				if( curlen >= (thiscont.getLength() - thiscont.grbitoff) )
 				{ // finished this one, get next continue
 					if( (currbound) < continues.size() )
 					{
@@ -946,7 +946,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 	byte[] convertCompressedBytesToDoubleBytes( int pos, int totallen, int uStrStart )
 	{
 		int uLenOnPrevious = (totallen - uStrStart);    // unicode string portion on previous boundary
-		byte[] converted = new byte[uStrStart + uLenOnPrevious * 2];
+		byte[] converted = new byte[uStrStart + (uLenOnPrevious * 2)];
 		System.arraycopy( this.thiscont.predecessor.getBytesAt( pos, uStrStart ), 0, converted, 0, uStrStart );
 		byte[] ustr = this.thiscont.predecessor.getBytesAt( pos + uStrStart, uLenOnPrevious );
 		converted[2] = (byte) (converted[2] | 0x1);    // flag as doublebyte/uncompressed for unicode string processing
@@ -989,7 +989,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 	private int putString( Unicodestring newString )
 	{
 		++retpos;
-		((SstArrayList) stringvector).put( (Object) newString, Integer.valueOf( retpos ) );
+		((SstArrayList) stringvector).put( (Object) newString, retpos );
 		return retpos;
 	}
 
@@ -1085,8 +1085,8 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 
 			if( leftoverlen > 0 )
 			{// there was leftover data!
-				cbounds.add( Integer.valueOf( leftoverlen ) );
-				sstgrbits.add( new Byte( gr ) );
+				cbounds.add( leftoverlen );
+				sstgrbits.add( gr );
 			}
 			if( cbounds.size() > 0 )
 			{
@@ -1235,7 +1235,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			{ // normal w/grbit
 				if( !breaksok )
 				{
-					cbounds.add( Integer.valueOf( contlen ) );
+					cbounds.add( contlen );
 				}
 				else
 				{
@@ -1243,12 +1243,12 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 					{
 						thisbounds--;
 					}
-					cbounds.add( Integer.valueOf( contlen - 1 ) );
+					cbounds.add( contlen - 1 );
 				}
 			}
 			else
 			{
-				cbounds.add( Integer.valueOf( contlen ) );
+				cbounds.add( contlen );
 			}
 
 			// set grbit add null if the Continue should not have a grbit
@@ -1264,7 +1264,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			}
 			else
 			{
-				sstgrbits.add( new Byte( gr ) );
+				sstgrbits.add( gr );
 				lastgrbit = 1;
 			}
 
@@ -1384,7 +1384,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 	 */
 	void initSharingOnStrings( int isst )
 	{
-		Integer iSst = Integer.valueOf( isst );
+		Integer iSst = isst;
 		if( existingSstEntries.contains( iSst ) )
 		{
 			if( !dupeSstEntries.contains( iSst ) )
@@ -1465,7 +1465,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		else
 		{
 			// this is a duplicate string, track it!
-			dupeSstEntries.add( Integer.valueOf( retpos ) );
+			dupeSstEntries.add( retpos );
 		}
 
 		return retpos;
@@ -1528,7 +1528,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			byte[] strbytes = null;
 
 			// handle string sizes
-			if( strlen * 2 > Short.MAX_VALUE )
+			if( (strlen * 2) > Short.MAX_VALUE )
 			{
 				isuni = false; // can't fit larger than Short String length
 			}
@@ -1661,7 +1661,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		{
 			cstTotal++;
 			// this is a duplicate string, track it!
-			dupeSstEntries.add( Integer.valueOf( retpos ) );
+			dupeSstEntries.add( retpos );
 		}
 
 		return retpos;
@@ -1837,7 +1837,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 
 			if( frs == null )
 			{ // no intra-string formattingz
-				if( s.indexOf( " " ) == 0 || s.lastIndexOf( " " ) == s.length() - 1 )
+				if( (s.indexOf( " " ) == 0) || (s.lastIndexOf( " " ) == (s.length() - 1)) )
 				{
 					zip.write( ("<t xml:space=\"preserve\">" + s + "</t>") );
 				}
@@ -1979,7 +1979,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 									 * )) bPreserve= true; }
 									 */
 									eventType = xpp.next();
-									while( eventType != XmlPullParser.END_DOCUMENT && eventType != XmlPullParser.END_TAG && eventType != XmlPullParser.TEXT )
+									while( (eventType != XmlPullParser.END_DOCUMENT) && (eventType != XmlPullParser.END_TAG) && (eventType != XmlPullParser.TEXT) )
 									{
 										eventType = xpp.next();
 									}
@@ -1989,7 +1989,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 									}
 								}
 							}
-							else if( eventType == XmlPullParser.END_TAG && xpp.getName().equals( "si" ) )
+							else if( (eventType == XmlPullParser.END_TAG) && xpp.getName().equals( "si" ) )
 							{
 								bk.getWorkBook().getSharedStringTable().addUnicodestring( s, formattingRuns ); // create
 								// a
@@ -2050,7 +2050,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		int len = super.getLength();
 		// if "hasGrbit" must account for additional size taken up by it
 		// see ContinueHandler.createSstContinues
-		for( int i = 0; i < sstgrbits.size() - 1; i++ )
+		for( int i = 0; i < (sstgrbits.size() - 1); i++ )
 		{
 			Byte b = (Byte) sstgrbits.get( i );
 			if( b != null )

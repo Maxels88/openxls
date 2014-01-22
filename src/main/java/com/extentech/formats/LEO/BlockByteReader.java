@@ -104,7 +104,7 @@ public class BlockByteReader implements Serializable
 			int block = startpos / SIZE;
 			int check = startpos % SIZE;
 			// handle EOF that falls right on boundary
-			if( ((check + 4) > SIZE) && (blockmap.size() - 1 == block) )
+			if( ((check + 4) > SIZE) && ((blockmap.size() - 1) == block) )
 			{
 				// Last EOF falls within 4 bytes of 512 boundary... junkrec
 				byte[] junk = { 0x0, 0x0, 0x0, 0x0 };
@@ -332,7 +332,7 @@ public class BlockByteReader implements Serializable
 	public int[] getFileOffsets( int start, int size )
 	{
 		int[] smap = this.getReadPositions( start, size );
-		int[] fmap = new int[smap.length / 3 * 2];
+		int[] fmap = new int[(smap.length / 3) * 2];
 
 		int offset = 0;
 		int fidx = 0;
@@ -343,7 +343,7 @@ public class BlockByteReader implements Serializable
 			prev = block;
 			block = (Block) this.blockmap.get( smap[sidx] );
 
-			if( prev == null || block.getOriginalPos() + smap[sidx + 1] != prev.getOriginalPos() + smap[sidx - 1] )
+			if( (prev == null) || ((block.getOriginalPos() + smap[sidx + 1]) != (prev.getOriginalPos() + smap[sidx - 1])) )
 			{
 				fmap[fidx++] = offset;
 				fmap[fidx++] = block.getOriginalPos() + smap[sidx + 1];
@@ -364,7 +364,7 @@ public class BlockByteReader implements Serializable
 
 		for( int idx = 0; idx < map.length; idx += 2 )
 		{
-			ret += (idx != 0 ? " " : "") + Integer.toHexString( map[idx + 0] ).toUpperCase() + ":" + Integer.toHexString( map[idx + 1] )
+			ret += ((idx != 0) ? " " : "") + Integer.toHexString( map[idx + 0] ).toUpperCase() + ":" + Integer.toHexString( map[idx + 1] )
 			                                                                                                .toUpperCase();
 		}
 

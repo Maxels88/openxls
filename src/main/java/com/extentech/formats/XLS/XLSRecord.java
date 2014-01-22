@@ -207,7 +207,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	public boolean remove( boolean nullme )
 	{
 		boolean success = false;
-		if( worksheet != null && isValueForCell )
+		if( (worksheet != null) && isValueForCell )
 		{
 			getSheet().removeCell( this );
 		}
@@ -428,7 +428,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		// size
 		ret += " length " + Integer.toHexString( reclen ).toUpperCase() + "h";
 		// file offset
-		ret += " file " + (databuf == null ? "no file"/*originalFileOffset*/ : databuf.getFileOffsetString( offset, reclen ));
+		ret += " file " + ((databuf == null) ? "no file" : databuf.getFileOffsetString( offset, reclen ));
 		// cell address, if applicable
 		if( this.isValueForCell() )
 		{
@@ -823,19 +823,19 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	{
 		if( this.isDoubleNumber )
 		{
-			return new Double( 0.0 );
+			return 0.0;
 		}
 		if( this.isFPNumber )
 		{
-			return new Float( 0.0f );
+			return 0.0f;
 		}
 		if( this.isBoolean )
 		{
-			return Boolean.valueOf( false );
+			return false;
 		}
 		if( this.isIntNumber )
 		{
-			return Integer.valueOf( 0 );
+			return 0;
 		}
 		if( this.isString )
 		{
@@ -910,13 +910,13 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 
 				case TYPE_FP: // always use Doubles to avoid loss of precision... see: 
 					// details http://stackoverflow.com/questions/916081/convert-float-to-double-without-losing-precision
-					return new Double( getDblVal() );
+					return getDblVal();
 
 				case TYPE_DOUBLE:
-					return new Double( getDblVal() );
+					return getDblVal();
 
 				case TYPE_INT:
-					return Integer.valueOf( getIntVal() );
+					return getIntVal();
 
 				case TYPE_FORMULA:
 					// OK this is broken, obviously we need to return a calced Object
@@ -925,7 +925,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 //					return getStringVal();
 
 				case TYPE_BOOLEAN:
-					return Boolean.valueOf( getBooleanVal() );
+					return getBooleanVal();
 
 				default:
 					return null;
@@ -1061,7 +1061,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		}
 		if( (ixfe > -1) && (ixfe < wkbook.getNumXfs()) )
 		{
-			if( myxf == null || myxf.tableidx != ixfe )
+			if( (myxf == null) || (myxf.tableidx != ixfe) )
 			{
 				this.myxf = wkbook.getXf( this.ixfe );
 				this.myxf.incUseCount();
@@ -1075,7 +1075,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public void setXFRecord( int i )
 	{
-		if( i != ixfe || myxf == null )
+		if( (i != ixfe) || (myxf == null) )
 		{
 			this.setIxfe( i );
 			this.setXFRecord();
@@ -1178,7 +1178,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 			setData( this.getBytesAt( 0, len - 4 ) );
 		}
 
-		if( this.opcode == SST || this.opcode == SXLI )
+		if( (this.opcode == SST) || (this.opcode == SXLI) )
 		{
 			return data;
 		}
@@ -1258,7 +1258,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	{
 		if( this.data != null )
 		{
-			if( len + off > data.length )
+			if( (len + off) > data.length )
 			{
 				len = data.length - off; // deal with bad requests
 			}

@@ -205,7 +205,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 			{
 				return new String( "#NAME?" );
 			}
-			else if( p.length == 1 || !(this.parent_rec instanceof com.extentech.formats.XLS.Array) )
+			else if( (p.length == 1) || !(this.parent_rec instanceof com.extentech.formats.XLS.Array) )
 			{    // usual case
 				return p[0].getValue();
 			}

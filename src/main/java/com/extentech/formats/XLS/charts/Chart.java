@@ -229,7 +229,7 @@ public class Chart extends GenericChartObject implements ChartObject
 				currentAi.setParentChart( this );  // necessary for base ops
 				currentAi.setSheet( this.getSheet() ); // needed for cell change updates
 			}
-			else if( currentAi != null && br.getOpcode() == SERIESTEXT )
+			else if( (currentAi != null) && (br.getOpcode() == SERIESTEXT) )
 			{
 				currentAi.setSeriesText( (SeriesText) br );
 				currentAi = null;    // done 
@@ -237,7 +237,7 @@ public class Chart extends GenericChartObject implements ChartObject
 			else if( br.getOpcode() == SERIES )
 			{
 				chartseries.add( new Object[]{
-						br, Integer.valueOf( nCharts )
+						br, nCharts
 				} );    // store series records - initially map all to default chart (normal case)
 			}
 			else if( br.getOpcode() == AXISPARENT )
@@ -362,7 +362,7 @@ public class Chart extends GenericChartObject implements ChartObject
 			b.getData();
 			if( !(b.getOpcode() == BEGIN) && !(b.getOpcode() == END) )
 			{
-				if( (cRecs.length > i + 1) && ((cRecs[i + 1]).getOpcode() == BEGIN) )
+				if( (cRecs.length > (i + 1)) && ((cRecs[i + 1]).getOpcode() == BEGIN) )
 				{ // this is an object with sub-data
 					try
 					{
@@ -632,7 +632,7 @@ public class Chart extends GenericChartObject implements ChartObject
 		{
 			BiffRec b = (BiffRec) postRecs.get( i );
 			int op = b.getOpcode();
-			if( op == NUMBER || op == LABEL )
+			if( (op == NUMBER) || (op == LABEL) )
 			{
 				postRecs.remove( i );
 			}
@@ -657,11 +657,11 @@ public class Chart extends GenericChartObject implements ChartObject
 				int[] coords = ExcelTools.getRangeCoords( s.getSeriesValueAi().getDefinition() );
 				if( coords[3] > coords[1] )
 				{
-					nPoints = Math.max( nPoints, coords[3] - coords[1] + 1 );    // c1-c0
+					nPoints = Math.max( nPoints, (coords[3] - coords[1]) + 1 );    // c1-c0
 				}
 				else
 				{
-					nPoints = Math.max( nPoints, coords[2] - coords[0] + 1 );    // r1-r0
+					nPoints = Math.max( nPoints, (coords[2] - coords[0]) + 1 );    // r1-r0
 				}
 			}
 			catch( Exception e )
@@ -919,7 +919,7 @@ public class Chart extends GenericChartObject implements ChartObject
 		{
 		}
 		int ct = this.getChartType();
-		if( bg == null || (ct != PIECHART && ct != RADARCHART) )
+		if( (bg == null) || ((ct != PIECHART) && (ct != RADARCHART)) )
 		{
 			bg = chartaxes.getPlotAreaBgColor();
 		}
@@ -1174,7 +1174,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	public void setTitle( String str )
 	{
 		// No need to create a TD record if setting title to ""
-		if( (str == null || str.equals( "" )) && charttitle == null )    // if no title and setting title to "", just leave it 
+		if( ((str == null) || str.equals( "" )) && (charttitle == null) )    // if no title and setting title to "", just leave it
 		{
 			return;
 		}
@@ -1356,7 +1356,7 @@ public class Chart extends GenericChartObject implements ChartObject
 		Legend l = this.getLegend();
 		ct.addLegend( l );
 
-		if( ct instanceof BubbleChart && options.contains( ChartOptions.THREED ) )
+		if( (ct instanceof BubbleChart) && options.contains( ChartOptions.THREED ) )
 		{
 			((BubbleChart) ct).setIs3d( true );        // when set, every series created will
 		}
@@ -1656,7 +1656,7 @@ public class Chart extends GenericChartObject implements ChartObject
 				int fontId = ((Fontx) b).getIfnt();        //((TextDisp) b).getFontId();
 				maxFont = Math.max( fontId, maxFont );
 				Font f = this.getWorkBook().getFont( fontId );
-				fonts.put( Integer.valueOf( fontId ), f.getXML() );
+				fonts.put( fontId, f.getXML() );
 			}
 		}
 		StringBuffer sb = new StringBuffer();
@@ -2228,12 +2228,12 @@ public class Chart extends GenericChartObject implements ChartObject
 				//chartseries.setWorkBook(wbh);
 				double[] minmax = chartseries.getMetrics( metricsDirty );    // Ignore Overlay charts for now!
 				short[] coords = this.getCoords();
-				chartMetrics.put( "x", new Double( coords[0] ) );
-				chartMetrics.put( "y", new Double( coords[1] ) );
-				chartMetrics.put( "w", new Double( coords[2] ) );
-				chartMetrics.put( "h", new Double( coords[3] ) );
-				chartMetrics.put( "canvasw", new Double( coords[2] ) );
-				chartMetrics.put( "canvash", new Double( coords[3] ) );
+				chartMetrics.put( "x", (double) coords[0] );
+				chartMetrics.put( "y", (double) coords[1] );
+				chartMetrics.put( "w", (double) coords[2] );
+				chartMetrics.put( "h", (double) coords[3] );
+				chartMetrics.put( "canvasw", (double) coords[2] );
+				chartMetrics.put( "canvash", (double) coords[3] );
 				chartMetrics.put( "min", minmax[0] );
 				chartMetrics.put( "max", minmax[1] );
 				float[] plotcoords = null;
@@ -2247,13 +2247,13 @@ public class Chart extends GenericChartObject implements ChartObject
 					}
 				}
 
-				chartMetrics.put( "x", new Double( plotcoords[0] ) );
-				chartMetrics.put( "y", new Double( plotcoords[1] ) );
-				chartMetrics.put( "w", new Double( plotcoords[2] ) );
-				chartMetrics.put( "h", new Double( plotcoords[3] ) );
+				chartMetrics.put( "x", (double) plotcoords[0] );
+				chartMetrics.put( "y", (double) plotcoords[1] );
+				chartMetrics.put( "w", (double) plotcoords[2] );
+				chartMetrics.put( "h", (double) plotcoords[3] );
 				// Chart title offset
 				com.extentech.formats.XLS.Font titlefont = this.getTitleFont();
-				if( titlefont != null && !this.getTitle().equals( "" ) )
+				if( (titlefont != null) && !this.getTitle().equals( "" ) )
 				{ // apparently can still have td even when no title is present ...
 					float[] tdcoords = this.charttitle.getCoords();
 					double fh = titlefont.getFontHeightInPoints();
@@ -2320,7 +2320,7 @@ public class Chart extends GenericChartObject implements ChartObject
 					double legendBeg = lcoords[0] - (chartMetrics.get( "w" ) + chartMetrics.get( "x" ));
 					double legendEnd = cw - (lcoords[0] + lcoords[2] + adjust);
 
-					if( legendBeg < 0 || legendEnd < 0 )
+					if( (legendBeg < 0) || (legendEnd < 0) )
 					{ // try to adjust
 						if( legendEnd < 0 )
 						{
@@ -2330,7 +2330,7 @@ public class Chart extends GenericChartObject implements ChartObject
 //						if (legendBeg < 0)
 //							chartMetrics.put("w",  lcoords[0]-10.0-chartMetrics.get("x"));
 					}
-					if( this.getAxes().hasAxis( XAXIS ) && ldist > 0 )    // pie, donut, don't
+					if( this.getAxes().hasAxis( XAXIS ) && (ldist > 0) )    // pie, donut, don't
 					// ensure distance between legend box and edge of plot area remains the same
 					{
 						chartMetrics.put( "w", lcoords[0] - (Double) chartMetrics.get( "x" ) - ldist );

@@ -80,7 +80,7 @@ public class ExcelTools implements java.io.Serializable
 		// double issues - use BigDecimal
 		java.math.BigDecimal bd = new java.math.BigDecimal( fpnum );
 		int scale = bd.scale();
-		if( (Math.abs( fpnum ) > 0.000000001) && scale > 9 )
+		if( (Math.abs( fpnum ) > 0.000000001) && (scale > 9) )
 		{
 			bd = bd.setScale( 9, java.math.RoundingMode.HALF_UP );
 		}
@@ -92,7 +92,7 @@ public class ExcelTools implements java.io.Serializable
 		String s = bd.toPlainString();
 		int len = s.length();
 		// If larger than 11 characters, truncate string
-		if( len > 11 && fpnum > 0 || len > 12 )
+		if( ((len > 11) && (fpnum > 0)) || (len > 12) )
 		{ // must deal with exponents and such as well
 			if( scale == 0 )
 			{
@@ -101,7 +101,7 @@ public class ExcelTools implements java.io.Serializable
 			else if( bd.toString().indexOf( "E" ) == -1 )
 			{
 				s = new java.math.BigDecimal( bd.toString(), new java.math.MathContext( 10, java.math.RoundingMode.HALF_UP ) ).toString();
-				while( s.length() > 0 && s.charAt( s.length() - 1 ) == '0' )
+				while( (s.length() > 0) && (s.charAt( s.length() - 1 ) == '0') )
 				{
 					s = s.substring( 0, s.length() - 1 );
 				}
@@ -134,7 +134,7 @@ public class ExcelTools implements java.io.Serializable
 		}
 
 		boolean isInteger = false;
-		if( o instanceof Integer || (o instanceof Double && ((Double) o).intValue() == ((Double) o).doubleValue()) )
+		if( (o instanceof Integer) || ((o instanceof Double) && (((Double) o).intValue() == ((Double) o).doubleValue())) )
 		{
 			isInteger = true;
 		}
@@ -143,7 +143,7 @@ public class ExcelTools implements java.io.Serializable
 			isInteger = false;
 		}
 
-		if( pattern == null || pattern.equals( "" ) || pattern.equalsIgnoreCase( "GENERAL" ) )
+		if( (pattern == null) || pattern.equals( "" ) || pattern.equalsIgnoreCase( "GENERAL" ) )
 		{
 			if( isInteger )
 			{
@@ -203,11 +203,11 @@ public class ExcelTools implements java.io.Serializable
 				{
 					idx = 0;
 				}
-				else if( pats.length > 1 && d < 0 )    // 2nd is for - numbers
+				else if( (pats.length > 1) && (d < 0) )    // 2nd is for - numbers
 				{
 					idx = 1;
 				}
-				else if( pats.length > 2 && d == 0 )    // 3rd for 0
+				else if( (pats.length > 2) && (d == 0) )    // 3rd for 0
 				{
 					idx = 2;
 				}
@@ -376,7 +376,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 	 */
 	public static boolean isBeforeRange( int[] rc, int[] rng )
 	{
-		if( rc[0] < rng[0] || (rc[0] == rng[0] && rc[1] < rng[1]) )
+		if( (rc[0] < rng[0]) || ((rc[0] == rng[0]) && (rc[1] < rng[1])) )
 		{
 			return true;
 		}
@@ -392,7 +392,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 	 */
 	public static boolean isAfterRange( int[] rc, int[] rng )
 	{
-		if( rc[0] > rng[2] || (rc[0] == rng[2] && rc[1] > rng[3]) )
+		if( (rc[0] > rng[2]) || ((rc[0] == rng[2]) && (rc[1] > rng[3])) )
 		{
 			return true;
 		}
@@ -941,7 +941,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 		{ // process least to most-sigificant dig
 			int z = 0;
 			char cc = c.charAt( i );
-			while( z < alpharr.length && cc != alpharr[z++] )
+			while( (z < alpharr.length) && (cc != alpharr[z++]) )
 			{
 				;
 			}
@@ -1025,7 +1025,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 		{
 			row = 0; // -1 below
 			col = -1;
-			if( charpos == 0 && numpos > 0 )
+			if( (charpos == 0) && (numpos > 0) )
 			{
 				String colval = address.substring( 0, numpos );
 				col = getIntVal( colval );
@@ -1117,7 +1117,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 		if( rowCol.length > 3 )
 		{
 			// 20090807: KSC: only a range if 1st is != 2nd cell :)
-			if( rowCol[0] == rowCol[2] && rowCol[1] == rowCol[3] ) // it's a single address
+			if( (rowCol[0] == rowCol[2]) && (rowCol[1] == rowCol[3]) ) // it's a single address
 			{
 				return sb.toString();
 			}
@@ -1159,7 +1159,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 		// 20090906 KSC: handle ranges
 		if( s.length > 3 )
 		{
-			if( s[0] == s[2] && s[1] == s[3] ) // it's a single address
+			if( (s[0] == s[2]) && (s[1] == s[3]) ) // it's a single address
 			{
 				return sb.toString();
 			}
@@ -1352,7 +1352,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 				}
 				break;
 			case 1: // NOTATION_SCIENTIFIC
-				if( num.indexOf( "E" ) != -1 && num.indexOf( "+" ) == -1 )
+				if( (num.indexOf( "E" ) != -1) && (num.indexOf( "+" ) == -1) )
 				{
 					fullString = num;
 				}
@@ -1367,7 +1367,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 					int pos = num.indexOf( "." );
 					preString = num.substring( 0, 1 ) + "." + num.substring( 1, num.indexOf( "." ) );
 					CompatibleBigDecimal d = new CompatibleBigDecimal( num );
-					if( d.doubleValue() < 1 && d.doubleValue() != 0 )
+					if( (d.doubleValue() < 1) && (d.doubleValue() != 0) )
 					{
 						// it is a very small value, ie 1.0E-10
 						int counter = 0;
@@ -1398,7 +1398,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 				}
 				break;
 			case 2: // NOTATION_SCIENTIFIC_EXCEL
-				if( num.indexOf( "E" ) != -1 && num.indexOf( "+" ) != -1 )
+				if( (num.indexOf( "E" ) != -1) && (num.indexOf( "+" ) != -1) )
 				{
 					fullString = num;
 				}
@@ -1412,7 +1412,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 				{
 					int pos = num.indexOf( "." );
 					CompatibleBigDecimal d = new CompatibleBigDecimal( num );
-					if( d.doubleValue() < 1 && d.doubleValue() != 0 )
+					if( (d.doubleValue() < 1) && (d.doubleValue() != 0) )
 					{
 						// it is a very small value, ie 1.0E-10
 						int counter = 0;
@@ -1531,7 +1531,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 		}
 		address = address.substring( m + 1 );
 		int n = address.indexOf( '!' ); // see if 2nd sheet name exists
-		if( n > -1 && !address.equals( "#REF!" ) )
+		if( (n > -1) && !address.equals( "#REF!" ) )
 		{
 			m = address.indexOf( ':' );
 			sheetname2 = address.substring( m + 1, n );
@@ -1541,7 +1541,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 		// 20090323 KSC: handle external references (OOXML-Specific format of
 		// [#]SheetName!Ref where # denotes ExternalLink workbook
 		String exLink1 = null, exLink2 = null;
-		if( sheetname != null && sheetname.indexOf( '[' ) >= 0 )
+		if( (sheetname != null) && (sheetname.indexOf( '[' ) >= 0) )
 		{ // External
 			// OOXML
 			// reference
@@ -1554,7 +1554,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 			}
 			// [#]!Name or range
 		}
-		if( sheetname2 != null && sheetname2.indexOf( '[' ) >= 0 )
+		if( (sheetname2 != null) && (sheetname2.indexOf( '[' ) >= 0) )
 		{ // External
 			// OOXML
 			// reference

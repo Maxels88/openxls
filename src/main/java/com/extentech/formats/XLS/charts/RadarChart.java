@@ -103,8 +103,8 @@ public class RadarChart extends ChartType
 		int n = series.size();
 		int nseries = categories.length;
 
-		double centerx = w / 2 + x;
-		double centery = h / 2 + y;
+		double centerx = (w / 2) + x;
+		double centery = (h / 2) + y;
 		double percentage = 1.0 / nseries; // divide into equal sections
 		double radius = Math.min( w, h ) / 2.3; // should take up almost entire
 		// w/h of chart
@@ -125,8 +125,8 @@ public class RadarChart extends ChartType
 			{
 				// get next point as a percentage of the radius
 				double r = radius * (curseries[j] / (max - min));
-				double x1 = centerx + r * (Math.cos( Math.toRadians( angle ) )); //
-				double y1 = centery - r * (Math.sin( Math.toRadians( angle ) ));
+				double x1 = centerx + (r * (Math.cos( Math.toRadians( angle ) ))); //
+				double y1 = centery - (r * (Math.sin( Math.toRadians( angle ) )));
 				if( j == 0 )
 				{ // save initial points so can close the loop at
 					// end
@@ -137,8 +137,8 @@ public class RadarChart extends ChartType
 				String l = getSVGDataLabels( dls, axisMetrics, curseries[j], percentage, j, legends, categories[j].toString() );
 				if( l != null )
 				{
-					double labelx1 = centerx + (r + 5) * (Math.cos( Math.toRadians( angle ) )); //
-					double labely1 = centery - (r + 5) * (Math.sin( Math.toRadians( angle ) ));
+					double labelx1 = centerx + ((r + 5) * (Math.cos( Math.toRadians( angle ) ))); //
+					double labely1 = centery - ((r + 5) * (Math.sin( Math.toRadians( angle ) )));
 					labels += "<text x='" + (labelx1) + "' y='" + (labely1) + "' style='text-anchor: middle;' " + getDataLabelFontSVG() + ">" + l + "</text>\r\n";
 				}
 				angle -= (percentage * 360); // next point on next category

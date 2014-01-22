@@ -231,7 +231,7 @@ public class Logger extends PrintStream implements LogOutputter
 		{
 			// if the line buffer ends with a newline, strip it
 			int length = lineBuffer.length();
-			if( length >= endl.length() && endl.equals( lineBuffer.substring( length - endl.length(), length ) ) )
+			if( (length >= endl.length()) && endl.equals( lineBuffer.substring( length - endl.length(), length ) ) )
 			{
 				lineBuffer.setLength( length - endl.length() );
 			}

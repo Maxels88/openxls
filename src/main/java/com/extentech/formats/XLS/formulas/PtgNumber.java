@@ -69,7 +69,7 @@ public class PtgNumber extends GenericPtg implements Ptg
 	@Override
 	public Object getValue()
 	{
-		Double d = new Double( val );
+		Double d = val;
 		return d;
 	}
 
@@ -130,7 +130,7 @@ public class PtgNumber extends GenericPtg implements Ptg
 	public void setVal( String s )
 	{
 		s = s.trim();
-		if( s.indexOf( "%" ) == s.length() - 1 )
+		if( s.indexOf( "%" ) == (s.length() - 1) )
 		{
 			percentage = true;
 			s = s.substring( 0, s.indexOf( "%" ) );

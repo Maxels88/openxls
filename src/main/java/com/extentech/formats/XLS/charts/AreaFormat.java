@@ -104,12 +104,12 @@ public class AreaFormat extends GenericChartObject implements ChartObject
 		grbit = ByteTools.readShort( data[10], data[11] );
 		fAuto = (grbit & 0x1) == 0x1;
 		fInvertNeg = (grbit & 0x2) == 0x2;
-		rgbFore = new java.awt.Color( (data[0] < 0 ? 255 + data[0] : data[0]),
-		                              (data[1] < 0 ? 255 + data[1] : data[1]),
-		                              (data[2] < 0 ? 255 + data[2] : data[2]) );
-		rgbBack = new java.awt.Color( (data[4] < 0 ? 255 + data[4] : data[4]),
-		                              (data[5] < 0 ? 255 + data[5] : data[5]),
-		                              (data[6] < 0 ? 255 + data[6] : data[6]) );
+		rgbFore = new java.awt.Color( ((data[0] < 0) ? (255 + data[0]) : data[0]),
+		                              ((data[1] < 0) ? (255 + data[1]) : data[1]),
+		                              ((data[2] < 0) ? (255 + data[2]) : data[2]) );
+		rgbBack = new java.awt.Color( ((data[4] < 0) ? (255 + data[4]) : data[4]),
+		                              ((data[5] < 0) ? (255 + data[5]) : data[5]),
+		                              ((data[6] < 0) ? (255 + data[6]) : data[6]) );
 		fls = ByteTools.readShort( data[8], data[9] );
 		icvFore = ByteTools.readShort( data[12], data[13] );
 		icvBack = ByteTools.readShort( data[14], data[15] );
@@ -286,7 +286,7 @@ public class AreaFormat extends GenericChartObject implements ChartObject
 
 	public void seticvBack( int clr )
 	{
-		if( clr > -1 && clr < this.getColorTable().length )
+		if( (clr > -1) && (clr < this.getColorTable().length) )
 		{
 			icvBack = (short) clr;
 			rgbBack = this.getColorTable()[clr];
@@ -310,7 +310,7 @@ public class AreaFormat extends GenericChartObject implements ChartObject
 
 		// fls= 1 The fill pattern is solid. When solid is specified,
 		// rgbFore is the only color rendered, even if rgbBack is specified
-		if( clr > -1 && clr < this.getColorTable().length )
+		if( (clr > -1) && (clr < this.getColorTable().length) )
 		{
 			fAuto = false;
 			fls = 1;

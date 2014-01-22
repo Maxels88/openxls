@@ -139,11 +139,11 @@ public class FormulaCalculator
 			{
 				t = 0;
 			}
-			if( p.getOpcode() == 0x22 || p.getOpcode() == 0x42 || p.getOpcode() == 0x62 )
+			if( (p.getOpcode() == 0x22) || (p.getOpcode() == 0x42) || (p.getOpcode() == 0x62) )
 			{
 				t = p.getNumParams();
 			}// it's a ptgfunkvar!
-			if( p.getOpcode() == 0x21 || p.getOpcode() == 0x41 || p.getOpcode() == 0x61 )
+			if( (p.getOpcode() == 0x21) || (p.getOpcode() == 0x41) || (p.getOpcode() == 0x61) )
 			{
 				t = p.getNumParams();
 			}// guess that ptgfunc is not only one..

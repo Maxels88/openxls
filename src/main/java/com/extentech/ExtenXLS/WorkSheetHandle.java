@@ -189,7 +189,7 @@ public class WorkSheetHandle implements Handle
 
 		if( oldpass != null )
 		{
-			if( !oldpass.equals( passcheck ) && oldpass != "0000" )
+			if( !oldpass.equals( passcheck ) && (oldpass != "0000") )
 			{
 				throw new WorkBookException( "Incorrect Password Attempt to Unprotect Worksheet.",
 				                             WorkBookException.SHEETPROTECT_INCORRECT_PASSWORD );
@@ -460,7 +460,7 @@ public class WorkSheetHandle implements Handle
 	{
 		Colinfo ci = mysheet.getColInfo( clnum );
 		ColHandle mycol;
-		if( ci == null || !ci.isSingleCol() )
+		if( (ci == null) || !ci.isSingleCol() )
 		{
 			try
 			{
@@ -789,9 +789,9 @@ public class WorkSheetHandle implements Handle
 						pr = (PtgRef) ptgs[j];
 						cursheet = pr.getSheetName();
 						rc = pr.getIntLocation();
-						if( rc[1] != rc[3] && sht.equalsIgnoreCase( cursheet ) )
+						if( (rc[1] != rc[3]) && sht.equalsIgnoreCase( cursheet ) )
 						{ // series are in rows, if existing series fall within deleted row 
-							if( (rc[0]) == rownum - 1 )
+							if( (rc[0]) == (rownum - 1) )
 							{
 								c.removeSeries( j );
 								break;    // got it
@@ -1047,7 +1047,7 @@ public class WorkSheetHandle implements Handle
 		this.mybook = sht.getWorkBook();
 		// 20080624 KSC: add flag for shift formula rules upon row insertion/deletion
 		String shiftRule = (String) System.getProperties().get( "com.extentech.extenXLS.WorkSheetHandle.shiftInclusive" );
-		if( shiftRule != null && shiftRule.equalsIgnoreCase( "true" ) )
+		if( (shiftRule != null) && shiftRule.equalsIgnoreCase( "true" ) )
 		{
 			mysheet.setShiftRule( shiftRule.equalsIgnoreCase( "true" ) );
 		}
@@ -1278,7 +1278,7 @@ public class WorkSheetHandle implements Handle
 		{
 			;
 		}
-		if( myr != null || shiftrows )
+		if( (myr != null) || shiftrows )
 		{
 			return insertRow( rownum, myr, ROW_INSERT_MULTI, shiftrows );
 		}
@@ -1534,7 +1534,7 @@ public class WorkSheetHandle implements Handle
 		}
 
 		// shiftrefs BEFORE inserting new row			
-		if( shiftrows && flag != WorkSheetHandle.ROW_INSERT_NO_REFERENCE_UPDATE )
+		if( shiftrows && (flag != WorkSheetHandle.ROW_INSERT_NO_REFERENCE_UPDATE) )
 		{
 			int refUpdateStart = rownum;
 			//  ExtenXLS default behavior is to update one row too high.  If we are using ROW_INSERT, update per excel standard,
@@ -1567,7 +1567,7 @@ public class WorkSheetHandle implements Handle
 
 		if( shiftrows )
 		{
-			addedrows.add( Integer.valueOf( rownum ) );
+			addedrows.add( rownum );
 		}
 
 		// TODO:  Why so much logic in here, move this to Boundsheet?
@@ -1613,9 +1613,9 @@ public class WorkSheetHandle implements Handle
 				int colnum = copyCellHandle.getColNum();
 
 				// insert an empty copy of the cell OR, if it's a formula cell, copy formula and adjust it's cell references appropriate for new cell position  
-				if( copyRowCell.getOpcode() == XLSRecord.FORMULA &&
-						flag != WorkSheetHandle.ROW_INSERT_NO_REFERENCE_UPDATE &&
-						flag != WorkSheetHandle.ROW_INSERT )
+				if( (copyRowCell.getOpcode() == XLSRecord.FORMULA) &&
+						(flag != WorkSheetHandle.ROW_INSERT_NO_REFERENCE_UPDATE) &&
+						(flag != WorkSheetHandle.ROW_INSERT) )
 				{
 					try
 					{
@@ -2438,10 +2438,10 @@ public class WorkSheetHandle implements Handle
 	public CellHandle add( java.util.Date dt, int row, int col, String fmt )
 	{
 		double x = DateConverter.getXLSDateVal( dt, this.mybook.getDateFormat() );
-		CellHandle thisCell = this.add( new Double( x ), row, col );
+		CellHandle thisCell = this.add( x, row, col );
 
 		// first handle fast adds
-		if( thisCell == null && this.mysheet.fastCellAdds )
+		if( (thisCell == null) && this.mysheet.fastCellAdds )
 		{
 			try
 			{
@@ -2458,7 +2458,7 @@ public class WorkSheetHandle implements Handle
 		if( fmt == null )
 		{
 			fmt = thisCell.getFormatPattern();
-			if( fmt == null || fmt.equals( "General" ) )
+			if( (fmt == null) || fmt.equals( "General" ) )
 			{
 				fmt = "m/d/yy h:mm";
 			}
@@ -2467,7 +2467,7 @@ public class WorkSheetHandle implements Handle
 		{
 			FormatHandle fh = thisCell.getFormatHandle();
 			fh.setFormatPattern( fmt );
-			dateFormats.put( fmt, Integer.valueOf( thisCell.getFormatId() ) );
+			dateFormats.put( fmt, thisCell.getFormatId() );
 		}
 		else
 		{
@@ -3005,7 +3005,7 @@ public class WorkSheetHandle implements Handle
 	public void setHasFrozenPanes( boolean b )
 	{
 		this.mysheet.getWindow2().setFreezePanes( b );
-		if( !b && this.mysheet.getPane() != null )
+		if( !b && (this.mysheet.getPane() != null) )
 		{
 			this.mysheet.removePane();    // remove pane rec if unfreezing ... can also convert to plain splits, but a bit more complicated ...
 		}
@@ -3201,7 +3201,7 @@ public class WorkSheetHandle implements Handle
 	                                                              String secondCondition )
 	{
 
-		if( cellAddress != null && cellAddress.indexOf( "!" ) == -1 )
+		if( (cellAddress != null) && (cellAddress.indexOf( "!" ) == -1) )
 		{
 			cellAddress = this.getSheetName() + "!" + cellAddress;
 		}
@@ -3489,10 +3489,10 @@ public class WorkSheetHandle implements Handle
 				try
 				{
 					int i = Integer.parseInt( vals[t] );
-					data[t] = Integer.valueOf( i );
+					data[t] = i;
 
 					double d = Double.parseDouble( vals[t] );
-					data[t] = new Double( d );
+					data[t] = d;
 
 				}
 				catch( NumberFormatException ax )

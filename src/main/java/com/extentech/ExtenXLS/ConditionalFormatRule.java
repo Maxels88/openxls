@@ -197,7 +197,7 @@ public class ConditionalFormatRule implements Handle
 	 */
 	public String getSecondCondition()
 	{
-		if( currentCf != null && currentCf.getFormula2() != null )
+		if( (currentCf != null) && (currentCf.getFormula2() != null) )
 		{
 			return currentCf.getFormula2().getFormulaString();
 		}
@@ -470,7 +470,7 @@ public class ConditionalFormatRule implements Handle
 	public String getOperator()
 	{
 		int op = currentCf.getOperator();
-		if( op >= 0 && op < OPERATORS.length )
+		if( (op >= 0) && (op < OPERATORS.length) )
 		{
 			return OPERATORS[op];
 		}

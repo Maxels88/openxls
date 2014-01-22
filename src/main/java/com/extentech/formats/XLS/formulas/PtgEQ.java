@@ -125,7 +125,7 @@ public class PtgEQ extends GenericPtg implements Ptg
 			// determine if any of the operands are double - if true,
 			// then blank comparisons will be treated as 0's
 			boolean isDouble = false;
-			for( int i = 0; i < 2 && !isDouble; i++ )
+			for( int i = 0; (i < 2) && !isDouble; i++ )
 			{
 				//if (!form[i].isBlank())
 				isDouble = ((o[i] instanceof Double));
@@ -133,11 +133,11 @@ public class PtgEQ extends GenericPtg implements Ptg
 			for( int i = 0; i < 2; i++ )
 			{
 				//if (form[i].isBlank()) {
-				if( o[i] != null && o[i].toString().equals( "" ) )
+				if( (o[i] != null) && o[i].toString().equals( "" ) )
 				{
 					if( isDouble )
 					{
-						o[i] = new Double( 0.0 );
+						o[i] = 0.0;
 					}
 					else
 					{
@@ -149,11 +149,11 @@ public class PtgEQ extends GenericPtg implements Ptg
 			{
 				res = true;
 			}
-			else if( o[0] == null || o[1] == null )
+			else if( (o[0] == null) || (o[1] == null) )
 			{
 				res = false;
 			}
-			else if( o[0] instanceof Double && o[1] instanceof Double )
+			else if( (o[0] instanceof Double) && (o[1] instanceof Double) )
 			{
 				res = (Math.abs( (((Double) o[0]).doubleValue()) - ((Double) o[1]).doubleValue() )) < doublePrecision;    // compare equality to certain precision
 			}
@@ -179,7 +179,7 @@ public class PtgEQ extends GenericPtg implements Ptg
 				pa.setVal( retArry );
 				return pa;
 			}
-			for( int i = 0; i < nArrays - 1; i += 2 )
+			for( int i = 0; i < (nArrays - 1); i += 2 )
 			{
 				res = false;
 				Object secondOp = null;

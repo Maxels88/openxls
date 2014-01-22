@@ -96,7 +96,7 @@ public class StringTool implements Serializable
 			{
 				skipping = false;
 			}
-			if( !skipping && tt != '>' )
+			if( !skipping && (tt != '>') )
 			{
 				ret.append( cx[t] );
 			}
@@ -181,7 +181,7 @@ public class StringTool implements Serializable
 			// if there is a single upper-case letter, then it's a case-word
 			if( Character.isUpperCase( chars[i] ) )
 			{
-				if( (i > 0) && (i + 1 < chars.length) )
+				if( (i > 0) && ((i + 1) < chars.length) )
 				{
 					if( !Character.isUpperCase( chars[i + 1] ) )
 					{
@@ -656,7 +656,7 @@ public class StringTool implements Serializable
 	public static String replaceText( String originalText, String replaceText, String replacementText, int offset )
 	{
 
-		int newlen = originalText.length() - replaceText.length() + replacementText.length();
+		int newlen = (originalText.length() - replaceText.length()) + replacementText.length();
 
 		if( newlen < 1 )
 		{
@@ -669,7 +669,7 @@ public class StringTool implements Serializable
 		}
 		else
 		{
-			if( replaceText != null && replaceText.equals( replacementText ) )
+			if( (replaceText != null) && replaceText.equals( replacementText ) )
 			{
 				return originalText; // avoid infinite loops
 			}
@@ -931,7 +931,7 @@ public class StringTool implements Serializable
 		for( int i = 0; i < theString.length(); i++ )
 		{
 			curChar = theString.charAt( i );
-			if( curChar < x || curChar > y )
+			if( (curChar < x) || (curChar > y) )
 			{
 				return false;
 			}
@@ -952,7 +952,7 @@ public class StringTool implements Serializable
 		while( toke.hasMoreTokens() )
 		{
 			sb.append( toke.nextToken() );
-			if( i <= vals.length - 1 )
+			if( i <= (vals.length - 1) )
 			{
 				sb.append( vals[i] );
 				++i;
@@ -1129,7 +1129,7 @@ public class StringTool implements Serializable
 			int lastSpace = -1;
 			int j = s.lastIndexOf( "\n" ) + 1;
 			len = 0;
-			while( len < w && j < s.length() )
+			while( (len < w) && (j < s.length()) )
 			{
 				len += StringTool.getApproximateCharWidth( f, s.charAt( j ) );
 				if( s.charAt( j ) == ' ' )
@@ -1223,7 +1223,7 @@ public class StringTool implements Serializable
 						jpattern += "%";
 						inConversion = true;
 					}
-					if( inPrecision && conversion != 'E' )
+					if( inPrecision && (conversion != 'E') )
 					{
 						precision++;
 					}
@@ -1274,7 +1274,7 @@ public class StringTool implements Serializable
 					{
 						inConversion = false;
 						inPrecision = false;
-						jpattern += flags + (w > 0 ? w : "") + "." + precision + conversion;
+						jpattern += flags + ((w > 0) ? w : "") + "." + precision + conversion;
 					}
 					if( k == j ) // then it was a color string
 					{
@@ -1290,7 +1290,7 @@ public class StringTool implements Serializable
 					{
 						inConversion = false;
 						inPrecision = false;
-						jpattern += flags + (w > 0 ? w : "") + "." + precision + conversion;
+						jpattern += flags + ((w > 0) ? w : "") + "." + precision + conversion;
 					}
 					for( i++; i < curPattern.length(); i++ )
 					{
@@ -1318,7 +1318,7 @@ public class StringTool implements Serializable
 						{
 							inConversion = false;
 							inPrecision = false;
-							jpattern += flags + (w > 0 ? w : "") + "." + precision + conversion;
+							jpattern += flags + ((w > 0) ? w : "") + "." + precision + conversion;
 						}
 						jpattern += (char) c;
 						removeSign = true;
@@ -1329,7 +1329,7 @@ public class StringTool implements Serializable
 					{
 						inConversion = false;
 						inPrecision = false;
-						jpattern += flags + (w > 0 ? w : "") + "." + precision + conversion;
+						jpattern += flags + ((w > 0) ? w : "") + "." + precision + conversion;
 					}
 					i++;    // skip next char -- true in all cases???
 					break;
@@ -1338,7 +1338,7 @@ public class StringTool implements Serializable
 					{
 						inConversion = false;
 						inPrecision = false;
-						jpattern += flags + (w > 0 ? w : "") + "." + precision + conversion;
+						jpattern += flags + ((w > 0) ? w : "") + "." + precision + conversion;
 					}
 					jpattern += "%%";
 					break;
@@ -1347,10 +1347,10 @@ public class StringTool implements Serializable
 					{
 						inConversion = false;
 						inPrecision = false;
-						jpattern += flags + (w > 0 ? w : "") + "." + precision + conversion;
+						jpattern += flags + ((w > 0) ? w : "") + "." + precision + conversion;
 					}
 					int z;
-					if( i + 1 < curPattern.length() && curPattern.charAt( i + 1 ) == 'u' )
+					if( ((i + 1) < curPattern.length()) && (curPattern.charAt( i + 1 ) == 'u') )
 					{
 						z = i + 6;
 					}
@@ -1358,7 +1358,7 @@ public class StringTool implements Serializable
 					{
 						z = i + 1;
 					}
-					for(; i < z && i < curPattern.length(); i++ )
+					for(; (i < z) && (i < curPattern.length()); i++ )
 					{
 						jpattern += (char) curPattern.charAt( i );
 					}
@@ -1368,7 +1368,7 @@ public class StringTool implements Serializable
 					{
 						inConversion = false;
 						inPrecision = false;
-						jpattern += flags + (w > 0 ? w : "") + "." + precision + conversion;
+						jpattern += flags + ((w > 0) ? w : "") + "." + precision + conversion;
 					}
 					jpattern += (char) c;
 					break;
@@ -1376,7 +1376,7 @@ public class StringTool implements Serializable
 		}
 		if( inConversion )
 		{
-			jpattern += flags + (w > 0 ? w : "") + "." + precision + conversion;
+			jpattern += flags + ((w > 0) ? w : "") + "." + precision + conversion;
 		}
 		if( isNegative && !removeSign )
 		{
@@ -1397,7 +1397,7 @@ public class StringTool implements Serializable
 		for( int i = 0; i < pattern.length(); i++ )
 		{
 			int c = pattern.charAt( i );
-			if( c != 'd' && !dString.equals( "" ) )
+			if( (c != 'd') && !dString.equals( "" ) )
 			{
 				if( dString.length() <= 2 )
 				{
@@ -1413,9 +1413,9 @@ public class StringTool implements Serializable
 				}
 				dString = "";
 			}
-			else if( c != 'm' && !mString.equals( "" ) )
+			else if( (c != 'm') && !mString.equals( "" ) )
 			{
-				if( c == ':' || prev == 'h' )
+				if( (c == ':') || (prev == 'h') )
 				{    //it's time
 					jpattern += mString;
 					prev = c;
@@ -1464,7 +1464,7 @@ public class StringTool implements Serializable
 					mString += (char) c;
 					break;
 				default:
-					if( c != ':' && c != 'm' )
+					if( (c != ':') && (c != 'm') )
 					{
 						prev = c;
 					}

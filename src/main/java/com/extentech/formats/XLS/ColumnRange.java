@@ -93,13 +93,13 @@ public interface ColumnRange
 			boolean single2 = r2.isSingleCol();
 
 			// if we're comparing a single column to a range
-			if( (single1 || single2) && single1 != single2 )
+			if( (single1 || single2) && (single1 != single2) )
 			{ // XOR
 				ColumnRange range = (single1 ? r2 : r1);
 				ColumnRange single = (single1 ? r1 : r2);
 
 				// and the single column falls within the range
-				if( range.getColFirst() <= single.getColFirst() && range.getColLast() >= single.getColLast() )
+				if( (range.getColFirst() <= single.getColFirst()) && (range.getColLast() >= single.getColLast()) )
 				{
 
 					// if it's a range boundary, it chooses what it is

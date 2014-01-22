@@ -72,6 +72,6 @@ public class WorkBookException extends RuntimeException
 	public Exception getWrappedException()
 	{
 		Throwable cause = getCause();
-		return cause instanceof Exception ? (Exception) cause : null;
+		return (cause instanceof Exception) ? (Exception) cause : null;
 	}
 }

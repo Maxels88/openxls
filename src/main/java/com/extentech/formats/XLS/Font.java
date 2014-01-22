@@ -193,7 +193,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		pos++;
 		boolean compressed = false;
 
-		if( buflen + pos >= this.getLength() )
+		if( (buflen + pos) >= this.getLength() )
 		{
 			buflen = this.getLength() - pos;
 			compressed = true;
@@ -624,7 +624,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 			return customColor.getColorAsColor();
 		}
 		// If icv is System window text color=7FFF, default fg color or default tooltip text color, return black
-		if( this.icv == 0x7FFF || this.icv == 0x40 || this.icv == 0x51 )
+		if( (this.icv == 0x7FFF) || (this.icv == 0x40) || (this.icv == 0x51) )
 		{
 			return java.awt.Color.BLACK;
 		}
@@ -653,7 +653,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	 */
 	public String getColorAsHex()
 	{
-		if( customColor != null && customColor.getColorAsOOXMLRBG() != null )
+		if( (customColor != null) && (customColor.getColorAsOOXMLRBG() != null) )
 		{
 			return "#" + customColor.getColorAsOOXMLRBG().substring( 2 ); // remove "FF" from beginning
 		}
@@ -776,7 +776,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	 */
 	public boolean matches( Font f )
 	{
-		return (this.fontName.equals( f.fontName ) && this.dyHeight == f.dyHeight && this.bls == f.bls && this.getColor() == f.getColor() && this.sss == f.sss && this.uls == f.uls && this.grbit == f.grbit);
+		return (this.fontName.equals( f.fontName ) && (this.dyHeight == f.dyHeight) && (this.bls == f.bls) && (this.getColor() == f.getColor()) && (this.sss == f.sss) && (this.uls == f.uls) && (this.grbit == f.grbit));
 	}
 
 	/**
@@ -905,7 +905,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		else
 		{
 			// KSC: modify due to certain XLS->XLSX issues with automatic color
-			if( this.icv != 9 && this.icv != 64 )
+			if( (this.icv != 9) && (this.icv != 64) )
 			{ // leave automatic "blank"
 				int cl = this.getColor();
 				if( cl > 0 )
@@ -920,7 +920,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 			ooxml.append( "<sz val=\"" + sz + "\"/>" );
 		}
 		String n = this.getFontName();
-		if( n != null && !n.equals( "" ) ) // for incremental styles, font name may
+		if( (n != null) && !n.equals( "" ) ) // for incremental styles, font name may
 		// not be set
 		{
 			ooxml.append( "<name val=\"" + n + "\"/>" );
@@ -988,7 +988,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 					{
 						if( xpp.getAttributeCount() == 0 )
 						{
-							u = Boolean.valueOf( true );
+							u = true;
 						}
 						else
 						{
@@ -1012,7 +1012,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 						c = (Color) Color.parseOOXML( xpp, FormatHandle.colorFONT, bk );
 					}
 				}
-				else if( eventType == XmlPullParser.END_TAG && xpp.getName().equals( "font" ) )
+				else if( (eventType == XmlPullParser.END_TAG) && xpp.getName().equals( "font" ) )
 				{
 					break;
 				}
@@ -1102,6 +1102,6 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	 */
 	private boolean isUnicodeCharSet()
 	{
-		return (bCharSet == SHIFTJIS_CHARSET || bCharSet == HANGEUL_CHARSET || bCharSet == HANGUL_CHARSET || bCharSet == GB2312_CHARSET || bCharSet == CHINESEBIG5_CHARSET || bCharSet == HEBREW_CHARSET || bCharSet == ARABIC_CHARSET || bCharSet == GREEK_CHARSET || bCharSet == TURKISH_CHARSET || bCharSet == VIETNAMESE_CHARSET || bCharSet == THAI_CHARSET || bCharSet == EASTEUROPE_CHARSET || bCharSet == RUSSIAN_CHARSET || bCharSet == BALTIC_CHARSET);
+		return ((bCharSet == SHIFTJIS_CHARSET) || (bCharSet == HANGEUL_CHARSET) || (bCharSet == HANGUL_CHARSET) || (bCharSet == GB2312_CHARSET) || (bCharSet == CHINESEBIG5_CHARSET) || (bCharSet == HEBREW_CHARSET) || (bCharSet == ARABIC_CHARSET) || (bCharSet == GREEK_CHARSET) || (bCharSet == TURKISH_CHARSET) || (bCharSet == VIETNAMESE_CHARSET) || (bCharSet == THAI_CHARSET) || (bCharSet == EASTEUROPE_CHARSET) || (bCharSet == RUSSIAN_CHARSET) || (bCharSet == BALTIC_CHARSET));
 	}
 }

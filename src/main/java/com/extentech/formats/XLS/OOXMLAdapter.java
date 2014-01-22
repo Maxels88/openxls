@@ -386,7 +386,7 @@ public class OOXMLAdapter implements OOXMLConstants
 			// This may be slow but it will not create any more buffer (for bytes)
 			int aByte;
 			int i = 0;
-			while( (aByte = aCARead.read()) != -1 && i++ < (aPosEnd - aPosStart) )
+			while( ((aByte = aCARead.read()) != -1) && (i++ < (aPosEnd - aPosStart)) )
 			{
 				ous.write( aByte );
 			}
@@ -430,7 +430,7 @@ public class OOXMLAdapter implements OOXMLConstants
 		for( int i = 0; i < externalOOXML.size(); i++ )
 		{
 			String[] s = (String[]) externalOOXML.get( i );
-			if( s != null && s.length == 3 )
+			if( (s != null) && (s.length == 3) )
 			{   // id, dir, filename
 				if( s[0].equalsIgnoreCase( type ) )
 				{
@@ -455,7 +455,7 @@ public class OOXMLAdapter implements OOXMLConstants
 			for( int i = 0; i < externalOOXML.size(); i++ )
 			{
 				String[] s = (String[]) externalOOXML.get( i );
-				if( s != null && s.length == 3 )
+				if( (s != null) && (s.length == 3) )
 				{   // id, dir, filename
 					if( s[0].equalsIgnoreCase( "vba" ) || s[0].equalsIgnoreCase( "macro" ) )
 					{
@@ -626,12 +626,12 @@ The preceding code points ranges contain the following controls which are only v
 		{
 			char c = s.charAt( i );
 			int charCode = (int) c;
-			if( charCode == 0x9 ||
-					charCode == 0xA ||
-					charCode == 0xD ||
-					(charCode >= 0x20 && charCode <= 0xD7FF) ||
-					(charCode >= 0xE000 && charCode <= 0xFFFD) ||
-					(charCode >= 0x10000 && charCode <= 0x10FFFF) )
+			if( (charCode == 0x9) ||
+					(charCode == 0xA) ||
+					(charCode == 0xD) ||
+					((charCode >= 0x20) && (charCode <= 0xD7FF)) ||
+					((charCode >= 0xE000) && (charCode <= 0xFFFD)) ||
+					((charCode >= 0x10000) && (charCode <= 0x10FFFF)) )
 			{
 				if( charCode == '&' )
 				{
@@ -703,7 +703,7 @@ The preceding code points ranges contain the following controls which are only v
 		{
 			char c = s.charAt( i );
 			int charCode = (int) c;
-			if( charCode >= 32 && charCode <= 126 )
+			if( (charCode >= 32) && (charCode <= 126) )
 			{
 				if( charCode == '&' )
 				{
@@ -794,7 +794,7 @@ The preceding code points ranges contain the following controls which are only v
 					if( eventType == XmlPullParser.START_TAG )
 					{
 						String tnm = xpp.getName();
-						if( tnm != null && tnm.equals( "Relationship" ) )
+						if( (tnm != null) && tnm.equals( "Relationship" ) )
 						{
 							String type = "", target = "", rId = "";
 							for( int i = 0; i < xpp.getAttributeCount(); i++ )
@@ -862,10 +862,9 @@ The preceding code points ranges contain the following controls which are only v
 	{
 		int eventType = xpp.next();
 		String ret = "";
-		while( eventType != XmlPullParser.END_DOCUMENT &&
-				eventType != XmlPullParser.END_TAG &&
-				eventType != XmlPullParser.START_TAG && /* true in all cases?? */
-				eventType != XmlPullParser.TEXT )
+		while( (eventType != XmlPullParser.END_DOCUMENT) &&
+				(eventType != XmlPullParser.END_TAG) &&
+				(eventType != XmlPullParser.START_TAG) && (eventType != XmlPullParser.TEXT) )
 		{
 			eventType = xpp.next();
 		}
@@ -1038,7 +1037,7 @@ The preceding code points ranges contain the following controls which are only v
 				{
 					int ti = Integer.parseInt( shtnm );
 					// we know the sheet number, add to the tree
-					sorted.put( Integer.valueOf( ti ), c );
+					sorted.put( ti, c );
 				}
 				catch( Exception e )
 				{
@@ -1143,7 +1142,7 @@ class intArray
 	public boolean equals( Object o )
 	{
 		int[] testa = ((intArray) o).get();
-		if( testa == null || a == null || testa.length != this.a.length )
+		if( (testa == null) || (a == null) || (testa.length != this.a.length) )
 		{
 			return false;
 		}

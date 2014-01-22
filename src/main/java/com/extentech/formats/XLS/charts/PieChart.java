@@ -91,9 +91,9 @@ public class PieChart extends ChartType
 			// TODO: warning ...?
 		}
 		// 20090717 KSC: input outside of try/catch to always set
-		minMax[0] = new Double( yMin );
-		minMax[1] = new Double( yMax );
-		minMax[2] = new Double( len );
+		minMax[0] = yMin;
+		minMax[1] = yMax;
+		minMax[2] = len;
 		chartObjectJSON.put( "Series", pieSeries );
 		chartObjectJSON.put( "SeriesFills", "" );    // not applicable for pie charts; color is set above
 		return chartObjectJSON;
@@ -199,8 +199,8 @@ public class PieChart extends ChartType
 					percentage = oneseries[j] / total;
 				}
 				double angle = (percentage * 360) + lasta;
-				double x1 = centerx + radius * (Math.cos( Math.toRadians( angle ) ));
-				double y1 = centery - radiusy * (Math.sin( Math.toRadians( angle ) ));
+				double x1 = centerx + (radius * (Math.cos( Math.toRadians( angle ) )));
+				double y1 = centery - (radiusy * (Math.sin( Math.toRadians( angle ) )));
 				if( (percentage * 360)/*angle*/ > 180 )
 				{
 					largearcflag = 1;
@@ -235,7 +235,7 @@ public class PieChart extends ChartType
 					{
 						style = " style='text-anchor: middle;'";
 					}
-					else if( lasta > 90 && lasta < 270 )
+					else if( (lasta > 90) && (lasta < 270) )
 					{    // right-align text for wedges on left side of pie
 						style = " style='text-anchor: end;'";
 						// TODO: dec x2 
@@ -244,8 +244,8 @@ public class PieChart extends ChartType
 					// leaderline - not exactly like Excel's but ... :) do when NOT putting text within wedge
 					if( percentage < .3 )
 					{
-						double x0 = centerx + (radius) * (Math.cos( Math.toRadians( halfa ) ));
-						double y0 = centery - (radiusy) * (Math.sin( Math.toRadians( halfa ) ));
+						double x0 = centerx + ((radius) * (Math.cos( Math.toRadians( halfa ) )));
+						double y0 = centery - ((radiusy) * (Math.sin( Math.toRadians( halfa ) )));
 						svg.append( "<line " + getScript( curranges[j] ) + " x1='" + x0 + "' y1 ='" + y0 + "' x2='" + (x2 - 3) + "' y2='" + (y2 - 3) + "'" + getStrokeSVG() + "/>\r\n" );
 					}
 				}

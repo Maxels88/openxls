@@ -71,7 +71,7 @@ public class Area3DChart extends AreaChart
 		//cooxml.append(getDataLabelsOOXML(cf));
 		// TODO: get real value
 		int gapdepth = this.getGapDepth(); // 150 is default
-		if( gapdepth != 0 && gapdepth != 150 )
+		if( (gapdepth != 0) && (gapdepth != 150) )
 		{
 			cooxml.append( "<c:gapDepth val=\"" + gapdepth + "\"/>" );
 		}

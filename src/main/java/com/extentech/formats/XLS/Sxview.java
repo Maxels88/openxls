@@ -1372,7 +1372,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 			BiffRec br = subRecs.get( i );
 			if( br.getOpcode() == opcode )
 			{
-				if( index == -1 || (j++ == index) )
+				if( (index == -1) || (j++ == index) )
 				{
 					return br;
 				}
@@ -1415,7 +1415,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 			BiffRec br = subRecs.get( i );
 			if( br.getOpcode() == opcode )
 			{
-				if( index == -1 || (j++ == index) )
+				if( (index == -1) || (j++ == index) )
 				{
 					return i;
 				}
@@ -1452,23 +1452,23 @@ public class Sxview extends XLSRecord implements XLSConstants
 					}
 					break;
 				}
-				else if( opcode == SXLI && (bropcode == SXDI || bropcode == SXPI || bropcode == SXIVD || bropcode == SXVDEX) )
+				else if( (opcode == SXLI) && ((bropcode == SXDI) || (bropcode == SXPI) || (bropcode == SXIVD) || (bropcode == SXVDEX)) )
 				{
 					break;
 				}
-				else if( opcode == SXDI && (bropcode == SXPI || bropcode == SXIVD || bropcode == SXVDEX) )
+				else if( (opcode == SXDI) && ((bropcode == SXPI) || (bropcode == SXIVD) || (bropcode == SXVDEX)) )
 				{
 					break;
 				}
-				else if( opcode == SXPI && (bropcode == SXIVD || bropcode == SXVDEX) )
+				else if( (opcode == SXPI) && ((bropcode == SXIVD) || (bropcode == SXVDEX)) )
 				{
 					break;
 				}
-				else if( opcode == SXIVD && (bropcode == SXVDEX) )
+				else if( (opcode == SXIVD) && (bropcode == SXVDEX) )
 				{
 					break;
 				}
-				else if( opcode == SXVD && (bropcode == SXEX) )
+				else if( (opcode == SXVD) && (bropcode == SXEX) )
 				{
 					break;
 				}

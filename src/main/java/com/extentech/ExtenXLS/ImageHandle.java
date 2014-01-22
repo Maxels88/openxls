@@ -760,7 +760,7 @@ public class ImageHandle implements Serializable
 	{
 		this.imageName = name;
 		// NOTE: updating mso code causes corruption in certain Infoteria files- must look at
-		if( this.thisMsodrawing != null && !this.thisMsodrawing.getName().equals( name ) )
+		if( (this.thisMsodrawing != null) && !this.thisMsodrawing.getName().equals( name ) )
 		{
 			this.thisMsodrawing.setImageName( name );    // update is done in setImageName
 			this.thisMsodrawing.getWorkBook()
@@ -784,7 +784,7 @@ public class ImageHandle implements Serializable
 			shapeName = "";
 		}
 		// only set name/update record if names have changed
-		if( this.thisMsodrawing != null && !shapeName.equals( this.thisMsodrawing.getShapeName() ) )
+		if( (this.thisMsodrawing != null) && !shapeName.equals( this.thisMsodrawing.getShapeName() ) )
 		{
 			this.thisMsodrawing.setShapeName( shapeName );    // update is done in setShapeName
 			this.thisMsodrawing.getWorkBook()
@@ -883,17 +883,17 @@ public class ImageHandle implements Serializable
 		// top left coords
 		sb.append( "<from>" );
 		sb.append( "<col>" + bounds[0] + "</col>" );
-		sb.append( "<colOff>" + bounds[1] * EMU + "</colOff>" );
+		sb.append( "<colOff>" + (bounds[1] * EMU) + "</colOff>" );
 		sb.append( "<row>" + bounds[2] + "</row>" );
-		sb.append( "<rowOff>" + bounds[3] * EMU + "</rowOff>" );
+		sb.append( "<rowOff>" + (bounds[3] * EMU) + "</rowOff>" );
 		sb.append( "</from>" );
 		sb.append( "\r\n" );
 		// bottom right coords
 		sb.append( "<to>" );
 		sb.append( "<col>" + bounds[4] + "</col>" );
-		sb.append( "<colOff>" + bounds[5] * EMU + "</colOff>" );
+		sb.append( "<colOff>" + (bounds[5] * EMU) + "</colOff>" );
 		sb.append( "<row>" + bounds[6] + "</row>" );
-		sb.append( "<rowOff>" + bounds[7] * EMU + "</rowOff>" );
+		sb.append( "<rowOff>" + (bounds[7] * EMU) + "</rowOff>" );
 		sb.append( "</to>" );
 		sb.append( "\r\n" );
 		// Picture details - req. child elements= nvPicPr (non-visual picture properties), blipFill (links to image), spPr (shape properties)

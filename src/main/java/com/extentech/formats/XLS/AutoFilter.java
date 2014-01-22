@@ -281,7 +281,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 					try
 					{
 						BiffRec c = r.getCell( iEntry );
-						if( c instanceof Blank && filterBlanks )
+						if( (c instanceof Blank) && filterBlanks )
 						{
 							r.setHidden( true );
 						}
@@ -357,7 +357,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 		{
 			if( ((ErrorDoper) d).isBooleanVal() )
 			{
-				val = Boolean.valueOf( ((ErrorDoper) d).getBooleanVal() );
+				val = ((ErrorDoper) d).getBooleanVal();
 			}
 			else
 			{
@@ -370,11 +370,11 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 		}
 		else if( (d instanceof RKDoper) )
 		{
-			val = new Double( ((RKDoper) d).getVal() );
+			val = ((RKDoper) d).getVal();
 		}
 		else if( (d instanceof IEEEDoper) )
 		{
-			val = new Double( ((IEEEDoper) d).getVal() );
+			val = ((IEEEDoper) d).getVal();
 		}
 		return val;
 	}
@@ -389,7 +389,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 		// must go thru 1+ times as must gather up values then go back and set hidden ...
 		// identifies top n values then displays ALL rows that contain those values
 		ArrayList top10 = new ArrayList();
-		int n = ((!fPercent) ? wTop10 : this.getSheet().getNumRows() / wTop10);
+		int n = ((!fPercent) ? wTop10 : (this.getSheet().getNumRows() / wTop10));
 		double[] maxVals = new double[n];
 		for( int i = 0; i < n; i++ )
 		{
@@ -425,7 +425,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 						}
 						else if( val > maxVals[j] )
 						{
-							if( insertionpoint == -1 || maxVals[j] < maxVals[insertionpoint] )
+							if( (insertionpoint == -1) || (maxVals[j] < maxVals[insertionpoint]) )
 							{
 								insertionpoint = j;    // overwrite point
 							}
@@ -483,7 +483,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 		// must go thru 1+ times as must gather up values then go back and set hidden ...
 		// identifies bottom n values then displays ALL rows that contain those values
 		ArrayList bottomN = new ArrayList();
-		int n = ((!fPercent) ? wTop10 : this.getSheet().getNumRows() / wTop10);
+		int n = ((!fPercent) ? wTop10 : (this.getSheet().getNumRows() / wTop10));
 		double[] minVals = new double[n];
 		for( int i = 0; i < n; i++ )
 		{
@@ -519,7 +519,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 						}
 						else if( val < minVals[j] )
 						{
-							if( insertionpoint == -1 || minVals[j] > minVals[insertionpoint] )
+							if( (insertionpoint == -1) || (minVals[j] > minVals[insertionpoint]) )
 							{
 								insertionpoint = j;    // overwrite point
 							}
@@ -572,7 +572,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 	public String toString()
 	{
 		String op1 = "=", op2 = "";
-		boolean hasDoper2 = (doper2 != null && !(doper2 instanceof UnusedDoper));
+		boolean hasDoper2 = ((doper2 != null) && !(doper2 instanceof UnusedDoper));
 		if( fTop10 )
 		{
 			if( fTop )
@@ -872,7 +872,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 			wTop10 = 0;
 			// TODO: set fSimple1?  remove dopers??
 		}
-		else if( n > 0 && n <= 500 )
+		else if( (n > 0) && (n <= 500) )
 		{
 			fTop = top10;
 			fTop10 = true;
@@ -914,7 +914,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public boolean isFilterBlanks()
 	{
-		return (fSimple1 && !fSimple2 && !fTop && !fTop10 && doper1 instanceof NoBlanksDoper);
+		return (fSimple1 && !fSimple2 && !fTop && !fTop10 && (doper1 instanceof NoBlanksDoper));
 	}
 
 	/**
@@ -940,7 +940,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public boolean isFilterNonBlanks()
 	{
-		return (fSimple1 && !fSimple2 && !fTop && !fTop10 && doper1 instanceof AllBlanksDoper);
+		return (fSimple1 && !fSimple2 && !fTop && !fTop10 && (doper1 instanceof AllBlanksDoper));
 	}
 
 	/**
@@ -950,7 +950,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public boolean isTop10()
 	{
-		return (fTop10 && wTop10 > 0);
+		return (fTop10 && (wTop10 > 0));
 	}
 
 	/**

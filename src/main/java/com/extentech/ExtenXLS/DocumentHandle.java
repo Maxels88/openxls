@@ -297,7 +297,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	 */
 	public String getFileName()
 	{
-		return file != null ? file.getPath() : "New Document.doc";
+		return (file != null) ? file.getPath() : "New Document.doc";
 	}
 
 	/**
@@ -337,7 +337,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 			URLConnection uc = u.openConnection();
 			String contentType = uc.getContentType();
 			int contentLength = uc.getContentLength();
-			if( contentType.startsWith( "text/" ) || contentLength == -1 )
+			if( contentType.startsWith( "text/" ) || (contentLength == -1) )
 			{
 				throw new IOException( "This is not a binary file." );
 			}
@@ -445,7 +445,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	@Override
 	public void write( File file, int format ) throws IOException
 	{
-		if( format > WorkBookHandle.FORMAT_XLS && this.file != null )
+		if( (format > WorkBookHandle.FORMAT_XLS) && (this.file != null) )
 		{
 			OOXMLAdapter.refreshPassThroughFiles( (WorkBookHandle) this );
 		}

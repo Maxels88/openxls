@@ -164,7 +164,7 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 	@Override
 	public void setStringVal( String v ) throws IllegalArgumentException
 	{
-		if( v != null && v.indexOf( '<' ) >= 0 )
+		if( (v != null) && (v.indexOf( '<' ) >= 0) )
 		{
 			v = parseFormatting( v );    // extracts text string from formats and sets formatting runs
 		}
@@ -256,8 +256,7 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 				else
 				{
 					String[] z = s.substring( i ).split( "[;>]" );
-					if( z == null || z.length == 0 /*would happen on invalid formats such as <;>*/ || (z.length == 1 && (!(z[0].endsWith(
-							">" ) || z[0].endsWith( ";" )))) )
+					if( (z == null) || (z.length == 0) || ((z.length == 1) && (!(z[0].endsWith( ">" ) || z[0].endsWith( ";" )))) )
 					{
 						txt.append( '<' );    // not a real embedded format
 						i--;
@@ -295,7 +294,7 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 						sz = Integer.valueOf( ssz ).intValue();
 					}
 					i += section.length();
-					if( i < s.length() && s.charAt( i ) == '>' )
+					if( (i < s.length()) && (s.charAt( i ) == '>') )
 					{    // if got end of formatting section
 						// store formatting run
 						informatting = false;
@@ -372,7 +371,7 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 		{
 			return null;    // only have the "NO FONT" entry
 		}
-		for( int i = 0; i < nFormattingRuns * 8; )
+		for( int i = 0; i < (nFormattingRuns * 8); )
 		{
 			short idx, font;
 			idx = ByteTools.readShort( frdata[i++], frdata[i++] );

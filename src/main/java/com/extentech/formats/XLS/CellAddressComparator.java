@@ -46,7 +46,7 @@ public class CellAddressComparator implements Comparator, Serializable
 	@Override
 	public int compare( Object o1, Object o2 )
 	{
-		if( o1 == null || !(o1 instanceof XLSRecord) || o2 == null || !(o2 instanceof XLSRecord) )
+		if( (o1 == null) || !(o1 instanceof XLSRecord) || (o2 == null) || !(o2 instanceof XLSRecord) )
 		{
 			throw new ClassCastException();
 		}
@@ -76,7 +76,7 @@ public class CellAddressComparator implements Comparator, Serializable
 	 */
 	public boolean equals( Object obj )
 	{
-		return obj != null && this.getClass().equals( obj.getClass() );
+		return (obj != null) && this.getClass().equals( obj.getClass() );
 	}
 
 	/**

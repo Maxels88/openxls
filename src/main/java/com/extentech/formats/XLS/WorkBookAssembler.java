@@ -121,7 +121,7 @@ public class WorkBookAssembler implements XLSConstants
 			{
 				// Add a new dbcell for every 32 rows
 				Dbcell d = (Dbcell) Dbcell.getPrototype();
-				dbOffsets.add( 0, Short.valueOf( (short) ((rowCount - 1) * 20) ) );
+				dbOffsets.add( 0, (short) ((rowCount - 1) * 20) );
 				d.initDbCell( dbOffset, dbOffsets );
 				addVec.add( insertValidx++, d );
 				if( thissheet.getSheetIDX() != null )
@@ -159,7 +159,7 @@ public class WorkBookAssembler implements XLSConstants
 				valrecOffset += or.getLength();
 				dbOffset += or.getLength();
 				short orc = or.getColNumber();
-				if( (!it.hasNext()) && orc > maxCol )
+				if( (!it.hasNext()) && (orc > maxCol) )
 				{
 					maxCol = orc;
 				}
@@ -168,14 +168,14 @@ public class WorkBookAssembler implements XLSConstants
 					skipMull = (Mulblank) or;
 				}
 			}
-			dbOffsets.add( Short.valueOf( (short) valrecOffset ) );
+			dbOffsets.add( (short) valrecOffset );
 			valrecOffset = 0;
 		}
 		// add the final dbcell.  Chart only sheets will not have an index, so ignore if so.
 		if( dbOffsets.size() > 0 )
 		{
 			Dbcell d = (Dbcell) Dbcell.getPrototype();
-			dbOffsets.add( 0, Short.valueOf( (short) ((rowCount - 1) * 20) ) );
+			dbOffsets.add( 0, (short) ((rowCount - 1) * 20) );
 			d.initDbCell( dbOffset, dbOffsets );
 			d.setOffset( dbOffset );    // KSC: Added to set dbCell offset
 			addVec.add( insertValidx++, d );
@@ -277,13 +277,13 @@ public class WorkBookAssembler implements XLSConstants
 					if( x.getOpcode() == MSODRAWING )
 					{
 						MSODrawing mm = (MSODrawing) x;
-						if( (mm.getSPID() > spid && spid != 0 && !mm.isHeader()) || isHeader )
+						if( ((mm.getSPID() > spid) && (spid != 0) && !mm.isHeader()) || isHeader )
 						{
 							insertValidx = chartInsert;
 							chartInsert = addVec.size();
 						}
 					}
-					if( x.getOpcode() == WINDOW2 || x.getOpcode() == MSODRAWINGSELECTION || x.getOpcode() == NOTE )
+					if( (x.getOpcode() == WINDOW2) || (x.getOpcode() == MSODRAWINGSELECTION) || (x.getOpcode() == NOTE) )
 					{
 						insertValidx = chartInsert;
 						chartInsert = addVec.size();

@@ -399,7 +399,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	public PivotTableHandle[] getPivotTables() throws PivotTableNotFoundException
 	{
 		Sxview[] sxv = mybook.getAllPivotTableViews();
-		if( sxv == null || sxv.length == 0 )
+		if( (sxv == null) || (sxv.length == 0) )
 		{
 			throw new PivotTableNotFoundException( "There are no PivotTables defined in: " + this.getName() );
 		}
@@ -934,7 +934,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 
 		try
 		{
-			if( format > WorkBookHandle.FORMAT_XLS && this.file != null )
+			if( (format > WorkBookHandle.FORMAT_XLS) && (this.file != null) )
 			{
 				OOXMLAdapter.refreshPassThroughFiles( this );
 			}
@@ -1314,7 +1314,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	protected void initializeFromByteArray( byte[] barray )
 	{
 		// check first bytes to see if this is a zipfile (OOXML)
-		if( (char) barray[0] == 'P' && (char) barray[1] == 'K' )
+		if( ((char) barray[0] == 'P') && ((char) barray[1] == 'K') )
 		{
 			try
 			{

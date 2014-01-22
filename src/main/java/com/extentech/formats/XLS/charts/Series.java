@@ -344,7 +344,7 @@ public final class Series extends GenericChartObject implements ChartObject
 					}
 					try
 					{
-						if( chartArr.size() > i + 1 )
+						if( chartArr.size() > (i + 1) )
 						{
 							SeriesText st = (SeriesText) chartArr.get( i + 1 );
 							if( st != null )
@@ -393,7 +393,7 @@ public final class Series extends GenericChartObject implements ChartObject
 				Ai thisAi = (Ai) br;
 				if( thisAi.getType() == Ai.TYPE_TEXT )
 				{
-					if( chartArr.size() > i + 1 )
+					if( chartArr.size() > (i + 1) )
 					{
 						try
 						{
@@ -791,7 +791,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	private DataFormat getDataFormatRec( boolean bCreate )
 	{
 		DataFormat df = (DataFormat) Chart.findRec( this.chartArr, DataFormat.class );
-		if( df == null && bCreate )
+		if( (df == null) && bCreate )
 		{ // create dataformat
 			df = (DataFormat) DataFormat.getPrototypeWithFormatRecs( this.getParentChart() );
 			this.addChartRecord( df );

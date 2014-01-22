@@ -438,7 +438,7 @@ public class ThreeD extends GenericChartObject implements ChartObject
 		}
 		// hPercent -- a height percent between 5 and 500.
 		// rotY == anRot
-		if( anRot != 0 || anElev != 0 ) // default
+		if( (anRot != 0) || (anElev != 0) ) // default
 		{
 			cooxml.append( "<c:rotY val=\"" + anRot + "\"/>" );
 		}

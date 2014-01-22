@@ -62,7 +62,7 @@ public class PtgCalculator
 		Double d = null;
 		try
 		{
-			d = new Double( operands[0].getDoubleVal() );
+			d = operands[0].getDoubleVal();
 		}
 		catch( NumberFormatException e )
 		{
@@ -92,7 +92,7 @@ public class PtgCalculator
 		{
 			try
 			{
-				Double dd = new Double( operands[i].getDoubleVal() );
+				Double dd = operands[i].getDoubleVal();
 				l[i] = dd.longValue();
 			}
 			catch( NumberFormatException e )
@@ -144,7 +144,7 @@ public class PtgCalculator
 			d = null;//new Double(0.0);		// 20081229 KSC: reset
 			Ptg pthing = (Ptg) en.nextElement();
 			Object ob = pthing.getValue();
-			if( ob == null || ob.toString().trim().equals( "" ) )
+			if( (ob == null) || ob.toString().trim().equals( "" ) )
 			{    // 20060802 KSC: added trim
 				darr[i] = 0;
 			}
@@ -180,7 +180,7 @@ public class PtgCalculator
 					catch( Exception ee )
 					{
 						Logger.logWarn( "PtgCalculator getting Double value array failed: " + ee );
-						d = new Double( Double.NaN );
+						d = Double.NaN;
 					}
 				}
 				if( d != null )

@@ -116,7 +116,7 @@ public class SxPI extends XLSRecord implements XLSConstants
 	 */
 	public int[] getPivotFieldItem( int i )
 	{
-		if( i >= 0 && i < sxpis.length )
+		if( (i >= 0) && (i < sxpis.length) )
 		{
 			return new int[]{ sxpis[i].isxvd, sxpis[i].idObj };
 		}
@@ -132,7 +132,7 @@ public class SxPI extends XLSRecord implements XLSConstants
 	 */
 	public void setPageFieldIndex( int i, int fieldindex, int itemindex )
 	{
-		if( i >= 0 && i < sxpis.length )
+		if( (i >= 0) && (i < sxpis.length) )
 		{
 			sxpis[i].isxvd = (short) fieldindex;
 			sxpis[i].isxvi = (short) itemindex;

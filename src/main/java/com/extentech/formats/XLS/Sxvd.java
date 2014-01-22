@@ -464,7 +464,7 @@ public class Sxvd extends XLSRecord
 	 */
 	public void setAxis( int axis )
 	{
-		if( !(axis == 1 || axis == 2 || axis == 4 || axis == 8) )
+		if( !((axis == 1) || (axis == 2) || (axis == 4) || (axis == 8)) )
 		{
 			return;
 		}

@@ -134,7 +134,7 @@ public final class FormulaParser
 		for( int i = 0; i < fmla.length(); i++ )
 		{
 			char c = fmla.charAt( i );
-			if( c == '"' || c == '\'' )
+			if( (c == '"') || (c == '\'') )
 			{ // get to ending quote
 				if( inQuote )
 				{
@@ -154,7 +154,7 @@ public final class FormulaParser
 							ops.add( 0, op );
 						}
 						op = "";
-						if( operands[0] != null && operands[1] != null )
+						if( (operands[0] != null) && (operands[1] != null) )
 						{
 							addOperands( form, /*functionStack, */operands, ops );
 						}
@@ -190,7 +190,7 @@ public final class FormulaParser
 						ops.add( 0, op );
 					}
 					op = "";
-					if( !ops.isEmpty() && operands[0] != null && operands[1] != null )
+					if( !ops.isEmpty() && (operands[0] != null) && (operands[1] != null) )
 					{
 						addOperands( form, /*functionStack, */operands, ops );
 					}
@@ -231,7 +231,7 @@ public final class FormulaParser
 					if( funcPtg != null )
 					{    // yes, then handle function paramters i.e. evertyhing between the parentheses
 						int endparen = getMatchOperator( fmla, i, '(', ')' );
-						if( endparen < fmla.length() - 1 )
+						if( endparen < (fmla.length() - 1) )
 						{
 							if( fmla.charAt( endparen + 1 ) == ':' )
 							{    // it's a VERY complex range :)
@@ -242,7 +242,7 @@ public final class FormulaParser
 							}
 						}
 						// things like: xyz + f(x)
-						if( !ops.isEmpty() && operands[0] != null && operands[1] != null )
+						if( !ops.isEmpty() && (operands[0] != null) && (operands[1] != null) )
 						{
 							addOperands( form, /*functionStack, */operands, ops );
 							inOp = false;
@@ -269,7 +269,7 @@ public final class FormulaParser
 				{        // enclosing parens
 					// complexities occur for complex ranges and enclosing parens ...
 					int endparen = getMatchOperator( fmla, i, '(', ')' );
-					if( endparen == -1 || (endparen < fmla.length() - 1 && fmla.charAt( endparen + 1 ) == ':') )
+					if( (endparen == -1) || ((endparen < (fmla.length() - 1)) && (fmla.charAt( endparen + 1 ) == ':')) )
 					{    // it's a VERY complex range :)  
 						inRange = true;
 						prefix = "(";
@@ -313,12 +313,12 @@ public final class FormulaParser
 			}
 			else
 			{    // see if we have found an operataor
-				if( !Character.isJavaIdentifierPart( c ) && c != ' ' && c != '%' )
+				if( !Character.isJavaIdentifierPart( c ) && (c != ' ') && (c != '%') )
 				{
 					//  if (inRange && !Character.isJavaIdentifierPart(c) && c!=',' && c!=' ')
 					if( inRange )
 					{
-						if( c != ',' && c != ' ' && c != ')' && c != '!' )
+						if( (c != ',') && (c != ' ') && (c != ')') && (c != '!') )
 						{
 							inRange = false;
 							if( !prefix.trim().equals( "" ) )
@@ -340,7 +340,7 @@ public final class FormulaParser
 							continue;
 						}
 					}
-					if( c != '!' && c != '#' && c != '.' )
+					if( (c != '!') && (c != '#') && (c != '.') )
 					{    // ignore !
 						// FOUND AN OPERATOR - ready to add operands yet?
 						inOp = true;
@@ -356,13 +356,13 @@ public final class FormulaParser
 							}
 							prefix = "";
 						}
-						if( !ops.isEmpty() && operands[0] != null && operands[1] != null )
+						if( !ops.isEmpty() && (operands[0] != null) && (operands[1] != null) )
 						{
 							addOperands( form, /*functionStack, */operands, ops );
 						}
 						if( !op.equals( "" ) )
 						{
-							if( !(c == '=' || c == '>') )
+							if( !((c == '=') || (c == '>')) )
 							{
 								ops.add( 0, op );
 								op = "";
@@ -375,7 +375,7 @@ public final class FormulaParser
 				else if( inOp )
 				{
 					inOp = false;
-					if( !ops.isEmpty() && operands[0] != null && operands[1] != null )
+					if( !ops.isEmpty() && (operands[0] != null) && (operands[1] != null) )
 					{
 						addOperands( form, /*functionStack, */operands, ops );
 					}
@@ -453,10 +453,10 @@ public final class FormulaParser
 			functionStack = (Stack) operands[0];
 			operands[0] = null;
 		}
-		if( !functionStack.isEmpty() && pOp != null )
+		if( !functionStack.isEmpty() && (pOp != null) )
 		{
 			Ptg lastOp = (Ptg) functionStack.peek();
-			if( lastOp != null && lastOp.getIsOperator() )
+			if( (lastOp != null) && lastOp.getIsOperator() )
 			{
 				if( lastOp.getIsOperator() )
 				{
@@ -547,7 +547,7 @@ public final class FormulaParser
 		Ptg curOp = (curStack.isEmpty() ? null : ((Ptg) curStack.peek()));
 		int group1 = rankPrecedence( lastOp );
 		int group2 = rankPrecedence( curOp );
-		if( group1 >= 0 && (group1 < group2 || group2 == -1) )
+		if( (group1 >= 0) && ((group1 < group2) || (group2 == -1)) )
 		{
 			lastOp = (Ptg) prevStack.pop();
 			curStack.push( lastOp );  				
@@ -587,9 +587,9 @@ public final class FormulaParser
 		int nParens = 0;
 		boolean enclosing = false;
 		// change:  only remove 1 set of parens:
-		if( fmla.length() > 0 && fmla.charAt( 0 ) == '(' )
+		if( (fmla.length() > 0) && (fmla.charAt( 0 ) == '(') )
 		{
-			if( getMatchOperator( fmla, 0, '(', ')' ) == fmla.length() - 1 )
+			if( getMatchOperator( fmla, 0, '(', ')' ) == (fmla.length() - 1) )
 			{    // then strip enclosing parens
 				nParens++;
 				enclosing = true;
@@ -691,7 +691,7 @@ public final class FormulaParser
 			return -1;
 		}
 //		if (curOp==null || !curOp.getIsOperator()) return -1;
-		if( curOp instanceof PtgUMinus || curOp instanceof PtgUPlus )
+		if( (curOp instanceof PtgUMinus) || (curOp instanceof PtgUPlus) )
 		{
 			return 7;
 		}
@@ -703,11 +703,11 @@ public final class FormulaParser
 		{
 			return 5;
 		}
-		if( curOp instanceof PtgMlt || curOp instanceof PtgDiv )
+		if( (curOp instanceof PtgMlt) || (curOp instanceof PtgDiv) )
 		{
 			return 4;
 		}
-		else if( curOp instanceof PtgAdd || curOp instanceof PtgSub )
+		else if( (curOp instanceof PtgAdd) || (curOp instanceof PtgSub) )
 		{
 			return 3;
 		}
@@ -715,9 +715,9 @@ public final class FormulaParser
 		{
 			return 2;
 		}
-		else if( curOp instanceof PtgEQ || curOp instanceof PtgNE ||
-				curOp instanceof PtgLE || curOp instanceof PtgLT ||
-				curOp instanceof PtgGE || curOp instanceof PtgGT )
+		else if( (curOp instanceof PtgEQ) || (curOp instanceof PtgNE) ||
+				(curOp instanceof PtgLE) || (curOp instanceof PtgLT) ||
+				(curOp instanceof PtgGE) || (curOp instanceof PtgGT) )
 		{
 			return 1;
 		}
@@ -738,7 +738,7 @@ public final class FormulaParser
 		int openCnt = 0;
 		for( int i = startParenLoc; i < input.length(); i++ )
 		{
-			if( input.charAt( i ) == '"' || input.charAt( i ) == '\'' )
+			if( (input.charAt( i ) == '"') || (input.charAt( i ) == '\'') )
 			{// handle quoted strings within input (quoted strings may of course contain match chars ...
 				char endquote = input.charAt( i );
 				while( ++i < input.length() )
@@ -879,10 +879,10 @@ public final class FormulaParser
 		try
 		{
 			pthing = XLSRecordFactory.getPtgRecord( name );
-			if( pthing == null && name.equals( "PtgName" ) )
+			if( (pthing == null) && name.equals( "PtgName" ) )
 			// TODO: MUST evaluate which type of PtgName is correct: understand usage!
 			{
-				if( form.getOpcode() == XLSConstants.FORMULA || form.getOpcode() == XLSConstants.ARRAY )
+				if( (form.getOpcode() == XLSConstants.FORMULA) || (form.getOpcode() == XLSConstants.ARRAY) )
 				{
 					pthing = new PtgName( 0x43 );    // assume this token to be of type Value (i.e PtgNameV) instead of Reference (PtgNameR)
 				}
@@ -1000,7 +1000,7 @@ public final class FormulaParser
 				if( bUnary )
 				{
 					// unary ops +, - ... have a diff't Ptg than regular vers of the operator
-					if( ptgOpStr.equals( "-" ) && x == 1 && ptgOpStr.length() > 1 )
+					if( ptgOpStr.equals( "-" ) && (x == 1) && (ptgOpStr.length() > 1) )
 					{
 						break; //negative number, NOT a unary -
 					}
@@ -1059,10 +1059,10 @@ public final class FormulaParser
 			try
 			{
 				pthing = XLSRecordFactory.getPtgRecord( name );
-				if( pthing == null && name.equals( "PtgName" ) )
+				if( (pthing == null) && name.equals( "PtgName" ) )
 				// TODO: MUST evaluate which type of PtgName is correct: understand usage!
 				{
-					if( form.getOpcode() == XLSConstants.FORMULA || form.getOpcode() == XLSConstants.ARRAY )
+					if( (form.getOpcode() == XLSConstants.FORMULA) || (form.getOpcode() == XLSConstants.ARRAY) )
 					{
 						pthing = new PtgName( 0x43 );    // assume this token to be of type Value (i.e PtgNameV) instead of Reference (PtgNameR)
 					}
@@ -1252,13 +1252,13 @@ public final class FormulaParser
 				int end = formStr.indexOf( c, start + 1 );
 				end += 1;  //include trailing quote
 				// check for being a part of a reference ...	
-				if( end < formStr.length() && formStr.charAt( end ) == '!' )
+				if( (end < formStr.length()) && (formStr.charAt( end ) == '!') )
 				{// then it's part of a reference
 					end++;
-					while( end < formStr.length() && loop )
+					while( (end < formStr.length()) && loop )
 					{
 						c = formStr.charAt( end );
-						if( !(Character.isLetterOrDigit( c ) || c == ':' || c == '$') || c == '-' || c == '+' )
+						if( !(Character.isLetterOrDigit( c ) || (c == ':') || (c == '$')) || (c == '-') || (c == '+') )
 						{
 							loop = false;
 						}
@@ -1271,7 +1271,7 @@ public final class FormulaParser
 				for( int y = start; y < end; y++ )
 				{
 					//make sure it is not a segment of a previous operand, like <> and >;
-					badLocs.add( Integer.valueOf( y ) );
+					badLocs.add( y );
 				}
 				if( end == 0 )
 				{ // means it didn't find an end quote
@@ -1312,7 +1312,7 @@ public final class FormulaParser
 						}
 						for( i = openparen; i < closeparen; i++ )
 						{
-							Integer in = Integer.valueOf( i );
+							Integer in = i;
 							badLocs.add( in );
 						}
 					}
@@ -1341,7 +1341,7 @@ public final class FormulaParser
 						}
 						for( i = openparen; i < closeparen; i++ )
 						{
-							Integer in = Integer.valueOf( i );
+							Integer in = i;
 							badLocs.add( in );
 						}
 					}
@@ -1363,7 +1363,7 @@ public final class FormulaParser
 				int i = formStr.indexOf( ",", holder );
 				if( i != -1 )
 				{
-					Integer ing = Integer.valueOf( i );
+					Integer ing = i;
 					if( !badLocs.contains( ing ) )
 					{
 						String s = formStr.substring( placeholder, i );
@@ -1402,19 +1402,19 @@ public final class FormulaParser
 				int end = s.substring( 1 ).indexOf( s.charAt( 0 ) );
 				end += 1;  //include trailing quote
 				// TEST IF The quoted item is a sheet name
-				if( end < s.length() && s.charAt( end ) == '!' )
+				if( (end < s.length()) && (s.charAt( end ) == '!') )
 				{// then it's part of a reference
 					end++;
 					boolean loop = true;
-					while( end < s.length() && loop )
+					while( (end < s.length()) && loop )
 					{    // if the quoted string is a sheet ref, get rest of reference
 						char c = s.charAt( end );
-						if( c == '#' && s.endsWith( "#REF!" ) )
+						if( (c == '#') && s.endsWith( "#REF!" ) )
 						{
 							end += 5;
 							loop = false;
 						}
-						else if( !(Character.isLetterOrDigit( c ) || c == ':' || c == '$') || c == '-' || c == '+' )
+						else if( !(Character.isLetterOrDigit( c ) || (c == ':') || (c == '$')) || (c == '-') || (c == '+') )
 						{
 							loop = false;
 						}
@@ -1478,7 +1478,7 @@ public final class FormulaParser
 				if( x > 0 )
 				{// process prefix, if any - unary since it's the first operand
 					// exception here-- error range in the form of "Sheet!#REF! (eg) needs to be kept whole
-					if( !(XLSRecordFactory.ptgLookup[i][1].equals( "PtgErr" ) && s.charAt( x - 1 ) == '!') )
+					if( !(XLSRecordFactory.ptgLookup[i][1].equals( "PtgErr" ) && (s.charAt( x - 1 ) == '!')) )
 					{
 						ret.addAll( parsePtgOperators( s.substring( 0, x ), bUnary ) );
 						bUnary = false;
@@ -1492,7 +1492,7 @@ public final class FormulaParser
 				if( bUnary )
 				{
 					// unary ops +, - ... have a diff't Ptg than regular vers of the operator
-					if( ptgOpStr.equals( "-" ) && x == 1 && ptgOpStr.length() > 1 )
+					if( ptgOpStr.equals( "-" ) && (x == 1) && (ptgOpStr.length() > 1) )
 					{
 						break; //negative number, NOT a unary -
 					}
@@ -1554,7 +1554,7 @@ public final class FormulaParser
 		for( int i = 0; i < formStr.length(); i++ )
 		{
 			char c = formStr.charAt( i );
-			if( c == '"' || c == '\'' )
+			if( (c == '"') || (c == '\'') )
 			{				
 /*				if (!s.equals("")) { 
 					locs.add(s);
@@ -1564,19 +1564,19 @@ public final class FormulaParser
 				int end = formStr.indexOf( c, i + 1 );
 				end += 1;  //include trailing quote
 				// TEST IF The quoted item is a sheet name
-				if( end < formStr.length() && formStr.charAt( end ) == '!' )
+				if( (end < formStr.length()) && (formStr.charAt( end ) == '!') )
 				{// then it's part of a reference
 					end++;
 					loop = true;
-					while( end < formStr.length() && loop )
+					while( (end < formStr.length()) && loop )
 					{    // if the quoted string is a sheet ref, get rest of reference
 						c = formStr.charAt( end );
-						if( c == '#' && formStr.endsWith( "#REF!" ) )
+						if( (c == '#') && formStr.endsWith( "#REF!" ) )
 						{
 							end += 5;
 							loop = false;
 						}
-						else if( !(Character.isLetterOrDigit( c ) || c == ':' || c == '$') || c == '-' || c == '+' )
+						else if( !(Character.isLetterOrDigit( c ) || (c == ':') || (c == '$')) || (c == '-') || (c == '+') )
 						{
 							loop = false;
 						}
@@ -1595,7 +1595,7 @@ public final class FormulaParser
 				if( !s.equals( "" ) && !inRange )
 				{
 //					char prevc= s.charAt(s.length()-1);
-					if( !(prevc == ' ' || prevc == ':' || prevc == ',' || prevc == '(') )
+					if( !((prevc == ' ') || (prevc == ':') || (prevc == ',') || (prevc == '(')) )
 					{
 						locs.add( s );
 						s = "";
@@ -1610,7 +1610,7 @@ public final class FormulaParser
 			}
 			else if( c == ':' )
 			{
-				if( prevc == ')' && locs.size() > 0 )    // complex range in style of: F(x):Y(x)
+				if( (prevc == ')') && (locs.size() > 0) )    // complex range in style of: F(x):Y(x)
 				{
 					s = (String) locs.get( locs.size() - 1 ) + '(' + s;
 				}
@@ -1705,7 +1705,7 @@ public final class FormulaParser
 			try
 			{
 				Integer i = Integer.valueOf( ptg );
-				if( i.intValue() >= 0 && i.intValue() <= 65535 ) // PtgInts are UNSIGNED + <=65535
+				if( (i.intValue() >= 0) && (i.intValue() <= 65535) ) // PtgInts are UNSIGNED + <=65535
 				{
 					return "PtgInt";
 				}
@@ -1718,7 +1718,7 @@ public final class FormulaParser
 			{
 			}
 		}
-		if( ptg.indexOf( "%" ) == ptg.length() - 1 )
+		if( ptg.indexOf( "%" ) == (ptg.length() - 1) )
 		{ // see if it's a percentage
 			try
 			{
@@ -1740,7 +1740,7 @@ public final class FormulaParser
 		}
 
 		// at this point it is probably some sort of ptgref
-		if( ptg.indexOf( ":" ) != -1 || ptg.indexOf( ',' ) != -1 || ptg.indexOf( "!" ) != -1 )
+		if( (ptg.indexOf( ":" ) != -1) || (ptg.indexOf( ',' ) != -1) || (ptg.indexOf( "!" ) != -1) )
 		{
 			// ptgarea or ptgarea3d or ptgmemfunc
 			return "PtgArea"; // in ParseFinalLevel, PtgRef.createPtgRefFromString will handle all types of string refs
@@ -1950,11 +1950,11 @@ public final class FormulaParser
 				{
 					t = 0;
 				}
-				if( p.getOpcode() == 0x22 || p.getOpcode() == 0x42 || p.getOpcode() == 0x62 )
+				if( (p.getOpcode() == 0x22) || (p.getOpcode() == 0x42) || (p.getOpcode() == 0x62) )
 				{
 					t = p.getNumParams();
 				}// it's a ptgfuncvar
-				if( p.getOpcode() == 0x21 || p.getOpcode() == 0x41 || p.getOpcode() == 0x61 )
+				if( (p.getOpcode() == 0x21) || (p.getOpcode() == 0x41) || (p.getOpcode() == 0x61) )
 				{
 					t = p.getNumParams();
 				}// it's a ptgFunc
@@ -1970,11 +1970,11 @@ public final class FormulaParser
 				}
 				p.setVars( vx );  // set'em
 				// here is where we adjust the ptg's of the func or funcvar parameters
-				if( p.getOpcode() == 0x22 || p.getOpcode() == 0x42 || p.getOpcode() == 0x62 ) /* it's a ptgfuncvar*/
+				if( (p.getOpcode() == 0x22) || (p.getOpcode() == 0x42) || (p.getOpcode() == 0x62) ) /* it's a ptgfuncvar*/
 				{
 					((PtgFuncVar) p).adjustParameterIds();
 				}
-				else if( p.getOpcode() == 0x21 || p.getOpcode() == 0x41 || p.getOpcode() == 0x61 )/* it's a ptgFunc */
+				else if( (p.getOpcode() == 0x21) || (p.getOpcode() == 0x41) || (p.getOpcode() == 0x61) )/* it's a ptgFunc */
 				{
 					((PtgFunc) p).adjustParameterIds();
 				}
@@ -2078,11 +2078,11 @@ public final class FormulaParser
 				{
 					t = 0;
 				}
-				if( p.getOpcode() == 0x22 || p.getOpcode() == 0x42 || p.getOpcode() == 0x62 )
+				if( (p.getOpcode() == 0x22) || (p.getOpcode() == 0x42) || (p.getOpcode() == 0x62) )
 				{
 					t = p.getNumParams();
 				}// it's a ptgfuncvar!
-				if( p.getOpcode() == 0x21 || p.getOpcode() == 0x41 || p.getOpcode() == 0x61 )
+				if( (p.getOpcode() == 0x21) || (p.getOpcode() == 0x41) || (p.getOpcode() == 0x61) )
 				{
 					t = p.getNumParams();
 				}// it's a ptgFunc

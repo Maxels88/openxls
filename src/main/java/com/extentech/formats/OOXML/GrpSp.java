@@ -176,19 +176,19 @@ public class GrpSp implements OOXMLElement
 			for( int i = 0; i < choice.size(); i++ )
 			{
 				OOXMLElement oe = (OOXMLElement) choice.get( i );
-				if( oe instanceof Sp && type == SP )
+				if( (oe instanceof Sp) && (type == SP) )
 				{
 					return oe;
 				}
-				else if( oe instanceof Pic && type == PIC )
+				else if( (oe instanceof Pic) && (type == PIC) )
 				{
 					return oe;
 				}
-				else if( oe instanceof CxnSp && type == CXN )
+				else if( (oe instanceof CxnSp) && (type == CXN) )
 				{
 					return oe;
 				}
-				else if( oe instanceof GraphicFrame && type == GRAPHICFRAME )
+				else if( (oe instanceof GraphicFrame) && (type == GRAPHICFRAME) )
 				{
 					return oe;
 				}
@@ -241,7 +241,7 @@ public class GrpSp implements OOXMLElement
 		{
 			oe = getObject( PIC );
 		}
-		if( oe != null && macro == null )
+		if( (oe != null) && (macro == null) )
 		{
 			macro = ((Pic) oe).getMacro();
 		}
@@ -250,7 +250,7 @@ public class GrpSp implements OOXMLElement
 		{
 			oe = getObject( CXN );
 		}
-		if( oe != null && macro == null )
+		if( (oe != null) && (macro == null) )
 		{
 			macro = ((CxnSp) oe).getMacro();
 		}
@@ -339,7 +339,7 @@ public class GrpSp implements OOXMLElement
 		{
 			oe = getObject( PIC );
 		}
-		if( oe != null && embed == null )
+		if( (oe != null) && (embed == null) )
 		{
 			embed = ((Pic) oe).getEmbed();
 		}
@@ -348,7 +348,7 @@ public class GrpSp implements OOXMLElement
 		{
 			oe = getObject( CXN );
 		}
-		if( oe != null && embed == null )
+		if( (oe != null) && (embed == null) )
 		{
 			embed = ((CxnSp) oe).getEmbed();
 		}
@@ -416,7 +416,7 @@ public class GrpSp implements OOXMLElement
 		{
 			oe = getObject( PIC );
 		}
-		if( oe != null && link == null )
+		if( (oe != null) && (link == null) )
 		{
 			link = ((Pic) oe).getLink();
 		}
@@ -425,7 +425,7 @@ public class GrpSp implements OOXMLElement
 		{
 			oe = getObject( CXN );
 		}
-		if( oe != null && link == null )
+		if( (oe != null) && (link == null) )
 		{
 			link = ((CxnSp) oe).getLink();
 		}
@@ -524,7 +524,7 @@ public class GrpSp implements OOXMLElement
 	 */
 	public boolean hasShape()
 	{
-		return (getObject( SP ) != null || getObject( CXN ) != null);
+		return ((getObject( SP ) != null) || (getObject( CXN ) != null));
 	}
 
 	/**

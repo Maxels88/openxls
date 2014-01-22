@@ -56,7 +56,7 @@ public abstract class ProtectionManager
 	 */
 	public boolean getProtected()
 	{
-		return protect != null && protect.getIsLocked();
+		return (protect != null) && protect.getIsLocked();
 	}
 
 	/**
@@ -113,7 +113,7 @@ public abstract class ProtectionManager
 	{
 		if( password == null )
 		{
-			return guess == null || guess.equals( "" );
+			return (guess == null) || guess.equals( "" );
 		}
 		return password.validatePassword( guess );
 	}

@@ -108,14 +108,14 @@ public class PtgSub extends GenericPtg implements Ptg
 				// blank handling:
 				if( form[0].isBlank() )
 				{
-					o[0] = new Double( 0 );
+					o[0] = (double) 0;
 				}
 				if( form[1].isBlank() )
 				{
-					o[1] = new Double( 0 );
+					o[1] = (double) 0;
 				}
 				// the following should only return #VALUE! if ???
-				if( !(o[0] instanceof Double && o[1] instanceof Double) )
+				if( !((o[0] instanceof Double) && (o[1] instanceof Double)) )
 				{
 					if( this.parent_rec == null )
 					{
@@ -143,7 +143,7 @@ public class PtgSub extends GenericPtg implements Ptg
 					return new PtgErr( PtgErr.ERROR_VALUE );
 				}
 				int nVals = java.lang.reflect.Array.getLength( o[0] );    // use first array element to determine length of values as subsequent vals might not be arrays
-				for( int i = 0; i < nArrays - 1; i += 2 )
+				for( int i = 0; i < (nArrays - 1); i += 2 )
 				{
 					Object secondOp = null;
 					boolean comparitorIsArray = o[i + 1].getClass().isArray();
@@ -158,7 +158,7 @@ public class PtgSub extends GenericPtg implements Ptg
 						{
 							secondOp = Array.get( o[i + 1], j );    // second array index j
 						}
-						if( !(firstOp instanceof Double && secondOp instanceof Double) )
+						if( !((firstOp instanceof Double) && (secondOp instanceof Double)) )
 						{
 							if( this.parent_rec == null )
 							{

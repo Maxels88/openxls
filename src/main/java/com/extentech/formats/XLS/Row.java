@@ -437,8 +437,8 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 		{ // then explicit ixfe set
 			// The low-order byte is sbyte 14. The low-order nybble of the
 			// high-order byte is stored in the high-order nybble of byte 15.
-			ixfe = ((byte14 & 0xFF) | ((byte15 & 0xFF) << 8) & 0xFFF); // 12 bits
-			if( ixfe < 0 || ixfe > this.getWorkBook().getNumXfs() )
+			ixfe = ((byte14 & 0xFF) | (((byte15 & 0xFF) << 8) & 0xFFF)); // 12 bits
+			if( (ixfe < 0) || (ixfe > this.getWorkBook().getNumXfs()) )
 			{    // KSC: TODO: ixfe calc is wrong ...?
 				ixfe = 15;//this.getWorkBook().getDefaultIxfe();
 				fGhostDirty = false;
@@ -620,7 +620,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 
 	public void setHeight( int twips )
 	{
-		if( twips < 2 || twips > 8192 )
+		if( (twips < 2) || (twips > 8192) )
 		{
 			throw new IllegalArgumentException( "twips value " + String.valueOf( twips ) + " is out of range, must be between 2 and 8192 inclusive" );
 		}
@@ -649,7 +649,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 		while( keepgoing )
 		{
 			Row r = this.getSheet().getRowByNumber( this.getRowNumber() + counter );
-			if( r != null && r.getOutlineLevel() == this.getOutlineLevel() )
+			if( (r != null) && (r.getOutlineLevel() == this.getOutlineLevel()) )
 			{
 				r.setHidden( b );
 			}
@@ -664,7 +664,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 		while( keepgoing )
 		{
 			Row r = this.getSheet().getRowByNumber( this.getRowNumber() - counter );
-			if( r != null && r.getOutlineLevel() == this.getOutlineLevel() )
+			if( (r != null) && (r.getOutlineLevel() == this.getOutlineLevel()) )
 			{
 				r.setHidden( b );
 			}
@@ -820,7 +820,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 			try
 			{
 				int bs = this.getXfRec().getTopBorderLineStyle();
-				return (bs == FormatHandle.BORDER_DOUBLE || bs == FormatHandle.BORDER_THICK);
+				return ((bs == FormatHandle.BORDER_DOUBLE) || (bs == FormatHandle.BORDER_THICK));
 			}
 			catch( Exception e )
 			{
@@ -856,7 +856,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 			try
 			{
 				int bs = this.getXfRec().getBottomBorderLineStyle();
-				return (bs == FormatHandle.BORDER_DOUBLE || bs == FormatHandle.BORDER_THICK);
+				return ((bs == FormatHandle.BORDER_DOUBLE) || (bs == FormatHandle.BORDER_THICK));
 			}
 			catch( Exception e )
 			{

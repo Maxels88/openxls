@@ -140,12 +140,12 @@ public class LineChart extends ChartType
 			String[] curranges = (String[]) s.getSeriesRanges().get( i );
 			for( int j = 0; j < curseries.length; j++ )
 			{
-				points += ((x) + (j + .5) * xfactor) + "," + ((y + h) - (curseries[j] * yfactor));
+				points += ((x) + ((j + .5) * xfactor)) + "," + ((y + h) - (curseries[j] * yfactor));
 				points += " ";
 				String l = getSVGDataLabels( dls, axisMetrics, curseries[j], 0, i, legends, categories[j].toString() );
 				if( l != null )
 				{
-					double xx = (2 + (x) + (j + .5) * xfactor);
+					double xx = (2 + (x) + ((j + .5) * xfactor));
 					if( markers[i] > 0 )
 					{
 						xx += 10;    // scoot over for markers

@@ -97,11 +97,11 @@ public final class Continue extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setHasGrbit( boolean b )
 	{
-		if( b && this.getEncryptedByteReader() == this.getByteReader() )
+		if( b && (this.getEncryptedByteReader() == this.getByteReader()) )
 		{
 			grbit = this.getByteAt( 0 );
 		}
-		hasgrbit = Boolean.valueOf( b );
+		hasgrbit = b;
 	}
 
 	public byte grbit = 0x0;

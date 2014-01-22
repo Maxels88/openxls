@@ -132,7 +132,7 @@ public class PivotCacheDefinition implements OOXMLElement
 		if( cacheid != null )
 		{
 // KSC: TESTING!!!			icache= Integer.valueOf((String)cacheid)+1;
-			icache = Integer.valueOf( 1 );
+			icache = 1;
 		}
 		icache = bk.getWorkBook().addPivotStream( ref, sheet, icache );
 		return new PivotCacheDefinition( ref, sheet, icache );

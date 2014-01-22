@@ -161,7 +161,7 @@ public class PtgFuncVar extends GenericPtg implements Ptg
 	// KSC: added to handle string version of add-in formulas
 	private String getAddInFunctionString()
 	{
-		if( vars != null && vars[0] instanceof PtgNameX )
+		if( (vars != null) && (vars[0] instanceof PtgNameX) )
 		{
 			return ((PtgNameX) vars[0]).toString() + "(";
 		}

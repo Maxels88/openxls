@@ -445,7 +445,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 			outfile.deleteOnExit();
 
 			File dirs = outfile.getParentFile();
-			if( dirs != null && !dirs.exists() )
+			if( (dirs != null) && !dirs.exists() )
 			{
 				dirs.mkdirs();
 				dirs.deleteOnExit();
@@ -647,7 +647,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 				sh = (String[]) obx;
 			}
 			String name = sh[0];
-			if( name != null && !name.equals( "" ) )
+			if( (name != null) && !name.equals( "" ) )
 			{
 				bk.createWorkSheet( name, i );
 				try
@@ -695,12 +695,12 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 	 */
 	protected static String parsePathForZip( String p, String parentDir )
 	{
-		if( (p.indexOf( "/" ) != 0 || p.indexOf( "\\" ) == 0) )
+		if( ((p.indexOf( "/" ) != 0) || (p.indexOf( "\\" ) == 0)) )
 		{
 			while( p.indexOf( ".." ) == 0 )
 			{
 				p = p.substring( 3 );
-				if( !parentDir.equals( "" ) && (parentDir.charAt( parentDir.length() - 1 ) == '/' || parentDir.charAt( parentDir.length() - 1 ) == '\\') )
+				if( !parentDir.equals( "" ) && ((parentDir.charAt( parentDir.length() - 1 ) == '/') || (parentDir.charAt( parentDir.length() - 1 ) == '\\')) )
 				{
 					parentDir = parentDir.substring( 0, parentDir.length() - 2 );
 				}
@@ -742,7 +742,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 			String elname = xpp.getName();
 			while( eventType != XmlPullParser.END_DOCUMENT )
 			{
-				if( eventType == XmlPullParser.START_TAG || eventType == XmlPullParser.TEXT )
+				if( (eventType == XmlPullParser.START_TAG) || (eventType == XmlPullParser.TEXT) )
 				{
 					el.append( xpp.getText() );
 				}
@@ -781,9 +781,9 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 	{
 		int eventType = xpp.next();
 		String ret = "";
-		while( eventType != XmlPullParser.END_DOCUMENT &&
-				eventType != XmlPullParser.END_TAG &&
-				eventType != XmlPullParser.TEXT )
+		while( (eventType != XmlPullParser.END_DOCUMENT) &&
+				(eventType != XmlPullParser.END_TAG) &&
+				(eventType != XmlPullParser.TEXT) )
 		{
 			eventType = xpp.next();
 		}
@@ -843,7 +843,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 					{
 						Font f = (Font) Font.parseOOXML( xpp, bk );
 						int idx = FormatHandle.addFont( f, bk );
-						fontmap.add( Integer.valueOf( idx ) );
+						fontmap.add( idx );
 					}
 					else if( tnm.equals( "dxfs" ) )
 					{   // differential formatting (conditional formatting) style
@@ -876,7 +876,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 							}
 						}
 						newFmtId = Xf.addFormatPattern( bk.getWorkBook(), xmlFormatPattern );
-						fmts.put( Integer.valueOf( fmtId ), Integer.valueOf( newFmtId ) );  // map our format id with original
+						fmts.put( fmtId, newFmtId );  // map our format id with original
 					}
 					else if( tnm.equals( "border" ) )
 					{ // TODO: use Border element to parse
@@ -891,7 +891,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 							{
 								this.parseCellXf( xpp, bk );
 							}
-							else if( eventType == XmlPullParser.END_TAG && xpp.getName().equals( "cellXfs" ) )
+							else if( (eventType == XmlPullParser.END_TAG) && xpp.getName().equals( "cellXfs" ) )
 							{
 								break;
 							}
@@ -1010,7 +1010,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 			}
 			// is xf 15 the default? (will happen if converted from xls) ******* very important to avoid unnecessary blank creation *******
 			// see TestCorruption.TestStackOverflow
-			if( nXfs == 15 && xf.toString().equals( bk.getWorkBook().getXf( 0 ).toString() ) )
+			if( (nXfs == 15) && xf.toString().equals( bk.getWorkBook().getXf( 0 ).toString() ) )
 			{
 				bk.getWorkBook().setDefaultIxfe( 15 );
 			}
@@ -1085,7 +1085,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 	 */
 	private int sLookup( String s, String[] sarr )
 	{
-		if( sarr != null && s != null )
+		if( (sarr != null) && (s != null) )
 		{
 			for( int i = 0; i < sarr.length; i++ )
 			{
@@ -1285,7 +1285,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 		{
 			String[] s = (String[]) formulas.get( j );
 			//formulas:  0=sheetname, 1= cell address, 2=formula including =, 3=shared formula index, 4=array refs, 5=formula type, 6=calculate always flag, 7=format id, 8=cached value
-			if( (s[0].equals( "" ) || s[1].equals( "" )) || s.length < 8 )
+			if( (s[0].equals( "" ) || s[1].equals( "" )) || (s.length < 8) )
 			{
 				continue; // no address or formula - should ever happen?
 			}
@@ -1467,7 +1467,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 					}
 
 				}
-				if( s[6] != null && ch != null )
+				if( (s[6] != null) && (ch != null) )
 				{  // for formulas such as =TODAY
 					BiffRec br = ch.getCell();
 					if( br instanceof Formula )

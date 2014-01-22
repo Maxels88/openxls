@@ -439,7 +439,7 @@ public class Color implements OOXMLElement
 			else if( this.colortype == COLORTYPEINDEXED )
 			{    // indexed (corresponds to either our color int or a custom set of indexed colors
 				this.colorint = Integer.valueOf( this.colorval ).intValue();
-				if( this.colorint == 64 && type == FormatHandle.colorFONT ) // means system foreground: Default foreground color. This is the window text color in the sheet display.
+				if( (this.colorint == 64) && (type == FormatHandle.colorFONT) ) // means system foreground: Default foreground color. This is the window text color in the sheet display.
 				{
 					this.colorstr = FormatHandle.colorToHexString( FormatHandle.getColor( 0 ) );
 				}
@@ -551,7 +551,7 @@ public class Color implements OOXMLElement
 		}
 		else                // lighten
 		{
-			l = l * (1 - tint) + (HLSMAX - HLSMAX * (1.0 - tint));
+			l = l * (1 - tint) + (HLSMAX - (HLSMAX * (1.0 - tint)));
 		}
 		l = Math.round( l );
 		hsl.initRGBbyHSL( hsl.getHue(), hsl.getSaturation(), new Double( l ).intValue() );
@@ -677,7 +677,7 @@ class HSLColor
 			}
 			else
 			{
-				pSat = (int) (((cMinus * HSLMAX) + 0.5) / (2 * RGBMAX - cPlus));
+				pSat = (int) (((cMinus * HSLMAX) + 0.5) / ((2 * RGBMAX) - cPlus));
 			}
 
 			//Calculate hue
@@ -722,9 +722,9 @@ class HSLColor
 		}
 		else
 		{
-			if( L <= HSLMAX / 2 )
+			if( L <= (HSLMAX / 2) )
 			{
-				Magic2 = (L * (HSLMAX + S) + (HSLMAX / 2)) / (HSLMAX);
+				Magic2 = ((L * (HSLMAX + S)) + (HSLMAX / 2)) / (HSLMAX);
 			}
 			else
 			{
@@ -733,19 +733,19 @@ class HSLColor
 			Magic1 = 2 * L - Magic2;
 
 			//get R, G, B; change units from HSLMAX range to RGBMAX range
-			pRed = (hueToRGB( Magic1, Magic2, H + (HSLMAX / 3) ) * RGBMAX + (HSLMAX / 2)) / HSLMAX;
+			pRed = ((hueToRGB( Magic1, Magic2, H + (HSLMAX / 3) ) * RGBMAX) + (HSLMAX / 2)) / HSLMAX;
 			if( pRed > RGBMAX )
 			{
 				pRed = RGBMAX;
 			}
 
-			pGreen = (hueToRGB( Magic1, Magic2, H ) * RGBMAX + (HSLMAX / 2)) / HSLMAX;
+			pGreen = ((hueToRGB( Magic1, Magic2, H ) * RGBMAX) + (HSLMAX / 2)) / HSLMAX;
 			if( pGreen > RGBMAX )
 			{
 				pGreen = RGBMAX;
 			}
 
-			pBlue = (hueToRGB( Magic1, Magic2, H - (HSLMAX / 3) ) * RGBMAX + (HSLMAX / 2)) / HSLMAX;
+			pBlue = ((hueToRGB( Magic1, Magic2, H - (HSLMAX / 3) ) * RGBMAX) + (HSLMAX / 2)) / HSLMAX;
 			if( pBlue > RGBMAX )
 			{
 				pBlue = RGBMAX;
@@ -767,7 +767,7 @@ class HSLColor
 
 		if( Hue < (HSLMAX / 6) )
 		{
-			return (mag1 + (((mag2 - mag1) * Hue + (HSLMAX / 12)) / (HSLMAX / 6)));
+			return (mag1 + ((((mag2 - mag1) * Hue) + (HSLMAX / 12)) / (HSLMAX / 6)));
 		}
 
 		if( Hue < (HSLMAX / 2) )
@@ -775,9 +775,9 @@ class HSLColor
 			return mag2;
 		}
 
-		if( Hue < (HSLMAX * 2 / 3) )
+		if( Hue < ((HSLMAX * 2) / 3) )
 		{
-			return (mag1 + (((mag2 - mag1) * ((HSLMAX * 2 / 3) - Hue) + (HSLMAX / 12)) / (HSLMAX / 6)));
+			return (mag1 + ((((mag2 - mag1) * (((HSLMAX * 2) / 3) - Hue)) + (HSLMAX / 12)) / (HSLMAX / 6)));
 		}
 
 		return mag1;

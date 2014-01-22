@@ -427,7 +427,7 @@ public class SxAddl extends XLSRecord implements XLSConstants
 	 */
 	public void setViewName( String viewName )
 	{
-		if( sxc != 0 && sxd != 0 )
+		if( (sxc != 0) && (sxd != 0) )
 		{
 			Logger.logErr( "Incorrect SXADDL_ record for view name" );
 		}

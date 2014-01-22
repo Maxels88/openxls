@@ -131,7 +131,7 @@ public class CellComparator implements Comparator
 		}
 
 		//Two formulas;
-		if( cellType1 == CellHandle.TYPE_FORMULA && cellType2 == CellHandle.TYPE_FORMULA )
+		if( (cellType1 == CellHandle.TYPE_FORMULA) && (cellType2 == CellHandle.TYPE_FORMULA) )
 		{
 			try
 			{

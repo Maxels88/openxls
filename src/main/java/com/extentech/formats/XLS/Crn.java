@@ -61,7 +61,7 @@ public class Crn extends XLSRecord
 		fc = this.getByteAt( 1 );
 		rowIndex = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
 		int pos = 4;
-		for( int i = 0; i < lc - fc + 1; i++ )
+		for( int i = 0; i < ((lc - fc) + 1); i++ )
 		{
 			try
 			{
@@ -91,7 +91,7 @@ public class Crn extends XLSRecord
 						}
 						break;
 					case 4: // boolean
-						cachedValues.add( Boolean.valueOf( this.getByteAt( pos + 1 ) == 1 ) );
+						cachedValues.add( this.getByteAt( pos + 1 ) == 1 );
 						pos += 8;
 						break;
 					case 16: // error

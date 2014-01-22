@@ -59,7 +59,7 @@ public class TextCalculator
 	 */
 	protected static Ptg calcAsc( Ptg[] operands )
 	{
-		if( operands == null || operands[0] == null )
+		if( (operands == null) || (operands[0] == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_VALUE );
 		}
@@ -95,7 +95,7 @@ public class TextCalculator
 	{
 		Object o = operands[0].getValue();
 		Byte s = new Byte( o.toString() );
-		if( s.intValue() > 255 || s.intValue() < 1 )
+		if( (s.intValue() > 255) || (s.intValue() < 1) )
 		{
 			return PtgCalculator.getError();
 		}
@@ -169,7 +169,7 @@ public class TextCalculator
 		{
 		}
 		;
-		Integer i = Integer.valueOf( b[0] );
+		Integer i = (int) b[0];
 		return new PtgInt( i.intValue() );
 	}
 
@@ -257,7 +257,7 @@ public class TextCalculator
 		Object o = operands[0].getValue();
 		Object oo = operands[1].getValue();
 
-		if( o == null || oo == null )
+		if( (o == null) || (oo == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_VALUE );
 		}
@@ -284,7 +284,7 @@ public class TextCalculator
 	 */
 	protected static Ptg calcFindB( Ptg[] operands )
 	{
-		if( operands == null || operands.length < 2 || operands[0] == null )
+		if( (operands == null) || (operands.length < 2) || (operands[0] == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_VALUE );
 		}
@@ -302,16 +302,16 @@ public class TextCalculator
 		byte[] strToFind = getUnicodeBytesFromOp( operands[0] );
 		byte[] str = getUnicodeBytesFromOp( operands[1] );
 		int index = -1;
-		if( strToFind == null || strToFind.length == 0 || str == null || startnum < 0 || str.length < startnum )
+		if( (strToFind == null) || (strToFind.length == 0) || (str == null) || (startnum < 0) || (str.length < startnum) )
 		{
 			return new PtgInt( startnum );
 		}
-		for( int i = startnum; i < str.length && index == -1; i++ )
+		for( int i = startnum; (i < str.length) && (index == -1); i++ )
 		{
 			if( strToFind[0] == str[i] )
 			{
 				index = i;
-				for( int j = 0; j < strToFind.length && (i + j) < str.length && index == i; j++ )
+				for( int j = 0; (j < strToFind.length) && ((i + j) < str.length) && (index == i); j++ )
 				{
 					if( strToFind[j] != str[i + j] )
 					{
@@ -363,7 +363,7 @@ public class TextCalculator
 			}
 		}
 		// pad w/zeros if need be.
-		if( res.indexOf( "." ) == -1 && pop > 0 )
+		if( (res.indexOf( "." ) == -1) && (pop > 0) )
 		{
 			res = res + ".0";
 		}
@@ -373,7 +373,7 @@ public class TextCalculator
 			res += 0;
 			mantissa = res.substring( res.indexOf( "." ) );
 		}
-		if( nocommas || dub < 999.99 )
+		if( nocommas || (dub < 999.99) )
 		{
 			return new PtgStr( res );
 		}
@@ -389,7 +389,7 @@ public class TextCalculator
 			String ch = begin.substring( (s - v) - 1, s - v );
 			mant = ch + mant;
 			v++;
-			if( counter == 2 && v != s )
+			if( (counter == 2) && (v != s) )
 			{
 				mant = "," + mant;
 			}
@@ -425,7 +425,7 @@ public class TextCalculator
 */
 	protected static Ptg calcJIS( Ptg[] operands )
 	{
-		if( operands == null || operands[0] == null )
+		if( (operands == null) || (operands[0] == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_VALUE );
 		}
@@ -478,7 +478,7 @@ public class TextCalculator
 			return new PtgStr( "" );
 		}
 		String str = String.valueOf( o );
-		if( str == null || numchars > str.length() )
+		if( (str == null) || (numchars > str.length()) )
 		{
 			return new PtgStr( "" );    // 20081202 KSC: Don't error out if not enough chars ala Excel
 		}
@@ -579,11 +579,11 @@ public class TextCalculator
 	protected static Ptg calcMid( Ptg[] operands )
 	{
 		String s = String.valueOf( operands[0].getValue() );
-		if( s == null || s.equals( "" ) )
+		if( (s == null) || s.equals( "" ) )
 		{
 			return new PtgStr( "" );    //  Don't error out if "" ala Excel
 		}
-		if( operands[1] instanceof PtgErr || operands[2] instanceof PtgErr )
+		if( (operands[1] instanceof PtgErr) || (operands[2] instanceof PtgErr) )
 		{
 			return new PtgErr( PtgErr.ERROR_VALUE );
 		}
@@ -641,7 +641,7 @@ public class TextCalculator
 		int repamount = operands[2].getIntVal();
 		String repstr = String.valueOf( operands[3].getValue() );
 		String begin = origstr.substring( 0, (start - 1) );
-		String end = origstr.substring( start + repamount - 1 );
+		String end = origstr.substring( (start + repamount) - 1 );
 		String returnstr = begin + repstr + end;
 		return new PtgStr( returnstr );
 
@@ -734,7 +734,7 @@ public class TextCalculator
 	 */
 	protected static Ptg calcSearchB( Ptg[] operands )
 	{
-		if( operands == null || operands.length < 2 || operands[0] == null )
+		if( (operands == null) || (operands.length < 2) || (operands[0] == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_VALUE );
 		}
@@ -752,7 +752,7 @@ public class TextCalculator
 		byte[] strToFind = getUnicodeBytesFromOp( operands[0] );
 		byte[] str = getUnicodeBytesFromOp( operands[1] );
 		int index = -1;
-		if( strToFind == null || strToFind.length == 0 || str == null || startnum < 0 || str.length < startnum )
+		if( (strToFind == null) || (strToFind.length == 0) || (str == null) || (startnum < 0) || (str.length < startnum) )
 		{
 			return new PtgInt( startnum );
 		}
@@ -889,7 +889,7 @@ public class TextCalculator
 		{
 			try
 			{
-				if( res != null && !res.equals( "" ) )        // 20090527 KSC: when cell=="", Excel treats as 0
+				if( (res != null) && !res.equals( "" ) )        // 20090527 KSC: when cell=="", Excel treats as 0
 				{
 					return new PtgStr( fmtx.format( new Float( res ) ) );
 				}
@@ -968,7 +968,7 @@ public class TextCalculator
 				fmtx = new DecimalFormat( fmt );
 			}
 
-			if( res != null && !res.equals( "" ) )
+			if( (res != null) && !res.equals( "" ) )
 			{
 				return new PtgStr( fmtx.format( new Float( res ) ) );
 			}
@@ -1010,7 +1010,7 @@ public class TextCalculator
 		{
 			res = String.valueOf( o );
 		}
-		if( res == null || res.equals( new PtgErr( PtgErr.ERROR_NA ).toString() ) )
+		if( (res == null) || res.equals( new PtgErr( PtgErr.ERROR_NA ).toString() ) )
 		{
 			return new PtgErr( PtgErr.ERROR_NA );
 		}

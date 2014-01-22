@@ -257,11 +257,11 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		{
 			optrec.setImageIndex( imageIndex );
 		}
-		if( imageName != null && !imageName.equals( "" ) )
+		if( (imageName != null) && !imageName.equals( "" ) )
 		{
 			optrec.setImageName( imageName );
 		}
-		if( shapeName != null && !shapeName.equals( "" ) )
+		if( (shapeName != null) && !shapeName.equals( "" ) )
 		{
 			optrec.setShapeName( shapeName );
 		}
@@ -795,11 +795,11 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 						{
 							optrec.setImageIndex( imageIndex );
 						}
-						if( imageName == null || !imageName.equals( optrec.getImageName() ) )
+						if( (imageName == null) || !imageName.equals( optrec.getImageName() ) )
 						{
 							optrec.setImageName( imageName );
 						}
-						if( shapeName == null || !shapeName.equals( optrec.getShapeName() ) )
+						if( (shapeName == null) || !shapeName.equals( optrec.getShapeName() ) )
 						{
 							optrec.setShapeName( shapeName );
 						}
@@ -907,7 +907,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
         		Logger.logErr("SPCONTAINERLENTH IS OFF: " + (SPCONTAINERLENGTH-origSP));
 			/**/
 			// SPGRCONTAINER
-			int spgrcontainerlen = SPCONTAINERLENGTH + otherSPCONTAINERLENGTH - 8;	
+			int spgrcontainerlen = (SPCONTAINERLENGTH + otherSPCONTAINERLENGTH) - 8;
         	/*// debugging
     	  	if (spgrcontainerlen!=origSPGR)
     	  		Logger.logErr("SPGRCONTAINERLENTH IS OFF: " + (spgrcontainerlen-origSPGR));
@@ -926,7 +926,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 			msofbtDgContainer.setLength( dgcontainerlen );    //HEADERRECLENGTH + SPCONTAINERLENGTH + otherSPCONTAINERLENGTH);
 			byte[] dgcontainer = msofbtDgContainer.toByteArray();
 
-			byte[] header = new byte[HEADERRECLENGTH + SPCONTAINERLENGTH - additionalSP + dgcontainer.length]; //+retData.length];
+			byte[] header = new byte[((HEADERRECLENGTH + SPCONTAINERLENGTH) - additionalSP) + dgcontainer.length]; //+retData.length];
 
 			int pos = 0;
 			System.arraycopy( dgcontainer, 0, header, pos, dgcontainer.length );
@@ -1099,15 +1099,15 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 							                        0,
 							                        3 );    //version is always 3, inst is current count of properties.
 						}
-						if( imageIndex != -1 && imageIndex != optrec.getImageIndex() )
+						if( (imageIndex != -1) && (imageIndex != optrec.getImageIndex()) )
 						{
 							optrec.setImageIndex( imageIndex );
 						}
-						if( imageName != null && !imageName.equals( "" ) && !imageName.equals( optrec.getImageName() ) )
+						if( (imageName != null) && !imageName.equals( "" ) && !imageName.equals( optrec.getImageName() ) )
 						{
 							optrec.setImageName( imageName );
 						}
-						if( shapeName != null && !shapeName.equals( "" ) && !shapeName.equals( optrec.getShapeName() ) )
+						if( (shapeName != null) && !shapeName.equals( "" ) && !shapeName.equals( optrec.getShapeName() ) )
 						{
 							optrec.setShapeName( shapeName );
 						}
@@ -1253,7 +1253,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 			}
 			else
 			{
-				if( fbt == MSODrawingConstants.MSOFBTREGROUPITEMS || fbt == MSODrawingConstants.MSOFBTDG || fbt == MSODrawingConstants.MSOFBTCOLORSCHEME )
+				if( (fbt == MSODrawingConstants.MSOFBTREGROUPITEMS) || (fbt == MSODrawingConstants.MSOFBTDG) || (fbt == MSODrawingConstants.MSOFBTCOLORSCHEME) )
 				{
 					DGATOMS += (len + 8);
 				}
@@ -1354,7 +1354,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 					if( propertyId == MSODrawingConstants.msooptpib )
 					{// blip to display = image index						
 						// testing int dtx = ByteTools.readInt(dat[pos+2],dat[pos+3],dat[pos+4],dat[pos+5]);  
-						int insertPosition = data.length - bis.available() - len + pos + 2;
+						int insertPosition = (data.length - bis.available() - len) + pos + 2;
 						System.arraycopy( ByteTools.cLongToLEBytes( idx ), 0, data, insertPosition, 4 );
 						imageIndex = idx;
 						return;
@@ -1573,10 +1573,10 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public short[] getCoords()
 	{
-		short x = (short) Math.round( getX() * 256 / ColHandle.COL_UNITS_TO_PIXELS );
-		short y = (short) Math.round( getY() * 20 / (RowHandle.ROW_HEIGHT_DIVISOR - 4) ); //*** WHY need -4 ?????????
-		short w = (short) Math.round( getWidth() * 256 / ColHandle.COL_UNITS_TO_PIXELS );
-		short h = (short) Math.round( calcHeight() * 20 / (RowHandle.ROW_HEIGHT_DIVISOR - 2) ); //*** WHY need -2 ?????????
+		short x = (short) Math.round( (getX() * 256) / ColHandle.COL_UNITS_TO_PIXELS );
+		short y = (short) Math.round( (getY() * 20) / (RowHandle.ROW_HEIGHT_DIVISOR - 4) ); //*** WHY need -4 ?????????
+		short w = (short) Math.round( (getWidth() * 256) / ColHandle.COL_UNITS_TO_PIXELS );
+		short h = (short) Math.round( (calcHeight() * 20) / (RowHandle.ROW_HEIGHT_DIVISOR - 2) ); //*** WHY need -2 ?????????
 		
 /* testsing new way above		short x= (short) Math.round(getX()*(XCONVERSION);	// convert excel units to pixels
 		short y= (short) Math.round(getY()*PIXELCONVERSION);	// convert points to pixels
@@ -1688,10 +1688,10 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		int z = 0;
 		short col = 0;
 		short colOffset = 0;
-		for( short i = 0; i < XLSConstants.MAXCOLS && z < x; i++ )
+		for( short i = 0; (i < XLSConstants.MAXCOLS) && (z < x); i++ )
 		{
 			int w = getColWidth( i );
-			if( z + w < x )
+			if( (z + w) < x )
 			{
 				z += w;
 			}
@@ -1739,7 +1739,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		for( short i = 0; z < y; i++ )
 		{
 			double h = getRowHeight( i );
-			if( z + h < y )
+			if( (z + h) < y )
 			{
 				z += h;
 			}
@@ -1789,7 +1789,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		double colOff = bounds[MSODrawing.COLOFFSET] / 1024.0;
 		int col1 = bounds[MSODrawing.COL1];
 		double colOff1 = bounds[MSODrawing.COLOFFSET1] / 1024.0;
-		double w = getColWidth( col ) - getColWidth( col ) * colOff;
+		double w = getColWidth( col ) - (getColWidth( col ) * colOff);
 		for( int i = col + 1; i < col1; i++ )
 		{
 			w += getColWidth( i );
@@ -1830,7 +1830,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		int row1 = bounds[MSODrawing.ROW1];
 		double rowOff = bounds[MSODrawing.ROWOFFSET] / 256.0;
 		double rowOff1 = bounds[MSODrawing.ROWOFFSET1] / 256.0;
-		double y = getRowHeight( row ) - getRowHeight( row ) * rowOff;
+		double y = getRowHeight( row ) - (getRowHeight( row ) * rowOff);
 		for( int i = row + 1; i < row1; i++ )
 		{
 			y += getRowHeight( i );
@@ -1864,10 +1864,10 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 			col1 = col;
 			colOff1 = (short) Math.round( (1024 * (w / (double) getColWidth( col ))) ) + bounds[MSODrawing.COLOFFSET];
 		}
-		for( int i = col + 1; i < XLSConstants.MAXCOLS && z < w; i++ )
+		for( int i = col + 1; (i < XLSConstants.MAXCOLS) && (z < w); i++ )
 		{
 			int cw = getColWidth( i );
-			if( z + cw < w )
+			if( (z + cw) < w )
 			{
 				z += cw;
 			}
@@ -1905,7 +1905,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		for( int i = row + 1; y < h; i++ )
 		{
 			rh = getRowHeight( i );
-			if( y + rh < h )
+			if( (y + rh) < h )
 			{
 				y += rh;
 			}

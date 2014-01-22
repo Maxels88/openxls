@@ -488,7 +488,7 @@ public class Dxf implements OOXMLElement
 	 */
 	public void createFill( int fs, int fg, int bg, WorkBookHandle bk )
 	{
-		if( fs < 0 || fs > OOXMLConstants.patternFill.length )
+		if( (fs < 0) || (fs > OOXMLConstants.patternFill.length) )
 		{
 			this.fill = new Fill( null, fg, bg, bk.getWorkBook().getTheme() );    // meaning it's the default (solid bg) pattern
 		}

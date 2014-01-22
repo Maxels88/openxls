@@ -203,10 +203,10 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 			// set the offset
 			//int stringlength=0;
 			continueStrPos = (sstpos - contoff);
-			if( continueStrPos > RecLen && (whichContinue + 1) < mysst.continues.size() )
+			if( (continueStrPos > RecLen) && ((whichContinue + 1) < mysst.continues.size()) )
 			{ // new bucket
 				updateRecLen = true;
-				continueStrPos = (continueStrPos - RecLen + 1);
+				continueStrPos = ((continueStrPos - RecLen) + 1);
 
 				if( updateRecLen )
 				{
@@ -217,7 +217,7 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 				}
 				Object[] grbits = mysst.getContinueDef( mysst, false );
 				Byte[] grbytes = (Byte[]) grbits[1];
-				if( (grbytes[whichContinue] != null) && (grbytes[whichContinue].byteValue() == 0x0 || grbytes[whichContinue].byteValue() == 0x1) )
+				if( (grbytes[whichContinue] != null) && ((grbytes[whichContinue].byteValue() == 0x0) || (grbytes[whichContinue].byteValue() == 0x1)) )
 				{
 					contoff += (RecLen);
 					sstOffset += 5;
@@ -237,7 +237,7 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 			{
 				Logger.logInfo( "ExtSST IB = " + sststartpos );
 				Logger.logInfo( "ExtSST CB = " + (continueStrPos - 4) );
-				Logger.logInfo( "String number " + t * newdsst );
+				Logger.logInfo( "String number " + (t * newdsst) );
 				Logger.logInfo( "Continue number " + whichContinue );
 				Logger.logInfo( "" );
 			}

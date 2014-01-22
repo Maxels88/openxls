@@ -112,7 +112,7 @@ public class StackedAreaChart extends AreaChart
 			{
 				x1 = (x) + j * xfactor;
 				double yval = areapoints[j][i];    // current point
-				points += ((x) + (j) * xfactor) + "," + ((y + h) - (yval * yfactor));
+				points += ((x) + ((j) * xfactor)) + "," + ((y + h) - (yval * yfactor));
 
 				if( j == 0 )
 				{
@@ -127,16 +127,16 @@ public class StackedAreaChart extends AreaChart
 					boolean showCategories = (dls[i] & AttachedLabel.CATEGORYLABEL) == AttachedLabel.CATEGORYLABEL;
 					boolean showValueLabel = (dls[i] & AttachedLabel.VALUELABEL) == AttachedLabel.VALUELABEL;
 					boolean showValue = (dls[i] & AttachedLabel.VALUE) == AttachedLabel.VALUE;
-					if( showCategories && !(showValue || showValueLabel) && j == 0 )
+					if( showCategories && !(showValue || showValueLabel) && (j == 0) )
 					{    // only 1 label, centered along category axis within area
 						//y1+= (seriesx[seriesx.length/2]/2)*yfactor;
 						double hh = (areapoints[areapoints.length / 2][i] * yfactor);
-						double yy = (y + h) - hh + 10;
+						double yy = ((y + h) - hh) + 10;
 						if( labels == null )
 						{
 							labels = "";
 						}
-						labels = "<text x='" + (x + w / 2) + "' y='" + yy + "' vertical-align='middle' " + this.getDataLabelFontSVG() + " style='text-align:middle;'>" + l + "</text>\r\n";
+						labels = "<text x='" + (x + (w / 2)) + "' y='" + yy + "' vertical-align='middle' " + this.getDataLabelFontSVG() + " style='text-align:middle;'>" + l + "</text>\r\n";
 					}
 					else if( showValue || showValueLabel )
 					{ // labels at each data point

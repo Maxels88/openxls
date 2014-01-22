@@ -347,14 +347,14 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	public ThreeD getThreeDRec( boolean bCreate )
 	{
 		ThreeD td = (ThreeD) Chart.findRec( this.chartArr, ThreeD.class );
-		if( td == null && bCreate )
+		if( (td == null) && bCreate )
 		{ // add ThreeD rec
 			for( int i = 0; i < this.chartArr.size(); i++ )
 			{
 				BiffRec b = (BiffRec) this.chartArr.get( i );
 				if( b.getOpcode() == CHARTFORMATLINK )
 				{
-					if( (i + 1) < chartArr.size() && ((BiffRec) this.chartArr.get( i + 1 )).getOpcode() == SERIESLIST )
+					if( ((i + 1) < chartArr.size()) && (((BiffRec) this.chartArr.get( i + 1 )).getOpcode() == SERIESLIST) )
 					{
 						i++;    // rare that SeriesList record appears
 					}
@@ -377,7 +377,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	{
 		int i = Chart.findRecPosition( this.chartArr, Legend.class );
 		TextDisp td = null;
-		if( this.chartArr.size() <= (i + 1) || this.chartArr.get( i + 1 ).getClass() != DefaultText.class )
+		if( (this.chartArr.size() <= (i + 1)) || (this.chartArr.get( i + 1 ).getClass() != DefaultText.class) )
 		{ // then add one
 			DefaultText d = (DefaultText) DefaultText.getPrototype();
 			d.setType( (short) type );
@@ -420,7 +420,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	private DataFormat getDataFormatRec( boolean bCreate )
 	{
 		DataFormat df = (DataFormat) Chart.findRec( this.chartArr, DataFormat.class );
-		if( df == null && bCreate )
+		if( (df == null) && bCreate )
 		{ // create dataformat
 			df = (DataFormat) DataFormat.getPrototypeWithFormatRecs( this.getParentChart() );
 			this.addChartRecord( df );
@@ -570,7 +570,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 		int z = Chart.findRecPosition( this.chartArr, DataLabExtContents.class );
 
 		// here we are assuming that the TextDisp is of the proper ObjectLink=4 type ... 
-		if( z > 0 && this.chartArr.get( z - 1 ) instanceof TextDisp )
+		if( (z > 0) && (this.chartArr.get( z - 1 ) instanceof TextDisp) )
 		{ // Extended Label -- add to attachedlabel, if any
 			DataLabExtContents dl = (DataLabExtContents) chartArr.get( z );
 			datalabels = dl.getTypeInt(); // if so, no fontx record ... use default???
@@ -690,7 +690,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 		{
 			BiffRec br = (BiffRec) chartArr.get( i );
 			short op = br.getOpcode();
-			if( op == DROPBAR || op == LEGEND || op == THREED || op == CHARTFORMATLINK )
+			if( (op == DROPBAR) || (op == LEGEND) || (op == THREED) || (op == CHARTFORMATLINK) )
 			{
 				cl = (ChartLine) cl.getPrototype();
 				cl.setParentChart( this.getParentChart() );
@@ -792,7 +792,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 			{
 				BiffRec br = (BiffRec) chartArr.get( i );
 				short op = br.getOpcode();
-				if( op == SERIESLIST || op == LEGEND || op == THREED || op == CHARTFORMATLINK )
+				if( (op == SERIESLIST) || (op == LEGEND) || (op == THREED) || (op == CHARTFORMATLINK) )
 				{
 					chartArr.add( ++i, upBar );
 					chartArr.add( ++i, downBar );
@@ -1006,7 +1006,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 					{
 						bFoundDefaultText0 = (((DefaultText) b).getType() == 0);
 					}
-					if( ((DefaultText) b).getType() == 1 && bFoundDefaultText0 )
+					if( (((DefaultText) b).getType() == 1) && bFoundDefaultText0 )
 					{
 						sb.append( " ShowLegendKey=\"true\"" );
 					}

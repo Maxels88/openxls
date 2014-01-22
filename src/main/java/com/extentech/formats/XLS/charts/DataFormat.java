@@ -199,7 +199,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	{
 		AttachedLabel al = null;
 		al = (AttachedLabel) Chart.findRec( this.chartArr, AttachedLabel.class );
-		if( al == null && bCreate )
+		if( (al == null) && bCreate )
 		{ // basic options are handled via AttachedLabel rec
 			al = (AttachedLabel) AttachedLabel.getPrototype();
 			int z = Chart.findRecPosition( this.chartArr, MarkerFormat.class );

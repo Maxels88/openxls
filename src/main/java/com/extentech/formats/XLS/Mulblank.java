@@ -137,7 +137,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 
 		data = getData();
 		super.init();
-		if( this.getLength() - 4 <= 0 )
+		if( (this.getLength() - 4) <= 0 )
 		{
 			if( DEBUGLEVEL > -1 )
 			{
@@ -167,7 +167,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 			{
 				Logger.logInfo( "INFO: MULBLANK range: " + colFirst + ":" + colLast );
 			}
-			int numblanks = colLast - colFirst + 1;
+			int numblanks = (colLast - colFirst) + 1;
 //			blanks = new ArrayList();
 			if( numblanks < 1 )
 			{
@@ -272,7 +272,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 			System.arraycopy( rgixfe, 0, tmp, 0, tmp.length );    // skip last
 			rgixfe = tmp;
 		}
-		if( c > colFirst && c < colLast )
+		if( (c > colFirst) && (c < colLast) )
 		{
 			// must break apart Mulblank as now is non-contiguous ...
 			// keep first colFirst->c as a MulBlank
@@ -297,7 +297,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 					this.getWorkBook().addRecord( b, true );    // and add a blank in it's place
 				}
 				// truncate the rgixfe:
-				byte[] tmp = new byte[(2 * (c - colFirst + 1))];
+				byte[] tmp = new byte[(2 * ((c - colFirst) + 1))];
 				System.arraycopy( rgixfe, 0, tmp, 0, tmp.length );    // skip last
 				rgixfe = tmp;
 				// now truncate the Mulblank
@@ -309,7 +309,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 			}
 			col = c;    // the blank to remove
 		}
-		if( colFirst < 0 || colLast < 0 )
+		if( (colFirst < 0) || (colLast < 0) )
 		{    // can happen when removing multiple cells ..?
 			return true;
 		}
@@ -445,7 +445,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 	public void setIxfe( int i )
 	{
 		int idx = 0;
-		if( col != -1 && col >= colFirst && col <= colLast )
+		if( (col != -1) && (col >= colFirst) && (col <= colLast) )
 		{
 			idx = (col - colFirst) * 2;
 		}

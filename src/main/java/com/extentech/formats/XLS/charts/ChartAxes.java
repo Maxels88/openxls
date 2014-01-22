@@ -307,7 +307,7 @@ public class ChartAxes implements ChartConstants, Serializable
 		Axis a = getAxis( axisType, false );
 		if( a != null )
 		{
-			boolean defaultIsVert = (axisType == YAXIS && ("".equals( a.getTitle() )));
+			boolean defaultIsVert = ((axisType == YAXIS) && ("".equals( a.getTitle() )));
 			a.setTitle( Title );
 			if( defaultIsVert )
 			{
@@ -891,7 +891,7 @@ public class ChartAxes implements ChartConstants, Serializable
 			java.awt.Font f = new java.awt.Font( ef.getFontName(), ef.getFontWeight(), (int) ef.getFontHeightInPoints() );
 			AtomicInteger h = new AtomicInteger( 0 );
 			double w = getRotatedWidth( f, h, this.getTitle( XAXIS ), this.getTitleRotation( XAXIS ) );
-			axisMetrics.put( "XAXISTITLEOFFSET", new Double( h.intValue() + 10 ) );	/* add a little padding */
+			axisMetrics.put( "XAXISTITLEOFFSET", (double) (h.intValue() + 10) );	/* add a little padding */
 		}
 
 		// Y Axis Title Offsets 
@@ -937,11 +937,11 @@ public class ChartAxes implements ChartConstants, Serializable
 				int nSeries = 0;
 				if( min == 0 )    // usual case
 				{
-					nSeries = ((major != 0) ? (int) (max / major) + 1 : 0);
+					nSeries = ((major != 0) ? ((int) (max / major) + 1) : 0);
 				}
 				else
 				{
-					nSeries = ((major != 0) ? (int) ((max - min) / major) + 1 : 0);
+					nSeries = ((major != 0) ? ((int) ((max - min) / major) + 1) : 0);
 				}
 				nSeries = Math.abs( nSeries );
 				series = new StringBuffer[nSeries];
@@ -980,7 +980,7 @@ public class ChartAxes implements ChartConstants, Serializable
 		}
 
 		// Label Offsets ...
-		if( this.hasAxis( XAXIS ) && charttype != RADARCHART && charttype != RADARAREACHART )
+		if( this.hasAxis( XAXIS ) && (charttype != RADARCHART) && (charttype != RADARAREACHART) )
 		{ //(Pie, donut, etc. don't have axes labels so disregard
 			Object[] s;            // Determine X Axis Label offsets
 			double width;
@@ -1004,7 +1004,7 @@ public class ChartAxes implements ChartConstants, Serializable
 			axisMetrics.put( "xAxisRotate", rot.intValue() ); // possibly changed when calculating label offsets
 			axisMetrics.put( "XAXISLABELOFFSET", off );
 		}
-		if( this.hasAxis( YAXIS ) && charttype != RADARCHART && charttype != RADARAREACHART )
+		if( this.hasAxis( YAXIS ) && (charttype != RADARCHART) && (charttype != RADARAREACHART) )
 		{    //(Pie, Donut, etc. don't have axes labels so disregard
 			// for Y axis, determine width of labels and use as offset (except for bar charts, use height as offset) 			
 			Object[] s;
@@ -1199,7 +1199,7 @@ public class ChartAxes implements ChartConstants, Serializable
 			int lastSpace = -1;
 			int j = s.lastIndexOf( "\n" ) + 1;
 			len = -1;
-			while( len < width && j < str.length() )
+			while( (len < width) && (j < str.length()) )
 			{
 				len += StringTool.getApproximateCharWidth( f, str.charAt( j ) );
 				if( str.charAt( j ) == ' ' )

@@ -836,7 +836,7 @@ public class NameHandle
 						{ // handles empties
 							;//
 						}
-						if( x != cx1.length - 1 )
+						if( x != (cx1.length - 1) )
 						{
 							ret.append( "'," );
 						}

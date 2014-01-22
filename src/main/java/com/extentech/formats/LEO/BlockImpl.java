@@ -74,7 +74,7 @@ public abstract class BlockImpl implements com.extentech.formats.LEO.Block, Comp
 			blockvec.clear();
 			blockvec = null;
 		}
-		if( nextblock != null && nextblock != this )
+		if( (nextblock != null) && (nextblock != this) )
 		{
 			nextblock = null;
 		}
@@ -136,7 +136,7 @@ public abstract class BlockImpl implements com.extentech.formats.LEO.Block, Comp
 			originalpos = 0;
 		}
 		// CAN HAPPEN ON OUT-OF-SPEC FILES whom have last block size < 512
-		if( capcheck < SIZE + originalpos )
+		if( capcheck < (SIZE + originalpos) )
 		{
 			SIZE = capcheck - originalpos;
 		}
@@ -192,7 +192,7 @@ public abstract class BlockImpl implements com.extentech.formats.LEO.Block, Comp
 		{
 			originalpos = 0;
 		}
-		if( capcheck < SIZE + originalpos )
+		if( capcheck < (SIZE + originalpos) )
 		{
 			SIZE = capcheck - originalpos;    // CAN HAPPEN ON OUT-OF-SPEC FILES whom have last block size < 512
 		}

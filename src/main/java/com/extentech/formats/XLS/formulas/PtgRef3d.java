@@ -206,7 +206,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 	public Boundsheet getSheet( WorkBook b )
 	{
 		Boundsheet[] bsa = b.getExternSheet().getBoundSheets( ixti );
-		if( bsa != null && bsa[0] == null )
+		if( (bsa != null) && (bsa[0] == null) )
 		{ // 20080303 KSC: catch error
 			// try harder...
 			if( parent_rec.getSheet() != null )
@@ -379,7 +379,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 			ret = getLocation();
 			if( (ret.indexOf( "!" ) == -1) && (sheetname != null) )
 			{ // prepend sheetname
-				if( sheetname.indexOf( ' ' ) == -1 && sheetname.charAt( 0 ) != '\'' )    // 20081211 KSC: Sheet names with spaces must have surrounding quotes
+				if( (sheetname.indexOf( ' ' ) == -1) && (sheetname.charAt( 0 ) != '\'') )    // 20081211 KSC: Sheet names with spaces must have surrounding quotes
 				{
 					ret = sheetname + "!" + ret;
 				}
@@ -509,10 +509,10 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 		if( parent_rec != null )
 		{
 			WorkBook wb = parent_rec.getWorkBook();
-			if( wb != null && wb.getExternSheet() != null )
+			if( (wb != null) && (wb.getExternSheet() != null) )
 			{
 				Boundsheet[] bsa = wb.getExternSheet().getBoundSheets( this.ixti );
-				if( bsa == null || bsa[0] == null )
+				if( (bsa == null) || (bsa[0] == null) )
 				{// 20080303 KSC: Catch Unresolved External refs
 					if( parent_rec instanceof Formula )
 					{
@@ -545,10 +545,10 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 			if( parent_rec != null )
 			{
 				WorkBook wb = parent_rec.getWorkBook();
-				if( wb != null && wb.getExternSheet() != null )
+				if( (wb != null) && (wb.getExternSheet() != null) )
 				{    // 20080306 KSC: new way is to get sheet names rather than sheets as can be external refs
 					String[] sheets = wb.getExternSheet().getBoundSheetNames( this.ixti );
-					if( sheets != null && sheets[0] != null )
+					if( (sheets != null) && (sheets[0] != null) )
 					{
 						sheetname = sheets[0];
 					}

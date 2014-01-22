@@ -46,7 +46,7 @@ public class DateCellFormat extends SimpleDateFormat implements CellFormat
 	{
 		// make sure to return the empty string for blank cells
 		// getting the calendar coerces to double and thus gets zero
-		if( (cell instanceof CellHandle && ((CellHandle) cell).isBlank()) || "".equals( cell.getVal() ) )
+		if( ((cell instanceof CellHandle) && ((CellHandle) cell).isBlank()) || "".equals( cell.getVal() ) )
 		{
 			return "";
 		}

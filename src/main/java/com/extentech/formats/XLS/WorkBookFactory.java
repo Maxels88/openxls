@@ -226,7 +226,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 			Logger.logInfo( "XLS File Size: " + String.valueOf( blen ) );
 		}
 
-		for( int i = 0; i <= blen - 4; )
+		for( int i = 0; i <= (blen - 4); )
 		{
 
 			this.fireProgressChanged(); // ""
@@ -234,7 +234,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 			opcode = ByteTools.readShort( headerbytes[0], headerbytes[1] );
 			reclen = ByteTools.readShort( headerbytes[2], headerbytes[3] );
 
-			if( lastOpcode == EOF && (opcode == 0) || (opcode == 0xffffffff) )
+			if( ((lastOpcode == EOF) && (opcode == 0)) || (opcode == 0xffffffff) )
 			{
 				int startpos = i - 3, junkreclen = 0, offset = 0;
 
@@ -263,7 +263,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 							.toHexString( opcode ) );
 				}
 
-				if( opcode == BOF || infile )
+				if( (opcode == BOF) || infile )
 				{ // if the first Bof has been
 					// reached, start
 					infile = true;
@@ -277,7 +277,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 					}
 
 					/**** KSC: record-level validation ****/
-					if( bPerformRecordLevelValidation && curSubstream != null )
+					if( bPerformRecordLevelValidation && (curSubstream != null) )
 					{
 						markRecord( curSubstream, rec, opcode );
 					}
@@ -324,7 +324,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 							book.setFirstBof( (com.extentech.formats.XLS.Bof) rec );
 							isWBBOF = false;
 						}
-						else if( bPerformRecordLevelValidation && BofCount == 0 && lastOpcode != EOF && curSubstream != null )
+						else if( bPerformRecordLevelValidation && (BofCount == 0) && (lastOpcode != EOF) && (curSubstream != null) )
 						{
 							/***** KSC: record-level validation ****/
 							// invalid record structure-  no EOF before BOF
@@ -333,7 +333,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 
 						BofCount++;
 						/***** KSC: record-level validation ****/
-						if( bPerformRecordLevelValidation && curSubstream == null )
+						if( bPerformRecordLevelValidation && (curSubstream == null) )
 						{
 							// after global substream is processed, switch to sheet substream
 							reInitSubstream( sheetSubstream );
@@ -347,7 +347,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 						BofCount--;
 
 						/***** KSC: record-level validation ****/
-						if( bPerformRecordLevelValidation && BofCount == 0 && curSubstream != null )
+						if( bPerformRecordLevelValidation && (BofCount == 0) && (curSubstream != null) )
 						{
 							validateRecords( curSubstream, book, rec.getSheet() );
 							curSubstream = null;
@@ -404,7 +404,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 			throw new InvalidRecordException( "InvalidRecordException BAD RECORD LENGTH: " + " off: " + offset + " op: " + Integer.toHexString(
 					opcode ) + " len: " + datalen );
 		}
-		if( offset + datalen > bytebuf.getLength() )
+		if( (offset + datalen) > bytebuf.getLength() )
 		{
 			throw new InvalidRecordException( "InvalidRecordException RECORD LENGTH LONGER THAN FILE: " + " off: " + offset + " op: " + Integer
 					.toHexString( opcode ) + " len: " + datalen + " buflen:" + bytebuf.getLength() );
@@ -435,7 +435,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 		boolean found = false;
 		int x = rec.getOffset();
 		short opcode = 0x0;
-		while( !found && x < parsedata.getLength() - 2 )
+		while( !found && (x < (parsedata.getLength() - 2)) )
 		{
 			opcode = ByteTools.readShort( parsedata.get( rec, x ), parsedata.get( rec, ++x ) );
 			if( opcode == op )
@@ -784,7 +784,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 		R lastR = new R( false );
 		lastR.recordPos = 0;
 		int lastOp = -1;
-		if( bs != null && bs.isChartOnlySheet() )
+		if( (bs != null) && bs.isChartOnlySheet() )
 		{
 			return;    // don't validate chart-only sheets
 		}
@@ -830,7 +830,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 				for( int zz = 0; zz < opcodes.length; zz++ )
 				{
 					R nextR = map.get( opcodes[zz] );
-					if( nextR.isPresent && !r.equals( nextR ) && nextR.recordPos >= r.recordPos )
+					if( nextR.isPresent && !r.equals( nextR ) && (nextR.recordPos >= r.recordPos) )
 					{
 						nextR.recordPos++;
 					}
@@ -871,7 +871,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 			if( r.isPresent )
 			{
 				// compare ordered list of records (R) to actual order (denoted via recordPos)
-				if( r.recordPos < lastR.recordPos && r.recordPos >= 0 )
+				if( (r.recordPos < lastR.recordPos) && (r.recordPos >= 0) )
 				{ // Out Of Order (NOTE: CellTable entries will have a record pos = -1)
 					if( r.altPrecedor != null )
 					{    // record can have more than 1 valid predecessor
@@ -897,7 +897,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 					for( int zz = i - 1; zz > 0; zz-- )
 					{
 						R prevr = map.get( opcodes[zz] );
-						if( prevr.isPresent && r.recordPos < prevr.recordPos )
+						if( prevr.isPresent && (r.recordPos < prevr.recordPos) )
 						{
 //System.out.println("\tInsert at " + prevr.recordPos + " before op= " + opcodes[zz]);
 							int recsMovedCount = 0;
@@ -919,7 +919,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 							for( int jj = 0; jj < opcodes.length; jj++ )
 							{
 								R nextR = map.get( opcodes[jj] );
-								if( nextR.isPresent && nextR.recordPos >= origRecPos && nextR.recordPos <= r.recordPos && opcodes[jj] != op )
+								if( nextR.isPresent && (nextR.recordPos >= origRecPos) && (nextR.recordPos <= r.recordPos) && (opcodes[jj] != op) )
 								{
 									nextR.recordPos -= recsMovedCount;
 								}
@@ -1103,7 +1103,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 						BiffRec b = (BiffRec) book.getStreamer().records.get( z );
 						if( b.getOpcode() == BOUNDSHEET )
 						{
-							while( z > 0 && b.getOpcode() == BOUNDSHEET )
+							while( (z > 0) && (b.getOpcode() == BOUNDSHEET) )
 							{
 								nSheets++;
 								b = (BiffRec) book.getStreamer().records.get( --z );

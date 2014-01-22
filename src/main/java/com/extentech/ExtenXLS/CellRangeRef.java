@@ -245,7 +245,7 @@ public class CellRangeRef implements Cloneable
 	 */
 	public boolean hasSheet()
 	{
-		return first_sheet != null || first_sheet_name != null;
+		return (first_sheet != null) || (first_sheet_name != null);
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class CellRangeRef implements Cloneable
 	 */
 	public boolean isMultiSheet()
 	{
-		return (first_sheet != null && last_sheet != null && first_sheet != last_sheet) || (first_sheet_name != null && last_sheet_name != null && first_sheet_name != last_sheet_name);
+		return ((first_sheet != null) && (last_sheet != null) && (first_sheet != last_sheet)) || ((first_sheet_name != null) && (last_sheet_name != null) && (first_sheet_name != last_sheet_name));
 	}
 
 	/**
@@ -320,7 +320,7 @@ public class CellRangeRef implements Cloneable
 	 */
 	public boolean contains( CellRangeRef range )
 	{
-		return this.first_row <= range.first_row && this.last_row >= range.last_row && this.first_col <= range.first_col && this.last_col >= range.last_col;
+		return (this.first_row <= range.first_row) && (this.last_row >= range.last_row) && (this.first_col <= range.first_col) && (this.last_col >= range.last_col);
 	}
 
 	/**
@@ -332,7 +332,7 @@ public class CellRangeRef implements Cloneable
 	public boolean equals( Object other )
 	{
 		// if it's null or not a CellRangeRef it can't be equal
-		if( other == null || !(other instanceof CellRangeRef) )
+		if( (other == null) || !(other instanceof CellRangeRef) )
 		{
 			return false;
 		}
@@ -364,7 +364,7 @@ public class CellRangeRef implements Cloneable
 	{
 		String sheet1 = getFirstSheetName();
 		String sheet2 = getLastSheetName();
-		return (sheet1 != null ? sheet1 + (sheet2 != null && sheet2 != sheet1 ? ":" + sheet2 : "") + "!" : "") + ExcelTools.formatRange( new int[]{
+		return ((sheet1 != null) ? (sheet1 + (((sheet2 != null) && (sheet2 != sheet1)) ? (":" + sheet2) : "") + "!") : "") + ExcelTools.formatRange( new int[]{
 				first_col, first_row, last_col, last_row
 		} );
 	}

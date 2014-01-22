@@ -117,7 +117,7 @@ public final class NumberRec extends XLSCellRecord
 			isFPNumber = true;
 			isIntNumber = false;
 		}
-		else if( d.substring( d.length() - 2, d.length() ).equals( ".0" ) && fpnum < Integer.MAX_VALUE )
+		else if( d.substring( d.length() - 2, d.length() ).equals( ".0" ) && (fpnum < Integer.MAX_VALUE) )
 		{
 			// this is for extenXLS output files, as we put int's into number records!
 			isIntNumber = true;
@@ -126,7 +126,7 @@ public final class NumberRec extends XLSCellRecord
 		}
 		else
 		{
-			if( fpnum < Float.MAX_VALUE || fpnum * -1 < Float.MAX_VALUE )
+			if( (fpnum < Float.MAX_VALUE) || ((fpnum * -1) < Float.MAX_VALUE) )
 			{
 				isFPNumber = true;
 				isIntNumber = false;

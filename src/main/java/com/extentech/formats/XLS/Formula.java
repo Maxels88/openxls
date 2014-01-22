@@ -171,7 +171,7 @@ public final class Formula extends XLSCellRecord
 		byte[] currVal = this.getBytesAt( 6, 8 );
 
 		// Is this a non-numeric value?
-		if( currVal[6] == (byte) 0xFF && currVal[7] == (byte) 0xFF )
+		if( (currVal[6] == (byte) 0xFF) && (currVal[7] == (byte) 0xFF) )
 		{
 			// String value
 			if( currVal[0] == (byte) 0x00 )
@@ -193,7 +193,7 @@ public final class Formula extends XLSCellRecord
 			// Boolean value
 			else if( currVal[0] == (byte) 0x01 )
 			{
-				cachedValue = Boolean.valueOf( currVal[2] != (byte) 0x00 );
+				cachedValue = currVal[2] != (byte) 0x00;
 			}
 
 			// Error value
@@ -215,7 +215,7 @@ public final class Formula extends XLSCellRecord
 			double dbv = ByteTools.eightBytetoLEDouble( currVal );
 			if( !Double.isNaN( dbv ) )
 			{
-				cachedValue = new Double( dbv );
+				cachedValue = dbv;
 			}
 		}
 
@@ -343,7 +343,7 @@ public final class Formula extends XLSCellRecord
 		}
 		else if( b instanceof StringRec )
 		{
-			if( !haveStringRec || string == null )
+			if( !haveStringRec || (string == null) )
 			{// should ONLY have 1 StringRec
 				internalRecords.add( b );
 				haveStringRec = true;
@@ -480,7 +480,7 @@ public final class Formula extends XLSCellRecord
 	//TODO: refactor external references and make private
 	void populateExpression()
 	{
-		if( expression != null || data == null )
+		if( (expression != null) || (data == null) )
 		{
 			return;
 		}
@@ -489,7 +489,7 @@ public final class Formula extends XLSCellRecord
 		{
 			short length = ByteTools.readShort( this.getByteAt( 20 ), this.getByteAt( 21 ) );
 
-			if( length + 22 > data.length )
+			if( (length + 22) > data.length )
 			{
 				throw new Exception( "cce longer than record" );
 			}
@@ -534,7 +534,7 @@ public final class Formula extends XLSCellRecord
 		}
 
 		// If this is an instantiation instead of a reference
-		if( expression.size() != 1 || !(expression.get( 0 ) instanceof PtgExp) )
+		if( (expression.size() != 1) || !(expression.get( 0 ) instanceof PtgExp) )
 		{
 			//TODO: find which ShrFmla this is and convert to reference
 			// For now, just clear fShrFmla
@@ -679,9 +679,9 @@ public final class Formula extends XLSCellRecord
 			setData( new byte[6] );    // happens when newly init'ing a formula
 		}
 
-		if( cachedValue instanceof String && !"".equals( cachedValue ) && !isErrorValue( (String) cachedValue ) )
+		if( (cachedValue instanceof String) && !"".equals( cachedValue ) && !isErrorValue( (String) cachedValue ) )
 		{// if it's a string and not an error string
-			if( !haveStringRec || string == null )
+			if( !haveStringRec || (string == null) )
 			{
 //					this.addInternalRecord( new StringRec( (String)cachedValue ) ); // will be added in workbook.addRecord
 				string = new StringRec( (String) cachedValue );
@@ -712,7 +712,7 @@ public final class Formula extends XLSCellRecord
 	public void preStream()
 	{
 		// If the record doesn't need to be updated, do nothing
-		if( !dirty && !isSharedFormula() && cachedValue != null &&
+		if( !dirty && !isSharedFormula() && (cachedValue != null) &&
 				(getWorkBook().getCalcMode() != WorkBook.CALCULATE_EXPLICIT) )
 		{
 			return;
@@ -740,7 +740,7 @@ public final class Formula extends XLSCellRecord
 			grbit |= FCALCONLOAD;
 			if( writeValue == null )
 			{
-				writeValue = new Double( Double.NaN );
+				writeValue = Double.NaN;
 			}
 		}
 
@@ -813,7 +813,7 @@ public final class Formula extends XLSCellRecord
 				{
 					value[2] = (byte) 0x00;
 					String sval = (String) writeValue;
-					if( sval.equals( "" ) || string == null )
+					if( sval.equals( "" ) || (string == null) )
 					{    // the latter can occur when input from XLSX; a cachedvalue is set without an associated StringRec
 						value[0] = (byte) 0x03; // means empty
 					}
@@ -841,7 +841,7 @@ public final class Formula extends XLSCellRecord
 			}
 			else
 			{
-				throw new Error( "unknown value type " + (writeValue == null ? "null" : writeValue.getClass().getName()) );
+				throw new Error( "unknown value type " + ((writeValue == null) ? "null" : writeValue.getClass().getName()) );
 			}
 		}
 		System.arraycopy( value, 0, newdata, 6, 8 );
@@ -904,7 +904,7 @@ public final class Formula extends XLSCellRecord
 			}
 			double db = ((Double) obx).doubleValue();
 			int ret = ((Double) obx).intValue();
-			if( (db - ret) > 0 && DEBUGLEVEL > this.DEBUG_LOW )
+			if( ((db - ret) > 0) && (DEBUGLEVEL > this.DEBUG_LOW) )
 			{
 				Logger.logWarn( "Loss of precision converting " + tl + " to int." );
 			}
@@ -1241,7 +1241,7 @@ public final class Formula extends XLSCellRecord
 				colA = this.getColNumber() - pxp.getColFirst();
 				// now, if it's a 1-dimensional array e.g {1,2,3,4,5}, nr=1, nc= 5
 				// if formula address is traversing rows then switch
-				if( rows.length == 1 && rowA > 0 && colA == 0 )
+				if( (rows.length == 1) && (rowA > 0) && (colA == 0) )
 				{
 					colA = rowA;
 					rowA = 0;
@@ -1323,7 +1323,7 @@ public final class Formula extends XLSCellRecord
 	 */
 	public boolean isArrayFormula()
 	{
-		if( internalRecords != null && internalRecords.size() > 0 )
+		if( (internalRecords != null) && (internalRecords.size() > 0) )
 		{
 			return (internalRecords.get( 0 ) instanceof Array);
 		}
@@ -1361,7 +1361,7 @@ public final class Formula extends XLSCellRecord
 	 */
 	public void setArrayRefs( String s )
 	{
-		if( internalRecords != null && internalRecords.size() > 0 )
+		if( (internalRecords != null) && (internalRecords.size() > 0) )
 		{
 			Object o = internalRecords.get( 0 );
 			if( o instanceof Array )
@@ -1413,7 +1413,7 @@ public final class Formula extends XLSCellRecord
 
 	public String getArrayRefs()
 	{
-		if( internalRecords != null && internalRecords.size() > 0 )
+		if( (internalRecords != null) && (internalRecords.size() > 0) )
 		{
 			Object o = internalRecords.get( 0 );
 			return ((Array) o).getArrayRefs();
@@ -1439,7 +1439,7 @@ public final class Formula extends XLSCellRecord
 				String s = p.getLocation();
 				if( p.getIsReference() )
 				{
-					if( !((((PtgRef) p).wholeRow && colInc != 0) || (((PtgRef) p).wholeCol && rowInc != 0)) )
+					if( !((((PtgRef) p).wholeRow && (colInc != 0)) || (((PtgRef) p).wholeCol && (rowInc != 0))) )
 					{
 						if( !(p instanceof PtgArea) )
 						{
@@ -1585,7 +1585,7 @@ public final class Formula extends XLSCellRecord
 		}
 		if( shared != null )
 		{
-			if( shared.getMembers() == null || shared.getMembers().size() == 1 )    // last one
+			if( (shared.getMembers() == null) || (shared.getMembers().size() == 1) )    // last one
 			{
 				shared.close();
 			}

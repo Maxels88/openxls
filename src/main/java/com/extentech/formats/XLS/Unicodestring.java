@@ -321,7 +321,7 @@ public final class Unicodestring implements XLSConstants, Serializable
 				ExtRst = new byte[cchExtRst];
 				System.arraycopy( ustrdata, (dlen + offer + formatlen), ExtRst, 0, cchExtRst ); // Extendadata
 //report error???
-				if( ExtRst[0] != 1 || ExtRst[1] != 0 )
+				if( (ExtRst[0] != 1) || (ExtRst[1] != 0) )
 				{
 					Logger.logWarn( "Unicodestring.initEasternEncoding: Phonetic Data is not correct" );
 				}
@@ -354,7 +354,7 @@ public final class Unicodestring implements XLSConstants, Serializable
 				System.arraycopy( ustrdata, 7, stringarray, 0, dlen ); // string data
 				System.arraycopy( ustrdata, (ustrdata.length - ExtRst.length) - off, ExtRst, 0, ExtRst.length ); // Extendadata
 // report error???
-				if( ExtRst[0] != 1 || ExtRst[1] != 0 )
+				if( (ExtRst[0] != 1) || (ExtRst[1] != 0) )
 				{
 					Logger.logWarn( "Unicodestring.initEasternEncoding: Phonetic Data is not correct" );
 				}
@@ -389,7 +389,7 @@ public final class Unicodestring implements XLSConstants, Serializable
 		}
 
 		// handle data being greater than the length of the bytes
-		if( dlen + offer > ustrdata.length )
+		if( (dlen + offer) > ustrdata.length )
 		{
 			dlen = ustrdata.length - offer;
 		}
@@ -757,7 +757,7 @@ public final class Unicodestring implements XLSConstants, Serializable
 	 */
 	private static boolean isJapanese( char c )
 	{
-		if( c >= '\u0100' && c <= '\uffff' )
+		if( (c >= '\u0100') && (c <= '\uffff') )
 		{
 			return true;
 		}
@@ -786,52 +786,52 @@ public final class Unicodestring implements XLSConstants, Serializable
 	private static boolean isJapaneseII( char c )
 	{
 		// katakana:
-		if( c >= '\u30a0' && c <= '\u30ff' )
+		if( (c >= '\u30a0') && (c <= '\u30ff') )
 		{
 			return true;
 		}
 		// hiragana
-		if( c >= '\u3040' && c <= '\u309f' )
+		if( (c >= '\u3040') && (c <= '\u309f') )
 		{
 			return true;
 		}
 		// CJK Unified Ideographs
-		if( c >= '\u4e00' && c <= '\u9fff' )
+		if( (c >= '\u4e00') && (c <= '\u9fff') )
 		{
 			return true;
 		}
 		// CJK symbols & punctuation
-		if( c >= '\u3000' && c <= '\u303f' )
+		if( (c >= '\u3000') && (c <= '\u303f') )
 		{
 			return true;
 		}
 		// KangXi (kanji)
-		if( c >= '\u2f00' && c <= '\u2fdf' )
+		if( (c >= '\u2f00') && (c <= '\u2fdf') )
 		{
 			return true;
 		}
 		// KanBun
-		if( c >= '\u3190' && c <= '\u319f' )
+		if( (c >= '\u3190') && (c <= '\u319f') )
 		{
 			return true;
 		}
 		// CJK Unified Ideographs Extension A
-		if( c >= '\u3400' && c <= '\u4db5' )
+		if( (c >= '\u3400') && (c <= '\u4db5') )
 		{
 			return true;
 		}
 		// CJK Compatibility Forms
-		if( c >= '\ufe30' && c <= '\ufe4f' )
+		if( (c >= '\ufe30') && (c <= '\ufe4f') )
 		{
 			return true;
 		}
 		// CJK Compatibility
-		if( c >= '\u3300' && c <= '\u33ff' )
+		if( (c >= '\u3300') && (c <= '\u33ff') )
 		{
 			return true;
 		}
 		// CJK Radicals Supplement
-		if( c >= '\u2e80' && c <= '\u2eff' )
+		if( (c >= '\u2e80') && (c <= '\u2eff') )
 		{
 			return true;
 		}

@@ -235,7 +235,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	void setFormatHandle()
 	{
 		setMulblank();
-		if( formatter != null && formatter.getFormatId() == this.mycell.getIxfe() )
+		if( (formatter != null) && (formatter.getFormatId() == this.mycell.getIxfe()) )
 		{
 			return;
 		}
@@ -248,7 +248,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		else
 		{// should ever happen now?
 			// useExistingXF = false;
-			if( wbh == null && this.mycell.getWorkBook() != null )
+			if( (wbh == null) && (this.mycell.getWorkBook() != null) )
 			{
 				formatter = new FormatHandle( this.mycell.getWorkBook(), -1 );
 			}
@@ -492,7 +492,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		// handle white on white text issue
 		Xf x = mycell.getXfRec();
 		int clidb = x.getBackgroundColor();
-		if( clidx == 64 && clidb == 64 )
+		if( (clidx == 64) && (clidb == 64) )
 		{ // return black
 			return FormatHandle.Black;
 		}
@@ -964,7 +964,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		// Ahhh, much cooler fonts here!
 		ftmap.put( java.awt.font.TextAttribute.FAMILY, fface );
 		float fx = this.getFontWeight();
-		ftmap.put( java.awt.font.TextAttribute.SIZE, new Float( sz ) );
+		ftmap.put( java.awt.font.TextAttribute.SIZE, (float) sz );
 		// TODO: Interpret other weights- LIGHT, DEMI_LIGHT, DEMI_BOLD, etc.
 		if( fx == FormatHandle.BOLD )
 		{
@@ -1119,7 +1119,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 				return false;
 			}
 			int[] i = cr.getRangeCoords();
-			if( this.getRowNum() + 1 == i[0] && this.getColNum() == i[1] )
+			if( ((this.getRowNum() + 1) == i[0]) && (this.getColNum() == i[1]) )
 			{
 				return true;
 			}
@@ -1437,7 +1437,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	{
 		String numval = mycell.getStringVal();
 		int i = this.getCellType();
-		if( i == TYPE_FP || i == TYPE_INT || i == TYPE_FORMULA || i == TYPE_DOUBLE )
+		if( (i == TYPE_FP) || (i == TYPE_INT) || (i == TYPE_FORMULA) || (i == TYPE_DOUBLE) )
 		{
 			return ExcelTools.formatNumericNotation( numval, notation );
 		}
@@ -1480,7 +1480,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	public int getConditionalFormatId()
 	{
 		ConditionalFormatHandle[] cfhandles = this.getConditionalFormatHandles();
-		if( cfhandles == null || cfhandles.length == 0 )
+		if( (cfhandles == null) || (cfhandles.length == 0) )
 		{
 			return this.getFormatId();
 		}
@@ -2031,7 +2031,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		if( obj instanceof String )
 		{
 			String formstr = (String) obj;
-			if( formstr.indexOf( "=" ) == 0 || formstr.startsWith( "{=" ) )
+			if( (formstr.indexOf( "=" ) == 0) || formstr.startsWith( "{=" ) )
 			{ // Formula or array string
 				try
 				{
@@ -2079,11 +2079,11 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	{
 		try
 		{
-			if( (s == null || s.equals( "" )) && !(mycell instanceof Blank) )
+			if( ((s == null) || s.equals( "" )) && !(mycell instanceof Blank) )
 			{
 				changeCellType( s );
 			}
-			else if( s != null && !s.equals( "" ) )
+			else if( (s != null) && !s.equals( "" ) )
 			{
 				if( !(mycell instanceof Labelsst) )
 				{
@@ -2113,11 +2113,11 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	{
 		try
 		{
-			if( (us == null || us.equals( "" )) && !(mycell instanceof Blank) )
+			if( ((us == null) || us.equals( "" )) && !(mycell instanceof Blank) )
 			{
 				changeCellType( null ); // set to blank
 			}
-			else if( us != null && !us.equals( "" ) )
+			else if( (us != null) && !us.equals( "" ) )
 			{
 				if( !(mycell instanceof Labelsst) )
 				{
@@ -2460,8 +2460,8 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public boolean isDefaultCell()
 	{
-		if( (this.getCellType() == CellHandle.TYPE_BLANK) && ((this.getFormatId() == 15 && !this.wbh.getWorkBook().getIsExcel2007()) || this
-				.getFormatId() == 0) && (this.getMergedCellRange() == null) && (this.getURL() == null) && (this.getValidationHandle() == null) )
+		if( (this.getCellType() == CellHandle.TYPE_BLANK) && (((this.getFormatId() == 15) && !this.wbh.getWorkBook()
+		                                                                                              .getIsExcel2007()) || (this.getFormatId() == 0)) && (this.getMergedCellRange() == null) && (this.getURL() == null) && (this.getValidationHandle() == null) )
 		{
 			return true;
 		}
@@ -2555,7 +2555,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 					{
 						typename = "Integer";
 					}
-					else if( val instanceof java.util.Date || val instanceof java.sql.Date || val instanceof java.sql.Timestamp )
+					else if( (val instanceof java.util.Date) || (val instanceof java.sql.Date) || (val instanceof java.sql.Timestamp) )
 					{
 						typename = "DateTime";
 					}
@@ -2841,7 +2841,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	private void setBiffRecValue( Object obj ) throws CellTypeMismatchException
 	{
-		if( mycell.getOpcode() == XLSConstants.BLANK || mycell.getOpcode() == XLSConstants.MULBLANK )
+		if( (mycell.getOpcode() == XLSConstants.BLANK) || (mycell.getOpcode() == XLSConstants.MULBLANK) )
 		{
 			// no reason for this Blank blank = (Blank)mycell;
 			// String addr = mycell.getCellAddress();
@@ -2862,7 +2862,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 				// should never be false ??? if (!(mycell instanceof Blank))
 				changeCellType( obj ); // will set to blank
 			}
-			else if( obj instanceof Float || obj instanceof Double || obj instanceof Integer || obj instanceof Long )
+			else if( (obj instanceof Float) || (obj instanceof Double) || (obj instanceof Integer) || (obj instanceof Long) )
 			{
 				if( (mycell instanceof NumberRec) || (mycell instanceof Rk) )
 				{
@@ -3271,9 +3271,9 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 						{
 							typename = JSON_INTEGER;
 						}
-						else if( val instanceof java.util.Date ||
-								val instanceof java.sql.Date ||
-								val instanceof java.sql.Timestamp )
+						else if( (val instanceof java.util.Date) ||
+								(val instanceof java.sql.Date) ||
+								(val instanceof java.sql.Timestamp) )
 						{
 							typename = JSON_DATETIME;
 						}

@@ -102,7 +102,7 @@ public class PtgNE extends GenericPtg implements Ptg
 			{
 				//double[] dub = super.getValuesFromPtgs(form);
 				// there should always be only two ptg's in this, error if not.
-				if( o == null || o.length != 2 )
+				if( (o == null) || (o.length != 2) )
 				{
 					Logger.logWarn( "calculating formula failed, wrong number of values in PtgNE" );
 					return null;
@@ -111,7 +111,7 @@ public class PtgNE extends GenericPtg implements Ptg
 				// determine if any of the operands are double - if true,
 				// then blank comparisons will be treated as 0's
 				boolean isDouble = false;
-				for( int i = 0; i < 2 && !isDouble; i++ )
+				for( int i = 0; (i < 2) && !isDouble; i++ )
 				{
 					//if (!form[i].isBlank())
 					isDouble = ((o[i] instanceof Double));
@@ -119,11 +119,11 @@ public class PtgNE extends GenericPtg implements Ptg
 				for( int i = 0; i < 2; i++ )
 				{
 					//if (form[i].isBlank()) {
-					if( o[i] != null && o[i].toString().equals( "" ) )
+					if( (o[i] != null) && o[i].toString().equals( "" ) )
 					{
 						if( isDouble )
 						{
-							o[i] = new Double( 0.0 );
+							o[i] = 0.0;
 						}
 						else
 						{
@@ -131,7 +131,7 @@ public class PtgNE extends GenericPtg implements Ptg
 						}
 					}
 				}
-				if( o[0] instanceof Double && o[1] instanceof Double )
+				if( (o[0] instanceof Double) && (o[1] instanceof Double) )
 				{
 					res = (Math.abs( (((Double) o[0]).doubleValue()) - ((Double) o[1]).doubleValue() )) > doublePrecision;    // compare equality to certain precision
 				}
@@ -155,7 +155,7 @@ public class PtgNE extends GenericPtg implements Ptg
 					return new PtgErr( PtgErr.ERROR_VALUE );
 				}
 				int nVals = java.lang.reflect.Array.getLength( o[0] );    // use first array element to determine length of values as subsequent vals might not be arrays
-				for( int i = 0; i < nArrays - 1; i += 2 )
+				for( int i = 0; i < (nArrays - 1); i += 2 )
 				{
 					res = false;
 					Object secondOp = null;
@@ -172,7 +172,7 @@ public class PtgNE extends GenericPtg implements Ptg
 							secondOp = Array.get( o[i + 1], j );    // second array index j
 						}
 
-						if( firstOp instanceof Double && secondOp instanceof Double )
+						if( (firstOp instanceof Double) && (secondOp instanceof Double) )
 						{
 							res = (Math.abs( (((Double) firstOp).doubleValue()) - ((Double) secondOp).doubleValue() )) > doublePrecision;    // compare to certain precision instead of equality
 						}

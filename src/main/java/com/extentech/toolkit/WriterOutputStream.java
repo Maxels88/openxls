@@ -122,7 +122,7 @@ public class WriterOutputStream extends OutputStream
 
 		// Append the input to the buffer if it'll fit. If not and there are
 		// bytes left in the buffer fill it anyway so we don't lose them.
-		if( length <= inputBuffer.remaining() || inputBuffer.position() > 0 )
+		if( (length <= inputBuffer.remaining()) || (inputBuffer.position() > 0) )
 		{
 			int fill = Math.min( inputBuffer.remaining(), length );
 			inputBuffer.put( buffer, offset, fill );

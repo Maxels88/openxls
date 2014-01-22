@@ -1130,7 +1130,7 @@ class Blip implements OOXMLElement
 	 */
 	public String getEmbed()
 	{
-		if( attrs != null && attrs.get( "r:embed" ) != null )
+		if( (attrs != null) && (attrs.get( "r:embed" ) != null) )
 		{
 			return (String) attrs.get( "r:embed" );
 		}
@@ -1144,7 +1144,7 @@ class Blip implements OOXMLElement
 	 */
 	public String getLink()
 	{
-		if( attrs != null && attrs.get( "link" ) != null )
+		if( (attrs != null) && (attrs.get( "link" ) != null) )
 		{
 			return (String) attrs.get( "link" );
 		}

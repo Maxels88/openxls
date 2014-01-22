@@ -157,7 +157,7 @@ public class ColHandle
 				int c0 = ih.getCol();
 				int c1 = ih.getCol1();
 				int col = myCol.getColFirst();    // should only be one, right?
-				if( col >= c0 && col <= c1 )
+				if( (col >= c0) && (col <= c1) )
 				{
 					int w = ih.getWidth();
 					iAdjust.add( new int[]{ z, w } );
@@ -201,7 +201,7 @@ public class ColHandle
 				int c0 = ih.getCol();
 				int c1 = ih.getCol1();
 				int col = myCol.getColFirst();    // should only be one, right?
-				if( col >= c0 && col <= c1 )
+				if( (col >= c0) && (col <= c1) )
 				{
 					int w = ih.getWidth();
 					iAdjust.add( new int[]{ z, w } );
@@ -396,7 +396,7 @@ public class ColHandle
 			try
 			{
 				b = r[i].myRow.getCell( (short) this.getColFirst() );
-				if( b != null && b.getMergeRange() != null )
+				if( (b != null) && (b.getMergeRange() != null) )
 				{
 					return true;
 				}

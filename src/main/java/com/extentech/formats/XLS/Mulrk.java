@@ -176,7 +176,7 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 	**/
 	public Mulrk splitMulrk( int splitcol )
 	{
-		if( splitcol < colFirst || splitcol > colLast )
+		if( (splitcol < colFirst) || (splitcol > colLast) )
 		{
 			return null;
 		}

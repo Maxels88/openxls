@@ -255,13 +255,13 @@ public class Axis extends GenericChartObject implements ChartObject
 					icvFore = 0x4E;
 				}
 				// if not defaults, set fore and back of walls, sides or floor
-				if( (wType == 0 && icvFore != 22) // xaxis
-						|| (wType == 1 && icvFore != -1) ) // yaxis
+				if( ((wType == 0) && (icvFore != 22)) // xaxis
+						|| ((wType == 1) && (icvFore != -1)) ) // yaxis
 				{
 					sb.append( " AreaFg=\"" + icvFore + "\"" );
 				}
-				if( (wType == 0 && icvBack != 0) // xaxis
-						|| (wType == 1 && icvBack != 1) ) // yaxis
+				if( ((wType == 0) && (icvBack != 0)) // xaxis
+						|| ((wType == 1) && (icvBack != 1)) ) // yaxis
 				{
 					sb.append( " AreaBg=\"" + icvBack + "\"" );
 				}
@@ -269,7 +269,7 @@ public class Axis extends GenericChartObject implements ChartObject
 			// TODO: parse LineFormat and, if not standard, add as option
 			// TODO: Parse Tick for options            
 		}
-		if( wType == 1 && !hasMajorGridLines ) // most Y Axes have major grid lines; flag if do not
+		if( (wType == 1) && !hasMajorGridLines ) // most Y Axes have major grid lines; flag if do not
 		{
 			sb.append( " MajorGridLines=\"false\"" );
 		}
@@ -400,7 +400,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		// Must add if can't find existing label
 		int x = Chart.findRecPosition( ap.chartArr, TextDisp.class );
 		pos = x;
-		while( x > 0 && linkedtd == null )
+		while( (x > 0) && (linkedtd == null) )
 		{
 			TextDisp td = (TextDisp) ap.chartArr.get( x );
 			if( td.getType() == tdtype )    // found it
@@ -415,7 +415,7 @@ public class Axis extends GenericChartObject implements ChartObject
 				}
 			}
 		}
-		if( linkedtd == null && add )
+		if( (linkedtd == null) && add )
 		{
 			linkedtd = (TextDisp) TextDisp.getPrototype( tdtype, "", this.wkbook );
 			if( pos < 0 )
@@ -599,7 +599,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	{
 		AxisLineFormat alf = null;
 		int j = Chart.findRecPosition( chartArr, AxisLineFormat.class );
-		if( j == -1 && !bCreate )
+		if( (j == -1) && !bCreate )
 		{
 			return null;
 		}
@@ -630,11 +630,9 @@ public class Axis extends GenericChartObject implements ChartObject
 		for(; j < chartArr.size(); j++ )
 		{
 			BiffRec b = (BiffRec) chartArr.get( j );
-			if( b.getOpcode() == AREAFORMAT ||
-					b.getOpcode() == GELFRAME ||
-					b.getOpcode() == 2213 ||	/* TextPropsStream */
-					b.getOpcode() == 2212 ||  /* ShapePropsStream */
-					b.getOpcode() == 2206 )	/* CtrlMlFrt */
+			if( (b.getOpcode() == AREAFORMAT) ||
+					(b.getOpcode() == GELFRAME) ||
+					(b.getOpcode() == 2213) || (b.getOpcode() == 2212) || (b.getOpcode() == 2206) )	/* CtrlMlFrt */
 			{
 				break;
 			}
@@ -701,7 +699,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	protected YMult getYMultRec( boolean bCreate )
 	{
 		YMult ym = (YMult) Chart.findRec( chartArr, YMult.class );
-		if( ym == null && bCreate )
+		if( (ym == null) && bCreate )
 		{
 			ym = (YMult) YMult.getPrototype();
 			ym.setParentChart( this.getParentChart() );
@@ -775,11 +773,11 @@ public class Axis extends GenericChartObject implements ChartObject
 		JSONObject axisOptions = new JSONObject();
 		try
 		{
-			if( wType == YAXIS && chartType != ChartConstants.BARCHART )
+			if( (wType == YAXIS) && (chartType != ChartConstants.BARCHART) )
 			{
 				axisOptions.put( "vertical", true );
 			}
-			else if( wType == XAXIS && chartType == ChartConstants.BARCHART )
+			else if( (wType == XAXIS) && (chartType == ChartConstants.BARCHART) )
 			{
 				axisOptions.put( "vertical", true );
 			}
@@ -873,7 +871,7 @@ public class Axis extends GenericChartObject implements ChartObject
 					switch( id )
 					{
 						case AxisLineFormat.ID_MAJOR_GRID:
-							if( wType == XAXIS || chartType == ChartConstants.BARCHART )
+							if( (wType == XAXIS) || (chartType == ChartConstants.BARCHART) )
 							{
 								gridJSON.put( "hMajorLines", false );
 							}
@@ -1574,7 +1572,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		if( t != null )
 		{    // shoudn't 
 			String p = t.getOption( "tickLblPos" );
-			if( p == null || p.equals( "none" ) )
+			if( (p == null) || p.equals( "none" ) )
 			{
 				return Axis.INVISIBLE;
 			}
@@ -1889,7 +1887,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		// scaling - required
 		String s = this.getOption( "orientation" );
 		double[] d = this.getMinMax();
-		if( s != null || d[0] != d[1] )
+		if( (s != null) || (d[0] != d[1]) )
 		{    // if have orientation or min/max set ..
 			axisooxml.append( "<c:scaling>\r\n" );
 			if( s != null )
@@ -2148,7 +2146,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		}
 
 		int wtype = wType;
-		if( wtype == XAXIS && (charttype == ChartConstants.SCATTERCHART || charttype == ChartConstants.BUBBLECHART) )
+		if( (wtype == XAXIS) && ((charttype == ChartConstants.SCATTERCHART) || (charttype == ChartConstants.BUBBLECHART)) )
 		{    // XY Charts - X Axis is a Value Axis
 			wtype = XVALAXIS;
 		}
@@ -2226,7 +2224,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		double XAXISLABELOFFSET = (Double) ca.getMetric( "XAXISLABELOFFSET" );
 		double XAXISTITLEOFFSET = (Double) ca.getMetric( "XAXISTITLEOFFSET" );
 
-		int labelRot = (wType == XAXIS ? xAxisRotate : 0);    // TODO: handle Y axis rotation 
+		int labelRot = ((wType == XAXIS) ? xAxisRotate : 0);    // TODO: handle Y axis rotation
 		if( labelRot != 0 )
 		{
 			// get font object so can calculate rotation point
@@ -2240,7 +2238,7 @@ public class Axis extends GenericChartObject implements ChartObject
 			{
 			}
 		}
-		if( categories != null && categories.length > 0 )
+		if( (categories != null) && (categories.length > 0) )
 		{ // shouldn't
 			// Category Labels - centered within area on X Axis
 			inc = w / categories.length;
@@ -2400,7 +2398,7 @@ public class Axis extends GenericChartObject implements ChartObject
 				x0 = x + (!xAxisReversed ? 0 : w);
 				x1 = x0 - 2 * rfX;// minor ticks
 				y1 = y0;
-				if( i < max && minor > 0 )
+				if( (i < max) && (minor > 0) )
 				{
 					if( showMinorTickMarks )
 					{
@@ -2450,7 +2448,7 @@ public class Axis extends GenericChartObject implements ChartObject
 			{
 				x0 = x + w + YAXISTITLEOFFSET;
 			}
-			svg.append( getAxisTitleSVG( x0, (y + h / 2), titlefontSVG, titleRot, "yaxistitle" ) );
+			svg.append( getAxisTitleSVG( x0, (y + (h / 2)), titlefontSVG, titleRot, "yaxistitle" ) );
 		}
 		return svg.toString();
 	}
@@ -2493,7 +2491,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		double XAXISLABELOFFSET = (Double) ca.getMetric( "XAXISLABELOFFSET" );
 		double XAXISTITLEOFFSET = (Double) ca.getMetric( "XAXISTITLEOFFSET" );
 
-		if( categories != null && categories.length > 0 )
+		if( (categories != null) && (categories.length > 0) )
 		{ // shouldn't
 			double xmin = Double.MAX_VALUE, xmax = Double.MIN_VALUE;
 			boolean TEXTUALXAXIS = true;
@@ -2586,7 +2584,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		}
 		// X AXIS TITLE
 		int titleRot = (linkedtd != null) ? linkedtd.getRotation() : 0;
-		svg.append( getAxisTitleSVG( (x + w / 2), (y + h + XAXISTITLEOFFSET), titlefontSVG, titleRot, "zaxistitle" ) );
+		svg.append( getAxisTitleSVG( (x + (w / 2)), (y + h + XAXISTITLEOFFSET), titlefontSVG, titleRot, "zaxistitle" ) );
 		return svg.toString();
 	}
 
@@ -2695,12 +2693,12 @@ public class Axis extends GenericChartObject implements ChartObject
 				{
 					x0 = x + w + YAXISTITLEOFFSET;
 				}
-				svg.append( getAxisTitleSVG( x0, (y + h / 2), titlefontSVG, 90, "xaxistitle" ) );
+				svg.append( getAxisTitleSVG( x0, (y + (h / 2)), titlefontSVG, 90, "xaxistitle" ) );
 				break;
 			case YAXIS:
 				rfX = (!xAxisReversed ? 1 : -1);    // if reversed, y vals on top (x axis), cats are in reversed order (y axis) 
 				rfY = (!yAxisReversed ? 1 : -1);    // if reversed, y vals in reverse order (x axis), cats are on RHS (y axis)
-				if( categories != null && categories.length > 0 )
+				if( (categories != null) && (categories.length > 0) )
 				{ // should! 
 					inc = h / categories.length;
 					x0 = x;    // + (!yAxisReversed?0:ci.w);	// draw y axis tick marks + y axis labels (= categories) 
@@ -2746,9 +2744,9 @@ public class Axis extends GenericChartObject implements ChartObject
 						}
 					}
 					// is the X AXIS TITLE i.e. GOES ON THE X AXIS
-					y0 = (!xAxisReversed ? canvash - XAXISTITLEOFFSET : y - XAXISTITLEOFFSET);
+					y0 = (!xAxisReversed ? (canvash - XAXISTITLEOFFSET) : (y - XAXISTITLEOFFSET));
 					int titleRot = (linkedtd != null) ? linkedtd.getRotation() : 0;
-					svg.append( getAxisTitleSVG( (x + w / 2), y0, titlefontSVG, titleRot, "yaxistitle" ) );
+					svg.append( getAxisTitleSVG( (x + (w / 2)), y0, titlefontSVG, titleRot, "yaxistitle" ) );
 				}
 				break;
 		}
@@ -2780,12 +2778,12 @@ public class Axis extends GenericChartObject implements ChartObject
 		if( wType == YAXIS )
 		{
 			svg.append( "<g>\r\n" );
-			if( categories != null && categories.length > 0 )
+			if( (categories != null) && (categories.length > 0) )
 			{ // shouldn't
 				major = major * 2;    // appears the scale calc doesn't follow other charts ...	
 				double n = categories.length;
-				double centerx = w / 2 + x;
-				double centery = h / 2 + y;
+				double centerx = (w / 2) + x;
+				double centery = (h / 2) + y;
 				double percentage = 1 / n;        // divide into equal sections
 				double radius = Math.min( w, h ) / 2.3;    // should take up almost entire w/h of chart
 				double radiusinc = radius / (max / major);
@@ -2797,14 +2795,14 @@ public class Axis extends GenericChartObject implements ChartObject
 					for( int i = 0; i <= n; i++ )
 					{        // each category is a radial line; <= n so can complete the spider web line path
 						// get next point on circumference 
-						double x1 = centerx + radius * (Math.cos( Math.toRadians( angle ) ));
-						double y1 = centery - radius * (Math.sin( Math.toRadians( angle ) ));
+						double x1 = centerx + (radius * (Math.cos( Math.toRadians( angle ) )));
+						double y1 = centery - (radius * (Math.sin( Math.toRadians( angle ) )));
 						svg.append( "<line fill='none' fill-opacity='" + ChartType.getFillOpacity() + "'" + ChartType.getStrokeSVG() + " x1='" + lastx + "' y1='" + lasty + "' x2='" + x1 + "' y2='" + y1 + "'/>\r\n" );
-						if( j == 0 && i < n )
+						if( (j == 0) && (i < n) )
 						{    // print radial lines & labels at very end of chart/top of each line  -- only do for 1st round
 							svg.append( "<line fill='none' fill-opacity='" + ChartType.getFillOpacity() + "' " + ChartType.getStrokeSVG() + " x1='" + centerx + "' y1='" + centery + "' x2='" + x1 + "' y2='" + y1 + "'/>\r\n" );
-							double labelx1 = centerx + (radius + 10) * (Math.cos( Math.toRadians( angle ) ));
-							double labely1 = centery - (radius + 10) * (Math.sin( Math.toRadians( angle ) ));
+							double labelx1 = centerx + ((radius + 10) * (Math.cos( Math.toRadians( angle ) )));
+							double labely1 = centery - ((radius + 10) * (Math.sin( Math.toRadians( angle ) )));
 							svg.append( "<text id='xaxislabels" + (k++) + "' x='" + labelx1 + "' y='" + labely1 + "' style='text-anchor: middle;' " + labelFontSVG + ">" + categories[i]
 									.toString() + "</text>\r\n" );
 						}
@@ -2857,7 +2855,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		int k = labelfontSVG.indexOf( "font-size=" ) + 11;
 		double fh = Double.parseDouble( labelfontSVG.substring( k,
 		                                                        labelfontSVG.indexOf( "pt" ) ) );    // approximate height of a line of labels
-		y0 = y + (!yAxisReversed ? h + XAXISLABELOFFSET / 3 : -XAXISLABELOFFSET);    // draw on bottom edge of axis unless Y axis is reversed
+		y0 = y + (!yAxisReversed ? (h + (XAXISLABELOFFSET / 3)) : -XAXISLABELOFFSET);    // draw on bottom edge of axis unless Y axis is reversed
 		int m = 0;    // axis label index
 		for( int i = 0; i < categories.length; i++ )
 		{
@@ -2878,7 +2876,7 @@ public class Axis extends GenericChartObject implements ChartObject
 					len = (int) Math.ceil( len * (Math.cos( Math.toRadians( labelRot ) )) );
 				}
 				int offset = (int) (len / 2) + 5;
-				y0 = y + (!yAxisReversed ? h + offset : -offset);
+				y0 = y + (!yAxisReversed ? (h + offset) : -offset);
 				if( labelRot == 45 )
 				{
 					x0 += inc / 2;
@@ -2888,7 +2886,7 @@ public class Axis extends GenericChartObject implements ChartObject
 			// handle multiple lines in X axis labels - must do "by hand"
 			String[] s = categories[i].toString().split( "\n" );
 			svg.append( "<text id='xaxislabels" + (m++) + "' x='" + x0 + "' y='" + y0 +
-					            (labelRot == 0 ? "" : "' transform='rotate(" + labelRot + ", " + (x0) + " , " + (y0) + ")") +
+					            ((labelRot == 0) ? "" : ("' transform='rotate(" + labelRot + ", " + (x0) + " , " + (y0) + ")")) +
 					            "' style='text-anchor: middle;' alignment-baseline='text-after-edge' " + labelfontSVG + ">" );
 			for( int z = 0; z < s.length; z++ )
 			{
@@ -2914,7 +2912,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		StringBuffer svg = new StringBuffer();
 		svg.append( "<g>\r\n" );
 		svg.append( "<text " + getScript( scriptTitle ) + " x='" + x + "' y='" + y +
-				            (titleRot == 0 ? "" : "' transform='rotate(-" + titleRot + ", " + x + " ," + y + ")") +
+				            ((titleRot == 0) ? "" : ("' transform='rotate(-" + titleRot + ", " + x + " ," + y + ")")) +
 				            "' style='text-anchor: middle;' " + titlefontSVG + ">" + this.getTitle() + "</text>\r\n" );
 		svg.append( "</g>\r\n" );
 		return svg.toString();

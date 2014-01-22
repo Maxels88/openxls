@@ -141,7 +141,7 @@ public class PtgMemAreaA extends PtgMemArea
 		 */
 		String getString()
 		{
-			if( rwFirst == rwLast && colFirst == colLast )
+			if( (rwFirst == rwLast) && (colFirst == colLast) )
 			{
 				// it is a single cell amoeba
 				String retstr = ExcelTools.getAlphaVal( colLast );

@@ -233,7 +233,7 @@ public class Ln implements OOXMLElement
 	 */
 	public int getWidth()
 	{
-		if( attrs != null && attrs.get( "w" ) != null )
+		if( (attrs != null) && (attrs.get( "w" ) != null) )
 		// Specifies the width to be used for the underline stroke.
 		// If this attribute is omitted, then a value of 0 is assumed.
 		{

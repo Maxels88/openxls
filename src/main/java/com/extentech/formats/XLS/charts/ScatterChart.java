@@ -122,9 +122,9 @@ public class ScatterChart extends ChartType
 		{
 			// TODO: Log error
 		}
-		minMax[0] = new Double( yMin );
-		minMax[1] = new Double( yMax );
-		minMax[2] = new Double( nSeries );
+		minMax[0] = yMin;
+		minMax[1] = yMax;
+		minMax[2] = (double) nSeries;
 		return chartObjectJSON;
 	}
 
@@ -275,12 +275,12 @@ public class ScatterChart extends ChartType
 				{
 					xval = seriesx[j];
 				}
-				points += ((x) + xval * xfactor) + "," + ((y + h) - (seriesy[j] * yfactor));
+				points += ((x) + (xval * xfactor)) + "," + ((y + h) - (seriesy[j] * yfactor));
 				points += " ";
 				String l = getSVGDataLabels( dls, axisMetrics, seriesy[j], 0, i, legends, categories[j].toString() );
 				if( l != null )
 				{
-					labels += "<text x='" + (12 + (x) + xval * xfactor) + "' y='" + (((y + h) - (seriesy[j] * yfactor))) +
+					labels += "<text x='" + (12 + (x) + (xval * xfactor)) + "' y='" + (((y + h) - (seriesy[j] * yfactor))) +
 							"' " + this.getDataLabelFontSVG() + ">" + l + "</text>\r\n";
 				}
 
@@ -365,11 +365,11 @@ public class ScatterChart extends ChartType
 				break;
 			}
 		}
-		if( style == null && this.getHasLines() )
+		if( (style == null) && this.getHasLines() )
 		{
 			style = "line";
 		}
-		if( style == null && this.getHasSmoothLines() )
+		if( (style == null) && this.getHasSmoothLines() )
 		{
 			style = "smooth";
 		}

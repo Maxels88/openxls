@@ -292,7 +292,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 					;    // fall thru -- see sheet copy operations -- appears correct
 				}
 			}
-			if( wb != null && wb.getExternSheet() != null )
+			if( (wb != null) && (wb.getExternSheet() != null) )
 			{
 				Boundsheet[] bsa = wb.getExternSheet().getBoundSheets( this.ixti );
 				if( bsa != null )
@@ -314,7 +314,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 		if( parent_rec != null )
 		{
 			WorkBook wb = parent_rec.getWorkBook();
-			if( wb != null && wb.getExternSheet() != null )
+			if( (wb != null) && (wb.getExternSheet() != null) )
 			{
 				Boundsheet[] bsa = wb.getExternSheet().getBoundSheets( this.ixti );
 				if( bsa != null )
@@ -366,17 +366,17 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 			if( parent_rec != null )
 			{
 				WorkBook wb = parent_rec.getWorkBook();
-				if( wb != null && wb.getExternSheet() != null )
+				if( (wb != null) && (wb.getExternSheet() != null) )
 				{
 					String[] sheets = wb.getExternSheet().getBoundSheetNames( this.ixti );
-					if( sheets != null && sheets.length > 0 )
+					if( (sheets != null) && (sheets.length > 0) )
 					{
 						sheetname = sheets[0];
 						sheetname = qualifySheetname( sheetname );
 					}
 				}
 
-				if( sheetname == null && parent_rec != null && parent_rec.getSheet() != null )
+				if( (sheetname == null) && (parent_rec != null) && (parent_rec.getSheet() != null) )
 				{    // try this:
 					sheetname = parent_rec.getSheet().getSheetName();
 					sheetname = qualifySheetname( sheetname );
@@ -397,10 +397,10 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 		if( parent_rec != null )
 		{
 			WorkBook wb = parent_rec.getWorkBook();
-			if( wb != null && wb.getExternSheet() != null )
+			if( (wb != null) && (wb.getExternSheet() != null) )
 			{
 				String[] sheets = wb.getExternSheet().getBoundSheetNames( this.ixti );
-				if( sheets != null && sheets.length > 0 )
+				if( (sheets != null) && (sheets.length > 0) )
 				{
 					sheetname = sheets[sheets.length - 1];
 				}
@@ -499,7 +499,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 		this.fColRel = firstPtg.isColRel();
 		this.fRwRel = firstPtg.isRowRel();
 		//init sets formula row to 1st row for a shared formula; adjust here
-		if( parent_rec != null && parent_rec instanceof Shrfmla )
+		if( (parent_rec != null) && (parent_rec instanceof Shrfmla) )
 		{
 			lastPtg.formulaRow = ((Shrfmla) parent_rec).getLastRow();
 			lastPtg.formulaCol = ((Shrfmla) parent_rec).getLastCol();
@@ -530,7 +530,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 	{
 		try
 		{
-			if( useReferenceTracker && locax != null )    // if in tracker already, remove
+			if( useReferenceTracker && (locax != null) )    // if in tracker already, remove
 			{
 				this.removeFromRefTracker();
 			}
@@ -566,7 +566,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 				xsht = b.getExternSheet();
 				int boundnum = b.getWorkSheetByName( sheetname ).getSheetNum();
 				int boundnum2 = boundnum; // it could possibly be a 3d ref - check
-				if( !sheetname.equals( sheetname2 ) && sheetname2 != null )
+				if( !sheetname.equals( sheetname2 ) && (sheetname2 != null) )
 				{
 					boundnum2 = b.getWorkSheetByName( sheetname2 ).getSheetNum();
 				}

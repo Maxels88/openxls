@@ -66,11 +66,11 @@ public class FunctionHandler
 		int oplen = ptgs.length - 1;
 		operands = new Ptg[oplen];
 		System.arraycopy( ptgs, 1, operands, 0, oplen );
-		if( funk.getOpcode() == 0x21 || funk.getOpcode() == 0x41 || funk.getOpcode() == 0x61 )
+		if( (funk.getOpcode() == 0x21) || (funk.getOpcode() == 0x41) || (funk.getOpcode() == 0x61) )
 		{  // ptgfunc
 			return calculatePtgFunc( funk, funkId, operands );
 		}
-		else if( funk.getOpcode() == 0x22 || funk.getOpcode() == 0x42 || funk.getOpcode() == 0x62 )
+		else if( (funk.getOpcode() == 0x22) || (funk.getOpcode() == 0x42) || (funk.getOpcode() == 0x62) )
 		{ // ptgfuncvar
 			return calculatePtgFuncVar( funk, funkId, operands );
 		}
@@ -1347,7 +1347,7 @@ public class FunctionHandler
 
 			default:
 				String s = FunctionConstants.getFunctionString( (short) functionId );
-				if( s != null && !s.equals( "" ) )
+				if( (s != null) && !s.equals( "" ) )
 				{
 					s = s.substring( 0, s.length() - 1 );
 				}

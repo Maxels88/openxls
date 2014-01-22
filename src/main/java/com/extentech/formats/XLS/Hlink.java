@@ -591,7 +591,7 @@ class HLinkStruct implements XLSConstants, Serializable
 				// copy char array length (cch) of description + description bytes
 				byte[] descbytes = desc.getBytes( UNICODEENCODING );
 				int newcch = descbytes.length;
-				byte[] newcchbytes = ByteTools.cLongToLEBytes( newcch / 2 + 1 );
+				byte[] newcchbytes = ByteTools.cLongToLEBytes( (newcch / 2) + 1 );
 
 				// copy cch of desc in...
 				newbytes = ByteTools.append( newcchbytes, newbytes );
@@ -648,7 +648,7 @@ class HLinkStruct implements XLSConstants, Serializable
 				// get cch
 				byte[] tmbytes = tm.getBytes( UNICODEENCODING );
 				int newcch = tmbytes.length;
-				byte[] newcchbytes = ByteTools.cLongToLEBytes( newcch / 2 + 1 );
+				byte[] newcchbytes = ByteTools.cLongToLEBytes( (newcch / 2) + 1 );
 				// copy cch of tm in...
 				newbytes = ByteTools.append( newcchbytes, newbytes );
 

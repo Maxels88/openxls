@@ -145,7 +145,7 @@ public final class Scl extends com.extentech.formats.XLS.XLSRecord
 
 		for( int x = highest; x > 0; x-- )
 		{
-			if( denominator % x == 0 && numerator % x == 0 )
+			if( ((denominator % x) == 0) && ((numerator % x) == 0) )
 			{
 				n = numerator / x;
 				d = denominator / x;

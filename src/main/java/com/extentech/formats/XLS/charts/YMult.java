@@ -160,7 +160,7 @@ public class YMult extends GenericChartObject implements ChartObject
 	 */
 	public void setAxMultiplierId( int m )
 	{
-		if( !(m > -2 && m < 10) )
+		if( !((m > -2) && (m < 10)) )
 		{
 			return;    // report error?
 		}

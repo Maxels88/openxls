@@ -72,7 +72,7 @@ public class PivotCache implements XLSConstants
 			ArrayList<BiffRec> curRecs = new ArrayList();
 			BlockByteReader bytes = child.getBlockReader();
 			int len = bytes.getLength();
-			for( int i = 0; i <= len - 4; )
+			for( int i = 0; i <= (len - 4); )
 			{
 				byte[] headerbytes = bytes.getHeaderBytes( i );
 				short opcode = ByteTools.readShort( headerbytes[0], headerbytes[1] );
@@ -431,7 +431,7 @@ System.out.println(rec.getClass().getName().substring(rec.getClass().getName().l
 					}
 					cachefieldindexes[i][z - 1] = (byte) i;
 					// data cells== CACHE ITEMS 
-					CellHandle c = ch[z * (cols.length) + i];
+					CellHandle c = ch[((z * (cols.length)) + i)];
 // TODO: handle SxNil, SxErr, SxDtr
 // TODO: handle SxFmla, SXName, SxPair, SxFormula					
 					switch( types[i] )

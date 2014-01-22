@@ -396,7 +396,7 @@ public class InformationCalculator
 	protected static Ptg calcInfo( Ptg[] operands )
 	{
 		// validate
-		if( operands == null || operands.length == 0 || operands[0].getParentRec() == null )
+		if( (operands == null) || (operands.length == 0) || (operands[0].getParentRec() == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_VALUE );
 		}
@@ -603,7 +603,7 @@ public class InformationCalculator
 					{
 						return new PtgBool( false );
 					}
-					return new PtgBool( (s % 2 == 0) );
+					return new PtgBool( ((s % 2) == 0) );
 				}
 				else if( o instanceof Float )
 				{
@@ -612,7 +612,7 @@ public class InformationCalculator
 					{
 						return new PtgBool( false );
 					}
-					return new PtgBool( (s % 2 == 0) );
+					return new PtgBool( ((s % 2) == 0) );
 				}
 				else if( o instanceof Double )
 				{
@@ -621,7 +621,7 @@ public class InformationCalculator
 					{
 						return new PtgBool( false );
 					}
-					return new PtgBool( (s % 2 == 0) );
+					return new PtgBool( ((s % 2) == 0) );
 				}
 			}
 			catch( Exception e )
@@ -828,7 +828,7 @@ public class InformationCalculator
 					{
 						return new PtgBool( false );
 					}
-					return new PtgBool( (s % 2 != 0) );
+					return new PtgBool( ((s % 2) != 0) );
 				}
 				else if( o instanceof Float )
 				{
@@ -837,7 +837,7 @@ public class InformationCalculator
 					{
 						return new PtgBool( false );
 					}
-					return new PtgBool( (s % 2 != 0) );
+					return new PtgBool( ((s % 2) != 0) );
 				}
 				else if( o instanceof Double )
 				{
@@ -846,7 +846,7 @@ public class InformationCalculator
 					{
 						return new PtgBool( false );
 					}
-					return new PtgBool( (s % 2 != 0) );
+					return new PtgBool( ((s % 2) != 0) );
 				}
 			}
 			catch( Exception e )
@@ -898,7 +898,7 @@ public class InformationCalculator
 	protected static Ptg calcN( Ptg[] operands )
 	{
 		Object o = operands[0].getValue();
-		if( o instanceof Double || o instanceof Integer || o instanceof Float || o instanceof Long )
+		if( (o instanceof Double) || (o instanceof Integer) || (o instanceof Float) || (o instanceof Long) )
 		{
 			Double d = new Double( o.toString() );
 			return new PtgNumber( d.doubleValue() );

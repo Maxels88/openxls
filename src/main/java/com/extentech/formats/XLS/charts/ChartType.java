@@ -433,9 +433,9 @@ public abstract class ChartType implements ChartConstants, Serializable
 		ThreeD threeD = cf.getThreeDRec( false );
 		if( threeD == null )
 		{
-			if( options.contains( ChartOptions.THREED ) || chartType == SURFACECHART )
+			if( options.contains( ChartOptions.THREED ) || (chartType == SURFACECHART) )
 			{    // surface charts ALWAYS have a 3 record as does pyramid, cone and cylinder charts
-				if( chartType != BUBBLECHART && chartType != SCATTERCHART )    // supposed to be also donught, radar as well ...
+				if( (chartType != BUBBLECHART) && (chartType != SCATTERCHART) )    // supposed to be also donught, radar as well ...
 				{
 					threeD = this.initThreeD( chartType );
 				}
@@ -453,7 +453,7 @@ public abstract class ChartType implements ChartConstants, Serializable
 		{
 			case BARCHART:
 			case COLCHART:
-				if( use3Ddefaults && threeD != null )
+				if( use3Ddefaults && (threeD != null) )
 				{
 					threeD.setChartOption( "AnRot", "20" );
 					threeD.setChartOption( "AnElev", "15" );
@@ -512,7 +512,7 @@ public abstract class ChartType implements ChartConstants, Serializable
 				}
 				break;
 			case AREACHART:
-				if( use3Ddefaults && threeD != null )
+				if( use3Ddefaults && (threeD != null) )
 				{
 					threeD.setChartOption( "AnRot", "20" );
 					threeD.setChartOption( "TwoDWalls", "true" );
@@ -564,7 +564,7 @@ public abstract class ChartType implements ChartConstants, Serializable
 				ca.removeAxes();
 				break;
 			case SURFACECHART:    // NOTE: For Surface charts, non-threeD==Contour
-				if( use3Ddefaults && threeD != null )
+				if( use3Ddefaults && (threeD != null) )
 				{    // shouldn't
 					threeD.setChartOption( "Cluster", "false" );
 					threeD.setChartOption( "TwoDWalls", "true" );
@@ -648,15 +648,15 @@ public abstract class ChartType implements ChartConstants, Serializable
 					threeD.setChartOption( "PcGap", "150" );
 					threeD.setChartOption( "PcHeight", "52" );    // ??????
 				}
-				if( chartType == PYRAMIDCHART || chartType == PYRAMIDBARCHART )
+				if( (chartType == PYRAMIDCHART) || (chartType == PYRAMIDBARCHART) )
 				{
 					cf.setBarShape( ChartConstants.SHAPEPYRAMID );
 				}
-				else if( chartType == CONECHART || chartType == CONEBARCHART )
+				else if( (chartType == CONECHART) || (chartType == CONEBARCHART) )
 				{
 					cf.setBarShape( ChartConstants.SHAPECONE );
 				}
-				else if( chartType == CYLINDERCHART || chartType == CYLINDERBARCHART )
+				else if( (chartType == CYLINDERCHART) || (chartType == CYLINDERBARCHART) )
 				{
 					cf.setBarShape( ChartConstants.SHAPECYLINDER );
 				}
@@ -793,7 +793,7 @@ public abstract class ChartType implements ChartConstants, Serializable
 			                                                               cf );    //, ((ChartType)chartobj.get(0)));
 			cf.setChartObject( co );    // sets the chart format (parent of chart item) to the specific chart item
 			// exception for surface charts in 3d
-			if( chartType == SURFACECHART && (tnm.equals( OOXMLConstants.threeDchartTypes[ChartHandle.SURFACECHART] )) )
+			if( (chartType == SURFACECHART) && (tnm.equals( OOXMLConstants.threeDchartTypes[ChartHandle.SURFACECHART] )) )
 			{
 				((Surface) co).setIs3d( true );
 			}
@@ -876,7 +876,7 @@ public abstract class ChartType implements ChartConstants, Serializable
 					}
 					else if( tnm.equals( "wireframe" ) )
 					{    // surface
-						((Surface) co).setIsWireframe( v != null && v.equals( "1" ) );
+						((Surface) co).setIsWireframe( (v != null) && v.equals( "1" ) );
 					}
 					else if( tnm.equals( "scatterStyle" ) )
 					{
@@ -1167,9 +1167,9 @@ public abstract class ChartType implements ChartConstants, Serializable
 		{
 			// TODO: Log error
 		}
-		minMax[0] = new Double( yMin );
-		minMax[1] = new Double( yMax );
-		minMax[2] = new Double( nSeries );
+		minMax[0] = yMin;
+		minMax[1] = yMax;
+		minMax[2] = (double) nSeries;
 		return chartObjectJSON;
 	}
 
@@ -1316,7 +1316,7 @@ public abstract class ChartType implements ChartConstants, Serializable
 	 */
 	public void showLegend( boolean bShow, boolean vertical )
 	{
-		if( bShow && legend == null )
+		if( bShow && (legend == null) )
 		{
 			legend = Legend.createDefaultLegend( wb );
 			legend.setParentChart( chartobj.getParentChart() );
@@ -1524,7 +1524,7 @@ public abstract class ChartType implements ChartConstants, Serializable
     		if (x!=-1) ap.chartArr.remove(x);
     	} catch (Exception e) {}*/
 		ThreeD td = cf.getThreeDRec( true );
-		td.setIsPie( charttype == PIECHART || charttype == DOUGHNUTCHART );
+		td.setIsPie( (charttype == PIECHART) || (charttype == DOUGHNUTCHART) );
 		return td;
 	}
 

@@ -426,7 +426,7 @@ public class FormulaHandle
 			}
 			int[] orig = ExcelTools.getRowColFromString( range );
 			boolean relCol = !(range.startsWith( "$" ));    // 20100603 KSC: handle relative refs
-			boolean relRow = !(range.length() > 0 && range.substring( 1 ).indexOf( '$' ) > -1);
+			boolean relRow = !((range.length() > 0) && (range.substring( 1 ).indexOf( '$' ) > -1));
 			if( relRow )    // only move if relative ref
 			{
 				orig[0] += offsets[0]; //row
@@ -436,7 +436,7 @@ public class FormulaHandle
 				orig[1] += offsets[1]; //col
 			}
 			String newAddress = ExcelTools.formatLocation( orig, relRow, relCol );
-			if( orig[0] < 0 || orig[1] < 0 )
+			if( (orig[0] < 0) || (orig[1] < 0) )
 			{
 				newAddress = "#REF!";
 			}
@@ -444,7 +444,7 @@ public class FormulaHandle
 			{
 				orig = ExcelTools.getRowColFromString( secondAddress );
 				relCol = !(secondAddress.startsWith( "$" ));    // handle relative refs
-				relRow = !(secondAddress.length() > 0 && secondAddress.substring( 1 ).indexOf( '$' ) > -1);
+				relRow = !((secondAddress.length() > 0) && (secondAddress.substring( 1 ).indexOf( '$' ) > -1));
 				if( orig[0] >= 0 )
 				{
 					if( relRow )    // only move if relative ref
@@ -570,7 +570,7 @@ public class FormulaHandle
 					val = new CalculationException( CalculationException.VALUE );
 				}
 			}
-			else if( val instanceof String && ((String) val).startsWith( "#" ) )
+			else if( (val instanceof String) && ((String) val).startsWith( "#" ) )
 			{
 				val = new CalculationException( CalculationException.getErrorCode( (String) val ) );
 			}

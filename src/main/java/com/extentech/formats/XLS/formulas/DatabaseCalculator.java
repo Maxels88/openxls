@@ -161,7 +161,7 @@ public class DatabaseCalculator
 		}
 		DB db = getDb( operands[0] );
 		Criteria crit = getCriteria( operands[2] );
-		if( db == null || crit == null )
+		if( (db == null) || (crit == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -215,7 +215,7 @@ public class DatabaseCalculator
 
 		DB db = getDb( operands[0] );
 		Criteria crit = getCriteria( operands[2] );
-		if( db == null || crit == null )
+		if( (db == null) || (crit == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -271,7 +271,7 @@ public class DatabaseCalculator
 
 		DB db = getDb( operands[0] );
 		Criteria crit = getCriteria( operands[2] );
-		if( db == null || crit == null )
+		if( (db == null) || (crit == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -291,7 +291,7 @@ public class DatabaseCalculator
 			{
 				// passes; now do action
 				String s = db.getCell( i, fNum ).getValue().toString();
-				if( s != null && !s.trim().equals( "" ) )
+				if( (s != null) && !s.trim().equals( "" ) )
 				{
 					count++;    // if field is not blank, increment count
 				}
@@ -313,7 +313,7 @@ public class DatabaseCalculator
 
 		DB db = getDb( operands[0] );
 		Criteria crit = getCriteria( operands[2] );
-		if( db == null || crit == null )
+		if( (db == null) || (crit == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -360,7 +360,7 @@ public class DatabaseCalculator
 
 		DB db = getDb( operands[0] );
 		Criteria crit = getCriteria( operands[2] );
-		if( db == null || crit == null )
+		if( (db == null) || (crit == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -415,7 +415,7 @@ public class DatabaseCalculator
 
 		DB db = getDb( operands[0] );
 		Criteria crit = getCriteria( operands[2] );
-		if( db == null || crit == null )
+		if( (db == null) || (crit == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -483,7 +483,7 @@ public class DatabaseCalculator
 
 		DB db = getDb( operands[0] );
 		Criteria crit = getCriteria( operands[2] );
-		if( db == null || crit == null )
+		if( (db == null) || (crit == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -530,7 +530,7 @@ public class DatabaseCalculator
 
 		DB db = getDb( operands[0] );
 		Criteria crit = getCriteria( operands[2] );
-		if( db == null || crit == null )
+		if( (db == null) || (crit == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -598,7 +598,7 @@ public class DatabaseCalculator
 
 		DB db = getDb( operands[0] );
 		Criteria crit = getCriteria( operands[2] );
-		if( db == null || crit == null )
+		if( (db == null) || (crit == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -662,7 +662,7 @@ public class DatabaseCalculator
 
 		DB db = getDb( operands[0] );
 		Criteria crit = getCriteria( operands[2] );
-		if( db == null || crit == null )
+		if( (db == null) || (crit == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -723,7 +723,7 @@ public class DatabaseCalculator
 
 		DB db = getDb( operands[0] );
 		Criteria crit = getCriteria( operands[2] );
-		if( db == null || crit == null )
+		if( (db == null) || (crit == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -790,7 +790,7 @@ public class DatabaseCalculator
 
 		DB db = getDb( operands[0] );
 		Criteria crit = getCriteria( operands[2] );
-		if( db == null || crit == null )
+		if( (db == null) || (crit == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -921,7 +921,7 @@ class DB
 	 */
 	public Ptg[] getRow( int i )
 	{
-		if( i > -1 && i < rows.length )
+		if( (i > -1) && (i < rows.length) )
 		{
 			return rows[i];
 		}
@@ -936,7 +936,7 @@ class DB
 	 */
 	public String getCol( int i )
 	{
-		if( i > -1 && i < colHeaders.length )
+		if( (i > -1) && (i < colHeaders.length) )
 		{
 			return colHeaders[i];
 		}
@@ -1106,7 +1106,7 @@ class Criteria extends DB
 			c = cx.toString();
 		}
 
-		if( c == null || c.length() == 0 )
+		if( (c == null) || (c.length() == 0) )
 		{
 			return false;
 		}
@@ -1122,7 +1122,7 @@ class Criteria extends DB
 		{
 			try
 			{
-				if( c.length() > 1 && c.substring( 0, 2 ).equals( ">=" ) )
+				if( (c.length() > 1) && c.substring( 0, 2 ).equals( ">=" ) )
 				{
 					c = c.substring( 2 );
 					bMatches = (Double.parseDouble( v ) >= Double.parseDouble( c ));
@@ -1141,7 +1141,7 @@ class Criteria extends DB
 		{
 			try
 			{
-				if( c.length() > 1 && c.substring( 0, 2 ).equals( "<=" ) )
+				if( (c.length() > 1) && c.substring( 0, 2 ).equals( "<=" ) )
 				{
 					c = c.substring( 2 );
 					bMatches = (Double.parseDouble( v ) <= Double.parseDouble( c ));
@@ -1181,14 +1181,14 @@ class Criteria extends DB
 		int crit_format = -1; // determine format of criteria table
 		// multiple rows of criteria for one column are OR searches
 		// on that column (col=x OR col=y OR col=z)
-		if( nrows > 1 && ncols == 1 )
+		if( (nrows > 1) && (ncols == 1) )
 		{
 			crit_format = 0;
 		}
 
 		// more than one column are AND searches (cola=x AND colb=y)
 		// ONE row of criteria is applied to N rows of data
-		if( nrows == 1 && ncols > 1 )
+		if( (nrows == 1) && (ncols > 1) )
 		{
 			crit_format = 1;
 		}
@@ -1196,12 +1196,12 @@ class Criteria extends DB
 		// more than one row and more than one column:  
 		// OR's:  (cola=x AND colb=y) || (cola=z AND colb=w)
 		// applied to each row of data
-		if( nrows > 1 && ncols > 1 )
+		if( (nrows > 1) && (ncols > 1) )
 		{
 			crit_format = 2;
 		}
 
-		if( nrows == 1 && ncols == 1 )
+		if( (nrows == 1) && (ncols == 1) )
 		{
 			crit_format = 0;
 		}
@@ -1257,7 +1257,7 @@ class Criteria extends DB
 		if( j >= 0 )
 		{
 			bColOK = false;    // need one bColOK= true for it to pass
-			for( int k = 0; k < nrows && !bColOK; k++ )
+			for( int k = 0; (k < nrows) && !bColOK; k++ )
 			{    //
 				try
 				{
@@ -1411,7 +1411,7 @@ class Criteria extends DB
 		int nrows = getNRows();
 		int ncols = getNCols();
 
-		for( int k = 0; k < nrows && !bRowOK; k++ )
+		for( int k = 0; (k < nrows) && !bRowOK; k++ )
 		{    // for each row of criteria
 			// for each col check for valid criteria
 			for( int i = 0; i < ncols; i++ )
@@ -1459,7 +1459,7 @@ class Criteria extends DB
 							//(criteria may run over many criteria rows & signifies an OR search)
 							bColOK = matches( rt, rx );
 
-							if( !bColOK && nrows == 1 ) // fast fail
+							if( !bColOK && (nrows == 1) ) // fast fail
 							{
 								return false;
 							}

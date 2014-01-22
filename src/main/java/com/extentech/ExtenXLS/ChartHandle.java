@@ -1300,7 +1300,7 @@ public class ChartHandle implements ChartConstants
 		try
 		{
 			CellHandle ICell = null;
-			if( legendCell != null && !legendCell.equals( "" ) )
+			if( (legendCell != null) && !legendCell.equals( "" ) )
 			{
 				// 20070707 KSC: allow addition of new cell ranges for legendCell (see ExtenXLS.handleChartElement)
 				try
@@ -1432,7 +1432,7 @@ public class ChartHandle implements ChartConstants
 	                                          int nChart ) throws CellNotFoundException
 	{
 		Series s = null;
-		if( bubbleRange == null || bubbleRange.equals( "" ) )
+		if( (bubbleRange == null) || bubbleRange.equals( "" ) )
 		{
 			s = mychart.addSeries( seriesRange, categoryRange, "", legendAddress, legendText, nChart );
 		}
@@ -1500,7 +1500,7 @@ public class ChartHandle implements ChartConstants
 		try
 		{
 			CellHandle ICell = null;
-			if( legendCell != null && !legendCell.equals( "" ) )
+			if( (legendCell != null) && !legendCell.equals( "" ) )
 			{
 				try
 				{
@@ -1691,7 +1691,7 @@ public class ChartHandle implements ChartConstants
 		}
 		setDimensionsRecord();
 		// now add series
-		boolean hasBubbles = ((bubbleSizeRanges != null && bubbleSizeRanges.length == valueRanges.length));
+		boolean hasBubbles = (((bubbleSizeRanges != null) && (bubbleSizeRanges.length == valueRanges.length)));
 		for( int i = valueRanges.length - 1; i >= 0; i-- )
 		{
 			try
@@ -1749,7 +1749,7 @@ public class ChartHandle implements ChartConstants
 		ChartSeriesHandle[] handles = this.getAllChartSeriesHandles( nChart );
 		ChartSeriesHandle theHandle = handles[handles.length - 1];
 		String legendRef = theHandle.getSeriesLegendReference();
-		if( legendRef != null && !legendRef.equals( "" ) )
+		if( (legendRef != null) && !legendRef.equals( "" ) )
 		{
 			String sheetnm = legendRef.substring( 0, legendRef.indexOf( "!" ) );
 			legendRef = legendRef.substring( legendRef.indexOf( "!" ) + 1, legendRef.length() );
@@ -2068,7 +2068,7 @@ public class ChartHandle implements ChartConstants
 								fUnderline = Integer.parseInt( val );
 							}
 						}
-						while( this.getWorkBook().getNumFonts() < fontId - 1 )
+						while( this.getWorkBook().getNumFonts() < (fontId - 1) )
 						{
 							this.getWorkBook().insertFont( new Font( "Arial", Font.PLAIN, 10 ) );
 						}
@@ -2674,11 +2674,11 @@ public class ChartHandle implements ChartConstants
 				int[] coords = ExcelTools.getRangeCoords( series[i].getSeriesRange() );
 				if( coords[3] > coords[1] )
 				{
-					nPoints = Math.max( nPoints, coords[3] - coords[1] + 1 );    // c1-c0
+					nPoints = Math.max( nPoints, (coords[3] - coords[1]) + 1 );    // c1-c0
 				}
 				else
 				{
-					nPoints = Math.max( nPoints, coords[2] - coords[0] + 1 );    // r1-r0
+					nPoints = Math.max( nPoints, (coords[2] - coords[0]) + 1 );    // r1-r0
 				}
 			}
 			catch( Exception e )
@@ -3427,7 +3427,7 @@ public class ChartHandle implements ChartConstants
 			theChart.put( "col", mychart.getCol0() );
 			// Plot Area Background color
 			int plotAreabg = this.getPlotAreaBgColor();
-			if( plotAreabg == 0x4D || plotAreabg == 0x4E )
+			if( (plotAreabg == 0x4D) || (plotAreabg == 0x4E) )
 			{
 				plotAreabg = FormatConstants.COLOR_WHITE;
 			}

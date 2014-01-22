@@ -79,7 +79,7 @@ public final class Label extends XLSCellRecord
 			try
 			{
 				Unicodestring thistr = null;
-				byte[] tmpBytes = this.getBytesAt( 6, cch * 2 + 4 );  // i.e. (cch * 2) - 2
+				byte[] tmpBytes = this.getBytesAt( 6, (cch * 2) + 4 );  // i.e. (cch * 2) - 2
 				thistr = new Unicodestring();
 				thistr.init( tmpBytes, false );
 				val = thistr.toString();

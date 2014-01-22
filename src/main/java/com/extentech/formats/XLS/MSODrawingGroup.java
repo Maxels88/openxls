@@ -416,7 +416,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 				buf = new byte[8];
 				int read = bis.read( buf, 0, 8 );
 				int version = (0xF & buf[0]);
-				int inst = ((0xFF & buf[1]) << 4) | (0xF0 & buf[0]) >> 4;
+				int inst = ((0xFF & buf[1]) << 4) | ((0xF0 & buf[0]) >> 4);
 				int fbt = ((0xFF & buf[3]) << 8) | (0xFF & buf[2]);
 				int len = ByteTools.readInt( buf[4], buf[5], buf[6], buf[7] );
 
@@ -466,7 +466,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 //		 Each BLIP in the BStore is serialized to a FBSE record; 
 		// btWin32, btMacOS, rgbUid[16] = identifier of blip, tag, size=BLIP size in stream
 		int btWin32 = buf[0];
-		imageType.add( Integer.valueOf( btWin32 ) );
+		imageType.add( btWin32 );
 		/* parse header for testing purposes
 		// inst= encoded type		
 		int pos= 1;		
@@ -498,7 +498,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 		}
 		*/
 		int ref = ByteTools.readInt( buf[24], buf[25], buf[26], buf[27] );
-		cRef.add( Integer.valueOf( ref ) );
+		cRef.add( ref );
 
 		int HEADERLEN = 61;
 		int STARTPOS = HEADERLEN;
@@ -825,7 +825,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 	protected int containsImage( byte[] imgData )
 	{
 		int z = -1;
-		for( int i = 0; i < imageData.size() && z < 0; i++ )
+		for( int i = 0; (i < imageData.size()) && (z < 0); i++ )
 		{
 			if( java.util.Arrays.equals( imgData, ((byte[]) imageData.get( 0 )) ) )
 			{
@@ -859,11 +859,11 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 	{
 		int n = -1;
 		// 20080908 KSC: done automatically numShapes++;	// 20080208 KSC: if add unconditionally, add even if imageData already exists 
-		if( bAddUnconditionally || (n = containsImage( imgData )) == -1 )
+		if( bAddUnconditionally || ((n = containsImage( imgData )) == -1) )
 		{ // 20071120 KSC: it's a unique image
 			imageData.add( imgData );
-			imageType.add( Integer.valueOf( imgType ) );
-			cRef.add( Integer.valueOf( 1 ) );
+			imageType.add( imgType );
+			cRef.add( 1 );
 			n = imageData.size();
 		}
 		else
@@ -952,11 +952,11 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 	 */
 	protected void incCRef( int idx )
 	{
-		if( idx >= 0 && idx < cRef.size() )
+		if( (idx >= 0) && (idx < cRef.size()) )
 		{
 			int cr = ((Integer) cRef.get( idx )).intValue() + 1;
 			cRef.remove( idx );
-			cRef.add( idx, Integer.valueOf( cr ) );
+			cRef.add( idx, cr );
 		} //else  20071126 KSC: it's OK, can have - indexes ... 
 		//Logger.logErr("Index error encountered when updating Reference Count");
 	}
@@ -968,7 +968,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 	 */
 	protected int getCRef( int idx )
 	{
-		if( idx >= 0 && idx < cRef.size() )
+		if( (idx >= 0) && (idx < cRef.size()) )
 		{
 			return ((Integer) cRef.get( idx )).intValue();
 		}
@@ -983,11 +983,11 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 	 */
 	protected void decCRef( int idx )
 	{
-		if( idx >= 0 && idx < cRef.size() )
+		if( (idx >= 0) && (idx < cRef.size()) )
 		{
 			int cr = ((Integer) cRef.get( idx )).intValue() - 1;
 			cRef.remove( idx );
-			cRef.add( idx, Integer.valueOf( cr ) );
+			cRef.add( idx, cr );
 		}
 		else
 		{

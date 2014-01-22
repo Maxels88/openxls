@@ -113,7 +113,7 @@ public class AxisParent extends GenericChartObject implements ChartObject
 	protected ChartFormat createNewChart( int nChart )
 	{
 		// muliple charts, create one
-		if( nChart > 0 && nChart <= 9 )
+		if( (nChart > 0) && (nChart <= 9) )
 		{
 			ChartFormat cf = (ChartFormat) ChartFormat.getPrototype();
 			cf.setParentChart( this.getParentChart() );
@@ -302,7 +302,7 @@ public class AxisParent extends GenericChartObject implements ChartObject
 		Axis a = null;
 		TextDisp td = null;
 		int tdType = TextDisp.convertType( axisType );
-		for( int i = 0; i < chartArr.size() && td == null; i++ )
+		for( int i = 0; (i < chartArr.size()) && (td == null); i++ )
 		{
 			BiffRec b = (BiffRec) chartArr.get( i );
 			if( b.getOpcode() == AXIS )
@@ -328,7 +328,7 @@ public class AxisParent extends GenericChartObject implements ChartObject
 				}
 			}
 		}
-		if( a == null && bCreateIfNecessary )
+		if( (a == null) && bCreateIfNecessary )
 		{
 			// if didn't find axis, then add axis + text disp ...
 			// first, add TD

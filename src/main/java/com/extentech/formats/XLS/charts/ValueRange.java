@@ -237,12 +237,12 @@ public class ValueRange extends GenericChartObject implements ChartObject
 		if( fAutoMajor && fAutoMinor )
 		{
 			int charttype = this.getParentChart().getChartType();
-			if( yMax >= 0 && yMin >= 0 && yMax != yMin )
+			if( (yMax >= 0) && (yMin >= 0) && (yMax != yMin) )
 			{
 				// Major Unit Calculation -- best guest TODO: would be great to find out Excel's algorithm!
 // TODO: major unit is affected by height (or width, for bar charts) ***** develop algorithm!!!		   		
 				// add a tiny pad for range ...
-				double diff = (yMax * 1.1 - yMin);
+				double diff = ((yMax * 1.1) - yMin);
 				if( fAutoMax )
 				{
 					double logDiff = Math.floor( Math.log10( diff ) );
@@ -281,16 +281,16 @@ public class ValueRange extends GenericChartObject implements ChartObject
 				 */
 				if( fAutoMax )
 				{
-					if( charttype == ChartConstants.AREACHART ||
-							charttype == ChartConstants.COLCHART ||
-							charttype == ChartConstants.BARCHART ||
-							charttype == ChartConstants.LINECHART ||
-							charttype == ChartConstants.SCATTERCHART ||
-							charttype == ChartConstants.BUBBLECHART )
+					if( (charttype == ChartConstants.AREACHART) ||
+							(charttype == ChartConstants.COLCHART) ||
+							(charttype == ChartConstants.BARCHART) ||
+							(charttype == ChartConstants.LINECHART) ||
+							(charttype == ChartConstants.SCATTERCHART) ||
+							(charttype == ChartConstants.BUBBLECHART) )
 					{
 						if( numMajor == (int) numMajor ) // int scale - usual case
 						{
-							numMax = Math.ceil( yMax + 0.05 * diff * 1.1 );
+							numMax = Math.ceil( yMax + (0.05 * diff * 1.1) );
 						}
 						else
 						{
@@ -318,9 +318,9 @@ public class ValueRange extends GenericChartObject implements ChartObject
 					/**
 					 * Exception: If the chart is an x-y scatter or bubble chart, the automatic minimum for the y-axis is the first major unit less than or equal to yMin.
 					 */
-					if( charttype == ChartConstants.SCATTERCHART || charttype == ChartConstants.BUBBLECHART )
+					if( (charttype == ChartConstants.SCATTERCHART) || (charttype == ChartConstants.BUBBLECHART) )
 					{
-						if( yMin % numMajor != 0 )
+						if( (yMin % numMajor) != 0 )
 						{
 							numMin = Math.floor( (yMin - numMajor) / numMajor ) * numMajor;
 							numMin = Math.round( numMin );
@@ -344,11 +344,11 @@ public class ValueRange extends GenericChartObject implements ChartObject
 				}
 
 				// 20120905 KSC: recheck major to ensure not more than 10 steps ...
-				if( numMin >= 0 && numMax >= 0 )
+				if( (numMin >= 0) && (numMax >= 0) )
 				{
 					if( ((numMax - numMin) / numMajor) > 9 )
 					{
-						diff = (numMax * 1.1 - numMin);
+						diff = ((numMax * 1.1) - numMin);
 						double logDiff = Math.floor( Math.log10( diff ) );
 						double f = (diff) / Math.pow( 10, logDiff );
 						if( f <= 1 )
@@ -373,7 +373,7 @@ public class ValueRange extends GenericChartObject implements ChartObject
 				}
 				numMinor = numMajor / 5;    // seems to be the correct calculation ...
 			}
-			else if( yMax < 0 && yMin < 0 )
+			else if( (yMax < 0) && (yMin < 0) )
 			{
 				double diff = (yMin - yMax);
 				numMin = yMin + 0.05 * diff;
@@ -421,15 +421,15 @@ public class ValueRange extends GenericChartObject implements ChartObject
 		double ymax = MaxVal;
 		double ymin = MinVal;
 		double numMajor = ymax - ymin;
-		if( numMajor > 0 && numMajor < 20 )
+		if( (numMajor > 0) && (numMajor < 20) )
 		{
 			numMajor = 2;
 		}
-		else if( numMajor > 20 && numMajor < 100 )
+		else if( (numMajor > 20) && (numMajor < 100) )
 		{
 			numMajor = 20;
 		}
-		else if( numMajor > 100 && numMajor < 500 )
+		else if( (numMajor > 100) && (numMajor < 500) )
 		{
 			numMajor = 50;
 		}

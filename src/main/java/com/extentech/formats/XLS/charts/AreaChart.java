@@ -90,9 +90,9 @@ public class AreaChart extends ChartType
 		{
 			// TODO: Log error
 		}
-		minMax[0] = new Double( yMin );
-		minMax[1] = new Double( yMax );
-		minMax[2] = new Double( nSeries );
+		minMax[0] = yMin;
+		minMax[1] = yMax;
+		minMax[2] = (double) nSeries;
 		return chartObjectJSON;
 
 	}
@@ -176,7 +176,7 @@ public class AreaChart extends ChartType
 			{
 				x1 = (x) + j * xfactor;
 				double yval = curseries[j];    //areapoints[j][i];	// current point
-				points += ((x) + (j) * xfactor) + "," + ((y + h) - (yval * yfactor));
+				points += ((x) + ((j) * xfactor)) + "," + ((y + h) - (yval * yfactor));
 
 				if( j == 0 )
 				{
@@ -191,15 +191,15 @@ public class AreaChart extends ChartType
 					boolean showCategories = (dls[i] & AttachedLabel.CATEGORYLABEL) == AttachedLabel.CATEGORYLABEL;
 					boolean showValueLabel = (dls[i] & AttachedLabel.VALUELABEL) == AttachedLabel.VALUELABEL;
 					boolean showValue = (dls[i] & AttachedLabel.VALUE) == AttachedLabel.VALUE;
-					if( showCategories && !(showValue || showValueLabel) && j == 0 )
+					if( showCategories && !(showValue || showValueLabel) && (j == 0) )
 					{    // only 1 label, centered along category axis within area
 						double hh = y1;    // (areapoints[areapoints.length/2][i]*yfactor);
-						double yy = (y + h) - hh + 10;
+						double yy = ((y + h) - hh) + 10;
 						if( labels == null )
 						{
 							labels = "";
 						}
-						labels = "<text x='" + (x + w / 2) + "' y='" + yy + "' vertical-align='middle' " + this.getDataLabelFontSVG() + " style='text-align:middle;'>" + l + "</text>\r\n";
+						labels = "<text x='" + (x + (w / 2)) + "' y='" + yy + "' vertical-align='middle' " + this.getDataLabelFontSVG() + " style='text-align:middle;'>" + l + "</text>\r\n";
 					}
 					else if( showValue || showValueLabel )
 					{ // labels at each data point

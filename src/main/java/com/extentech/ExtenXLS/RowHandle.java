@@ -230,7 +230,7 @@ public class RowHandle
 				int r0 = ih.getRow();
 				int r1 = ih.getRow1();
 				int row = myRow.getRowNumber();
-				if( row >= r0 && row <= r1 )
+				if( (row >= r0) && (row <= r1) )
 				{
 					int h = ih.getHeight();
 					iAdjust.add( new int[]{ z, h } );

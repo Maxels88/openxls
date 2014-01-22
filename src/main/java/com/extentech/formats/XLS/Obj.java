@@ -312,7 +312,7 @@ obj.ftCmo.getRec()[17]= (byte)0x02;
 		{    // parse rest of object sub-records
 			int pos = 22;
 			int cb;
-			while( pos < data.length - 2 )
+			while( pos < (data.length - 2) )
 			{
 				int ft = ByteTools.readShort( data[pos], data[pos + 1] );
 				cb = 2;
@@ -829,7 +829,7 @@ obj.ftCmo.getRec()[17]= (byte)0x02;
 					// rgLines - var
 				}
 				// bsels - var
-				cb = (short) (pos + 2 - origPos);
+				cb = (short) ((pos + 2) - origPos);
 			}
 			else        //	the rest are in continues record
 			{
@@ -859,7 +859,7 @@ obj.ftCmo.getRec()[17]= (byte)0x02;
 		{    // parse rest of object sub-records
 			int pos = 22;
 			int cb;
-			while( pos < data.length - 2 )
+			while( pos < (data.length - 2) )
 			{
 				log.append( "\r\n\t" );
 				int ft = ByteTools.readShort( data[pos], data[pos + 1] );
@@ -987,11 +987,11 @@ obj.ftCmo.getRec()[17]= (byte)0x02;
 
 		for( int i = 0; i < 8; i++ )
 		{
-			buffer[i] = (byte) (msb >>> 8 * (7 - i));
+			buffer[i] = (byte) (msb >>> (8 * (7 - i)));
 		}
 		for( int i = 8; i < 16; i++ )
 		{
-			buffer[i] = (byte) (lsb >>> 8 * (7 - i));
+			buffer[i] = (byte) (lsb >>> (8 * (7 - i)));
 		}
 
 		return buffer;

@@ -215,7 +215,7 @@ public class LookupReferenceCalculator
 			Double dd = new Double( o.toString() ); // this can be non-integer, so truncate it if so...
 			double e = dd.doubleValue();
 			int i = (int) e;
-			if( i > operands.length + 1 || i < 1 )
+			if( (i > (operands.length + 1)) || (i < 1) )
 			{
 				return new PtgErr( PtgErr.ERROR_REF );
 			}
@@ -320,7 +320,7 @@ public class LookupReferenceCalculator
 				{
 					PtgArea pa = (PtgArea) operands[0];
 					int[] loc = pa.getIntLocation();
-					int ncols = loc[3] - loc[1] + 1;
+					int ncols = (loc[3] - loc[1]) + 1;
 					return new PtgInt( ncols );
 				}
 				else if( operands[0] instanceof PtgArray )
@@ -380,7 +380,7 @@ public class LookupReferenceCalculator
 			// Handle getting vals out of name
 
 		}
-		else if( table_array instanceof PtgArea || table_array instanceof PtgArea3d )
+		else if( (table_array instanceof PtgArea) || (table_array instanceof PtgArea3d) )
 		{
 			try
 			{
@@ -399,7 +399,7 @@ public class LookupReferenceCalculator
 
 		}
 		// error check
-		if( lookupComponents == null || lookupComponents.length == 0 )
+		if( (lookupComponents == null) || (lookupComponents.length == 0) )
 		{
 			return new PtgErr( PtgErr.ERROR_REF );
 		}
@@ -443,7 +443,7 @@ public class LookupReferenceCalculator
 				{
 					return valueComponents[i].getPtgVal();
 				}
-				else if( sorted && val > match_num )
+				else if( sorted && (val > match_num) )
 				{
 					if( i == 0 )
 					{
@@ -557,8 +557,8 @@ public class LookupReferenceCalculator
 		 * the row_num or column_num argument, respectively, is optional. 
 		 * For example, for a single row reference, use INDEX(reference,,column_num). 
 		 */
-		Object rowref = new Double( 1 );    // defaults (1-based)
-		Object colref = new Double( 1 );
+		Object rowref = (double) 1;    // defaults (1-based)
+		Object colref = (double) 1;
 		double areanum = 1;
 		int[] retarea = null;
 		String sht = null;
@@ -595,7 +595,7 @@ public class LookupReferenceCalculator
 			{
 				Ptg[] ps = ((PtgMemFunc) o).getComponents();
 				areanum--;
-				if( areanum >= 0 && areanum < ps.length )
+				if( (areanum >= 0) && (areanum < ps.length) )
 				{
 					o = ps[(int) areanum];
 				}
@@ -610,7 +610,7 @@ public class LookupReferenceCalculator
 			{
 				Ptg[] ps = ((PtgArray) o).getComponents();
 				areanum--;
-				if( areanum >= 0 && areanum < ps.length )
+				if( (areanum >= 0) && (areanum < ps.length) )
 				{
 					o = ps[(int) areanum];
 				}
@@ -867,10 +867,10 @@ public class LookupReferenceCalculator
 				boolean rowbased = (ncs > nrs);
 				ncs++; // make 1-based
 				int i = 0;
-				for( int j = 0; j < nrs && !found; j++ )
+				for( int j = 0; (j < nrs) && !found; j++ )
 				{
 					int start = i;
-					for(; i < start + ncs && !found; i++ )
+					for(; (i < (start + ncs)) && !found; i++ )
 					{
 						if( Calculator.compareCellValue( array[i].getValue(), lookup, ">" ) )
 						{
@@ -1082,24 +1082,24 @@ public class LookupReferenceCalculator
 				}
 				if( i < values.length )
 				{ // only check order
-					if( (matchType == 1 && mType > 0)// not in ascending order
-							|| (matchType == -1 && mType < 0) ) // not in descending order
+					if( ((matchType == 1) && (mType > 0))// not in ascending order
+							|| ((matchType == -1) && (mType < 0)) ) // not in descending order
 // DOCUMENTATION SEZ MUST BE IN DESCENDING ORDER FOR -1 BUT EXCEL ALLOWS IT IN CERTAIN CIRCUMSTANCES
 //						)
 					{
 						return new PtgErr( PtgErr.ERROR_NA );
 					}
 				}
-				if( matchType == 0 && match == 0 )
+				if( (matchType == 0) && (match == 0) )
 				{
 					retIndex = i;    // 1-based
 					break;
 				}
-				if( matchType == 1 && match <= 0 )
+				if( (matchType == 1) && (match <= 0) )
 				{
 					retIndex = i;    // 1-based
 				}
-				else if( matchType == -1 && match >= 0 )
+				else if( (matchType == -1) && (match >= 0) )
 				{
 					retIndex = i;    // 1-based
 				}
@@ -1192,7 +1192,7 @@ public class LookupReferenceCalculator
 		// height and width are only really applicable for an initial single reference
 		// in Excel, a height and width value of more than 1 returns #VALUE! unless wrapped in SUM
 		// ????
-		if( height == 1 && width == 1 )
+		if( (height == 1) && (width == 1) )
 		{ // it's a single reference
 			if( rc.length > 3 )
 			{    // truncate
@@ -1201,7 +1201,7 @@ public class LookupReferenceCalculator
 				rc = temp;
 			}
 		}
-		else if( !(height == -1 && width == -1) )
+		else if( !((height == -1) && (width == -1)) )
 		{
 			if( rc.length < 3 )
 			{ // make a range
@@ -1221,7 +1221,7 @@ public class LookupReferenceCalculator
 		if( rc.length > 3 )
 		{
 			// If rows and cols offset reference over the edge of the worksheet, OFFSET returns the #REF! error value.
-			if( rc[0] < 0 || rc[1] < 0 || rc[2] < 0 || rc[3] < 0 )
+			if( (rc[0] < 0) || (rc[1] < 0) || (rc[2] < 0) || (rc[3] < 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_REF );
 			}
@@ -1246,7 +1246,7 @@ public class LookupReferenceCalculator
 		else
 		{ // it's a single reference
 			// If rows and cols offset reference over the edge of the worksheet, OFFSET returns the #REF! error value.
-			if( rc[0] < 0 || rc[1] < 0 )
+			if( (rc[0] < 0) || (rc[1] < 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_REF );
 			}
@@ -1290,7 +1290,7 @@ public class LookupReferenceCalculator
 			int nr = pa.getNumberOfRows() + 1;
 			for( int i = 0; i < nc; i++ )
 			{
-				for( int j = 0; j < nc * nr; j += nc )
+				for( int j = 0; j < (nc * nr); j += nc )
 				{
 					retArray = retArray + arr[i + j].getValue().toString() + ",";
 				}
@@ -1310,7 +1310,7 @@ public class LookupReferenceCalculator
 	 */
 	protected static Ptg calcRow( Ptg[] operands ) throws FunctionNotSupportedException
 	{
-		if( operands == null || operands.length != 1 )
+		if( (operands == null) || (operands.length != 1) )
 		{
 			return new PtgErr( PtgErr.ERROR_VALUE );
 		}
@@ -1426,7 +1426,7 @@ public class LookupReferenceCalculator
 			else if( operands[0] instanceof PtgMemFunc )
 			{
 				Ptg[] p = ((PtgMemFunc) operands[0]).getComponents();
-				if( p != null && p.length > 0 )
+				if( (p != null) && (p.length > 0) )
 				{
 					int[] rc0 = p[0].getIntLocation();
 					int[] rc1 = null;
@@ -1625,11 +1625,11 @@ public class LookupReferenceCalculator
 				}
 			}
 			// error check
-			if( lookupComponents == null || lookupComponents.length == 0 )
+			if( (lookupComponents == null) || (lookupComponents.length == 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_REF );
 			}
-			if( lookup_value == null || lookup_value.getValue() == null ) // 20070221 KSC: Error trap getValue
+			if( (lookup_value == null) || (lookup_value.getValue() == null) ) // 20070221 KSC: Error trap getValue
 			{
 				return new PtgErr( PtgErr.ERROR_NULL );
 			}
@@ -1688,7 +1688,7 @@ public class LookupReferenceCalculator
 					{
 						return valueComponents[i].getPtgVal();
 					}
-					else if( rangeLookup && val > match_num )
+					else if( rangeLookup && (val > match_num) )
 					{
 						if( i == 0 )
 						{
@@ -1727,7 +1727,7 @@ public class LookupReferenceCalculator
 							{// we found it
 								return valueComponents[i].getPtgVal();
 							}
-							else if( val.length() >= match_len && val.substring( 0, match_len ).equalsIgnoreCase( match_str ) )
+							else if( (val.length() >= match_len) && val.substring( 0, match_len ).equalsIgnoreCase( match_str ) )
 							{ // matches up to length, but not all, return previous
 								return valueComponents[i - 1].getPtgVal();
 							}
@@ -1735,7 +1735,7 @@ public class LookupReferenceCalculator
 							{
 								return valueComponents[i - 1].getPtgVal();
 							}
-							else if( i == lookupComponents.length - 1 )
+							else if( i == (lookupComponents.length - 1) )
 							{// we reached the last one so use this
 								return valueComponents[i].getPtgVal();
 							}
@@ -1759,7 +1759,7 @@ public class LookupReferenceCalculator
 								{// we found it
 									return valueComponents[i].getPtgVal();
 								}
-								else if( i == lookupComponents.length - 1 )
+								else if( i == (lookupComponents.length - 1) )
 								{// we reached the last one so error out
 									return new PtgErr( PtgErr.ERROR_NA );
 								}

@@ -113,7 +113,7 @@ public class PtgLT extends GenericPtg implements Ptg
 				// determine if any of the operands are double - if true,
 				// then blank comparisons will be treated as 0's
 				boolean isDouble = false;
-				for( int i = 0; i < 2 && !isDouble; i++ )
+				for( int i = 0; (i < 2) && !isDouble; i++ )
 				{
 					if( !form[i].isBlank() )
 					{
@@ -126,7 +126,7 @@ public class PtgLT extends GenericPtg implements Ptg
 					{
 						if( isDouble )
 						{
-							o[i] = new Double( 0.0 );
+							o[i] = 0.0;
 						}
 						else
 						{
@@ -137,7 +137,7 @@ public class PtgLT extends GenericPtg implements Ptg
 
 				boolean res;
 				//if (dub[0].doubleValue() < dub[1].doubleValue()){
-				if( o[0] instanceof Double && o[1] instanceof Double )
+				if( (o[0] instanceof Double) && (o[1] instanceof Double) )
 				{
 					if( ((Double) o[0]).doubleValue() < ((Double) o[1]).doubleValue() )
 					{
@@ -187,7 +187,7 @@ public class PtgLT extends GenericPtg implements Ptg
 					return new PtgErr( PtgErr.ERROR_VALUE );
 				}
 				int nVals = java.lang.reflect.Array.getLength( o[0] );    // use first array element to determine length of values as subsequent vals might not be arrays
-				for( int i = 0; i < nArrays - 1; i += 2 )
+				for( int i = 0; i < (nArrays - 1); i += 2 )
 				{
 					res = false;
 					Object secondOp = null;
@@ -204,7 +204,7 @@ public class PtgLT extends GenericPtg implements Ptg
 							secondOp = Array.get( o[i + 1], j );    // second array index j
 						}
 
-						if( firstOp instanceof Double && secondOp instanceof Double )
+						if( (firstOp instanceof Double) && (secondOp instanceof Double) )
 						{
 							res = ((Double) firstOp).compareTo( (Double) secondOp ) < 0;
 						}

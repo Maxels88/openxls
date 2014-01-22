@@ -114,15 +114,15 @@ public class FinancialCalculator
 			{
 				d0 = 30;
 			}
-			if( d1 == 31 && d0 >= 30 )
+			if( (d1 == 31) && (d0 >= 30) )
 			{
 				d1 = 30;
 			}
-			if( m0 == 1 && d0 >= 28 )
+			if( (m0 == 1) && (d0 >= 28) )
 			{
 				d0 = 30;
 			}
-			yearFrac = (double) (360 * (y1 - y0) + 30 * (m1 - m0) + (d1 - d0)) / 360.0;
+			yearFrac = (double) ((360 * (y1 - y0)) + (30 * (m1 - m0)) + (d1 - d0)) / 360.0;
 		}
 		else if( basis == 1 )
 		{ // Actual/Actual
@@ -153,7 +153,7 @@ public class FinancialCalculator
 		{ // 30/360 EURO
 			//			if (m0==1 && d0>=28) d0= 30; //???????????????????????????
 			//				if (m1==1 && d1>=28) d1= 30; //???????????????????????????
-			yearFrac = (double) (360 * (y1 - y0) + 30 * (m1 - m0) + (d1 - d0)) / 360.0;
+			yearFrac = (double) ((360 * (y1 - y0)) + (30 * (m1 - m0)) + (d1 - d0)) / 360.0;
 		}
 		return yearFrac;
 	}
@@ -190,7 +190,7 @@ public class FinancialCalculator
 
 	static long getDaysFromBasis( int basis, long date0, long date1 )
 	{
-		if( basis == 0 || basis == 4 )
+		if( (basis == 0) || (basis == 4) )
 		{ // # months * 30 + extra days
 			GregorianCalendar fromDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( new Long( date0 ) );
 			GregorianCalendar toDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( new Long( date1 ) );
@@ -208,7 +208,7 @@ public class FinancialCalculator
 				{
 					d0 = 30;
 				}
-				if( d1 == 31 && d0 >= 30 )
+				if( (d1 == 31) && (d0 >= 30) )
 				{
 					d1 = 30;
 				}
@@ -223,7 +223,7 @@ public class FinancialCalculator
 				//				if (m0==1 && d0>=28) d0= 30; // ?????????????????????
 				//				if (m1==1 && d1>=28) d1= 30; // ?????????????????????
 			}
-			int result = (360 * (y1 - y0) + 30 * (m1 - m0) + (d1 - d0));
+			int result = ((360 * (y1 - y0)) + (30 * (m1 - m0)) + (d1 - d0));
 			return result;
 		}
 		return date1 - date0; // actual (1, 2, 3)
@@ -237,7 +237,7 @@ public class FinancialCalculator
 			{
 				d = 28;
 			}
-			else if( (m == 3 || m == 5 || m == 8 || m == 10) && d == 31 )
+			else if( ((m == 3) || (m == 5) || (m == 8) || (m == 10)) && (d == 31) )
 			{
 				d = 30;
 			}
@@ -311,15 +311,15 @@ public class FinancialCalculator
 			long settlementDate = (new Double( DateConverter.getXLSDateVal( sDate ) )).longValue();
 
 			// TODO: if dates are not valid, return #VALUE! error
-			if( !(frequency == 1 || frequency == 2 || frequency == 4) )
+			if( !((frequency == 1) || (frequency == 2) || (frequency == 4)) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( rate <= 0 || par <= 0 )
+			if( (rate <= 0) || (par <= 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -340,7 +340,7 @@ public class FinancialCalculator
 			//        NLi=normal # days in odd period i
 			// For cases where Previous Coupon Date < Issue Date, NC=1, A= getDaysFromBasis and NLi= coupDays
 
-			double result = (par * rate / frequency);//* Sum #Accrued days for
+			double result = ((par * rate) / frequency);//* Sum #Accrued days for
 			double sum = 0;
 			long E, PCD;
 
@@ -381,7 +381,7 @@ public class FinancialCalculator
 //Logger.logInfo(">>PCD==0");	
 			}
 			long A = 0;
-			if( basis == 0 || basis == 4 )
+			if( (basis == 0) || (basis == 4) )
 			// correct for basis 0, 4
 			// INCORRECT for basis 1,2 and 3
 			{
@@ -456,7 +456,7 @@ public class FinancialCalculator
 			// Annual Coupon Rate
 			rate = operands[2].getDoubleVal();
 			// Par value. If omitted, = 1000.
-			if( operands.length > 3 && (!(operands[3] instanceof PtgMissArg)) )
+			if( (operands.length > 3) && (!(operands[3] instanceof PtgMissArg)) )
 			{
 				par = operands[3].getDoubleVal();
 			}
@@ -467,11 +467,11 @@ public class FinancialCalculator
 			}
 
 			// TODO: if dates are not valid, return #VALUE! error
-			if( rate <= 0 || par <= 0 )
+			if( (rate <= 0) || (par <= 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -525,7 +525,7 @@ public class FinancialCalculator
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( basis < 0 || basis > 4 || basis == 2 )
+			if( (basis < 0) || (basis > 4) || (basis == 2) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -573,7 +573,7 @@ public class FinancialCalculator
 					 * if (period==i+1) { // A= Math.round(0.5*cost);
 					 * Remainder=A; }
 					 */
-						if( i + 1 < period )
+						if( (i + 1) < period )
 						{
 							A = 0;
 						}
@@ -632,7 +632,7 @@ public class FinancialCalculator
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( basis < 0 || basis > 4 || basis == 2 )
+			if( (basis < 0) || (basis > 4) || (basis == 2) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -646,7 +646,7 @@ public class FinancialCalculator
 			double C = yearFrac( basis, datePurchased, firstPeriod ) * rate * cost;
 			double D = cost * rate;
 			long n = Math.round( (cost - salvage - C) / D );
-			if( period == 0 || C == 0 )
+			if( (period == 0) || (C == 0) )
 			{
 				A = C;
 			}
@@ -656,9 +656,9 @@ public class FinancialCalculator
 			}
 			else if( period == n )
 			{
-				A = Math.min( D + (B - D * n - C), D );
+				A = Math.min( D + (B - (D * n) - C), D );
 			}
-			else if( period == n + 1 )
+			else if( period == (n + 1) )
 			{
 				A = B - D * n - C;
 			}
@@ -754,11 +754,11 @@ public class FinancialCalculator
 				basis = operands[3].getIntVal();
 			}
 			//			 TODO: if dates are not valid, return #VALUE! error
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( !(frequency == 1 || frequency == 2 || frequency == 4) )
+			if( !((frequency == 1) || (frequency == 2) || (frequency == 4)) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -819,11 +819,11 @@ public class FinancialCalculator
 				basis = operands[3].getIntVal();
 			}
 			// TODO: if dates are not valid, return #VALUE! error
-			if( !(frequency == 1 || frequency == 2 || frequency == 4) )
+			if( !((frequency == 1) || (frequency == 2) || (frequency == 4)) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -840,7 +840,7 @@ public class FinancialCalculator
 				long ncd = PtgCalculator.getLongValue( calcCoupNCD( operands ) );
 				result = getDaysFromBasis( basis, pcd, ncd );
 			}
-			else if( basis == 0 || basis == 2 || basis == 4 )
+			else if( (basis == 0) || (basis == 2) || (basis == 4) )
 			{
 				result = 360.0 / frequency;
 			}
@@ -892,11 +892,11 @@ public class FinancialCalculator
 			basis = operands[3].getIntVal();
 		}
 		//		 TODO: if dates are not valid, return #VALUE! error
-		if( basis < 0 || basis > 4 )
+		if( (basis < 0) || (basis > 4) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
-		if( !(frequency == 1 || frequency == 2 || frequency == 4) )
+		if( !((frequency == 1) || (frequency == 2) || (frequency == 4)) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -951,11 +951,11 @@ public class FinancialCalculator
 				basis = operands[3].getIntVal();
 			}
 			//		 TODO: if dates are not valid, return #VALUE! error
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( !(frequency == 1 || frequency == 2 || frequency == 4) )
+			if( !((frequency == 1) || (frequency == 2) || (frequency == 4)) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -1055,11 +1055,11 @@ public class FinancialCalculator
 				basis = operands[3].getIntVal();
 			}
 			//	 TODO: if dates are not valid, return #VALUE! error
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( !(frequency == 1 || frequency == 2 || frequency == 4) )
+			if( !((frequency == 1) || (frequency == 2) || (frequency == 4)) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -1112,11 +1112,11 @@ public class FinancialCalculator
 				basis = operands[3].getIntVal();
 			}
 			//		 TODO: if dates are not valid, return #VALUE! error
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( !(frequency == 1 || frequency == 2 || frequency == 4) )
+			if( !((frequency == 1) || (frequency == 2) || (frequency == 4)) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -1208,11 +1208,11 @@ public class FinancialCalculator
 		{
 			debugOperands( operands, "CUMIPMT" );
 		}
-		if( rate <= 0 || pv <= 0 || nper <= 0 )
+		if( (rate <= 0) || (pv <= 0) || (nper <= 0) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
-		if( startperiod < 1 || endperiod < 1 )
+		if( (startperiod < 1) || (endperiod < 1) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -1220,7 +1220,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
-		if( type < 0 || type > 1 )
+		if( (type < 0) || (type > 1) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -1231,26 +1231,26 @@ public class FinancialCalculator
 		//	PMT used in fv calc
 		double Rn = Math.pow( 1 + rate, nper );
 		A = -pv * Rn * rate;
-		B = (Rn - 1) * (1 + rate * type);
+		B = (Rn - 1) * (1 + (rate * type));
 		double pmt = A / B;
 
 		// WORKS on everything BUT type=1 AND startperiod=1 !!!!!!
 		double n = startperiod - 1 - type;
-		int period = endperiod - startperiod + 1;
+		int period = (endperiod - startperiod) + 1;
 
 		// FVa (StartPeriod)
 		A = Math.pow( 1 + rate, n );
-		B = pmt * (1 + rate * type);
+		B = pmt * (1 + (rate * type));
 		B *= (Math.pow( 1 + rate, n ) - 1) / rate;
-		double fva = -(pv * A + B);
+		double fva = -((pv * A) + B);
 		// FVb (endPeriod)
 		A = Math.pow( 1 + rate, endperiod - type );
-		B = pmt * (1 + rate * type);
+		B = pmt * (1 + (rate * type));
 		B *= (Math.pow( 1 + rate, endperiod - type ) - 1) / rate;
-		double fvb = -(pv * A + B);
+		double fvb = -((pv * A) + B);
 
 		double result = fva - fvb - (pmt * period); //- (fva - fvb);
-		if( startperiod == 1 && type == 1 )
+		if( (startperiod == 1) && (type == 1) )
 		{
 			result = (pmt * period) + pv; // I'm sure there's a good reason for
 		}
@@ -1299,22 +1299,22 @@ public class FinancialCalculator
 		//	PMT used in fv calc
 		double Rn = Math.pow( 1 + rate, nper );
 		A = -pv * Rn * rate;
-		B = (Rn - 1) * (1 + rate * type);
+		B = (Rn - 1) * (1 + (rate * type));
 		double pmt = A / B;
 
 		// FVa (StartPeriod)
 		A = Math.pow( 1 + rate, startperiod - type - 1 );
-		B = pmt * (1 + rate * type);
+		B = pmt * (1 + (rate * type));
 		B *= (Math.pow( 1 + rate, startperiod - type - 1 ) - 1) / rate;
-		double fva = -(pv * A + B);
+		double fva = -((pv * A) + B);
 		// FVb (endPeriod)
 		A = Math.pow( 1 + rate, endperiod - type );
-		B = pmt * (1 + rate * type);
+		B = pmt * (1 + (rate * type));
 		B *= (Math.pow( 1 + rate, endperiod - type ) - 1) / rate;
-		double fvb = -(pv * A + B);
+		double fvb = -((pv * A) + B);
 
 		double result = fva - fvb;
-		if( startperiod == 1 && type == 1 )
+		if( (startperiod == 1) && (type == 1) )
 		{
 			result = pv; // I'm sure there's a good reason for this!?!?!
 		}
@@ -1349,7 +1349,7 @@ public class FinancialCalculator
 
 	protected static Ptg calcDB( Ptg[] operands )
 	{
-		if( operands.length < 4 || operands[0].getComponents() != null )
+		if( (operands.length < 4) || (operands[0].getComponents() != null) )
 		{ // not
 			// supported
 			// by
@@ -1389,10 +1389,10 @@ public class FinancialCalculator
 		rate = Math.round( rate );
 		rate /= 1000;
 
-		double totalDepreciation = cost * rate * month / 12;
+		double totalDepreciation = (cost * rate * month) / 12;
 		double result = totalDepreciation;
 		// 1st and last (i.e. period==life) are special cases 
-		for( int i = 2; i < period || (i == period && period <= life); i++ )
+		for( int i = 2; (i < period) || ((i == period) && (period <= life)); i++ )
 		{
 			result = (cost - totalDepreciation) * rate;
 			totalDepreciation += (cost - totalDepreciation) * rate;
@@ -1429,7 +1429,7 @@ public class FinancialCalculator
 	 */
 	protected static Ptg calcDDB( Ptg[] operands )
 	{
-		if( operands.length < 4 || operands[0].getComponents() != null )
+		if( (operands.length < 4) || (operands[0].getComponents() != null) )
 		{ // not
 			// supported
 			// by
@@ -1469,7 +1469,7 @@ public class FinancialCalculator
 			totalDepreciation += (cost - totalDepreciation) * facLife;
 		}
 		double result = 0.0;
-		if( cost - salvage - totalDepreciation > 0 )
+		if( (cost - salvage - totalDepreciation) > 0 )
 		{
 			result = (cost - totalDepreciation) * facLife;
 		}
@@ -1511,7 +1511,7 @@ public class FinancialCalculator
 				basis = operands[4].getIntVal();
 			}
 			//		 TODO: if dates are not valid, return #VALUE! error
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -1519,7 +1519,7 @@ public class FinancialCalculator
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( pr <= 0 || redemption <= 0 )
+			if( (pr <= 0) || (redemption <= 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -1572,7 +1572,7 @@ public class FinancialCalculator
 		int n = String.valueOf( fraction ).length();
 		double x = Math.floor( fractional_dollar );
 		double y = (fractional_dollar - x) * Math.pow( 10, n );
-		double result = x + y / fraction;
+		double result = x + (y / fraction);
 		PtgNumber pnum = new PtgNumber( result );
 		if( DEBUG )
 		{
@@ -1611,7 +1611,7 @@ public class FinancialCalculator
 
 		double x = Math.floor( decimal_dollar );
 		double y = (decimal_dollar - x);
-		double result = x + (y * fraction) / Math.pow( 10, n );
+		double result = x + ((y * fraction) / Math.pow( 10, n ));
 		PtgNumber pnum = new PtgNumber( result );
 		if( DEBUG )
 		{
@@ -1654,7 +1654,7 @@ public class FinancialCalculator
 			}
 
 			//	 TODO: if dates are not valid, return #VALUE! error
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -1662,11 +1662,11 @@ public class FinancialCalculator
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( coupon < 0 || yld < 0 )
+			if( (coupon < 0) || (yld < 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( !(frequency == 1 || frequency == 2 || frequency == 4) )
+			if( !((frequency == 1) || (frequency == 2) || (frequency == 4)) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -1698,22 +1698,22 @@ public class FinancialCalculator
 			double E = calcCoupDays( ops ).getDoubleVal();
 			double F = DSC / E;
 			double R = coupon * 100;
-			double Y = 1 + yld / frequency;
-			double Yx = Math.pow( Y, n - 1 + F );
+			double Y = 1 + (yld / frequency);
+			double Yx = Math.pow( Y, (n - 1) + F );
 			double SumA = 0;
 			for( int i = 1; i <= n; i++ )
 			{
-				SumA += R * (i - 1 + F) / (Math.pow( Y, i - 1 + F ) * frequency);
+				SumA += R * ((i - 1) + F) / (Math.pow( Y, (i - 1) + F ) * frequency);
 			}
 			double SumB = 0;
 			for( int i = 1; i <= n; i++ )
 			{
-				SumB += R / (Math.pow( Y, i - 1 + F ) * frequency);
+				SumB += R / (Math.pow( Y, (i - 1) + F ) * frequency);
 			}
 			double C = 0.0, D = 0.0;
 			if( n > 1 )
 			{
-				C = ((n - 1 + F) * 100) / Yx;
+				C = (((n - 1) + F) * 100) / Yx;
 				D = 100 / Yx;
 			}
 			double result = (SumA + C) / ((SumB + D) * frequency);
@@ -1748,7 +1748,7 @@ public class FinancialCalculator
 		double nominal_rate = operands[0].getDoubleVal();
 		int npery = operands[1].getIntVal();
 		// TODO: If either argument is non-numeric, #VALUE! error
-		if( npery <= 0 || npery < 1 ) // funny guard!!!!
+		if( (npery <= 0) || (npery < 1) ) // funny guard!!!!
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -1804,7 +1804,7 @@ public class FinancialCalculator
 		double pmt = operands[2].getDoubleVal();
 		double pv = 0;
 		int type = 0;
-		if( operands.length > 3 && !(operands[3] instanceof PtgMissArg) )
+		if( (operands.length > 3) && !(operands[3] instanceof PtgMissArg) )
 		{
 			pv = operands[3].getDoubleVal();
 		}
@@ -1814,9 +1814,9 @@ public class FinancialCalculator
 		}
 
 		double A = Math.pow( 1 + rate, nper );
-		double B = pmt * (1 + rate * type);
+		double B = pmt * (1 + (rate * type));
 		B *= (Math.pow( 1 + rate, nper ) - 1) / rate;
-		double result = -(pv * A + B);
+		double result = -((pv * A) + B);
 		PtgNumber pnum = new PtgNumber( result );
 		if( DEBUG )
 		{
@@ -1886,7 +1886,7 @@ public class FinancialCalculator
 			}
 
 			//	 TODO: if dates are not valid, return #VALUE! error
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -1894,7 +1894,7 @@ public class FinancialCalculator
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( investment <= 0 || redemption <= 0 )
+			if( (investment <= 0) || (redemption <= 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -1948,7 +1948,7 @@ public class FinancialCalculator
 		double pv = operands[3].getDoubleVal();
 		double fv = 0;
 		int type = 0;
-		if( operands.length > 4 && !(operands[4] instanceof PtgMissArg) )
+		if( (operands.length > 4) && !(operands[4] instanceof PtgMissArg) )
 		{
 			fv = operands[4].getDoubleVal();
 		}
@@ -1957,7 +1957,7 @@ public class FinancialCalculator
 			type = operands[5].getIntVal();
 		}
 
-		if( per < 0 || per > nper )
+		if( (per < 0) || (per > nper) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -1976,19 +1976,19 @@ public class FinancialCalculator
 		}
 		// PMT
 		double Rn = Math.pow( 1 + rate, nper );
-		double A = -fv * rate - pv * Rn * rate;
-		double B = (Rn - 1) * (1 + rate * type);
+		double A = (-fv * rate) - (pv * Rn * rate);
+		double B = (Rn - 1) * (1 + (rate * type));
 		double pmt = A / B;
 		// FVa
 		A = Math.pow( 1 + rate, n );
-		B = pmt * (1 + rate * type);
+		B = pmt * (1 + (rate * type));
 		B *= (Math.pow( 1 + rate, n ) - 1) / rate;
-		double fva = -(pv * A + B);
+		double fva = -((pv * A) + B);
 		// FVb
 		A = Math.pow( 1 + rate, n - 1 );
-		B = pmt * (1 + rate * type);
+		B = pmt * (1 + (rate * type));
 		B *= (Math.pow( 1 + rate, n - 1 ) - 1) / rate;
-		double fvb = -(pv * A + B);
+		double fvb = -((pv * A) + B);
 
 		double result = pmt - (fvb - fva);
 		PtgNumber pnum = new PtgNumber( result );
@@ -2039,7 +2039,7 @@ public class FinancialCalculator
 	 */
 	protected static Ptg calcIRR( Ptg[] operands )
 	{
-		if( operands.length < 1 || operands[0].getComponents() == null )
+		if( (operands.length < 1) || (operands[0].getComponents() == null) )
 		{ // not
 			// supported
 			// by
@@ -2079,7 +2079,7 @@ public class FinancialCalculator
 				inflow += val;
 			}
 		}
-		if( outflow == 0.0 || inflow == 0.0 )
+		if( (outflow == 0.0) || (inflow == 0.0) )
 		{
 			return new PtgErr( PtgErr.ERROR_VALUE ); // TODO: Excel doesn't specify which
 		}
@@ -2103,7 +2103,7 @@ public class FinancialCalculator
 				fh -= val / (Math.pow( 1 + xh, i ));
 			}
 		}
-		for( int j = 0; j < 50 && !bIsCorrect; j++ )
+		for( int j = 0; (j < 50) && !bIsCorrect; j++ )
 		{ // maximum 20 tries - need
 			// more!!!!
 			trial = xl + delta * fl / (fl - fh);
@@ -2168,7 +2168,7 @@ public class FinancialCalculator
 		double per = operands[1].getDoubleVal();
 		double nper = operands[2].getDoubleVal();
 		double pv = operands[3].getDoubleVal();
-		if( per < 0 || per > nper )
+		if( (per < 0) || (per > nper) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -2216,7 +2216,7 @@ public class FinancialCalculator
 			}
 
 			//	 TODO: if dates are not valid, return #VALUE! error
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -2224,18 +2224,18 @@ public class FinancialCalculator
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( coupon < 0 || yld < 0 )
+			if( (coupon < 0) || (yld < 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( !(frequency == 1 || frequency == 2 || frequency == 4) )
+			if( !((frequency == 1) || (frequency == 2) || (frequency == 4)) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
 
 			double result = calcDURATION( operands ).getDoubleVal();
 			// above is regular duration calculation; to get modified duration:
-			result = result / (1 + yld / frequency);
+			result = result / (1 + (yld / frequency));
 			PtgNumber pnum = new PtgNumber( result );
 			if( DEBUG )
 			{
@@ -2351,7 +2351,7 @@ public class FinancialCalculator
 		double effect = operands[0].getDoubleVal();
 		int npery = operands[1].getIntVal();
 		// TODO: if either is non-numeric, return #VALUE!
-		if( effect <= 0 || npery < 1 )
+		if( (effect <= 0) || (npery < 1) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -2399,7 +2399,7 @@ public class FinancialCalculator
 		double pmt = operands[1].getDoubleVal();
 		double pv = operands[2].getDoubleVal();
 		double fv = 0;
-		if( operands.length > 3 && !(operands[3] instanceof PtgMissArg) )
+		if( (operands.length > 3) && !(operands[3] instanceof PtgMissArg) )
 		{
 			fv = operands[3].getDoubleVal();
 		}
@@ -2409,8 +2409,8 @@ public class FinancialCalculator
 			type = operands[4].getIntVal();
 		}
 
-		double A = pmt * (1 + type * rate) - rate * fv;
-		double B = pmt * (1 + type * rate) + rate * pv;
+		double A = (pmt * (1 + (type * rate))) - (rate * fv);
+		double B = (pmt * (1 + (type * rate))) + (rate * pv);
 		double C = 1 + rate;
 		double result = Math.log( A / B ) / Math.log( C );
 		if( DEBUG )
@@ -2436,7 +2436,7 @@ public class FinancialCalculator
 	 */
 	protected static Ptg calcNPV( Ptg[] operands )
 	{
-		if( operands.length < 2 || operands[0].getComponents() != null )
+		if( (operands.length < 2) || (operands[0].getComponents() != null) )
 		{ // not
 			// supported
 			// by
@@ -2513,7 +2513,7 @@ public class FinancialCalculator
 			long firstCouponDate = (new Double( DateConverter.getXLSDateVal( fcDate ) )).longValue();
 
 			//	 TODO: if dates are not valid, return #VALUE! error
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -2521,7 +2521,7 @@ public class FinancialCalculator
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( yld < 0 || rate < 0 )
+			if( (yld < 0) || (rate < 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -2530,8 +2530,8 @@ public class FinancialCalculator
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
 		/*maturity > first_coupon > settlement > issue */
-			if( issueDate >= settlementDate || settlementDate >= firstCouponDate ||
-					firstCouponDate >= maturityDate )
+			if( (issueDate >= settlementDate) || (settlementDate >= firstCouponDate) ||
+					(firstCouponDate >= maturityDate) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -2549,20 +2549,20 @@ public class FinancialCalculator
 			double DFC = firstCouponDate - settlementDate;    // # days from odd first coupon to next coupon date
 			double z = getDaysFromBasis( basis, settlementDate, firstCouponDate );
 
-			double R = 100 * rate / frequency;
-			double Y = 1 + yld / frequency;
+			double R = (100 * rate) / frequency;
+			double Y = 1 + (yld / frequency);
 
 			double result = 0.0;
 			if( DFC < E )
 			{    // odd short first coupon			
-				double firstTerm = redemption / Math.pow( Y, N - 1 + DSC / E );
-				double secondTerm = (R * DFC / E) / Math.pow( Y, DSC / E );
+				double firstTerm = redemption / Math.pow( Y, (N - 1) + (DSC / E) );
+				double secondTerm = ((R * DFC) / E) / Math.pow( Y, DSC / E );
 				double thirdTerm = 0.0;
 				for( int i = 2; i <= N; i++ )
 				{
-					thirdTerm += R / Math.pow( Y, i - 1 + DSC / E );
+					thirdTerm += R / Math.pow( Y, (i - 1) + (DSC / E) );
 				}
-				double fourthTerm = R * A / E;
+				double fourthTerm = (R * A) / E;
 				result = firstTerm + secondTerm + thirdTerm - fourthTerm;
 			}
 			else
@@ -2620,7 +2620,7 @@ public class FinancialCalculator
 			}
 
 			//	 TODO: if dates are not valid, return #VALUE! error
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -2628,7 +2628,7 @@ public class FinancialCalculator
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( yld < 0 || rate < 0 )
+			if( (yld < 0) || (rate < 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -2655,8 +2655,8 @@ public class FinancialCalculator
 			double DSC = calcCoupDaysNC( ops ).getDoubleVal();  // days from  settlement to next coupon		
 			double E = calcCoupDays( ops ).getDoubleVal();  // total # days in coupon period 
 			double N = PtgCalculator.getLongValue( calcCoupNum( ops ) ); // n is the number of coupons btwn settlement and maturity
-			double R = 100 * rate / frequency;
-			double Y = 1 + yld / frequency;
+			double R = (100 * rate) / frequency;
+			double Y = 1 + (yld / frequency);
 
 			double result = 0.0;
 
@@ -2711,7 +2711,7 @@ public class FinancialCalculator
 			}
 
 			//	 TODO: if dates are not valid, return #VALUE! error
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -2719,7 +2719,7 @@ public class FinancialCalculator
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( yld < 0 || rate < 0 )
+			if( (yld < 0) || (rate < 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -2746,8 +2746,8 @@ public class FinancialCalculator
 			double DSC = calcCoupDaysNC( ops ).getDoubleVal(); // days from  settlement to next coupon		
 			double E = calcCoupDays( ops ).getDoubleVal(); // total # days in coupon period 
 			double N = PtgCalculator.getLongValue( calcCoupNum( ops ) ); // n is the number of coupons btwn settlement and maturity
-			double R = 100 * rate / frequency;
-			double Y = 1 + yld / frequency;
+			double R = (100 * rate) / frequency;
+			double Y = 1 + (yld / frequency);
 
 			double result = 0.0;
 
@@ -2801,7 +2801,7 @@ public class FinancialCalculator
 			}
 
 			//	 TODO: if dates are not valid, return #VALUE! error
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -2809,7 +2809,7 @@ public class FinancialCalculator
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( yld < 0 || rate < 0 )
+			if( (yld < 0) || (rate < 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -2836,8 +2836,8 @@ public class FinancialCalculator
 			double DSC = calcCoupDaysNC( ops ).getDoubleVal(); // days from  settlement to next coupon		
 			double E = calcCoupDays( ops ).getDoubleVal(); // total # days in coupon period 
 			double N = PtgCalculator.getLongValue( calcCoupNum( ops ) ); // n is the number of coupons btwn settlement and maturity
-			double R = 100 * rate / frequency;
-			double Y = 1 + yld / frequency;
+			double R = (100 * rate) / frequency;
+			double Y = 1 + (yld / frequency);
 
 			double result = 0.0;
 
@@ -2910,8 +2910,8 @@ public class FinancialCalculator
 		//KSC: For some strange odd weird reason, original calculation was off
 		// even though this should be exactly the same thing. Go figure!
 		double Rn = Math.pow( 1 + rate, nper );
-		double A = -fv * rate - pv * Rn * rate;
-		double B = (Rn - 1) * (1 + rate * type);
+		double A = (-fv * rate) - (pv * Rn * rate);
+		double B = (Rn - 1) * (1 + (rate * type));
 		double result = A / B;
 		PtgNumber pnum = new PtgNumber( result );
 		return pnum;
@@ -2944,7 +2944,7 @@ public class FinancialCalculator
 		double pv = operands[3].getDoubleVal();
 		double fv = 0;
 		int type = 0;
-		if( operands.length > 4 && !(operands[4] instanceof PtgMissArg) )
+		if( (operands.length > 4) && !(operands[4] instanceof PtgMissArg) )
 		{
 			fv = operands[4].getDoubleVal();
 		}
@@ -2956,8 +2956,8 @@ public class FinancialCalculator
 		double result;
 		// 1st, get payment for entire period
 		double Rn = Math.pow( 1 + rate, nper );
-		double A = -fv * rate - pv * Rn * rate;
-		double B = (Rn - 1) * (1 + rate * type);
+		double A = (-fv * rate) - (pv * Rn * rate);
+		double B = (Rn - 1) * (1 + (rate * type));
 		double pmt = A / B;
 
 		double n;
@@ -2971,14 +2971,14 @@ public class FinancialCalculator
 		}
 		// FVa
 		A = Math.pow( 1 + rate, n );
-		B = pmt * (1 + rate * type);
+		B = pmt * (1 + (rate * type));
 		B *= (Math.pow( 1 + rate, n ) - 1) / rate;
-		double fva = -(pv * A + B);
+		double fva = -((pv * A) + B);
 		// FVb
 		A = Math.pow( 1 + rate, n - 1 );
-		B = pmt * (1 + rate * type);
+		B = pmt * (1 + (rate * type));
 		B *= (Math.pow( 1 + rate, n - 1 ) - 1) / rate;
-		double fvb = -(pv * A + B);
+		double fvb = -((pv * A) + B);
 
 		result = fvb - fva;
 		PtgNumber pnum = new PtgNumber( result );
@@ -3029,7 +3029,7 @@ public class FinancialCalculator
 			}
 
 			//	 TODO: if dates are not valid, return #VALUE! error
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -3037,7 +3037,7 @@ public class FinancialCalculator
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( yld < 0 || rate < 0 )
+			if( (yld < 0) || (rate < 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -3062,13 +3062,13 @@ public class FinancialCalculator
 			double N = PtgCalculator.getLongValue( calcCoupNum( ops ) ); // n is the number of coupons btwn settlement and maturity
 			double A = calcCoupDayBS( ops ).getDoubleVal(); // days from beg. coupon period to settlement
 			double R = rate / frequency;
-			double Y = 1 + yld / frequency;
-			double result = redemption / Math.pow( Y, N - 1 + DSC / E );
+			double Y = 1 + (yld / frequency);
+			double result = redemption / Math.pow( Y, (N - 1) + (DSC / E) );
 			for( int i = 1; i <= N; i++ )
 			{
-				result += (R * 100) / Math.pow( Y, i - 1 + DSC / E );
+				result += (R * 100) / Math.pow( Y, (i - 1) + (DSC / E) );
 			}
-			result -= (100 * R * A / E);
+			result -= ((100 * R * A) / E);
 
 			PtgNumber pnum = new PtgNumber( result );
 			if( DEBUG )
@@ -3115,7 +3115,7 @@ public class FinancialCalculator
 			}
 
 			//	 TODO: if dates are not valid, return #VALUE! error
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -3178,7 +3178,7 @@ public class FinancialCalculator
 			}
 
 			//	 TODO: if dates are not valid, return #VALUE! error
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -3186,7 +3186,7 @@ public class FinancialCalculator
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( rate < 0 || yld < 0 )
+			if( (rate < 0) || (yld < 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -3200,7 +3200,7 @@ public class FinancialCalculator
 			double DIM = getDaysFromBasis( basis, issueDate, maturityDate );
 			double A = getDaysFromBasis( basis, issueDate, settlementDate );
 
-			double result = (100 + (DIM / B) * rate * 100) / (1 + ((DSM / B) * yld));
+			double result = (100 + ((DIM / B) * rate * 100)) / (1 + ((DSM / B) * yld));
 			result -= (A / B) * rate * 100;
 			PtgNumber pnum = new PtgNumber( result );
 			if( DEBUG )
@@ -3258,7 +3258,7 @@ public class FinancialCalculator
 		}
 		double fv = 0.0;
 		int type = 0;
-		if( operands.length > 3 && !(operands[3] instanceof PtgMissArg) )
+		if( (operands.length > 3) && !(operands[3] instanceof PtgMissArg) )
 		{
 			fv = operands[3].getDoubleVal();
 		}
@@ -3268,7 +3268,7 @@ public class FinancialCalculator
 		}
 
 		double A = Math.pow( 1 + rate, nper );
-		double B = pmt * (1 + rate * type);
+		double B = pmt * (1 + (rate * type));
 		B *= (A - 1) / rate;
 		double result = (-fv - B) / A;
 
@@ -3341,11 +3341,11 @@ public class FinancialCalculator
 			guess = operands[5].getDoubleVal();
 		}
 		// validate params
-		if( type != 0 && type != 1 )
+		if( (type != 0) && (type != 1) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
-		if( pv == 0 && fv == 0 )
+		if( (pv == 0) && (fv == 0) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -3359,13 +3359,13 @@ public class FinancialCalculator
 		double fx0;
 		double fprimex0;
 		// iterate, using Newton's approximation
-		for( int j = 0; j < 100 && !bIsCorrect; j++ )
+		for( int j = 0; (j < 100) && !bIsCorrect; j++ )
 		{ // maximum 20 tries
 			// Calculate f(x) = (a+ f*g*h + c)			
 			double R = Math.pow( 1 + x0, nper );
 			double U = 1 / x0;
 			double a = pv * R;
-			double f = pmt * (1 + x0 * type);
+			double f = pmt * (1 + (x0 * type));
 			double g = R - 1;
 			double h = U;
 			fx0 = a + f * g * U + fv;
@@ -3542,7 +3542,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
-		double A = (cost - salvage) * (life - per + 1) * 2;
+		double A = (cost - salvage) * ((life - per) + 1) * 2;
 		double B = life * (life + 1);
 		double result = A / B;
 		if( DEBUG )
@@ -3582,7 +3582,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
-		if( maturityDate - settlementDate > 365 )
+		if( (maturityDate - settlementDate) > 365 )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -3595,16 +3595,16 @@ public class FinancialCalculator
 		double result;
 		if( DSM <= 182 )
 		{
-			result = (365 * rate) / (360 - rate * DSM);
+			result = (365 * rate) / (360 - (rate * DSM));
 		}
 		else
 		{
 			double A = DSM / 365;
 			double B = rate * DSM;
 
-			double C = (2 * A - 1) * B / (B - 360);
+			double C = (((2 * A) - 1) * B) / (B - 360);
 			double D = Math.pow( A, 2 ) - C;
-			result = (-2 * A + 2 * Math.sqrt( D )) / (2 * A - 1);
+			result = ((-2 * A) + (2 * Math.sqrt( D ))) / ((2 * A) - 1);
 		}
 		if( DEBUG )
 		{
@@ -3640,7 +3640,7 @@ public class FinancialCalculator
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( maturityDate - settlementDate > 365 )
+			if( (maturityDate - settlementDate) > 365 )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -3650,7 +3650,7 @@ public class FinancialCalculator
 			}
 
 			double DSM = maturityDate - settlementDate;
-			double result = 100 * (1 - (rate * DSM / 360));
+			double result = 100 * (1 - ((rate * DSM) / 360));
 			if( DEBUG )
 			{
 				Logger.logInfo( "Result from calcTBILLPRICE= " + result );
@@ -3693,7 +3693,7 @@ public class FinancialCalculator
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( maturityDate - settlementDate > 365 )
+			if( (maturityDate - settlementDate) > 365 )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -3741,7 +3741,7 @@ public class FinancialCalculator
 		int start_period = operands[3].getIntVal();
 		int end_period = operands[4].getIntVal();
 		int factor = 2;
-		if( operands.length > 5 && !(operands[5] instanceof PtgMissArg) )
+		if( (operands.length > 5) && !(operands[5] instanceof PtgMissArg) )
 		{
 			factor = operands[5].getIntVal();
 		}
@@ -3751,9 +3751,9 @@ public class FinancialCalculator
 			bNoSwitch = PtgCalculator.getBooleanValue( operands[6] );
 		}
 
-		if( cost <= 0 || salvage <= 0 || life <= 0 ||
-				start_period < 0 || end_period < 0 ||
-				factor < 0 || end_period > life )
+		if( (cost <= 0) || (salvage <= 0) || (life <= 0) ||
+				(start_period < 0) || (end_period < 0) ||
+				(factor < 0) || (end_period > life) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -3778,9 +3778,9 @@ public class FinancialCalculator
 			boolean bSwitch = false;
 			double A = 0.0;
 			int i = start_period + 1;
-			while( i <= end_period && !bSwitch )
+			while( (i <= end_period) && !bSwitch )
 			{
-				double sl = (cost - A - salvage) / (life - i + 1);
+				double sl = (cost - A - salvage) / ((life - i) + 1);
 				ops[3] = new PtgInt( i );
 				double ddb = calcDDB( ops ).getDoubleVal();
 				if( sl <= ddb )
@@ -3797,7 +3797,7 @@ public class FinancialCalculator
 			// use straight-line depreciation for rest of period
 			for( int j = i; j <= end_period; j++ )
 			{
-				result += (cost - A - salvage) / (life - i + 1);
+				result += (cost - A - salvage) / ((life - i) + 1);
 			}
 		}
 
@@ -3888,7 +3888,7 @@ public class FinancialCalculator
 				inflow += val;
 			}
 		}
-		if( outflow == 0.0 || inflow == 0.0 )
+		if( (outflow == 0.0) || (inflow == 0.0) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -3917,7 +3917,7 @@ public class FinancialCalculator
 			//		f+= val*(Math.pow(xh, -exp));
 			fprime += val * -exp; // f' of x0
 		}
-		for( int j = 0; j < 100 && !bIsCorrect; j++ )
+		for( int j = 0; (j < 100) && !bIsCorrect; j++ )
 		{ // maximum 100 tries
 			// SECANT METHOD: trial= x0+dx*f0/(f0-f1);
 			// NEWTON'S:
@@ -3932,7 +3932,7 @@ public class FinancialCalculator
 			}
 			fprime = fprime / trial; // final f' expression
 			delta = f / fprime;
-			if( trial - delta <= 0 )
+			if( (trial - delta) <= 0 )
 			{
 				delta = trial / 2;
 			}
@@ -3963,7 +3963,7 @@ public class FinancialCalculator
 	 */
 	protected static Ptg calcXNPV( Ptg[] operands )
 	{
-		if( operands.length < 2 || operands[1].getComponents() == null )
+		if( (operands.length < 2) || (operands[1].getComponents() == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
@@ -4015,7 +4015,7 @@ public class FinancialCalculator
 				inflow += val;
 			}
 		}
-		if( outflow == 0.0 || inflow == 0.0 )
+		if( (outflow == 0.0) || (inflow == 0.0) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -4075,7 +4075,7 @@ public class FinancialCalculator
 			}
 
 			//	 TODO: if dates are not valid, return #VALUE! error
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -4087,7 +4087,7 @@ public class FinancialCalculator
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( pr <= 0 || redemption <= 0 )
+			if( (pr <= 0) || (redemption <= 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -4194,12 +4194,12 @@ public class FinancialCalculator
 		double R = rate / frequency;
 		double Y;
 		double B = R * 100;
-		double Exp = n - 1 + F;
+		double Exp = (n - 1) + F;
 
 		// N-R iteration
 		double fprime; // derivative of f(x0)
 		double delta = 0;
-		for( int j = 0; j < 100 && !bIsCorrect; j++ )
+		for( int j = 0; (j < 100) && !bIsCorrect; j++ )
 		{ // maximum 100 tries
 			// f= f(trial)
 			Y = 1 + trial / frequency;
@@ -4207,8 +4207,8 @@ public class FinancialCalculator
 			fprime = 0;
 			for( int i = 1; i <= n; i++ )
 			{
-				f += B / Math.pow( Y, i - 1 + F );
-				fprime += (B / Math.pow( Y, i - 1 + F )) * (i - 1 + F);
+				f += B / Math.pow( Y, (i - 1) + F );
+				fprime += (B / Math.pow( Y, (i - 1) + F )) * ((i - 1) + F);
 			}
 			f -= (B * G);
 			// pr-f =>0
@@ -4289,11 +4289,11 @@ public class FinancialCalculator
 			long settlementDate = (new Double( DateConverter.getXLSDateVal( sDate ) )).longValue();
 			long maturityDate = (new Double( DateConverter.getXLSDateVal( mDate ) )).longValue();
 
-			if( pr <= 0 || redemption <= 0 )
+			if( (pr <= 0) || (redemption <= 0) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
-			if( basis < 0 || basis > 4 )
+			if( (basis < 0) || (basis > 4) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -4356,7 +4356,7 @@ public class FinancialCalculator
 			double DIM = getDaysFromBasis( basis, issueDate, maturityDate );
 			double A = getDaysFromBasis( basis, issueDate, settlementDate );
 
-			double result = (((1 + (DIM / B) * rate) - ((price / 100) + (A / B) * rate)) / ((price / 100) + (A / B) * rate)) * (B / DSM);
+			double result = (((1 + ((DIM / B) * rate)) - ((price / 100) + ((A / B) * rate))) / ((price / 100) + ((A / B) * rate))) * (B / DSM);
 			if( DEBUG )
 			{
 				Logger.logInfo( "Result from calcYIELDMAT= " + result );
@@ -4393,6 +4393,6 @@ public class FinancialCalculator
 
 	public static boolean isLeapYear( int year )
 	{
-		return (year % 400 == 0) || ((year % 100 != 0) && (year % 4 == 0));
+		return ((year % 400) == 0) || (((year % 100) != 0) && ((year % 4) == 0));
 	}
 }

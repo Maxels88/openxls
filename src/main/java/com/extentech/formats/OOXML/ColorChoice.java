@@ -310,7 +310,7 @@ class SchemeClr implements OOXMLElement
 
 	public int getColor()
 	{
-		double tint = (clrTransform == null ? 0 : clrTransform.getTint());
+		double tint = ((clrTransform == null) ? 0 : clrTransform.getTint());
 		Object[] o = Color.parseThemeColor( val, tint, (short) 0, this.theme );
 		return (Integer) o[0];
 	}

@@ -292,7 +292,7 @@ public final class ByteTools implements Serializable
 		java.io.DataInputStream dis = new java.io.DataInputStream( bais );
 		try
 		{
-			Double dbl = new Double( dis.readDouble() );
+			Double dbl = dis.readDouble();
 			d = dbl.doubleValue();
 		}
 		catch( java.io.IOException e )
@@ -321,7 +321,7 @@ public final class ByteTools implements Serializable
 		java.io.DataInputStream dis = new java.io.DataInputStream( bais );
 		try
 		{
-			Long lg = new Long( dis.readLong() );
+			Long lg = dis.readLong();
 			l = lg.longValue();
 		}
 		catch( java.io.IOException e )
@@ -500,13 +500,13 @@ public final class ByteTools implements Serializable
 	 */
 	public static int readInt( int low, int high )
 	{
-		if( low == 0x0 && high == 0x0 )
+		if( (low == 0x0) && (high == 0x0) )
 		{
 			return 0;
 		}
 		low = low & 0xffff;
 		high = high & 0xffff;
-		return (int) (low << 16 | high);
+		return (int) ((low << 16) | high);
 	}
 
 	/**
@@ -532,7 +532,7 @@ public final class ByteTools implements Serializable
 		// 2 bytes
 		low = low & 0xff;
 		high = high & 0xff;
-		return (short) (high << 8 | low);
+		return (short) ((high << 8) | low);
 	}
 
 	/** bit-flipping action converting a 'little-endian'

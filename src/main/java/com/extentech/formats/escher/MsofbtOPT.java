@@ -97,7 +97,7 @@ public class MsofbtOPT extends EscherRecord
 		try
 		{
 			imageName = name;
-			if( imageName == null || imageName.equals( "" ) )
+			if( (imageName == null) || imageName.equals( "" ) )
 			{
 				// remove property
 				props.remove( Integer.valueOf( MSODrawingConstants.msooptpibName ) );
@@ -125,7 +125,7 @@ public class MsofbtOPT extends EscherRecord
 		try
 		{
 			shapeName = name;
-			if( shapeName == null || shapeName.equals( "" ) )
+			if( (shapeName == null) || shapeName.equals( "" ) )
 			{
 				// remove property
 				props.remove( Integer.valueOf( MSODrawingConstants.msooptwzName ) );
@@ -189,7 +189,7 @@ public class MsofbtOPT extends EscherRecord
 				}
 				// the basic part of the property table
 				tmp[pos++] = ((byte) (0xFF & propId.intValue()));
-				tmp[pos++] = (byte) (flag | (0x3F00 & propId.intValue()) >> 8);
+				tmp[pos++] = (byte) (flag | ((0x3F00 & propId.intValue()) >> 8));
 				byte[] dtxBytes = ByteTools.cLongToLEBytes( dtx );
 				System.arraycopy( dtxBytes, 0, tmp, pos, 4 );
 				pos += 4;
@@ -231,7 +231,7 @@ public class MsofbtOPT extends EscherRecord
 		int propertyId, fBid, fComplex;
 		//int n= inst;				// number of properties to parse
 		int pos = 0;                    // pointer to current property in data/property table
-		if( inst == 0 && recordData.length > 0 )
+		if( (inst == 0) && (recordData.length > 0) )
 		{    // called from GelFrame ...
 			byte[] dat = new byte[8];    // read header
 			System.arraycopy( recordData, 0, dat, 0, 8 );
@@ -299,8 +299,8 @@ public class MsofbtOPT extends EscherRecord
 			{
 				hasTextId = true;
 			} // msooptFillWidth
-			props.put( Integer.valueOf( propertyId ),
-			           new Object[]{ Boolean.valueOf( fComplex != 0 ), Integer.valueOf( dtx ), Boolean.valueOf( fBid != 0 ) } );
+			props.put( propertyId,
+			           new Object[]{ fComplex != 0, dtx, fBid != 0 } );
 			pos += 6;
 		}
 
@@ -401,12 +401,12 @@ public class MsofbtOPT extends EscherRecord
 		 */
 		if( isComplex ) // complexBytes shouldn't be null
 		{
-			props.put( Integer.valueOf( propId ), new Object[]{ Boolean.valueOf( isComplex ), complexBytes, Boolean.valueOf( isBid ) } );
+			props.put( propId, new Object[]{ isComplex, complexBytes, isBid } );
 		}
 		else
 		{
-			props.put( Integer.valueOf( propId ), new Object[]{
-					Boolean.valueOf( isComplex ), Integer.valueOf( dtx ), Boolean.valueOf( isBid )
+			props.put( propId, new Object[]{
+					isComplex, dtx, isBid
 			} );
 		}
 
@@ -416,7 +416,7 @@ public class MsofbtOPT extends EscherRecord
 
 	public boolean hasBorder()
 	{
-		if( lineprops != null && lineprops[LINEPROPTS_WEIGHT] > 1 )
+		if( (lineprops != null) && (lineprops[LINEPROPTS_WEIGHT] > 1) )
 		{
 			return true;
 		}
@@ -658,7 +658,7 @@ public class MsofbtOPT extends EscherRecord
 				fillclr = FormatConstants.COLOR_BLACK;
 			}
 
-			if( fillclr < 0 || fillclr > FormatHandle.COLORTABLE.length )
+			if( (fillclr < 0) || (fillclr > FormatHandle.COLORTABLE.length) )
 			{
 				fillclr = FormatConstants.COLOR_WHITE;
 			}
@@ -667,9 +667,9 @@ public class MsofbtOPT extends EscherRecord
 		}
 
 		// otherwise, r, g and blue are color values 0-255
-		int bl = (b[5] < 0 ? 255 + b[5] : b[5]);
-		int g = (b[6] < 0 ? 255 + b[6] : b[6]);
-		int r = (b[7] < 0 ? 255 + b[7] : b[7]);
+		int bl = ((b[5] < 0) ? (255 + b[5]) : b[5]);
+		int g = ((b[6] < 0) ? (255 + b[6]) : b[6]);
+		int r = ((b[7] < 0) ? (255 + b[7]) : b[7]);
 		fillColor = new java.awt.Color( r, g, bl );
 		return fillColor;
 	}

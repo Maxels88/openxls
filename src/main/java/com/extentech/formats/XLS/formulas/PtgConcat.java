@@ -102,7 +102,7 @@ public class PtgConcat extends GenericPtg implements Ptg
 		{
 			Object[] o = super.getStringValuesFromPtgs( form );
 			// there should always be only two ptg's in this, error if not.
-			if( o == null || o.length != 2 )
+			if( (o == null) || (o.length != 2) )
 			{
 				//if (o!=null)
 				//	Logger.logWarn("calculating formula failed, wrong number of values in PtgConcat");

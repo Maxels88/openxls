@@ -666,7 +666,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 				recbytes = ByteTools.append( tmp, recbytes );
 			}
 		}
-		else if( ooxmlranges != null && ooxmlranges.length > 0 )
+		else if( (ooxmlranges != null) && (ooxmlranges.length > 0) )
 		{
 			tmp[0] = (byte) ooxmlranges.length;
 			recbytes = ByteTools.append( tmp, recbytes );
@@ -761,7 +761,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public String[] getRanges()
 	{
-		if( cRangeList == null && ooxmlranges != null )
+		if( (cRangeList == null) && (ooxmlranges != null) )
 		{
 			if( ooxmlranges.length > 0 )
 			{
@@ -1646,13 +1646,13 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		}
 		ooxml.append( ">" );
 		String formula1 = this.getFirstCond();
-		if( formula1 != null && formula1.length() > 0 )
+		if( (formula1 != null) && (formula1.length() > 0) )
 		{
 			formula1 = formula1.replace( (char) 0, ',' );    // DV Lists are delimited by 0 must replace with commas for OOXML use
 			ooxml.append( "<formula1>" + formula1 + "</formula1>" );
 		}
 		String formula2 = this.getSecondCond();
-		if( formula2 != null && formula2.length() > 0 )
+		if( (formula2 != null) && (formula2.length() > 0) )
 		{
 			formula2 = formula2.replace( (char) 0, ',' );    // DV Lists are delimited by 0 must replace with commas for OOXML use
 			ooxml.append( "<formula2>" + formula2 + "</formula2>" );

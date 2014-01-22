@@ -220,7 +220,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		for( int i = 0; i < externalOOXML.size(); i++ )
 		{
 			String[] s = (String[]) externalOOXML.get( i );
-			if( s != null && s.length >= 0 )
+			if( (s != null) && (s.length >= 0) )
 			{   // id, dir, filename, rId [, extra info [, embedded file info]]
 				if( s[0].equalsIgnoreCase( type ) )
 				{ // got one
@@ -245,7 +245,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		for( int i = 0; i < externalOOXML.size(); i++ )
 		{
 			String[] s = (String[]) externalOOXML.get( i );
-			if( s != null && s.length >= 3 )
+			if( (s != null) && (s.length >= 3) )
 			{   // id, dir, filename, rid, [extra info], [embedded information]
 				String type = s[EX_TYPE];
 				if( type.equalsIgnoreCase( "props" ) ||
@@ -351,7 +351,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		for( int i = 0; i < refs.size(); i++ )
 		{
 			String[] s = (String[]) refs.get( i );
-			if( s.length > EX_EXTRAINFO && s[EX_EXTRAINFO] != null )
+			if( (s.length > EX_EXTRAINFO) && (s[EX_EXTRAINFO] != null) )
 			{   // add associated info, if any 
 				ooxml.append( "<" + xmlElement + " " + s[EX_EXTRAINFO] + " r:id=\"rId" + (shContentList.size() + 1) + "\"/>" );
 				ooxml.append( "\r\n" );
@@ -380,7 +380,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 	 */
 	protected void writeRels( ArrayList cl, String relsfname ) throws IOException
 	{
-		if( cl == null || cl.size() == 0 )
+		if( (cl == null) || (cl.size() == 0) )
 		{
 			return;   // don't write a .rels if there are no relationships to track
 		}
@@ -506,7 +506,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 
 		java.io.File fout = new java.io.File( path );
 		File dirs = fout.getParentFile();
-		if( dirs != null && !dirs.exists() )
+		if( (dirs != null) && !dirs.exists() )
 		{
 			dirs.mkdirs();
 		}
@@ -728,13 +728,13 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 			}
 
 			// TODO: shrinkToFit ...
-			boolean alignblock = (ha != 0 || va != 2 || wr != 0 || ind != 0 || rot != 0);
-			boolean protectblock = (hidden == 1 || locked == 0);
+			boolean alignblock = ((ha != 0) || (va != 2) || (wr != 0) || (ind != 0) || (rot != 0));
+			boolean protectblock = ((hidden == 1) || (locked == 0));
 			if( alignblock || protectblock )
 			{
 				stylesooxml.append( ">" );
 			}
-			if( ha != 0 || va != 2 || wr != 0 || ind != 0 || rot != 0 )
+			if( (ha != 0) || (va != 2) || (wr != 0) || (ind != 0) || (rot != 0) )
 			{
 				stylesooxml.append( "<alignment" );
 				if( ha != 0 )  //default=general
@@ -767,7 +767,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 				}
 				stylesooxml.append( "/>\r\n" );
 			}
-			if( hidden == 1 || locked == 0 )
+			if( (hidden == 1) || (locked == 0) )
 			{ // if not the default protection settings, add protection element
 				stylesooxml.append( "<protection" );
 				if( hidden == 1 )
@@ -1028,14 +1028,14 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		// NAMES AFTER EXTERNAL REFS
 		// TODO:  add handling for name parameters
 		Name[] names = bk.getWorkBook().getNames();
-		if( names != null && names.length > 0 )
+		if( (names != null) && (names.length > 0) )
 		{
 			writer.write( "<definedNames>" );
 			writer.write( "\r\n" );
 			for( int i = 0; i < names.length; i++ )
 			{
 				String s = stripNonAsciiRetainQuote( names[i].getExpressionString().substring( 1 ) ).toString(); //avoid "="
-				if( s != null && s.length() != 0 && !s.startsWith( "#REF!" ) )
+				if( (s != null) && (s.length() != 0) && !s.startsWith( "#REF!" ) )
 				{
 					if( !names[i].isBuiltIn() )
 					{
@@ -1079,7 +1079,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		{ // macro-enabled template
 			mainContentList.add( new String[]{ "/xl/workbook.xml", "documentTemplateMacroEnabled" } );
 		}
-		else if( format == WorkBookHandle.FORMAT_XLSM || hasMacros( bk ) )
+		else if( (format == WorkBookHandle.FORMAT_XLSM) || hasMacros( bk ) )
 		{// format can be XLSM even though it does not contain macros ((:
 			mainContentList.add( new String[]{ "/xl/workbook.xml", "documentMacroEnabled" } );
 			format = WorkBookHandle.FORMAT_XLSM;   // ensure flag is set properly - macro-enabled workbook
@@ -1120,7 +1120,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 
 		// dimensions    // TODO: Deal with MAXROWS MAXCOLS in various Excel Versions
 		int last = sheet.getLastCol() - 1;
-		if( last == WorkBook.MAXCOLS - 1 )
+		if( last == (WorkBook.MAXCOLS - 1) )
 		{
 			last = XLSConstants.MAXCOLS - 1;    // 20081204 KSC: eventually WorkBook.MAXCOLS will == Excel-7 MAXCOLS, but until, convert
 		}
@@ -1476,7 +1476,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		// screwing up output
 		// ... fix!!
 		// Use getMergedCells method - which DOESN'T add new blank merged cell
-		if( mcs != null && mcs.size() > 0 )
+		if( (mcs != null) && (mcs.size() > 0) )
 		{
 			StringBuffer mc = new StringBuffer();
 			int cnt = 0;
@@ -1530,9 +1530,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 			h = " ht=\"" + row.getHeight() / rowHtFactor + "\" customHeight=\"1\"";
 		}
 		writer.write( ("<row r=\"" + (row.getRowNumber() + 1) + "\"" + h) );
-		if( row.getFormatId() > 0 && row.getFormatId() > row.getWorkBook()
-		                                                    .getWorkBook()
-		                                                    .getDefaultIxfe() )      // row-level formatting specified
+		if( (row.getFormatId() > 0) && (row.getFormatId() > row.getWorkBook().getWorkBook().getDefaultIxfe()) )      // row-level formatting specified
 		{
 			writer.write( (" s=\"" + row.getFormatId() + "\" customFormat=\"1\"") );
 		}
@@ -1899,7 +1897,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 	private void writeComments( Writer out, WorkSheetHandle sheet, WorkBookHandle bk ) throws IOException
 	{
 		CommentHandle[] nh = sheet.getCommentHandles();
-		if( nh == null || nh.length == 0 )
+		if( (nh == null) || (nh.length == 0) )
 		{
 			return;
 		}
@@ -1962,7 +1960,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		}
 		// add Notes to the vml, if any
 		CommentHandle[] nh = sheet.getCommentHandles();
-		if( nh != null && nh.length > 0 )
+		if( (nh != null) && (nh.length > 0) )
 		{
 			if( vml == null )
 			{
@@ -2008,7 +2006,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 				vml.append( "<x:Anchor>" );                              /* bounds of text box */
 				for( int j = 0; j < bounds.length; j++ )
 				{
-					vml.append( bounds[j] + ((j < bounds.length - 1) ? "," : "") );
+					vml.append( bounds[j] + ((j < (bounds.length - 1)) ? "," : "") );
 				}
 				vml.append( "</x:Anchor>" );
 
@@ -2022,7 +2020,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 				vml.append( "</x:ClientData>" + "</v:shape>" );
 			}
 		}
-		if( vml != null && vml.length() > 0 )
+		if( (vml != null) && (vml.length() > 0) )
 		{
 			// start with ns info
 			vml.insert( 0, "<xml xmlns:v=\"urn:schemas-microsoft-com:vml\"" +

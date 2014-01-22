@@ -243,7 +243,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				im.setName( rec.getName() );                // set image name from rec ...
 				im.setShapeName( rec.getShapeName() );    // set shape name as well ...
 				im.setImageType( msodg.getImageType( imgdx ) );// 20100519 KSC: added!
-				rec.getSheet().imageMap.put( im, Integer.valueOf( imgdx ) );
+				rec.getSheet().imageMap.put( im, imgdx );
 			}
 		}
 	}
@@ -303,7 +303,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				MSODrawing rec = (MSODrawing) msodg.getMsodrawingrecs().get( z );
 				if( rec.getSheet().equals( bs ) )
 				{
-					if( rec != msdHeader && !rec.isHeader() )
+					if( (rec != msdHeader) && !rec.isHeader() )
 					{    // added header check- seems like *can* have multiple header recs in charts!
 						spContainerLength += rec.getSPContainerLength();
 						otherContainerLength += rec.getSOLVERContainerLength();
@@ -510,7 +510,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				}
 			}
 		}
-		if( sb == null && bCreate )
+		if( (sb == null) && bCreate )
 		{  // create
 			sb = (Supbook) Supbook.getExternalPrototype( externalWorkbook );
 			int loc = ((Supbook) supBooks.get( supBooks.size() - 1 )).getRecordIndex();    // must have at least one global supbook present
@@ -1121,7 +1121,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{    // start from the back so don't initially match defaults...
 			if( f.matches( (Font) fonts.get( i ) ) )
 			{
-				return ((i > 3) ? i + 1 : i);
+				return ((i > 3) ? (i + 1) : i);
 			}
 		}
 		// return  fonts.indexOf(f);
@@ -1275,7 +1275,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public int addFormat( Format format )
 	{
-		Short ifmt = Short.valueOf( format.getIfmt() );
+		Short ifmt = format.getIfmt();
 
 		// Add it to the format record lookup
 		formats.put( ifmt, format );
@@ -1391,7 +1391,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		rec.setWorkBook( this );
 
 		Boundsheet bs = null;
-		Long lbplypos = new Long( 0l );
+		Long lbplypos = 0l;
 
 		// get the relevant Boundsheet for this rec
 		if( rec instanceof Bof )
@@ -1419,12 +1419,12 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			lb += (long) 8;
 		}
-		lbplypos = new Long( lb ); // use last
+		lbplypos = lb; // use last
 
 		bs = getSheetFromRec( rec, lbplypos );
 		if( bs != null )
 		{
-			lbplypos = new Long( bs.getLbPlyPos() );
+			lbplypos = bs.getLbPlyPos();
 		}
 
 		if( (bs != null) )
@@ -1490,8 +1490,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 
 		// Rows, valrecs, dbcells, and muls are stored in the row, not the byte streamer
-		if( opc == XLSRecord.DBCELL || opc == XLSRecord.ROW || rec.isValueForCell() || opc == XLSRecord.MULRK 
-                /*|| opc==MULBLANK*/ || opc == CHART || opc == XLSRecord.FILEPASS || opc == XLSRecord.SHRFMLA || opc == XLSRecord.ARRAY || opc == XLSRecord.STRINGREC )
+		if( (opc == XLSRecord.DBCELL) || (opc == XLSRecord.ROW) || rec.isValueForCell() || (opc == XLSRecord.MULRK) || (opc == CHART) || (opc == XLSRecord.FILEPASS) || (opc == XLSRecord.SHRFMLA) || (opc == XLSRecord.ARRAY) || (opc == XLSRecord.STRINGREC) )
 		{
 			addtorec = false;
 		}
@@ -1739,7 +1738,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 					sh.selected = true;
 				}
 
-				this.addWorkSheet( new Long( sh.getLbPlyPos() ), sh );
+				this.addWorkSheet( sh.getLbPlyPos(), sh );
 				break;
 
 			case MULRK:
@@ -2669,7 +2668,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		Name[] ns = this.getNames();
 		for( int i = 0; i < ns.length; i++ )
 		{ // 20100404 KSC: take out +1? 
-			if( ns[i].getItab() == origSheet.getSheetNum() + 1 )
+			if( ns[i].getItab() == (origSheet.getSheetNum() + 1) )
 			{
 				// it's a built in record, move it to the new sheet
 				int sheetnum = bnd.getSheetNum();
@@ -2785,7 +2784,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		msodg.addMsodrawingrec( mso );
 		MSODrawing hdr = msodg.getMsoHeaderRec( sht );
-		if( hdr != null && hdr != mso )
+		if( (hdr != null) && (hdr != mso) )
 		{ // already have a header rec
 			if( sht.getCharts().size() > 0 )
 			{
@@ -2883,7 +2882,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	public void changeWorkSheetOrder( Boundsheet bs, int idx )
 	{
 		// reorder the sheet vector
-		if( idx >= 0 && idx < boundsheets.size() )
+		if( (idx >= 0) && (idx < boundsheets.size()) )
 		{
 			boundsheets.remove( bs );
 			boundsheets.add( idx, bs );
@@ -3097,7 +3096,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			{
 				((Obj) xl).setObjId( bound.lastObjId++ );
 			}
-			else if( xl.getOpcode() == MSODRAWING || (xl.getOpcode() == CONTINUE && ((Continue) xl).maskedMso != null) )
+			else if( (xl.getOpcode() == MSODRAWING) || ((xl.getOpcode() == CONTINUE) && (((Continue) xl).maskedMso != null)) )
 			{    // 20100510 KSC: handle masked mso's            	
 				MSODrawing mso;
 				if( xl.getOpcode() == MSODRAWING )
@@ -3118,8 +3117,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				{ //  add image bytes as well, if any        			
 					ImageHandle im = bound.getImageByMsoIndex( mso.getImageIndex() );
 					int idx = msodg.addImage( im.getImageBytes(), im.getImageType(), false );
-					bound.imageMap.put( im,
-					                    Integer.valueOf( idx ) );    // 20100518 KSC: makes more sense? im.getImageIndex()));	// add new image to map and link to actual imageIndex - moved from above
+					bound.imageMap.put( im, idx );    // 20100518 KSC: makes more sense? im.getImageIndex()));	// add new image to map and link to actual imageIndex - moved from above
 					if( idx != mso.getImageIndex() )
 					{
 						mso.updateImageIndex( idx );
@@ -3419,7 +3417,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				else
 				{ // it's a new font for this workbook, add it in
 					localfNum = this.insertFont( thisFont ) + 1;
-					localFonts.put( xmlFont, Integer.valueOf( localfNum ) );
+					localFonts.put( xmlFont, localfNum );
 				}
 
 				/** XF **/
@@ -3440,7 +3438,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				if( xfNum == null )
 				{ // insert it into the book
 					localNum = this.insertXf( localxf );
-					localXfs.put( xmlxf, Integer.valueOf( localNum ) );
+					localXfs.put( xmlxf, localNum );
 				}
 				else  // already exists in the destination
 				{
@@ -3553,7 +3551,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		List records = this.getStreamer().records;
 		int z = -1;
-		for( int i = records.size() - 1; i > 0 && z == -1; i-- )
+		for( int i = records.size() - 1; (i > 0) && (z == -1); i-- )
 		{
 			int opcode = ((BiffRec) records.get( i )).getOpcode();
 			if( opcode == SXADDL )
@@ -3769,7 +3767,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			Xf x = this.getXf( xfNum );
 			String xml = x.toString();
-			retMap.put( xml, Integer.valueOf( xfNum ) );
+			retMap.put( xml, xfNum );
 		}
 		return retMap;
 	}
@@ -3788,7 +3786,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			Font fnt = (Font) this.fonts.get( i );
 			String xml = "<FONT><" + fnt.getXML() + "/></FONT>";
-			retMap.put( xml, Integer.valueOf( fnt.getIdx() ) );
+			retMap.put( xml, fnt.getIdx() );
 		}
 		return retMap;
 	}
@@ -3930,10 +3928,10 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public boolean defaultLanguageIsDBCS()
 	{
-		return (this.defaultLanguage == 81 ||
-				this.defaultLanguage == 886 ||
-				this.defaultLanguage == 86 ||
-				this.defaultLanguage == 82);
+		return ((this.defaultLanguage == 81) ||
+				(this.defaultLanguage == 886) ||
+				(this.defaultLanguage == 86) ||
+				(this.defaultLanguage == 82));
 		// PROBLEM WITH THIS:  POSSIBLE TO BE SET AS DBCS DEFAULT LANGUAGE
 		// BUT HAVE NON-DBCS TEXT or VISA VERSA
     	
@@ -4124,7 +4122,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{    // just clearing out sheets instead of closing workbook
 			// reset lasteof for possible new insertion of sheets (if not removing workbook) ...
 			int i = recs.length - 1;
-			while( i > 0 && lasteof == null )
+			while( (i > 0) && (lasteof == null) )
 			{
 				if( recs[i] != null )
 				{

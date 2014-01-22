@@ -106,7 +106,7 @@ public class ColChart extends ChartType
 			//x+=barw;	// a barwidth separates each series group
 			for( int j = 0; j < curseries.length; j++ )
 			{        // each series
-				double xx = x + barw * (i + 1) + (j * (n + 1) * barw);        // x goes from 1 series to next, corresponding to bar/column color
+				double xx = x + (barw * (i + 1)) + (j * (n + 1) * barw);        // x goes from 1 series to next, corresponding to bar/column color
 				double hh = yfactor * curseries[j];                        // bar height = measure of series value
 				double yy = y0 - (!isYReversed ? hh : 0);                // start drawing column
 				svg.append( "<rect id='series_" + (i + 1) + "' " + getScript( curranges[j] ) + " fill='" + seriescolors[i] + "' fill-opacity='1' stroke='black' stroke-opacity='1' stroke-width='1' stroke-linecap='butt' stroke-linejoin='miter' stroke-miterlimit='4'" +
@@ -114,7 +114,7 @@ public class ColChart extends ChartType
 				String l = getSVGDataLabels( dls, axisMetrics, curseries[j], 0, i, legends, categories[j].toString() );
 				if( l != null )
 				{
-					svg.append( "<text x='" + (xx + barw / 2) + "' y='" + (y0 - (hh + 10) * rfY) +
+					svg.append( "<text x='" + (xx + (barw / 2)) + "' y='" + (y0 - ((hh + 10) * rfY)) +
 							            "' style='text-anchor: middle;' " + getDataLabelFontSVG() + ">" + l + "</text>\r\n" );
 				}
 			}

@@ -381,7 +381,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		}
 		else
 		{
-			if( rw < 0 || col < 0 )
+			if( (rw < 0) || (col < 0) )
 			{
 				return new PtgRefErr().toString();
 			}
@@ -463,7 +463,7 @@ public class PtgRef extends GenericPtg implements Ptg
 			colNew += formulaCol;
 		}
 
-		if( wholeCol || rowNew < 0 )
+		if( wholeCol || (rowNew < 0) )
 		{
 			try
 			{
@@ -479,7 +479,7 @@ public class PtgRef extends GenericPtg implements Ptg
 			}
 		}
 
-		if( wholeRow || colNew >= MAXCOLS )
+		if( wholeRow || (colNew >= MAXCOLS) )
 		{
 			try
 			{
@@ -509,7 +509,7 @@ public class PtgRef extends GenericPtg implements Ptg
 				sheetname = locax.substring( 0, locax.indexOf( "!" ) );
 			}
 		}
-		if( sheetname == null && parent_rec != null )
+		if( (sheetname == null) && (parent_rec != null) )
 		{
 			if( parent_rec.getSheet() != null )
 			{
@@ -585,16 +585,16 @@ public class PtgRef extends GenericPtg implements Ptg
 		{   // have to assume that it's a wholeRow even if 2007
 			return true;
 		}
-		else if( colNew >= MAXCOLS_BIFF8 - 1 && !isExcel2007 )
+		else if( (colNew >= (MAXCOLS_BIFF8 - 1)) && !isExcel2007 )
 		{
 			return true;
 		}
-		if( this.cachedLocation != null && isExcel2007 )
+		if( (this.cachedLocation != null) && isExcel2007 )
 		{
 			return this.locationStringReferencesEntireRow();
 		}
 		// This is unfortunately a bit of a hack due to biff 8 incompatibilies
-		if( colNew == MAXCOLS_BIFF8 - 1 && isExcel2007 )
+		if( (colNew == (MAXCOLS_BIFF8 - 1)) && isExcel2007 )
 		{
 			return true;
 		}
@@ -637,7 +637,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		{
 			return true;
 		}
-		else if( rowNew >= MAXROWS_BIFF8 - 1 && !isExcel2007 )
+		else if( (rowNew >= (MAXROWS_BIFF8 - 1)) && !isExcel2007 )
 		{
 			rowNew = -1;
 			return true;
@@ -708,7 +708,7 @@ public class PtgRef extends GenericPtg implements Ptg
 				res = ExcelTools.getRowColFromString( addr );
 				col = res[1];
 				rw = res[0];
-				if( col == -1 || rw == -1 )
+				if( (col == -1) || (rw == -1) )
 				{    // if wholerow or wholecol, must be absolute
 					fColRel = false;
 					fRwRel = false;
@@ -811,7 +811,7 @@ public class PtgRef extends GenericPtg implements Ptg
 			String sh1 = s[0];
 			String range = s[1];
 			Ptg ptg;
-			if( range == null || range.equals( "#REF!" ) || (sh1 != null && sh1.equals( "#REF" )) )
+			if( (range == null) || range.equals( "#REF!" ) || ((sh1 != null) && sh1.equals( "#REF" )) )
 			{
 				if( sh1 != null )
 				{
@@ -835,7 +835,7 @@ public class PtgRef extends GenericPtg implements Ptg
 			String opMatch = "(.*([ ,]).*)+";        //matches union or isect op	( " " or ,)
 			String m = sht + "((" + opMatch + ")|(" + rangeMatch + "))";
 			// is address a complex range??
-			if( address.matches( m ) || range.indexOf( "(" ) > -1 )
+			if( address.matches( m ) || (range.indexOf( "(" ) > -1) )
 			{
 				//NOTE: this can be a MemFunc OR a MemArea --
 				// PtgMemFunc= a NON-CONSTANT cell address, cell range address or cell range list
@@ -850,7 +850,7 @@ public class PtgRef extends GenericPtg implements Ptg
 			else if( range.indexOf( ":" ) > 0 )
 			{ // it's a range, either PtgRef3d or PtgArea3d
 				String[] ops = StringTool.getTokensUsingDelim( range, ":" );
-				if( (bk.getName( ops[0] ) != null || bk.getName( ops[1] ) != null) )
+				if( ((bk.getName( ops[0] ) != null) || (bk.getName( ops[1] ) != null)) )
 				{
 					PtgMemFunc pmf = new PtgMemFunc();
 					pmf.setParentRec( parent );
@@ -860,7 +860,7 @@ public class PtgRef extends GenericPtg implements Ptg
 				else if( sh1 != null )
 				{
 					int[] rc = ExcelTools.getRowColFromString( ops[0] );    // see if a wholerow/wholecol ref
-					if( !(ops[0].equals( ops[1] ) && rc[0] != -1 && rc[1] != -1) )
+					if( !(ops[0].equals( ops[1] ) && (rc[0] != -1) && (rc[1] != -1)) )
 					{
 						PtgArea3d pta = new PtgArea3d();
 						pta.setParentRec( parent );
@@ -1011,7 +1011,7 @@ public class PtgRef extends GenericPtg implements Ptg
 	public boolean isBlank()
 	{
 		getRefCells();
-		return (refCell[0] == null || ((XLSRecord) refCell[0]).isBlank);//getOpcode()==BLANK);
+		return ((refCell[0] == null) || ((XLSRecord) refCell[0]).isBlank);//getOpcode()==BLANK);
 	}
 
 	/**
@@ -1034,7 +1034,7 @@ public class PtgRef extends GenericPtg implements Ptg
 			{
 				if( refCell[0].getDataType().equals( "Float" ) )
 				{
-					retValue = new Double( refCell[0].getDblVal() );
+					retValue = refCell[0].getDblVal();
 					return retValue;
 				}
 				else
@@ -1057,7 +1057,7 @@ public class PtgRef extends GenericPtg implements Ptg
 			{
 				// assume zero, which the vast majority of cases are
 			}
-			return Integer.valueOf( 0 );
+			return 0;
 		}
 	}
 
@@ -1083,7 +1083,7 @@ public class PtgRef extends GenericPtg implements Ptg
 			{
 				if( cell.getDataType().equals( "Float" ) )
 				{
-					retValue = new Double( cell.getDblVal() );
+					retValue = cell.getDblVal();
 				}
 				else
 				{
@@ -1299,7 +1299,7 @@ public class PtgRef extends GenericPtg implements Ptg
 				opc = parent_rec.getOpcode();
 			}
 			// protocol for shared formulas, conditional formatting, data validity and defined names only (type B cell addresses!)
-			if( opc == SHRFMLA || opc == DVAL )
+			if( (opc == SHRFMLA) || (opc == DVAL) )
 			{
 				this.formulaRow = parent_rec.getRowNumber();
 				this.formulaCol = parent_rec.getColNumber();
@@ -1412,7 +1412,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		}
 		else
 		{
-			return col + ((MAXROWS - rw + 1) * MAXCOLS);
+			return col + (((MAXROWS - rw) + 1) * MAXCOLS);
 		}
 	}
 
@@ -1433,7 +1433,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		}
 		useReferenceTracker = false;
 		super.close();
-		if( refCell != null && refCell.length > 0 && refCell[0] != null ) // clear out object references
+		if( (refCell != null) && (refCell.length > 0) && (refCell[0] != null) ) // clear out object references
 		{
 			((XLSRecord) refCell[0]).close();
 		}

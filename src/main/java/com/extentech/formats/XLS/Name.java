@@ -358,7 +358,7 @@ public final class Name extends XLSRecord
 	 */
 	public void parseExpression()
 	{
-		if( expressionbytes != null && expression == null )
+		if( (expressionbytes != null) && (expression == null) )
 		{
 			expression = ExpressionParser.parseExpression( expressionbytes, this );
 			if( DEBUGLEVEL == DEBUG_LOW )
@@ -428,7 +428,7 @@ public final class Name extends XLSRecord
 	 */
 	public String getExpressionString()
 	{
-		if( (this.expression == null || this.expression.size() == 0) && this.getCachedOOXMLExpression() != null )
+		if( ((this.expression == null) || (this.expression.size() == 0)) && (this.getCachedOOXMLExpression() != null) )
 		{
 			return "=" + this.getCachedOOXMLExpression();
 		}
@@ -504,7 +504,7 @@ public final class Name extends XLSRecord
 	 */
 	public boolean isStringReference()
 	{
-		if( this.expression.size() == 1 && this.expression.get( 0 ) instanceof PtgStr )
+		if( (this.expression.size() == 1) && (this.expression.get( 0 ) instanceof PtgStr) )
 		{
 			return true;
 		}
@@ -569,7 +569,7 @@ public final class Name extends XLSRecord
 			{    // usual case of 1 ref or 1 PtgMemFunc (complex expression)
 				ptga = (Ptg) ptgs.pop();
 				//  KSC: memory usage changes: now parent rec nec. for reference tracking; if change must update
-				if( ptga instanceof PtgRef && ((PtgRef) ptga).getUseReferenceTracker() )
+				if( (ptga instanceof PtgRef) && ((PtgRef) ptga).getUseReferenceTracker() )
 				{
 					((PtgRef) ptga).updateInRefTracker( this );
 				}
@@ -668,7 +668,7 @@ public final class Name extends XLSRecord
 		{
 			this.init();
 		}
-		if( expression == null || expression.size() == 0 )
+		if( (expression == null) || (expression.size() == 0) )
 		{
 			return;
 		}

@@ -190,10 +190,10 @@ public class PtgArea extends PtgRef implements Ptg
 			// cases of named range or if location sheet does not = parent_rec sheet, set sheet explicitly
 			String sht = null;    // usual case, don't need to set sheet
 			Boundsheet sh = parent_rec.getSheet();
-			if( sh == null || (this.sheetname != null && !this.sheetname.equals( sh.getSheetName() )) )
+			if( (sh == null) || ((this.sheetname != null) && !this.sheetname.equals( sh.getSheetName() )) )
 			{
-				if( sh == null || !GenericPtg.qualifySheetname( this.sheetname )
-				                             .equals( GenericPtg.qualifySheetname( sh.getSheetName() ) ) )
+				if( (sh == null) || !GenericPtg.qualifySheetname( this.sheetname )
+				                               .equals( GenericPtg.qualifySheetname( sh.getSheetName() ) ) )
 				{
 					sht = this.sheetname + "!";
 				}
@@ -243,7 +243,7 @@ public class PtgArea extends PtgRef implements Ptg
 		{
 			return null;
 		}
-		if( lastPtg == null && firstPtg != null )
+		if( (lastPtg == null) && (firstPtg != null) )
 		{
 			int[] rc1 = firstPtg.getRowCol();
 			int[] ret = { rc1[0], rc1[1], rc1[0], rc1[1] };
@@ -445,7 +445,7 @@ public class PtgArea extends PtgRef implements Ptg
 	 */
 	public void setWholeRowCol()
 	{
-		if( firstPtg.rw <= 1 && lastPtg.wholeCol ) // TODO: inconsistencies in 0-based or 1-based rows
+		if( (firstPtg.rw <= 1) && lastPtg.wholeCol ) // TODO: inconsistencies in 0-based or 1-based rows
 		{
 			this.wholeCol = true;
 		}
@@ -695,10 +695,10 @@ public class PtgArea extends PtgRef implements Ptg
 	private String getLocationHelper()
 	{
 		//String loc= null;
-		if( firstPtg == null || lastPtg == null )
+		if( (firstPtg == null) || (lastPtg == null) )
 		{
 			this.populateVals();
-			if( firstPtg == null || lastPtg == null ) // we tried!
+			if( (firstPtg == null) || (lastPtg == null) ) // we tried!
 			{
 				throw new AssertionError( "PtgArea.getLocationHelper null ptgs" );
 			}
@@ -735,7 +735,7 @@ public class PtgArea extends PtgRef implements Ptg
 		{
 			sh1 = "[" + externalLink1 + "]" + sh1;
 		}
-		if( externalLink2 > 0 && sh2 != null )
+		if( (externalLink2 > 0) && (sh2 != null) )
 		{
 			sh2 = "[" + externalLink2 + "]" + sh2;
 		}
@@ -841,7 +841,7 @@ public class PtgArea extends PtgRef implements Ptg
 	{
 		// 20080214 KSC: underlying cells may have changed ...if(refCell==null)
 		refCell = this.getRefCells();
-		Object returnval = new Double( 0 );
+		Object returnval = (double) 0;
 		String retstr = null;
 		String array = "";
 		boolean isArray = (this.parent_rec instanceof Array);
@@ -899,7 +899,7 @@ public class PtgArea extends PtgRef implements Ptg
 			}
 			retstr = null;
 		}
-		if( isArray && array != null && array.length() > 1 )
+		if( isArray && (array != null) && (array.length() > 1) )
 		{   // 20090817 KSC:  [BugTracker 2683]
 			array = "{" + array.substring( 0, array.length() - 1 ) + "}";
 			PtgArray pa = new PtgArray();
@@ -938,7 +938,7 @@ public class PtgArea extends PtgRef implements Ptg
 			                       .getWorkBook()
 			                       .getRefTracker()
 			                       .getLookupColCache()
-			                       .get( lu + ":" + Integer.valueOf( colNum ) );
+			                       .get( lu + ":" + colNum );
 			if( ret != null )
 			{
 				return ret;
@@ -989,7 +989,7 @@ public class PtgArea extends PtgRef implements Ptg
 
 		// cache
 		parent_rec.getWorkBook().getRefTracker().getVlookups().put( this.toString(), this );
-		parent_rec.getWorkBook().getRefTracker().getLookupColCache().put( lu + ":" + Integer.valueOf( colNum ), v );
+		parent_rec.getWorkBook().getRefTracker().getLookupColCache().put( lu + ":" + colNum, v );
 		return v;
 	}
 
@@ -1182,6 +1182,6 @@ public class PtgArea extends PtgRef implements Ptg
 	@Override
 	protected long getHashCode()
 	{
-		return lastPtg.hashcode + (firstPtg.hashcode) * ((long) MAXCOLS + (long) MAXROWS * MAXCOLS);
+		return lastPtg.hashcode + ((firstPtg.hashcode) * ((long) MAXCOLS + ((long) MAXROWS * MAXCOLS)));
 	}
 }

@@ -255,13 +255,13 @@ public class DateConverter
 
 		// If the date is after February 28, 1900 add one day.
 		// This compensates for Excel incorrectly treating 1900 as a leap year
-		if( format == DateFormat.LEGACY_1900 && days >= EXTRA_DAY )
+		if( (format == DateFormat.LEGACY_1900) && (days >= EXTRA_DAY) )
 		{
 			days += 1;
 		}
 
 		// Perform validation
-		if( validate && (days < format.getLowerLimit() || days > format.getUpperLimit()) )
+		if( validate && ((days < format.getLowerLimit()) || (days > format.getUpperLimit())) )
 		{
 			throw new IllegalArgumentException( "the given date is not supported by Excel" );
 		}
@@ -330,7 +330,7 @@ public class DateConverter
 		// one day. This compensates for 1900 being considered a leap year.
 		// Not matching the non-existent February 29 causes it to become
 		// March 1. This behavior matches that of Calendar for the same input.
-		if( format == DateFormat.LEGACY_1900 && days > EXTRA_DAY )
+		if( (format == DateFormat.LEGACY_1900) && (days > EXTRA_DAY) )
 		{
 			days -= 1;
 		}
@@ -347,7 +347,7 @@ public class DateConverter
 
 		// Adjust for time zone and daylight saving time offsets
 		long offset = 0;
-		for( int count = 0; offset != (offset = cal.get( Calendar.ZONE_OFFSET ) + cal.get( Calendar.DST_OFFSET )) && count < 3; count++ )
+		for( int count = 0; (offset != (offset = cal.get( Calendar.ZONE_OFFSET ) + cal.get( Calendar.DST_OFFSET ))) && (count < 3); count++ )
 		{
 			cal.setTimeInMillis( millis - offset );
 		}
@@ -838,7 +838,7 @@ public class DateConverter
 			try
 			{
 				String ds = dateString;
-				if( i == 32 || i == 33 )
+				if( (i == 32) || (i == 33) )
 				{ // then must add year to date
 					GregorianCalendar calendar = new GregorianCalendar();
 					int curyear = calendar.get( Calendar.YEAR );

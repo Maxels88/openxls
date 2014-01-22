@@ -218,7 +218,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 		if( minCapacity > oldCapacity )
 		{
 			Object oldData[] = elementData;
-			int newCapacity = (oldCapacity * 3) / 2 + 1;
+			int newCapacity = ((oldCapacity * 3) / 2) + 1;
 			if( newCapacity < minCapacity )
 			{
 				newCapacity = minCapacity;
@@ -475,7 +475,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	@Override
 	public void add( int index, Object element )
 	{
-		if( index > size || index < 0 )
+		if( (index > size) || (index < 0) )
 		{
 			throw new IndexOutOfBoundsException( "Index: " + index + ", Size: " + size );
 		}
@@ -580,7 +580,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	@Override
 	public boolean addAll( int index, Collection c )
 	{
-		if( index > size || index < 0 )
+		if( (index > size) || (index < 0) )
 		{
 			throw new IndexOutOfBoundsException( "Index: " + index + ", Size: " + size );
 		}

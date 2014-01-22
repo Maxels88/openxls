@@ -112,7 +112,7 @@ public class BarChart extends ChartType
 		{
 			sb.append( " Overlap=\"" + bar.pcOverlap + "\"" );
 		}
-		if( bar.pcGap != 50 && bar.pcGap != 150 )
+		if( (bar.pcGap != 50) && (bar.pcGap != 150) )
 		{
 			sb.append( " Gap=\"" + bar.pcGap + "\"" );
 		}
@@ -254,9 +254,9 @@ public class BarChart extends ChartType
 		}
 		StringBuffer svg = new StringBuffer();
 		int shape = cf.getBarShape();
-		if( shape == ChartConstants.SHAPECONE ||
-				shape == ChartConstants.SHAPECYLINDER ||
-				shape == ChartConstants.SHAPEPYRAMID )
+		if( (shape == ChartConstants.SHAPECONE) ||
+				(shape == ChartConstants.SHAPECYLINDER) ||
+				(shape == ChartConstants.SHAPEPYRAMID) )
 		{
 			;    // TODO: SOMETHING!!! Interpret Shape for Pyramid, etc. charts
 		}
@@ -273,7 +273,7 @@ public class BarChart extends ChartType
 		}
 
 		int rf = 1;    //(!yAxisReversed?1:-1);
-		double y0 = h + y - barw * 0.5;    //start at bottom and work up (unless reversed)
+		double y0 = (h + y) - (barw * 0.5);    //start at bottom and work up (unless reversed)
 		// for each series
 		for( int i = 0; i < n; i++ )
 		{    // each series group i.e. each bar with a different color
@@ -283,14 +283,14 @@ public class BarChart extends ChartType
 			for( int j = 0; j < curseries.length; j++ )
 			{        // each category (group of series)
 //						double y= y0 - barw*(i+1)*rf - (j*n*barw*1.5)*rf;		// y goes from 1 series to next, corresponding to bar/column color
-				double yy = y0 - (barw * (n + 1) * 1.1 * (j)) /* each series (bar group) */ - (barw * (i + 1)) /* each bar in the series group */ - (barw * 1.5) * rf /* start */;
+				double yy = y0 - (barw * (n + 1) * 1.1 * (j)) - (barw * (i + 1)) - ((barw * 1.5) * rf) /* start */;
 				double ww = yfactor * curseries[j];                            // width of bar -- measure of series
 				svg.append( "<rect " + getScript( curranges[j] ) + " fill='" + seriescolors[i] + "' fill-opacity='1' stroke='black' stroke-opacity='1' stroke-width='1' stroke-linecap='butt' stroke-linejoin='miter' stroke-miterlimit='4'" +
 						            " x='" + x + "' y='" + yy + "' width='" + ww + "' height='" + barw + "' fill-rule='evenodd'/>" );
 				String l = getSVGDataLabels( dls, axisMetrics, curseries[j], 0, i, legends, categories[j].toString() );
 				if( l != null )
 				{
-					svg.append( "<text x='" + (x + ww + 10) + "' y='" + (yy + barw * rf) +
+					svg.append( "<text x='" + (x + ww + 10) + "' y='" + (yy + (barw * rf)) +
 							            "' " + getDataLabelFontSVG() + ">" + l + "</text>\r\n" );
 				}
 			}

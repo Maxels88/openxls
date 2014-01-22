@@ -64,7 +64,7 @@ public class Calculator
 			}
 			else // it's a Double
 			{
-				compare = ((Double) o).compareTo( new Double( c.getDblVal() ) );
+				compare = ((Double) o).compareTo( c.getDblVal() );
 			}
 		}
 		catch( Exception e )
@@ -132,7 +132,7 @@ public class Calculator
 			}
 			else if( val instanceof Number )    // assume it's a number
 			{
-				compare = (new Double( compareval )).compareTo( new Double( ((Number) val).doubleValue() ) );
+				compare = (new Double( compareval )).compareTo( ((Number) val).doubleValue() );
 			}
 			else
 			{
@@ -144,7 +144,7 @@ public class Calculator
 			try
 			{    // try date compare
 				double dt = DateConverter.getXLSDateVal( new java.util.Date( compareval ) );
-				compare = (new Double( dt )).compareTo( new Double( ((Number) val).doubleValue() ) );
+				compare = (new Double( dt )).compareTo( ((Number) val).doubleValue() );
 			}
 			catch( Exception ex )
 			{    // just try string compare
@@ -268,7 +268,7 @@ public class Calculator
 			{
 				break;
 			}
-			else if( c == '*' || c == '?' )
+			else if( (c == '*') || (c == '?') )
 			{
 				break;
 			}
@@ -301,7 +301,7 @@ public class Calculator
 			{
 				try
 				{    // if it's a PtgRef, convert to a PtgArea
-					if( !(pr[0] instanceof PtgArea) && pr[0] instanceof PtgRef )
+					if( !(pr[0] instanceof PtgArea) && (pr[0] instanceof PtgRef) )
 					{
 						PtgArea pa = new PtgArea();
 						pa.setParentRec( pr[0].getParentRec() );

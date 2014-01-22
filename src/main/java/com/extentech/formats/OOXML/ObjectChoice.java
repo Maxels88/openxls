@@ -176,7 +176,7 @@ public class ObjectChoice implements OOXMLElement
 	 */
 	public boolean hasShape()
 	{
-		return (cxnSp != null || sp != null || (grpSp != null && grpSp.hasShape()));
+		return ((cxnSp != null) || (sp != null) || ((grpSp != null) && grpSp.hasShape()));
 	}
 
 	/**

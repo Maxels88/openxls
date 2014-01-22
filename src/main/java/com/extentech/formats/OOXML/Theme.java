@@ -158,7 +158,7 @@ public class Theme implements OOXMLElement
 									this.genericThemeClrs[idx] = xpp.getAttributeValue( 0 );
 								}
 							}
-							else if( eventType == XmlPullParser.END_TAG && xpp.getName().equals( "clrScheme" ) )
+							else if( (eventType == XmlPullParser.END_TAG) && xpp.getName().equals( "clrScheme" ) )
 							{
 								break;
 							}

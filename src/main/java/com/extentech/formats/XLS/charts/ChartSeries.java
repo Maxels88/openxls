@@ -94,7 +94,7 @@ public class ChartSeries implements ChartConstants, Serializable
 	 */
 	public double[] getMetrics( boolean isDirty )
 	{
-		if( !isDirty && minmaxcache != null )
+		if( !isDirty && (minmaxcache != null) )
 		{
 			return minmaxcache;
 		}
@@ -154,7 +154,7 @@ public class ChartSeries implements ChartConstants, Serializable
 		 * A Scatter chart has two value axes, showing one set of numerical data along the x-axis and another along the y-axis.
     	 * It combines these values into single data points and displays them in uneven intervals, or clusters		
     	 */
-		if( charttype != PIECHART && charttype != DOUGHNUTCHART )
+		if( (charttype != PIECHART) && (charttype != DOUGHNUTCHART) )
 		{
 			seriescolors = new String[s.size()];
 			legends = new String[s.size()];
@@ -214,7 +214,7 @@ public class ChartSeries implements ChartConstants, Serializable
 				seriesranges.add( sranges );        // trap series range
 			}
 		}
-		else if( charttype == DOUGHNUTCHART && s.size() > 1 )
+		else if( (charttype == DOUGHNUTCHART) && (s.size() > 1) )
 		{ // like a PIE chart but can have multiple series
 			legends = new String[categories.length];        // for PIE/DONUT charts, legends are actually category labels, not series labels
 			for( int i = 0; i < categories.length; i++ )
@@ -439,7 +439,7 @@ public class ChartSeries implements ChartConstants, Serializable
 		for( int i = 0; i < series.size(); i++ )
 		{
 			Integer chart = (Integer) ((Object[]) series.get( i ))[1];
-			if( nChart == -1 || nChart == chart.intValue() )
+			if( (nChart == -1) || (nChart == chart.intValue()) )
 			{
 				Series s = (Series) ((Object[]) series.get( i ))[0];
 				retVec.add( s );
@@ -469,19 +469,19 @@ public class ChartSeries implements ChartConstants, Serializable
 		Series s = Series.getPrototype( seriesRange, categoryRange, bubbleRange, legendRange, legendText, chartObject );
 		s.setParentChart( chartObject.getParentChart() );
 		s.setShape( chartObject.getBarShape() );
-		series.add( new Object[]{ s, Integer.valueOf( nChart ) } );
+		series.add( new Object[]{ s, nChart } );
 		// Update parent chartArr
 		ArrayList<XLSRecord> chartArr = s.getParentChart().chartArr;
 		for( int i = 0; i < chartArr.size(); i++ )
 		{
 			BiffRec br = (BiffRec) chartArr.get( i );
 			BiffRec br2 = null;
-			if( i < chartArr.size() - 1 )
+			if( i < (chartArr.size() - 1) )
 			{
 				br2 = (BiffRec) chartArr.get( i + 1 );
 			}
-			if( br != null && ((br.getOpcode() == XLSConstants.SERIES && br2.getOpcode() != XLSConstants.SERIES) || br.getOpcode() == XLSConstants.FRAME && br2
-					.getOpcode() == XLSConstants.SHTPROPS) )
+			if( (br != null) && (((br.getOpcode() == XLSConstants.SERIES) && (br2.getOpcode() != XLSConstants.SERIES)) || ((br.getOpcode() == XLSConstants.FRAME) && (br2
+					.getOpcode() == XLSConstants.SHTPROPS))) )
 			{
 				chartArr.add( i + 1, s );
 				break;
@@ -742,7 +742,7 @@ public class ChartSeries implements ChartConstants, Serializable
 				int idx = seriesList[i] - 1;
 				// ALL series in chart MAPPED to chart that "owns" it            			
 				Series s = (Series) ((Object[]) series.get( idx ))[0];
-				series.add( idx, new Object[]{ s, Integer.valueOf( nCharts ) } );
+				series.add( idx, new Object[]{ s, nCharts } );
 			}
 			catch( ArrayIndexOutOfBoundsException ae )
 			{
@@ -902,7 +902,7 @@ public class ChartSeries implements ChartConstants, Serializable
 					}
 					else if( tnm.equals( "smooth" ) )
 					{  // line chart
-						smooth = (xpp.getAttributeCount() == 0 || !xpp.getAttributeValue( 0 ).equals( "0" ));
+						smooth = ((xpp.getAttributeCount() == 0) || !xpp.getAttributeValue( 0 ).equals( "0" ));
 					}
 					else if( tnm.equals( "explosion" ) )
 					{
@@ -928,7 +928,7 @@ public class ChartSeries implements ChartConstants, Serializable
 						{
 							legendText = OOXMLAdapter.getNextText( xpp );    // legend text; possible to have legend text without a legend cell range (ranges[1])
 						}
-						else if( idx == -1 || ranges[idx].equals( "" ) )
+						else if( (idx == -1) || ranges[idx].equals( "" ) )
 						{ // shoudln't!! can't have a textual refernce in place of a series or cat value (can you?)
 							Logger.logWarn( "ChartSeries.parseOOXML: unexpected text value" );
 						}
@@ -944,7 +944,7 @@ public class ChartSeries implements ChartConstants, Serializable
 							// unclear if at any other time the range referenced is a subset ... [NOTE: in testing, only pivot charts hit]
 							// another assumption:  assume that range is only TRUNCATED -- in testing, true
 							int npoints = Integer.valueOf( xpp.getAttributeValue( 0 ) ).intValue();
-							if( !ranges[idx].equals( "" ) && ranges[idx].indexOf( "," ) == -1 )
+							if( !ranges[idx].equals( "" ) && (ranges[idx].indexOf( "," ) == -1) )
 							{
 								try
 								{
@@ -1034,7 +1034,7 @@ public class ChartSeries implements ChartConstants, Serializable
 						// TODO: " When you create a chart, by default - the first six series are the six accent colors in order - but not the exact color or any variation that appears in the palette. They're typically (unless the primary accent color being modified is extremely dark) a bit darker than the primary accent color. Chart series 7 - 12 use the actual primary accent colors 1 through 6 ... and then chart series 13 starts a set of lighter variations of the six accent colors that are also slightly different from any position in the palette."
 						else if( seriesidx < 7 ) // TODO: figure out where to get colors past 6
 						{
-							if( seriesidx > 0 && parentChart instanceof PieChart )
+							if( (seriesidx > 0) && (parentChart instanceof PieChart) )
 							{
 								Logger.logWarn( "ChartSeries.parseOOXML:  more than 1 series encountered for a Pie-style chart" );
 							}
@@ -1107,8 +1107,8 @@ public class ChartSeries implements ChartConstants, Serializable
 
 	public String getOOXML( int ct, boolean isBubble3d, int nChart )
 	{
-		String catstr = (ct == SCATTERCHART || ct == BUBBLECHART) ? ("xVal") : ("cat");
-		String valstr = (ct == SCATTERCHART || ct == BUBBLECHART) ? ("yVal") : ("val");
+		String catstr = ((ct == SCATTERCHART) || (ct == BUBBLECHART)) ? ("xVal") : ("cat");
+		String valstr = ((ct == SCATTERCHART) || (ct == BUBBLECHART)) ? ("yVal") : ("val");
 		StringBuffer ooxml = new StringBuffer();
 
 		Vector v = parentChart.getAllSeries( nChart );
@@ -1205,7 +1205,7 @@ public class ChartSeries implements ChartConstants, Serializable
 			int chartnumber = ((Integer) ((Object[]) series.get( z ))[1]).intValue();
 			if( chartnumber == thischartnumber )    // mappped to this chart
 			{
-				seriesmappings.add( Integer.valueOf( z + 1 ) );
+				seriesmappings.add( z + 1 );
 			}
 		}
 		int[] mappings = new int[seriesmappings.size()];
@@ -1232,7 +1232,7 @@ public class ChartSeries implements ChartConstants, Serializable
 	 */
 	public int[] getDataLabelsPerSeries( int defaultDL, int charttype )
 	{
-		if( charttype == PIECHART || charttype == DOUGHNUTCHART )
+		if( (charttype == PIECHART) || (charttype == DOUGHNUTCHART) )
 		{    // handled differently
 			if( series.size() > 0 )
 			{

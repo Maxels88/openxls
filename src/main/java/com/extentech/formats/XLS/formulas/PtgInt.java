@@ -104,7 +104,7 @@ public class PtgInt extends GenericPtg implements Ptg
 	@Override
 	public Object getValue()
 	{
-		Integer i = Integer.valueOf( val );
+		Integer i = val;
 		return i;
 	}
 

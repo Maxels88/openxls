@@ -268,7 +268,7 @@ public class SheetProtectionManager extends ProtectionManager implements Seriali
 	@Override
 	public void setPassword( String pass )
 	{
-		if( pass != null && !pass.equals( "" ) )
+		if( (pass != null) && !pass.equals( "" ) )
 		{
 			insertPassword();
 			super.setPassword( pass );
@@ -315,7 +315,7 @@ public class SheetProtectionManager extends ProtectionManager implements Seriali
 		{
 			objprotect = new ObjProtect();
 			objprotect.setLocked( true );
-			sheet.insertSheetRecordAt( objprotect, (scenprotect != null ? (BiffRec) scenprotect : (BiffRec) protect).getRecordIndex() + 1 );
+			sheet.insertSheetRecordAt( objprotect, ((scenprotect != null) ? (BiffRec) scenprotect : (BiffRec) protect).getRecordIndex() + 1 );
 		}
 	}
 
@@ -346,7 +346,7 @@ public class SheetProtectionManager extends ProtectionManager implements Seriali
 				}
 				break;
 			}
-			if( opc == XLSConstants.DEFCOLWIDTH || opc == XLSConstants.COLINFO || opc == XLSConstants.DIMENSIONS )
+			if( (opc == XLSConstants.DEFCOLWIDTH) || (opc == XLSConstants.COLINFO) || (opc == XLSConstants.DIMENSIONS) )
 			{
 				break;
 			}

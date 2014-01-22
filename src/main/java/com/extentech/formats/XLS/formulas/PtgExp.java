@@ -296,7 +296,7 @@ public class PtgExp extends GenericPtg implements Ptg
 				if( f.isSharedFormula() )
 				{
 					o = FormulaParser.getExpressionString( f.shared.instantiate( f ) );
-					if( o != null && o.toString().startsWith( "=" ) )
+					if( (o != null) && o.toString().startsWith( "=" ) )
 					{
 						return o.toString().substring( 1 );
 					}

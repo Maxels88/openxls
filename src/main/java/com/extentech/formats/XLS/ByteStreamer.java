@@ -155,7 +155,7 @@ public class ByteStreamer implements Serializable, XLSConstants
 	 */
 	public BiffRec getRecordAt( int t, BiffRec rec )
 	{
-		if( rec instanceof Boundsheet || rec instanceof Dbcell )
+		if( (rec instanceof Boundsheet) || (rec instanceof Dbcell) )
 		{
 			return this.getRecordAt( t );
 		}
@@ -420,13 +420,13 @@ public class ByteStreamer implements Serializable, XLSConstants
 				lastindex = (Index) rec;
 			}
 //            offset dlen by number of new continue headers
-			if( rec.getOpcode() == CONTINUE && ((Continue) rec).maskedMso != null )
+			if( (rec.getOpcode() == CONTINUE) && (((Continue) rec).maskedMso != null) )
 			{
 				rec.setData( ((Continue) rec).maskedMso.getData() );    // ensure any mso changes are propogated up
 			}
 			int rln = rec.getLength();  //length of total rec data including continue
 			int numcx = rln / MAXRECLEN;    // num continues?
-			if( (rln % MAXRECLEN) <= 4 && numcx > 0 )    // hits boundary; since rlen==datalen+4, numcx is 1 more than actual continues
+			if( ((rln % MAXRECLEN) <= 4) && (numcx > 0) )    // hits boundary; since rlen==datalen+4, numcx is 1 more than actual continues
 			{
 				numcx--;
 			}
@@ -438,7 +438,7 @@ public class ByteStreamer implements Serializable, XLSConstants
 					rln = 0; // do not count data byte size for Continues...
 				}
 			}
-			if( ((rln > (MAXRECLEN + 4)) && (numcx > 0) && rec.getOpcode() != SST) )
+			if( ((rln > (MAXRECLEN + 4)) && (numcx > 0) && (rec.getOpcode() != SST)) )
 			{
 				dlen += (numcx * 4);
 				recpos += (numcx * 4);
@@ -706,7 +706,7 @@ public class ByteStreamer implements Serializable, XLSConstants
 				{
 					writer.write( "\t[" + ((Crn) b).toString() + "]" );
 				}
-				else if( b instanceof Formula || b instanceof Rk || b instanceof NumberRec || b instanceof Blank || b instanceof Labelsst )
+				else if( (b instanceof Formula) || (b instanceof Rk) || (b instanceof NumberRec) || (b instanceof Blank) || (b instanceof Labelsst) )
 				{
 					writer.write( " " + ((XLSRecord) b).getCellAddressWithSheet() + "\t[" + ByteTools.getByteDump( b.getData(), 0 )
 					                                                                                 .substring( 11 ) + "]" );

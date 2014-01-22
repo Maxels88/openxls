@@ -195,7 +195,7 @@ public class PtgArray extends GenericPtg implements Ptg
 					byte[] barr = new byte[8];
 					System.arraycopy( rgval, i, barr, 0, 8 );
 					double val = ByteTools.eightBytetoLEDouble( barr );
-					Double d = new Double( val );
+					Double d = val;
 					arrVals.add( d );
 					i = i + 8;
 				}
@@ -229,11 +229,11 @@ public class PtgArray extends GenericPtg implements Ptg
 				{ // its a boolean
 					if( rgval[++i] == 0 )
 					{
-						arrVals.add( Boolean.valueOf( false ) );
+						arrVals.add( false );
 					}
 					else
 					{
-						arrVals.add( Boolean.valueOf( true ) );
+						arrVals.add( true );
 					}
 					i = i + 8;
 				}
@@ -312,7 +312,7 @@ public class PtgArray extends GenericPtg implements Ptg
 		Object retVal = null;
 		Ptg[] p = this.getComponents();
 		String retstr = "";
-		if( nc == 0 && nr == 0 )
+		if( (nc == 0) && (nr == 0) )
 		{    // if it's a single value, just return val
 			for( int i = 0; i < p.length; i++ )
 			{
@@ -327,13 +327,13 @@ public class PtgArray extends GenericPtg implements Ptg
 		{
 			retstr = "";
 			int loc = 0;
-			for( int x = 0; x < nr + 1; x++ )
+			for( int x = 0; x < (nr + 1); x++ )
 			{
 				if( x != 0 )
 				{
 					retstr += ";";
 				}
-				for( int i = 0; i < nc + 1; i++ )
+				for( int i = 0; i < (nc + 1); i++ )
 				{
 					if( i != 0 )
 					{
@@ -433,7 +433,7 @@ public class PtgArray extends GenericPtg implements Ptg
 					thisElement[0] = 0x4;        // id for boolean value
 					thisElement[1] = (byte) (bb.booleanValue() ? 1 : 0);
 				}
-				else if( constVal == null || constVal.equals( "" ) )
+				else if( (constVal == null) || constVal.equals( "" ) )
 				{    // emtpy or null value
 					thisElement[0] = 0x0;        // id for empty value
 				}
@@ -575,7 +575,7 @@ public class PtgArray extends GenericPtg implements Ptg
 					pa.setUseReferenceTracker( true );
 					pa.setLocation( (String) o );
 					Ptg[] pacomps = pa.getComponents();
-					Ptg[] temp = new Ptg[retVals.length - 1 + pacomps.length];
+					Ptg[] temp = new Ptg[(retVals.length - 1) + pacomps.length];
 					System.arraycopy( retVals, 0, temp, 0, retVals.length - 1 );
 					System.arraycopy( pacomps, 0, temp, retVals.length - 1, pacomps.length );
 					retVals = temp;

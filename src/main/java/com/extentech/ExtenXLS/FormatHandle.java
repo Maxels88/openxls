@@ -175,7 +175,7 @@ public class FormatHandle implements Handle, FormatConstants
 	public FormatHandle( com.extentech.formats.XLS.WorkBook book, int xfnum )
 	{
 		wkbook = book;
-		if( xfnum > -1 && xfnum < wkbook.getNumXfs() )
+		if( (xfnum > -1) && (xfnum < wkbook.getNumXfs()) )
 		{
 			myxf = wkbook.getXf( xfnum );
 			xfe = myxf.getIdx();
@@ -2111,7 +2111,7 @@ public class FormatHandle implements Handle, FormatConstants
 	 */
 	public static Color getColor( int col )
 	{
-		if( col > -1 && col < FormatHandle.COLORTABLE.length )
+		if( (col > -1) && (col < FormatHandle.COLORTABLE.length) )
 		{
 			return FormatHandle.COLORTABLE[col];
 		}
@@ -2234,11 +2234,11 @@ public class FormatHandle implements Handle, FormatConstants
 					for(; z < pats[i].length(); z++ )
 					{
 						char c = pats[i].charAt( z );
-						if( (c == '0' || c == '#' || c == '?') )    // numeric placeholders
+						if( ((c == '0') || (c == '#') || (c == '?')) )    // numeric placeholders
 						{
 							foundit = true;
 						}
-						else if( foundit && !(c == '0' || c == '#' || c == '?') )    // numeric placeholders. if hit last one, either inc or dec
+						else if( foundit && !((c == '0') || (c == '#') || (c == '?')) )    // numeric placeholders. if hit last one, either inc or dec
 						{
 							break;
 						}
@@ -2268,7 +2268,7 @@ public class FormatHandle implements Handle, FormatConstants
 					for(; z >= 0; z-- )
 					{
 						char c = pats[i].charAt( z );
-						if( (c == '0' || c == '#' || c == '?') )
+						if( ((c == '0') || (c == '#') || (c == '?')) )
 						{    // found last numeric placeholder
 							foundit = true;
 							break;
@@ -2717,7 +2717,7 @@ public class FormatHandle implements Handle, FormatConstants
 			// PDf processing shouldn't output white background due to z-order and overwriting image/chart objects
 			// ... possibly other uses need the white bg set ...???
 			// ****************************************
-			if( !(myxf.getFillPattern() == PATTERN_FILLED && this.getWorkBook().getColorTable()[fg].equals( Color.WHITE )) )
+			if( !((myxf.getFillPattern() == PATTERN_FILLED) && this.getWorkBook().getColorTable()[fg].equals( Color.WHITE )) )
 			{
 				sb.append( " Color=\"" + colorToHexString( this.getWorkBook().getColorTable()[fg] ) + "\"" + " Fg=\"" + fg + "\"" );
 			}
@@ -2875,7 +2875,7 @@ public class FormatHandle implements Handle, FormatConstants
 			// Handle exceptions for black, white and color indexes 9 (see
 			// FormatConstants for more info)
 
-			if( r == 255 && r == g && r == b )
+			if( (r == 255) && (r == g) && (r == b) )
 			{
 				if( colorType == colorFONT )
 				{
@@ -2919,7 +2919,7 @@ public class FormatHandle implements Handle, FormatConstants
 
 			// Handle exceptions for black, white and color indexes 9 (see
 			// FormatConstants for more info)
-			if( r == 255 && r == g && r == b )
+			if( (r == 255) && (r == g) && (r == b) )
 			{
 				if( colorType == colorFONT )
 				{
@@ -3161,9 +3161,9 @@ public class FormatHandle implements Handle, FormatConstants
 	{
 		if( !myxf.toString().equals( xf.toString() ) )
 		{
-			if( myxf.getUseCount() <= 1 && xfe > 15 )
+			if( (myxf.getUseCount() <= 1) && (xfe > 15) )
 			{ // used only by one cell, OK to modify
-				if( writeImmediate || wkbook.getFormatCache().get( xf.toString() ) == null )
+				if( writeImmediate || (wkbook.getFormatCache().get( xf.toString() ) == null) )
 				{
 					// myxf hasn't been used yet; modify bytes and re-init ***
 					byte[] xfbytes = xf.getBytes();

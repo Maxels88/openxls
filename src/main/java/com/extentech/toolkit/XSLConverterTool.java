@@ -159,7 +159,7 @@ public class XSLConverterTool
 	{
 		StringBuffer returnString = new StringBuffer();
 		int colSpan = 1;
-		if( colspan != null && colspan != "" )
+		if( (colspan != null) && (colspan != "") )
 		{
 			colSpan = Integer.parseInt( colspan );
 		}

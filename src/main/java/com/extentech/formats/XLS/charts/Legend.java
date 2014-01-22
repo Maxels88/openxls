@@ -197,7 +197,7 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 	{
 		int lpos = getLegendPosition();
 		String[] pos = { "b", "tr", "t", "r", "l" };
-		if( lpos >= 0 && lpos < pos.length )
+		if( (lpos >= 0) && (lpos < pos.length) )
 		{
 			return pos[lpos];
 		}
@@ -349,7 +349,7 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 			// calculate how much width the legends take up -- algorithm works well for about 80% of the cases ...
 			double legendsWidth = 0;
 			java.awt.Font jf = new java.awt.Font( f.getFontName(), f.getFontWeight(), (int) f.getFontHeightInPoints() );
-			int extras = (chartType == ChartConstants.LINECHART || chartType == ChartConstants.RADARCHART ? 15 : 5);    // pad for legend symbols, etc	-
+			int extras = (((chartType == ChartConstants.LINECHART) || (chartType == ChartConstants.RADARCHART)) ? 15 : 5);    // pad for legend symbols, etc	-
 			for( int i = 0; i < legends.length; i++ )
 			{
 				if( fVert )
@@ -373,7 +373,7 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 //	    System.out.println(this.getParentChart().toString() + String.format(": legend box x: %.1f legend box w: %.0f chart x: %.1f w: %.1f cw: %.1f font size: %.0f L.W: %.1f Auto? %b Vertical? %b",  
 //		    x, (float)coords[2], chartMetrics.get("x"), w, cw, (float) jf.getSize(), legendsWidth, fAutoPosition, fVert));	    
 			p.setLegendW( (int) legendsWidth );
-			if( ((x + legendsWidth) > cw) || (position == Legend.RIGHT || position == Legend.CORNER) )
+			if( ((x + legendsWidth) > cw) || ((position == Legend.RIGHT) || (position == Legend.CORNER)) )
 			{
 				x = (float) (cw - (legendsWidth + 5));
 				if( x < 0 )
@@ -485,7 +485,7 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 				len = Math.max( len, StringTool.getApproximateStringWidth( f, legends[i] ) );
 			}
 			retcoords[2] = (int) Math.ceil( len );
-			retcoords[2] += 15 + (charttype == ChartConstants.LINECHART || charttype == ChartConstants.RADARCHART ? 25 : 5);    // pad for legend symbols, etc	-
+			retcoords[2] += 15 + (((charttype == ChartConstants.LINECHART) || (charttype == ChartConstants.RADARCHART)) ? 25 : 5);    // pad for legend symbols, etc	-
 			// if now legend box extends over edge reduce plot area width, not canvas width ... EXCEPT for OOXML; in those cases, extend CW
 			if( !canMoveCW && ((retcoords[0] + retcoords[2]) > chartMetrics.get( "canvasw" ).floatValue()) )
 			{
@@ -495,7 +495,7 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 //System.out.println("Original Lcoords:  w" + w + " cw:" + cw + " coords:" + Arrays.toString(retcoords));				
 				double ldist = retcoords[0] - w;    // original distance between legend and edge of plot area
 				retcoords[0] = (int) Math.ceil( cw - retcoords[2] );
-				if( ldist > 0 && (chartMetrics.get( "w" ) + chartMetrics.get( "x" )) > retcoords[0] )
+				if( (ldist > 0) && ((chartMetrics.get( "w" ) + chartMetrics.get( "x" )) > retcoords[0]) )
 				{
 					chartMetrics.put( "w", retcoords[0] - ldist );
 				}
@@ -552,7 +552,7 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 	public void getMetrics( HashMap<String, Double> chartMetrics, int chartType, ChartSeries s )
 	{
 		String[] legends = s.getLegends();
-		if( legends == null || legends.length == 0 )
+		if( (legends == null) || (legends.length == 0) )
 		{
 			return;
 		}
@@ -605,7 +605,7 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 
 		String[] legends = s.getLegends();
 		String[] seriescolors = s.getSeriesBarColors();
-		if( legends == null || legends.length == 0 )
+		if( (legends == null) || (legends.length == 0) )
 		{
 			return "";
 		}
@@ -660,8 +660,8 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 				y += YOFFSET;
 			}
 		}
-		else if( !(chartobj.getChartType() == ChartConstants.LINECHART || chartobj.getChartType() == ChartConstants.SCATTERCHART || chartobj
-				.getChartType() == ChartConstants.RADARCHART || chartobj.getChartType() == ChartConstants.BUBBLECHART) )
+		else if( !((chartobj.getChartType() == ChartConstants.LINECHART) || (chartobj.getChartType() == ChartConstants.SCATTERCHART) || (chartobj
+				.getChartType() == ChartConstants.RADARCHART) || (chartobj.getChartType() == ChartConstants.BUBBLECHART)) )
 		{
 			// draw a little box in appropriate color
 			int h = 8;    // box size
@@ -705,12 +705,12 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 			{
 				if( haslines )
 				{
-					svg.append( "<line x1='" + x + "' y1='" + (y + fh / 2) + "' x2='" + (x + w) + "' y2='" + (y + fh / 2) +
+					svg.append( "<line x1='" + x + "' y1='" + (y + (fh / 2)) + "' x2='" + (x + w) + "' y2='" + (y + (fh / 2)) +
 							            "' stroke='" + seriescolors[i] + "' stroke-width='2'/>" );
 				}
 				if( markers[i] > 0 )
 				{
-					svg.append( MarkerFormat.getMarkerSVG( x + w / 2 - 5, y + fh / 2, seriescolors[i], markers[i] ) );
+					svg.append( MarkerFormat.getMarkerSVG( (x + (w / 2)) - 5, y + (fh / 2), seriescolors[i], markers[i] ) );
 				}
 
 				svg.append( "<text " + getScript( "legend" + i ) + " x='" + (x + XOFFSET) + "' y='" + (y + fh) + font + ">" + legends[i] + "</text>" );

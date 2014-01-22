@@ -235,7 +235,7 @@ public class PtgIsect extends GenericPtg implements Ptg
 						}
 					}
 				}
-				else if( p instanceof PtgErr || p instanceof PtgRefErr || p instanceof PtgAreaErr3d )
+				else if( (p instanceof PtgErr) || (p instanceof PtgRefErr) || (p instanceof PtgAreaErr3d) )
 				{
 					// DO WHAT???
 				}
@@ -244,7 +244,7 @@ public class PtgIsect extends GenericPtg implements Ptg
 					Ptg[] pc = ((GenericPtg) p).vars;
 					for( int j = 0; j < pc.length; j++ )
 					{
-						if( pc[j] instanceof PtgArea & !(pc[j] instanceof PtgAreaErr3d) )
+						if( (pc[j] instanceof PtgArea) & !(pc[j] instanceof PtgAreaErr3d) )
 						{
 							Ptg[] pa = pc[j].getComponents();
 							for( int k = 0; k < pa.length; k++ )

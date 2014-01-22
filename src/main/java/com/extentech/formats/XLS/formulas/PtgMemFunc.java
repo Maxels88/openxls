@@ -167,7 +167,7 @@ public class PtgMemFunc extends GenericPtg
 			{
 				result += dub[i];
 			}
-			return new Double( result );
+			return result;
 		}
 		catch( FunctionNotSupportedException e )
 		{
@@ -217,7 +217,7 @@ public class PtgMemFunc extends GenericPtg
 		// calculate subexpression to obtain ptgs
 		Object o = FormulaCalculator.calculateFormula( this.subexpression );
 		ArrayList<Ptg> components = new ArrayList<Ptg>();
-		if( o != null && o instanceof Ptg[] )
+		if( (o != null) && (o instanceof Ptg[]) )
 		{
 			// Firstly: take subexpression and remove reference-tracked elements; calcualted elements are ref-tracked below
 			for( int i = 0; i < subexpression.size(); i++ )
@@ -240,7 +240,7 @@ public class PtgMemFunc extends GenericPtg
 						refsheets.add( ((PtgRef) ptgs[i]).getSheetName() );
 					}
 					((PtgRef) ptgs[i]).addToRefTracker();
-					if( ptgs[i] instanceof PtgArea & !(ptgs[i] instanceof PtgAreaErr3d) )
+					if( (ptgs[i] instanceof PtgArea) & !(ptgs[i] instanceof PtgAreaErr3d) )
 					{
 						Ptg[] p = ptgs[i].getComponents();
 						for( int j = 0; j < p.length; j++ )
@@ -563,9 +563,9 @@ public class PtgMemFunc extends GenericPtg
 			}
 			else if( !inquote )
 			{
-				if( c == ',' || c == ' ' || c == ')' || (c == ':' && finishRange) )
+				if( (c == ',') || (c == ' ') || (c == ')') || ((c == ':') && finishRange) )
 				{    // it's an operand
-					if( c == ' ' && lastOp == ' ' )
+					if( (c == ' ') && (lastOp == ' ') )
 					{
 						continue;    // skip 2nd space op (Isect)
 					}
@@ -583,7 +583,7 @@ public class PtgMemFunc extends GenericPtg
 						range = null;
 						ref = "";
 						finishRange = false;
-						ops.push( new Character( (char) c ) );
+						ops.push( (char) c );
 					}
 					else if( refs.isEmpty() )
 					{    // no operands yet - put in 1st
@@ -592,7 +592,7 @@ public class PtgMemFunc extends GenericPtg
 							refs.push( ref );
 						}
 						ref = "";
-						ops.push( new Character( (char) c ) );
+						ops.push( (char) c );
 					}
 					else
 					{    // have all we need to process
@@ -605,7 +605,7 @@ public class PtgMemFunc extends GenericPtg
 							refs.push( ops.pop() );
 						}
 						ref = "";    // handle case of two spaces ... unfortunately
-						ops.push( new Character( (char) c ) );
+						ops.push( (char) c );
 					}
 					lastOp = c;
 				}
@@ -621,7 +621,7 @@ public class PtgMemFunc extends GenericPtg
 						}
 						else
 						{ // happens in cases such as (opopop):ref:ref
-							ops.push( new Character( (char) c ) );
+							ops.push( (char) c );
 						}
 						ref = "";
 					}
@@ -629,7 +629,7 @@ public class PtgMemFunc extends GenericPtg
 					{    // it's a named range
 						refs.push( ref );
 						ref = "";
-						ops.push( new Character( (char) c ) );
+						ops.push( (char) c );
 						finishRange = false;    // it's not a regular range
 					}
 				}
@@ -682,8 +682,8 @@ public class PtgMemFunc extends GenericPtg
 		if( finishRange )
 		{ // add ref to rest of range
 			// range op has more precedence than others ...
-			if( !ops.isEmpty() && ((Character) ops.peek()).charValue() == ':' && !refs.isEmpty() &&
-					refs.peek() instanceof Character )
+			if( !ops.isEmpty() && (((Character) ops.peek()).charValue() == ':') && !refs.isEmpty() &&
+					(refs.peek() instanceof Character) )
 			{
 				while( refs.peek() instanceof Character )
 				{
@@ -737,19 +737,19 @@ public class PtgMemFunc extends GenericPtg
 			int group2 = rankPrecedence( curOp );
 			if( group2 >= group1 )
 			{
-				ops.push( new Character( lastOp ) );
-				refs.push( new Character( curOp ) );
+				ops.push( lastOp );
+				refs.push( curOp );
 			}
 			else
 			{
-				ops.push( new Character( curOp ) );
-				refs.push( new Character( lastOp ) );
+				ops.push( curOp );
+				refs.push( lastOp );
 			}
 
 		}
 		else
 		{
-			ops.push( new Character( lastOp ) );
+			ops.push( lastOp );
 		}
 		return refs;
 	}
@@ -774,7 +774,7 @@ public class PtgMemFunc extends GenericPtg
 		{
 			return 5;
 		}
-		if( curOp == ',' || curOp == ' ' )    // same level????
+		if( (curOp == ',') || (curOp == ' ') )    // same level????
 		{
 			return 4;
 		}
@@ -816,7 +816,7 @@ public class PtgMemFunc extends GenericPtg
 		{
 			parseSubexpression();
 		}
-		if( this.refsheets != null || this.refsheets.size() != 0 )
+		if( (this.refsheets != null) || (this.refsheets.size() != 0) )
 		{
 			try
 			{

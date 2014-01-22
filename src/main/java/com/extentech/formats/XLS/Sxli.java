@@ -379,7 +379,7 @@ class SXLI_Item
 		pos = 0;
 		ArrayList<SXLI_Item> items = new ArrayList<SXLI_Item>();
 
-		while( pos < data.length - 7 )
+		while( pos < (data.length - 7) )
 		{
 			items.add( new SXLI_Item( data, nItemsPerLine ) );
 		}
@@ -454,7 +454,7 @@ class SXLI_Item
 			case ITMTYPEVARP:*/
 		}
 		rgisxvi = new byte[indexes.length * 2];
-		for( int i = 0; i < indexes.length * 2; i += 2 )
+		for( int i = 0; i < (indexes.length * 2); i += 2 )
 		{
 			byte[] b = ByteTools.shortToLEBytes( indexes[i / 2] );
 			rgisxvi[i] = b[0];

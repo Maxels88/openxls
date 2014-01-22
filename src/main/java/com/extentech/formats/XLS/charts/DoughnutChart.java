@@ -91,9 +91,9 @@ public class DoughnutChart extends ChartType
 			// TODO: warning ...?
 		}
 		// 20090717 KSC: input outside of try/catch to always set
-		minMax[0] = new Double( yMin );
-		minMax[1] = new Double( yMax );
-		minMax[2] = new Double( len );
+		minMax[0] = yMin;
+		minMax[1] = yMax;
+		minMax[2] = len;
 		chartObjectJSON.put( "Series", pieSeries );
 		chartObjectJSON.put( "SeriesFills", "" );    // not applicable for pie charts; color is set above
 		return chartObjectJSON;
@@ -196,8 +196,8 @@ public class DoughnutChart extends ChartType
 			{
 				percentage = curseries[j] / total;
 				double angle = (percentage * 360) + lasta;
-				double x1 = centerx + r * (Math.cos( Math.toRadians( angle ) ));
-				double y1 = centery - r * (Math.sin( Math.toRadians( angle ) ));
+				double x1 = centerx + (r * (Math.cos( Math.toRadians( angle ) )));
+				double y1 = centery - (r * (Math.sin( Math.toRadians( angle ) )));
 				if( (percentage * 360) > 180 )
 				{
 					sweepflag = 0;
@@ -215,8 +215,8 @@ public class DoughnutChart extends ChartType
 				if( l != null )
 				{
 					double halfa = ((percentage / 2) * 360) + lasta;    // center in area
-					double x2 = centerx + (r - r0 / 2) * (Math.cos( Math.toRadians( halfa ) ));
-					double y2 = centery - (r - r0 / 2) * (Math.sin( Math.toRadians( halfa ) ));
+					double x2 = centerx + ((r - (r0 / 2)) * (Math.cos( Math.toRadians( halfa ) )));
+					double y2 = centery - ((r - (r0 / 2)) * (Math.sin( Math.toRadians( halfa ) )));
 					svg.append( "<text x='" + (x2) + "' y='" + (y2) + "' vertical-align='bottom' " + this.getDataLabelFontSVG() + " style='text-anchor: middle;'>" + l + "</text>\r\n" );
 				}
 				lasta = angle;

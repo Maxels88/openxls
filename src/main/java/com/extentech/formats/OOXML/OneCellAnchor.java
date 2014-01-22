@@ -344,7 +344,7 @@ public class OneCellAnchor implements OOXMLElement
 	{
 		if( objectChoice != null )    // o will be a pic element, it's blipFill.blip child references the rId of the embedded file
 		{
-			return ((objectChoice.getObject() instanceof Pic) && objectChoice.getEmbed() != null);
+			return ((objectChoice.getObject() instanceof Pic) && (objectChoice.getEmbed() != null));
 		}
 		return false;
 	}
@@ -373,7 +373,7 @@ public class OneCellAnchor implements OOXMLElement
 	{
 		if( objectChoice != null )
 		{
-			return (objectChoice.getObject() instanceof GraphicFrame && objectChoice.getChartRId() != null);
+			return ((objectChoice.getObject() instanceof GraphicFrame) && (objectChoice.getChartRId() != null));
 		}
 		return false;
 	}
@@ -387,7 +387,7 @@ public class OneCellAnchor implements OOXMLElement
 	{
 		if( objectChoice != null )
 		{
-			return (objectChoice.getObject() instanceof CxnSp || objectChoice.getObject() instanceof Sp);
+			return ((objectChoice.getObject() instanceof CxnSp) || (objectChoice.getObject() instanceof Sp));
 		}
 		return false;
 	}

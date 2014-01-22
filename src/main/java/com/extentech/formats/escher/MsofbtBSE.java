@@ -209,7 +209,7 @@ public class MsofbtBSE extends EscherRecord
 		int version1 = 0;
 		int fbt1 = MSODrawingConstants.msofbtBlipFirst + imageType;
 		int len1 = imageData.length + 17;
-		imgHeader[36] = (byte) ((0x0F & inst1) << 4 | (0x0F & version1));
+		imgHeader[36] = (byte) (((0x0F & inst1) << 4) | (0x0F & version1));
 		imgHeader[37] = (byte) ((0xFF0 & inst1) >> 4);
 		imgHeader[38] = (byte) ((0xFF & fbt1));
 		imgHeader[39] = (byte) ((0xFF00 & fbt1) >> 8);

@@ -93,7 +93,7 @@ public class NumberCellFormat extends NumberFormat implements CellFormat
 				return buffer.append( String.valueOf( input ) );
 			}
 
-			return buffer.append( String.format( format, Double.valueOf( value ) ) );
+			return buffer.append( String.format( format, value ) );
 		}
 		else
 		{
@@ -104,13 +104,13 @@ public class NumberCellFormat extends NumberFormat implements CellFormat
 	@Override
 	public StringBuffer format( double number, StringBuffer buffer, FieldPosition pos )
 	{
-		return buffer.append( this.format( Double.valueOf( number ) ) );
+		return buffer.append( this.format( number ) );
 	}
 
 	@Override
 	public StringBuffer format( long number, StringBuffer buffer, FieldPosition pos )
 	{
-		return buffer.append( this.format( Long.valueOf( number ) ) );
+		return buffer.append( this.format( number ) );
 	}
 
 	@Override

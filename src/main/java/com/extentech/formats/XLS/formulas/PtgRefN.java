@@ -298,7 +298,7 @@ public class PtgRefN extends PtgRef
 			i[1] = col;
 		}
 
-		if( i[1] >= MAXCOLS_BIFF8 && !r.getWorkBook().getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
+		if( (i[1] >= MAXCOLS_BIFF8) && !r.getWorkBook().getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
 		{
 			i[1] -= MAXCOLS_BIFF8;
 		}
@@ -405,13 +405,11 @@ public class PtgRefN extends PtgRef
 			i[3] = col;
 		}
 
-		if( i[1] >= MAXCOLS_BIFF8 && !this.parent_rec.getWorkBook()
-		                                             .getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
+		if( (i[1] >= MAXCOLS_BIFF8) && !this.parent_rec.getWorkBook().getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
 		{
 			i[1] -= MAXCOLS_BIFF8;
 		}
-		if( i[3] >= MAXCOLS_BIFF8 && !this.parent_rec.getWorkBook()
-		                                             .getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
+		if( (i[3] >= MAXCOLS_BIFF8) && !this.parent_rec.getWorkBook().getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
 		{
 			i[3] -= MAXCOLS_BIFF8;
 		}

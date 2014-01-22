@@ -93,11 +93,11 @@ public class PtgMlt extends GenericPtg implements Ptg
 	public Ptg calculatePtg( Ptg[] form )
 	{
 		// handle ref errs
-		if( form[0] instanceof PtgErr || form[0] instanceof PtgRefErr || form[0] instanceof PtgRefErr3d || form[0] instanceof PtgAreaErr3d )
+		if( (form[0] instanceof PtgErr) || (form[0] instanceof PtgRefErr) || (form[0] instanceof PtgRefErr3d) || (form[0] instanceof PtgAreaErr3d) )
 		{
 			return form[0];
 		}
-		if( form[1] instanceof PtgErr || form[1] instanceof PtgRefErr || form[1] instanceof PtgRefErr3d || form[1] instanceof PtgAreaErr3d )
+		if( (form[1] instanceof PtgErr) || (form[1] instanceof PtgRefErr) || (form[1] instanceof PtgRefErr3d) || (form[1] instanceof PtgAreaErr3d) )
 		{
 			return form[1];
 		}
@@ -143,7 +143,7 @@ public class PtgMlt extends GenericPtg implements Ptg
 					return new PtgErr( PtgErr.ERROR_VALUE );
 				}
 				int nVals = java.lang.reflect.Array.getLength( o[0] );    // use first array element to determine length of values as subsequent vals might not be arrays
-				for( int i = 0; i < nArrays - 1; i += 2 )
+				for( int i = 0; i < (nArrays - 1); i += 2 )
 				{
 					Object secondOp = null;
 					boolean comparitorIsArray = o[i + 1].getClass().isArray();

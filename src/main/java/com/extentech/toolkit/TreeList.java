@@ -303,7 +303,7 @@ class TreeList extends AbstractList
 	 */
 	private void checkInterval( int index, int startIndex, int endIndex )
 	{
-		if( index < startIndex || index > endIndex )
+		if( (index < startIndex) || (index > endIndex) )
 		{
 			throw new IndexOutOfBoundsException( "Invalid index:" + index + ", size=" + size() );
 		}
@@ -426,7 +426,7 @@ class TreeList extends AbstractList
 					return result;
 				}
 			}
-			if( value == null ? value == object : value.equals( object ) )
+			if( (value == null) ? (value == object) : value.equals( object ) )
 			{
 				return index;
 			}
@@ -463,7 +463,7 @@ class TreeList extends AbstractList
 		 */
 		AVLNode next()
 		{
-			if( rightIsNext || right == null )
+			if( rightIsNext || (right == null) )
 			{
 				return right;
 			}
@@ -477,7 +477,7 @@ class TreeList extends AbstractList
 		 */
 		AVLNode previous()
 		{
-			if( leftIsPrevious || left == null )
+			if( leftIsPrevious || (left == null) )
 			{
 				return left;
 			}
@@ -652,7 +652,7 @@ class TreeList extends AbstractList
 
 		private AVLNode removeSelf()
 		{
-			if( getRightSubTree() == null && getLeftSubTree() == null )
+			if( (getRightSubTree() == null) && (getLeftSubTree() == null) )
 			{
 				return null;
 			}
@@ -660,14 +660,14 @@ class TreeList extends AbstractList
 			{
 				if( relativePosition > 0 )
 				{
-					left.relativePosition += relativePosition + (relativePosition > 0 ? 0 : 1);
+					left.relativePosition += relativePosition + ((relativePosition > 0) ? 0 : 1);
 				}
 				left.max().setRight( null, right );
 				return left;
 			}
 			if( getLeftSubTree() == null )
 			{
-				right.relativePosition += relativePosition - (relativePosition < 0 ? 0 : 1);
+				right.relativePosition += relativePosition - ((relativePosition < 0) ? 0 : 1);
 				right.min().setLeft( null, left );
 				return right;
 			}
@@ -765,8 +765,8 @@ class TreeList extends AbstractList
 		 */
 		private void recalcHeight()
 		{
-			height = Math.max( getLeftSubTree() == null ? -1 : getLeftSubTree().height,
-			                   getRightSubTree() == null ? -1 : getRightSubTree().height ) + 1;
+			height = Math.max( (getLeftSubTree() == null) ? -1 : getLeftSubTree().height,
+			                   (getRightSubTree() == null) ? -1 : getRightSubTree().height ) + 1;
 		}
 
 		/**
@@ -774,7 +774,7 @@ class TreeList extends AbstractList
 		 */
 		private int getHeight( AVLNode node )
 		{
-			return (node == null ? -1 : node.height);
+			return ((node == null) ? -1 : node.height);
 		}
 
 		/**
@@ -947,7 +947,7 @@ class TreeList extends AbstractList
 			super();
 			this.parent = parent;
 			this.expectedModCount = parent.modCount;
-			this.next = (parent.root == null ? null : parent.root.get( fromIndex ));
+			this.next = ((parent.root == null) ? null : parent.root.get( fromIndex ));
 			this.nextIndex = fromIndex;
 		}
 

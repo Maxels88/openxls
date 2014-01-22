@@ -123,6 +123,6 @@ public class DelimitedValuesParser
 
 	public String getValue()
 	{
-		return value.length() > 0 ? value.toString() : null;
+		return (value.length() > 0) ? value.toString() : null;
 	}
 }

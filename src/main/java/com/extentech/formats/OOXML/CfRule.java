@@ -239,7 +239,7 @@ public class CfRule implements OOXMLElement
 
 	public String getFormula1()
 	{
-		if( formulas != null && formulas.size() > 0 )
+		if( (formulas != null) && (formulas.size() > 0) )
 		{
 			return (String) formulas.get( 0 );
 		}
@@ -248,7 +248,7 @@ public class CfRule implements OOXMLElement
 
 	public String getFormula2()
 	{
-		if( formulas != null && formulas.size() > 1 )
+		if( (formulas != null) && (formulas.size() > 1) )
 		{
 			return (String) formulas.get( 1 );
 		}

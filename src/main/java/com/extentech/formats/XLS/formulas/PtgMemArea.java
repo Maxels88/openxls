@@ -167,7 +167,7 @@ public class PtgMemArea extends GenericPtg
 		recbytes[0] = b[0];
 		recbytes[1] = b[1];
 		int pos = 2;
-		for( int i = 0; i < subexpression.size() && pos + 7 < recbytes.length; i++ )
+		for( int i = 0; (i < subexpression.size()) && ((pos + 7) < recbytes.length); i++ )
 		{
 			Ptg p = (Ptg) subexpression.get( i );
 			if( p instanceof PtgRef )
@@ -215,7 +215,7 @@ public class PtgMemArea extends GenericPtg
 			{
 				Object o = FormulaCalculator.calculateFormula( this.subexpression );
 				ArrayList components = new ArrayList();
-				if( o != null && o instanceof Ptg[] )
+				if( (o != null) && (o instanceof Ptg[]) )
 				{
 					ptgs = (Ptg[]) o;
 					for( int i = 0; i < ptgs.length; i++ )
@@ -388,7 +388,7 @@ public class PtgMemArea extends GenericPtg
 			{
 				result += dub[i];
 			}
-			return new Double( result );
+			return result;
 		}
 		catch( FunctionNotSupportedException e )
 		{

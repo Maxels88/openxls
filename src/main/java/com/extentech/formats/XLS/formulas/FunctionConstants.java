@@ -1845,7 +1845,7 @@ public class FunctionConstants
 		{
 			return 2; // Mod
 		}
-		if( iftab >= xlfDcount && iftab <= xlfDstdev )
+		if( (iftab >= xlfDcount) && (iftab <= xlfDstdev) )
 		{
 			return 3; // Dxxx formulas
 		}

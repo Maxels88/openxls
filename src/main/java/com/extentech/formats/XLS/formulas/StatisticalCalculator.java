@@ -238,7 +238,7 @@ public class StatisticalCalculator
 			String[] criteria = new String[(operands.length - 1) / 2];
 			Ptg[][] criteria_cells = new Ptg[(operands.length - 1) / 2][];
 			int j = 0;
-			for( int i = 1; i + 1 < operands.length; i += 2 )
+			for( int i = 1; (i + 1) < operands.length; i += 2 )
 			{
 				//criteria range - parse and get comprising cells
 				PtgArea cr = Calculator.getRange( operands[i] );
@@ -481,7 +481,7 @@ CONFIDENCE
 		double yMean = pnum.getVal();
 		double[] xVals = PtgCalculator.getDoubleValueArray( xPtg );
 		double[] yVals = PtgCalculator.getDoubleValueArray( yPtg );
-		if( xVals == null || yVals == null )
+		if( (xVals == null) || (yVals == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NA );//20090130 KSC: propagate error
 		}
@@ -717,13 +717,13 @@ CONFIDENCE
 			String[] ops = new String[operands.length / 2];
 			String[] criteria = new String[operands.length / 2];
 			Ptg[][] criteria_cells = new Ptg[operands.length / 2][];
-			for( int i = 0; i + 1 < operands.length; i += 2 )
+			for( int i = 0; (i + 1) < operands.length; i += 2 )
 			{
 				//criteria range - parse and get comprising cells
 				PtgArea cr = Calculator.getRange( operands[i] );
 				criteria_cells[i / 2] = cr.getComponents();
 				// each criteria_range must contain the same number of rows and columns as the criteriarange 
-				if( i > 0 && criteria_cells[i / 2].length != criteria_cells[0].length )
+				if( (i > 0) && (criteria_cells[i / 2].length != criteria_cells[0].length) )
 				{
 					return new PtgErr( PtgErr.ERROR_VALUE );
 				}
@@ -796,7 +796,7 @@ CONFIDENCE
 		double yMean = pnum.getVal();
 		double[] xVals = PtgCalculator.getDoubleValueArray( xMeanPtg );
 		double[] yVals = PtgCalculator.getDoubleValueArray( yMeanPtg );
-		if( xVals == null || yVals == null )
+		if( (xVals == null) || (yVals == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NA );//propagate error
 		}
@@ -967,7 +967,7 @@ HYPGEOMDIST
 		yvals = PtgCalculator.getDoubleValueArray( operands[0] );
 
 		double[] xvals = PtgCalculator.getDoubleValueArray( operands[1] );
-		if( xvals == null || yvals == null )
+		if( (xvals == null) || (yvals == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NA );//20090130 KSC: propagate error
 		}
@@ -1031,7 +1031,7 @@ KURT
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
 		int k = new Double( PtgCalculator.getDoubleValueArray( operands[1] )[0] ).intValue();
-		if( k <= 0 || k > array.length )
+		if( (k <= 0) || (k > array.length) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -1107,7 +1107,7 @@ KURT
 			return new PtgErr( PtgErr.ERROR_NA );//20090130 KSC: propagate error
 		}
 		double[] xs;
-		if( operands.length == 1 || operands[1] instanceof PtgMissArg )
+		if( (operands.length == 1) || (operands[1] instanceof PtgMissArg) )
 		{
 			// create a 1,2,3 array
 			xs = new double[ys.length];
@@ -1152,7 +1152,7 @@ KURT
 		PtgNumber Pintercept = (PtgNumber) calcIntercept( operands );
 		double intercept = Pintercept.getVal(); // b1 val
 
-		if( operands.length > 3 && (operands[3] instanceof PtgBool || operands[3] instanceof PtgInt) )
+		if( (operands.length > 3) && ((operands[3] instanceof PtgBool) || (operands[3] instanceof PtgInt)) )
 		{
 			boolean b = PtgCalculator.getBooleanValue( operands[3] );
 			if( !b )
@@ -1397,7 +1397,7 @@ LOGNORMDIST
 			Double[] dub = new Double[t.size()];
 			t.toArray( dub );
 			double dd = (double) t.size() % 2;
-			if( (double) t.size() % 2 == 0 )
+			if( ((double) t.size() % 2) == 0 )
 			{
 				int firstValLoc = ((t.size()) / 2) - 1;
 				int lastValLoc = firstValLoc + 1;
@@ -1564,13 +1564,13 @@ LOGNORMDIST
 				{
 					int loc = vals.indexOf( d );
 					Double nums = (Double) occurences.get( loc );
-					Double newnum = new Double( nums.doubleValue() + 1 );
+					Double newnum = nums.doubleValue() + 1;
 					occurences.setElementAt( newnum, loc );
 				}
 				else
 				{
 					vals.add( d );
-					occurences.add( new Double( 1 ) );
+					occurences.add( (double) 1 );
 				}
 			}
 			catch( NumberFormatException e )
@@ -1634,7 +1634,7 @@ NEGBINOMDIST
 			}
 			boolean cumulative = PtgCalculator.getBooleanValue( operands[3] );
 			// If mean = 0, standard_dev = 1, and cumulative = TRUE, NORMDIST returns the standard normal distribution, NORMSDIST.
-			if( mean == 0 && stddev == 1.0 && cumulative )
+			if( (mean == 0) && (stddev == 1.0) && cumulative )
 			{
 				return calcNormsdist( operands );
 			}
@@ -1831,13 +1831,13 @@ NEGBINOMDIST
 			// below is consistently correct to at least 7 decimals using a range of test values
 			if( x >= 0.0 )
 			{
-				double t = 1.0 / (1.0 + p * x);
-				result = (1.0 - c * Math.exp( -x * x / 2.0 ) * t * (t * (t * (t * (t * b5 + b4) + b3) + b2) + b1));
+				double t = 1.0 / (1.0 + (p * x));
+				result = (1.0 - (c * Math.exp( (-x * x) / 2.0 ) * t * ((t * ((t * ((t * ((t * b5) + b4)) + b3)) + b2)) + b1)));
 			}
 			else
 			{
-				double t = 1.0 / (1.0 - p * x);
-				result = (c * Math.exp( -x * x / 2.0 ) * t * (t * (t * (t * (t * b5 + b4) + b3) + b2) + b1));
+				double t = 1.0 / (1.0 - (p * x));
+				result = (c * Math.exp( (-x * x) / 2.0 ) * t * ((t * ((t * ((t * ((t * b5) + b4)) + b3)) + b2)) + b1));
 			}
 /*	 		
 			// try this one:
@@ -1961,7 +1961,7 @@ NEGBINOMDIST
 		}
 		else /* Taylor expansion, more accurate in this range */
 		{
-			y = (x / 2 + 1) * x;
+			y = ((x / 2) + 1) * x;
 		}
 
 	    /* Newton step for solving   log(1 + y) = x   for y : */
@@ -1972,7 +1972,7 @@ NEGBINOMDIST
 
 	private int R_Q_P01_check( int p, boolean log_p )
 	{
-		if( (log_p && p > 0) || (!log_p && (p < 0 || p > 1)) )
+		if( (log_p && (p > 0)) || (!log_p && ((p < 0) || (p > 1))) )
 		{
 			return 0;
 		}
@@ -2015,7 +2015,7 @@ NEGBINOMDIST
 		if( Math.abs( q ) <= .425 )
 		{/* 0.075 <= p <= 0.925 */
 			r = .180625 - q * q;
-			val = q * (((((((r * 2509.0809287301226727 + 33430.575583588128105) * r + 67265.770927008700853) * r + 45921.953931549871457) * r + 13731.693765509461125) * r + 1971.5909503065514427) * r + 133.14166789178437745) * r + 3.387132872796366608) / (((((((r * 5226.495278852854561 + 28729.085735721942674) * r + 39307.89580009271061) * r + 21213.794301586595867) * r + 5394.1960214247511077) * r + 687.1870074920579083) * r + 42.313330701600911252) * r + 1.);
+			val = q * ((((((((((((((r * 2509.0809287301226727) + 33430.575583588128105) * r) + 67265.770927008700853) * r) + 45921.953931549871457) * r) + 13731.693765509461125) * r) + 1971.5909503065514427) * r) + 133.14166789178437745) * r) + 3.387132872796366608) / ((((((((((((((r * 5226.495278852854561) + 28729.085735721942674) * r) + 39307.89580009271061) * r) + 21213.794301586595867) * r) + 5394.1960214247511077) * r) + 687.1870074920579083) * r) + 42.313330701600911252) * r) + 1.);
 		}
 		else
 		{ /* closer than 0.075 from {0,1} boundary */
@@ -2030,18 +2030,18 @@ NEGBINOMDIST
 				r = p_;/* = R_DT_Iv(p) ^=  p */
 			}
 
-			r = Math.sqrt( -((log_p && ((lower_tail && q <= 0) || (!lower_tail && q > 0))) ? p : /* else */ Math.log( r )) );
+			r = Math.sqrt( -((log_p && ((lower_tail && (q <= 0)) || (!lower_tail && (q > 0)))) ? p : /* else */ Math.log( r )) );
 			    /* r = sqrt(-log(r))  <==>  min(p, 1-p) = exp( - r^2 ) */
 
 			if( r <= 5. )
 			{ /* <==> min(p,1-p) >= exp(-25) ~= 1.3888e-11 */
 				r += -1.6;
-				val = (((((((r * 7.7454501427834140764e-4 + .0227238449892691845833) * r + .24178072517745061177) * r + 1.27045825245236838258) * r + 3.64784832476320460504) * r + 5.7694972214606914055) * r + 4.6303378461565452959) * r + 1.42343711074968357734) / (((((((r * 1.05075007164441684324e-9 + 5.475938084995344946e-4) * r + .0151986665636164571966) * r + .14810397642748007459) * r + .68976733498510000455) * r + 1.6763848301838038494) * r + 2.05319162663775882187) * r + 1.);
+				val = ((((((((((((((r * 7.7454501427834140764e-4) + .0227238449892691845833) * r) + .24178072517745061177) * r) + 1.27045825245236838258) * r) + 3.64784832476320460504) * r) + 5.7694972214606914055) * r) + 4.6303378461565452959) * r) + 1.42343711074968357734) / ((((((((((((((r * 1.05075007164441684324e-9) + 5.475938084995344946e-4) * r) + .0151986665636164571966) * r) + .14810397642748007459) * r) + .68976733498510000455) * r) + 1.6763848301838038494) * r) + 2.05319162663775882187) * r) + 1.);
 			}
 			else
 			{ /* very close to  0 or 1 */
 				r += -5.;
-				val = (((((((r * 2.01033439929228813265e-7 + 2.71155556874348757815e-5) * r + .0012426609473880784386) * r + .026532189526576123093) * r + .29656057182850489123) * r + 1.7848265399172913358) * r + 5.4637849111641143699) * r + 6.6579046435011037772) / (((((((r * 2.04426310338993978564e-15 + 1.4215117583164458887e-7) * r + 1.8463183175100546818e-5) * r + 7.868691311456132591e-4) * r + .0148753612908506148525) * r + .13692988092273580531) * r + .59983220655588793769) * r + 1.);
+				val = ((((((((((((((r * 2.01033439929228813265e-7) + 2.71155556874348757815e-5) * r) + .0012426609473880784386) * r) + .026532189526576123093) * r) + .29656057182850489123) * r) + 1.7848265399172913358) * r) + 5.4637849111641143699) * r) + 6.6579046435011037772) / ((((((((((((((r * 2.04426310338993978564e-15) + 1.4215117583164458887e-7) * r) + 1.8463183175100546818e-5) * r) + 7.868691311456132591e-4) * r) + .0148753612908506148525) * r) + .13692988092273580531) * r) + .59983220655588793769) * r) + 1.);
 			}
 
 			if( q < 0.0 )
@@ -2050,7 +2050,7 @@ NEGBINOMDIST
 			}
 			    /* return (q >= 0.)? r : -r ;*/
 		}
-		return mu + sigma * val;
+		return mu + (sigma * val);
 	}
 
 	public static Ptg calcNormInv( Ptg[] operands )
@@ -2059,7 +2059,7 @@ NEGBINOMDIST
 		{
 
 			double p = operands[0].getDoubleVal();
-			if( p < 0 || p > 1 )
+			if( (p < 0) || (p > 1) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -2089,7 +2089,7 @@ NEGBINOMDIST
 		try
 		{
 			double x = operands[0].getDoubleVal();
-			if( x < 0 || x > 1 )
+			if( (x < 0) || (x > 1) )
 			{
 				return new PtgErr( PtgErr.ERROR_NUM );
 			}
@@ -2147,7 +2147,7 @@ NEGBINOMDIST
 			if( x < plow )
 			{
 				double q = Math.sqrt( -2 * Math.log( x ) );
-				BigDecimal r = new BigDecimal( (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1) );
+				BigDecimal r = new BigDecimal( ((((((((((c[0] * q) + c[1]) * q) + c[2]) * q) + c[3]) * q) + c[4]) * q) + c[5]) / ((((((((d[0] * q) + d[1]) * q) + d[2]) * q) + d[3]) * q) + 1) );
 				r.setScale( 15, java.math.RoundingMode.HALF_UP );
 				return new PtgNumber( r.doubleValue() );
 			}
@@ -2156,7 +2156,7 @@ NEGBINOMDIST
 			if( phigh < x )
 			{
 				double q = Math.sqrt( -2 * Math.log( 1 - x ) );
-				BigDecimal r = new BigDecimal( -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1) );
+				BigDecimal r = new BigDecimal( -((((((((((c[0] * q) + c[1]) * q) + c[2]) * q) + c[3]) * q) + c[4]) * q) + c[5]) / ((((((((d[0] * q) + d[1]) * q) + d[2]) * q) + d[3]) * q) + 1) );
 				r.setScale( 15, java.math.RoundingMode.HALF_UP );
 				return new PtgNumber( r.doubleValue() );
 			}
@@ -2164,7 +2164,7 @@ NEGBINOMDIST
 			// Rational approximation for central region:
 			double q = x - 0.5;
 			double r = q * q;
-			BigDecimal rr = new BigDecimal( (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1) );
+			BigDecimal rr = new BigDecimal( (((((((((((a[0] * r) + a[1]) * r) + a[2]) * r) + a[3]) * r) + a[4]) * r) + a[5]) * q) / ((((((((((b[0] * r) + b[1]) * r) + b[2]) * r) + b[3]) * r) + b[4]) * r) + 1) );
 
 			rr.setScale( 15, java.math.RoundingMode.HALF_UP );
 			return new PtgNumber( rr.doubleValue() );
@@ -2238,7 +2238,7 @@ PROB
 		}
 		else
 		{
-			quart = Integer.valueOf( ((Double) operands[1].getValue()).intValue() );
+			quart = ((Double) operands[1].getValue()).intValue();
 		}
 
 		float quartile = quart.floatValue();
@@ -2250,7 +2250,7 @@ PROB
 		{    // return maximum value
 			return new PtgNumber( dub[t.size() - 1].doubleValue() );
 		}
-		else if( quart.intValue() > 4 || quart.intValue() < 0 )
+		else if( (quart.intValue() > 4) || (quart.intValue() < 0) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -2261,7 +2261,7 @@ PROB
 		// truncate k, but keep the remainder.
 		int k = -1;
 		float remainder = 0;
-		if( kk % 1 != 0 )
+		if( (kk % 1) != 0 )
 		{
 			remainder = kk % 1;
 			String s = String.valueOf( kk );
@@ -2312,7 +2312,7 @@ PROB
 			Object o = num.getValue();
 			if( o.equals( "" ) )
 			{
-				theNum = new Double( 0.0d );
+				theNum = 0.0d;
 			}
 			else
 			{
@@ -2426,7 +2426,7 @@ SKEW
 		}
 		double[] yvals = PtgCalculator.getDoubleValueArray( operands[0] );
 		double[] xvals = PtgCalculator.getDoubleValueArray( operands[1] );
-		if( xvals == null || yvals == null )
+		if( (xvals == null) || (yvals == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_NA );//20090130 KSC: propagate error
 		}
@@ -2479,7 +2479,7 @@ SKEW
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
 		int k = new Double( PtgCalculator.getDoubleValueArray( operands[1] )[0] ).intValue();
-		if( k <= 0 || k > array.length )
+		if( (k <= 0) || (k > array.length) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}

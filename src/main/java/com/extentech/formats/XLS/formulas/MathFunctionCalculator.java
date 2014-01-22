@@ -146,7 +146,7 @@ public class MathFunctionCalculator
 		{
 			return PtgCalculator.getValueError();
 		}
-		double dd = Math.log( x + (1.0 + x) * Math.sqrt( (x - 1.0) / (x + 1.0) ) );
+		double dd = Math.log( x + ((1.0 + x) * Math.sqrt( (x - 1.0) / (x + 1.0) )) );
 		if( new Double( dd ).isNaN() ) // Not a Num -- possibly PtgErr
 		{
 			return PtgCalculator.getError();
@@ -208,7 +208,7 @@ public class MathFunctionCalculator
 		}
 
 // KSC: TESTING: I BELIEVE THE CALCULATION IS NOT CORRECT!    
-		BigDecimal bd = new BigDecimal( (x > 0.0 ? 1.0 : -1.0) * getAcosh( Math.sqrt( 1.0 + (x * x) ) ) );
+		BigDecimal bd = new BigDecimal( ((x > 0.0) ? 1.0 : -1.0) * getAcosh( Math.sqrt( 1.0 + (x * x) ) ) );
 		bd.setScale( 15, BigDecimal.ROUND_HALF_UP );
 //	PtgNumber ptnum = new PtgNumber(dd);
 		PtgNumber ptnum = new PtgNumber( bd.doubleValue() );
@@ -284,7 +284,7 @@ public class MathFunctionCalculator
 		{
 			return PtgCalculator.getValueError();
 		}
-		if( dd > 1 || dd < -1 )
+		if( (dd > 1) || (dd < -1) )
 		{
 			return PtgCalculator.getError();
 		}
@@ -490,7 +490,7 @@ public class MathFunctionCalculator
 	 */
 	protected static Ptg calcExp( Ptg[] operands )
 	{
-		if( operands.length > 1 || operands[0].getComponents() != null )
+		if( (operands.length > 1) || (operands[0].getComponents() != null) )
 		{ // not supported by function 
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
@@ -565,7 +565,7 @@ public class MathFunctionCalculator
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
 		double res = 1;
-		long endPoint = (n % 2 == 0 ? 2 : 1);
+		long endPoint = (((n % 2) == 0) ? 2 : 1);
 		for( long i = n; i >= endPoint; i -= 2 )
 		{
 			res *= i;
@@ -932,7 +932,7 @@ Returns the matrix inverse of an array
 		{
 			return PtgCalculator.getValueError();
 		}
-		if( (n < 0 && m > 0) || (n > 0 && m < 0) )
+		if( ((n < 0) && (m > 0)) || ((n > 0) && (m < 0)) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
@@ -1165,7 +1165,7 @@ Returns the matrix inverse of an array
 			return PtgCalculator.getValueError();
 		}
 		Random r = new Random();
-		double result = r.nextInt( upper - lower + 1 ) + lower;
+		double result = r.nextInt( (upper - lower) + 1 ) + lower;
 		PtgNumber pnum = new PtgNumber( result );
 		return pnum;
 	}
@@ -1189,7 +1189,7 @@ Returns the matrix inverse of an array
 			}
 
 			int i = (int) dd;
-			if( i < 0 || i > 3999 )
+			if( (i < 0) || (i > 3999) )
 			{
 				return PtgCalculator.getError(); // can't write nums that high!
 			}
@@ -1676,7 +1676,7 @@ Returns a subtotal in a list or database
 			String[] criteria = new String[(operands.length - 1) / 2];
 			Ptg[][] criteria_cells = new Ptg[(operands.length - 1) / 2][];
 			int j = 0;
-			for( int i = 1; i + 1 < operands.length; i += 2 )
+			for( int i = 1; (i + 1) < operands.length; i += 2 )
 			{
 				//criteria range - parse and get comprising cells
 				PtgArea cr = Calculator.getRange( operands[i] );
@@ -1927,7 +1927,7 @@ Returns the sum of squares of differences of corresponding values in two arrays
 //helper for asinh
 	private static double getAcosh( double x )
 	{
-		return Math.log( x + (1.0 + x) * Math.sqrt( (x - 1.0) / (x + 1.0) ) );
+		return Math.log( x + ((1.0 + x) * Math.sqrt( (x - 1.0) / (x + 1.0) )) );
 	}
 
 	// factorial helper

@@ -288,7 +288,7 @@ public class LogicalCalculator
 	 */
 	protected static Ptg calcIferror( Ptg[] operands )
 	{
-		if( operands == null || operands.length != 2 )
+		if( (operands == null) || (operands.length != 2) )
 		{
 			return new PtgErr( PtgErr.ERROR_VALUE );
 		}

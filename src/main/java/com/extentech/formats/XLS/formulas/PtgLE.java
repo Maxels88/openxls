@@ -102,7 +102,7 @@ public class PtgLE extends GenericPtg implements Ptg
 			{
 				//double[] dub = super.getValuesFromPtgs(form);
 				// there should always be only two ptg's in this, error if not.
-				if( o == null || o.length != 2 )
+				if( (o == null) || (o.length != 2) )
 				{
 					Logger.logWarn( "calculating formula failed, wrong number of values in PtgLE" );
 					return new PtgErr( PtgErr.ERROR_VALUE );    // 20081203 KSC: handle error's ala Excel
@@ -111,7 +111,7 @@ public class PtgLE extends GenericPtg implements Ptg
 				// determine if any of the operands are double - if true,
 				// then blank comparisons will be treated as 0's
 				boolean isDouble = false;
-				for( int i = 0; i < 2 && !isDouble; i++ )
+				for( int i = 0; (i < 2) && !isDouble; i++ )
 				{
 					if( !form[i].isBlank() )
 					{
@@ -124,7 +124,7 @@ public class PtgLE extends GenericPtg implements Ptg
 					{
 						if( isDouble )
 						{
-							o[i] = new Double( 0.0 );
+							o[i] = 0.0;
 						}
 						else
 						{
@@ -134,7 +134,7 @@ public class PtgLE extends GenericPtg implements Ptg
 				}
 
 				boolean res;
-				if( o[0] instanceof Double && o[1] instanceof Double )
+				if( (o[0] instanceof Double) && (o[1] instanceof Double) )
 				{
 					//if (dub[0].doubleValue() <= dub[1].doubleValue()){
 					if( ((Double) o[0]).doubleValue() <= ((Double) o[1]).doubleValue() )
@@ -181,7 +181,7 @@ public class PtgLE extends GenericPtg implements Ptg
 				String retArry = "";
 				int nArrays = java.lang.reflect.Array.getLength( o );    // TODO: Should always be 2 ????????????????????
 				int nVals = java.lang.reflect.Array.getLength( o[0] );    // use first array element to determine length of values as subsequent vals might not be arrays
-				for( int i = 0; i < nArrays - 1; i += 2 )
+				for( int i = 0; i < (nArrays - 1); i += 2 )
 				{
 					res = false;
 					Object secondOp = null;
@@ -197,7 +197,7 @@ public class PtgLE extends GenericPtg implements Ptg
 						{
 							secondOp = Array.get( o[i + 1], j );    // second array index j
 						}
-						if( firstOp instanceof Double && secondOp instanceof Double )
+						if( (firstOp instanceof Double) && (secondOp instanceof Double) )
 						{
 							res = ((Double) firstOp).compareTo( (Double) secondOp ) <= 0;
 						}

@@ -314,7 +314,7 @@ public class Storage extends BlockByteReader
 		childStorageID = headerData.getInt();
 
 		sz = this.getActualFileSize();
-		if( sz > 0 && sz < BIGBLOCK.SIZE )
+		if( (sz > 0) && (sz < BIGBLOCK.SIZE) )
 		{
 			miniStreamStorage = true;
 		}
@@ -691,7 +691,7 @@ public class Storage extends BlockByteReader
 					break; // ksc
 
 				case -2: // end of Storage - keep end block
-					if( i + 1 < dta.size() )
+					if( (i + 1) < dta.size() )
 					{
 						// get the "padding" block for later retrieval
 						thisbb = (Block) dta.get( i + 1 );
@@ -714,7 +714,7 @@ public class Storage extends BlockByteReader
 					{
 						break;
 					}
-					if( nextIdx != i + 1 )
+					if( nextIdx != (i + 1) )
 					{
 						//the next is a jumper, pickup the orphan
 						if( LEOFile.DEBUG )
@@ -865,7 +865,7 @@ public class Storage extends BlockByteReader
 			myblocks.clear();
 			for(; t < blks.length; t++ )
 			{
-				if( t + 1 < blks.length )
+				if( (t + 1) < blks.length )
 				{
 					blks[t].setNextBlock( blks[t + 1] );
 				}
@@ -891,7 +891,7 @@ public class Storage extends BlockByteReader
 	 */
 	public void addIdx( int x )
 	{
-		idxs.add( Integer.valueOf( x ) );
+		idxs.add( x );
 	}
 
 	public boolean equals( Object other )

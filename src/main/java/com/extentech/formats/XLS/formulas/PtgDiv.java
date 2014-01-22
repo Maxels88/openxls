@@ -135,7 +135,7 @@ public final class PtgDiv extends GenericPtg implements Ptg
 					return new PtgErr( PtgErr.ERROR_VALUE );
 				}
 				int nVals = java.lang.reflect.Array.getLength( o[0] );    // use first array element to determine length of values as subsequent vals might not be arrays
-				for( int i = 0; i < nArrays - 1; i += 2 )
+				for( int i = 0; i < (nArrays - 1); i += 2 )
 				{
 					Object secondOp = null;
 					boolean comparitorIsArray = o[i + 1].getClass().isArray();

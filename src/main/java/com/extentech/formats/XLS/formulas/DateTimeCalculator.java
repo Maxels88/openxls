@@ -130,7 +130,7 @@ public class DateTimeCalculator
 	protected static Ptg calcDateValue( Ptg[] operands )
 	{
 		// TODO: there may be formats that need to be input 
-		if( operands == null || operands[0].getString() == null )
+		if( (operands == null) || (operands[0].getString() == null) )
 		{
 			return new PtgErr( PtgErr.ERROR_VALUE );
 		}
@@ -326,13 +326,13 @@ public class DateTimeCalculator
 				mm -= 12;
 				y++;
 			}
-			if( mm == 3 || mm == 5 || mm == 8 || mm == 10 )    // 0-based
+			if( (mm == 3) || (mm == 5) || (mm == 8) || (mm == 10) )    // 0-based
 			{
 				d = 30;
 			}
 			else if( mm == 1 )
 			{// february
-				if( y % 4 == 0 )
+				if( (y % 4) == 0 )
 				{
 					d = 29;
 				}
@@ -443,7 +443,7 @@ public class DateTimeCalculator
 			ArrayList holidays = new ArrayList();
 			GregorianCalendar startDate = getDateFromPtg( operands[0] );
 			GregorianCalendar endDate = getDateFromPtg( operands[1] );
-			if( operands.length > 2 && operands[2] != null )
+			if( (operands.length > 2) && (operands[2] != null) )
 			{
 				if( operands[2] instanceof PtgRef )
 				{
@@ -463,7 +463,7 @@ public class DateTimeCalculator
 			while( !startDate.equals( endDate ) )
 			{
 				int d = startDate.get( Calendar.DAY_OF_WEEK );
-				if( d != Calendar.SATURDAY && d != Calendar.SUNDAY )
+				if( (d != Calendar.SATURDAY) && (d != Calendar.SUNDAY) )
 				{
 					boolean OKtoIncrement = true;
 					// check if on a holidays
@@ -667,7 +667,7 @@ public class DateTimeCalculator
 		{
 			GregorianCalendar dt = getDateFromPtg( operands[0] );
 			days = operands[1].getIntVal();
-			if( operands.length > 2 && operands[2] != null )
+			if( (operands.length > 2) && (operands[2] != null) )
 			{    // holidays
 				if( operands[2] instanceof PtgRef )
 				{
@@ -685,7 +685,7 @@ public class DateTimeCalculator
 			for( int absDays = Math.abs( days ); absDays > 0; )
 			{
 				int d = dt.get( Calendar.DAY_OF_WEEK );
-				if( d != Calendar.SATURDAY && d != Calendar.SUNDAY )
+				if( (d != Calendar.SATURDAY) && (d != Calendar.SUNDAY) )
 				{
 					boolean OKtoIncrement = true;
 					// check if on a holidays
@@ -781,7 +781,7 @@ public class DateTimeCalculator
 			basis = operands[2].getIntVal();
 		}
 		//If basis < 0 or if basis > 4, YEARFRAC returns the #NUM! error value.
-		if( basis < 0 || basis > 4 )
+		if( (basis < 0) || (basis > 4) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
