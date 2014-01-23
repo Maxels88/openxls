@@ -14,3 +14,11 @@ the logging to SLF4J, and ensuring that all exceptions are logged at WARN or ERR
 
 A big issue for us right now is the corruption of the two TreeMaps held within Boundsheet - this is an ordered tree, and instance variables
 that are part of the ordering are being modified in place.  This prevents the nodes from being found in subsequent searches and deletions.
+
+## 2014-01-22
+Loggin has been moved to SLF4J.  There will likely be many log lines that are being recorded at the wrong level (i.e. too much noise).
+Please feel free to send a pull request with your level changes, or log an issue with the file name and line number, the current level and
+what you think it should be.
+
+## 2014-01-23
+Tracking down some weird and wonderful initialization issue with Mulblank cells...
