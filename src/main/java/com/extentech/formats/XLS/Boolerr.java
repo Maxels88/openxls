@@ -191,13 +191,13 @@ public final class Boolerr extends XLSCellRecord
 	{
 		super.init();
 		// get the row information
-		rw = (int) ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		rw = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
 		;
 		col = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
 		;
 		ixfe = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
 		// get the value
-		int num = (int) this.getByteAt( 6 );
+		int num = this.getByteAt( 6 );
 		if( num == 0 )
 		{
 			val = false;
@@ -206,7 +206,7 @@ public final class Boolerr extends XLSCellRecord
 		{
 			val = true;
 		}
-		num = (int) this.getByteAt( 7 );
+		num = this.getByteAt( 7 );
 		if( num == 0 )
 		{
 			iserr = false;

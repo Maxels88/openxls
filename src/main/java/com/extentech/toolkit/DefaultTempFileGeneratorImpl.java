@@ -30,6 +30,9 @@
  */
 package com.extentech.toolkit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -38,7 +41,7 @@ import java.io.IOException;
  */
 public class DefaultTempFileGeneratorImpl implements TempFileGenerator
 {
-
+	private static final Logger log = LoggerFactory.getLogger( DefaultTempFileGeneratorImpl.class );
 	@Override
 	public File createTempFile( String prefix, String extension ) throws IOException
 	{
@@ -63,7 +66,7 @@ public class DefaultTempFileGeneratorImpl implements TempFileGenerator
 		}
 		catch( Exception e )
 		{
-			Logger.logInfo( "Could not access temp dir: " + tmpdir );// could not create the temp folder fallback to unspecified temp file
+			log.error( "Could not access temp dir: " + tmpdir );// could not create the temp folder fallback to unspecified temp file
 			target = File.createTempFile( prefix, extension );
 		}
 

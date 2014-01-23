@@ -25,8 +25,9 @@ package com.extentech.ExtenXLS;
 import com.extentech.formats.XLS.ColumnNotFoundException;
 import com.extentech.formats.XLS.SxStreamID;
 import com.extentech.formats.XLS.Sxview;
-import com.extentech.toolkit.Logger;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** PivotTable Handle allows for manipulation of PivotTables within a WorkBook.
 
@@ -46,6 +47,7 @@ import org.json.JSONObject;
  */
 public class PivotTableHandle
 {
+	private static final Logger log = LoggerFactory.getLogger( PivotTableHandle.class );
 
 	public static int AUTO_FORMAT_Report1 = 1;
 	public static int AUTO_FORMAT_Report2 = 2;
@@ -418,7 +420,7 @@ public class PivotTableHandle
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "could not remove artifacts in PivotTableHandle: " + e );
+			log.error( "could not remove artifacts in PivotTableHandle: " + e );
 		}
 	}
 
@@ -516,7 +518,7 @@ public class PivotTableHandle
 	 */
 	public int getRowFirst()
 	{
-		return (int) pt.getRwFirst() + 1;
+		return pt.getRwFirst() + 1;
 	}
 
 	/**
@@ -533,7 +535,7 @@ public class PivotTableHandle
 	 */
 	public int getRowLast()
 	{
-		return (int) pt.getRwLast() + 1;
+		return pt.getRwLast() + 1;
 	}
 
 	/**
@@ -549,7 +551,7 @@ public class PivotTableHandle
 	 */
 	public int getColFirst()
 	{
-		return (int) pt.getColFirst();
+		return pt.getColFirst();
 	}
 
 	/**
@@ -565,7 +567,7 @@ public class PivotTableHandle
 	 */
 	public int getColLast()
 	{
-		return (int) pt.getColLast();
+		return pt.getColLast();
 	}
 
 	/**
@@ -582,7 +584,7 @@ public class PivotTableHandle
 	 */
 	public int getRowFirstHead()
 	{
-		return (int) pt.getRwFirstHead() + 1;
+		return pt.getRwFirstHead() + 1;
 	}
 
 	/**
@@ -599,7 +601,7 @@ public class PivotTableHandle
 	 */
 	public int getRowFirstData()
 	{
-		return (int) pt.getRwFirstData() + 1;
+		return pt.getRwFirstData() + 1;
 	}
 
 	/**
@@ -615,7 +617,7 @@ public class PivotTableHandle
 	 */
 	public int getColFirstData()
 	{
-		return (int) pt.getColFirstData();
+		return pt.getColFirstData();
 	}
 
 	/**

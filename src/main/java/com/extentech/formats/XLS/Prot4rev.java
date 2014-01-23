@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>PROT4REV: Protection Flag (12h)</b><br>
@@ -39,9 +40,7 @@ import com.extentech.toolkit.Logger;
  */
 public final class Prot4rev extends com.extentech.formats.XLS.XLSRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Prot4rev.class );
 	private static final long serialVersionUID = 681662633243537043L;
 	int fRevLock = -1;
 
@@ -61,10 +60,10 @@ public final class Prot4rev extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		fRevLock = (int) ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		fRevLock = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
 		if( this.getIsLocked() )
 		{
-			Logger.logInfo( "Shared Workbook Protection Enabled." );
+			log.info( "Shared Workbook Protection Enabled." );
 			// throw new InvalidFileException("Shared Workbook Protection Enabled.  Unsupported file format.");
 		}
 	}

@@ -23,8 +23,9 @@
 package com.extentech.formats.XLS.formulas;
 
 import com.extentech.formats.XLS.FunctionNotSupportedException;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
     EngineeringCalculator is a collection of static methods that operate
@@ -36,8 +37,7 @@ import com.extentech.toolkit.StringTool;
 */
 public class EngineeringCalculator
 {
-	public static boolean DEBUG = false;
-
+	private static final Logger log = LoggerFactory.getLogger( EngineeringCalculator.class );
 /*
 	BESSELI
 	 Returns the modified Bessel function In(x)
@@ -62,10 +62,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "BIN2DEC" );
-		}
+		debugOperands( operands, "BIN2DEC" );
 		String bString = operands[0].getString().trim();
 		// 10 bits at most
 		if( bString.length() > 10 )
@@ -91,10 +88,7 @@ public class EngineeringCalculator
 		}
 
 		PtgNumber pnum = new PtgNumber( dec );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from BIN2DEC= " + pnum.getVal() );
-		}
+		log.debug( "Result from BIN2DEC= " + pnum.getVal() );
 		return pnum;
 	}
 
@@ -108,10 +102,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "BIN2HEX" );
-		}
+		debugOperands( operands, "BIN2HEX" );
 		String bString = operands[0].getString().trim();
 		int places = 0;
 		if( operands.length > 1 )
@@ -158,10 +149,7 @@ public class EngineeringCalculator
 		}
 
 		PtgStr pstr = new PtgStr( hString );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from BIN2HEX= " + pstr.getString() );
-		}
+		log.debug( "Result from BIN2HEX= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -175,10 +163,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "Bin2Oct" );
-		}
+		debugOperands( operands, "Bin2Oct" );
 		String bString = operands[0].getString().trim();
 		int places = 0;
 		if( operands.length > 1 )
@@ -224,10 +209,7 @@ public class EngineeringCalculator
 			oString = oString.substring( oString.length() - places );
 		}
 		PtgStr pstr = new PtgStr( oString );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from BIN2OCT= " + pstr.getString() );
-		}
+		log.debug( "Result from BIN2OCT= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -241,10 +223,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "Complex" );
-		}
+		debugOperands( operands, "Complex" );
 		int real = operands[0].getIntVal();
 		int imaginary = operands[1].getIntVal();
 		String suffix = "i";
@@ -283,10 +262,7 @@ public class EngineeringCalculator
 		}
 
 		PtgStr pstr = new PtgStr( complexString );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from COMPLEX= " + pstr.getString() );
-		}
+		log.debug( "Result from COMPLEX= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -481,10 +457,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "CONVERT" );
-		}
+		debugOperands( operands, "CONVERT" );
 		double number = operands[0].getDoubleVal();
 		String fromUnits = operands[1].getString().trim();
 		String toUnits = operands[2].getString().trim();
@@ -1106,10 +1079,7 @@ public class EngineeringCalculator
 		}
 
 		PtgNumber pnum = new PtgNumber( result );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from CONVERT= " + pnum.getString() );
-		}
+		log.debug( "Result from CONVERT= " + pnum.getString() );
 		return pnum;
 	}
 
@@ -1123,10 +1093,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "DEC2BIN" );
-		}
+		debugOperands( operands, "DEC2BIN" );
 		int dec = operands[0].getIntVal();
 		int places = 0;
 		if( operands.length > 1 )
@@ -1154,10 +1121,7 @@ public class EngineeringCalculator
 			bString = bString.substring( bString.length() - places );
 		}
 		PtgStr pstr = new PtgStr( bString );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from DEC2BIN= " + pstr.getString() );
-		}
+		log.debug( "Result from DEC2BIN= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -1171,10 +1135,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "DEC2HEX" );
-		}
+		debugOperands( operands, "DEC2HEX" );
 		long dec = PtgCalculator.getLongValue( operands[0] );
 		int places = 0;
 		if( operands.length > 1 )
@@ -1201,10 +1162,7 @@ public class EngineeringCalculator
 
 		}
 		PtgStr pstr = new PtgStr( hString );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from DEC2HEX= " + pstr.getString() );
-		}
+		log.debug( "Result from DEC2HEX= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -1218,10 +1176,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "DEC2OCT" );
-		}
+		debugOperands( operands, "DEC2OCT" );
 		long dec = PtgCalculator.getLongValue( operands[0] );
 		int places = 0;
 		if( operands.length > 1 )
@@ -1248,10 +1203,7 @@ public class EngineeringCalculator
 
 		}
 		PtgStr pstr = new PtgStr( oString );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from DEC2OCT= " + pstr.getString() );
-		}
+		log.debug( "Result from DEC2OCT= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -1265,10 +1217,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "DELTA" );
-		}
+		debugOperands( operands, "DELTA" );
 
 		double number1 = operands[0].getDoubleVal();
 		double number2 = 0;
@@ -1283,10 +1232,7 @@ public class EngineeringCalculator
 		}
 
 		PtgNumber pnum = new PtgNumber( result );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from DELTA= " + pnum.getString() );
-		}
+		log.debug( "Result from DELTA= " + pnum.getString() );
 		return pnum;
 	}
 
@@ -1864,10 +1810,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "GESTEP" );
-		}
+		debugOperands( operands, "GESTEP" );
 
 		double number = operands[0].getDoubleVal();
 		double step = 0;
@@ -1882,10 +1825,7 @@ public class EngineeringCalculator
 		}
 
 		PtgNumber pnum = new PtgNumber( result );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from GESTEP= " + pnum.getString() );
-		}
+		log.debug( "Result from GESTEP= " + pnum.getString() );
 		return pnum;
 	}
 
@@ -1899,10 +1839,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "HEX2BIN" );
-		}
+		debugOperands( operands, "HEX2BIN" );
 		String hString = operands[0].getString().trim();
 		// 10 digits (40 bits) at most
 		if( hString.length() > 10 )
@@ -1951,10 +1888,7 @@ public class EngineeringCalculator
 			bString = bString.substring( bString.length() - places );
 		}
 		PtgStr pstr = new PtgStr( bString );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from HEX2BIN= " + pstr.getString() );
-		}
+		log.debug( "Result from HEX2BIN= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -1968,10 +1902,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "HEX2DEC" );
-		}
+		debugOperands( operands, "HEX2DEC" );
 		String hString = operands[0].getString().trim();
 		// 10 digits (40 bits) at most
 		if( hString.length() > 10 )
@@ -1995,10 +1926,7 @@ public class EngineeringCalculator
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
 		PtgNumber pnum = new PtgNumber( dec );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from HEX2DEC= " + pnum.getVal() );
-		}
+		log.debug( "Result from HEX2DEC= " + pnum.getVal() );
 		return pnum;
 	}
 
@@ -2012,10 +1940,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "HEX2OCT" );
-		}
+		debugOperands( operands, "HEX2OCT" );
 		String hString = operands[0].getString().trim();
 		// 10 digits (40 bits) at most
 		if( hString.length() > 10 )
@@ -2063,10 +1988,7 @@ public class EngineeringCalculator
 			oString = oString.substring( oString.length() - places );
 		}
 		PtgStr pstr = new PtgStr( oString );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from HEX2OCT= " + pstr.getString() );
-		}
+		log.debug( "Result from HEX2OCT= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -2166,10 +2088,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "IMABS" );
-		}
+		debugOperands( operands, "IMABS" );
 		String complexString = StringTool.allTrim( operands[0].getString() );
 
 		Complex c;
@@ -2187,10 +2106,7 @@ public class EngineeringCalculator
 		double result = Math.sqrt( Math.pow( c.real, 2 ) + Math.pow( c.imaginary, 2 ) );
 
 		PtgNumber pnum = new PtgNumber( result );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMABS= " + pnum.getString() );
-		}
+		log.debug( "Result from IMABS= " + pnum.getString() );
 		return pnum;
 	}
 
@@ -2204,10 +2120,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "Imaginary" );
-		}
+		debugOperands( operands, "Imaginary" );
 		String complexString = StringTool.allTrim( operands[0].getString() );
 
 		Complex c;
@@ -2221,10 +2134,7 @@ public class EngineeringCalculator
 		}
 
 		PtgNumber pnum = new PtgNumber( c.imaginary );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMAGINARY= " + pnum.getString() );
-		}
+		log.debug( "Result from IMAGINARY= " + pnum.getString() );
 		return pnum;
 	}
 
@@ -2238,10 +2148,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "ImArgument" );
-		}
+		debugOperands( operands, "ImArgument" );
 		String complexString = StringTool.allTrim( operands[0].getString() );
 		Complex c;
 		try
@@ -2256,10 +2163,7 @@ public class EngineeringCalculator
 		double result = Math.atan( c.imaginary / c.real );
 
 		PtgNumber pnum = new PtgNumber( result );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMARGUMENT= " + pnum.getString() );
-		}
+		log.debug( "Result from IMARGUMENT= " + pnum.getString() );
 		return pnum;
 	}
 
@@ -2273,10 +2177,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "ImCongugate" );
-		}
+		debugOperands( operands, "ImCongugate" );
 		String complexString = StringTool.allTrim( operands[0].getString() );
 
 		Complex c;
@@ -2303,10 +2204,7 @@ public class EngineeringCalculator
 			congugate = imGetExcelStr( c.real );
 		}
 		PtgStr pstr = new PtgStr( congugate );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMCONGUGATE= " + pstr.getString() );
-		}
+		log.debug( "Result from IMCONGUGATE= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -2320,10 +2218,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "ImCos" );
-		}
+		debugOperands( operands, "ImCos" );
 		String complexString = StringTool.allTrim( operands[0].getString() );
 		Complex c;
 		try
@@ -2351,10 +2246,7 @@ public class EngineeringCalculator
 		}
 
 		PtgStr pstr = new PtgStr( imCos );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMCOS= " + pstr.getString() );
-		}
+		log.debug( "Result from IMCOS= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -2370,10 +2262,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "IMDIV" );
-		}
+		debugOperands( operands, "IMDIV" );
 		String complexString1 = StringTool.allTrim( operands[0].getString() );
 		String complexString2 = StringTool.allTrim( operands[1].getString() );
 
@@ -2406,10 +2295,7 @@ public class EngineeringCalculator
 		}
 
 		PtgStr pstr = new PtgStr( imDiv );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMDIV= " + pstr.getString() );
-		}
+		log.debug( "Result from IMDIV= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -2423,10 +2309,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "ImExp" );
-		}
+		debugOperands( operands, "ImExp" );
 		String complexString = StringTool.allTrim( operands[0].getString() );
 		Complex c;
 		try
@@ -2453,10 +2336,7 @@ public class EngineeringCalculator
 		}
 
 		PtgStr pstr = new PtgStr( imExp );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMEXP= " + pstr.getString() );
-		}
+		log.debug( "Result from IMEXP= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -2470,10 +2350,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "ImLn" );
-		}
+		debugOperands( operands, "ImLn" );
 		String complexString = StringTool.allTrim( operands[0].getString() );
 		Complex c;
 		try
@@ -2502,10 +2379,7 @@ public class EngineeringCalculator
 		}
 
 		PtgStr pstr = new PtgStr( imLn );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMLN= " + pstr.getString() );
-		}
+		log.debug( "Result from IMLN= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -2519,10 +2393,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "ImLog10" );
-		}
+		debugOperands( operands, "ImLog10" );
 		String complexString = StringTool.allTrim( operands[0].getString() );
 		Complex c;
 		try
@@ -2555,10 +2426,7 @@ public class EngineeringCalculator
 		}
 
 		PtgStr pstr = new PtgStr( imLog10 );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMLOG10= " + pstr.getString() );
-		}
+		log.debug( "Result from IMLOG10= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -2572,10 +2440,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "ImLog2" );
-		}
+		debugOperands( operands, "ImLog2" );
 		String complexString = StringTool.allTrim( operands[0].getString() );
 		Complex c;
 		try
@@ -2608,10 +2473,7 @@ public class EngineeringCalculator
 		}
 
 		PtgStr pstr = new PtgStr( imLog2 );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMLOG2= " + pstr.getString() );
-		}
+		log.debug( "Result from IMLOG2= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -2625,10 +2487,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "ImPower" );
-		}
+		debugOperands( operands, "ImPower" );
 		String complexString = StringTool.allTrim( operands[0].getString() );
 		double n = operands[1].getDoubleVal();
 		Complex c;
@@ -2661,10 +2520,7 @@ public class EngineeringCalculator
 		}
 
 		PtgStr pstr = new PtgStr( imPower );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMPOWER= " + pstr.getString() );
-		}
+		log.debug( "Result from IMPOWER= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -2679,10 +2535,7 @@ public class EngineeringCalculator
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
 
-		if( DEBUG )
-		{
-			debugOperands( operands, "IMPRODUCT" );
-		}
+		debugOperands( operands, "IMPRODUCT" );
 		Ptg[] ops = PtgCalculator.getAllComponents( operands );
 		String[] complexStrings = new String[ops.length];
 		for( int i = 0; i < ops.length; i++ )
@@ -2725,10 +2578,7 @@ public class EngineeringCalculator
 		}
 
 		PtgStr pstr = new PtgStr( imSum );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMSPRODUCT= " + pstr.getString() );
-		}
+		log.debug( "Result from IMSPRODUCT= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -2742,10 +2592,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "IMREAL" );
-		}
+		debugOperands( operands, "IMREAL" );
 		String complexString = StringTool.allTrim( operands[0].getString() );
 
 		Complex c;
@@ -2759,10 +2606,7 @@ public class EngineeringCalculator
 		}
 
 		PtgNumber pnum = new PtgNumber( c.real );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMREAL= " + pnum.getString() );
-		}
+		log.debug( "Result from IMREAL= " + pnum.getString() );
 		return pnum;
 	}
 
@@ -2776,10 +2620,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "ImSin" );
-		}
+		debugOperands( operands, "ImSin" );
 		String complexString = StringTool.allTrim( operands[0].getString() );
 		Complex c;
 		try
@@ -2807,10 +2648,7 @@ public class EngineeringCalculator
 		}
 
 		PtgStr pstr = new PtgStr( imSin );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMSIN= " + pstr.getString() );
-		}
+		log.debug( "Result from IMSIN= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -2824,10 +2662,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "ImSqrt" );
-		}
+		debugOperands( operands, "ImSqrt" );
 		String complexString = StringTool.allTrim( operands[0].getString() );
 		Complex c;
 		try
@@ -2860,10 +2695,7 @@ public class EngineeringCalculator
 		}
 
 		PtgStr pstr = new PtgStr( imSqrt );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMSQRT= " + pstr.getString() );
-		}
+		log.debug( "Result from IMSQRT= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -2877,10 +2709,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "IMSUB" );
-		}
+		debugOperands( operands, "IMSUB" );
 		String complexString1 = StringTool.allTrim( operands[0].getString() );
 		String complexString2 = StringTool.allTrim( operands[1].getString() );
 
@@ -2911,10 +2740,7 @@ public class EngineeringCalculator
 		}
 
 		PtgStr pstr = new PtgStr( imSub );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMSUB= " + pstr.getString() );
-		}
+		log.debug( "Result from IMSUB= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -2929,10 +2755,7 @@ public class EngineeringCalculator
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
 
-		if( DEBUG )
-		{
-			debugOperands( operands, "IMSUM" );
-		}
+		debugOperands( operands, "IMSUM" );
 		Ptg[] ops = PtgCalculator.getAllComponents( operands );
 		String[] complexStrings = new String[ops.length];
 		for( int i = 0; i < ops.length; i++ )
@@ -2973,10 +2796,7 @@ public class EngineeringCalculator
 		}
 
 		PtgStr pstr = new PtgStr( imSum );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from IMSUM= " + pstr.getString() );
-		}
+		log.debug( "Result from IMSUM= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -2990,10 +2810,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "OCT2BIN" );
-		}
+		debugOperands( operands, "OCT2BIN" );
 		long l = (long) operands[0].getDoubleVal();    // avoid sci notation
 		String oString = String.valueOf( l ).trim();
 		// 10 digits at most (=30 bits)
@@ -3043,10 +2860,7 @@ public class EngineeringCalculator
 			bString = bString.substring( bString.length() - places );
 		}
 		PtgStr pstr = new PtgStr( bString );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from OCT2BIN= " + pstr.getString() );
-		}
+		log.debug( "Result from OCT2BIN= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -3060,10 +2874,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "OCT2DEC" );
-		}
+		debugOperands( operands, "OCT2DEC" );
 		long l = (long) operands[0].getDoubleVal(); // avoid sci notation
 		String oString = String.valueOf( l ).trim();
 		// 10 digits at most (=30 bits)
@@ -3087,10 +2898,7 @@ public class EngineeringCalculator
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
 		PtgNumber pnum = new PtgNumber( dec );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from OCT2DEC= " + pnum.getVal() );
-		}
+		log.debug( "Result from OCT2DEC= " + pnum.getVal() );
 		return pnum;
 	}
 
@@ -3104,10 +2912,7 @@ public class EngineeringCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
-			debugOperands( operands, "OCT2HEX" );
-		}
+		debugOperands( operands, "OCT2HEX" );
 		long l = (long) operands[0].getDoubleVal(); // avoid sci notation
 		String oString = String.valueOf( l ).trim();
 		// 10 digits at most (=30 bits)
@@ -3153,10 +2958,7 @@ public class EngineeringCalculator
 		}
 
 		PtgStr pstr = new PtgStr( hString );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from OCT2HEX= " + pstr.getString() );
-		}
+		log.debug( "Result from OCT2HEX= " + pstr.getString() );
 		return pstr;
 	}
 
@@ -3166,23 +2968,24 @@ public class EngineeringCalculator
 */
 	static void debugOperands( Ptg[] operands, String f )
 	{
-		if( DEBUG )
+		if( !log.isDebugEnabled() )
 		{
-			Logger.logInfo( "Operands for " + f );
+			return;
+		}
+			log.debug( "Operands for " + f );
 			for( int i = 0; i < operands.length; i++ )
 			{
 				String s = operands[i].getString();
 				if( !(operands[i] instanceof PtgMissArg) )
 				{
 					String v = operands[i].getValue().toString();
-					Logger.logInfo( "\tOperand[" + i + "]=" + s + " " + v );
+					log.debug( "\tOperand[" + i + "]=" + s + " " + v );
 				}
 				else
 				{
-					Logger.logInfo( "\tOperand[" + i + "]=" + s + " is Missing" );
+					log.debug( "\tOperand[" + i + "]=" + s + " is Missing" );
 				}
 			}
-		}
 	}
 
 }

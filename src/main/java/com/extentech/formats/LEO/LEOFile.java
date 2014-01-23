@@ -26,9 +26,10 @@ import com.extentech.formats.XLS.WorkBookException;
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.CompatibleVector;
 import com.extentech.toolkit.JFileWriter;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.ResourceLoader;
 import com.extentech.toolkit.TempFileManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -54,15 +55,10 @@ import java.util.Vector;
  */
 public class LEOFile implements Serializable
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( LEOFile.class );
 	private static final long serialVersionUID = 2760792940329331096L;
 	public final static int MAXDIFATLEN = 109;    // maximum DIFATLEN = 109; if more sectors are needed goes into extraDIFAT
 	public final static int IDXBLOCKSIZE = 128;    // number of indexes that can be stored in 1 block
-	public final static boolean DEBUG = false;
-	public int DEBUGLEVEL = 0;
 	public static int actualOutput = 0;
 	private List bigBlocks;
 	private boolean readok = false;
@@ -135,10 +131,7 @@ public class LEOFile implements Serializable
 		}
 		catch( Exception e )
 		{
-			if( DEBUGLEVEL > 0 )
-			{
-				Logger.logWarn( "could not close workbook cleanly." + e );
-			}
+				log.warn( "could not close workbook cleanly.", e );
 		}
 	}
 
@@ -239,12 +232,10 @@ public class LEOFile implements Serializable
 	/**
 	 * a new LEO file containing LEO archive entries
 	 *
-	 * @param a file containing a valid LEOfile (XLS BIFF8)
 	 */
-	public LEOFile( File fpath, int DEBUGLEVEL )
+	public LEOFile( File fpath )
 	{
 		this.fileName = fpath.getAbsolutePath();
-		this.DEBUGLEVEL = DEBUGLEVEL;
 		fb = LEOFile.readFile( fpath );
 		this.initWrapper( fb.getBuffer() );
 	}
@@ -270,11 +261,6 @@ public class LEOFile implements Serializable
 		if( FAT != null )
 		{
 			directories.initDirectories( bigBlocks, FAT );
-// KSC: TESTING: XLS-97            
-			if( DEBUG || (DEBUGLEVEL > 200) )
-			{
-				directories.DEBUG();
-			}
 			FAT = null;
 			readok = true;
 		}
@@ -600,10 +586,7 @@ public class LEOFile implements Serializable
 			// this is a questionable line.  It is setting the storage length to that of the padded bigblock.
 			// causes errors in encrypted files
 			book.setActualFileSize( (workbook_idx_block_size + 1) * BIGBLOCK.SIZE );
-			if( DEBUG )
-			{
-				Logger.logInfo( "Workbook actual bytes: " + book.getActualFileSize() );
-			}
+				log.debug( "Workbook actual bytes: " + book.getActualFileSize() );
 		}
 
 		// now rest of "static" stores (summary, document summary, comp obj ...)
@@ -847,15 +830,11 @@ public class LEOFile implements Serializable
 			int origps = b.getBlockIndex();
 			if( origps < 0 )
 			{
-				Logger.logWarn( "WARNING: LEOFile Block Not In MINIFAT vector: " + String.valueOf( b.getOriginalIdx() ) );
+				log.warn( "WARNING: LEOFile Block Not In MINIFAT vector: " + String.valueOf( b.getOriginalIdx() ) );
 			}
 			else
 			{
 				int newp = ((Block) b.next()).getBlockIndex();
-				if( false )
-				{
-					Logger.logInfo( "INFO: LEOFile Initializing block index: " + origps + " val: " + newp + " idxlen: " + newidx.length );
-				}
 				newidx[origps] = newp;
 			}
 			b = (Block) b.next();
@@ -1021,7 +1000,7 @@ public class LEOFile implements Serializable
 			}
 			catch( StorageNotFoundException e1 )
 			{
-				Logger.logInfo( "Not Excel '97 (BIFF8) or later version.  Unsupported file format." );
+				log.warn( "Not Excel '97 (BIFF8) or later version.  Unsupported file format." );
 				throw new InvalidFileException( "InvalidFileException: Not Excel '97 (BIFF8) or later version.  Unsupported file format." );
 			}
 		}
@@ -1039,10 +1018,7 @@ public class LEOFile implements Serializable
 		bigBlocks = new ArrayList();
 		int len = bbuf.limit() / BIGBLOCK.SIZE;
 		// get ALL BIGBLOCKS (512 byte chunks of file)
-		if( DEBUG )
-		{
-			Logger.logInfo( "\nINIT: Total Number of bigblocks:  " + len );
-		}
+			log.debug( "INIT: Total Number of bigblocks:  " + len );
 		for( int i = 0; i < len; i++ )
 		{
 			BIGBLOCK bbd = new BIGBLOCK();
@@ -1082,15 +1058,12 @@ public class LEOFile implements Serializable
 			throw new InvalidFileException( this.getFileName() + " is not a valid OLE File." );
 		}
 
-		if( DEBUG )
-		{
-			Logger.logInfo( "Header: " );
-			Logger.logInfo( "numbFATSectors: " + header.getNumFATSectors() );
-			Logger.logInfo( "numMiniFATSectors: " + header.getNumMiniFATSectors() );
-			Logger.logInfo( "numbExtraDIFATSectors: " + header.getNumExtraDIFATSectors() );
-			Logger.logInfo( "rootstart: " + header.getRootStartPos() );
-			Logger.logInfo( "miniFATStart: " + header.getMiniFATStart() );
-		}
+			log.debug( "Header: " );
+			log.debug( "numbFATSectors: " + header.getNumFATSectors() );
+			log.debug( "numMiniFATSectors: " + header.getNumMiniFATSectors() );
+			log.debug( "numbExtraDIFATSectors: " + header.getNumExtraDIFATSectors() );
+			log.debug( "rootstart: " + header.getRootStartPos() );
+			log.debug( "miniFATStart: " + header.getMiniFATStart() );
 		BIGBLOCK headerblock = (BIGBLOCK) bigBlocks.get( 0 );
 		headerblock.setInitialized( true );
 
@@ -1103,13 +1076,7 @@ public class LEOFile implements Serializable
 		FAT = LEOFile.readFAT( blx );
 		blx = null; // done
 
-		if( DEBUG )
-		{
-			Logger.logInfo( "FAT:\n" + Arrays.toString( FAT ) );
-		}
-
-//		if (DEBUG)
-//			StorageTable.writeitout(FATSectors, "FAT.dat");
+			log.debug( "FAT: {}", Arrays.toString( FAT ) );
 
 		/*****  Read the Directory blocks */
 		directories = new StorageTable();
@@ -1256,9 +1223,8 @@ public class LEOFile implements Serializable
 			}
 			catch( IOException a )
 			{
-				Logger.logWarn( "ERROR: gettting bytes from blocks failed: " + a );
+				log.warn( "ERROR: gettting bytes from blocks failed: " + a );
 			}
-
 		}
 	}
 
@@ -1336,10 +1302,7 @@ public class LEOFile implements Serializable
 	{
 		CompatibleVector FATSectors = new CompatibleVector();
 		int[] DIFAT = header.getDIFAT(); // the Index for the FAT(which is the File Allocation Table or Sector Chain Array), id's of 1st 109 sectors or blocks 
-		if( DEBUG )
-		{
-			Logger.logInfo( "FAT Blocks:\n" + Arrays.toString( DIFAT ) );
-		}
+			log.debug( "FAT Blocks: {}" , Arrays.toString( DIFAT ) );
 		//**** read in the FAT index ****//
 		//**** First get the inital blocks before the extra DIFAT sectors ****//
 		int FATidx = 0;
@@ -1359,7 +1322,7 @@ public class LEOFile implements Serializable
 			else
 			{
 				// Usually caused by CHECK ByteStreamer.writeOut() dlen/filler handling
-				Logger.logErr( "LEOFile.init failed. FAT Index Attempting to fetch Block past end of blocks." );
+				log.error( "LEOFile.init failed. FAT Index Attempting to fetch Block past end of blocks." );
 				throw new InvalidFileException(
 						"Input file truncated. LEOFile.init failed. FAT Index Attempting to fetch Block past end of blocks." );
 			}
@@ -1391,7 +1354,7 @@ public class LEOFile implements Serializable
 					}
 					else
 					{
-						Logger.logErr( "LEOFile.init failed. Attempting to fetch Invalid Extra Sector Block." );
+						log.error( "LEOFile.init failed. Attempting to fetch Invalid Extra Sector Block." );
 						throw new InvalidFileException( "LEOFile.init failed. Attempting to fetch Invalid Extra Sector Block." );
 					}
 				}

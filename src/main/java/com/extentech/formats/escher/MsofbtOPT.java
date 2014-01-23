@@ -27,7 +27,8 @@ import com.extentech.formats.XLS.FormatConstants;
 import com.extentech.formats.XLS.MSODrawingConstants;
 import com.extentech.formats.XLS.XLSConstants;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -39,9 +40,7 @@ import java.util.LinkedHashMap;
  */
 public class MsofbtOPT extends EscherRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( MsofbtOPT.class );
 	private static final long serialVersionUID = 465530579513265882L;
 	byte[] recordData = new byte[0];
 	boolean bBackground, bActive, bPrint;
@@ -111,7 +110,7 @@ public class MsofbtOPT extends EscherRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Msofbt.setImageName failed.", e );
+			log.error( "Msofbt.setImageName failed.", e );
 		}
 	}
 
@@ -139,7 +138,7 @@ public class MsofbtOPT extends EscherRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Msofbt.setShapeName failed.", e );
+			log.error( "Msofbt.setShapeName failed.", e );
 		}
 	}
 

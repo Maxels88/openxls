@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -101,12 +102,8 @@ import java.util.ArrayList;
  */
 public final class Unicodestring implements XLSConstants, Serializable
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Unicodestring.class );
 	private static final long serialVersionUID = -1800227752945355535L;
-	private int DEBUGLEVEL = -1;
 	int cch;
 	private int cchExtRst = 0;
 	private byte[] ExtRst;
@@ -191,7 +188,7 @@ public final class Unicodestring implements XLSConstants, Serializable
 		System.arraycopy( ExtRst, 0, data, (stringlen + offer + formatlen), ExtRst.length );
 		if( data[0] == 0x0 )
 		{
-			Logger.logInfo( "Unicodestring has zero length." );
+			log.debug( "Unicodestring has zero length." );
 		}
 		return data;
 	}
@@ -323,12 +320,12 @@ public final class Unicodestring implements XLSConstants, Serializable
 //report error???
 				if( (ExtRst[0] != 1) || (ExtRst[1] != 0) )
 				{
-					Logger.logWarn( "Unicodestring.initEasternEncoding: Phonetic Data is not correct" );
+					log.warn( "Unicodestring.initEasternEncoding: Phonetic Data is not correct" );
 				}
 			}
 			catch( Throwable e )
 			{
-				Logger.logInfo( "Problem parsing rich text Eastern Unicodestring.  len:" + dlen + " rich:" + fRichSt + ".  " + e );
+				log.error( "Problem parsing rich text Eastern Unicodestring.  len:" + dlen + " rich:" + fRichSt + ".  " + e, e );
 			}
 		}
 		else
@@ -342,10 +339,7 @@ public final class Unicodestring implements XLSConstants, Serializable
 				// the most important code in the world
 				if( (cchExtRst != extrstLen) || (extrstbrk) )
 				{
-					if( DEBUGLEVEL > 0 )
-					{
-						Logger.logWarn( "Unicodestring ExtRst Inconsistent." );
-					}
+						log.warn( "Unicodestring ExtRst Inconsistent." );
 					//off = 1;
 					cchExtRst = extrstLen;
 				}
@@ -356,12 +350,12 @@ public final class Unicodestring implements XLSConstants, Serializable
 // report error???
 				if( (ExtRst[0] != 1) || (ExtRst[1] != 0) )
 				{
-					Logger.logWarn( "Unicodestring.initEasternEncoding: Phonetic Data is not correct" );
+					log.warn( "Unicodestring.initEasternEncoding: Phonetic Data is not correct" );
 				}
 			}
 			catch( Throwable t )
 			{
-				Logger.logInfo( "Problem Parsing non-rich Eastern Unicodestring.  len:" + dlen + " rich:" + fRichSt + ".  " + t.toString() );
+				log.error( "Problem Parsing non-rich Eastern Unicodestring.  len:" + dlen + " rich:" + fRichSt + ".  " + t.toString(), t );
 			}
 		}
 	}
@@ -417,7 +411,7 @@ public final class Unicodestring implements XLSConstants, Serializable
 		}
 		catch( Exception e )
 		{
-			Logger.logInfo( "Problem Parsing Western Unicodestring.  len:" + dlen + " rich:" + fRichSt + ".  " + e );
+			log.error( "Problem Parsing Western Unicodestring.  len:" + dlen + " rich:" + fRichSt + ".  " + e, e );
 		}
 	}
 
@@ -580,17 +574,14 @@ public final class Unicodestring implements XLSConstants, Serializable
 		}
 		catch( UnsupportedEncodingException e )
 		{
-			Logger.logInfo( "Problem decoding Unicodestring.  " + e + " Resorting to default encoding: " + DEFAULTENCODING );
+			log.error( "Problem decoding Unicodestring.  " + e + " Resorting to default encoding: " + DEFAULTENCODING , e);
 			try
 			{
 				return new String( stringarray, DEFAULTENCODING ); // supported by JDK1.1 +
 			}
 			catch( UnsupportedEncodingException t )
 			{
-				if( DEBUGLEVEL > -1 )
-				{
-					Logger.logInfo( "Problem decoding Unicodestring.  " + t );
-				}
+					log.warn( "Problem decoding Unicodestring.  " + t, t );
 			}
 		}
 		return null;
@@ -616,17 +607,14 @@ public final class Unicodestring implements XLSConstants, Serializable
 		}
 		catch( UnsupportedEncodingException e )
 		{
-			Logger.logInfo( "Problem decoding Unicodestring.  " + e + " Resorting to default encoding: " + DEFAULTENCODING );
+			log.error( "Problem decoding Unicodestring.  " + e + " Resorting to default encoding: " + DEFAULTENCODING , e);
 			try
 			{
 				return new String( stringarray, DEFAULTENCODING ); // supported by JDK1.1 +
 			}
 			catch( UnsupportedEncodingException t )
 			{
-				if( DEBUGLEVEL > -1 )
-				{
-					Logger.logInfo( "Problem decoding Unicodestring.  " + t );
-				}
+					log.warn( "Problem decoding Unicodestring.  " + t, t );
 				return null;
 			}
 		}
@@ -663,7 +651,7 @@ public final class Unicodestring implements XLSConstants, Serializable
 		}
 		catch( UnsupportedEncodingException e )
 		{
-			Logger.logInfo( "Problem encoding string: " + e );
+			log.warn( "Problem encoding string: " + e , e);
 		}
 		int strdatalen = strbytes.length;
 		int strlen = s.length();

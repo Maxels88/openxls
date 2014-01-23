@@ -23,13 +23,15 @@
 package com.extentech.formats.XLS.charts;
 
 import com.extentech.formats.XLS.WorkBook;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RadarChart extends ChartType
 {
+	private static final Logger log = LoggerFactory.getLogger( RadarChart.class );
 	//private Radar radar = null; can be Radar or RadarArea
 
 	public RadarChart( GenericChartObject charttype, ChartFormat cf, WorkBook wb )
@@ -90,7 +92,7 @@ public class RadarChart extends ChartType
 		// y value for each point= h/YMAX
 		if( series.size() == 0 )
 		{
-			Logger.logErr( "Radar.getSVG: error in series" );
+			log.error( "Radar.getSVG: error in series" );
 			return "";
 		}
 		StringBuffer svg = new StringBuffer();

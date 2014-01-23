@@ -32,17 +32,15 @@ package com.extentech.formats.XLS;
 
 import com.extentech.ExtenXLS.DateConverter;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Locale;
 
 public class SXDBEx extends XLSRecord implements XLSConstants, PivotCacheRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( SXDBEx.class );
 	private static final long serialVersionUID = 9027599480633995587L;
 	int nformulas;
 	double lastdate;
@@ -51,10 +49,7 @@ public class SXDBEx extends XLSRecord implements XLSConstants, PivotCacheRecord
 	public void init()
 	{
 		super.init();
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "SXDBEx -" + Arrays.toString( this.getData() ) );
-		}
+			log.debug( "SXDBEx - {}", Arrays.toString( this.getData() ) );
 		// numDate 0-8 last refresh date
 		lastdate = ByteTools.eightBytetoLEDouble( this.getBytesAt( 0, 8 ) );
 		nformulas = ByteTools.readInt( this.getBytesAt( 8, 4 ) );    // # SXFormula records

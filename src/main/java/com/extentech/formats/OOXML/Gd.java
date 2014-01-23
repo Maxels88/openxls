@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.OOXML;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -41,7 +42,7 @@ import java.util.Stack;
  */
 public class Gd implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Gd.class );
 	private static final long serialVersionUID = -633176234309521998L;
 	private HashMap attrs = null;
 
@@ -57,7 +58,7 @@ public class Gd implements OOXMLElement
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -88,7 +89,7 @@ public class Gd implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "gd.parseOOXML: " + e.toString() );
+			log.error( "gd.parseOOXML: " + e.toString() );
 		}
 		Gd g = new Gd( attrs );
 		return g;

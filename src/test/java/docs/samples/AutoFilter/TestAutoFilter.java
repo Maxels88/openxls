@@ -25,14 +25,16 @@ package docs.samples.AutoFilter;
 import com.extentech.ExtenXLS.AutoFilterHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This Class Demonstrates the AutoFilter Functionality of ExtenXLS
  */
 public class TestAutoFilter
 {
+	private static final Logger log = LoggerFactory.getLogger( TestAutoFilter.class );
 	public WorkBookHandle book;
 	public WorkSheetHandle sheet;
 	String wd = System.getProperty( "user.dir" ) + "/docs/samples/Excel2007/";
@@ -65,22 +67,22 @@ public class TestAutoFilter
 			AutoFilterHandle[] afs = sheet.getAutoFilterHandles();    // get a handle to the existing AutoFilters
 			// assert the autofilters in the file
 			// 1st autofilter column 1 (B)
-			Logger.logInfo( "Column " + afs[0].getCol() );    //1
-			Logger.logInfo( "Condition Column 1 (B): " + afs[0].toString() );    //=MegaStore
+			log.info( "Column " + afs[0].getCol() );    //1
+			log.info( "Condition Column 1 (B): " + afs[0].toString() );    //=MegaStore
 			// 2nd Column C
-			Logger.logInfo( "Column " + afs[1].getCol() );    //2
-			Logger.logInfo( "Condition Column 2 (C): " + afs[1].toString() );    //=A-M
+			log.info( "Column " + afs[1].getCol() );    //2
+			log.info( "Condition Column 2 (C): " + afs[1].toString() );    //=A-M
 			// 3rd Column E
-			Logger.logInfo( "Column " + afs[2].getCol() );    //4 (E)
-			Logger.logInfo( "Condition Column 3 (E): " + afs[2].toString() );    //>2.98
+			log.info( "Column " + afs[2].getCol() );    //4 (E)
+			log.info( "Condition Column 3 (E): " + afs[2].toString() );    //>2.98
 			// 4th Column
-			Logger.logInfo( "Column " + afs[3].getCol() );
-			Logger.logInfo( "Condition Column 4: " + afs[3].toString() );    // Top 50 Items
-			Logger.logInfo( "Is it a Top 10 Filter? " + afs[3].isTop10() );
+			log.info( "Column " + afs[3].getCol() );
+			log.info( "Condition Column 4: " + afs[3].toString() );    // Top 50 Items
+			log.info( "Is it a Top 10 Filter? " + afs[3].isTop10() );
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( e.toString() );
+			log.error( e.toString() );
 /**/
 		}
 	}
@@ -102,7 +104,7 @@ public class TestAutoFilter
 					(!afs[0].toString().equals( "=A-M" )) ||
 					(!afs[1].toString().equals( ">2.98" )) )
 			{
-				Logger.logErr( "Incorrect Input File" );
+				log.error( "Incorrect Input File" );
 			}
 			// alter 1st condition
 			afs[0].setTop10( 7, true, true ); // set to top 50%
@@ -116,7 +118,7 @@ public class TestAutoFilter
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( e.toString() );
+			log.error( e.toString() );
 		}
 	}
 
@@ -133,14 +135,14 @@ public class TestAutoFilter
 			AutoFilterHandle[] afs = sheet.getAutoFilterHandles();    // get handles to existing auto filters
 			if( afs.length != 2 )
 			{
-				Logger.logErr( "Incorrect Input File" );                // two initially
+				log.error( "Incorrect Input File" );                // two initially
 			}
 			sheet.removeAutoFilters();                                // remove auto filters
 			book.write( od + "testRemoveAF-OUT.xls" );
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( e.toString() );
+			log.error( e.toString() );
 		}
 	}
 
@@ -223,7 +225,7 @@ public class TestAutoFilter
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( e.toString() );
+			log.error( e.toString() );
 		}
 		nAdditions++;
 	}

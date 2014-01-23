@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.formats.XLS.OOXMLAdapter;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ import java.util.Iterator;
 //TODO: Finish children colorScale, dataBar, iconSet
 public class CfRule implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( CfRule.class );
 	private static final long serialVersionUID = 8509907308100079138L;
 	private HashMap<String, String> attrs;
 	private ArrayList<String> formulas;
@@ -71,8 +72,8 @@ public class CfRule implements OOXMLElement
 	// TODO: finish children colorScale, dataBar, iconSet
 	public static CfRule parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
-		ArrayList<String> formulas = new ArrayList<String>();
+		HashMap<String, String> attrs = new HashMap<>();
+		ArrayList<String> formulas = new ArrayList<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -106,7 +107,7 @@ public class CfRule implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "cfRule.parseOOXML: " + e.toString() );
+			log.error( "cfRule.parseOOXML: " + e.toString() );
 		}
 		CfRule cf = new CfRule( attrs, formulas );
 		return cf;
@@ -177,7 +178,7 @@ public class CfRule implements OOXMLElement
 	{
 		if( this.attrs == null )
 		{
-			this.attrs = new HashMap<String, String>();
+			this.attrs = new HashMap<>();
 		}
 		attrs.put( "dxfId", Integer.valueOf( dxfId ).toString() );
 	}

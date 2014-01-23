@@ -24,8 +24,9 @@ package com.extentech.ExtenXLS;
 
 import com.extentech.formats.LEO.LEOFile;
 import com.extentech.formats.XLS.OOXMLAdapter;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.TempFileManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -49,19 +50,13 @@ import java.util.Map;
  */
 public abstract class DocumentHandle implements Document, Handle, Closeable
 {
+	private static final Logger log = LoggerFactory.getLogger( DocumentHandle.class );
 	/**
 	 * Format constant for the most appropriate format for this document.
 	 * If the document was read in from a file, this is usually the format that
 	 * was read in.
 	 */
 	public static final int FORMAT_NATIVE = 0;
-
-	/**
-	 * The level of debugging output requested by the user.
-	 * Higher values should produce more output.
-	 */
-	//TODO: should the debug level be static?
-	protected int DEBUGLEVEL = 1000000;
 
 	/**
 	 * The user-visible display name or title of this document.
@@ -77,7 +72,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	/**
 	 * Store for workbook properties.
 	 */
-	private Map<String, Object> props = new HashMap<String, Object>();
+	private Map<String, Object> props = new HashMap<>();
 
 	/**
 	 * Handling for a streaming worksheet based workbook *
@@ -102,7 +97,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	{
 		super();
 		// TODO Auto-generated constructor stub
-		Logger.logErr( "DocumentHandle InputStream Constructor Not Implemented" );
+		log.error( "DocumentHandle InputStream Constructor Not Implemented" );
 	}
 
 	/**
@@ -150,7 +145,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	 */
 	public void setProperties( Map<String, Object> properties )
 	{
-		props = new HashMap<String, Object>();
+		props = new HashMap<>();
 		props.putAll( properties );
 	}
 
@@ -294,24 +289,6 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	}
 
 	/**
-	 * Sets the debugging output level.
-	 * Higher values will produce more output. Output at higher values will
-	 * generally only be of use to ExtenXLS developers. Increased output incurs
-	 * a performance penalty, so it is recommended this be left at zero unless
-	 * you are reporting a bug.
-	 */
-	@Override
-	public void setDebugLevel( int level )
-	{
-		DEBUGLEVEL = level;
-	}
-
-	public int getDebugLevel()
-	{
-		return DEBUGLEVEL;
-	}
-
-	/**
 	 * Downloads the resource at the given URL to a temporary file.
 	 *
 	 * @param u the URL representing the resource to be downloaded
@@ -364,7 +341,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Could not load WorkBook from URL: " + e.toString() );
+			log.error( "Could not load WorkBook from URL: " + e.toString() );
 			return null;
 		}
 	}
@@ -442,7 +419,11 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 
 		if( file.exists() )
 		{
-			file.delete();    // try this
+			boolean deleted = file.delete();// try this
+			if(!deleted)
+			{
+			log.warn( "Attempt to delete file {} failed.", file.getAbsolutePath() );
+			}
 		}
 		OutputStream stream = new BufferedOutputStream( new FileOutputStream( file ) );
 		this.write( stream, format );

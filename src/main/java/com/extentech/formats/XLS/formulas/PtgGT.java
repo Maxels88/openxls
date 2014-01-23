@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS.formulas;
 
 import com.extentech.formats.XLS.Formula;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
 
@@ -39,10 +40,7 @@ import java.lang.reflect.Array;
 */
 public class PtgGT extends GenericPtg implements Ptg
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgGT.class );
 	private static final long serialVersionUID = -1779961703481749272L;
 
 	@Override
@@ -107,7 +105,7 @@ public class PtgGT extends GenericPtg implements Ptg
 				// there should always be only two ptg's in this, error if not.
 				if( (o == null) || (o.length != 2) )
 				{
-					Logger.logInfo( "calculating formula failesd, wrong number of values in PtgGT" );
+					log.warn( "calculating formula failesd, wrong number of values in PtgGT" );
 					return new PtgErr( PtgErr.ERROR_VALUE );    // 20081203 KSC: handle error's ala Excel
 				}
 				// blank handling:

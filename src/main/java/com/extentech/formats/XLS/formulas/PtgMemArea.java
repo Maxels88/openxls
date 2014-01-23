@@ -25,7 +25,8 @@ package com.extentech.formats.XLS.formulas;
 import com.extentech.formats.XLS.ExpressionParser;
 import com.extentech.formats.XLS.FunctionNotSupportedException;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -70,9 +71,7 @@ import java.util.Stack;
  */
 public class PtgMemArea extends GenericPtg
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgMemArea.class );
 	private static final long serialVersionUID = -6869393084367355874L;
 	int cce = 0;
 	Stack subexpression = null;
@@ -272,7 +271,7 @@ public class PtgMemArea extends GenericPtg
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "PtgMemArea init: " + e.toString() );
+				log.error( "PtgMemArea init: " + e.toString() );
 			}
 
 			//int z= subexpression.size();
@@ -392,7 +391,7 @@ public class PtgMemArea extends GenericPtg
 		}
 		catch( FunctionNotSupportedException e )
 		{
-			Logger.logWarn( "Function Unsupported error in PtgMemFunction: " + e );
+			log.warn( "Function Unsupported error in PtgMemFunction: " + e, e );
 			return null;
 		}
 	}

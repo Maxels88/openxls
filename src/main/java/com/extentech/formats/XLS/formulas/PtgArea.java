@@ -34,7 +34,8 @@ import com.extentech.formats.XLS.Row;
 import com.extentech.formats.XLS.WorkSheetNotFoundException;
 import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.toolkit.FastAddVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Vector;
 
@@ -68,7 +69,7 @@ import java.util.Vector;
  */
 public class PtgArea extends PtgRef implements Ptg
 {
-
+	private static final Logger log = LoggerFactory.getLogger( PtgArea.class );
 	public static final long serialVersionUID = 666555444333222l;
 
 	@Override
@@ -118,7 +119,7 @@ public class PtgArea extends PtgRef implements Ptg
 		}
 		catch( WorkSheetNotFoundException we )
 		{
-			Logger.logErr( we );
+			log.error( "Error getting sheet name",we );
 		}
 		firstPtg = new PtgRef( temp1, parent_rec, false );    // don't add to ref tracker as it's part of area
 		firstPtg.sheetname = sheetname;
@@ -222,7 +223,7 @@ public class PtgArea extends PtgRef implements Ptg
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "calculating formula range value failed.", e );
+			log.error( "calculating formula range value failed.", e );
 		}
 		PtgRef[] pref = new PtgRef[v.size()];
 		v.toArray( pref );
@@ -515,7 +516,7 @@ public class PtgArea extends PtgRef implements Ptg
 				}
 				catch( WorkSheetNotFoundException we )
 				{
-					Logger.logErr( we );
+					log.error("Error getting sheet name",  we );
 				}
 			}
 		}
@@ -980,7 +981,7 @@ public class PtgArea extends PtgRef implements Ptg
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Getting column range in PtgArea failed.", e );
+			log.error( "Getting column range in PtgArea failed.", e );
 		}
 
 		// cache
@@ -1104,7 +1105,7 @@ public class PtgArea extends PtgRef implements Ptg
 			}
 			if( totcell < 0 )
 			{
-				Logger.logErr( "PtgArea.getRefCells.  Error in Ptg locations: " + firstPtg.toString() + ":" + lastPtg.toString() );
+				log.error( "PtgArea.getRefCells.  Error in Ptg locations: " + firstPtg.toString() + ":" + lastPtg.toString() );
 				totcell = 0;
 			}
 			refCell = new BiffRec[totcell];
@@ -1170,7 +1171,7 @@ public class PtgArea extends PtgRef implements Ptg
 		}
 		catch( Exception ex )
 		{
-			Logger.logErr( "PtgArea.getRefCells failed.", ex );
+			log.error( "PtgArea.getRefCells failed.", ex );
 		}
 		return refCell;
 	}
@@ -1178,6 +1179,6 @@ public class PtgArea extends PtgRef implements Ptg
 	@Override
 	protected long getHashCode()
 	{
-		return lastPtg.hashcode + ((firstPtg.hashcode) * ((long) MAXCOLS + ((long) MAXROWS * MAXCOLS)));
+		return lastPtg.hashcode + ((firstPtg.hashcode) * (MAXCOLS + ((long) MAXROWS * MAXCOLS)));
 	}
 }

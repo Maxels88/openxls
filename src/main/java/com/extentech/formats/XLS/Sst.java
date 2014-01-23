@@ -27,7 +27,8 @@ import com.extentech.formats.OOXML.OOXMLConstants;
 import com.extentech.formats.OOXML.Ss_rPr;
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -68,11 +69,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public final class Sst extends com.extentech.formats.XLS.XLSRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
-	private static final long serialVersionUID = 6966063306230877101L;
+	private static final Logger log = LoggerFactory.getLogger( Sst.class );	private static final long serialVersionUID = 6966063306230877101L;
 	private int cstTotal = -1;
 	private int cstUnique = -1;
 	private int boundincrement = 0;
@@ -225,10 +222,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		sst.cstUnique = ByteTools.readInt( sst.getByteAt( 4 ), sst.getByteAt( 5 ), sst.getByteAt( 6 ), sst.getByteAt( 7 ) );
 		int strlen = 0, strpos = 8;
 
-		if( sst.DEBUGLEVEL > 5 )
-		{
-			Logger.logInfo( "INFO: initializing Sst: " + sst.cstTotal + " total Strings, " + sst.cstUnique + " unique Strings." );
-		}
+			log.debug( "INFO: initializing Sst: " + sst.cstTotal + " total Strings, " + sst.cstUnique + " unique Strings." );
 		// Initialize continues records
 		sst.initContinues();
 
@@ -243,10 +237,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			boolean doubleByte = false; // whether this is a double-byte string
 			byte grbit = 0x0;
 			// the grbit tells us what kind of Unicodestring this is
-			if( sst.DEBUGLEVEL > 30 )
-			{
-				Logger.logInfo( "Initializing String: " + String.valueOf( d ) + "/" + sst.cstTotal );
-			}
+				log.debug( "Initializing String: " + String.valueOf( d ) + "/" + sst.cstTotal );
 			// figure out the boundary offsets
 			int offr = sst.boundaries.length;
 			if( offr < 1 )
@@ -275,10 +266,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			// array errors when short strings at end of continue boundary
 
 			XLSRecord currec = sst;
-			if( sst.DEBUGLEVEL > 5 )
-			{
-				Logger.logInfo( "INFO: StrLen:" + strlen + " Strpos:" + strpos + " bound:" + sst.boundaries[sst.currbound] );
-			}
+				log.debug( "StrLen:" + strlen + " Strpos:" + strpos + " bound:" + sst.boundaries[sst.currbound] );
 
 			if( strpos >= sst.boundaries[0] )
 			{
@@ -352,16 +340,13 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 					if( grbit != 0x0 )
 					{
 						// if(st.DEBUGLEVEL > 10)
-						Logger.logWarn( "ERROR: Invalid Unicodestring grbit:" + String.valueOf( grbit ) );
+						log.warn( "ERROR: Invalid Unicodestring grbit:" + String.valueOf( grbit ) );
 					}
 			}
 			// create the String
 			if( strlen == 0 )
 			{
-				if( sst.DEBUGLEVEL > 10 )
-				{
-					Logger.logWarn( "WARNING: Attempt to initialize Zero-length String." );
-				}
+					log.warn( "WARNING: Attempt to initialize Zero-length String." );
 			}
 			if( doubleByte )
 			{
@@ -383,14 +368,11 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			}
 			catch( Exception e )
 			{
-				Logger.logWarn( "ERROR: Error Reading String @ " + strpos + e.toString() + " Skipping..." );
+				log.warn( "ERROR: Error Reading String @ " + strpos + e.toString() + " Skipping..." );
 				strpos += strlen + basereclen + runlen;
 			}
 		}
-		if( sst.DEBUGLEVEL > 5 )
-		{
-			Logger.logInfo( "Done reading SST." );
-		}
+			log.debug( "Done reading SST." );
 	}
 
 	/**
@@ -425,10 +407,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		{// string is on the boundary - easy!
 			if( (this.numconts == 0) || (this.numconts == this.contcounter) )
 			{
-				if( DEBUGLEVEL > 5 )
-				{
-					Logger.logInfo( "Last String in SST encountered." );
-				}
+					log.debug( "Last String in SST encountered." );
 			}
 			byte[] newStringBytes = getData( uLen, pos, ustrStart, cchExtRst, runlen, doublebyte, false );
 			this.initString( newStringBytes, pos, false );
@@ -522,10 +501,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			Continue nextcont = (Continue) this.continues.get( t );
 			nextcont.setContinueOffset( nextcont.getContinueOffset() + x );
 			boundaries[t] = nextcont.getContinueOffset();
-			if( DEBUGLEVEL > 5 )
-			{
-				Logger.logInfo( "Sst.shiftBoundaries() Updated " + nextcont + " : " + nextcont.getContinueOffset() );
-			}
+				log.debug( "Sst.shiftBoundaries() Updated " + nextcont + " : " + nextcont.getContinueOffset() );
 		}
 		if( boundaries.length == (this.continues.size() + 1) )
 		{
@@ -563,10 +539,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			if( DEBUGLEVEL > 0 )
-			{
-				Logger.logWarn( "possible problem parsing String table getting next string def data: " + e );
-			}
+				log.warn( "possible problem parsing String table getting next string def data: " + e, e );
 		}
 		return ret;
 	}
@@ -635,10 +608,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 
 		// if string spans two or more records, must deal with boundaries and grbits and lots of complications ...
 		int bufferBoundary = boundaries[currbound]; // get the current boundary
-		if( DEBUGLEVEL > 5 )
-		{
-			Logger.logInfo( "Crossing Boundary: " + bufferBoundary + ".  Double-Bytes: " + doublebyte );
-		}
+			log.debug( "Crossing Boundary: " + bufferBoundary + ".  Double-Bytes: " + doublebyte );
 
 		// get ensuing record (previous==thiscont.predecessor)
 		if( (currbound) < continues.size() )
@@ -658,10 +628,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			currpos -= cchExtRst;
 			if( currpos <= bufferBoundary )
 			{
-				if( DEBUGLEVEL > 5 )
-				{
-					Logger.logInfo( "Continue Boundary in ExtRst data." );
-				}
+					log.debug( "Continue Boundary in ExtRst data." );
 				if( thiscont.getHasGrbit() )
 				{
 					thiscont.setHasGrbit( false );
@@ -677,10 +644,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			currpos -= runlen;
 			if( !bfoundBreak && (currpos <= bufferBoundary) )
 			{ // check against japanese!
-				if( DEBUGLEVEL > 5 )
-				{
-					Logger.logInfo( "Continue Boundary in Formatting Run data." );
-				}
+					log.debug( "Continue Boundary in Formatting Run data." );
 				if( thiscont.getHasGrbit() )
 				{
 					this.shiftBoundaries( 1 );
@@ -696,10 +660,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		{
 			if( ustrLen.intValue() == 0 )
 			{ // a ONE BYTE String on the boundary! Add the grbit back to the Continue
-				if( DEBUGLEVEL > 5 )
-				{
-					Logger.logInfo( "1 byte length String on the Continue Boundary." );
-				}
+					log.debug( "1 byte length String on the Continue Boundary." );
 				boundaries[boundaries.length - 1]++; // increment the last boundary...
 			}
 		}
@@ -707,10 +668,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		// check if break is within the actual ustring data
 		if( ((currpos <= bufferBoundary) && ((currpos + ustrLen.intValue()) > bufferBoundary)) )
 		{ // is break within String portion// ?
-			if( DEBUGLEVEL > 5 )
-			{
-				Logger.logInfo( "Continue Boundary in String data." );
-			}
+				log.debug( "Continue Boundary in String data." );
 			if( !thiscont.getHasGrbit() )
 			{ // when does this happen???
 				thiscont.setHasGrbit( true );
@@ -926,10 +884,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			}
 		}
 
-		if( DEBUGLEVEL > 23 )
-		{
-			Logger.logInfo( "Total Length from Continue: " + returnstringbytes.length );
-		}
+			log.trace( "Total Length from Continue: " + returnstringbytes.length );
 		return returnstringbytes;
 	}
 
@@ -969,13 +924,10 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		newString.init( newStringBytes, extrstbrk );
 
 		// add the new String to the String table and return the new pointer
-		if( DEBUGLEVEL > 5 )
-		{
-			Logger.logInfo( " val: " + newString.toString() );
-		}
+			log.debug( " val: " + newString.toString() );
 		if( newString.getLen() == 0 )
 		{
-			Logger.logInfo( "Adding zero-length string!" );
+			log.trace( "Adding zero-length string!" );
 		}
 		else
 		{
@@ -1047,7 +999,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( IOException e )
 		{
-			Logger.logInfo( "Exception getting String bytes: " + e );
+			log.warn( "Exception getting String bytes: " + e , e);
 		}
 
 		if( this.stringvector.size() > 0 )
@@ -1073,7 +1025,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 				}
 				catch( IOException e )
 				{
-					Logger.logInfo( "Exception getting String bytes: " + e );
+					log.warn( "Exception getting String bytes: " + e , e);
 				}
 				lastpos = thispos;
 				thispos = lastpos + strb.length;
@@ -1109,22 +1061,6 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			}
 
 		}
-		if( (DEBUGLEVEL > 15) && (cbounds != null) )
-		{
-			for( Object cbound : cbounds )
-			{
-				Logger.logInfo( cbound + "," );
-			}
-			Logger.logInfo( "" );
-		}
-		if( (DEBUGLEVEL > 150) && (sstgrbits != null) )
-		{
-			for( Object sstgrbit : sstgrbits )
-			{
-				Logger.logInfo( "0x" + sstgrbit + "," );
-			}
-			Logger.logInfo( "" );
-		}
 	}
 
 	/**
@@ -1145,10 +1081,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		}
 		if( ((datalen - 4) - contLens) > 8223 )
 		{
-			if( DEBUGLEVEL > 1 )
-			{
-				Logger.logWarn( "SST continue lengths not correct, regenerating" );
-			}
+				log.warn( "SST continue lengths not correct, regenerating" );
 			return false;
 		}
 		return true;
@@ -1168,19 +1101,10 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 
 	void checkOnBoundary( Unicodestring str, int lastpos, int thispos, byte[] strb )
 	{
-		if( false )
-		{
-			Logger.logInfo( "Checking Sst boundary: " + lastpos + "/" + thispos + ":" + thisbounds + " ContinueNumber: " + continuenumber + " StringNumber:" + stringnumber++ + "numboundaries" + cbounds
-					.size() );
-		}
-
 		while( thispos >= (thisbounds) )
 		{
 			continuenumber++;
-			if( DEBUGLEVEL > 5 )
-			{
-				Logger.logInfo( String.valueOf( thisbounds ) );
-			}
+				log.info( String.valueOf( thisbounds ) );
 
 			// check whether the string can safely be split
 			boolean breaksok = str.isBreakable( thisbounds );
@@ -1194,10 +1118,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			{
 				gr = this.getContinueGrbitFromString( str );
 			}
-			if( DEBUGLEVEL > 5 )
-			{
-				Logger.logInfo( " String @: " + thispos + " is breakable: " + breaksok );
-			}
+				log.debug( " String @: " + thispos + " is breakable: " + breaksok );
 
 			// deal with string break subtleties
 			contlen = WorkBookFactory.MAXRECLEN; // the default
@@ -1553,7 +1474,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 				}
 				catch( UnsupportedEncodingException e )
 				{
-					Logger.logWarn( "error encoding string: " + e + " with default encoding 'UnicodeLittleUnmarked'" );
+					log.warn( "error encoding string: " + e + " with default encoding 'UnicodeLittleUnmarked'", e );
 				}
 				if( formattingRuns == null )
 				{
@@ -1581,11 +1502,11 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 			strbytes[pos++] = lenbytes[1];
 			if( !isuni )
 			{
-				strbytes[pos++] = (byte) 0x0; // grbit byte 2
+				strbytes[pos++] = 0x0; // grbit byte 2
 			}
 			else
 			{
-				strbytes[pos++] = (byte) 0x1; // grbit byte 2
+				strbytes[pos++] = 0x1; // grbit byte 2
 				if( formattingRuns != null )
 				{ //
 					strbytes[pos - 1] |= 0x8; // set Rich Text attribute
@@ -1621,7 +1542,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( UnsupportedEncodingException e )
 		{
-			Logger.logWarn( "error encoding string: " + e.toString() );
+			log.warn( "error encoding string: " + e.toString() , e);
 		}
 		return null;
 	}
@@ -1786,7 +1707,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		@Override
 		public boolean remove( Object o )
 		{
-			Logger.logWarn( "String being removed from SST array, Indexing may be off" );
+			log.warn( "String being removed from SST array, Indexing may be off" );
 			container.remove( ((Unicodestring) o).toCachingString() );
 			return super.remove( o );
 		}
@@ -2010,7 +1931,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "SST.parseXML: " + e.toString() );
+			log.error( "SST.parseXML: " + e.toString() );
 		}
 		if( shareDups )
 		{

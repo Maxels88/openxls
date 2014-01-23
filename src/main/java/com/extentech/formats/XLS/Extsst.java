@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -72,9 +73,7 @@ import java.util.List;
 
 public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Extsst.class );
 	private static final long serialVersionUID = -2409458213287279987L;
 	Sst mysst = null;
 	short Dsst;
@@ -113,9 +112,8 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 			{
 				int sststartpos = ByteTools.readInt( b[bpos++], b[bpos++], b[bpos++], b[bpos++] );
 				int continueStrPos = ByteTools.readInt( b[bpos++], b[bpos++], b[bpos++], b[bpos++] );
-				Logger.logInfo( "ExtSST IB = " + (sststartpos - 16) );
-				Logger.logInfo( "ExtSST CB = " + continueStrPos );
-				Logger.logInfo( "" );
+				log.debug( "ExtSST IB = " + (sststartpos - 16) );
+				log.debug( "ExtSST CB = " + continueStrPos );
 			}
 		}
 
@@ -233,15 +231,6 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 			sststartpos = sstpos + sstOffset;
 			// get the data into bytes
 
-			if( !true )
-			{
-				Logger.logInfo( "ExtSST IB = " + sststartpos );
-				Logger.logInfo( "ExtSST CB = " + (continueStrPos - 4) );
-				Logger.logInfo( "String number " + (t * newdsst) );
-				Logger.logInfo( "Continue number " + whichContinue );
-				Logger.logInfo( "" );
-			}
-
 			byte[] ib1 = ByteTools.cLongToLEBytes( sststartpos );
 			byte[] cb1 = ByteTools.shortToLEBytes( (short) continueStrPos );//((short)0);
 
@@ -260,10 +249,7 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 		this.setDsst( newdsst );
 		//int orsz = this.getOriginalDataSize();
 		int newsz = this.getLength();
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "Done creating Isstinfs" );
-		}
+			log.debug( "Done creating Isstinfs" );
 	}
 
 	@Override
@@ -275,7 +261,7 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Extsst.preStream() failed updating Isstinfs.", e );
+			log.error( "Extsst.preStream() failed updating Isstinfs.", e );
 		}
 	}
 

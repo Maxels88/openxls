@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.XLS.formulas;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
    Ptg that is a exponent operand
@@ -36,9 +37,7 @@ import com.extentech.toolkit.Logger;
 */
 public class PtgPower extends GenericPtg implements Ptg
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgPower.class );
 	private static final long serialVersionUID = 4675566993519011450L;
 
 	@Override
@@ -98,7 +97,7 @@ public class PtgPower extends GenericPtg implements Ptg
 				// there should always be only two ptg's in this, error if not.
 				if( (o == null) || (o.length != 2) )
 				{
-					Logger.logWarn( "calculating formula failed, wrong number of values in PtgPower" );
+					log.warn( "calculating formula failed, wrong number of values in PtgPower" );
 					return null;
 				}
 				//double returnVal = Math.pow(dub[0].doubleValue(), dub[1].doubleValue());

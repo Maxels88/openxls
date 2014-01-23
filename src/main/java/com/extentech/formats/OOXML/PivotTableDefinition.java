@@ -28,7 +28,8 @@ import com.extentech.formats.XLS.Boundsheet;
 import com.extentech.formats.XLS.SxStreamID;
 import com.extentech.formats.XLS.Sxvd;
 import com.extentech.formats.XLS.Sxview;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -37,7 +38,7 @@ import java.io.InputStream;
 
 public class PivotTableDefinition implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( PivotTableDefinition.class );
 	private static final long serialVersionUID = -5070227633357072878L;
 	Sxview ptview = null;
 
@@ -193,7 +194,7 @@ public class PivotTableDefinition implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "PivotTableDefinition.parseOOXML: " + e.toString() );
+			log.error( "PivotTableDefinition.parseOOXML: " + e.toString() );
 		}
 		PivotTableHandle pth = new PivotTableHandle( ptview, bk );
 		return pth;
@@ -414,7 +415,7 @@ public class PivotTableDefinition implements OOXMLElement
 								}
 								else
 								{
-									Logger.logWarn( "PivitItem: Unknown type" );    // REMOVE WHEN TESTED
+									log.warn( "PivitItem: Unknown type {}", v );    // REMOVE WHEN TESTED
 								}
 							}
 							else if( nm.equals( "x" ) ) // Specifies the item index in pivotFields collection in the PivotCache. Applies only non- OLAP PivotTables.

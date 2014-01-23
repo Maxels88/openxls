@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.XLS;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>Continue: Continues Long Records (3Ch)</b><br>
@@ -55,10 +56,9 @@ import com.extentech.toolkit.Logger;
  */
 public final class Continue extends com.extentech.formats.XLS.XLSRecord
 {
-	/**
-	 * serialVersionUID
-	 */
-	private static final long serialVersionUID = -6303887828816619839L;
+	public byte grbit = 0x0;
+	public BiffRec predecessor = null;
+	public int grbitoff = 0;
 	/**
 	 * The SST record is the Shared String Table record,
 	 * and will contain the strings of text from cells of the worksheet.
@@ -86,163 +86,12 @@ public final class Continue extends com.extentech.formats.XLS.XLSRecord
 
 	Boolean hasgrbit = null;
 	MSODrawing maskedMso = null;    // Continue's can mask Mso's-this links to Masked Mso rec created from this data; see ContinueHandler.addRec;
-
-	/**
-	 * Set that this continue has a grbit.  I find this method very odd in that
-	 * when one is in a continue record, it backs off the amount of the continue offset to the beginning of the
-	 * sst record that is being handled.  In cases of encrypted workbooks this causes a failure.  I am not exactly enamored
-	 * of this fix, but the whole code section seems off.
-	 *
-	 * @param b
-	 */
-	public void setHasGrbit( boolean b )
-	{
-		if( b && (this.getEncryptedByteReader() == this.getByteReader()) )
-		{
-			grbit = this.getByteAt( 0 );
-		}
-		hasgrbit = b;
-	}
-
-	public byte grbit = 0x0;
-
-	boolean isBigRecContinue()
-	{
-		if( this.predecessor == null )
-		{
-			return true;
-		}
-		if( this.predecessor.getLength() >= MAXRECLEN )
-		{
-			return true;
-		}
-		return false;
-	}
-
-	boolean getHasGrbit()
-	{
-		if( this.hasgrbit != null )
-		{
-			return hasgrbit;
-		}
-
-		if( DEBUGLEVEL > 1 )
-		{
-			Logger.logInfo( "Grbit pos0: " + String.valueOf( getGrbit() & 0 ) );
-			Logger.logInfo( "Grbit pos2: " + String.valueOf( getGrbit() & 4 ) );
-			Logger.logInfo( "Grbit pos3: " + String.valueOf( getGrbit() & 8 ) );
-		}
-
-		if( (getGrbit() & 8) != 0 )
-		{
-			return true; // ie Bit is set
-		}
-
-		return ((getGrbit() < 0x2) && (getGrbit() >= 0x0));
-	}
-
-	private byte mygr;
-
-	byte getGrbit()
-	{
-		if( this.data != null )
-		{
-			return this.data[0];
-		}
-		return super.getByteAt( 0 );
-	}
-
 	byte[] deldata = null;
-
-	@Override
-	public void init()
-	{
-		super.init();
-		streaming = false;
-		mygr = super.getByteAt( 0 );
-		if( DEBUGLEVEL > 2 )
-		{
-			Logger.logInfo( " init() GRBIT: " + String.valueOf( mygr ) );
-		}
-	}
-
-	public BiffRec predecessor = null;
-
-	void setPredecessor( BiffRec pr )
-	{
-		this.predecessor = pr;
-	}
-
-	public int grbitoff = 0;
-	private int continue_offset = -1;
-
-	@Override
-	public byte getByteAt( int off )
-	{
-		int s = off;
-		int rpos = s + this.grbitoff;
-		if( rpos < 0 )
-		{
-			if( DEBUGLEVEL > 5 )
-			{
-				Logger.logWarn( "Continue pointer is: " + rpos );
-			}
-			rpos = 0;
-		}
-		rpos -= continue_offset;
-		return super.getByteAt( rpos );
-
-	}
-
-	/**
-	 * Override this to not return the grbit as part of Continue data
-	 */
-	@Override
-	public byte[] getData()
-	{
-		if( getHasGrbit() && !streaming )
-		{
-			super.getData();
-			return this.getBytesAt( 0, this.getLength() - 4 );
-		}
-		streaming = false;
-		return super.getData();
-	}
-
 	boolean streaming = false;
-
-	/**
-	 * set the streaming flag so we get the grbit in output
-	 */
-	@Override
-	public void preStream()
-	{
-		streaming = true;
-	}
-
-	/**
-	 * @return
-	 */
-	public int getContinueOffset()
-	{
-		return continue_offset;
-	}
-
-	/**
-	 * @param i
-	 */
-	public void setContinueOffset( int i )
-	{
-		continue_offset = i;
-	}
-
-	/**
-	 * @return
-	 */
-	public BiffRec getPredecessor()
-	{
-		return predecessor;
-	}
+	private static final Logger log = LoggerFactory.getLogger( Continue.class );
+	private static final long serialVersionUID = -6303887828816619839L;
+	private byte mygr;
+	private int continue_offset = -1;
 
 	/**
 	 * creates and returns a basic Continues record which defines a text string
@@ -277,5 +126,140 @@ public final class Continue extends com.extentech.formats.XLS.XLSRecord
 		c.setData( new byte[4] );    // meaning: from character 0 to the end, use default font 0
 		c.init();
 		return c;
+	}
+
+	@Override
+	public void init()
+	{
+		super.init();
+		streaming = false;
+		mygr = super.getByteAt( 0 );
+			log.trace( " init() GRBIT: {}", String.valueOf( mygr ) );
+	}
+
+	/**
+	 * set the streaming flag so we get the grbit in output
+	 */
+	@Override
+	public void preStream()
+	{
+		streaming = true;
+	}
+
+	/**
+	 * Override this to not return the grbit as part of Continue data
+	 */
+	@Override
+	public byte[] getData()
+	{
+		if( getHasGrbit() && !streaming )
+		{
+			super.getData();
+			return this.getBytesAt( 0, this.getLength() - 4 );
+		}
+		streaming = false;
+		return super.getData();
+	}
+
+	@Override
+	public byte getByteAt( int off )
+	{
+		int s = off;
+		int rpos = s + this.grbitoff;
+		if( rpos < 0 )
+		{
+				log.trace( "Continue pointer is: " + rpos );
+			rpos = 0;
+		}
+		rpos -= continue_offset;
+		return super.getByteAt( rpos );
+
+	}
+
+	/**
+	 * @return
+	 */
+	public int getContinueOffset()
+	{
+		return continue_offset;
+	}
+
+	/**
+	 * @param i
+	 */
+	public void setContinueOffset( int i )
+	{
+		continue_offset = i;
+	}
+
+	/**
+	 * @return
+	 */
+	public BiffRec getPredecessor()
+	{
+		return predecessor;
+	}
+
+	void setPredecessor( BiffRec pr )
+	{
+		this.predecessor = pr;
+	}
+
+	boolean isBigRecContinue()
+	{
+		if( this.predecessor == null )
+		{
+			return true;
+		}
+		if( this.predecessor.getLength() >= MAXRECLEN )
+		{
+			return true;
+		}
+		return false;
+	}
+
+	boolean getHasGrbit()
+	{
+		if( this.hasgrbit != null )
+		{
+			return hasgrbit;
+		}
+
+		log.trace( "Grbit pos0: " + String.valueOf( getGrbit() & 0 ) );
+		log.trace( "Grbit pos2: " + String.valueOf( getGrbit() & 4 ) );
+		log.trace( "Grbit pos3: " + String.valueOf( getGrbit() & 8 ) );
+
+		if( (getGrbit() & 8) != 0 )
+		{
+			return true; // ie Bit is set
+		}
+
+		return ((getGrbit() < 0x2) && (getGrbit() >= 0x0));
+	}
+
+	/**
+	 * Set that this continue has a grbit.  I find this method very odd in that
+	 * when one is in a continue record, it backs off the amount of the continue offset to the beginning of the
+	 * sst record that is being handled.  In cases of encrypted workbooks this causes a failure.  I am not exactly enamored
+	 * of this fix, but the whole code section seems off.
+	 *
+	 * @param b
+	 */
+	public void setHasGrbit( boolean b )
+	{
+		if( b && (this.getEncryptedByteReader() == this.getByteReader()) )
+		{
+			grbit = this.getByteAt( 0 );
+		}
+		hasgrbit = b;
+	}
+
+	byte getGrbit()
+	{
+		if( this.data != null )
+		{
+			return this.data[0];
+		}
+		return super.getByteAt( 0 );
 	}
 }

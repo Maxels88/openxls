@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -38,7 +39,7 @@ import java.util.Stack;
 //TODO: Finish rPr children highlight TEXTUNDERLINE, TEXTUNDERLINEFILL, sym, hlinkClick, hlinkMouseOver, 
 public class TextRun implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( TextRun.class );
 	private static final long serialVersionUID = -6224636879471246452L;
 	private r run = null;
 	private Br brk = null;
@@ -113,7 +114,7 @@ public class TextRun implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "textRun.parseOOXML: " + e.toString() );
+			log.error( "textRun.parseOOXML: " + e.toString() );
 		}
 		TextRun oe = new TextRun( run, brk, f );
 		return oe;
@@ -168,7 +169,7 @@ public class TextRun implements OOXMLElement
 		{
 			return run.getTextProperties();
 		}
-		return new HashMap<String, String>();
+		return new HashMap<>();
 	}
 }
 
@@ -179,9 +180,7 @@ public class TextRun implements OOXMLElement
  */
 class r implements OOXMLElement
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( r.class );
 	private static final long serialVersionUID = 863254651451294443L;
 	private String t = "";        // t element just contains string
 	private RPr rp = null;
@@ -254,7 +253,7 @@ class r implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "r.parseOOXML: " + e.toString() );
+			log.error( "r.parseOOXML: " + e.toString() );
 		}
 		r run = new r( t, rp );
 		return run;
@@ -277,7 +276,7 @@ class r implements OOXMLElement
 		{
 			return rp.getTextProperties();
 		}
-		return new HashMap<String, String>();
+		return new HashMap<>();
 	}
 }
 
@@ -288,6 +287,7 @@ class r implements OOXMLElement
  */
 class Br implements OOXMLElement
 {
+	private static final Logger log = LoggerFactory.getLogger( Br.class );
 	private static final long serialVersionUID = -1724086871866480013L;
 	private RPr rp;
 
@@ -345,7 +345,7 @@ class Br implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "br.parseOOXML: " + e.toString() );
+			log.error( "br.parseOOXML: " + e.toString() );
 		}
 		Br b = new Br( rp );
 		return b;
@@ -365,7 +365,7 @@ class Br implements OOXMLElement
  */
 class Fld implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Fld.class );
 	private static final long serialVersionUID = -7060602732912595402L;
 	private String t;        // t element just contains string
 	private RPr rp;
@@ -480,7 +480,7 @@ class Fld implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "textRun.parseOOXML: " + e.toString() );
+			log.error( "textRun.parseOOXML: " + e.toString() );
 		}
 		Fld f = new Fld( id, type, t, rp, p );
 		return f;
@@ -501,7 +501,7 @@ class Fld implements OOXMLElement
 
 class RPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( RPr.class );
 	private static final long serialVersionUID = 228716184734751439L;
 	private HashMap<String, String> attrs;
 	private Ln l;
@@ -533,7 +533,7 @@ class RPr implements OOXMLElement
 
 	public static RPr parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		Ln l = null;
 		FillGroup fill = null;
 		EffectPropsGroup effect = null;
@@ -601,7 +601,7 @@ class RPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "rPr.parseOOXML: " + e.toString() );
+			log.error( "rPr.parseOOXML: " + e.toString() );
 		}
 		RPr rp = new RPr( attrs, l, fill, effect, latin, ea, cs );
 		return rp;
@@ -671,7 +671,7 @@ class RPr implements OOXMLElement
 	 */
 	public HashMap<String, String> getTextProperties()
 	{
-		HashMap<String, String> textprops = new HashMap<String, String>();
+		HashMap<String, String> textprops = new HashMap<>();
 		textprops.putAll( attrs );
 		if( latin != null )
 		{

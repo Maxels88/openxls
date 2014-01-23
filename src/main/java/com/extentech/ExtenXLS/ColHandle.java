@@ -27,8 +27,9 @@ import com.extentech.formats.XLS.Boundsheet;
 import com.extentech.formats.XLS.CellNotFoundException;
 import com.extentech.formats.XLS.Colinfo;
 import com.extentech.formats.XLS.Font;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,7 @@ import java.util.List;
  */
 public class ColHandle
 {
+	private static final Logger log = LoggerFactory.getLogger( ColHandle.class );
 
 	// TODO: read 1st font in file to set DEFAULT_ZERO_CHAR_WIDTH ... eventually ...
 	public static final double DEFAULT_ZERO_CHAR_WIDTH = 7.0; // width of '0' char in default font + conversion 1.3
@@ -374,7 +376,7 @@ public class ColHandle
 		for( int t = 0; t < ch.length; t++ )
 		{
 			Object o = mycells.get( t );
-			Logger.logInfo( "getCells() - processing index " + t + ", " + ((o == null) ? "<NULL>" : o.getClass().getName()) );
+			log.debug( "getCells() - processing index " + t + ", " + ((o == null) ? "<NULL>" : o.getClass().getName()) );
 			ch[t] = new CellHandle( (BiffRec) o, null );
 			ch[t].setWorkSheetHandle( null );
 		}

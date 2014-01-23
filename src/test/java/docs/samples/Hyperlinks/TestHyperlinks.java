@@ -28,7 +28,8 @@ import com.extentech.ExtenXLS.WorkSheetHandle;
 import com.extentech.formats.XLS.CellNotFoundException;
 import com.extentech.formats.XLS.CellPositionConflictException;
 import com.extentech.formats.XLS.WorkSheetNotFoundException;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -38,6 +39,7 @@ import java.io.FileOutputStream;
  */
 public class TestHyperlinks
 {
+	private static final Logger log = LoggerFactory.getLogger( TestHyperlinks.class );
 	String wd = System.getProperty( "user.dir" ) + "/docs/samples/Hyperlinks/";
 
 	/**
@@ -49,9 +51,9 @@ public class TestHyperlinks
 	public static void main( String[] args )
 	{
 		TestHyperlinks t = new TestHyperlinks();
-		Logger.logInfo( "Testing creation of hyperlinks." );
+		log.info( "Testing creation of hyperlinks." );
 		t.testHyperlinks();
-		Logger.logInfo( "Done testing hyperlinks." );
+		log.info( "Done testing hyperlinks." );
 	}
 
 	/**
@@ -122,7 +124,7 @@ public class TestHyperlinks
 		}
 		catch( java.io.IOException e )
 		{
-			Logger.logInfo( "IOException in Tester.  " + e );
+			log.info( "IOException in Tester.  " + e );
 		}
 	}
 

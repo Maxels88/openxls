@@ -61,7 +61,7 @@ public final class Usersviewend extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		fValid = (int) ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		fValid = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
 	}
 
 }

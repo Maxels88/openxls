@@ -28,7 +28,8 @@ import com.extentech.formats.XLS.Boundsheet;
 import com.extentech.formats.XLS.FunctionNotSupportedException;
 import com.extentech.formats.XLS.Name;
 import com.extentech.formats.XLS.WorkBook;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -43,7 +44,7 @@ import java.util.ArrayList;
 
 public class LookupReferenceCalculator
 {
-
+	private static final Logger log = LoggerFactory.getLogger( LookupReferenceCalculator.class );
 	/**
 	 * ADDRESS
 	 * Creates a cell address as text, given specified row and column numbers.
@@ -392,9 +393,9 @@ public class LookupReferenceCalculator
 				lookupComponents = (PtgRef[]) pa.getRowComponents( firstrow );
 				valueComponents = (PtgRef[]) pa.getRowComponents( firstrow + rowNum );
 			}
-			catch(/*20070209 KSC: FormulaNotFound*/Exception e )
+			catch(Exception e )
 			{
-				Logger.logWarn( "Error in LookupReferenceCalculator: Cannot determine PtgArea location. " + e );
+				log.warn( "Error in LookupReferenceCalculator: Cannot determine PtgArea location. " + e, e );
 			}
 
 		}
@@ -698,7 +699,7 @@ public class LookupReferenceCalculator
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "could not calculate INDEX function: " + o.toString() + ":" + e );
+			log.warn( "could not calculate INDEX function: " + o.toString() + ":" + e, e );
 		}
 		return new PtgErr( PtgErr.ERROR_NULL );
 
@@ -774,7 +775,7 @@ public class LookupReferenceCalculator
 		}
 		catch( Exception e )
 		{
-			//Logger.logErr("INDIRECT: " + e.toString());
+			//log.error("INDIRECT: " + e.toString());
 		}
 		return new PtgErr( PtgErr.ERROR_REF );    // 's what Excel does ...
 	}
@@ -1012,7 +1013,7 @@ public class LookupReferenceCalculator
 			}
 			else
 			{ // testing!
-				Logger.logErr( "match: unknown type of lookup array" );
+				log.error( "match: unknown type of lookup array" );
 			}
 
 			// Step # 2- traverse thru value array to find lookupValue using matchType rules
@@ -1308,7 +1309,7 @@ public class LookupReferenceCalculator
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "Error running calcRow " + e );
+				log.error( "Error running calcRow " + e );
 			}
 			;
 		}
@@ -1555,7 +1556,7 @@ public class LookupReferenceCalculator
 				table_array = pa;
 				if( ((PtgArea3d) table_array).isExternalRef() )
 				{
-					Logger.logWarn( "LookupReferenceCalculator.calcVlookup External References are disallowed" );
+					log.warn( "LookupReferenceCalculator.calcVlookup External References are disallowed" );
 					return new PtgErr( PtgErr.ERROR_REF );
 				}
 			}
@@ -1572,7 +1573,7 @@ public class LookupReferenceCalculator
 				}
 				catch(/*20070209 KSC: FormulaNotFound*/Exception e )
 				{
-					Logger.logWarn( "LookupReferenceCalculator.calcVlookup cannot determine PtgArea location. " + e );
+					log.warn( "LookupReferenceCalculator.calcVlookup cannot determine PtgArea location. " + e, e );
 				}
 
 			}
@@ -1593,7 +1594,7 @@ public class LookupReferenceCalculator
 					}
 					catch( Exception e )
 					{
-						Logger.logWarn( "LookupReferenceCalculator.calcVlookup could not determine row col from PtgMemFunc." );
+						log.warn( "LookupReferenceCalculator.calcVlookup could not determine row col from PtgMemFunc.", e );
 					}
 
 					lookupComponents = (PtgRef[]) pa.getColComponents( firstcol );
@@ -1601,7 +1602,7 @@ public class LookupReferenceCalculator
 				}
 				catch(/*20070209 KSC: FormulaNotFound*/Exception e )
 				{
-					Logger.logWarn( "LookupReferenceCalculator.calcVlookup cannot determine PtgArea location. " + e );
+					log.warn( "LookupReferenceCalculator.calcVlookup cannot determine PtgArea location. " + e, e );
 				}
 			}
 			// error check
@@ -1739,7 +1740,7 @@ public class LookupReferenceCalculator
 						}
 						catch( Exception e )
 						{
-							Logger.logErr( "LookupReferenceCalculator.calcVLookup error: " + e.toString() );
+							log.error( "LookupReferenceCalculator.calcVLookup error: " + e.toString() );
 							return new PtgErr( PtgErr.ERROR_NA );
 						}
 					}

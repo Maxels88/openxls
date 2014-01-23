@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -53,7 +54,7 @@ import java.util.Stack;
  */
 public class SpPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( SpPr.class );
 	private static final long serialVersionUID = 4542844402486023785L;
 	private Xfrm x = null;
 	private GeomGroup geom = null;
@@ -213,7 +214,7 @@ public class SpPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "spPr.parseOOXML: " + e.toString() );
+			log.error( "spPr.parseOOXML: " + e.toString() );
 		}
 		SpPr sp = new SpPr( x, geom, fill, l, effect, bwMode, ns );
 		return sp;

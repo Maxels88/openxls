@@ -132,8 +132,8 @@ public class PtgMemAreaA extends PtgMemArea
 		{
 			rwFirst = ByteTools.readInt( b[0], b[1] );
 			rwLast = ByteTools.readInt( b[2], b[3] );
-			colFirst = (int) b[4];
-			colLast = (int) b[5];
+			colFirst = b[4];
+			colLast = b[5];
 		}
 
 		/*

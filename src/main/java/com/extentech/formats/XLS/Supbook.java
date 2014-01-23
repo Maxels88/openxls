@@ -24,7 +24,8 @@ package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -95,10 +96,7 @@ import java.util.Arrays;
 
 public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Supbook.class );
 	private static final long serialVersionUID = 5010774855281594364L;
 	int cstab = -1;
 	int nSheets = -1;
@@ -148,10 +146,7 @@ public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 					filename = new String( f, "UTF-16LE" );
 					pos += ln * 2 - 1;
 				}
-				if( DEBUGLEVEL > 5 )
-				{
-					Logger.logInfo( "Supbook File: " + filename );
-				}
+					log.debug( "Supbook File: " + filename );
 				// now get sheetnames
 				for( int i = 0; i < cstab; i++ )
 				{
@@ -172,15 +167,12 @@ public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 						pos += ln * 2;
 					}
 					tabs.add( sheetname );
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "Supbook Sheet Reference: " + sheetname );
-					}
+						log.debug( "Supbook Sheet Reference: " + sheetname );
 				}
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "Supbook.init External Record: " + e.toString() );
+				log.error( "Supbook.init External Record: " + e.toString() );
 			}
 
 		}
@@ -289,10 +281,7 @@ public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 		this.setData( newData );
 		// add newest
 		tabs.add( externalSheet );
-		if( DEBUGLEVEL > 5 )
-		{
-			Logger.logInfo( "Supbook Sheet Reference: " + externalSheet );
-		}
+			log.debug( "Supbook Sheet Reference: " + externalSheet );
 		return (short) (cstab - 1);
 	}
 

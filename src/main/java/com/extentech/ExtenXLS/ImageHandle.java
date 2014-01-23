@@ -27,9 +27,10 @@ import com.extentech.formats.OOXML.TwoCellAnchor;
 import com.extentech.formats.XLS.Boundsheet;
 import com.extentech.formats.XLS.MSODrawing;
 import com.extentech.formats.XLS.MSODrawingConstants;
-import com.extentech.toolkit.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -68,6 +69,7 @@ import java.util.Iterator;
  */
 public class ImageHandle implements Serializable
 {
+	private static final Logger log = LoggerFactory.getLogger( ImageHandle.class );
 	/**
 	 * returns width divided by height for the aspect ratio
 	 *
@@ -101,7 +103,6 @@ public class ImageHandle implements Serializable
 	private short height, width;
 	private short x, y;
 	private int image_type = -1;
-	private int DEBUGLEVEL = 0; // 	eventually will set!
 
 	// OOXML-specific
 	private SpPr imagesp;
@@ -180,7 +181,7 @@ public class ImageHandle implements Serializable
 		}
 		catch( Exception ex )
 		{
-			System.err.print( "Failed to create new ImageHandle in sheet" + bs.getSheetName() + " from InputStream:" + ex.toString() );
+			log.error( "Failed to create new ImageHandle in sheet" + bs.getSheetName() + " from InputStream:" + ex.toString() );
 		}
 		initialize();
 	}
@@ -228,10 +229,7 @@ public class ImageHandle implements Serializable
 			if( imageFormat == null )
 			{
 				// 20080128 KSC: Occurs when image format= EMF ????? We cannot interpret, will most likely crash file
-				if( DEBUGLEVEL > WorkBook.DEBUG_LOW )
-				{
-					Logger.logErr( "ImageHandle.initialize: Unrecognized Image Format" );
-				}
+					log.error( "ImageHandle.initialize: Unrecognized Image Format" );
 				return;
 			}
 			if( !(imageFormat.equalsIgnoreCase( "jpeg" ) || imageFormat.equalsIgnoreCase( "png" )) )
@@ -262,7 +260,7 @@ public class ImageHandle implements Serializable
 			}
 			catch( IOException ex )
 			{
-				Logger.logWarn( "Java ImageIO could not decode image bytes for " + imageName + ":" + ex.toString() );
+				log.warn( "Java ImageIO could not decode image bytes for " + imageName + ":" + ex.toString() );
 				if( false )
 				{    // 20081028 KSC: don't overwrite original image bytes
 					String imgname = "failed_image_read_" + this.imageName + "." + imageFormat;
@@ -279,7 +277,7 @@ public class ImageHandle implements Serializable
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "Problem creating ImageHandle:" + e.toString() + " Please see BugTrack article: http://extentech.com/uimodules/docs/docs_detail.jsp?meme_id=1431&showall=true" );
+			log.warn( "Problem creating ImageHandle:" + e.toString() + " Please see BugTrack article: http://extentech.com/uimodules/docs/docs_detail.jsp?meme_id=1431&showall=true", e );
 			if( false )
 			{ // debug image parse probs
 				String imgname = "failed_image_read_" + this.imageName + "." + imageFormat;
@@ -348,7 +346,7 @@ public class ImageHandle implements Serializable
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "ImageHandle.convertData: " + e.toString() );
+			log.error( "ImageHandle.convertData: " + e.toString(), e );
 			return null;
 		}
 
@@ -839,7 +837,7 @@ public class ImageHandle implements Serializable
 		}
 		catch( JSONException e )
 		{
-			Logger.logErr( "Error getting imageHandle JSON: " + e );
+			log.error( "Error getting imageHandle JSON", e );
 		}
 		return ch;
 	}

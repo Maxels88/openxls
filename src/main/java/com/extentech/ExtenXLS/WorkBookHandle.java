@@ -53,11 +53,12 @@ import com.extentech.formats.XLS.Xf;
 import com.extentech.formats.XLS.charts.Chart;
 import com.extentech.formats.XLS.charts.OOXMLChart;
 import com.extentech.toolkit.JFileWriter;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.ProgressListener;
 import com.extentech.toolkit.ResourceLoader;
 import com.extentech.toolkit.StringTool;
 import com.extentech.toolkit.TempFileManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -101,8 +102,9 @@ import java.util.Vector;
  * temporary files in your working directory. All ExtenXLS temporary file names
  * begin with "ExtenXLS_".
  */
-public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
+public class WorkBookHandle extends DocumentHandle implements WorkBook
 {
+	private static final Logger log = LoggerFactory.getLogger( WorkBookHandle.class );
 	private static final long serialVersionUID = -7040065539645064209L;
 
 	/**
@@ -207,7 +209,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 			}
 			catch( IOException e )
 			{
-				Logger.logErr( "Unable to get default chart bytes" );
+				log.error( "Unable to get default chart bytes", e );
 			}
 		}
 		return protochart;
@@ -828,7 +830,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		}
 		catch( Exception e1 )
 		{
-			Logger.logErr( "Getting Spreadsheet bytes failed.", e1 );
+			log.error( "Getting Spreadsheet bytes failed.", e1 );
 			return null;
 		}
 	}
@@ -1269,15 +1271,12 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 			File fdel = new File( target.toString() );
 			if( !fdel.delete() )
 			{
-				if( this.DEBUGLEVEL > DEBUG_LOW )
-				{
-					Logger.logWarn( "Could not delete tempfile: " + target.toString() );
-				}
+					log.warn( "Could not delete tempfile: " + target.toString() );
 			}
 		}
 		catch( IOException ex )
 		{
-			Logger.logErr( "Initializing WorkBookHandle failed.", ex );
+			log.error( "Initializing WorkBookHandle failed.", ex );
 		}
 	}
 
@@ -1315,7 +1314,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "Could not parse XLSX from bytes." + e.toString() );
+				log.error( "Could not parse XLSX from bytes." + e.toString() );
 				return;
 			}
 		}
@@ -1346,8 +1345,8 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		}
 		else
 		{
-			Logger.logWarn( "Initializing WorkBookHandle failed: byte array does not contain a supported Excel WorkBook." );
-			throw new InvalidFileException( "byte array does not contian a supported Excel WorkBook." );
+			log.error( "Initializing WorkBookHandle failed: byte array does not contain a supported Excel WorkBook." );
+			throw new InvalidFileException( "byte array does not contain a supported Excel WorkBook." );
 		}
 	}
 
@@ -1378,24 +1377,9 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 	 */
 	public WorkBookHandle( String filePath )
 	{
-		this( filePath, 0 );
-	}
-
-	/**
-	 * constructor which takes the XLS file name and has an optional
-	 * debug setting to assist with output.  Setting this value will cause verbose logging
-	 * and is discouraged unless required for support.
-	 *
-	 * @param String filePath the name of the XLS file to read
-	 * @param Debug  level
-	 */
-	public WorkBookHandle( String filePath, int debug )
-	{
-		this.setDebugLevel( debug );
 		File f = new File( filePath );
 		this.initFromFile( f );
 		this.file = f;        // XXX KSC: Save for potential re-input of pass-through ooxml files
-
 	}
 
 	/**
@@ -1423,7 +1407,6 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		// set state vars for this workbookhandle
 		this.initWorkBookFactory();
 
-		myfactory.setDebugLevel( this.DEBUGLEVEL );
 		myfactory.setFileName( this.name );
 
 		if( plist != null )
@@ -1436,8 +1419,6 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 			OOXMLReader oe = new OOXMLReader();
 			WorkBookHandle bk = new WorkBookHandle();
 			bk.removeAllWorkSheets();
-			myfactory.setDebugLevel( this.DEBUGLEVEL );
-			bk.DEBUGLEVEL = this.DEBUGLEVEL;
 			oe.parseNBind( bk, fname );
 			this.sheethandles = bk.sheethandles;
 			this.mybook = bk.mybook;
@@ -1477,11 +1458,11 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		}
 		catch( FileNotFoundException e )
 		{
-			Logger.logErr( "WorkBookHandle: Cannot open file " + fname + ": " + e );
+			log.error( "WorkBookHandle: Cannot open file " + fname, e );
 		}
 		catch( Exception e1 )
 		{
-			Logger.logErr( "Invalid XLSX/OOXML File." );
+			log.error( "Invalid XLSX/OOXML File.", e1 );
 		}
 		this.name = fname;        // 20081231 KSC: set here
 		if( finch.toUpperCase().startsWith( "PK" ) )
@@ -1497,7 +1478,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		}
 		try
 		{
-			myLEOFile = new LEOFile( fx, this.DEBUGLEVEL );
+			myLEOFile = new LEOFile( fx);
 		}
 		catch( InvalidFileException ifx )
 		{
@@ -1528,7 +1509,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		else
 		{
 			// total failure to load
-			Logger.logErr( "Initializing WorkBookHandle failed: " + fname + " does not contain a supported Excel WorkBook." );
+			log.error( "Initializing WorkBookHandle failed: " + fname + " does not contain a supported Excel WorkBook." );
 			throw new InvalidFileException( fname + " does not contian a supported Excel WorkBook." );
 		}
 	}
@@ -1592,7 +1573,6 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		{
 			myfactory.register( plist ); // register progress notifier
 		}
-		myfactory.setDebugLevel( this.DEBUGLEVEL );
 
 		mybook = (com.extentech.formats.XLS.WorkBook) myfactory.getWorkBook( blockByteReader, myLEOFile );
 
@@ -1682,10 +1662,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		}
 		catch( Exception e )
 		{
-			if( DEBUGLEVEL > 3 )
-			{
-				Logger.logWarn( "Closing Document: " + toString() + " failed: " + e.toString() );
-			}
+				log.warn( "Closing Document: " + toString() + " failed: " + e.toString(), e );
 		}
 		if( mybook != null )
 		{
@@ -1741,7 +1718,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		}
 		catch( WorkSheetNotFoundException a )
 		{
-			Logger.logWarn( "getWorkSheets() failed: " + a );
+			log.warn( "getWorkSheets() failed: " + a );
 			return null;
 		}
 	}
@@ -2034,7 +2011,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 			}
 			catch( FunctionNotSupportedException fe )
 			{
-				Logger.logErr( "WorkBookHandle.recalc:  Error calculating Formula " + fe.toString() );
+				log.error( "WorkBookHandle.recalc:  Error calculating Formula " + fe.toString() );
 			}
 		}
 		// KSC: Clear out lookup caches!
@@ -2149,7 +2126,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		}
 		catch( WorkSheetNotFoundException e )
 		{
-			Logger.logErr( "Error adding sheet from workbook" + e );
+			log.error( "Error adding sheet from workbook" + e );
 		}
 		return false;
 	}
@@ -2174,7 +2151,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		}
 		catch( WorkSheetNotFoundException e )
 		{
-			Logger.logErr( "Error adding sheet from workbook" + e );
+			log.error( "Error adding sheet from workbook" + e );
 		}
 		return false;
 		/**
@@ -2389,7 +2366,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Creating New Chart: " + name + " failed: " + e );
+			log.error( "Creating New Chart: " + name + " failed: " + e );
 			return null;
 		}
 	}
@@ -2411,7 +2388,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Removing Chart: " + chartname + " failed: " + e );
+			log.error( "Removing Chart: " + chartname + " failed: " + e );
 		}
 	}
 
@@ -2494,13 +2471,13 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook, Handle
 			}
 			catch( WorkSheetNotFoundException e )
 			{
-				Logger.logWarn( "Creating New Sheet: " + name + " failed: " + e );
+				log.warn( "Creating New Sheet: " + name + " failed: " + e );
 				return null;
 			}
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "Error loading prototype sheet: " + e );
+			log.warn( "Error loading prototype sheet: " + e );
 			return null;
 		}
 	}

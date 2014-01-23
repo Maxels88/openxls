@@ -27,7 +27,8 @@ import com.extentech.formats.OOXML.SpPr;
 import com.extentech.formats.XLS.BiffRec;
 import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -70,9 +71,7 @@ import java.util.Stack;
  */
 public class ChartFormat extends GenericChartObject implements ChartObject
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( ChartFormat.class );
 	private static final long serialVersionUID = 4000704166442059677L;
 	private short grbit = 0;
 	private boolean fVaried = false;
@@ -861,7 +860,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "parseUpDownBarsOOXML: " + e.toString() );
+			log.error( "parseUpDownBarsOOXML: " + e.toString() );
 		}
 	}
 

@@ -25,7 +25,8 @@ package com.extentech.formats.XLS;
 import com.extentech.ExtenXLS.CellRange;
 import com.extentech.ExtenXLS.ExcelTools;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 
@@ -74,9 +75,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class DConRef extends XLSRecord implements XLSConstants
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( DConRef.class );
 	private static final long serialVersionUID = 2639291289806138985L;
 	private short rwFirst, rwLast;
 	private short colFirst, colLast;
@@ -108,7 +107,7 @@ public class DConRef extends XLSRecord implements XLSConstants
 
 			if( refType != 2 )    // TODO: handle external refs ...
 			{
-				Logger.logWarn( "PivotTable: External Data Sources are not supported" );
+				log.warn( "PivotTable: External Data Sources are not supported" );
 			}
 			byte[] tmp = this.getBytesAt( 10, (cchFile - 1) * (encoding + 1) );
 			try
@@ -124,13 +123,10 @@ public class DConRef extends XLSRecord implements XLSConstants
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logInfo( "encoding PivotTable name in DCONREF: " + e );
+				log.warn( "encoding PivotTable name in DCONREF: " + e, e );
 			}
 		}
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "DCONREF: rwFirst:" + rwFirst + " rwLast:" + rwLast + " colFirst:" + colFirst + " colLast:" + colLast + " cchFile:" + cchFile + " fileName:" + fileName );
-		}
+			log.debug( "DCONREF: rwFirst:" + rwFirst + " rwLast:" + rwLast + " colFirst:" + colFirst + " colLast:" + colLast + " cchFile:" + cchFile + " fileName:" + fileName );
 	}
 
 	/**
@@ -152,7 +148,7 @@ public class DConRef extends XLSRecord implements XLSConstants
 	{
 		if( refType != 2 )
 		{
-			Logger.logWarn( "External Data Sources are not supported" );
+			log.warn( "External Data Sources are not supported" );
 		}
 		return fileName;
 	}

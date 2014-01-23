@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.OOXML;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -35,7 +36,7 @@ import java.util.Stack;
 //TODO: FINISH CHILD ELEMENTS for both effectDag and effectLst
 public class EffectPropsGroup implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( EffectPropsGroup.class );
 	private static final long serialVersionUID = 8250236905326475833L;
 
 	private EffectDag effectDag;
@@ -90,7 +91,7 @@ public class EffectPropsGroup implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "EffectPropsGroup.parseOOXML: " + e.toString() );
+			log.error( "EffectPropsGroup.parseOOXML: " + e.toString() );
 		}
 		EffectPropsGroup e = new EffectPropsGroup( ed, el );
 		return e;
@@ -128,6 +129,7 @@ public class EffectPropsGroup implements OOXMLElement
  */ // TODO: FINISH CHILD ELEMENTS
 class EffectDag implements OOXMLElement
 {
+	private static final Logger log = LoggerFactory.getLogger( EffectDag.class );
 
 	private static final long serialVersionUID = 4786440439664356745L;
 	private HashMap<String, String> attrs = null;
@@ -144,7 +146,7 @@ class EffectDag implements OOXMLElement
 
 	public static EffectDag parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -181,7 +183,7 @@ class EffectDag implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "effectDag.parseOOXML: " + e.toString() );
+			log.error( "effectDag.parseOOXML: " + e.toString() );
 		}
 		EffectDag e = new EffectDag( attrs );
 		return e;
@@ -224,7 +226,7 @@ class EffectDag implements OOXMLElement
  */ // TODO: FINISH CHILD ELEMENTS
 class EffectLst implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( EffectLst.class );
 	private static final long serialVersionUID = -6164888373165090983L;
 
 	//	public effectLst() { 	}
@@ -266,7 +268,7 @@ class EffectLst implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "effectLst.parseOOXML: " + e.toString() );
+			log.error( "effectLst.parseOOXML: " + e.toString() );
 		}
 		EffectLst e = new EffectLst();
 		return e;

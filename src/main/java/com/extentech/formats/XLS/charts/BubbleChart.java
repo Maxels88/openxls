@@ -23,14 +23,15 @@
 package com.extentech.formats.XLS.charts;
 
 import com.extentech.formats.XLS.WorkBook;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BubbleChart extends ChartType
 {
-
+	private static final Logger log = LoggerFactory.getLogger( BubbleChart.class );
 	private Scatter bubble = null;
 	private boolean is3d = false;
 
@@ -89,7 +90,7 @@ public class BubbleChart extends ChartType
 
 		if( series.size() == 0 )
 		{
-			Logger.logErr( "Scatter.getSVG: error in series" );
+			log.error( "Scatter.getSVG: error in series" );
 			return "";
 		}
 		// gather data labels, markers, has lines, series colors for chart

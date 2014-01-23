@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -40,7 +41,7 @@ import java.util.Stack;
 //TODO: handle nvPicPr.cNvPicPr.picLocks element
 public class Pic implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Pic.class );
 	private static final long serialVersionUID = -4929177274389163606L;
 	private HashMap<String, String> attrs;
 	private NvPicPr nvPicPr;
@@ -77,7 +78,7 @@ public class Pic implements OOXMLElement
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		NvPicPr nv = null;
 		BlipFill bf = null;
 		SpPr sp = null;
@@ -133,7 +134,7 @@ public class Pic implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "pic.parseOOXML: " + e.toString() );
+			log.error( "pic.parseOOXML: " + e.toString() );
 		}
 		Pic p = new Pic( attrs, nv, bf, sp, s );
 		return p;
@@ -386,7 +387,7 @@ public class Pic implements OOXMLElement
  */
 class NvPicPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( NvPicPr.class );
 	private static final long serialVersionUID = -3722424348721713313L;
 	private CNvPr cpr;
 	private CNvPicPr ppr;
@@ -446,7 +447,7 @@ class NvPicPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "nvPicPr.parseOOXML: " + e.toString() );
+			log.error( "nvPicPr.parseOOXML: " + e.toString() );
 		}
 		NvPicPr n = new NvPicPr( cpr, ppr );
 		return n;
@@ -558,7 +559,7 @@ class NvPicPr implements OOXMLElement
 // TODO: handle child picLocks
 class CNvPicPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( CNvPicPr.class );
 	private static final long serialVersionUID = 3690228348761065940L;
 	private String preferRelativeResize = null;
 
@@ -614,7 +615,7 @@ class CNvPicPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "cNvPicPr.parseOOXML: " + e.toString() );
+			log.error( "cNvPicPr.parseOOXML: " + e.toString() );
 		}
 		CNvPicPr c = new CNvPicPr( preferRelativeResize );
 		return c;

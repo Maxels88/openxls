@@ -22,6 +22,9 @@
  */
 package com.extentech.toolkit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Vector;
@@ -32,9 +35,7 @@ import java.util.Vector;
  */
 public class CompatibleVector extends Vector
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( CompatibleVector.class );
 	private static final long serialVersionUID = 6805047965683753637L;
 	private int change_offset = 0;
 	private int reindex_change_size = 1000;
@@ -340,7 +341,7 @@ public class CompatibleVector extends Vector
 			}
 			catch( Exception e )
 			{
-				Logger.logInfo( "CompatibleVector.toArray() failed." );
+				log.error( "CompatibleVector.toArray() failed.", e );
 			}
 		}
 		return obj;

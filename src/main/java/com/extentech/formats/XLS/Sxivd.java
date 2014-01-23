@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -75,21 +76,16 @@ import java.util.Arrays;
  * </p></pre>
  */
 
-public class Sxivd extends XLSRecord implements XLSConstants
+public class Sxivd extends XLSRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Sxivd.class );
 	private static final long serialVersionUID = 9027599480633995587L;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "SXIVD - n: " + this.getData().length + " array:" + Arrays.toString( this.getData() ) );
-		}
+			log.trace( "SXIVD - n: " + this.getData().length + " array:" + Arrays.toString( this.getData() ) );
 	}
 
 	public String toString()

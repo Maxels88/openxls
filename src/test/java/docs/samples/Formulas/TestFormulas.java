@@ -30,7 +30,8 @@ import com.extentech.formats.XLS.CellNotFoundException;
 import com.extentech.formats.XLS.FormulaNotFoundException;
 import com.extentech.formats.XLS.FunctionNotSupportedException;
 import com.extentech.formats.XLS.WorkSheetNotFoundException;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -57,6 +58,7 @@ public class TestFormulas
  */
 class testformula
 {
+	private static final Logger log = LoggerFactory.getLogger( testformula.class );
 	WorkBookHandle book = null;
 	WorkSheetHandle sheet = null;
 	String sheetname = "Sheet1";
@@ -71,28 +73,28 @@ class testformula
 	{
 		try
 		{
-			Logger.logInfo( "Testing multiple changes to formula references and recalc" );
+			log.info( "Testing multiple changes to formula references and recalc" );
 			WorkBookHandle wbx = new WorkBookHandle();
 			WorkSheetHandle sheet1 = wbx.getWorkSheet( 0 );
 			sheet1.add( new Double( 100.123 ), "A1" );
 			sheet1.add( new Double( 200.123 ), "A2" );
 			CellHandle cx = sheet1.add( "=sum(A1*A2)", "A3" );
-			Logger.logInfo( String.valueOf( cx ) );
-			Logger.logInfo( "start setting 100k vals" );
+			log.info( String.valueOf( cx ) );
+			log.info( "start setting 100k vals" );
 			for( int t = 0; t < 100000; t++ )
 			{
 				sheet1.getCell( "A1" ).setVal( Math.random() * 10000 );
 				sheet1.getCell( "A2" ).setVal( Math.random() * 10000 );
 				Object calced = cx.getVal();
-				Logger.logInfo( calced.toString() );
+				log.info( calced.toString() );
 			}
-			Logger.logInfo( "done setting 100k vals" );
+			log.info( "done setting 100k vals" );
 			wbx.write( wd + "testFormulas_out.xls" );
 
 		}
 		catch( Exception ex )
 		{
-			Logger.logErr( "testFormulas.testMultiChange: " + ex.toString() );
+			log.error( "testFormulas.testMultiChange: " + ex.toString() );
 		}
 	}
 
@@ -130,7 +132,7 @@ class testformula
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "TestFormulas failed.", e );
+			log.error( "TestFormulas failed.", e );
 		}
 	}
 
@@ -243,7 +245,7 @@ class testformula
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "TestFormulas failed.", e );
+			log.error( "TestFormulas failed.", e );
 		}
 
 		FormulaHandle f = null;
@@ -355,15 +357,15 @@ class testformula
 			}
 			catch( CellNotFoundException e )
 			{
-				Logger.logErr( "TestFormulas failed.", e );
+				log.error( "TestFormulas failed.", e );
 			}
 			catch( FunctionNotSupportedException e )
 			{
-				Logger.logErr( "TestFormulas failed.", e );
+				log.error( "TestFormulas failed.", e );
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "TestFormulas failed.", e );
+				log.error( "TestFormulas failed.", e );
 			}
 			testWrite( "testCalcFormulas_out.xls" );
 		}
@@ -396,7 +398,7 @@ class testformula
 		}
 		catch( java.io.IOException e )
 		{
-			Logger.logInfo( "IOException in Tester.  " + e );
+			log.info( "IOException in Tester.  " + e );
 		}
 	}
 

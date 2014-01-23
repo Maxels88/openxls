@@ -51,10 +51,6 @@ public interface XLSConstants
 	public static String REFTRACK_PROP = "com.extentech.extenxls.trackreferences";
 	public static String USETEMPFILE_PROP = "com.extentech.formats.LEO.usetempfile";
 	public static String VALIDATEWORKBOOK = "com.extentech.formats.LEO.validateworkbook";
-	// Debug options
-	public static int DEBUG_LOW = 50;
-	public static int DEBUG_MEDIUM = 60;
-	public static int DEBUG_HIGH = 100;
 
 	// String table handling
 	public static int STRING_ENCODING_AUTO = 0;

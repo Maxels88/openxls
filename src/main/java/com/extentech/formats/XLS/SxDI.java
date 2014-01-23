@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 
@@ -103,9 +104,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class SxDI extends XLSRecord implements XLSConstants
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( SxDI.class );
 	short isxvdData, isxvd, iiftab, df, isxvi, cchName, ifmt;
 	String name = null;
 	private static final long serialVersionUID = 2639291289806138985L;
@@ -199,13 +198,10 @@ public class SxDI extends XLSRecord implements XLSConstants
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logInfo( "encoding PivotTable caption name in Sxvd: " + e );
+				log.warn( "encoding PivotTable caption name in Sxvd: " + e , e);
 			}
 		}
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "SXDI - isxvdData:" + isxvdData + " iiftab:" + iiftab + " df:" + df + " isxvd:" + isxvd + " isxvi:" + isxvi + " ifmt:" + ifmt + " name:" + name );
-		}
+			log.debug( "SXDI - isxvdData:" + isxvdData + " iiftab:" + iiftab + " df:" + df + " isxvd:" + isxvd + " isxvi:" + isxvi + " ifmt:" + ifmt + " name:" + name );
 	}
 
 	/**
@@ -390,7 +386,7 @@ public class SxDI extends XLSRecord implements XLSConstants
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logInfo( "encoding pivot table name in SXVI: " + e );
+				log.warn( "encoding pivot table name in SXVI: " + e, e );
 			}
 
 			//update the lengths:

@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.XLS.formulas;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
 
@@ -34,10 +35,7 @@ import java.lang.reflect.Array;
  */
 public class PtgSub extends GenericPtg implements Ptg
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgSub.class );
 	private static final long serialVersionUID = -3252464873846778499L;
 
 	@Override
@@ -102,7 +100,7 @@ public class PtgSub extends GenericPtg implements Ptg
 			{
 				if( o.length != 2 )
 				{
-					Logger.logWarn( "calculating formula failed, wrong number of values in PtgSub" );
+					log.warn( "calculating formula failed, wrong number of values in PtgSub" );
 					return new PtgErr( PtgErr.ERROR_VALUE );    // 20081203 KSC: handle error's ala Excel return null;
 				}
 				// blank handling:
@@ -181,7 +179,7 @@ public class PtgSub extends GenericPtg implements Ptg
 		}
 		catch( Exception e )
 		{    // 20081125 KSC: handle error ala Excel
-			// Logger.logErr("PtgSub failed:" + e);
+			// log.error("PtgSub failed:" + e);
 			PtgErr perr = new PtgErr( PtgErr.ERROR_VALUE );
 			return perr;
 		}

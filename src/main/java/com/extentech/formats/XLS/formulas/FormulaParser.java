@@ -33,8 +33,9 @@ import com.extentech.formats.XLS.XLSConstants;
 import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.formats.XLS.XLSRecordFactory;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Locale;
 import java.util.Stack;
@@ -51,10 +52,7 @@ import java.util.Vector;
  */
 public final class FormulaParser
 {
-
-	static int DEBUGLEVEL = -1;
-	// KSC: handling unary operators necessitated, in the end, a complete rewrite ...
-
+	private static final Logger log = LoggerFactory.getLogger( FormulaParser.class );
 	/**
 	 * getPtgsFromFormulaString
 	 * returns ordered stack of Ptgs parsed from formula string fmla
@@ -894,7 +892,7 @@ public final class FormulaParser
 		}
 		catch( InvalidRecordException e )
 		{
-			Logger.logInfo( "parsing formula string.  Invalid Ptg: " + name + " error: " + e );
+			log.warn( "parsing formula string.  Invalid Ptg: " + name + " error: " + e, e );
 		}
 		// if it is an operator we don't need to do anything with it!
 		if( pthing != null )
@@ -1074,7 +1072,7 @@ public final class FormulaParser
 			}
 			catch( InvalidRecordException e )
 			{
-				Logger.logInfo( "parsing formula string.  Invalid Ptg: " + name + " error: " + e );
+				log.warn( "parsing formula string.  Invalid Ptg: " + name + " error: " + e, e );
 			}
 			// if it is an operator we don't need to do anything with it!
 			if( pthing != null )
@@ -1799,7 +1797,7 @@ public final class FormulaParser
 			}
 			catch( FunctionNotSupportedException e )
 			{  // 200902 KSC: still add record if function is not found (using N/A in place of said function)
-				Logger.logErr( "Adding new Formula at " + form.getSheet() + "!" + ExcelTools.formatLocation( rc ) + " failed: " + e.toString() + "." );
+				log.error( "Adding new Formula at " + form.getSheet() + "!" + ExcelTools.formatLocation( rc ) + " failed: " + e.toString() + "." );
 				Stack newptgs = new Stack();
 				newptgs.push( new PtgErr( PtgErr.ERROR_NA ) );
 				form.setExpression( newptgs );
@@ -2083,12 +2081,8 @@ public final class FormulaParser
 
 				if( t > vals.size() )
 				{
-
 					// is this a real error? throw an exception?
-					if( DEBUGLEVEL > 0 )
-					{
-						Logger.logWarn( "FormulaParser.handlePtg: number of parameters " + t + " is greater than available " + vals.size() );
-					}
+						log.warn( "FormulaParser.handlePtg: number of parameters " + t + " is greater than available " + vals.size() );
 					t = vals.size();
 				}
 				Ptg[] vx = new Ptg[t];
@@ -2110,10 +2104,7 @@ public final class FormulaParser
 		}
 		else
 		{
-			if( DEBUGLEVEL > -1 )
-			{
-				Logger.logInfo( "FormulaParser Error - Ptg Type: " + p.getOpcode() + " " + p.getString() );
-			}
+				log.debug( "FormulaParser Error - Ptg Type: " + p.getOpcode() + " " + p.getString() );
 		}
 	}
 
@@ -2184,6 +2175,7 @@ public final class FormulaParser
 		{
 			return false;
 		}
+		// TODO PRECOMPILE THESE
 		String one = "(([(]*[ ]*[']?([a-zA-Z0-9 _]*[']*[!])?[$]*[a-zA-Z]{1,2}[$]*[0-9]+[)]*){1})";
 		String aRange = one + "(:" + one + ")?";
 		String rangeop = "([ ]*[: ,][ ]*)";
@@ -2201,6 +2193,7 @@ public final class FormulaParser
 	 */
 	public static boolean isComplexRange( String s )
 	{
+		// TODO PRECOMPILE THESE
 		String one = "(([(]*[ ]*[']?([a-zA-Z0-9 _]*[']*[!])?[$]*[a-zA-Z]{1,2}[$]*[0-9]+[)]*){1})";
 		String aRange = one + "(:" + one + ")?";
 		String rangeop = "([ ]*[: ,][ ]*)";

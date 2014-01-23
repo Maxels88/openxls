@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -38,7 +39,7 @@ import java.util.Stack;
 // TODO: finish pictureOptions
 public class DPt implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( DPt.class );
 	private static final long serialVersionUID = 8354707071603571747L;
 	private int idx;
 	private boolean invertIfNegative;
@@ -137,7 +138,7 @@ public class DPt implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "dPt.parseOOXML: " + e.toString() );
+			log.error( "dPt.parseOOXML: " + e.toString() );
 		}
 		DPt oe = new DPt( idx, invertIfNegative, bubble3D, m, sp, explosion );
 		return oe;

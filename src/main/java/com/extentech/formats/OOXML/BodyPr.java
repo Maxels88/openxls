@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.OOXML;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -41,15 +42,15 @@ import java.util.Stack;
 // TODO: Handle CHILDREN ***********************************
 public class BodyPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( BodyPr.class );
 	private static final long serialVersionUID = 3693893834015788452L;
-	private HashMap<String, String> attrs = new HashMap<String, String>();
+	private HashMap<String, String> attrs = new HashMap<>();
 	private PrstTxWarp txwarp = null;
 	private boolean spAutoFit = false;
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		PrstTxWarp txwarp = null;
 		boolean spAutoFit = false;
 		try
@@ -94,7 +95,7 @@ public class BodyPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "bodyPr.parseOOXML: " + e.toString() );
+			log.error( "bodyPr.parseOOXML: " + e.toString() );
 		}
 		BodyPr bpr = new BodyPr( attrs, txwarp, spAutoFit );
 		return bpr;
@@ -131,7 +132,7 @@ public class BodyPr implements OOXMLElement
 	 */
 	public BodyPr( int hrot, String vert )
 	{
-		attrs = new HashMap<String, String>();
+		attrs = new HashMap<>();
 		attrs.put( "rot", String.valueOf( hrot ) );
 		if( vert != null )
 		{
@@ -187,9 +188,7 @@ public class BodyPr implements OOXMLElement
  */
 class PrstTxWarp implements OOXMLElement
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PrstTxWarp.class );
 	private static final long serialVersionUID = -2627323317407321668L;
 	private String prst = null;
 	private AvLst av = null;
@@ -247,7 +246,7 @@ class PrstTxWarp implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "prstTxWarp.parseOOXML: " + e.toString() );
+			log.error( "prstTxWarp.parseOOXML: " + e.toString() );
 		}
 		PrstTxWarp p = new PrstTxWarp( prst, av );
 		return p;

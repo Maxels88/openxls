@@ -24,7 +24,8 @@ package com.extentech.formats.XLS;
 
 import com.extentech.formats.OOXML.Text;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -93,11 +94,7 @@ import java.util.ArrayList;
  */
 public final class Note extends com.extentech.formats.XLS.XLSRecord
 {
-
-	/**
-	 *
-	 *
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Note.class );
 	private short id;
 	boolean hidden = true;    // default
 	private String author;
@@ -302,7 +299,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 			}
 			catch( IllegalArgumentException e )
 			{
-				Logger.logErr( e.toString() );
+				log.error( e.toString() );
 			}
 		}
 	}
@@ -323,7 +320,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 			}
 			catch( IllegalArgumentException e )
 			{
-				Logger.logErr( e.toString() );
+				log.error( e.toString() );
 			}
 		}
 

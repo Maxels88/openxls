@@ -25,7 +25,8 @@ package com.extentech.formats.XLS.formulas;
 import com.extentech.ExtenXLS.ExcelTools;
 import com.extentech.toolkit.CompatibleVector;
 import com.extentech.toolkit.FastAddVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Enumeration;
 
@@ -36,7 +37,7 @@ import java.util.Enumeration;
 
 public class PtgCalculator
 {
-
+	private static final Logger log = LoggerFactory.getLogger( PtgCalculator.class );
 	/**
 	 * getLongValue is for single-operand functions.
 	 * It returns NaN for calculations that have too many operands.
@@ -56,7 +57,7 @@ public class PtgCalculator
 		}
 		if( operands.length > 1 )
 		{ // not supported by function
-			Logger.logWarn( "PtgCalculator getting Long Value for operand failed: - UNSUPPORTED BY FUNCTION" );
+			log.warn( "PtgCalculator getting Long Value for operand failed: - UNSUPPORTED BY FUNCTION" );
 			return (long) Double.NaN;
 		}
 		Double d = null;
@@ -66,7 +67,7 @@ public class PtgCalculator
 		}
 		catch( NumberFormatException e )
 		{
-			Logger.logWarn( "PtgCalculator getting Long Value for operand failed: " + e );
+			log.warn( "PtgCalculator getting Long Value for operand failed: " + e );
 			return (long) Double.NaN;
 		}
 		return d.longValue();
@@ -97,7 +98,7 @@ public class PtgCalculator
 			}
 			catch( NumberFormatException e )
 			{
-				Logger.logWarn( "PtgCalculator getting Long value array failed: " + e );
+				log.warn( "PtgCalculator getting Long value array failed: " + e );
 				l[i] = (long) Double.NaN;
 			}
 		}
@@ -179,7 +180,7 @@ public class PtgCalculator
 					}
 					catch( Exception ee )
 					{
-						Logger.logWarn( "PtgCalculator getting Double value array failed: " + ee );
+						log.warn( "PtgCalculator getting Double value array failed: " + ee );
 						d = Double.NaN;
 					}
 				}

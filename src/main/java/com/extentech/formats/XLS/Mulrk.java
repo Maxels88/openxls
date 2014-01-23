@@ -24,7 +24,8 @@ package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -52,9 +53,7 @@ import java.util.List;
 
 public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements Mul
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Mulrk.class );
 	private static final long serialVersionUID = 1438740082267768419L;
 	boolean removed = false;
 
@@ -92,10 +91,7 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 
 		if( datalen <= 0 )
 		{
-			if( DEBUGLEVEL > -1 )
-			{
-				Logger.logInfo( "no data in MULRk" );
-			}
+				log.info( "no data in MULRk" );
 		}
 		else
 		{
@@ -104,7 +100,7 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 			colFirst = s;
 			col = colFirst;
 			s = ByteTools.readShort( this.getByteAt( datalen - 2 ), this.getByteAt( datalen - 1 ) );
-			colLast = (int) s;
+			colLast = s;
 			// get the records data only
 			datalen = datalen - 6;
 			byte[] rkdatax = this.getBytesAt( 4, datalen );
@@ -120,10 +116,7 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 				byte[] rkd = this.getBytesAt( i, 6 );
 				Rk r = new Rk();
 				r.init( rkd, rw, rkcol++ );
-				if( DEBUGLEVEL > 5 )
-				{
-					Logger.logInfo( " rk@" + (rkcol - 1) + ":" + r.getStringVal() );
-				}
+					log.trace( " rk@" + (rkcol - 1) + ":" + r.getStringVal() );
 				i += 6;
 				if( reccount == numRkRecs )
 				{
@@ -135,10 +128,7 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 				rkrecs.add( r );
 				reccount++;
 			}
-			if( DEBUGLEVEL > 5 )
-			{
-				Logger.logInfo( "Done adding Rk recs to: " + this.getCellAddress() );
-			}
+				log.trace( "Done adding Rk recs to: " + this.getCellAddress() );
 		}
 	}
 
@@ -263,9 +253,8 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 		}
 		catch( IOException a )
 		{
-			Logger.logInfo( "parsing record continues failed: " + a );
+			log.warn( "parsing record continues failed: " + a );
 		}
 		this.setData( out.toByteArray() );
 	}
-
 }

@@ -25,7 +25,8 @@ package com.extentech.formats.OOXML;
 import com.extentech.ExtenXLS.FormatHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.formats.XLS.Xf;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -39,7 +40,7 @@ import java.util.Iterator;
  */
 public class Border implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Border.class );
 	private static final long serialVersionUID = 4340789910636828223L;
 	private HashMap<String, String> attrs = null;
 	private HashMap<String, BorderElement> borderElements = null;
@@ -73,7 +74,7 @@ public class Border implements OOXMLElement
 	 */
 	public Border( WorkBookHandle bk, int[] styles, int[] colors )
 	{
-		this.borderElements = new HashMap<String, BorderElement>();
+		this.borderElements = new HashMap<>();
 		String[] borderElements = { "top", "left", "bottom", "right" };
 		for( int i = 0; i < 4; i++ )
 		{
@@ -88,8 +89,8 @@ public class Border implements OOXMLElement
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, WorkBookHandle bk )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
-		HashMap<String, BorderElement> borderElements = new HashMap<String, BorderElement>();
+		HashMap<String, String> attrs = new HashMap<>();
+		HashMap<String, BorderElement> borderElements = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -147,7 +148,7 @@ public class Border implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "border.parseOOXML: " + e.toString() );
+			log.error( "border.parseOOXML: " + e.toString() );
 		}
 		Border b = new Border( attrs, borderElements );
 		return b;
@@ -559,7 +560,7 @@ public class Border implements OOXMLElement
  */
 class BorderElement implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( BorderElement.class );
 	private static final long serialVersionUID = -8040551653089261574L;
 	private String style;
 	private Color color;
@@ -769,7 +770,7 @@ class BorderElement implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "borderElement.parseOOXML: " + e.toString() );
+			log.error( "borderElement.parseOOXML: " + e.toString() );
 		}
 		BorderElement b = new BorderElement( style, c, borderElement );
 		return b;

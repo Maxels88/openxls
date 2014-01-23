@@ -25,8 +25,9 @@ package com.extentech.formats.OOXML;
 import com.extentech.formats.XLS.FormatConstants;
 import com.extentech.formats.XLS.OOXMLAdapter;
 import com.extentech.formats.XLS.Xf;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 /**
@@ -46,7 +47,7 @@ import org.xmlpull.v1.XmlPullParser;
  */
 public class NumFmt implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( NumFmt.class );
 	private static final long serialVersionUID = -206715418106414662L;
 	private String formatCode, numFmtId;
 	private boolean sourceLinked = false;
@@ -111,7 +112,7 @@ public class NumFmt implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "numFmt.parseOOXML: " + e.toString() );
+			log.error( "numFmt.parseOOXML: " + e.toString() );
 		}
 		NumFmt oe = new NumFmt( formatCode, numFmtId, sourceLinked );
 		return oe;

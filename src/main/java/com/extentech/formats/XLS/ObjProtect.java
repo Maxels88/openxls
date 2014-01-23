@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>OBJPROTECT: Protection Flag (63h)</b><br>
@@ -38,6 +39,7 @@ import com.extentech.toolkit.Logger;
  */
 public final class ObjProtect extends com.extentech.formats.XLS.XLSRecord
 {
+	private static final Logger log = LoggerFactory.getLogger( ObjProtect.class );
 	/**
 	 * serialVersionUID
 	 */
@@ -89,10 +91,10 @@ public final class ObjProtect extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		fLock = (int) ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		if( this.getIsLocked() && (DEBUGLEVEL > DEBUG_LOW) )
+		fLock = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		if( this.getIsLocked()  )
 		{
-			Logger.logInfo( "Object Protection Enabled." );
+			log.info( "Object Protection Enabled." );
 		}
 	}
 

@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.XLS;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SxEX  0xF1
@@ -125,19 +126,14 @@ import com.extentech.toolkit.Logger;
  */
 public class SxEX extends XLSRecord implements XLSConstants
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( SxEX.class );
 	private static final long serialVersionUID = 2639291289806138985L;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "SXEX - " );
-		}
+		log.trace( "SXEX - " );
 	}
 
 	private byte[] PROTOTYPE_BYTES = new byte[]{ // default configuration

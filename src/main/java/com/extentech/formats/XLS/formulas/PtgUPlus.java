@@ -30,16 +30,15 @@
 */
 package com.extentech.formats.XLS.formulas;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
 public class PtgUPlus extends GenericPtg implements Ptg
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgUPlus.class );
 	private static final long serialVersionUID = -3514760881731524419L;
 
 	public PtgUPlus()
@@ -91,7 +90,7 @@ public class PtgUPlus extends GenericPtg implements Ptg
 		// there should always be only one ptg in this, error if not.
 		if( form.length != 1 )
 		{
-			Logger.logWarn( "calculating formula failed, wrong number of values in PtgUPlus" );
+			log.warn( "calculating formula failed, wrong number of values in PtgUPlus" );
 			return null;
 		}
 		return form[0];

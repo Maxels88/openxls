@@ -30,16 +30,15 @@
 */
 package com.extentech.formats.XLS.formulas;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
 public class PtgUMinus extends GenericPtg implements Ptg
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgUMinus.class );
 	private static final long serialVersionUID = 8448419489380791823L;
 
 	public PtgUMinus()
@@ -84,7 +83,7 @@ public class PtgUMinus extends GenericPtg implements Ptg
 	{
 		if( form.length != 1 )
 		{
-			Logger.logWarn( "PtgMinus calculating formula failed, wrong number of values." );
+			log.warn( "PtgMinus calculating formula failed, wrong number of values." );
 			return new PtgErr( PtgErr.ERROR_VALUE );
 		}
 		try
@@ -107,7 +106,7 @@ public class PtgUMinus extends GenericPtg implements Ptg
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "PtgMinus calculating formula failed, could not negate operand " + form[0].toString() + " : " + e.toString() );
+			log.warn( "PtgMinus calculating formula failed, could not negate operand " + form[0].toString() + " : " + e.toString() );
 			return new PtgErr( PtgErr.ERROR_VALUE );
 		}
 	}

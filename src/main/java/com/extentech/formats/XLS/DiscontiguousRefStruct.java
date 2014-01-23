@@ -418,7 +418,7 @@ public class DiscontiguousRefStruct implements Serializable
 class refPtgs extends TreeMap implements Serializable
 {
 	private static final long serialVersionUID = -7923448634000437926L;
-	static final long SECONDPTGFACTOR = (((long) XLSRecord.MAXCOLS + ((long) XLSRecord.MAXROWS * XLSRecord.MAXCOLS)));
+	static final long SECONDPTGFACTOR = ((XLSRecord.MAXCOLS + ((long) XLSRecord.MAXROWS * XLSRecord.MAXCOLS)));
 
 	/**
 	 * set the custom Comparitor for tracked Ptgs

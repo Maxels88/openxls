@@ -32,14 +32,15 @@ import com.extentech.ExtenXLS.CellHandle;
 import com.extentech.ExtenXLS.RowHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class demonstrates how to load a Spreadsheet from CSV data
  */
 public class Spreadsheet_CSV_Input
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Spreadsheet_CSV_Input.class );
 	/**
 	 * Test functionality of reading and writing CSV file to and from
 	 * a Spreadsheet.
@@ -56,11 +57,11 @@ public class Spreadsheet_CSV_Input
 			// load the current file and output it to same directory
 			book = new WorkBookHandle( System.getProperty( "user.dir" ) + "/docs/samples/Input_CSV/contacts.csv" );
 			System.out.println( book.getStats() );
-			Logger.logInfo( "Successfully read CSV into spreadsheet: " + book );
+			log.info( "Successfully read CSV into spreadsheet: " + book );
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Spreadsheet_CSV_Input failed.", e );
+			log.error( "Spreadsheet_CSV_Input failed.", e );
 		}
 
 		// Write out the spreadsheet as CSV -- 
@@ -86,14 +87,14 @@ public class Spreadsheet_CSV_Input
 				}
 				catch( Exception ex )
 				{
-					Logger.logErr( "Spreadsheet CSV output failed to fetch row:" + i, ex );
+					log.error( "Spreadsheet CSV output failed to fetch row:" + i, ex );
 				}
 			}
 			System.out.println( "WorkBook:" + book + " CSV output: " + arr.toString() );
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Spreadsheet CSV output failed: " + e.toString() );
+			log.error( "Spreadsheet CSV output failed: " + e.toString() );
 		}
 	}
 }

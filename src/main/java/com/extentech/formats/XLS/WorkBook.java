@@ -40,7 +40,8 @@ import com.extentech.formats.XLS.formulas.PtgExp;
 import com.extentech.formats.XLS.formulas.PtgNameX;
 import com.extentech.formats.XLS.formulas.PtgRef;
 import com.extentech.toolkit.FastAddVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
 import java.io.BufferedInputStream;
@@ -81,7 +82,7 @@ import java.util.Vector;
 
 public class WorkBook implements Serializable, XLSConstants, Book
 {
-
+	private static final Logger log = LoggerFactory.getLogger( WorkBook.class );
 	private static final long serialVersionUID = 2282017774412632087L;
 
 	DateConverter.DateFormat dateFormat = DateConverter.DateFormat.LEGACY_1900;
@@ -93,7 +94,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	public static int ALLOWDUPES = 0;
 	public static int SHAREDUPES = 1;
 
-	private int DEBUGLEVEL = 0;
 	private int bofct = 0, eofct = 0, indexnum = 0;
 	private int defaultIxfe = 15;
 	private int CalcMode = CALCULATE_AUTO;
@@ -621,7 +621,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			}
 			catch( Exception e )
 			{
-				Logger.logWarn( "Invalid Calc Mode Setting in System properties:" + cm );
+				log.warn( "Invalid Calc Mode Setting in System properties:" + cm, e );
 			}
 		}
 		if( System.getProperties().get( "com.extentech.ExtenXLS.sharedupes" ) != null )
@@ -738,7 +738,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			}
 			catch( WorkSheetNotFoundException e )
 			{
-				Logger.logWarn( "WorkBookHandle.addName() setting Externsheet failed for new Name: " + e.toString() );
+				log.warn( "WorkBookHandle.addName() setting Externsheet failed for new Name: " + e.toString() );
 			}
 		}
 		return names.size() - 1;
@@ -764,7 +764,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				}
 				catch( WorkSheetNotFoundException e )
 				{
-					Logger.logWarn( "WorkBookHandle.addName() setting Externsheet failed for new Name: " + e.toString() );
+					log.warn( "WorkBookHandle.addName() setting Externsheet failed for new Name: " + e.toString() );
 				}
 			}
 			newName.updateSheetRefs( origWorkBookName );
@@ -885,7 +885,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "Error adding externname: " + e );
+			log.warn( "Error adding externname: " + e );
 		}
 		return n;
 	}
@@ -1198,7 +1198,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			if( t >= fonts.size() )
 			{
-				Logger.logWarn( "font " + t + " not found. Workbook contains only: " + fonts.size() + " defined fonts." );
+				log.warn( "font " + t + " not found. Workbook contains only: " + fonts.size() + " defined fonts." );
 				return (Font) fonts.get( 0 );
 			}
 			return (Font) fonts.get( t );
@@ -1406,12 +1406,12 @@ public class WorkBook implements Serializable, XLSConstants, Book
 
 		if( this.lastBOF == null )
 		{
-			Logger.logWarn( "WorkBook: NULL Last BOF" );
+			log.debug( "WorkBook: NULL Last BOF" );
 		}
 		long lb = this.lastBOF.getLbPlyPos();
 		if( !this.lastBOF.isValidBIFF8() )
 		{
-			lb += (long) 8;
+			lb += 8;
 		}
 		lbplypos = lb; // use last
 
@@ -1567,15 +1567,15 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				this.setLastINDEX( id );
 				if( bs == null )
 				{
-					Logger.logWarn( "ERROR: WorkBook.addRecord( Index ) error: BAD LBPLYPOS.  The wrong LB:" + lbplypos );
+					log.error( "ERROR: WorkBook.addRecord( Index ) error: BAD LBPLYPOS.  The wrong LB:" + lbplypos );
 					try
 					{
 						bs = this.getWorkSheetByNumber( indexnum - 1 );
-						Logger.logInfo( " The RIGHT LB:" + bs.getLbPlyPos() );
+						log.warn( " The RIGHT LB:" + bs.getLbPlyPos() );
 					}
 					catch( WorkSheetNotFoundException e )
 					{
-						Logger.logInfo( "problem getting WorkSheetByNumber: " + e );
+						log.warn( "problem getting WorkSheetByNumber: " + e );
 					}
 
 				}
@@ -1632,9 +1632,9 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				Dsf dsf = (Dsf) rec;
 				if( dsf.fDSF == 1 )
 				{
-					Logger.logErr( "DOUBLE STREAM FILE DETECTED!" );
-					Logger.logErr( "  ExtenXLS is compatible with Excel 97 and above only." );
-					throw new WorkBookException( "ERROR: DOUBLE STREAM FILE DETECTED!  ExtenXLS is compatible with Excel 97 + only.",
+					log.error( "DOUBLE STREAM FILE DETECTED!" );
+					log.error( "  OpenXLS is compatible with Excel 97 and above only." );
+					throw new WorkBookException( "ERROR: DOUBLE STREAM FILE DETECTED!  OpenXLS is compatible with Excel 97 + only.",
 					                             WorkBookException.DOUBLE_STREAM_FILE );
 				}
 				break;
@@ -1650,10 +1650,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				break;
 
 			case BOF:
-				if( DEBUGLEVEL > 5 )
-				{
-					Logger.logInfo( "BOF:" + bofct + " - " + rec );
-				}
+					log.debug( "BOF:" + bofct + " - " + rec );
 				if( eofct == bofct )
 				{
 					if( bs != null )
@@ -1965,15 +1962,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	}
 
 	/**
-	 * set the Debug level
-	 */
-	@Override
-	public void setDebugLevel( int i )
-	{
-		this.DEBUGLEVEL = i;
-	}
-
-	/**
 	 * get a handle to the Reader for this
 	 * WorkBook.
 	 */
@@ -2035,7 +2023,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "Error retrieving worksheet for getCells: " + e );
+				log.error( "Error retrieving worksheet for getCells: " + e );
 			}
 		}
 		BiffRec[] cellzr = new BiffRec[cellz.size()];
@@ -2093,14 +2081,11 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	{
 		if( sheet == null )
 		{
-			Logger.logWarn( "WorkBook.addWorkSheet() attempting to add null sheet." );
+			log.warn( "WorkBook.addWorkSheet() attempting to add null sheet." );
 			return;
 		}
 		this.lastbound = sheet;
-		if( DEBUGLEVEL > 10 )
-		{
-			Logger.logInfo( "Workbook Adding Sheet: " + sheet.getSheetName() + ":" + String.valueOf( lbplypos ) );
-		}
+			log.debug( "Workbook Adding Sheet: " + sheet.getSheetName() + ":" + String.valueOf( lbplypos ) );
 		workSheets.put( lbplypos, sheet );
 		boundsheets.add( sheet );
 	}
@@ -2205,7 +2190,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		catch( WorkSheetNotFoundException e )
 		{
-			Logger.logInfo( "could not update Externsheet reference from " + sheet.toString() + " : " + e.toString() );
+			log.warn( "could not update Externsheet reference from " + sheet.toString() + " : " + e.toString() );
 		}
 
 		sheet.removeAllRecords();
@@ -2323,7 +2308,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		catch( Exception ex )
 		{
-			Logger.logWarn( "WorkBook.getWorkSheetByName failed: " + ex.toString() );
+			log.warn( "WorkBook.getWorkSheetByName failed: " + ex.toString() );
 		}
 		throw new WorkSheetNotFoundException( "Worksheet " + bstr + " not found in " + this.toString() );
 	}
@@ -2831,7 +2816,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "deleteChart: expected Msodrawing record" );
+			log.error( "deleteChart: expected Msodrawing record" );
 		}
         /* shouldn't be necessary to remove chart recs as they are separated upon init of workbook and reassebmbled upon write*/
 		this.removeChart( chartname );
@@ -3028,7 +3013,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "Adding new sheetRef failed in addBoundsheet()" + e.toString() );
+			log.warn( "Adding new sheetRef failed in addBoundsheet()" + e.toString() );
 		}
 
 		// update the chart references + add to wb
@@ -3048,17 +3033,15 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			XLSRecord xl = (XLSRecord) newrecs.get( z );
 			this.addRecord( xl, false );
-			if( DEBUGLEVEL > 5 )
-			{
 				try
 				{
-					Logger.logInfo( "Copying: " + xl.toString() + ":" + String.valueOf( newoffset ) + ":" + xl.getLength() );
+					log.trace( "Copying: " + xl.toString() + ":" + String.valueOf( newoffset ) + ":" + xl.getLength() );
 				}
 				catch( Exception e )
 				{
+					// TODO This is dumb - if we need the log output for debugging...
 					;
 				}
-			}
 			if( xl instanceof Codename )
 			{
 				Codename secretagent = (Codename) xl;  // lol -nr
@@ -3160,10 +3143,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			bound.setSelected( true );
 		}
 
-		if( DEBUGLEVEL > 5 )
-		{
-			Logger.logInfo( "changesize for  new boundsheet: " + bound.getSheetName() + ": " + tout );
-		}
+			log.trace( "changesize for  new boundsheet: " + bound.getSheetName() + ": " + tout );
 		copying = false;
 	}
 
@@ -3294,7 +3274,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 					}
 					catch( WorkSheetNotFoundException we )
 					{
-						Logger.logWarn( "External Reference encountered upon updating formula references:  Worksheet Reference Found: " + ptg
+						log.warn( "External Reference encountered upon updating formula references:  Worksheet Reference Found: " + ptg
 								.getSheetName() );
 						ptg.setExternalReference( origWorkBookName );
 					}
@@ -3321,7 +3301,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 								}
 								catch( WorkSheetNotFoundException we )
 								{
-									Logger.logWarn(
+									log.warn(
 											"External References Not Supported:  UpdateFormulaReferences: External Worksheet Reference Found: " + ptg
 													.getSheetName() );
 									ptg.setExternalReference( origWorkBookName );
@@ -3338,7 +3318,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "WorkBook.updateFormulaRefs: error parsing expression: " + e );
+			log.error( "WorkBook.updateFormulaRefs: error parsing expression: " + e, e );
 		}
 	}
 
@@ -3698,7 +3678,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			}
 			catch( WorkSheetNotFoundException e )
 			{
-				Logger.logWarn( "WorkBook.addExternSheet() locating Sheet for adding Externsheet failed: " + e );
+				log.warn( "WorkBook.addExternSheet() locating Sheet for adding Externsheet failed: " + e );
 			}
 
 		}

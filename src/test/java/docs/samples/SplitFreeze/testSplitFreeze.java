@@ -24,8 +24,9 @@ package docs.samples.SplitFreeze;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.toolkit.Logger;
 import junit.framework.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -37,6 +38,7 @@ import java.io.FileOutputStream;
  */
 public class testSplitFreeze
 {
+	private static final Logger log = LoggerFactory.getLogger( testSplitFreeze.class );
 	public static final String wd = System.getProperty( "user.dir" ) + "/docs/samples/SplitFreeze/";
 
 	WorkBookHandle workbook;
@@ -46,16 +48,16 @@ public class testSplitFreeze
 		testSplitFreeze test = new testSplitFreeze();
 		try
 		{
-			Logger.logInfo( "Begin testSplitFreeze." );
+			log.info( "Begin testSplitFreeze." );
 			test.setUp();
 			test.tesSplitCols();
 			test.tesSplitRows();
 			test.testFreezePanes();
-			Logger.logInfo( "testSplitFreeze done." );
+			log.info( "testSplitFreeze done." );
 		}
 		catch( Exception ex )
 		{
-			Logger.logErr( "testSplitFreeze failed", ex );
+			log.error( "testSplitFreeze failed", ex );
 		}
 	}
 

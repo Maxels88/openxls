@@ -23,16 +23,11 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
 
 import java.util.Arrays;
 
 public class SXNum extends XLSRecord implements XLSConstants, PivotCacheRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
 	private static final long serialVersionUID = 9027599480633995587L;
 	double num;
 
@@ -40,10 +35,6 @@ public class SXNum extends XLSRecord implements XLSConstants, PivotCacheRecord
 	public void init()
 	{
 		super.init();
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "SXNum -" );
-		}
 		num = ByteTools.eightBytetoLEDouble( getBytesAt( 0, 8 ) );
 	}
 

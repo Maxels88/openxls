@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>USERSVIEWBEGIN: Custom View Settings (1AAh)</b><br>
@@ -48,10 +49,7 @@ import com.extentech.toolkit.Logger;
  */
 public final class Usersviewbegin extends com.extentech.formats.XLS.XLSRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Usersviewbegin.class );
 	private static final long serialVersionUID = -1877650235927064991L;
 	// record fields
 	private int tabid = -1;
@@ -165,10 +163,7 @@ public final class Usersviewbegin extends com.extentech.formats.XLS.XLSRecord
 		num2 = ByteTools.readShort( this.getByteAt( 30 ), this.getByteAt( 31 ) );
 		grbit = ByteTools.readInt( num1, num2 );
 		this.decodeGrbit();
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "Usersviewbegin Tab Index: " + tabid );
-		}
+			log.debug( "Usersviewbegin Tab Index: " + tabid );
 	}
 
 	/**

@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 
@@ -183,10 +184,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class Sxvd extends XLSRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Sxvd.class );
 	private static final long serialVersionUID = -6537376162863865578L;
 
 	public static final short AXIS_NONE = 0;
@@ -229,7 +227,7 @@ public class Sxvd extends XLSRecord
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logInfo( "encoding PivotTable caption name in Sxvd: " + e );
+				log.warn( "encoding PivotTable caption name in Sxvd: " + e, e );
 			}
 		}
 		// type of subtotal funtion
@@ -248,10 +246,7 @@ public class Sxvd extends XLSRecord
 		fVariance = ((b1 & 0x4) == 0x4);// variance subtotal function - if so: if sxaxis.sxaxisRw field equals 1 or if the sxaxis.sxaxisCol field equals 1 or if the sxaxis.sxaxisPage field equals 1, there MUST be one SXVI record with the itmType field of the SXVI record equal to 11.
 		fVariancep = ((b1 & 0x8) == 0x8);// variance population subtotal function - if so: if sxaxis.sxaxisRw field equals 1 or if the sxaxis.sxaxisCol field equals 1 or if the sxaxis.sxaxisPage field equals 1, there MUST be one SXVI record with the itmType field of the SXVI record equal to 12.
 
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "SXVD - axis:" + getAxisTypeName() + " cSub:" + cSub + " cItm:" + cItm + " default?" + fDefault + " sum?" + fSum + " caption:" + caption );
-		}
+			log.debug( "SXVD - axis:" + getAxisTypeName() + " cSub:" + cSub + " cItm:" + cItm + " default?" + fDefault + " sum?" + fSum + " caption:" + caption );
 	}
 
 	/**

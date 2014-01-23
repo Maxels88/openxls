@@ -25,7 +25,8 @@ package docs.samples.PrinterSettings;
 import com.extentech.ExtenXLS.PrinterSettingsHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -44,7 +45,7 @@ import java.io.FileOutputStream;
  */
 public class PrinterSettingsDemo
 {
-
+	private static final Logger log = LoggerFactory.getLogger( PrinterSettingsDemo.class );
 	String outputdir = System.getProperty( "user.dir" ) + "/docs/samples/PrinterSettings/";
 
 	/**
@@ -56,7 +57,7 @@ public class PrinterSettingsDemo
 	{
 		try
 		{
-			Logger.logInfo( "Begin Demo of Printer Settings..." );
+			log.info( "Begin Demo of Printer Settings..." );
 			// load the current file and output it to same directory
 			WorkBookHandle bk = new WorkBookHandle( System.getProperty( "user.dir" ) + "/docs/samples/PrinterSettings/InvoiceTemplate.xls" );
 
@@ -64,11 +65,11 @@ public class PrinterSettingsDemo
 			PrinterSettingsDemo demo = new PrinterSettingsDemo();
 			demo.testPrinterSettings( bk );
 
-			Logger.logInfo( "Successfully Set Printer Settings for Spreadsheet: " + bk.toString() );
+			log.info( "Successfully Set Printer Settings for Spreadsheet: " + bk.toString() );
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Spreadsheet Printer Settings Demo failed.", e );
+			log.error( "Spreadsheet Printer Settings Demo failed.", e );
 		}
 
 	}
@@ -95,7 +96,7 @@ public class PrinterSettingsDemo
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "testPrinterSettings failed: " + e.toString() );
+			log.error( "testPrinterSettings failed: " + e.toString() );
 		}
 
 		// fit width
@@ -137,13 +138,13 @@ public class PrinterSettingsDemo
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "testPrinterSettings failed: " + e.toString() );
+			log.error( "testPrinterSettings failed: " + e.toString() );
 		}
 
 		// header margin
-		Logger.logInfo( "Header Margin: " + printersetup.getHeaderMargin() );
+		log.info( "Header Margin: " + printersetup.getHeaderMargin() );
 		// footer margin
-		Logger.logInfo( "Header Margin: " + printersetup.getFooterMargin() );
+		log.info( "Header Margin: " + printersetup.getFooterMargin() );
 
 		// assertions
 
@@ -182,7 +183,7 @@ public class PrinterSettingsDemo
 	{
 		if( o1 != o2 )
 		{
-			Logger.logWarn( "Values not equal:" + o1 + "!=" + o2 );
+			log.warn( "Values not equal:" + o1 + "!=" + o2 );
 		}
 	}
 
@@ -197,7 +198,7 @@ public class PrinterSettingsDemo
 	{
 		if( o1 != o2 )
 		{
-			Logger.logWarn( "Values not equal:" + o1 + "!=" + o2 );
+			log.warn( "Values not equal:" + o1 + "!=" + o2 );
 		}
 	}
 
@@ -214,7 +215,7 @@ public class PrinterSettingsDemo
 		}
 		catch( java.io.IOException e )
 		{
-			Logger.logInfo( "IOException in Tester.  " + e );
+			log.info( "IOException in Tester.  " + e );
 		}
 	}
 

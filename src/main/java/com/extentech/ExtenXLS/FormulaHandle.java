@@ -33,7 +33,8 @@ import com.extentech.formats.XLS.formulas.FunctionConstants;
 import com.extentech.formats.XLS.formulas.Ptg;
 import com.extentech.formats.XLS.formulas.PtgName;
 import com.extentech.formats.XLS.formulas.PtgRef;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.List;
@@ -47,6 +48,7 @@ import java.util.List;
  */
 public class FormulaHandle
 {
+	private static final Logger log = LoggerFactory.getLogger( FormulaHandle.class );
 	public static String[][] getSupportedFunctions()
 	{
 		return FunctionConstants.recArr;
@@ -339,7 +341,7 @@ public class FormulaHandle
 			}
 			catch( Exception e )
 			{
-				Logger.logInfo( "updating Formula reference failed:" + e.toString() );
+				log.warn( "updating Formula reference failed {} to {}", formulaLoc, newaddr, e );
 				return false;
 			}
 		}
@@ -468,7 +470,7 @@ public class FormulaHandle
 			}
 			if( !fmh.changeFormulaLocation( celladdy, newAddress ) )
 			{
-				Logger.logErr( "Could not change Formula Reference: " + celladdy + " to: " + newAddress );
+				log.error( "Could not change Formula Reference: " + celladdy + " to: " + newAddress );
 			}
 		}
 		return;
@@ -581,7 +583,7 @@ public class FormulaHandle
 		}
 		if( val == null )
 		{
-			Logger.logErr( "FormulaHandle.getOOXML:  unexpected null encountered when calculating formula: " + this.getCellAddress() );
+			log.error( "FormulaHandle.getOOXML:  unexpected null encountered when calculating formula: " + this.getCellAddress() );
 		}
 		// Handle attributes for special cached values
 		if( val instanceof String )
@@ -617,7 +619,7 @@ public class FormulaHandle
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "FormulaHandle.getOOXML: error obtaining formula string: " + e.toString() );
+			log.error( "FormulaHandle.getOOXML: error obtaining formula string: " + e.toString(), e );
 		}
 		fs = OOXMLAdapter.stripNonAscii( fs ).toString();    // handle non-standard xml chars -- ummm what about Japanese? -- it's all ok
 		if( !this.isArrayFormula() )

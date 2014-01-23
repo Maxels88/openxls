@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>SCENPROTECT: Protection Flag (DDh)</b><br>
@@ -39,9 +40,7 @@ import com.extentech.toolkit.Logger;
 
 public final class ScenProtect extends com.extentech.formats.XLS.XLSRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( ScenProtect.class );
 	private static final long serialVersionUID = -3722344748446193860L;
 	int fLock = -1;
 
@@ -90,10 +89,10 @@ public final class ScenProtect extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		fLock = (int) ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		if( this.getIsLocked() && (DEBUGLEVEL > 3) )
+		fLock = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		if( this.getIsLocked()  )
 		{
-			Logger.logInfo( "Scenario Protection Enabled." );
+			log.debug( "Scenario Protection Enabled." );
 		}
 	}
 }

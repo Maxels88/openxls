@@ -29,8 +29,9 @@ import com.extentech.formats.XLS.FormatConstants;
 import com.extentech.formats.XLS.Formula;
 import com.extentech.formats.XLS.XLSConstants;
 import com.extentech.formats.XLS.Xf;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
@@ -47,7 +48,7 @@ import java.util.Date;
  */
 public class TextCalculator
 {
-
+	private static final Logger log = LoggerFactory.getLogger( TextCalculator.class );
 	/**
 	 * ASC function
 	 * For Double-byte character set (DBCS) languages, changes full-width (double-byte) characters to half-width (single-byte) characters.
@@ -942,14 +943,14 @@ public class TextCalculator
 					}
 					catch( Exception ex )
 					{
-						Logger.logWarn( "Simple Date Format could not parse: " + fmt + ". Returning default." ); //not a valid date format
+						log.warn( "Simple Date Format could not parse: " + fmt + ". Returning default.", ex ); //not a valid date format
 					}
 					//return new PtgStr(sdf.format(d));
 					return new PtgStr( WorkBookHandle.simpledateformat.format( d ) );
 				}
 				catch( Exception e )
 				{
-					Logger.logErr( "Unable to calcText formatting correctly for a date" + e );
+					log.error( "Unable to calcText formatting correctly for a date" + e );
 				}
 			}
 		}
@@ -1097,7 +1098,7 @@ public class TextCalculator
 			}
 			else // DEBUGGING- Take out when done
 			{
-				Logger.logWarn( "getUnicodeBytes: Unexpected rec encountered: " + op.getClass() );
+				log.warn( "getUnicodeBytes: Unexpected rec encountered: " + op.getClass() );
 			}
 		}
 		else if( op instanceof PtgStr )
@@ -1108,7 +1109,7 @@ public class TextCalculator
 		else
 		{
 			// DEBUGGING- Take out when done
-			Logger.logWarn( "getUnicodeBytes: Unexpected operand encountered: " + op.getClass() );
+			log.warn( "getUnicodeBytes: Unexpected operand encountered: " + op.getClass() );
 		}
 		return strbytes;
 	}

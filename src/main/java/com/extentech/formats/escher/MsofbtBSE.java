@@ -57,7 +57,7 @@ public class MsofbtBSE extends EscherRecord
 		if( imageType == 0 )
 		{
 			byte[] retData = new byte[36];
-			retData[18] = (byte) -1;    // tag
+			retData[18] = -1;    // tag
 			setLength( retData.length );
 			return retData;
 		}
@@ -66,8 +66,8 @@ public class MsofbtBSE extends EscherRecord
 		byte[] digest = md4Digest.getDigest( imageData );
 		System.arraycopy( digest, 0, imgHeader, 2, 16 );
 
-		imgHeader[18] = (byte) -1;   //First tag byte is always -1
-		imgHeader[19] = (byte) 0;    //Second tag byte is always 0
+		imgHeader[18] = -1;   //First tag byte is always -1
+		imgHeader[19] = 0;    //Second tag byte is always 0
 
 /* 20071119 KSC: original code; this was wrong    		
 		int mod = (imageData.length+25)%MAXROWS_BIFF8;
@@ -122,8 +122,8 @@ public class MsofbtBSE extends EscherRecord
 		imgHeader[30] = tempBytes[2];
 		imgHeader[31] = tempBytes[3];
 
-		imgHeader[32] = (byte) 0;    //usage - should be 0=default usage
-		imgHeader[33] = (byte) 0;    //cbName is always zero = no name following this header
+		imgHeader[32] = 0;    //usage - should be 0=default usage
+		imgHeader[33] = 0;    //cbName is always zero = no name following this header
 		// bytes 34 and 35 are unused at this point and should be 0
 
 		// ********************************************************************************

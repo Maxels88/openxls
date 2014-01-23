@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>GUTS: Size of Row and Column Gutters</b><br>
@@ -41,9 +42,7 @@ import com.extentech.toolkit.Logger;
  */
 public final class Guts extends com.extentech.formats.XLS.XLSRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Guts.class );
 	private static final long serialVersionUID = 2815489536116897500L;
 	private short dxRwGut;
 	private short dyColGut;
@@ -59,10 +58,7 @@ public final class Guts extends com.extentech.formats.XLS.XLSRecord
 		iLevelRwMac = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
 		iLevelColMac = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
 
-		if( DEBUGLEVEL > 5 )
-		{
-			Logger.logInfo( "INFO: Guts settings: dxRwGut:" + dxRwGut + " dyColGut:" + dyColGut + " iLevelRwMac:" + iLevelRwMac + " iLevelColMac:" + iLevelColMac );
-		}
+			log.debug( "INFO: Guts settings: dxRwGut:" + dxRwGut + " dyColGut:" + dyColGut + " iLevelRwMac:" + iLevelRwMac + " iLevelColMac:" + iLevelColMac );
 	}
 
 	public void setRowGutterSize( int i )
@@ -73,7 +69,7 @@ public final class Guts extends com.extentech.formats.XLS.XLSRecord
 
 	public int getRowGutterSize()
 	{
-		return (int) dxRwGut;
+		return dxRwGut;
 	}
 
 	public void setColGutterSize( int i )
@@ -84,7 +80,7 @@ public final class Guts extends com.extentech.formats.XLS.XLSRecord
 
 	public int getColGutterSize()
 	{
-		return (int) dyColGut;
+		return dyColGut;
 	}
 
 	public void setMaxRowLevel( int i )
@@ -95,7 +91,7 @@ public final class Guts extends com.extentech.formats.XLS.XLSRecord
 
 	public int getMaxRowLevel()
 	{
-		return (int) iLevelRwMac;
+		return iLevelRwMac;
 	}
 
 	public void setMaxColLevel( int i )
@@ -106,7 +102,7 @@ public final class Guts extends com.extentech.formats.XLS.XLSRecord
 
 	public int getMaxColLevel()
 	{
-		return (int) iLevelColMac;
+		return iLevelColMac;
 	}
 
 	private void updateRecBody()

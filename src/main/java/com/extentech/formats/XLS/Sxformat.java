@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.XLS;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SXFORMAT FBh: This record contains formatting data
@@ -38,10 +39,7 @@ import com.extentech.toolkit.Logger;
 
 public class Sxformat extends XLSRecord implements XLSConstants
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Sxformat.class );
 	private static final long serialVersionUID = -8702313274711819140L;
 	byte[] data = null;
 
@@ -51,10 +49,7 @@ public class Sxformat extends XLSRecord implements XLSConstants
 		super.init();
 		if( this.getLength() <= 0 )
 		{  // Is this record populated?
-			if( DEBUGLEVEL > -1 )
-			{
-				Logger.logInfo( "no data in Sxformat" );
-			}
+				log.debug( "no data in Sxformat" );
 		}
 		else
 		{ // parse out all the fields

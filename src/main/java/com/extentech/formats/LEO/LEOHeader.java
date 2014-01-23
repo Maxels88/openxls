@@ -24,7 +24,8 @@ package com.extentech.formats.LEO;
 
 // NIO based API requires JDK1.3+
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
@@ -58,10 +59,8 @@ import java.nio.ByteBuffer;
  */
 public class LEOHeader implements Serializable
 {
+	private static final Logger log = LoggerFactory.getLogger( LEOHeader.class );
 
-	/**
-	 * serialVersionUID
-	 */
 	private static final long serialVersionUID = -422489164065975273L;
 	public final static int HEADER_SIZE = 0x200;
 	private transient ByteBuffer data;
@@ -353,7 +352,7 @@ public class LEOHeader implements Serializable
 			if( (FAT.length * 4) >= (this.data.limit() - 4) )
 			{
 				// TODO: Create extra DIFAT sectors FAT.length too big...
-				Logger.logWarn( "WARNING: LEOHeader.setFAT() creating Extra FAT Sectors Not Implemented.  Output file too large." );
+				log.error( "WARNING: LEOHeader.setFAT() creating Extra FAT Sectors Not Implemented.  Output file too large." );
 			}
 			else
 			{

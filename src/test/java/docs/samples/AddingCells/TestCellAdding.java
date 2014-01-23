@@ -27,7 +27,8 @@ import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
 import com.extentech.formats.XLS.CellNotFoundException;
 import com.extentech.formats.XLS.WorkSheetNotFoundException;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -52,7 +53,7 @@ public class TestCellAdding
  */
 class testadds
 {
-
+	private static final Logger log = LoggerFactory.getLogger( testadds.class );
 	private String wdir = System.getProperty( "user.dir" ) + "/docs/samples/AddingCells/";
 	int ROWHEIGHT = 1000;
 	int NUMADDS = 11000;
@@ -165,7 +166,7 @@ class testadds
 		}
 		catch( java.io.IOException e )
 		{
-			Logger.logInfo( "IOException in Tester.  " + e );
+			log.info( "IOException in Tester.  " + e );
 		}
 	}
 

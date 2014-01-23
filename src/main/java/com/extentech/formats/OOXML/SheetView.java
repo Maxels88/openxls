@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.OOXML;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
@@ -44,11 +45,11 @@ import java.util.Iterator;
 // TODO: finish pivotSelection
 public class SheetView implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( SheetView.class );
 	private static final long serialVersionUID = 8750051341951797617L;
-	private HashMap<String, Object> attrs = new HashMap<String, Object>();
+	private HashMap<String, Object> attrs = new HashMap<>();
 	private Pane pane = null;
-	private ArrayList<Selection> selections = new ArrayList<Selection>();
+	private ArrayList<Selection> selections = new ArrayList<>();
 
 	public SheetView()
 	{
@@ -71,9 +72,9 @@ public class SheetView implements OOXMLElement
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, Object> attrs = new HashMap<String, Object>();
+		HashMap<String, Object> attrs = new HashMap<>();
 		Pane p = null;
-		ArrayList<Selection> selections = new ArrayList<Selection>();
+		ArrayList<Selection> selections = new ArrayList<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -111,7 +112,7 @@ public class SheetView implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "sheetView.parseOOXML: " + e.toString() );
+			log.error( "sheetView.parseOOXML: " + e.toString() );
 		}
 		SheetView s = new SheetView( attrs, p, selections );
 		return s;
@@ -187,7 +188,7 @@ public class SheetView implements OOXMLElement
 	public void removeSelection()
 	{
 		this.removeAttr( "tabSelected" );
-		selections = new ArrayList<Selection>();
+		selections = new ArrayList<>();
 	}
 
 	/**
@@ -218,6 +219,7 @@ public class SheetView implements OOXMLElement
  */
 class Pane implements OOXMLElement
 {
+	private static final Logger log = LoggerFactory.getLogger( Pane.class );
 	private static final long serialVersionUID = 5570779997661362205L;
 	private HashMap<String, String> attrs = null;
 
@@ -233,7 +235,7 @@ class Pane implements OOXMLElement
 
 	public static Pane parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -263,7 +265,7 @@ class Pane implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "pane.parseOOXML: " + e.toString() );
+			log.error( "pane.parseOOXML: " + e.toString() );
 		}
 		Pane p = new Pane( attrs );
 		return p;
@@ -302,7 +304,7 @@ class Pane implements OOXMLElement
  */
 class Selection implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Selection.class );
 	private static final long serialVersionUID = -5411798327743116154L;
 	private HashMap<String, String> attrs = null;
 
@@ -318,7 +320,7 @@ class Selection implements OOXMLElement
 
 	public static Selection parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -348,7 +350,7 @@ class Selection implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "selection.parseOOXML: " + e.toString() );
+			log.error( "selection.parseOOXML: " + e.toString() );
 		}
 		Selection s = new Selection( attrs );
 		return s;

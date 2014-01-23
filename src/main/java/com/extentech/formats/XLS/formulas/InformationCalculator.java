@@ -29,7 +29,8 @@ import com.extentech.formats.XLS.FunctionNotSupportedException;
 import com.extentech.formats.XLS.Labelsst;
 import com.extentech.formats.XLS.WorkSheetNotFoundException;
 import com.extentech.formats.XLS.XLSRecord;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 
@@ -46,7 +47,7 @@ import java.text.DecimalFormat;
 
 public class InformationCalculator
 {
-
+	private static final Logger log = LoggerFactory.getLogger( InformationCalculator.class );
 	/**
 	 * CELL
 	 * Returns information about the formatting, location, or contents of a cell
@@ -327,7 +328,7 @@ public class InformationCalculator
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "CELL: unable to calculate: " + e.toString() );
+			log.warn( "CELL: unable to calculate: " + e.toString(), e );
 		}
 		return new PtgErr( PtgErr.ERROR_VALUE );
 	}
@@ -469,7 +470,7 @@ public class InformationCalculator
 		if( type_text.equals( "release" ) )
 		{    //Version of Microsoft Excel, as text.
 			// TODO: Finish!  97= 8.0, 2000= 9.0, 2002 (XP)= 10.0, 2003= 11.0, 2007= 12.0
-			Logger.logWarn( "Worksheet Function INFO(\"release\") is not supported" );
+			log.warn( "Worksheet Function INFO(\"release\") is not supported" );
 			return new PtgStr( "" );
 		}
 		if( type_text.equals( "system" ) )        // Name of the operating environment: Macintosh = "mac" Windows = "pcdos"

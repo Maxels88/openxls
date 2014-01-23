@@ -32,8 +32,9 @@ import com.extentech.formats.XLS.formulas.Ptg;
 import com.extentech.formats.XLS.formulas.PtgArray;
 import com.extentech.formats.XLS.formulas.PtgRefN;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
@@ -110,9 +111,7 @@ import java.util.Stack;
  */
 public final class Cf extends com.extentech.formats.XLS.XLSRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Cf.class );
 	private static final long serialVersionUID = 5624169378370505532L;
 	short ct = 0;        //		Conditional formatting type
 	short cp = 0;        //		Conditional formatting operator
@@ -353,7 +352,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 			pos += 2;
 			if( pos != 130 )
 			{
-				Logger.logWarn( "Cf font block parsing pos mismatch" + pos );
+				log.warn( "Cf font block parsing pos mismatch" + pos );
 			}
 			getFont();
 		}
@@ -434,7 +433,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 
 		if( postest != pos )
 		{
-			Logger.logWarn( "Cf bad pos offset during init()." );
+			log.warn( "Cf bad pos offset during init()." );
 			pos = postest;
 		}
 		// 1st formula data= pos->cce1
@@ -445,7 +444,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Initializing expression1 for Cf failed: " + new String( function ) );
+			log.error( "Initializing expression1 for Cf failed: " + new String( function ) );
 		}
 		pos += cce1;
 		// 2nd formula data= pos+cce1->cce2
@@ -458,13 +457,10 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "Initializing expression2 for Cf failed: " + new String( function ) );
+				log.error( "Initializing expression2 for Cf failed: " + new String( function ) );
 			}
 		}
-		if( DEBUGLEVEL > DEBUG_LOW )
-		{
-			Logger.logInfo( "Cf record encountered." );
-		}
+			log.trace( "Cf record encountered." );
 	}
 
 	/**
@@ -1728,7 +1724,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		this.updateBorderLineColorsFlag();
 		if( this.borderLineColorTop != b )
 		{
-			Logger.logWarn( "setBorderLineColorTop failed" );
+			log.warn( "setBorderLineColorTop failed" );
 		}
 	}
 
@@ -1759,7 +1755,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		this.updateBorderLineColorsFlag();
 		if( this.borderLineColorBottom != b )
 		{
-			Logger.logWarn( "borderLineColorBottom failed" );
+			log.warn( "borderLineColorBottom failed" );
 		}
 	}
 
@@ -2092,7 +2088,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception ex )
 		{
-			// Logger.logWarn("CF condition "+this.formula1.getFormulaString()+" evaluation failed for : " + refcell.toString());
+			// log.warn("CF condition "+this.formula1.getFormulaString()+" evaluation failed for : " + refcell.toString());
 			return false;
 		}
 	}
@@ -2720,7 +2716,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Cf.parseXML: " + e.toString() );
+			log.error( "Cf.parseXML: " + e.toString() );
 		}
 		return oe;
 	}

@@ -25,7 +25,8 @@ package com.extentech.formats.XLS;
 import com.extentech.ExtenXLS.ExcelTools;
 import com.extentech.formats.XLS.SxAddl.SxcView;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -131,9 +132,7 @@ import java.util.ArrayList;
  */
 public class Sxview extends XLSRecord implements XLSConstants
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Sxview.class );
 	private static final long serialVersionUID = 2639291289806138985L;
 	short rwFirst = 0x0; // First Row of Pivot Table
 	short rwLast = 0x0; // Last Row of Pivot Table
@@ -218,10 +217,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 		super.init();
 		if( this.getLength() <= 0 )
 		{  // Is this record populated?
-			if( DEBUGLEVEL > -1 )
-			{
-				Logger.logInfo( "no data in SXVIEW" );
-			}
+				log.debug( "no data in SXVIEW" );
 		}
 		else
 		{ // parse out all the fields
@@ -252,7 +248,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 			itblAutoFmt = ByteTools.readShort( this.getByteAt( 38 ), this.getByteAt( 39 ) );
 			cchName = ByteTools.readShort( this.getByteAt( 40 ), this.getByteAt( 41 ) );
 			cchData = ByteTools.readShort( this.getByteAt( 42 ), this.getByteAt( 43 ) );
-			int fullnamelen = (int) cchName + ((int) cchData);
+			int fullnamelen = cchName + (cchData);
 			rgch = new byte[fullnamelen];
 			int pos = 44;
 			if( cchName > 0 )
@@ -278,7 +274,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 				}
 				catch( UnsupportedEncodingException e )
 				{
-					Logger.logInfo( "encoding PivotTable name in Sxview: " + e );
+					log.warn( "encoding PivotTable name in Sxview: " + e, e );
 				}
 				pos += cchName * (encoding + 1);
 			}
@@ -299,14 +295,11 @@ public class Sxview extends XLSRecord implements XLSConstants
 				}
 				catch( UnsupportedEncodingException e )
 				{
-					Logger.logInfo( "encoding PivotTable name in Sxview: " + e );
+					log.warn( "encoding PivotTable name in Sxview: " + e, e );
 				}
 			}
 		}
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "SXVIEW: name:" + this.getTableName() + " iCache:" + iCache + " cDim:" + cDim + " cDimRw:" + cDimRw + " cDimCol:" + cDimCol + " cDimPg:" + cDimPg + " cDimData:" + cDimData + " cRw:" + cRw + " cCol:" + cCol + " datafieldname:" + DataFieldName );
-		}
+			log.debug( "SXVIEW: name:" + this.getTableName() + " iCache:" + iCache + " cDim:" + cDim + " cDimRw:" + cDimRw + " cDimCol:" + cDimCol + " cDimPg:" + cDimPg + " cDimData:" + cDimData + " cRw:" + cRw + " cCol:" + cCol + " datafieldname:" + DataFieldName );
 	}
 
 	/**
@@ -1334,7 +1327,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 		}
 		catch( UnsupportedEncodingException e )
 		{
-			Logger.logInfo( "encoding pivot table name in SXVIEW: " + e );
+			log.warn( "encoding pivot table name in SXVIEW: " + e, e );
 		}
 
 		//update the lengths:

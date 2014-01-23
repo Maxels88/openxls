@@ -24,7 +24,8 @@ package com.extentech.formats.XLS;
 
 import com.extentech.ExtenXLS.ExcelTools;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.NumberFormat;
 
@@ -48,9 +49,7 @@ import java.text.NumberFormat;
 
 public final class Rk extends XLSCellRecord implements Mulled
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Rk.class );
 	private static final long serialVersionUID = -3027662614434608240L;
 	int rkType;
 	double Rkdouble;
@@ -206,7 +205,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		short num2 = ByteTools.readShort( rkval[2], rkval[3] );
 		l = ByteTools.readInt( num2, num1 );
 
-		long num = (long) l;
+		long num = l;
 		// num = num << 1;
 		// num = num >>> 1;
 
@@ -218,14 +217,6 @@ public final class Rk extends XLSCellRecord implements Mulled
 		double d = 1.0;
 
 		Rkdouble = Rk.getRealVal( rkType, num );
-		if( DEBUG )
-		{
-			Logger.logInfo( String.valueOf( rkType ) );
-		}
-		if( DEBUG )
-		{
-			Logger.logInfo( String.valueOf( Rkdouble ) );
-		}
 		this.setIsValueForCell( true );
 		this.isDoubleNumber = false;
 		switch( rkType )
@@ -279,7 +270,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 				break;
 			case Rk.RK_INT_100:
 				newnum = String.valueOf( Rkdouble );
-				if( newnum.toUpperCase().indexOf( "E" ) > -1 )
+				if( newnum.toUpperCase().contains( "E" ) )
 				{
 					// do something intelligent
 					NumberFormat nmf = NumberFormat.getInstance();
@@ -287,14 +278,11 @@ public final class Rk extends XLSCellRecord implements Mulled
 					{
 						Number nm = nmf.parse( newnum );
 						float v = nm.floatValue();
-						if( this.DEBUGLEVEL > 5 )
-						{
-							Logger.logInfo( "Rk number format: " + v );
-						}
+							log.debug( "Rk number format: " + v );
 					}
 					catch( Exception e )
 					{
-						;
+						log.debug( "Exception parsing newnum: {} ", newnum,e );
 					}
 				}
 				else
@@ -369,7 +357,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		// add them to get the type
 		int rkType = bitset + bitset2;
 
-		return Rk.getRealVal( rkType, (long) num );
+		return Rk.getRealVal( rkType, num );
 	}
 
 	/**
@@ -406,15 +394,15 @@ public final class Rk extends XLSCellRecord implements Mulled
 			case Rk.RK_INT_100:
 				if( waknum >= 4290773292l )
 				{
-					Logger.logWarn( "Erroneous Rk" ); // THIS IS THE CUTOFF NUMBER -- ANYTHING THIS SIZE IS < -10,485.01
+					log.warn( "Erroneous Rk: {}", waknum ); // THIS IS THE CUTOFF NUMBER -- ANYTHING THIS SIZE IS < -10,485.01
 				}
 				// Integer x 100
 				waknum = waknum >> 2;
-				double ddd = (double) waknum;
+				double ddd = waknum;
 				return (ddd / 100);
 
 			default:
-				Logger.logInfo( "incorrect RK type for RK record: " + String.valueOf( RKType ) );
+				log.warn( "incorrect RK type for RK record: " + String.valueOf( RKType ) );
 		}
 		return 0.0;
 	}
@@ -443,7 +431,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 	{
 		if( isIntNumber )
 		{
-			return (double) RKint;
+			return RKint;
 		}
 		return Rkdouble;
 	}
@@ -453,7 +441,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 	{
 		if( isIntNumber )
 		{
-			return (float) RKint;
+			return RKint;
 		}
 		return (float) Rkdouble;
 	}
@@ -491,7 +479,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		}
 		catch( java.lang.NumberFormatException f )
 		{
-			Logger.logWarn( "in Rk " + s + " is not a number." );
+			log.warn( "in Rk " + s + " is not a number." );
 		}
 	}
 
@@ -507,8 +495,8 @@ public final class Rk extends XLSCellRecord implements Mulled
 		}
 		catch( Exception x )
 		{
-			Logger.logWarn( "Rk.setFloatVal() problem.  Fallback to floating point Number." );
-			Rk.convertRkToNumber( this, (double) f );
+			log.warn( "Rk.setFloatVal() problem.  Fallback to floating point Number." );
+			Rk.convertRkToNumber( this, f );
 		}
 	}
 
@@ -520,12 +508,12 @@ public final class Rk extends XLSCellRecord implements Mulled
 	{
 		try
 		{
-			this.setRKVal( (double) f );
+			this.setRKVal( f );
 		}
 		catch( Exception x )
 		{
-			Logger.logWarn( "Rk.setIntVal() problem.  Fallback to floating point Number." );
-			Rk.convertRkToNumber( this, (double) f );
+			log.warn( "Rk.setIntVal() problem.  Fallback to floating point Number." );
+			Rk.convertRkToNumber( this, f );
 		}
 	}
 
@@ -541,7 +529,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		}
 		catch( Exception x )
 		{
-			Logger.logWarn( "Rk.setDoubleVal() problem.  Fallback to floating point Number." );
+			log.warn( "Rk.setDoubleVal() problem.  Fallback to floating point Number." );
 			Rk.convertRkToNumber( this, f );
 		}
 	}
@@ -613,7 +601,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 			long lo = (long) d;
 			lo = (lo << 2);
 			doublebytes = ByteTools.longToByteArray( lo );        // RK_INT
-			byte mask = (byte) 0x2;
+			byte mask = 0x2;
 			doublebytes[7] = (byte) (doublebytes[7] | mask);
 			rkbytes[0] = doublebytes[7];
 			rkbytes[1] = doublebytes[6];
@@ -625,7 +613,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		else if( (bigger << 30) == 0 )
 		{
 			doublebytes = ByteTools.doubleToByteArray( d * 100 );        // F100
-			byte mask = (byte) 0x1;
+			byte mask = 0x1;
 			doublebytes[3] = (byte) (doublebytes[3] | mask);
 			rkbytes[0] = doublebytes[3];
 			rkbytes[1] = doublebytes[2];
@@ -639,7 +627,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 			long lo = (long) (d * 100);        // F100 + INT
 			lo = (lo << 2);
 			doublebytes = ByteTools.longToByteArray( lo );
-			byte mask = (byte) 0x3;
+			byte mask = 0x3;
 			doublebytes[7] = (byte) (doublebytes[7] | mask);
 			rkbytes[0] = doublebytes[7];
 			rkbytes[1] = doublebytes[6];
@@ -695,7 +683,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		// failsafe... if for any reason it did not work
 		if( this.Rkdouble != d )
 		{
-			Logger.logWarn( "Rk.setRKVal() problem.  Fallback to floating point Number." );
+			log.warn( "Rk.setRKVal() problem.  Fallback to floating point Number." );
 			Rk.convertRkToNumber( this, d );
 		}
 	}

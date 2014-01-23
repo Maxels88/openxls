@@ -28,7 +28,8 @@
  */
 package com.extentech.ExtenXLS;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -43,7 +44,7 @@ import java.util.Map;
 // is this a valid class anymore?
 public class FormatCache
 {
-
+	private static final Logger log = LoggerFactory.getLogger( FormatCache.class );
 	Map mpx = new java.util.HashMap();
 
 	/**
@@ -71,7 +72,7 @@ public class FormatCache
 		String fmt = fmx.toString();
 		if( !mpx.containsKey( fmt ) )
 		{
-			Logger.logErr( "missing in cache: FH " + fmt );
+			log.error( "missing in cache: FH " + fmt );
 		}
 		FormatHandle ret = (FormatHandle) mpx.get( fmt );
 		return ret;

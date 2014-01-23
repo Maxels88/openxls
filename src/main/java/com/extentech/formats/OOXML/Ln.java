@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -43,7 +44,7 @@ import java.util.Stack;
 // TODO: Finish custDash
 public class Ln implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Ln.class );
 	private static final long serialVersionUID = -161619607936083688L;
 	private HashMap<String, String> attrs = null;
 	private FillGroup fill = null;
@@ -95,7 +96,7 @@ public class Ln implements OOXMLElement
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		FillGroup fill = null;
 		JoinGroup join = null;
 		DashGroup dash = null;
@@ -161,7 +162,7 @@ public class Ln implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "ln.parseOOXML: " + e.toString() );
+			log.error( "ln.parseOOXML: " + e.toString() );
 		}
 		Ln l = new Ln( attrs, fill, join, dash, h, t );
 		return l;
@@ -220,7 +221,7 @@ public class Ln implements OOXMLElement
 	{
 		if( attrs == null )
 		{
-			attrs = new HashMap<String, String>();
+			attrs = new HashMap<>();
 		}
 		attrs.put( "w", String.valueOf( w ) );
 
@@ -308,7 +309,7 @@ public class Ln implements OOXMLElement
 // TODO: Finish custDash
 class DashGroup implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( DashGroup.class );
 	private static final long serialVersionUID = -6892326040716070609L;
 	private PrstDash prstDash;
 
@@ -354,7 +355,7 @@ class DashGroup implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "custDash.parseOOXML: " + e.toString() );
+			log.error( "custDash.parseOOXML: " + e.toString() );
 		}
 		DashGroup dg = new DashGroup( p );
 		return dg;
@@ -404,7 +405,7 @@ class DashGroup implements OOXMLElement
 /* since each child element is so simple, we will just store which element it is rather than create separate object */
 class JoinGroup implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( JoinGroup.class );
 	private static final long serialVersionUID = -6107424300366896696L;
 	private boolean miter;
 	private boolean round;
@@ -471,7 +472,7 @@ class JoinGroup implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "JoinGroup.parseOOXML: " + e.toString() );
+			log.error( "JoinGroup.parseOOXML: " + e.toString() );
 		}
 		JoinGroup jg = new JoinGroup( a, miter, round, bevel );
 		return jg;
@@ -510,6 +511,7 @@ class JoinGroup implements OOXMLElement
  */
 class HeadEnd implements OOXMLElement
 {
+	private static final Logger log = LoggerFactory.getLogger( HeadEnd.class );
 	private static final long serialVersionUID = -6744308104003922477L;
 	private String len = null;
 	private String type = null;
@@ -581,7 +583,7 @@ class HeadEnd implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "headEnd.parseOOXML: " + e.toString() );
+			log.error( "headEnd.parseOOXML: " + e.toString() );
 		}
 		HeadEnd te = new HeadEnd( len, type, w );
 		return te;
@@ -623,6 +625,7 @@ class HeadEnd implements OOXMLElement
  */
 class TailEnd implements OOXMLElement
 {
+	private static final Logger log = LoggerFactory.getLogger( TailEnd.class );
 	private static final long serialVersionUID = -5587427916156543370L;
 	private String len = null;
 	private String type = null;
@@ -693,7 +696,7 @@ class TailEnd implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "tailEnd.parseOOXML: " + e.toString() );
+			log.error( "tailEnd.parseOOXML: " + e.toString() );
 		}
 		TailEnd te = new TailEnd( len, type, w );
 		return te;
@@ -730,7 +733,7 @@ class TailEnd implements OOXMLElement
 
 class PrstDash implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( PrstDash.class );
 	private static final long serialVersionUID = -4645986946936173151L;
 	private String val = null;
 
@@ -778,7 +781,7 @@ class PrstDash implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "prstDash.parseOOXML: " + e.toString() );
+			log.error( "prstDash.parseOOXML: " + e.toString() );
 		}
 		PrstDash p = new PrstDash( val );
 		return p;

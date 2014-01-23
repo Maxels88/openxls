@@ -25,7 +25,8 @@ package com.extentech.formats.LEO;
 import com.extentech.formats.XLS.XLSConstants;
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -83,9 +84,7 @@ import java.util.List;
  */
 public class Storage extends BlockByteReader
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Storage.class );
 	private static final long serialVersionUID = -2065921767253066667L;
 	// make an enum in > 1.4
 	static byte TYPE_INVALID = 0;
@@ -295,7 +294,7 @@ public class Storage extends BlockByteReader
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logWarn( "Storage error decoding storage name " + e );
+				log.warn( "Storage error decoding storage name " + e );
 			}
 			name = name.substring( 0, name.length() - 1 );
 			// if this line fails, your header BBD index is wrong...
@@ -318,11 +317,8 @@ public class Storage extends BlockByteReader
 		{
 			miniStreamStorage = true;
 		}
-		if( LEOFile.DEBUG )
-		{
-			Logger.logInfo( "Storage: " + name + " storageType: " + storageType + " directoryColor:" + directoryColor +
+			log.debug( "Storage: " + name + " storageType: " + storageType + " directoryColor:" + directoryColor +
 					                " prevSID:" + prevStorageID + " nextSID:" + nextStorageID + " childSID:" + childStorageID + " sz:" + sz );
-		}
 	}
 
 	/**
@@ -581,10 +577,7 @@ public class Storage extends BlockByteReader
 
 		if( miniFAT == null )
 		{ // error: trying to access smallblocks but no smallblock container found
-			if( LEOFile.DEBUG )
-			{
-				Logger.logWarn( "initMiniFAT: no miniFAT container found" );
-			}
+				log.debug( "initMiniFAT: no miniFAT container found" );
 			return;
 		}
 		myblocks = new ArrayList();
@@ -604,7 +597,7 @@ public class Storage extends BlockByteReader
 				default:
 					if( idx >= miniStream.size() )
 					{
-						Logger.logWarn( "MiniStream Error initting Storage: " + this.getName() );
+						log.warn( "MiniStream Error initting Storage: " + this.getName() );
 					}
 					else
 					{
@@ -618,14 +611,13 @@ public class Storage extends BlockByteReader
 			}
 			idx = miniFAT[idx];    // otherwise, walk the sector id chain
 		}
-		if( LEOFile.DEBUG )
-		{
+
 			if( (int) Math.ceil( this.getActualFileSize() / 64.0 ) != myblocks.size() )
 			{
-				Logger.logErr( "Number of miniStream Sectors does not equal storage size.  Expected: " + (int) Math.ceil( this.getActualFileSize() / 64.0 ) + ". Is: " + myblocks
+				log.warn( "Number of miniStream Sectors does not equal storage size.  Expected: " + (int) Math.ceil( this.getActualFileSize() / 64.0 ) + ". Is: " + myblocks
 						.size() );
 			}
-		}
+
 		this.setInitialized( true );
 	}
 
@@ -661,16 +653,13 @@ public class Storage extends BlockByteReader
 			{
 
 				case -4: // extraDIFAT sector
-					Logger.logInfo( "INFO: Storage.init() encountered extra DIFAT sector." );
+					log.debug( "INFO: Storage.init() encountered extra DIFAT sector." );
 					break;
 
 				case -3: // special block	= DIFAT - defines the FAT
 					if( this.getActualFileSize() > 0 )
 					{
-						if( LEOFile.DEBUG )
-						{
-							Logger.logWarn( "WARNING: Storage.init() Special block containing headerData." );
-						}
+						log.debug( "WARNING: Storage.init() Special block containing headerData." );
 						this.setIsSpecial( true );
 
 						thisbb = (Block) dta.get( i++ );
@@ -717,10 +706,7 @@ public class Storage extends BlockByteReader
 					if( nextIdx != (i + 1) )
 					{
 						//the next is a jumper, pickup the orphan
-						if( LEOFile.DEBUG )
-						{
-							Logger.logInfo( "INFO: Storage init: jumper skipping: " + String.valueOf( i ) );
-						}
+							log.debug( "INFO: Storage init: jumper skipping: " + String.valueOf( i ) );
 						Block skipbb = (Block) dta.get( i + 1 );
 
 						this.addBlock( skipbb ); //
@@ -738,14 +724,14 @@ public class Storage extends BlockByteReader
 			}
 		}
 
-		if( LEOFile.DEBUG )
+		if( log.isDebugEnabled() )
 		{
 			int sz = this.getActualFileSize();
 			if( sz != 0 )
 			{
 				if( Math.ceil( sz / 512.0 ) != myblocks.size() )
 				{
-					Logger.logWarn( "Storage.init:  Number of blocks do not equal storage size" );
+					log.debug( "Storage.init:  Number of blocks do not equal storage size: {} {}", sz, myblocks.size() );
 				}
 			}
 		}
@@ -766,10 +752,7 @@ public class Storage extends BlockByteReader
 
 		if( b.getInitialized() )
 		{
-			if( LEOFile.DEBUG )
-			{
-				Logger.logWarn( "ERROR: " + this.toString() + " - Block is already initialized." );
-			}
+			log.debug( "ERROR: " + this.toString() + " - Block is already initialized." );
 			return;
 		}
 		b.setStorage( this );

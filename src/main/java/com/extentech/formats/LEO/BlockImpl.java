@@ -23,7 +23,8 @@
 package com.extentech.formats.LEO;
 
 import com.extentech.toolkit.CompatibleVectorHints;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -38,14 +39,11 @@ import java.util.List;
  */
 public abstract class BlockImpl implements com.extentech.formats.LEO.Block, CompatibleVectorHints, Serializable
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( BlockImpl.class );
 	private static final long serialVersionUID = 4833713921208834278L;
 	/*allows the block to be populated with a byte array
 	 rather than just a bytebuffer, easing debugging
-    **/ boolean DEBUG = false;
+    **/
 
 	/**
 	 * methods from CompatibleVectorHints
@@ -109,7 +107,7 @@ public abstract class BlockImpl implements com.extentech.formats.LEO.Block, Comp
 		}
 		catch( Exception exp )
 		{
-			Logger.logErr( "BlockImpl.writeBytes failed.", exp );
+			log.error( "BlockImpl.writeBytes failed.", exp );
 		}
 	}
 
@@ -148,7 +146,7 @@ public abstract class BlockImpl implements com.extentech.formats.LEO.Block, Comp
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "BlockImpl.getBytes() start: " + start + " size: " + SIZE + ": " + e );
+			log.error( "BlockImpl.getBytes() start: " + start + " size: " + SIZE + ": " + e, e );
 		}
 		return ret;
 	}
@@ -200,7 +198,7 @@ public abstract class BlockImpl implements com.extentech.formats.LEO.Block, Comp
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "BlockImpl.getBytes(0," + SIZE + "): " + e );
+			log.error( "BlockImpl.getBytes(0," + SIZE + "): " + e, e );
 		}
 		return ret;
 	}

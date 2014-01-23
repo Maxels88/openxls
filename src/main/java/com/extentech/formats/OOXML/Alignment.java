@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.OOXML;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -39,7 +40,7 @@ import java.util.Iterator;
  */
 public class Alignment implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Alignment.class );
 	private static final long serialVersionUID = 995367747930839216L;
 	private HashMap<String, String> attrs = null;
 
@@ -55,7 +56,7 @@ public class Alignment implements OOXMLElement
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -85,7 +86,7 @@ public class Alignment implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "alignment.parseOOXML: " + e.toString() );
+			log.error( "alignment.parseOOXML: " + e.toString() );
 		}
 		Alignment a = new Alignment( attrs );
 		return a;

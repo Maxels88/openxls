@@ -22,8 +22,9 @@
  */
 package docs.samples;
 
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -33,7 +34,7 @@ import java.lang.reflect.Method;
  */
 public class RunSamples
 {
-
+	private static final Logger log = LoggerFactory.getLogger( RunSamples.class );
 	/**
 	 * Run all tests in the test Suite
 	 * <p/>
@@ -47,13 +48,13 @@ public class RunSamples
 		String inf = System.getProperty( "user.dir" ) + "/docs/samples/";
 		try
 		{
-			Logger.logInfo( "RunSamples Begin..." );
+			log.info( "RunSamples Begin..." );
 			RunSamples.execDir( new File( inf ) );
-			Logger.logInfo( "RunSamples Complete." );
+			log.info( "RunSamples Complete." );
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "RunSamples failed.", e );
+			log.error( "RunSamples failed.", e );
 		}
 
 	}
@@ -98,19 +99,19 @@ public class RunSamples
 							String[] args = new String[1];
 							try
 							{
-								Logger.logInfo( "Running " + packagename );
+								log.info( "Running " + packagename );
 								m[t].invoke( cx, args );
 							}
 							catch( Throwable tx )
 							{
-								Logger.logErr( "Problem Running " + packagename + " main method.", tx );
+								log.error( "Problem Running " + packagename + " main method.", tx );
 							}
 						}
 					}
 				}
 				catch( Exception e )
 				{
-					Logger.logErr( "Cannot run " + packagename + " main method.", e );
+					log.error( "Cannot run " + packagename + " main method.", e );
 				}
 			}
 		}

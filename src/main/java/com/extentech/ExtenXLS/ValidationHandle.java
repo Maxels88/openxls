@@ -24,8 +24,9 @@ package com.extentech.ExtenXLS;
 
 import com.extentech.formats.XLS.Dv;
 import com.extentech.formats.XLS.ValidationException;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ValidationHandle allows for manipulation of the validation cells in Excel
@@ -73,7 +74,7 @@ import com.extentech.toolkit.StringTool;
 
 public class ValidationHandle implements Handle
 {
-
+	private static final Logger log = LoggerFactory.getLogger( ValidationHandle.class );
 	private Dv myDv;
 
 	// static shorts for setting validation type
@@ -252,7 +253,7 @@ public class ValidationHandle implements Handle
 				}
 				catch( Exception ex )
 				{
-					Logger.logErr( "Error getting isValid " + ex.toString() );
+					log.error( "Error getting isValid " + ex.toString() );
 				}
 			}
 			;
@@ -678,7 +679,7 @@ public class ValidationHandle implements Handle
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Problem getting range for ValidationHandle.getXML().", e );
+			log.error( "Problem getting range for ValidationHandle.getXML().", e );
 		}
 		xml.append( ">" );
 		if( this.getFirstCondition() != null )

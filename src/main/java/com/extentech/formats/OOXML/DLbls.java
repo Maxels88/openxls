@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -39,7 +40,7 @@ import java.util.Stack;
 // TODO: Finish All Children!!!! leaderLines, numFmt, separator 
 public class DLbls implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( DLbls.class );
 	private static final long serialVersionUID = -3765320144606034211L;
 	private SpPr sp = null;
 	private TxPr tx = null;
@@ -222,7 +223,7 @@ public class DLbls implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "dLbls.parseOOXML: " + e.toString() );
+			log.error( "dLbls.parseOOXML: " + e.toString() );
 		}
 		DLbls d = new DLbls( showVal, showLeaderLines, showLegendKey, showCatName, showSerName, showPercent, showBubbleSize, sp, tx );
 		return d;

@@ -173,15 +173,6 @@ public interface WorkBook extends Handle, Document
 	public abstract void setName( String nm );
 
 	/**
-	 * Set the Debugging level.  Higher values output more
-	 * debugging info during execution.
-	 *
-	 * @parameter int Debug level.  higher=more verbose
-	 */
-	@Override
-	public abstract void setDebugLevel( int l );
-
-	/**
 	 * Returns a Named Range Handle
 	 *
 	 * @return NameHandle a Named range in the WorkBook

@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS.formulas;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 
@@ -45,10 +46,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class PtgStr extends GenericPtg implements Ptg
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgStr.class );
 	private static final long serialVersionUID = -1427051673654768400L;
 
 	@Override
@@ -201,7 +199,7 @@ public class PtgStr extends GenericPtg implements Ptg
 		}
 		catch( UnsupportedEncodingException e )
 		{
-			Logger.logInfo( "decoding formula string failed: " + e );
+			log.warn( "decoding formula string failed: " + e, e );
 		}
 	}
 

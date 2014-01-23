@@ -53,11 +53,6 @@ public interface Book
 	 */
 	public int stream( OutputStream out );
 
-	/**
-	 * set the Debug level
-	 */
-	public abstract void setDebugLevel( int i );
-
 	public abstract String toString();
 
 	public abstract String getFileName();

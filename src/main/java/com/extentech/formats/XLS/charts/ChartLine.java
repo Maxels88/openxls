@@ -26,7 +26,8 @@ import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.formats.OOXML.SpPr;
 import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -52,9 +53,7 @@ import java.util.Stack;
  */
 public class ChartLine extends GenericChartObject implements ChartObject
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( ChartLine.class );
 	private static final long serialVersionUID = -8311605814020380069L;
 	private short id;
 	private ChartFormat cf;    // necessary to link to corresponding ChartFormat
@@ -173,7 +172,7 @@ public class ChartLine extends GenericChartObject implements ChartObject
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "ChartLine.parseOOXML: " + e.toString() );
+			log.error( "ChartLine.parseOOXML: " + e.toString() );
 		}
 	}
 

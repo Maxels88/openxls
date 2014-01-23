@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>Label: BiffRec Value, String Constant (204h)</b><br>
@@ -46,9 +47,7 @@ import com.extentech.toolkit.Logger;
 
 public final class Label extends XLSCellRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Label.class );
 	private static final long serialVersionUID = -2921430854162954640L;
 	int cch;
 	String val;
@@ -60,7 +59,7 @@ public final class Label extends XLSCellRecord
 		short s, s1;
 		// get the row, col and ixfe information
 		s = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		rw = (int) s;
+		rw = s;
 		s = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
 		col = s;
 		s = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
@@ -86,7 +85,7 @@ public final class Label extends XLSCellRecord
 			}
 			catch( Exception e )
 			{
-				Logger.logWarn( "ERROR Label.init: decoding string failed: " + e );
+				log.warn( "ERROR Label.init: decoding string failed: " + e , e);
 			}
 		}
 		this.setIsValueForCell( true );

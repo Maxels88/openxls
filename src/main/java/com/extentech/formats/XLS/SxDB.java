@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -83,12 +84,9 @@ import java.util.Arrays;
  * related to the User Names StreamABNF.
  */
 
-public class SxDB extends XLSRecord implements XLSConstants, PivotCacheRecord
+public class SxDB extends XLSRecord implements PivotCacheRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( SxDB.class );
 	private static final long serialVersionUID = 9027599480633995587L;
 	private int crdbdb;
 	private short idstm, grbit, cfdbdb, cfdbTot, crdbUsed, vsType, cchWho;
@@ -103,10 +101,7 @@ public class SxDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 	public void init()
 	{
 		super.init();
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "SXDB -" + Arrays.toString( this.getData() ) );
-		}
+			log.trace( "SXDB -{}",Arrays.toString( this.getData() ) );
 		crdbdb = ByteTools.readInt( this.getBytesAt( 0, 4 ) );                    // # cache records
 		idstm = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );    // streamid
 		grbit = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );    //
@@ -137,7 +132,7 @@ public class SxDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logInfo( "SxDB.init: " + e );
+				log.error( "SxDB.init: " + e );
 			}
 		}
 	}

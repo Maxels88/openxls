@@ -36,7 +36,8 @@ import com.extentech.formats.XLS.formulas.PtgExp;
 import com.extentech.formats.XLS.formulas.PtgMemArea;
 import com.extentech.formats.XLS.formulas.PtgRef;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -73,9 +74,7 @@ import java.util.Stack;
  */
 public final class Formula extends XLSCellRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Formula.class );
 	private static final long serialVersionUID = 7563301825566021680L;
 	/**
 	 * Mask for the fAlwaysCalc grbit flag.
@@ -224,17 +223,14 @@ public final class Formula extends XLSCellRecord
 			this.setSheet( this.wkbook.getLastbound() );
 		}
 
-		if( DEBUGLEVEL > 10 )
-		{
 			try
 			{
-				Logger.logInfo( "INFO: Formula " + this.getCellAddress() + this.getFormulaString() );
+				log.debug( "Formula " + this.getCellAddress() + this.getFormulaString() );
 			}
 			catch( Exception e )
 			{
-				Logger.logInfo( "Debug output of Formula failed: " + e );
+				log.warn( "Debug output of Formula failed: " + e );
 			}
-		}
 
 		// The expression needs to be parsed on input in order to add it to
 		// the reference tracker
@@ -351,7 +347,7 @@ public final class Formula extends XLSCellRecord
 				cachedValue = string.getStringVal();
 			}/* TODO: this is such a rare occurrence - due possibly to OUR processing - keep if and wa
 				else
-        		Logger.logErr("Formula.init:  Out of Spec Formula Encountered (Multiple String Recs Encountered)- Ignoring");
+        		log.error("Formula.init:  Out of Spec Formula Encountered (Multiple String Recs Encountered)- Ignoring");
         		*/
 		}
 		else    // array formula
@@ -469,7 +465,7 @@ public final class Formula extends XLSCellRecord
 			// want to throw an exception and crap out on the book loading
 			// but the client should be informed in some way.  Also a generic exception is caught
 			// because our code does not bubble a calc exception up.
-			Logger.logErr( "Error registering lookup for INDIRECT() function at cell: " + this.getCellAddress() + " : " + e );
+			log.error( "Error registering lookup for INDIRECT() function at cell: " + this.getCellAddress() + " : " + e );
 		}
 	}
 
@@ -504,10 +500,7 @@ public final class Formula extends XLSCellRecord
 		}
 		catch( Exception e )
 		{
-			if( DEBUGLEVEL > -10 )
-			{
-				Logger.logInfo( "Formula.init:  Parsing Formula failed: " + e );
-			}
+				log.warn( "Formula.init:  Parsing Formula failed: " + e );
 		}
 	}
 
@@ -662,7 +655,7 @@ public final class Formula extends XLSCellRecord
 		}
 		catch( FormulaNotFoundException e )
 		{
-			Logger.logInfo( "locking Formula Location failed:" + loc + ": " + e.toString() );
+			log.warn( "locking Formula Location failed:" + loc + ": " + e.toString() );
 			return false;
 		}
 	}
@@ -799,11 +792,11 @@ public final class Formula extends XLSCellRecord
 		{
 			value = new byte[8];
 			// byte 0 specifies the marker type
-			value[1] = (byte) 0x00;
+			value[1] = 0x00;
 			// byte 2 is used by bool and boolerr
-			value[3] = (byte) 0x00;
-			value[4] = (byte) 0x00;
-			value[5] = (byte) 0x00;
+			value[3] = 0x00;
+			value[4] = 0x00;
+			value[5] = 0x00;
 			value[6] = (byte) 0xFF;
 			value[7] = (byte) 0xFF;
 
@@ -811,32 +804,32 @@ public final class Formula extends XLSCellRecord
 			{
 				if( !isErrorValue( (String) writeValue ) )
 				{
-					value[2] = (byte) 0x00;
+					value[2] = 0x00;
 					String sval = (String) writeValue;
 					if( sval.equals( "" ) || (string == null) )
 					{    // the latter can occur when input from XLSX; a cachedvalue is set without an associated StringRec
-						value[0] = (byte) 0x03; // means empty
+						value[0] = 0x03; // means empty
 					}
 					else
 					{
-						value[0] = (byte) 0x00;
+						value[0] = 0x00;
 						string.setStringVal( sval );
 					}
 				}
 				else
 				{
-					value[0] = (byte) 0x02;    // error code
+					value[0] = 0x02;    // error code
 					value[2] = CalculationException.getErrorCode( (String) writeValue );
 				}
 			}
 			else if( writeValue instanceof Boolean )
 			{
-				value[0] = (byte) 0x01;
+				value[0] = 0x01;
 				value[2] = ((Boolean) writeValue ? (byte) 0x01 : (byte) 0x00);
 			}
 			else if( writeValue instanceof CalculationException )
 			{
-				value[0] = (byte) 0x02;
+				value[0] = 0x02;
 				value[2] = ((CalculationException) writeValue).getErrorCode();
 			}
 			else
@@ -904,9 +897,9 @@ public final class Formula extends XLSCellRecord
 			}
 			double db = (Double) obx;
 			int ret = ((Double) obx).intValue();
-			if( ((db - ret) > 0) && (DEBUGLEVEL > this.DEBUG_LOW) )
+			if( ((db - ret) > 0) )
 			{
-				Logger.logWarn( "Loss of precision converting " + tl + " to int." );
+				log.warn( "Loss of precision converting " + tl + " to int." );
 			}
 
 			return ret;
@@ -965,7 +958,7 @@ public final class Formula extends XLSCellRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Formula.getFloatVal failed for: " + this.toString(), e );
+			log.error( "Formula.getFloatVal failed for: " + this.toString(), e );
 		}
 
 		try
@@ -986,7 +979,7 @@ public final class Formula extends XLSCellRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "Formula.getFloatVal() failed: " + e );
+			log.warn( "Formula.getFloatVal() failed: " + e );
 		}
 		return Float.NaN;
 	}
@@ -1004,7 +997,7 @@ public final class Formula extends XLSCellRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "getBooleanVal failed for: " + this.toString(), e );
+			log.error( "getBooleanVal failed for: " + this.toString(), e );
 		}
 
 		try
@@ -1018,7 +1011,7 @@ public final class Formula extends XLSCellRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "getBooleanVal() failed: " + e );
+			log.warn( "getBooleanVal() failed: " + e );
 		}
 		return false;
 	}
@@ -1037,7 +1030,7 @@ public final class Formula extends XLSCellRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Formula.getDblVal failed for: " + this.toString(), e );
+			log.error( "Formula.getDblVal failed for: " + this.toString(), e );
 		}
 
 		String s = String.valueOf( obx );
@@ -1058,7 +1051,7 @@ public final class Formula extends XLSCellRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "Formula.getDblVal() failed: " + e );
+			log.warn( "Formula.getDblVal() failed: " + e );
 		}
 		return Double.NaN;
 	}
@@ -1097,7 +1090,7 @@ public final class Formula extends XLSCellRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Formula.getStringVal failed for: " + this.toString(), e );
+			log.error( "Formula.getStringVal failed for: " + this.toString(), e );
 		}
 		// if null, return empty string
 		if( obx == null )
@@ -1160,7 +1153,7 @@ public final class Formula extends XLSCellRecord
 			recurseCount.set( depth + 1 );
 			if( depth > WorkBookHandle.RECURSION_LEVELS_ALLOWED )
 			{
-				Logger.logWarn( "Recursion levels reached in calculating formula " + this.getCellAddressWithSheet() + ". Possible circular reference.  Recursion levels can be set through WorkBookHandle.setFormulaRecursionLevels" );
+				log.warn( "Recursion levels reached in calculating formula " + this.getCellAddressWithSheet() + ". Possible circular reference.  Recursion levels can be set through WorkBookHandle.setFormulaRecursionLevels" );
 				cachedValue = new CalculationException( CalculationException.CIR_ERR );
 				return cachedValue;
 			}
@@ -1192,7 +1185,7 @@ public final class Formula extends XLSCellRecord
 		}
 		catch( StackOverflowError e )
 		{
-			Logger.logWarn( "Stack overflow while calculating " + this.getCellAddressWithSheet() + ". Possible circular reference." );
+			log.warn( "Stack overflow while calculating " + this.getCellAddressWithSheet() + ". Possible circular reference." );
 			cachedValue = new CalculationException( CalculationException.CIR_ERR );
 			return cachedValue;
 		}
@@ -1262,10 +1255,7 @@ public final class Formula extends XLSCellRecord
 			{
 				; // let it go
 			}
-			if( DEBUGLEVEL > 10 )
-			{
-				Logger.log( cachedValue );
-			}
+				log.debug( "Cached Value: {}", cachedValue );
 		}
 		if( this.getAttatchedString() != null )
 		{
@@ -1501,7 +1491,7 @@ public final class Formula extends XLSCellRecord
 			}
 			catch( Exception ex )
 			{
-				Logger.logErr( "Formula.incrementSharedFormula: " + ex.toString() );
+				log.error( "Formula.incrementSharedFormula: " + ex.toString() );
 			}
 		}
 	}

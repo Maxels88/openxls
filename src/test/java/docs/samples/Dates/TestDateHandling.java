@@ -28,7 +28,8 @@ import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
 import com.extentech.formats.XLS.CellNotFoundException;
 import com.extentech.formats.XLS.WorkSheetNotFoundException;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -54,6 +55,7 @@ public class TestDateHandling
  */
 class testDates
 {
+	private static final Logger log = LoggerFactory.getLogger( testDates.class );
 	String wd = System.getProperty( "user.dir" ) + "/docs/samples/Dates/";
 	String file = wd + "testdates.xls", sheetname = "Sheet1";
 	int ROWHEIGHT = 100;
@@ -71,7 +73,7 @@ class testDates
 		}
 		catch( WorkSheetNotFoundException e )
 		{
-			Logger.logErr( e );
+			log.error( "",e );
 		}
 
 		// get a date-time
@@ -86,19 +88,19 @@ class testDates
 		}
 		catch( CellNotFoundException e )
 		{
-			Logger.logErr( e );
+			log.error( "",e );
 		}
 
-		Logger.logInfo( sdf.format( DateConverter.getDateFromCell( a1 ) ) );
-		Logger.logInfo( sdf.format( DateConverter.getDateFromCell( a2 ) ) );
-		Logger.logInfo( sdf.format( DateConverter.getDateFromCell( a3 ) ) );
+		log.info( sdf.format( DateConverter.getDateFromCell( a1 ) ) );
+		log.info( sdf.format( DateConverter.getDateFromCell( a2 ) ) );
+		log.info( sdf.format( DateConverter.getDateFromCell( a3 ) ) );
 
 		// add new date to cells
 		CellHandle a6 = sheet.add( new Date( System.currentTimeMillis() ), "a6" );
-		Logger.logInfo( a6.getFormattedStringVal() );
+		log.info( a6.getFormattedStringVal() );
 
 		CellHandle a7 = sheet.add( new Date( System.currentTimeMillis() + 5555555 ), "a7", "m/d/yy h:mm" );
-		Logger.logInfo( a7.getFormattedStringVal() );
+		log.info( a7.getFormattedStringVal() );
 
 		// Excel Divides the day into 100 units, so .25 is 9am, .5 is 12 noon, .75 is 9pm, and 00 is midnight
 		try
@@ -106,11 +108,11 @@ class testDates
 			sheet.add( new Float( 2000.75 ), "a5" ); // add a new cell, set date format
 			CellHandle a5 = sheet.getCell( "a5" );
 			a5.setFormatId( GMT_FORMAT );
-			Logger.logInfo( sdf.format( DateConverter.getDateFromCell( a5 ) ) );
+			log.info( sdf.format( DateConverter.getDateFromCell( a5 ) ) );
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "setting date failed.", e );
+			log.error( "setting date failed.", e );
 		}
 
 		try
@@ -122,11 +124,11 @@ class testDates
 			double dd = DateConverter.getXLSDateVal( gc );
 			CellHandle a10 = sheet.add( new Double( dd ), "A10" ); // add a new cell, set date format
 			a10.setFormatId( GMT_FORMAT ); // set date format on cell
-			Logger.logInfo( sdf.format( DateConverter.getDateFromCell( a10 ) ) );
+			log.info( sdf.format( DateConverter.getDateFromCell( a10 ) ) );
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "setting date failed.", e );
+			log.error( "setting date failed.", e );
 		}
 		testWrite( book );
 	}
@@ -144,7 +146,7 @@ class testDates
 		}
 		catch( java.io.IOException e )
 		{
-			Logger.logInfo( "IOException in Tester.  " + e );
+			log.info( "IOException in Tester.  " + e );
 		}
 	}
 

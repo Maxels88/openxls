@@ -37,7 +37,8 @@ import com.extentech.formats.XLS.formulas.PtgRef3d;
 import com.extentech.formats.XLS.formulas.PtgRefErr3d;
 import com.extentech.formats.XLS.formulas.PtgStr;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -74,14 +75,9 @@ import java.util.Stack;
  */
 public final class Name extends XLSRecord
 {
-
-	/**
-	 *
-	 *
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Name.class );
 	private static final long serialVersionUID = -7868028144327389601L;
 	short grbit = -1;
-	boolean DEBUG = false;
 	boolean builtIn = false;
 	String rgch = "";            //     name text
 	String rgce = "";            //     name definition
@@ -148,7 +144,7 @@ public final class Name extends XLSRecord
 		}
 		catch( WorkSheetNotFoundException x )
 		{
-			Logger.logWarn( "Name could not reference WorkBook Externsheet." + x.toString() );
+			log.warn( "Name could not reference WorkBook Externsheet." + x.toString() );
 		}
 
 		this.init( false );
@@ -176,7 +172,7 @@ public final class Name extends XLSRecord
 		}
 		catch( WorkSheetNotFoundException x )
 		{
-			Logger.logWarn( "Name could not reference WorkBook Externsheet." + x.toString() );
+			log.warn( "Name could not reference WorkBook Externsheet." + x.toString() );
 		}
 		this.init();
 		bk.insertName( this );
@@ -329,10 +325,7 @@ public final class Name extends XLSRecord
 			{
 				rgch = new String( namebytes );
 			}
-			if( DEBUG )
-			{
-				Logger.logInfo( this.getName() );
-			}
+				log.info( this.getName() );
 			pos += cch;
 
 			// get the parsed expression
@@ -346,10 +339,7 @@ public final class Name extends XLSRecord
 		}
 		catch( Exception e )
 		{
-			if( DEBUGLEVEL > -1 )
-			{
-				Logger.logWarn( "problem reading Name record expression for Name:" + this.getName() + " " + e );
-			}
+				log.warn( "problem reading Name record expression for Name:" + this.getName() + " " + e );
 		}
 	}
 
@@ -361,10 +351,7 @@ public final class Name extends XLSRecord
 		if( (expressionbytes != null) && (expression == null) )
 		{
 			expression = ExpressionParser.parseExpression( expressionbytes, this );
-			if( DEBUGLEVEL == DEBUG_LOW )
-			{
-				Logger.logInfo( this.getName() + ":" + this.getDefinition() );
-			}
+				log.debug( this.getName() + ":" + this.getDefinition() );
 			if( expression == null )
 			{
 				PtgMystery gpg = new PtgMystery();
@@ -475,7 +462,7 @@ public final class Name extends XLSRecord
 			}
 			catch( Exception e )
 			{
-				Logger.logWarn( "Name.getLocation() failed: " + e.toString() );
+				log.warn( "Name.getLocation() failed: " + e.toString() );
 			}
 		}
 		if( ptga == null )
@@ -528,7 +515,7 @@ public final class Name extends XLSRecord
 		}
 		catch( FunctionNotSupportedException e )
 		{
-			Logger.logWarn( "Unable to parse Name record expression: " + xpression );
+			log.warn( "Unable to parse Name record expression: " + xpression );
 			this.cachedOOXMLExpression = xpression;
 		}
 	}
@@ -583,7 +570,7 @@ public final class Name extends XLSRecord
 		}
 		catch( Exception e )
 		{    // usually some #REF! error
-			Logger.logErr( "Name.setLocation: Error processing location " + e.toString() );
+			log.warn( "Name.setLocation: Error processing location " + e.toString() );
 		}
 		if( ptga instanceof PtgRef )
 		{    // ensure that references are absolute
@@ -716,20 +703,14 @@ public final class Name extends XLSRecord
 			Ptg p = (Ptg) anExpression;
 			if( p instanceof PtgArea3d )
 			{
-				if( DEBUGLEVEL > 1 )
-				{
-					Logger.logInfo( "PtgArea3d encountered in Ai record." );
-				}
+					log.debug( "PtgArea3d encountered in Ai record." );
 				PtgArea3d ptg3d = (PtgArea3d) p;
 				ptg3d.setIxti( (short) x );
 				ptga = ptg3d;
 			}
 			if( p instanceof PtgRef3d )
 			{
-				if( DEBUGLEVEL > 1 )
-				{
-					Logger.logInfo( "PtgRef3d encountered in Ai record." );
-				}
+					log.debug( "PtgRef3d encountered in Ai record." );
 				PtgRef3d ptg3d = (PtgRef3d) p;
 				ptg3d.setIxti( (short) x );
 				ptga = ptg3d;
@@ -756,7 +737,7 @@ public final class Name extends XLSRecord
 			}
 			catch( WorkSheetNotFoundException we )
 			{
-				Logger.logWarn( "External References Not Supported:  UpdateSheetReferences: External Worksheet Reference Found: " + p.getSheetName() );
+				log.warn( "External References Not Supported:  UpdateSheetReferences: External Worksheet Reference Found: " + p.getSheetName() );
 				p.setExternalReference( origWorkBookName );
 			}
 		}
@@ -809,7 +790,7 @@ public final class Name extends XLSRecord
 		}
 		catch( UnsupportedEncodingException e )
 		{
-			Logger.logWarn( "UnsupportedEncodingException in setting NamedRange name: " + e );
+			log.warn( "UnsupportedEncodingException in setting NamedRange name: " + e );
 		}
 	}
 
@@ -889,7 +870,7 @@ public final class Name extends XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "problem updating Name record expression for Name:" + this.getName() );
+			log.warn( "problem updating Name record expression for Name:" + this.getName() );
 		}
 
 	}
@@ -946,7 +927,7 @@ public final class Name extends XLSRecord
 			}
 			catch( Exception e )
 			{
-				Logger.logInfo( "setting ExternalSheetValue in Name rec: value: " + ptg.getOpcode() + ": " + e );
+				log.warn( "setting ExternalSheetValue in Name rec: value: " + ptg.getOpcode() + ": " + e );
 			}
 			offset = offset + ptg.getLength();
 		}
@@ -1009,7 +990,7 @@ public final class Name extends XLSRecord
 		}
 		catch( FormulaNotFoundException e )
 		{
-			Logger.logInfo( "updating Chart Series Location failed: " + e );
+			log.warn( "updating Chart Series Location failed: " + e );
 		}
 		return null;
 	}
@@ -1194,7 +1175,7 @@ public final class Name extends XLSRecord
 		}
 		catch( WorkSheetNotFoundException x )
 		{
-			Logger.logWarn( "Name could not reference WorkBook Externsheet." + x.toString() );
+			log.warn( "Name could not reference WorkBook Externsheet." + x.toString() );
 		}
 		this.init();
 		this.setName( namestr );

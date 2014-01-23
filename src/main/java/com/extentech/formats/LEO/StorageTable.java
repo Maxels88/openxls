@@ -28,7 +28,8 @@ import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.formats.XLS.XLSRecordFactory;
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,10 +51,7 @@ import java.util.List;
  */
 public class StorageTable implements Serializable
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( StorageTable.class );
 	private static final long serialVersionUID = 3399830613453524580L;
 	public final static int TABLE_SIZE = 0x200;
 	public final static int DIRECTORY_SIZE = 0x80;
@@ -100,11 +98,8 @@ public class StorageTable implements Serializable
 		byte[] data = LEOFile.getBytes( this.initDirectoryStream( blockvect, FAT ) );
 		int psbsize = data.length;
 		int numRecs = psbsize / DIRECTORY_SIZE;
-		if( LEOFile.DEBUG )
-		{
-			Logger.logInfo( "Number of Directories: " + numRecs );
-			Logger.logInfo( "Directories:  " + Arrays.toString( data ) );
-		}
+			log.debug( "Number of Directories: " + numRecs );
+			log.debug( "Directories:  {}", Arrays.toString( data ) );
 
 		int pos = 0;
 		for( int i = 0; i < numRecs; i++ )
@@ -202,9 +197,9 @@ public class StorageTable implements Serializable
 				// also sets miniFAT ... ugly, I know ...
 				miniStream = this.initMiniStream( blockvect,
 				                                  FAT );    // grab the mini stream (short sector container) (if any), indexed by miniFAT
-				if( LEOFile.DEBUG && (miniFAT != null) )
+				if( (miniFAT != null) )
 				{
-					Logger.logInfo( "miniFAT: " + Arrays.toString( miniFAT ) );
+					log.debug( "miniFAT: {} ", Arrays.toString( miniFAT ) );
 				}
 			}
 			// this storage has it's data in the miniStream
@@ -226,17 +221,10 @@ public class StorageTable implements Serializable
 			}
 			else
 			{
-				if( LEOFile.DEBUG )
-				{
-					Logger.logWarn( "Storage has no Block Type." );
-				}
+					log.warn( "Storage has no Block Type." );
 			}
 		}
-		if( LEOFile.DEBUG )
-		{
-			Logger.logInfo( "Total Size used by Directories : " + String.valueOf( totrecsize ) );
-		}
-
+			log.debug( "Total Size used by Directories : " + String.valueOf( totrecsize ) );
 	}
 
 	/**
@@ -307,7 +295,7 @@ public class StorageTable implements Serializable
 			}
 			catch( LEOIndexingException e )
 			{
-				Logger.logWarn( "initSBStorages: Error obtaining sbdIdx" );
+				log.error( "initSBStorages: Error obtaining sbdIdx" );
 			}
 		}
 		return null;
@@ -328,10 +316,7 @@ public class StorageTable implements Serializable
 		miniFATContainer.setBlockType( Block.BIG );
 		miniFATContainer.setStartBlock( pos );
 		miniFATContainer.setStorageType( 5 ); // set as root type to distinguish from regular storages
-		if( LEOFile.DEBUG )
-		{
-			Logger.logInfo( "StorageTable.getMiniFAT() Initializing miniFAT Container." );
-		}
+			log.debug( "StorageTable.getMiniFAT() Initializing miniFAT Container." );
 		miniFATContainer.init( blockvect, FAT, true );
 		//	miniFAT.setName("SBidx");
 		// miniFAT index
@@ -384,13 +369,6 @@ public class StorageTable implements Serializable
 
 			}
 		}
-
-		if( false && LEOFile.DEBUG )
-		{
-			Logger.logInfo(
-				/*"INFO: StorageTable.addStorage() Storage size: "
-					+*/ rec.getName() + " Size: " + String.valueOf( rec.getActualFileSize() ) + " Start Block: " + rec.getStartBlock() );
-		}
 	}
 
 	/* remove a Storage
@@ -408,12 +386,9 @@ public class StorageTable implements Serializable
 	{
 		String name = rec.getName();
 		int recsize = rec.getActualFileSize();
-		if( LEOFile.DEBUG )
-		{
-			Logger.logInfo( "Initializing Storage: " + name + " Retrieving Data." +
+			log.debug( "Initializing Storage: " + name + " Retrieving Data." +
 					                " Size: " + String.valueOf( recsize ) + " type: " + String.valueOf( blocktype ) + " startidx: " + rec.getStartBlock() + ((rec
 					.getBlockType() == Block.SMALL) ? " MiniFAT" : "") );
-		}
 		rec.setBlockType( blocktype );
 		if( ("Root Entry").equals( name ) ) // ksc: shouldn't!
 		{
@@ -429,26 +404,6 @@ public class StorageTable implements Serializable
 			rec.initFromMiniStream( sourceblocks, idx );
 		}
 
-		if( LEOFile.DEBUG )
-		{
-			if( rec.getBytes() != null )
-			{
-				if( name == null )
-				{
-					name = "noname.dat";
-				}
-				if( name.charAt( 0 ) == '' )
-				{
-					name = name.substring( 1 );
-				}
-				if( name.charAt( 0 ) == '' )
-				{
-					name = name.substring( 1 );
-				}
-				// if(blocktype == Block.BIG)
-				StorageTable.writeitout( rec.getBlockVect(), name + ".stor" );
-			}
-		}
 		rec.idxs = null;
 	}
 
@@ -651,18 +606,18 @@ public class StorageTable implements Serializable
 
 	public void DEBUG()
 	{
-		System.out.println( "DIRECTORY CONTENTS:" );
+		log.info( "DIRECTORY CONTENTS:" );
 		for( Object aDirectoryVector : directoryVector )
 		{
 			Storage s = (Storage) aDirectoryVector;
 			String n = s.getName();
-			Logger.logInfo( "Storage: " + n + " storageType: " + s.getStorageType() + " directoryColor:" + s.getDirectoryColor() +
+			log.info( "Storage: " + n + " storageType: " + s.getStorageType() + " directoryColor:" + s.getDirectoryColor() +
 					                " prevSID:" + s.getPrevStorageID() + " nextSID:" + s.getNextStorageID() + " childSID:" + s.getChildStorageID() + " sz:" + s
 					.getActualFileSize() );
 			// special storages
 			if( n.equals( "Root Entry" ) )
 			{
-				Logger.logInfo( "Root Header: " + Arrays.toString( s.getHeaderData().array() ) );
+				log.info( "Root Header: " + Arrays.toString( s.getHeaderData().array() ) );
 
 				/***********************************
 				 // KSC: TESTING for XLS-97:
@@ -677,11 +632,11 @@ public class StorageTable implements Serializable
 					int zz = 0;
 					if( (s.myblocks.get( zz ) instanceof BIGBLOCK) )
 					{
-						System.out.println( "BLOCK 1:\t" + zz + "-" + Arrays.toString( ((BIGBLOCK) s.myblocks.get( zz )).getBytes() ) );
+						log.debug( "BLOCK 1:\t" + zz + "-" + Arrays.toString( ((BIGBLOCK) s.myblocks.get( zz )).getBytes() ) );
 					}
 					else
 					{
-						System.out.println( "BLOCK 1:\t" + zz + "-" + Arrays.toString( ((SMALLBLOCK) s.myblocks.get( zz )).getBytes() ) );
+						log.debug( "BLOCK 1:\t" + zz + "-" + Arrays.toString( ((SMALLBLOCK) s.myblocks.get( zz )).getBytes() ) );
 					}
 				}
 			}
@@ -701,7 +656,7 @@ public class StorageTable implements Serializable
 				{
 					String ss = new String( rec.getBytesAt( 28,
 					                                        slen ) );        // AnsiUserType= a display name of the linked object or embedded object.
-					System.out.println( "\tOLE Object:" + ss );
+					log.debug( "\tOLE Object:" + ss );
 				}
 				// AnsiClipboardFormat (variable)
 //				System.out.println("\t" + Arrays.toString(rec.getData()));				
@@ -714,11 +669,11 @@ public class StorageTable implements Serializable
 					{
 						if( (s.myblocks.get( zz ) instanceof BIGBLOCK) )
 						{
-							System.out.println( "\t" + zz + "-" + Arrays.toString( ((BIGBLOCK) s.myblocks.get( zz )).getBytes() ) );
+							log.debug( "\t" + zz + "-" + Arrays.toString( ((BIGBLOCK) s.myblocks.get( zz )).getBytes() ) );
 						}
 						else
 						{
-							System.out.println( "\t" + zz + "-" + Arrays.toString( ((SMALLBLOCK) s.myblocks.get( zz )).getBytes() ) );
+							log.debug( "\t" + zz + "-" + Arrays.toString( ((SMALLBLOCK) s.myblocks.get( zz )).getBytes() ) );
 						}
 					}
 				}
@@ -734,7 +689,7 @@ public class StorageTable implements Serializable
 					rec.setOffset( z );
 					rec.setLength( (short) reclen );
 					rec.init();
-					System.out.println( "\t\t" + rec.toString() );
+					log.debug( "\t\t" + rec.toString() );
 					z += reclen + 4;
 				}
 			}
@@ -746,11 +701,11 @@ public class StorageTable implements Serializable
 					{
 						if( (s.myblocks.get( zz ) instanceof BIGBLOCK) )
 						{
-							System.out.println( "\t" + zz + "-" + Arrays.toString( ((BIGBLOCK) s.myblocks.get( zz )).getBytes() ) );
+							log.debug( "\t" + zz + "-" + Arrays.toString( ((BIGBLOCK) s.myblocks.get( zz )).getBytes() ) );
 						}
 						else
 						{
-							System.out.println( "\t" + zz + "-" + Arrays.toString( ((SMALLBLOCK) s.myblocks.get( zz )).getBytes() ) );
+							log.debug( "\t" + zz + "-" + Arrays.toString( ((SMALLBLOCK) s.myblocks.get( zz )).getBytes() ) );
 						}
 					}
 				}

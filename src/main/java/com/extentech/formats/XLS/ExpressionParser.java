@@ -75,7 +75,8 @@ import com.extentech.formats.XLS.formulas.PtgUPlus;
 import com.extentech.formats.XLS.formulas.PtgUnion;
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Stack;
@@ -86,12 +87,8 @@ import java.util.Vector;
  */
 public final class ExpressionParser implements java.io.Serializable
 {
-	/**
-	 *
-	 *
-	 */
+	private static final Logger log = LoggerFactory.getLogger( ExpressionParser.class );
 	private static final long serialVersionUID = 4745215965823234010L;
-	private static int DEBUGLEVEL = 0;
 	/*  All of the operand values
 
 		Section of binary operator PTG's.  These pop the two
@@ -225,10 +222,7 @@ public final class ExpressionParser implements java.io.Serializable
 			{
 
 				case ptgExp:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgExp Located" );
-					}
+					log.debug( "ptgExp Located" );
 					if( i == 0 )
 					{// MUST BE THE ONLY PTG in the formula expression
 						PtgExp px = new PtgExp();
@@ -246,10 +240,7 @@ public final class ExpressionParser implements java.io.Serializable
 					// ptgStr is one of the only ptg's that varies in length, so there is some special handling
 					// going on for it.
 				case ptgStr:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgStr Located" );
-					}
+					log.debug( "ptgStr Located" );
 					int x = i;
 					x += 1; // move past the opcode to the cch
 					ptgLen = function[x] & 0xff; // this is the cch
@@ -273,10 +264,7 @@ public final class ExpressionParser implements java.io.Serializable
 				/* */
 
 				case ptgMemAreaA:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgMemAreaA Located" + function[i] );
-					}
+					log.debug( "ptgMemAreaA Located" + function[i] );
 					x = i;
 					x += 5; // move past the opcode & reserved to the cce
 					ptgLen = ByteTools.readShort( function[x], function[x + 1] ); // this is the cce
@@ -293,10 +281,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgMemAreaN:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgMemAreaN Located" + function[i] );
-					}
+					log.debug( "ptgMemAreaN Located" + function[i] );
 					PtgMemAreaN pmemn = new PtgMemAreaN();
 					ptgLen = pmemn.getLength();
 					b = new byte[ptgLen];
@@ -310,10 +295,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgMemAreaNV:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgMemAreaNV Located" + function[i] );
-					}
+					log.debug( "ptgMemAreaNV Located" + function[i] );
 					x = i;
 					x += 5; // move past the opcode & reserved to the cce
 					ptgLen = ByteTools.readShort( function[x], function[x + 1] ); // this is the cce
@@ -331,10 +313,7 @@ public final class ExpressionParser implements java.io.Serializable
 
 //				ptgMemArea also varies in length...							
 				case ptgMemArea:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgMemArea Located" + function[i] );
-					}
+					log.debug( "ptgMemArea Located" + function[i] );
 					ptgLen = 7;
 					PtgMemArea pmem = new PtgMemArea();
 					b = new byte[ptgLen];
@@ -361,10 +340,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgMemFunc:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgMemFunc Located" );
-					}
+					log.debug( "ptgMemFunc Located" );
 					PtgMemFunc pmemf = new PtgMemFunc();
 					x = i;
 					x += 1; // move past the opcode to the cce
@@ -381,10 +357,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgInt:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgInt Located" );
-					}
+					log.debug( "ptgInt Located" );
 					PtgInt pi = new PtgInt();
 					ptgLen = pi.getLength();
 					b = new byte[ptgLen];
@@ -398,10 +371,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgErr:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgErr Located" );
-					}
+					log.debug( "ptgErr Located" );
 					PtgErr perr = new PtgErr();
 					ptgLen = perr.getLength();
 					b = new byte[ptgLen];
@@ -415,10 +385,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgNum:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgNum Located" );
-					}
+					log.debug( "ptgNum Located" );
 					PtgNumber pnum = new PtgNumber();
 					ptgLen = pnum.getLength();
 					b = new byte[ptgLen];
@@ -432,10 +399,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgBool:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgBool Located" );
-					}
+					log.debug( "ptgBool Located" );
 					PtgBool pboo = new PtgBool();
 					ptgLen = pboo.getLength();
 					b = new byte[ptgLen];
@@ -449,10 +413,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgName:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgName Located" );
-					}
+					log.debug( "ptgName Located" );
 					PtgName pn = new PtgName();
 					ptgLen = pn.getLength();
 					b = new byte[ptgLen];
@@ -469,24 +430,15 @@ public final class ExpressionParser implements java.io.Serializable
 					{
 						if( function[i + ptgLen] == 0x0 )
 						{
-							if( DEBUGLEVEL > 1 )
-							{
-								Logger.logWarn( "Undocumented Name Record mystery byte encountered in Formula: " );
-							}
+								log.warn( "Undocumented Name Record mystery byte encountered in Formula: " );
 							i++;
 						}
 					}
 					break;
 
 				case ptgNameX:
-					if( DEBUGLEVEL > 1 )
-					{
-						Logger.logInfo( "ptgNameX Located" );
-					}
-					if( DEBUGLEVEL > 0 )
-					{
-						Logger.logWarn( "referencing external spreadsheets unsupported." );
-					}
+					log.debug( "ptgNameX Located" );
+						log.warn( "referencing external spreadsheets unsupported." );
 					PtgNameX pnx = new PtgNameX();
 					ptgLen = pnx.getLength();
 					b = new byte[ptgLen];
@@ -501,10 +453,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgRef:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgRef Located " );
-					}
+					log.debug( "ptgRef Located " );
 					PtgRef pt = new PtgRef();
 					ptgLen = pt.getLength();
 					b = new byte[ptgLen];
@@ -520,10 +469,7 @@ public final class ExpressionParser implements java.io.Serializable
 
 				case ptgArray:
 					hasArrays = true;
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgArray Located " );
-					}
+					log.debug( "ptgArray Located " );
 					PtgArray pa = new PtgArray();
 					ptgLen = 8;  //7 len + id
 					b = new byte[ptgLen];
@@ -538,10 +484,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgRefN:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgRefN Located " );
-					}
+					log.debug( "ptgRefN Located " );
 					PtgRefN ptn = new PtgRefN( false );
 					ptgLen = ptn.getLength();
 					b = new byte[ptgLen];
@@ -559,10 +502,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgArea:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgArea Located " );
-					}
+					log.debug( "ptgArea Located " );
 					PtgArea pg = new PtgArea();
 					ptgLen = pg.getLength();
 					b = new byte[ptgLen];
@@ -577,10 +517,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgArea3d:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgArea3d Located " );
-					}
+					log.debug( "ptgArea3d Located " );
 					PtgArea3d pg3 = new PtgArea3d();
 					ptgLen = pg3.getLength();
 					b = new byte[ptgLen];
@@ -595,10 +532,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgAreaN:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgAreaN Located " );
-					}
+					log.debug( "ptgAreaN Located " );
 					PtgAreaN pgn = new PtgAreaN();
 					ptgLen = pgn.getLength();
 					b = new byte[ptgLen];
@@ -616,10 +550,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgAreaErr3d:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgAreaErr3d Located" );
-					}
+					log.debug( "ptgAreaErr3d Located" );
 					PtgAreaErr3d ptfa = new PtgAreaErr3d();
 					ptgLen = ptfa.getLength();
 					b = new byte[ptgLen];
@@ -634,10 +565,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgRefErr3d:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgRefErr3d Located" );
-					}
+					log.debug( "ptgRefErr3d Located" );
 					PtgRefErr3d ptfr = new PtgRefErr3d();
 					ptgLen = ptfr.getLength();
 					b = new byte[ptgLen];
@@ -652,10 +580,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgMemErr:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgMemErr Located" );
-					}
+					log.debug( "ptgMemErr Located" );
 					PtgMemErr pm = new PtgMemErr();
 					ptgLen = pm.getLength();
 					b = new byte[ptgLen];
@@ -669,10 +594,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgRefErr:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgRefErr Located" );
-					}
+					log.debug( "ptgRefErr Located" );
 					PtgRefErr pr = new PtgRefErr();
 					ptgLen = pr.getLength();
 					b = new byte[ptgLen];
@@ -686,10 +608,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgEndSheet:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgEndSheet Located" );
-					}
+					log.debug( "ptgEndSheet Located" );
 					PtgEndSheet prs = new PtgEndSheet();
 					ptgLen = prs.getLength();
 					b = new byte[ptgLen];
@@ -703,10 +622,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgRef3d:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgRef3d Located" );
-					}
+					log.debug( "ptgRef3d Located" );
 					PtgRef3d pr3 = new PtgRef3d();
 					ptgLen = pr3.getLength();
 					b = new byte[ptgLen];
@@ -730,10 +646,7 @@ public final class ExpressionParser implements java.io.Serializable
                  */
 				case ptgAtr:
 					PtgAtr pat = new PtgAtr( (byte) 0 );
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "PtgAtr Located" );
-					}
+					log.debug( "PtgAtr Located" );
 					ptgLen = pat.getLength();
 					if( (function[i + 1] & 0x4) == 0x4 )
 					{
@@ -754,10 +667,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgFunc:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgFunc Located" );
-					}
+					log.debug( "ptgFunc Located" );
 					PtgFunc ptf = new PtgFunc();
 					ptgLen = ptf.getLength();
 					b = new byte[ptgLen];
@@ -771,10 +681,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgFuncVar:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgFuncVar Located" );
-					}
+					log.debug( "ptgFuncVar Located" );
 					PtgFuncVar ptfv = new PtgFuncVar();
 					ptgLen = ptfv.getLength();
 					b = new byte[ptgLen];
@@ -841,10 +748,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgAdd:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgAdd Located" );
-					}
+					log.debug( "ptgAdd Located" );
 					PtgAdd pad = new PtgAdd();
 					ptgLen = pad.getLength();
 					b = new byte[ptgLen];
@@ -856,10 +760,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgMissArg:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgMissArg Located" );
-					}
+					log.debug( "ptgMissArg Located" );
 					PtgMissArg pmar = new PtgMissArg();
 					ptgLen = pmar.getLength();
 					b = new byte[ptgLen];
@@ -871,10 +772,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgSub:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "PtgSub Located" );
-					}
+					log.debug( "PtgSub Located" );
 					PtgSub psb = new PtgSub();
 					ptgLen = psb.getLength();
 					b = new byte[ptgLen];
@@ -888,10 +786,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgMlt:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "PtgMlt Located" );
-					}
+					log.debug( "PtgMlt Located" );
 					PtgMlt pml = new PtgMlt();
 					ptgLen = pml.getLength();
 					b = new byte[ptgLen];
@@ -905,10 +800,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgDiv:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "PtgDiv Located" );
-					}
+					log.debug( "PtgDiv Located" );
 					PtgDiv pdiv = new PtgDiv();
 					ptgLen = pdiv.getLength();
 					b = new byte[ptgLen];
@@ -922,10 +814,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgUPlus:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "PtgUPlus Located" );
-					}
+					log.debug( "PtgUPlus Located" );
 					PtgUPlus puplus = new PtgUPlus();
 					ptgLen = puplus.getLength();
 					b = new byte[ptgLen];
@@ -939,10 +828,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgUMinus:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "PtgUminus Located" );
-					}
+					log.debug( "PtgUminus Located" );
 					PtgUMinus puminus = new PtgUMinus();
 					ptgLen = puminus.getLength();
 					b = new byte[ptgLen];
@@ -956,10 +842,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgPercent:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgPercent Located" );
-					}
+					log.debug( "ptgPercent Located" );
 					PtgPercent pperc = new PtgPercent();
 					ptgLen = pperc.getLength();
 					b = new byte[ptgLen];
@@ -973,10 +856,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgPower:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "PtgPower Located" );
-					}
+					log.debug( "PtgPower Located" );
 					PtgPower pow = new PtgPower();
 					ptgLen = pow.getLength();
 					b = new byte[ptgLen];
@@ -990,10 +870,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgConcat:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "PtgConcat Located" );
-					}
+					log.debug( "PtgConcat Located" );
 					PtgConcat pcon = new PtgConcat();
 					ptgLen = pcon.getLength();
 					b = new byte[ptgLen];
@@ -1007,10 +884,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgLT:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "PtgLT Located" );
-					}
+					log.debug( "PtgLT Located" );
 					PtgLT plt = new PtgLT();
 					ptgLen = plt.getLength();
 					b = new byte[ptgLen];
@@ -1024,10 +898,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgLE:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "PtgLE Located" );
-					}
+					log.debug( "PtgLE Located" );
 					PtgLE ple = new PtgLE();
 					ptgLen = ple.getLength();
 					b = new byte[ptgLen];
@@ -1041,10 +912,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgEQ:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "PtgEQ Located" );
-					}
+					log.debug( "PtgEQ Located" );
 					PtgEQ peq = new PtgEQ();
 					ptgLen = peq.getLength();
 					b = new byte[ptgLen];
@@ -1058,10 +926,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgGE:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "PtgGE Located" );
-					}
+					log.debug( "PtgGE Located" );
 					PtgGE pge = new PtgGE();
 					ptgLen = pge.getLength();
 					b = new byte[ptgLen];
@@ -1075,10 +940,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgGT:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "PtgGT Located" );
-					}
+					log.debug( "PtgGT Located" );
 					PtgGT pgt = new PtgGT();
 					ptgLen = pgt.getLength();
 					b = new byte[ptgLen];
@@ -1092,10 +954,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgNE:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "PtgNE Located" );
-					}
+					log.debug( "PtgNE Located" );
 					PtgNE pne = new PtgNE();
 					ptgLen = pne.getLength();
 					b = new byte[ptgLen];
@@ -1110,10 +969,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgIsect:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "PtgIsect Located" );
-					}
+					log.debug( "PtgIsect Located" );
 					PtgIsect pist = new PtgIsect();
 					ptgLen = pist.getLength();
 					b = new byte[ptgLen];
@@ -1128,10 +984,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgUnion:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgUnion Located" );
-					}
+					log.debug( "ptgUnion Located" );
 					PtgUnion pun = new PtgUnion();
 					ptgLen = pun.getLength();
 					b = new byte[ptgLen];
@@ -1145,10 +998,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgRange:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "ptgRange Located" );
-					}
+					log.debug( "ptgRange Located" );
 					PtgRange pran = new PtgRange();
 					ptgLen = pran.getLength();
 					b = new byte[ptgLen];
@@ -1162,10 +1012,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgParen:
-					if( DEBUGLEVEL > 5 )
-					{
-						Logger.logInfo( "PtgParens Located" );
-					}
+					log.debug( "PtgParens Located" );
 					PtgParen pp = new PtgParen();
 					ptgLen = pp.getLength();
 					b = new byte[ptgLen];
@@ -1183,10 +1030,7 @@ public final class ExpressionParser implements java.io.Serializable
 					PtgMystery pmy = new PtgMystery();
 					ptgLen = function.length - i;
 					b = new byte[ptgLen];
-					if( DEBUGLEVEL > 0 )
-					{
-						Logger.logWarn( "Unsupported Formula Function: 0x" + Integer.toHexString( ptg ) + " length: " + ptgLen );
-					}
+						log.warn( "Unsupported Formula Function: 0x" + Integer.toHexString( ptg ) + " length: " + ptgLen );
 					System.arraycopy( function, i, b, 0, ptgLen );
 					pmy.init( b );
 					pmy.setParentRec( p );
@@ -1219,10 +1063,7 @@ public final class ExpressionParser implements java.io.Serializable
 				}
 				catch( Exception e )
 				{//TODO: this needs to be caught due to "name" records being parsed incorrectly.  The problem has to do with the lenght of the name record not including the extra 7 bytes of space.  Temporary fix for infoteria
-					if( DEBUGLEVEL > 0 )
-					{
-						Logger.logInfo( "ExpressionParser.parseExpression: Array: " + e );
-					}
+					log.debug( "ExpressionParser.parseExpression: Array: " + e );
 				}
 			}
 		} /* no need to keep PtgExtraMem as can regenerate easily else
@@ -1232,10 +1073,7 @@ public final class ExpressionParser implements java.io.Serializable
         	// 	   array (variable): An array of Ref8U that specifies the range. The number of elements MUST be equal to count.
         		pma.setPostExpression(function, expressionLen);
         }*/
-		if( DEBUGLEVEL > 5 )
-		{
-			Logger.logInfo( "finished formula" );
-		}
+		log.debug( "finished formula" );
 		return stack;
 
 	}

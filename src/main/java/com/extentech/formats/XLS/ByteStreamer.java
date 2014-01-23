@@ -30,7 +30,8 @@ import com.extentech.formats.XLS.charts.ChartObject;
 import com.extentech.formats.XLS.charts.SeriesText;
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.FastAddVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -55,11 +56,11 @@ import java.util.Vector;
  */
 public class ByteStreamer implements Serializable, XLSConstants
 {
+	private static final Logger log = LoggerFactory.getLogger( ByteStreamer.class );
 	private static final long serialVersionUID = -8188652784510579406L;
 	AbstractList records = new FastAddVector();
 	private byte[] bytes;
 	private String myname = "";
-	boolean DEBUG = !true;
 	protected WorkBook workbook = null;
 	private OutputStream out = null;
 	int dlen = -1;
@@ -85,11 +86,11 @@ public class ByteStreamer implements Serializable, XLSConstants
 		Vector testVect;
 		if( true )
 		{
-			Logger.logInfo( "TestVector on in bytestreamer.stream" );
+			log.info( "TestVector on in bytestreamer.stream" );
 			testVect = new Vector();
 			testVect.addAll( records );
 		}
-		Logger.logInfo( "TESTING Recvec done." );
+		log.info( "TESTING Recvec done." );
 	}
 
 	public ByteStreamer( WorkBook bk )
@@ -326,10 +327,7 @@ public class ByteStreamer implements Serializable, XLSConstants
 		{
 			out.write( dt );
 		}
-		if( LEOFile.DEBUG )
-		{
 			LEOFile.actualOutput += (op.length + ln.length + dt.length); // debugging
-		}
 		rec.postStream();
 	}
 
@@ -394,7 +392,7 @@ public class ByteStreamer implements Serializable, XLSConstants
 			}
 			else
 			{
-				Logger.logWarn( "Body Rec missing while preStreaming(): " + rec.toString() );
+				log.warn( "Body Rec missing while preStreaming(): " + rec.toString() );
 			}
 		}
 		e = rex.iterator();
@@ -471,10 +469,7 @@ public class ByteStreamer implements Serializable, XLSConstants
 		hdrBlock.writeBytes( out );
 
 		// now output the workbook biff records
-		if( LEOFile.DEBUG )
-		{
 			LEOFile.actualOutput = 0;    // debugging
-		}
 		while( e.hasNext() )
 		{
 			rec = (BiffRec) e.next();
@@ -521,13 +516,10 @@ public class ByteStreamer implements Serializable, XLSConstants
 		}
 
 		// pad to fit FAT size
-		if( LEOFile.DEBUG )
-		{
 			if( LEOFile.actualOutput != dlen )
 			{
-				Logger.logInfo( "Expected:" + dlen + " Actual: " + LEOFile.actualOutput + " Diff: " + (LEOFile.actualOutput - dlen) );
+				log.debug( "Expected:" + dlen + " Actual: " + LEOFile.actualOutput + " Diff: " + (LEOFile.actualOutput - dlen) );
 			}
-		}
 		int leftover;
 		int nBlocks = Math.max( leo.getMinBlocks(), (int) Math.ceil( dlen / (BIGBLOCK.SIZE * 1.0) ) + 1 );
 		leftover = (nBlocks * BIGBLOCK.SIZE) - dlen;    // padding
@@ -561,7 +553,7 @@ public class ByteStreamer implements Serializable, XLSConstants
 		}
 		catch( Exception a )
 		{
-			Logger.logErr( "Streaming WorkBook Storage Bytes failed.", a );
+			log.error( "Streaming WorkBook Storage Bytes failed.", a );
 			throw new WorkBookException( "ByteStreamer.stream(): Body Rec missing while preStreaming(): " + rec.toString() + " " + a.toString() + " Output Corrupted.",
 			                             WorkBookException.WRITING_ERROR );
 

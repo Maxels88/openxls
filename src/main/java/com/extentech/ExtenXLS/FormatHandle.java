@@ -31,10 +31,11 @@ import com.extentech.formats.XLS.FormatConstants;
 import com.extentech.formats.XLS.FormatConstantsImpl;
 import com.extentech.formats.XLS.Xf;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.Collections;
@@ -62,7 +63,7 @@ import java.util.Map;
  */
 public class FormatHandle implements Handle, FormatConstants
 {
-
+	private static final Logger log = LoggerFactory.getLogger( FormatHandle.class );
 	private CompatibleVector mycells = new CompatibleVector(); // all the Cells sharing this format e.g. CellRange
 	private Xf myxf;
 	private int xfe;
@@ -81,7 +82,7 @@ public class FormatHandle implements Handle, FormatConstants
 
 	static
 	{
-		Map<String, String> formats = new HashMap<String, String>();
+		Map<String, String> formats = new HashMap<>();
 		for( String[] formatArr : FormatConstants.NUMERIC_FORMATS )
 		{
 			if( formatArr.length == 3 )
@@ -91,7 +92,7 @@ public class FormatHandle implements Handle, FormatConstants
 		}
 		numericFormatMap = Collections.unmodifiableMap( formats );
 
-		formats = new HashMap<String, String>();
+		formats = new HashMap<>();
 		for( String[] formatArr : FormatConstants.CURRENCY_FORMATS )
 		{
 			if( formatArr.length == 3 )
@@ -101,7 +102,7 @@ public class FormatHandle implements Handle, FormatConstants
 		}
 		currencyFormatMap = Collections.unmodifiableMap( formats );
 
-		formats = new HashMap<String, String>();
+		formats = new HashMap<>();
 		for( String[] formatArr : FormatConstants.DATE_FORMATS )
 		{
 			if( formatArr.length == 3 )
@@ -146,7 +147,7 @@ public class FormatHandle implements Handle, FormatConstants
 			}
 			else
 			{
-				Logger.logErr( "FormatHandle constructed with null WorkBook." );
+				log.error( "FormatHandle constructed with null WorkBook." );
 			}
 		}
 	}
@@ -1232,7 +1233,7 @@ public class FormatHandle implements Handle, FormatConstants
 	{
 		if( wkbook == null )
 		{
-			Logger.logErr( "AddFontIfNecessary: workbook is null" );
+			log.error( "AddFontIfNecessary: workbook is null" );
 			return -1;
 		}
 		int fti = wkbook.getFontIdx( f );
@@ -1264,7 +1265,7 @@ public class FormatHandle implements Handle, FormatConstants
 	{
 		if( bk == null )
 		{
-			Logger.logErr( "addFont: workbook is null" );
+			log.error( "addFont: workbook is null" );
 		}
 		int fti = bk.getWorkBook().getFontIdx( f );
 		// if (fti > 3) {// don't use the built-ins.
@@ -1355,7 +1356,7 @@ public class FormatHandle implements Handle, FormatConstants
 		}
 		else
 		{
-			Logger.logWarn( "FormatHandle.addCell() - You MUST call setFont() to initialize the FormatHandle's font before adding Cells." );
+			log.error( "FormatHandle.addCell() - You MUST call setFont() to initialize the FormatHandle's font before adding Cells." );
 		}
 		mycells.add( c );
 	}
@@ -2281,7 +2282,7 @@ public class FormatHandle implements Handle, FormatConstants
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Error setting style" );    // KSC: TESETING: TAKE OUT WHEN DONE
+			log.error( "Error setting style", e );    // KSC: TESETING: TAKE OUT WHEN DONE
 		}
 	}
 
@@ -2595,7 +2596,7 @@ public class FormatHandle implements Handle, FormatConstants
 		}
 		catch( JSONException e )
 		{
-			Logger.logErr( "Error getting cellRange JSON: " + e );
+			log.error( "Error getting cellRange JSON: ", e );
 		}
 		return theStyle;
 	}
@@ -2766,7 +2767,7 @@ public class FormatHandle implements Handle, FormatConstants
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "FormatHandle.getXML problem with protection setting: " + e.toString() );
+			log.warn( "FormatHandle.getXML problem with protection setting: " + e.toString() );
 		}
 		finally
 		{

@@ -23,14 +23,12 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SXBool extends XLSRecord implements XLSConstants, PivotCacheRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( SXBool.class );
 	private static final long serialVersionUID = 9027599480633995587L;
 	boolean bool;
 
@@ -38,10 +36,7 @@ public class SXBool extends XLSRecord implements XLSConstants, PivotCacheRecord
 	public void init()
 	{
 		super.init();
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "SXBool -" );
-		}
+			log.trace( "SXBool -" );
 		bool = (this.getByteAt( 0 ) == 0x1);
 	}
 

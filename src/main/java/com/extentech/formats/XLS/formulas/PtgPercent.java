@@ -30,17 +30,15 @@
 */
 package com.extentech.formats.XLS.formulas;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
 public class PtgPercent extends GenericPtg implements Ptg
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgPercent.class );
 	private static final long serialVersionUID = -8559541841405018157L;
 
 	@Override
@@ -92,7 +90,7 @@ public class PtgPercent extends GenericPtg implements Ptg
 			{
 				// there should always be only one ptg in this, error if not.
 				//if (form.length != 1){
-				Logger.logWarn( "calculating formula failed, wrong number of values in PtgPercent" );
+				log.warn( "calculating formula failed, wrong number of values in PtgPercent" );
 				return null;
 			}
 		}

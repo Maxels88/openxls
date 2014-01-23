@@ -26,7 +26,8 @@ import com.extentech.ExtenXLS.CellHandle;
 import com.extentech.ExtenXLS.ValidationHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -36,7 +37,7 @@ import java.io.FileOutputStream;
  */
 public class TestValidations
 {
-
+	private static final Logger log = LoggerFactory.getLogger( TestValidations.class );
 	public static final String wd = System.getProperty( "user.dir" ) + "/docs/samples/Validations/";
 
 	public static void main( String[] args )
@@ -73,7 +74,7 @@ public class TestValidations
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( e );
+			log.error( "",e );
 		}
 	}
 
@@ -117,7 +118,7 @@ public class TestValidations
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Failure in testValidationHandle.testExistingValidation: " + e.toString() );
+			log.error( "Failure in testValidationHandle.testExistingValidation: " + e.toString() );
 		}
 
 	}
@@ -135,7 +136,7 @@ public class TestValidations
 		}
 		catch( java.io.IOException e )
 		{
-			Logger.logInfo( "IOException in Tester.  " + e );
+			log.info( "IOException in Tester.  " + e );
 		}
 	}
 

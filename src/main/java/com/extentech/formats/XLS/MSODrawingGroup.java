@@ -30,7 +30,8 @@ import com.extentech.formats.escher.MsofbtDggContainer;
 import com.extentech.formats.escher.MsofbtOPT;
 import com.extentech.formats.escher.MsofbtSplitMenuColors;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -81,6 +82,7 @@ import java.util.Iterator;
  */
 public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 {
+	private static final Logger log = LoggerFactory.getLogger( MSODrawingGroup.class );
 	// 20070914 KSC: Save drawing recs here
 	private AbstractList msoRecs = new ArrayList();
 
@@ -181,7 +183,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 				{
 					return msd;
 				} //else 
-				//Logger.logErr("WorkBook.updateMsodrawingHeaderRec:  Header Record should be first rec in group.");
+				//log.error("WorkBook.updateMsodrawingHeaderRec:  Header Record should be first rec in group.");
 //				break;
 			}
 		}
@@ -331,7 +333,6 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 				Phonetic p = new Phonetic();
 				p.setData( p.PROTOTYPE_BYTES );
 				p.setOpcode( XLSRecord.PHONETIC );
-				p.setDebugLevel( this.DEBUGLEVEL );
 				p.setStreamer( this.getStreamer() );
 				aB.insertSheetRecordAt( p, aB.getIndexOf( SELECTION ) + 1 );
 			}
@@ -457,7 +458,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Msodrawingroup parse error.", e );
+			log.error( "Msodrawingroup parse error.", e );
 		}
 	}
 
@@ -546,7 +547,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Msodrawingroup createData error.", e );
+			log.error( "Msodrawingroup createData error.", e );
 		}
 
 		MsofbtDgg dgg = new MsofbtDgg( MSODrawingConstants.MSOFBTDGG, 0, 0 );
@@ -679,7 +680,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception ex )
 		{
-			Logger.logErr( "Msodrawingroup setImageBytes failed.", ex );
+			log.error( "Msodrawingroup setImageBytes failed.", ex );
 			return false;
 		}
 
@@ -714,7 +715,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception ex )
 		{
-			Logger.logErr( "Msodrawingroup getImageBytes error.", ex );
+			log.error( "Msodrawingroup getImageBytes error.", ex );
 		}
 		return ret;
 
@@ -958,7 +959,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 			cRef.remove( idx );
 			cRef.add( idx, cr );
 		} //else  20071126 KSC: it's OK, can have - indexes ... 
-		//Logger.logErr("Index error encountered when updating Reference Count");
+		//log.error("Index error encountered when updating Reference Count");
 	}
 
 	/**
@@ -972,7 +973,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 		{
 			return (Integer) cRef.get( idx );
 		}
-		//Logger.logErr("MSODrawingGroup: error encountered when returning Reference Count");
+		//log.error("MSODrawingGroup: error encountered when returning Reference Count");
 		return -1;
 	}
 
@@ -991,7 +992,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 		}
 		else
 		{
-			Logger.logErr( "MSODrawingGroup: error encountered when decrementing Reference Count" );
+			log.error( "MSODrawingGroup: error encountered when decrementing Reference Count" );
 		}
 	}
 

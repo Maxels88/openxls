@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.OOXML;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -38,7 +39,7 @@ import java.util.Stack;
  */
 public class Graphic implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Graphic.class );
 	private static final long serialVersionUID = -7027946026352255398L;
 	private GraphicData graphicData = new GraphicData();
 
@@ -87,7 +88,7 @@ public class Graphic implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "graphic.parseOOXML: " + e.toString() );
+			log.error( "graphic.parseOOXML: " + e.toString() );
 		}
 		Graphic gr = new Graphic( g );
 		return gr;
@@ -168,7 +169,7 @@ public class Graphic implements OOXMLElement
  */
 class GraphicData implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( GraphicData.class );
 	private static final long serialVersionUID = 7395991759307532325L;
 	private String uri = OOXMLConstants.chartns; //xmlns:r=\"" + OOXMLConstants.relns + "\"";	// default
 	private String rid = null;
@@ -230,7 +231,7 @@ class GraphicData implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "graphicData.parseOOXML: " + e.toString() );
+			log.error( "graphicData.parseOOXML: " + e.toString() );
 		}
 		GraphicData g = new GraphicData( uri, rid );
 		return g;

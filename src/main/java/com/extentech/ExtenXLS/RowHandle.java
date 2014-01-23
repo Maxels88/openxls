@@ -30,11 +30,12 @@ import com.extentech.formats.XLS.Mulblank;
 import com.extentech.formats.XLS.Row;
 import com.extentech.formats.XLS.XLSConstants;
 import com.extentech.formats.XLS.XLSRecord;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ import static com.extentech.ExtenXLS.JSONConstants.JSON_ROW_BORDER_TOP;
  */
 public class RowHandle
 {
+	private static final Logger log = LoggerFactory.getLogger( RowHandle.class );
 	// FYI: do not change lightly -- these match Excel 2007 almost exactly
 	public static int ROW_HEIGHT_DIVISOR = 17;
 
@@ -194,7 +196,7 @@ public class RowHandle
 				}
 				catch( Exception e )
 				{
-					Logger.logErr( "RowHandle.setRowHeightAutoFit: " + e.toString() );
+					log.error( "RowHandle.setRowHeightAutoFit: ", e );
 				}
 
 				h = Math.max( h, newH );
@@ -469,7 +471,7 @@ public class RowHandle
 							}
 							catch( Exception exz )
 							{
-								Logger.logErr( "Error getting Row cell value " + thisCell.getCellAddress() + " JSON: " + exz );
+								log.error( "Error getting Row cell value " + thisCell.getCellAddress() + " JSON: " + exz );
 								v = "ERROR FETCHING VALUE for:" + thisCell.getCellAddress();
 							}
 							if( v != null )
@@ -489,7 +491,7 @@ public class RowHandle
 						}
 						catch( Exception exz )
 						{
-							Logger.logErr( "Error getting Row cell value " + thisCell.getCellAddress() + " JSON: " + exz );
+							log.error( "Error getting Row cell value " + thisCell.getCellAddress() + " JSON: " + exz );
 						}
 						if( v != null )
 						{
@@ -503,7 +505,7 @@ public class RowHandle
 		}
 		catch( JSONException e )
 		{
-			Logger.logErr( "Error getting Row JSON: " + e );
+			log.error( "Error getting Row JSON: " + e );
 		}
 		return theRange;
 	}

@@ -22,6 +22,9 @@
  */
 package com.extentech.toolkit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
@@ -37,10 +40,7 @@ import java.util.List;
 
 public final class ByteTools implements Serializable
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( ByteTools.class );
 	private static final long serialVersionUID = 1220042103372057083L;
 
 	/**
@@ -200,7 +200,7 @@ public final class ByteTools implements Serializable
 		int destlen = dest.length;
 		if( destlen < srclen )
 		{
-			Logger.logInfo( "Your destination byte array is too small to copy into: srclen=" + String.valueOf( srclen ) + ": destlen=" + String
+			log.error( "Your destination byte array is too small to copy into: srclen=" + String.valueOf( srclen ) + ": destlen=" + String
 					.valueOf( destlen ) );
 			srclen = destlen;
 		}
@@ -297,7 +297,7 @@ public final class ByteTools implements Serializable
 		}
 		catch( java.io.IOException e )
 		{
-			Logger.logInfo( "io exception in byte to Double conversion" + e );
+			log.error( "io exception in byte to Double conversion" + e, e );
 		}
 		return d;
 	}
@@ -326,7 +326,7 @@ public final class ByteTools implements Serializable
 		}
 		catch( java.io.IOException e )
 		{
-			Logger.logInfo( "io exception in byte to Double conversion" + e );
+			log.error( "io exception in byte to Double conversion" + e, e );
 		}
 		return l;
 	}
@@ -372,7 +372,7 @@ public final class ByteTools implements Serializable
 		}
 		catch( UnsupportedEncodingException e )
 		{
-			Logger.logInfo( "Error creating encoded string: " + e );
+			log.warn( "Error creating encoded string: " + e, e );
 		}
 		boolean unicode = false;
 		for( int i = 0; i < strbytes.length; i++ )
@@ -595,7 +595,7 @@ public final class ByteTools implements Serializable
 		}
 		catch( IOException e )
 		{
-			Logger.logInfo( "Error writing bytes to file in ByteTools: " + e );
+			log.error( "Error writing bytes to file in ByteTools: " + e, e );
 		}
 
 	}

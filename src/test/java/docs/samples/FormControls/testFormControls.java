@@ -26,7 +26,8 @@ import com.extentech.ExtenXLS.CellHandle;
 import com.extentech.ExtenXLS.NameHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -37,6 +38,7 @@ import java.io.FileOutputStream;
  */
 public class testFormControls
 {
+	private static final Logger log = LoggerFactory.getLogger( testFormControls.class );
 
 	// change to the folder containing the image files and spreadsheet templates
 	String workingdir = System.getProperty( "user.dir" ) + "/docs/samples/FormControls/";
@@ -126,7 +128,7 @@ public class testFormControls
 		}
 		testWrite( tbo, workingdir + "testFormsOut.xls" );
 		// write out the results
-		WorkBookHandle newbook = new WorkBookHandle( workingdir + "testFormsOut.xls", 0 );
+		WorkBookHandle newbook = new WorkBookHandle( workingdir + "testFormsOut.xls" );
 		System.out.println( "Successfully read: " + newbook );
 	}
 
@@ -143,7 +145,7 @@ public class testFormControls
 		}
 		catch( java.io.IOException e )
 		{
-			Logger.logInfo( "IOException in Tester.  " + e );
+			log.info( "IOException in Tester.  " + e );
 		}
 	}
 

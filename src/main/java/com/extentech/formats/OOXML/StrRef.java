@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.OOXML;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -32,7 +33,7 @@ import java.util.Stack;
  */
 public class StrRef implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( StrRef.class );
 	private static final long serialVersionUID = -5992001371281543027L;
 	private String stringRef = null;
 	private StrCache strCache = null;
@@ -92,7 +93,7 @@ public class StrRef implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "title.parseOOXML: " + e.toString() );
+			log.error( "title.parseOOXML: " + e.toString() );
 		}
 		StrRef sr = new StrRef( f, s );
 		return sr;
@@ -136,9 +137,7 @@ public class StrRef implements OOXMLElement
  */
 class StrCache implements OOXMLElement
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( StrCache.class );
 	private static final long serialVersionUID = -4914374179641060956L;
 	private int ptCount = -1, idx = -1;
 	private String pt = null;
@@ -199,7 +198,7 @@ class StrCache implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "strCache.parseOOXML: " + e.toString() );
+			log.error( "strCache.parseOOXML: " + e.toString() );
 		}
 		StrCache sc = new StrCache( ptCount, idx, pt );
 		return sc;

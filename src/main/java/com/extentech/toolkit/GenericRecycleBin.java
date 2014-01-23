@@ -22,6 +22,9 @@
  */
 package com.extentech.toolkit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +37,7 @@ import java.util.Vector;
  */
 public abstract class GenericRecycleBin extends java.lang.Thread implements Map, com.extentech.toolkit.RecycleBin
 {
+	private static final Logger log = LoggerFactory.getLogger( GenericRecycleBin.class );
 	protected Map map = new java.util.HashMap();
 	protected Vector active = new Vector();
 	protected Stack spares = new Stack();
@@ -108,7 +112,7 @@ public abstract class GenericRecycleBin extends java.lang.Thread implements Map,
 			}
 			catch( Exception ex )
 			{
-				Logger.logErr( "recycle failed", ex );
+				log.error( "recycle failed", ex );
 			}
 		}
 

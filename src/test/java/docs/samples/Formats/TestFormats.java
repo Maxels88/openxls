@@ -26,7 +26,8 @@ import com.extentech.ExtenXLS.CellHandle;
 import com.extentech.ExtenXLS.FormatHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.BufferedOutputStream;
@@ -37,7 +38,7 @@ import java.io.FileOutputStream;
  */
 public class TestFormats
 {
-
+	private static final Logger log = LoggerFactory.getLogger( TestFormats.class );
 	String wd = System.getProperty( "user.dir" ) + "/docs/samples/Formats/";
 
 	private String finpath = "", sheetname = "";
@@ -278,7 +279,7 @@ public class TestFormats
 		}
 		catch( java.io.IOException e )
 		{
-			Logger.logInfo( "IOException in Tester.  " + e );
+			log.info( "IOException in Tester.  " + e );
 		}
 	}
 }

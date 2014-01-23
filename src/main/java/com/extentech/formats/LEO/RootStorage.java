@@ -22,8 +22,6 @@
  */
 package com.extentech.formats.LEO;
 
-import com.extentech.toolkit.Logger;
-
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
@@ -35,11 +33,7 @@ import java.util.ArrayList;
  */
 public class RootStorage extends com.extentech.formats.LEO.Storage
 {
-	/**
-	 * serialVersionUID
-	 */
 	private static final long serialVersionUID = -6568586717509723981L;
-	int DEBUGLEVEL = 0;
 
 	RootStorage( ByteBuffer b )
 	{
@@ -75,10 +69,6 @@ public class RootStorage extends com.extentech.formats.LEO.Storage
 	@Override
 	public byte[] getBytes()
 	{
-		if( DEBUGLEVEL > 5 )
-		{
-			Logger.logInfo( "Getting Root Storage Bytes...." );
-		}
 		return super.getBytes();
 	}
 }

@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.XLS.formulas;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
 
@@ -39,9 +40,7 @@ import java.lang.reflect.Array;
 */
 public class PtgEQ extends GenericPtg implements Ptg
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgEQ.class );
 	private static final long serialVersionUID = 5446048862531696036L;
 
 	@Override
@@ -100,7 +99,7 @@ public class PtgEQ extends GenericPtg implements Ptg
 		// there should always be only two ptg's in this, error if not.
 		if( form.length != 2 )
 		{
-			Logger.logInfo( "calculating formula, wrong number of values in PtgEQ" );
+			log.warn( "calculating formula, wrong number of values in PtgEQ" );
 			return new PtgErr( PtgErr.ERROR_VALUE );    // 20081203 KSC: handle error's ala Excel
 		}
 		// check for null referenced values, a null reference is equal to the string "";

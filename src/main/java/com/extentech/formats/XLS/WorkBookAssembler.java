@@ -133,7 +133,7 @@ public class WorkBookAssembler implements XLSConstants
 				rowCount = 0;
 				dbOffset = 0;
 			}
-			Row r = (Row) thissheet.getRowMap().get( outRows.next() );
+			Row r = thissheet.getRowMap().get( outRows.next() );
 			rowCount++;
 			maxRow = Math.max( r.getRowNumber(), maxRow );
 			dbOffset += r.getLength();

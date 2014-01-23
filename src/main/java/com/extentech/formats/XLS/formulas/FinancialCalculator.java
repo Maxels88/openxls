@@ -24,7 +24,8 @@ package com.extentech.formats.XLS.formulas;
 
 import com.extentech.ExtenXLS.DateConverter;
 import com.extentech.formats.XLS.FunctionNotSupportedException;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -42,7 +43,7 @@ import java.util.Vector;
 
 public class FinancialCalculator
 {
-	public static boolean DEBUG = false;
+	private static final Logger log = LoggerFactory.getLogger( FinancialCalculator.class );
 
 	/*
 	 * Basis
@@ -122,7 +123,7 @@ public class FinancialCalculator
 			{
 				d0 = 30;
 			}
-			yearFrac = (double) ((360 * (y1 - y0)) + (30 * (m1 - m0)) + (d1 - d0)) / 360.0;
+			yearFrac = ((360 * (y1 - y0)) + (30 * (m1 - m0)) + (d1 - d0)) / 360.0;
 		}
 		else if( basis == 1 )
 		{ // Actual/Actual
@@ -134,7 +135,7 @@ public class FinancialCalculator
 			}
 			if( i != y0 )
 			{
-				yearFrac = (double) (date1 - date0) / ((double) ndays / (i - y0)); // yes I know it's redundant ...
+				yearFrac = (date1 - date0) / ((double) ndays / (i - y0)); // yes I know it's redundant ...
 			}
 			else
 			{
@@ -143,17 +144,17 @@ public class FinancialCalculator
 		}
 		else if( basis == 2 )
 		{ // Actual/360
-			yearFrac = (double) (date1 - date0) / 360.0;
+			yearFrac = (date1 - date0) / 360.0;
 		}
 		else if( basis == 3 )
 		{ // Actual/365
-			yearFrac = (double) (date1 - date0) / 365.0;
+			yearFrac = (date1 - date0) / 365.0;
 		}
 		else if( basis == 4 )
 		{ // 30/360 EURO
 			//			if (m0==1 && d0>=28) d0= 30; //???????????????????????????
 			//				if (m1==1 && d1>=28) d1= 30; //???????????????????????????
-			yearFrac = (double) ((360 * (y1 - y0)) + (30 * (m1 - m0)) + (d1 - d0)) / 360.0;
+			yearFrac = ((360 * (y1 - y0)) + (30 * (m1 - m0)) + (d1 - d0)) / 360.0;
 		}
 		return yearFrac;
 	}
@@ -277,17 +278,14 @@ public class FinancialCalculator
 		if( true )
 		{
 			String wn = "WARNING: this version of ExtenXLS does not support the formula ACCRINT.";
-			Logger.logWarn( wn );
+			log.warn( wn );
 			throw new FunctionNotSupportedException( wn );
 		}
 		if( operands.length < 6 )
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "ACCRINT" );
-		}
 		try
 		{
 			GregorianCalendar iDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -347,10 +345,7 @@ public class FinancialCalculator
 			// ACCRINT in EXCEL handles this case, so we should, too!
 			if( firstInterestDate < settlementDate )
 			{
-				if( DEBUG )
-				{
-					Logger.logInfo( ">>> S > FI!" );
-				}
+					log.debug( ">>> S > FI!" );
 /*			Ptg[] ops = new Ptg[4];
 			ops[0] = new PtgNumber(settlementDate);
 			ops[1] = new PtgNumber(firstInterestDate);
@@ -396,20 +391,14 @@ public class FinancialCalculator
 			{
 // ???????????????????????????????????????????????			
 				A = getDaysFromBasis( basis, Math.max( issueDate, PCD ), settlementDate );
-				if( DEBUG )
-				{
-					Logger.logInfo( ">>I < PCD" );
-				}
+					log.debug( ">>I < PCD" );
 			}
 
 			result *= A / (double) E;
 
 			PtgNumber pnum = new PtgNumber( result );
 			// TODO: Complete Accrint Alogorithm
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from Accrint= " + result );
-			}
+				log.debug( "Result from Accrint= " + result );
 			return pnum;
 		}
 		catch( Exception e )
@@ -437,10 +426,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "ACCRINTM" );
-		}
 		try
 		{
 			long issueDate, maturityDate; // dates are truncated to integers
@@ -481,10 +467,7 @@ public class FinancialCalculator
 			}
 
 			double result = par * rate * yearFrac( basis, issueDate, maturityDate );
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from Accrintm= " + result );
-			}
+				log.debug( "Result from Accrintm= " + result );
 			PtgNumber pnum = new PtgNumber( result );
 			return pnum;
 		}
@@ -503,10 +486,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "AMORDEGRC" );
-		}
 		try
 		{
 			double cost = operands[0].getDoubleVal();
@@ -588,10 +568,7 @@ public class FinancialCalculator
 				A = Math.round( rate * salvage );
 			}
 			double result = Math.max( Math.round( A ), 0 );
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from AMORDEGRC= " + result );
-			}
+				log.debug( "Result from AMORDEGRC= " + result );
 			PtgNumber pnum = new PtgNumber( result );
 			return pnum;
 		}
@@ -610,10 +587,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "AMORLINC" );
-		}
 		try
 		{
 			double cost = operands[0].getDoubleVal();
@@ -706,10 +680,7 @@ public class FinancialCalculator
 		else
 			result = 0;
 */
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from AMORLINC= " + result );
-			}
+				log.debug( "Result from AMORLINC= " + result );
 			PtgNumber pnum = new PtgNumber( result );
 			return pnum;
 		}
@@ -737,10 +708,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "COUPDAYSBS" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -773,10 +741,7 @@ public class FinancialCalculator
 
 			// 
 
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcCoupDaysBS= " + result );
-			}
+				log.debug( "Result from calcCoupDaysBS= " + result );
 			PtgNumber pnum = new PtgNumber( result );
 			return pnum;
 		}
@@ -802,10 +767,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "COUPDAYS" );
-		}
 		try
 		{
 			GregorianCalendar dt = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -848,10 +810,7 @@ public class FinancialCalculator
 			{
 				result = 365.0 / frequency;
 			}
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcCoupDays=" + result );
-			}
+				log.debug( "Result from calcCoupDays=" + result );
 			PtgNumber pnum = new PtgNumber( result );
 			return pnum;
 		}
@@ -879,10 +838,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "COUPDAYSNC" );
-		}
 		long settlementDate = new Long( operands[0].getValue().toString() );
 		long maturityDate = new Long( operands[1].getValue().toString() );
 		int frequency = operands[2].getIntVal();
@@ -908,10 +864,7 @@ public class FinancialCalculator
 		long ncd = PtgCalculator.getLongValue( calcCoupNCD( operands ) );
 
 		double result = getDaysFromBasis( basis, settlementDate, ncd );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcCoupDaysNC= " + result );
-		}
+			log.debug( "Result from calcCoupDaysNC= " + result );
 		PtgNumber pnum = new PtgNumber( result );
 		return pnum;
 	}
@@ -936,10 +889,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "COUPNCD" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -1007,11 +957,8 @@ public class FinancialCalculator
 			}
 			resultDate = new GregorianCalendar( y, mm - 1, d );
 			double date = DateConverter.getXLSDateVal( resultDate );
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcCoupNCD= " + date + " " + java.text.DateFormat.getDateInstance()
+				log.debug( "Result from calcCoupNCD= " + date + " " + java.text.DateFormat.getDateInstance()
 				                                                                               .format( resultDate.getTime() ) );
-			}
 			int i = (int) date;
 			PtgInt pi = new PtgInt( i );
 			return pi;
@@ -1038,10 +985,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "COUPNUM" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -1075,10 +1019,7 @@ public class FinancialCalculator
 		double result= delta/calcCoupDays(operands));
 */
 			double result = Math.ceil( yearFrac( basis, settlementDate, maturityDate ) * frequency );
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcCoupNUM= " + result );
-			}
+				log.debug( "Result from calcCoupNUM= " + result );
 			PtgNumber pnum = new PtgNumber( result );
 			return pnum;
 		}
@@ -1097,10 +1038,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "COUPPCD" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -1165,11 +1103,8 @@ public class FinancialCalculator
 			}
 			resultDate = new GregorianCalendar( y, mm - 1, d );
 			double date = DateConverter.getXLSDateVal( resultDate );
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcCoupPCD= " + date + " " + java.text.DateFormat.getDateInstance()
+				log.debug( "Result from calcCoupPCD= " + date + " " + java.text.DateFormat.getDateInstance()
 				                                                                               .format( resultDate.getTime() ) );
-			}
 			int i = (int) date;
 			PtgInt pi = new PtgInt( i );
 			return pi;
@@ -1204,10 +1139,7 @@ public class FinancialCalculator
 		int endperiod = operands[4].getIntVal();
 		int type = operands[5].getIntVal();
 
-		if( DEBUG )
-		{
 			debugOperands( operands, "CUMIPMT" );
-		}
 		if( (rate <= 0) || (pv <= 0) || (nper <= 0) )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
@@ -1256,10 +1188,7 @@ public class FinancialCalculator
 		}
 		// this!?!?!
 		result *= -1;
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcCumIPmt= " + result );
-		}
+			log.debug( "Result from calcCumIPmt= " + result );
 		PtgNumber pnum = new PtgNumber( result );
 		return pnum;
 	}
@@ -1290,10 +1219,7 @@ public class FinancialCalculator
 		int endperiod = operands[4].getIntVal();
 		int type = operands[5].getIntVal();
 
-		if( DEBUG )
-		{
 			debugOperands( operands, "CUMPRINC" );
-		}
 		// Cumprinc= FV for start-1 and pmt - FV for end period and pmt
 		double A, B;
 		//	PMT used in fv calc
@@ -1318,10 +1244,7 @@ public class FinancialCalculator
 		{
 			result = pv; // I'm sure there's a good reason for this!?!?!
 		}
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcCUMPRINC= " + result );
-		}
+			log.debug( "Result from calcCUMPRINC= " + result );
 		PtgNumber pnum = new PtgNumber( result );
 		return pnum;
 	}
@@ -1493,10 +1416,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcDISC" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -1530,14 +1450,12 @@ public class FinancialCalculator
 			double result = (redemption - pr) / (redemption * yearFrac( basis, settlementDate, maturityDate ));
 
 			PtgNumber pnum = new PtgNumber( result );
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcDISC= " + result );
-			}
+				log.debug( "Result from calcDISC= " + result );
 			return pnum;
 		}
 		catch( Exception e )
 		{
+			log.warn( "Error in calcDISC", e );
 		}
 		return new PtgErr( PtgErr.ERROR_VALUE );
 	}
@@ -1554,10 +1472,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcDOLLARDE" );
-		}
 		double fractional_dollar = operands[0].getDoubleVal();
 		int fraction = operands[1].getIntVal();
 		if( fraction < 0 )
@@ -1574,10 +1489,7 @@ public class FinancialCalculator
 		double y = (fractional_dollar - x) * Math.pow( 10, n );
 		double result = x + (y / fraction);
 		PtgNumber pnum = new PtgNumber( result );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcDOLLARDE= " + result );
-		}
+			log.debug( "Result from calcDOLLARDE= " + result );
 		return pnum;
 	}
 
@@ -1592,10 +1504,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcDOLLARFR" );
-		}
 		double decimal_dollar = operands[0].getDoubleVal();
 		int fraction = operands[1].getIntVal();
 		if( fraction < 0 )
@@ -1613,10 +1522,7 @@ public class FinancialCalculator
 		double y = (decimal_dollar - x);
 		double result = x + ((y * fraction) / Math.pow( 10, n ));
 		PtgNumber pnum = new PtgNumber( result );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcDOLLARFR= " + result );
-		}
+			log.debug( "Result from calcDOLLARFR= " + result );
 		return pnum;
 	}
 
@@ -1636,10 +1542,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcDURATION" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -1718,10 +1621,7 @@ public class FinancialCalculator
 			}
 			double result = (SumA + C) / ((SumB + D) * frequency);
 			PtgNumber pnum = new PtgNumber( result );
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcDURATION= " + result );
-			}
+				log.debug( "Result from calcDURATION= " + result );
 			return pnum;
 		}
 		catch( Exception e )
@@ -1741,10 +1641,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcEFFECT" );
-		}
 		double nominal_rate = operands[0].getDoubleVal();
 		int npery = operands[1].getIntVal();
 		// TODO: If either argument is non-numeric, #VALUE! error
@@ -1768,10 +1665,7 @@ public class FinancialCalculator
 		double x = nominal_rate / npery;
 		double result = Math.pow( 1 + x, npery ) - 1;
 		PtgNumber pnum = new PtgNumber( result );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcEFFECT= " + result );
-		}
+			log.debug( "Result from calcEFFECT= " + result );
 		return pnum;
 	}
 
@@ -1795,10 +1689,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcFV" );
-		}
 		double rate = operands[0].getDoubleVal();
 		int nper = operands[1].getIntVal();
 		double pmt = operands[2].getDoubleVal();
@@ -1818,10 +1709,7 @@ public class FinancialCalculator
 		B *= (Math.pow( 1 + rate, nper ) - 1) / rate;
 		double result = -((pv * A) + B);
 		PtgNumber pnum = new PtgNumber( result );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcFV= " + result );
-		}
+			log.debug( "Result from calcFV= " + result );
 		return pnum;
 
 	}
@@ -1836,16 +1724,10 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcFVSCHEDULE" );
-		}
 		double principal = operands[0].getDoubleVal();
 		Ptg[] schedule = PtgCalculator.getAllComponents( operands[1] );
-		if( DEBUG )
-		{
 			debugOperands( schedule, "calcFVSCHEDULE" ); // AFTER converting
-		}
 		// references ...
 		double result = 1.0;
 		for( Ptg aSchedule : schedule )
@@ -1853,10 +1735,7 @@ public class FinancialCalculator
 			result *= principal + aSchedule.getDoubleVal();
 		}
 		PtgNumber pnum = new PtgNumber( result );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcFVSCHEDULE= " + result );
-		}
+			log.debug( "Result from calcFVSCHEDULE= " + result );
 		return pnum;
 	}
 
@@ -1869,10 +1748,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcINTRATE" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -1905,10 +1781,7 @@ public class FinancialCalculator
 //		double result = ((redemption - investment) / investment) * ((getDaysInYearFromBasis(basis, settlementDate, maturityDate) / delta));
 			double result = ((redemption - investment) / investment) / yearFrac( basis, settlementDate, maturityDate );
 			PtgNumber pnum = new PtgNumber( result );
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcINTRATE= " + result );
-			}
+				log.debug( "Result from calcINTRATE= " + result );
 			return pnum;
 		}
 		catch( Exception e )
@@ -1938,10 +1811,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcIPMT" );
-		}
 		double rate = operands[0].getDoubleVal();
 		double per = operands[1].getDoubleVal();
 		double nper = operands[2].getDoubleVal();
@@ -1992,10 +1862,7 @@ public class FinancialCalculator
 
 		double result = pmt - (fvb - fva);
 		PtgNumber pnum = new PtgNumber( result );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcIPMT= " + result );
-		}
+			log.debug( "Result from calcIPMT= " + result );
 		return pnum;
 	}
 
@@ -2047,20 +1914,14 @@ public class FinancialCalculator
 			PtgErr perr = new PtgErr( PtgErr.ERROR_NULL );
 			return perr;
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcIRR" );
-		}
 		double guess = .1;
 		if( operands.length > 1 )
 		{
 			guess = operands[1].getDoubleVal();
 		}
 		Ptg[] params = PtgCalculator.getAllComponents( operands );
-		if( DEBUG )
-		{
 			debugOperands( params, "calcIRR" ); // AFTER converting references ...
-		}
 		int n = params.length;
 
 		// examine values array, sum all outflows (= negative values) + inflows
@@ -2137,10 +1998,7 @@ public class FinancialCalculator
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
 
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcIRR= " + trial );
-		}
+			log.debug( "Result from calcIRR= " + trial );
 		PtgNumber pnum = new PtgNumber( trial );
 		return pnum;
 	}
@@ -2160,10 +2018,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcISPMT" );
-		}
 		double rate = operands[0].getDoubleVal();
 		double per = operands[1].getDoubleVal();
 		double nper = operands[2].getDoubleVal();
@@ -2175,10 +2030,7 @@ public class FinancialCalculator
 
 		double result = (-pv * rate * (nper - per)) / nper;
 		PtgNumber pnum = new PtgNumber( result );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcISPMT= " + result );
-		}
+			log.debug( "Result from calcISPMT= " + result );
 		return pnum;
 	}
 
@@ -2198,10 +2050,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcMDURATION" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -2237,10 +2086,7 @@ public class FinancialCalculator
 			// above is regular duration calculation; to get modified duration:
 			result = result / (1 + (yld / frequency));
 			PtgNumber pnum = new PtgNumber( result );
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcMDURATION= " + result );
-			}
+				log.debug( "Result from calcMDURATION= " + result );
 			return pnum;
 		}
 		catch( Exception e )
@@ -2279,17 +2125,11 @@ public class FinancialCalculator
 		{ // not supported by function
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcMIRR" );
-		}
 		double finance_rate = operands[1].getDoubleVal();
 		double reinvest_rate = operands[2].getDoubleVal();
 		Ptg[] params = PtgCalculator.getAllComponents( operands );
-		if( DEBUG )
-		{
 			debugOperands( params, "calcMIRR" ); // AFTER converting references
-		}
 		// ...
 
 		// Get + Values and - Values in separate Ptg arrays
@@ -2326,10 +2166,7 @@ public class FinancialCalculator
 		Y = Y * (1 + finance_rate);
 		double result = Math.pow( X / Y, 1.0 / (n - 1) ) - 1;
 
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcMIRR= " + result );
-		}
+			log.debug( "Result from calcMIRR= " + result );
 		PtgNumber pnum = new PtgNumber( result );
 		return pnum;
 	}
@@ -2344,10 +2181,7 @@ public class FinancialCalculator
 			PtgErr perr = new PtgErr( PtgErr.ERROR_NULL );
 			return perr;
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcNominal" );
-		}
 		double effect = operands[0].getDoubleVal();
 		int npery = operands[1].getIntVal();
 		// TODO: if either is non-numeric, return #VALUE!
@@ -2363,10 +2197,7 @@ public class FinancialCalculator
 		double log10y = Math.log( y ) / Math.log( 10 ); // base 10 log
 		double z = Math.pow( 10, log10y / npery );
 		double result = (z - 1) * npery;
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcNominal= " + result );
-		}
+			log.debug( "Result from calcNominal= " + result );
 		PtgNumber pnum = new PtgNumber( result );
 		return pnum;
 	}
@@ -2391,10 +2222,7 @@ public class FinancialCalculator
 			PtgErr perr = new PtgErr( PtgErr.ERROR_NULL );
 			return perr;
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcNPER" );
-		}
 		double rate = operands[0].getDoubleVal();
 		double pmt = operands[1].getDoubleVal();
 		double pv = operands[2].getDoubleVal();
@@ -2413,10 +2241,7 @@ public class FinancialCalculator
 		double B = (pmt * (1 + (type * rate))) + (rate * pv);
 		double C = 1 + rate;
 		double result = Math.log( A / B ) / Math.log( C );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcNPER= " + result );
-		}
+			log.debug( "Result from calcNPER= " + result );
 		PtgNumber pnum = new PtgNumber( result );
 		return pnum;
 	}
@@ -2444,15 +2269,9 @@ public class FinancialCalculator
 			PtgErr perr = new PtgErr( PtgErr.ERROR_NULL );
 			return perr;
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcNPV" );
-		}
 		Ptg[] params = PtgCalculator.getAllComponents( operands );
-		if( DEBUG )
-		{
 			debugOperands( params, "calcNPV" ); // AFTER converting references ...
-		}
 		double rate = params[0].getDoubleVal();
 		int n = Math.min( params.length, 30 ); // at most 29 values
 		double result = 0;
@@ -2462,10 +2281,7 @@ public class FinancialCalculator
 			// TODO: if valuei is an error, empty, etc., ignore
 			result += valuei / Math.pow( 1 + rate, i );
 		}
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcNPV= " + result );
-		}
+			log.debug( "Result from calcNPV= " + result );
 		PtgNumber pnum = new PtgNumber( result );
 		return pnum;
 	}
@@ -2480,17 +2296,14 @@ public class FinancialCalculator
 		if( true )
 		{
 			String wn = "WARNING: this version of ExtenXLS does not support the formula ODDFPRICE.";
-			Logger.logWarn( wn );
+			log.warn( wn );
 			throw new FunctionNotSupportedException( wn );
 		}
 		if( operands.length < 8 )
 		{ // not supported by function
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcODDFPRICE" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -2570,10 +2383,7 @@ public class FinancialCalculator
 
 			}
 
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcODDFPRICE= " + result );
-			}
+				log.debug( "Result from calcODDFPRICE= " + result );
 			PtgNumber pnum = new PtgNumber( result );
 			return pnum;
 		}
@@ -2592,17 +2402,14 @@ public class FinancialCalculator
 		if( true )
 		{
 			String wn = "WARNING: this version of ExtenXLS does not support the formula ODDFYIELD.";
-			Logger.logWarn( wn );
+			log.warn( wn );
 			throw new FunctionNotSupportedException( wn );
 		}
 		if( operands.length < 8 )
 		{ // not supported by function
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcODDFYIELD" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -2660,10 +2467,7 @@ public class FinancialCalculator
 
 			double result = 0.0;
 
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcODDFYIELD= " + result );
-			}
+				log.debug( "Result from calcODDFYIELD= " + result );
 			PtgNumber pnum = new PtgNumber( result );
 			return pnum;
 		}
@@ -2683,17 +2487,14 @@ public class FinancialCalculator
 		if( true )
 		{
 			String wn = "WARNING: this version of ExtenXLS does not support the formula ODDLPRICE.";
-			Logger.logWarn( wn );
+			log.warn( wn );
 			throw new FunctionNotSupportedException( wn );
 		}
 		if( operands.length < 8 )
 		{ // not supported by function
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcODDLPRICE" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -2751,10 +2552,7 @@ public class FinancialCalculator
 
 			double result = 0.0;
 
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcODDLPRICE= " + result );
-			}
+				log.debug( "Result from calcODDLPRICE= " + result );
 			PtgNumber pnum = new PtgNumber( result );
 			return pnum;
 		}
@@ -2773,17 +2571,14 @@ public class FinancialCalculator
 		if( true )
 		{
 			String wn = "WARNING: this version of ExtenXLS does not support the formula ODDLYIELD.";
-			Logger.logWarn( wn );
+			log.warn( wn );
 			throw new FunctionNotSupportedException( wn );
 		}
 		if( operands.length < 8 )
 		{ // not supported by function
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcODDLYIELD" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -2841,10 +2636,7 @@ public class FinancialCalculator
 
 			double result = 0.0;
 
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcODDLYIELD= " + result );
-			}
+				log.debug( "Result from calcODDLYIELD= " + result );
 			PtgNumber pnum = new PtgNumber( result );
 			return pnum;
 		}
@@ -2934,10 +2726,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcPPMT" );
-		}
 		double rate = operands[0].getDoubleVal();
 		int per = operands[1].getIntVal();
 		int nper = operands[2].getIntVal();
@@ -2982,10 +2771,7 @@ public class FinancialCalculator
 
 		result = fvb - fva;
 		PtgNumber pnum = new PtgNumber( result );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcPPMT= " + result );
-		}
+			log.debug( "Result from calcPPMT= " + result );
 		return pnum;
 
 	}
@@ -3010,10 +2796,7 @@ public class FinancialCalculator
 		{ // not supported by function
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcPRICE" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -3071,10 +2854,7 @@ public class FinancialCalculator
 			result -= ((100 * R * A) / E);
 
 			PtgNumber pnum = new PtgNumber( result );
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcPRICE= " + result );
-			}
+				log.debug( "Result from calcPRICE= " + result );
 			return pnum;
 		}
 		catch( Exception e )
@@ -3098,10 +2878,7 @@ public class FinancialCalculator
 		{ // not supported by function
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcPRICEDISC" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -3138,10 +2915,7 @@ public class FinancialCalculator
 		 */
 			double result = redemption - (discount * redemption * yearFrac( basis, settlementDate, maturityDate ));
 			PtgNumber pnum = new PtgNumber( result );
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcPRICEDISC= " + result );
-			}
+				log.debug( "Result from calcPRICEDISC= " + result );
 			return pnum;
 		}
 		catch( Exception e )
@@ -3160,10 +2934,7 @@ public class FinancialCalculator
 		{ // not supported by function
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcPRICEMAT" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -3203,10 +2974,7 @@ public class FinancialCalculator
 			double result = (100 + ((DIM / B) * rate * 100)) / (1 + ((DSM / B) * yld));
 			result -= (A / B) * rate * 100;
 			PtgNumber pnum = new PtgNumber( result );
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcPRICEMAT= " + result );
-			}
+				log.debug( "Result from calcPRICEMAT= " + result );
 			return pnum;
 		}
 		catch( Exception e )
@@ -3244,10 +3012,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcPV" );
-		}
 		double rate = operands[0].getDoubleVal();
 		double nper = operands[1].getDoubleVal();
 		double pmt = 0;
@@ -3276,10 +3041,7 @@ public class FinancialCalculator
 		//testresults must==0  for Pv to be correct
 
 		PtgNumber pnum = new PtgNumber( result );
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcPV= " + result );
-		}
+			log.debug( "Result from calcPV= " + result );
 		return pnum;
 
 	}
@@ -3309,10 +3071,7 @@ public class FinancialCalculator
 		{ // not supported by function
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcRate" );
-		}
 		double nper = operands[0].getDoubleVal();
 		double pmt = operands[1].getDoubleVal();
 		double pv = 0.0, fv = 0.0;
@@ -3426,10 +3185,7 @@ public class FinancialCalculator
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
 
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcRate= " + x1 );
-		}
+			log.debug( "Result from calcRate= " + x1 );
 		PtgNumber pnum = new PtgNumber( x1 );
 		return pnum;
 	}
@@ -3445,10 +3201,7 @@ public class FinancialCalculator
 			PtgErr perr = new PtgErr( PtgErr.ERROR_NULL );
 			return perr;
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcRECEIVED" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -3468,10 +3221,7 @@ public class FinancialCalculator
 //		double B = getDaysInYearFromBasis(basis, settlementDate, maturityDate);
 //		double result = investment / (1 - (rate * DSM / B));
 			double result = investment / (1 - (rate * yearFrac( basis, settlementDate, maturityDate )));
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcRECEIVED= " + result );
-			}
+				log.debug( "Result from calcRECEIVED= " + result );
 			PtgNumber pnum = new PtgNumber( result );
 			return pnum;
 		}
@@ -3498,19 +3248,13 @@ public class FinancialCalculator
 		double cost = operands[0].getDoubleVal();
 		double salvage = operands[1].getDoubleVal();
 		double life = operands[2].getDoubleVal();
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcSLN" );
-		}
 		if( life == 0 )
 		{
 			return new PtgErr( PtgErr.ERROR_NUM );
 		}
 		double result = (cost - salvage) / life;
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcSLN= " + result );
-		}
+			log.debug( "Result from calcSLN= " + result );
 		PtgNumber pnum = new PtgNumber( result );
 		return pnum;
 	}
@@ -3530,10 +3274,7 @@ public class FinancialCalculator
 			PtgErr perr = new PtgErr( PtgErr.ERROR_NULL );
 			return perr;
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcSYD" );
-		}
 		double cost = operands[0].getDoubleVal();
 		double salvage = operands[1].getDoubleVal();
 		double life = operands[2].getDoubleVal();
@@ -3545,10 +3286,7 @@ public class FinancialCalculator
 		double A = (cost - salvage) * ((life - per) + 1) * 2;
 		double B = life * (life + 1);
 		double result = A / B;
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcSYD= " + result );
-		}
+			log.debug( "Result from calcSYD= " + result );
 		PtgNumber pnum = new PtgNumber( result );
 		return pnum;
 	}
@@ -3568,10 +3306,7 @@ public class FinancialCalculator
 			PtgErr perr = new PtgErr( PtgErr.ERROR_NULL );
 			return perr;
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcTBILLEQ" );
-		}
 		GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
 		GregorianCalendar mDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[1].getValue() );
 		double rate = operands[2].getDoubleVal();
@@ -3606,10 +3341,7 @@ public class FinancialCalculator
 			double D = Math.pow( A, 2 ) - C;
 			result = ((-2 * A) + (2 * Math.sqrt( D ))) / ((2 * A) - 1);
 		}
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcTBILLEQ= " + result );
-		}
+			log.debug( "Result from calcTBILLEQ= " + result );
 		PtgNumber pnum = new PtgNumber( result );
 		return pnum;
 	}
@@ -3624,10 +3356,7 @@ public class FinancialCalculator
 			PtgErr perr = new PtgErr( PtgErr.ERROR_NULL );
 			return perr;
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcTBILLPRICE" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -3651,10 +3380,7 @@ public class FinancialCalculator
 
 			double DSM = maturityDate - settlementDate;
 			double result = 100 * (1 - ((rate * DSM) / 360));
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcTBILLPRICE= " + result );
-			}
+				log.debug( "Result from calcTBILLPRICE= " + result );
 			PtgNumber pnum = new PtgNumber( result );
 			return pnum;
 		}
@@ -3677,10 +3403,7 @@ public class FinancialCalculator
 			PtgErr perr = new PtgErr( PtgErr.ERROR_NULL );
 			return perr;
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcTBILLYIELD" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -3704,10 +3427,7 @@ public class FinancialCalculator
 
 			double DSM = maturityDate - settlementDate;
 			double result = ((100 - price) / price) * (360 / DSM);
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcTBILLYIELD= " + result );
-			}
+				log.debug( "Result from calcTBILLYIELD= " + result );
 			PtgNumber pnum = new PtgNumber( result );
 			return pnum;
 		}
@@ -3731,10 +3451,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcVDB" );
-		}
 		double cost = operands[0].getDoubleVal();
 		double salvage = operands[1].getDoubleVal();
 		int life = operands[2].getIntVal();
@@ -3801,10 +3518,7 @@ public class FinancialCalculator
 			}
 		}
 
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcVDB= " + result );
-		}
+			log.debug( "Result from calcVDB= " + result );
 		PtgNumber pnum = new PtgNumber( result );
 		return pnum;
 	}
@@ -3819,10 +3533,7 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcXIRR" );
-		}
 		double guess = .1;
 		if( operands.length > 2 )
 		{
@@ -3831,14 +3542,8 @@ public class FinancialCalculator
 		// convert references to Ptg[]s
 		Ptg[] values = PtgCalculator.getAllComponents( operands[0] );
 		Ptg[] dates = PtgCalculator.getAllComponents( operands[1] );
-		if( DEBUG )
-		{
 			debugOperands( values, "calcXIRR" );
-		}
-		if( DEBUG )
-		{
 			debugOperands( dates, "calcXIRR" );
-		}
 		/*
 		 * 'Newton-Raphson method: ' Given PV a function of X, determine the
 		 * value of X ' such that SUM[PV] = 0, using iteration. ' dPVdX =
@@ -3949,10 +3654,7 @@ public class FinancialCalculator
 		}
 
 		trial -= 1;
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcXIRR= " + trial );
-		}
+			log.debug( "Result from calcXIRR= " + trial );
 		PtgNumber pnum = new PtgNumber( trial );
 		return pnum;
 	}
@@ -3967,22 +3669,13 @@ public class FinancialCalculator
 		{
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcXNPV" );
-		}
 		double rate = operands[0].getDoubleVal();
 		// convert references to Ptg[]s
 		Ptg[] values = PtgCalculator.getAllComponents( operands[1] );
 		Ptg[] dates = PtgCalculator.getAllComponents( operands[2] );
-		if( DEBUG )
-		{
 			debugOperands( values, "calcXNPV" );
-		}
-		if( DEBUG )
-		{
 			debugOperands( dates, "calcXNPV" );
-		}
 
 		if( values.length != dates.length )
 		{
@@ -4028,10 +3721,7 @@ public class FinancialCalculator
 			double exp = (dates[i].getDoubleVal() - date0) / 365.0;
 			result += val / (Math.pow( 1 + rate, exp ));
 		}
-		if( DEBUG )
-		{
-			Logger.logInfo( "Result from calcXNPV= " + result );
-		}
+			log.debug( "Result from calcXNPV= " + result );
 		PtgNumber pnum = new PtgNumber( result );
 		return pnum;
 	}
@@ -4056,10 +3746,7 @@ public class FinancialCalculator
 		{ // not supported by function
 			return new PtgErr( PtgErr.ERROR_NULL );
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcINTRATE" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -4129,10 +3816,7 @@ public class FinancialCalculator
 			}
 
 			PtgNumber pnum = new PtgNumber( result );
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcYIELD= " + result );
-			}
+				log.debug( "Result from calcYIELD= " + result );
 			return pnum;
 		}
 		catch( Exception e )
@@ -4267,10 +3951,7 @@ public class FinancialCalculator
 			PtgErr perr = new PtgErr( PtgErr.ERROR_NULL );
 			return perr;
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcYIELDDISC" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -4303,10 +3984,7 @@ public class FinancialCalculator
 //		double B = getDaysInYearFromBasis(basis, settlementDate, maturityDate);
 //		double result = ((redemption - pr) / pr) * (B / DSM);
 			double result = ((redemption - pr) / pr) / yearFrac( basis, settlementDate, maturityDate );
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcYIELDDISC= " + result );
-			}
+				log.debug( "Result from calcYIELDDISC= " + result );
 			PtgNumber pnum = new PtgNumber( result );
 			return pnum;
 		}
@@ -4327,10 +4005,7 @@ public class FinancialCalculator
 			PtgErr perr = new PtgErr( PtgErr.ERROR_NULL );
 			return perr;
 		}
-		if( DEBUG )
-		{
 			debugOperands( operands, "calcYIELDMAT" );
-		}
 		try
 		{
 			GregorianCalendar sDate = (GregorianCalendar) DateConverter.getCalendarFromNumber( operands[0].getValue() );
@@ -4354,10 +4029,7 @@ public class FinancialCalculator
 			double A = getDaysFromBasis( basis, issueDate, settlementDate );
 
 			double result = (((1 + ((DIM / B) * rate)) - ((price / 100) + ((A / B) * rate))) / ((price / 100) + ((A / B) * rate))) * (B / DSM);
-			if( DEBUG )
-			{
-				Logger.logInfo( "Result from calcYIELDMAT= " + result );
-			}
+				log.debug( "Result from calcYIELDMAT= " + result );
 			PtgNumber pnum = new PtgNumber( result );
 			return pnum;
 		}
@@ -4369,21 +4041,23 @@ public class FinancialCalculator
 
 	static void debugOperands( Ptg[] operands, String f )
 	{
-		if( DEBUG )
+		if( !log.isDebugEnabled() )
 		{
-			Logger.logInfo( "Operands for " + f );
-			for( int i = 0; i < operands.length; i++ )
+			return;
+		}
+
+		log.debug( "Operands for " + f );
+		for( int i = 0; i < operands.length; i++ )
+		{
+			String s = operands[i].getString();
+			if( !(operands[i] instanceof PtgMissArg) )
 			{
-				String s = operands[i].getString();
-				if( !(operands[i] instanceof PtgMissArg) )
-				{
-					String v = operands[i].getValue().toString();
-					Logger.logInfo( "\tOperand[" + i + "]=" + s + " " + v );
-				}
-				else
-				{
-					Logger.logInfo( "\tOperand[" + i + "]=" + s + " is Missing" );
-				}
+				String v = operands[i].getValue().toString();
+				log.debug( "\tOperand[" + i + "]=" + s + " " + v );
+			}
+			else
+			{
+				log.debug( "\tOperand[" + i + "]=" + s + " is Missing" );
 			}
 		}
 	}

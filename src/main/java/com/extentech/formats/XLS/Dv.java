@@ -30,8 +30,9 @@ import com.extentech.formats.XLS.formulas.Ptg;
 import com.extentech.formats.XLS.formulas.PtgArea;
 import com.extentech.formats.XLS.formulas.PtgRef;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
@@ -101,9 +102,7 @@ import java.util.Stack;
  */
 public class Dv extends com.extentech.formats.XLS.XLSRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Dv.class );
 	private static final long serialVersionUID = -7895028832113540094L;
 	private int grbit;
 	private Unicodestring dTitlePrompt;
@@ -255,7 +254,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Error calculating formula in validation " + e.toString() );
+			log.error( "Error calculating formula in validation " + e.toString() );
 		}
 		return false;
 	}
@@ -292,7 +291,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Error calculating formula in validation " + e.toString() );
+			log.error( "Error calculating formula in validation " + e.toString() );
 		}
 		return false;
 	}
@@ -329,7 +328,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Error calculating formula in validation " + e.toString() );
+			log.error( "Error calculating formula in validation " + e.toString() );
 		}
 		return false;
 	}
@@ -355,7 +354,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Error calculating formula in validation " + e.toString() );
+			log.error( "Error calculating formula in validation " + e.toString() );
 		}
 		return false;
 	}
@@ -381,7 +380,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Error calculating formula in validation " + e.toString() );
+			log.error( "Error calculating formula in validation " + e.toString() );
 		}
 		return false;
 	}
@@ -407,7 +406,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Error calculating formula in validation " + e.toString() );
+			log.error( "Error calculating formula in validation " + e.toString() );
 		}
 		return false;
 	}
@@ -1465,7 +1464,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "OOXMLELEMENT.parseOOXML: " + e.toString() );
+			log.error( "OOXMLELEMENT.parseOOXML: " + e.toString() );
 		}
 		return dv;
 	}

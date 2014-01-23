@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 
@@ -48,9 +49,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class TableStyles extends XLSRecord implements XLSConstants
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( TableStyles.class );
 	short cts, cchDefTableStyle, cchDefPivotStyle;
 	String rgchDefTableStyle = null, rgchDefPivotStyle = null;
 	private static final long serialVersionUID = 2639291289806138985L;
@@ -75,7 +74,7 @@ public class TableStyles extends XLSRecord implements XLSConstants
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logInfo( "encoding Table Style name in TableStyles: " + e );
+				log.warn( "encoding Table Style name in TableStyles: " + e, e );
 			}
 			pos += cchDefTableStyle * (2);
 		}
@@ -88,7 +87,7 @@ public class TableStyles extends XLSRecord implements XLSConstants
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logInfo( "encoding Pivot Style name in TableStyles: " + e );
+				log.warn( "encoding Pivot Style name in TableStyles: " + e, e );
 			}
 		}
 	}

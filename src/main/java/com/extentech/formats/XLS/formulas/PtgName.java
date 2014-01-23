@@ -28,7 +28,8 @@ import com.extentech.formats.XLS.Name;
 import com.extentech.formats.XLS.WorkBook;
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.FastAddVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This PTG stores an index to a name.  The ilbl field is a 1 based index to the table
@@ -44,10 +45,7 @@ import com.extentech.toolkit.Logger;
  */
 public class PtgName extends GenericPtg implements Ptg, IlblListener
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgName.class );
 	private static final long serialVersionUID = 8047146848365098162L;
 	short ilbl;
 	String name;
@@ -140,7 +138,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 		}
 		catch( Exception ex )
 		{
-			Logger.logErr( "PtgRef.addToRefTracker() failed.", ex );
+			log.error( "PtgRef.addToRefTracker() failed.", ex );
 		}
 	}
 
@@ -164,7 +162,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 
 	public int getVal()
 	{
-		return (int) ilbl;
+		return ilbl;
 	}
 
 	@Override

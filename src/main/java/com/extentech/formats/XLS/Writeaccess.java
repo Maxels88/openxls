@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.XLS;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 
@@ -40,9 +41,7 @@ import java.io.UnsupportedEncodingException;
 
 public class Writeaccess extends com.extentech.formats.XLS.XLSRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Writeaccess.class );
 	private static final long serialVersionUID = 8868603864018600260L;
 	private Unicodestring strname;
 
@@ -69,7 +68,7 @@ public class Writeaccess extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( UnsupportedEncodingException e )
 		{
-			Logger.logInfo( "setting name in Writeaccess record failed: " + e );
+			log.warn( "setting name in Writeaccess record failed: " + e, e );
 		}
 	}
 

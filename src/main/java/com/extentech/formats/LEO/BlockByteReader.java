@@ -24,7 +24,8 @@ package com.extentech.formats.LEO;
 
 import com.extentech.formats.XLS.WorkBookException;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
@@ -58,10 +59,7 @@ import java.util.List;
  */
 public class BlockByteReader implements Serializable
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( BlockByteReader.class );
 	private static final long serialVersionUID = 4845306509411520019L;
 	private boolean applyRelativePosition = true;
 
@@ -162,11 +160,6 @@ public class BlockByteReader implements Serializable
 			startpos += 4; // add the offset
 		}
 		startpos += recoffy;
-		// reality checks
-		if( false ) // ((startpos + len) > getLength())
-		{
-			Logger.logWarn( "WARNING: BlockByteReader.get(rec," + startpos + "," + rec.getLength() + ") error.  Attempt to read past end of Block buffer." );
-		}
 
 		// return the bytes from the rec
 		return getRecBytes( rec, startpos, len );
@@ -196,15 +189,10 @@ public class BlockByteReader implements Serializable
 			{ // inlining byte read
 				Block b1 = (Block) this.blockmap.get( pos[blkdef++] );
 				out.write( b1.getBytes( pos[blkdef++], pos[blkdef++] ) );
-				if( false )
-				{
-					Logger.logInfo( "INFO: BBR.getRecBytes() " + rec.getClass()
-					                                                .getName() + " ACCESSING DATA for block:" + b1.getBlockIndex() + ":" + pos[0] + "-" + pos[1] );
-				}
 			}
 			catch( Exception a )
 			{
-				Logger.logWarn( "ERROR: BBR.getRecBytes streaming " + rec.toString() + " bytes for block failed: " + a );
+				log.error( "ERROR: BBR.getRecBytes streaming " + rec.toString() + " bytes for block failed: " + a );
 			}
 		}
 		return out.toByteArray();
@@ -263,7 +251,8 @@ public class BlockByteReader implements Serializable
 		{
 			if( t >= ret.length )
 			{
-				Logger.logWarn( "BlockByteReader.getReadPositions() wrong guess on NumBlocks." );
+				// TODO:20140122:Why is this a guess?
+				log.warn( "BlockByteReader.getReadPositions() wrong guess on NumBlocks." );
 				numblocks++;
 				int[] retz = new int[numblocks * 3];
 				System.arraycopy( ret, 0, retz, 0, ret.length );

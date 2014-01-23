@@ -33,7 +33,8 @@ import com.extentech.formats.XLS.WorkSheetNotFoundException;
 import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.FastAddVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A BiffRec range spanning 3rd dimension of WorkSheets.
@@ -68,7 +69,7 @@ import com.extentech.toolkit.Logger;
  */
 public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 {
-
+	private static final Logger log = LoggerFactory.getLogger( PtgRef3d.class );
 	boolean quoted = false;
 	public short ixti;
 
@@ -213,10 +214,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 			{
 				return parent_rec.getSheet(); // sheetless names belong to parent rec
 			}
-			if( b.getFactory().getDebugLevel() > 1 )    // 20080925 KSC
-			{
-				Logger.logErr( "PtgRef3d.getSheet: Unresolved External or Deleted Sheet Reference Found" ); // [BUGTRACKER 1836] Claritas extenXLS22677.rec (Deleted Sheet/Named Range causes errant value in B3)
-			}
+				log.warn( "PtgRef3d.getSheet: Unresolved External or Deleted Sheet Reference Found" ); // [BUGTRACKER 1836] Claritas extenXLS22677.rec (Deleted Sheet/Named Range causes errant value in B3)
 			return null;    //20080805 KSC: Don't just return the 1st sheet, may be wrong, deleted, etc!
 		}
 		if( bsa == null )
@@ -284,7 +282,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 				}
 				catch( Exception e )
 				{
-					Logger.logWarn( "PtgRef3d.setLocation could not update Externsheet:" + e.toString() );
+					log.warn( "PtgRef3d.setLocation could not update Externsheet:" + e.toString(), e );
 				}
 			}
 			catch( WorkSheetNotFoundException e )
@@ -388,7 +386,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 		}
 		catch( Exception ex )
 		{
-			Logger.logErr( "PtgRef3d.toString() failed", ex );
+			log.error( "PtgRef3d.toString() failed", ex );
 		}
 		return ret;
 	}
@@ -428,7 +426,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 		}
 		catch( WorkSheetNotFoundException e )
 		{
-			Logger.logErr( "Unable to set referenced sheet in PtgRef3d " + e );
+			log.error( "Unable to set referenced sheet in PtgRef3d " + e );
 		}
 	}
 
@@ -513,15 +511,15 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 				{// 20080303 KSC: Catch Unresolved External refs
 					if( parent_rec instanceof Formula )
 					{
-						Logger.logErr( "PtgRef3d.getSheet: Unresolved External Worksheet in Formula " + parent_rec.getCellAddressWithSheet() );
+						log.error( "PtgRef3d.getSheet: Unresolved External Worksheet in Formula " + parent_rec.getCellAddressWithSheet() );
 					}
 					else if( parent_rec instanceof Name )
 					{
-						Logger.logErr( "PtgRef3d.getSheet: Unresolved External Worksheet in Name " + ((Name) parent_rec).getName() );
+						log.error( "PtgRef3d.getSheet: Unresolved External Worksheet in Name " + ((Name) parent_rec).getName() );
 					}
 					else
 					{
-						Logger.logErr( "PtgRef3d.getSheet: Unresolved External Worksheet for " + parent_rec.getCellAddressWithSheet() );
+						log.error( "PtgRef3d.getSheet: Unresolved External Worksheet for " + parent_rec.getCellAddressWithSheet() );
 					}
 					return null;
 				}

@@ -31,7 +31,8 @@ import com.extentech.formats.XLS.formulas.PtgExp;
 import com.extentech.formats.XLS.formulas.PtgMemArea;
 import com.extentech.formats.XLS.formulas.PtgRef;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Stack;
 
@@ -65,7 +66,7 @@ import java.util.Stack;
  */
 public final class Array extends com.extentech.formats.XLS.XLSRecord
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Array.class );
 	private static final long serialVersionUID = -7316545663448065447L;
 	private short rwFirst;
 	private short rwLast;
@@ -78,22 +79,22 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 
 	public int getFirstRow()
 	{
-		return (int) rwFirst;
+		return rwFirst;
 	}
 
 	public int getLastRow()
 	{
-		return (int) rwLast;
+		return rwLast;
 	}
 
 	public int getFirstCol()
 	{
-		return (int) colFirst;
+		return colFirst;
 	}
 
 	public int getLastCol()
 	{
-		return (int) colLast;
+		return colLast;
 	}
 
 	/*
@@ -170,7 +171,7 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 				}
 				catch( Exception e )
 				{
-					Logger.logErr( "Array: error getting Constants " + e.getLocalizedMessage() );
+					log.warn( "Array: error getting Constants " + e.getLocalizedMessage() );
 				}
 			}
 			else if( anExpression instanceof PtgMemArea )
@@ -186,16 +187,13 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 				}
 				catch( Exception e )
 				{
-					Logger.logErr( "Array: error getting memarea constants " + e.toString() );
+					log.warn( "Array: error getting memarea constants " + e.toString() );
 				}
 			}
 		}
-		if( DEBUGLEVEL > DEBUG_LOW )
-		{
-			Logger.logInfo( "Array encountered at: " + this.wkbook.getLastbound()
+			log.debug( "Array encountered at: " + this.wkbook.getLastbound()
 			                                                      .getSheetName() + "!" + ExcelTools.getAlphaVal( colFirst ) + (rwFirst + 1) + ":" + ExcelTools
 					.getAlphaVal( colLast ) + (rwLast + 1) );
-		}
 	}
 
 	/**

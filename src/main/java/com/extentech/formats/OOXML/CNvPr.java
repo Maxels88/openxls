@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.formats.XLS.OOXMLAdapter;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -41,7 +42,7 @@ import java.util.Stack;
 // TODO: Handle Child elements hlinkClick, hlinkHover
 public class CNvPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( CNvPr.class );
 	private static final long serialVersionUID = -3382139449400844949L;
 	//private hlinkClick hc;
 	//private hlinkHover hh;
@@ -135,7 +136,7 @@ public class CNvPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "cNvPr.parseOOXML: " + e.toString() );
+			log.error( "cNvPr.parseOOXML: " + e.toString() );
 		}
 		CNvPr cnv = new CNvPr(/*hc, hh, */id, name, descr, hidden );
 		return cnv;

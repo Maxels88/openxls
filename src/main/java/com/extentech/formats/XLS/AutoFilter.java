@@ -24,7 +24,8 @@ package com.extentech.formats.XLS;
 
 import com.extentech.ExtenXLS.ExcelTools;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -54,7 +55,7 @@ import java.util.ArrayList;
  */
 public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 {
-
+	private static final Logger log = LoggerFactory.getLogger( AutoFilter.class );
 	private static final long serialVersionUID = -5228830347211523997L;
 
 	short iEntry;    // *** this is the column number ***  oops!  not always!!!
@@ -713,7 +714,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "AutoFilter.setVal: error setting value to " + val + ":" + e.toString() );
+				log.error( "AutoFilter.setVal: error setting value to " + val + ":" + e.toString() );
 			}
 		}
 		doper1.setComparisonOperator( op );
@@ -789,7 +790,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "AutoFilter.setVal: error setting value to " + val + ":" + e.toString() );
+				log.error( "AutoFilter.setVal: error setting value to " + val + ":" + e.toString() );
 			}
 		}
 		doper2.setComparisonOperator( op );
@@ -883,7 +884,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 		}
 		else
 		{
-			Logger.logErr( "AutoFilter.setTop10: value " + n + " must be between 0 and 500" );
+			log.error( "AutoFilter.setTop10: value " + n + " must be between 0 and 500" );
 		}
 		update();
 	}

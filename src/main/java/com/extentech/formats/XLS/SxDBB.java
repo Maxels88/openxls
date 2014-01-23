@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -48,10 +49,7 @@ import java.util.Arrays;
 
 public class SxDBB extends XLSRecord implements XLSConstants, PivotCacheRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( SxDBB.class );
 	private static final long serialVersionUID = 9027599480633995587L;
 	short[] cacheitems;
 
@@ -66,10 +64,7 @@ public class SxDBB extends XLSRecord implements XLSConstants, PivotCacheRecord
 		{
 			cacheitems[i] = (short) data[i];        // TODO: may also be two bytes
 		}
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "SXDBB -" + Arrays.toString( cacheitems ) );
-		}
+			log.debug( "SXDBB -" + Arrays.toString( cacheitems ) );
 	}
 
 	public String toString()

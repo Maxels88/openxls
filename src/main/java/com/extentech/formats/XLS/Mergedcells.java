@@ -27,7 +27,8 @@ import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.List;
@@ -46,10 +47,7 @@ import java.util.List;
  */
 public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Mergedcells.class );
 	private static final long serialVersionUID = 6638569392267433468L;
 	public static int MAXRANGES = 1024;
 	private int nummerges = 0;
@@ -59,10 +57,7 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		if( DEBUGLEVEL > 5 )
-		{
-			Logger.logInfo( "Mergedcells record." );
-		}
+			log.trace( "Mergedcells record." );
 	}
 
 	public static XLSRecord getPrototype()
@@ -130,10 +125,7 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 		data[0] = szbt[0];
 		data[1] = szbt[1];
 		int pos = 2;
-		if( DEBUGLEVEL > DEBUG_LOW )
-		{
-			Logger.logInfo( "updating Mergedcell with " + nummerges + " merges." );
-		}
+			log.debug( "updating Mergedcell with " + nummerges + " merges." );
 		for( Object range : ranges )
 		{
 			CellRange thisrng = (CellRange) range;
@@ -211,7 +203,7 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void initCells( WorkBookHandle wbook )
 	{
-		nummerges = (int) ByteTools.readShort( this.getByteAt( 0 ), getByteAt( 1 ) );
+		nummerges = ByteTools.readShort( this.getByteAt( 0 ), getByteAt( 1 ) );
 		ranges = new CompatibleVector();
 		int pos = 2; // pointer to the indexes
 		for( int x = 0; x < nummerges; x++ )
@@ -223,15 +215,11 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 			cellcoords[3] = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) ); // last row
 			try
 			{
-				// for(int xd=0;xd<cellcoords.length;xd++)
-				//    Logger.logInfo("" + cellcoords[xd]+",");
 				WorkSheetHandle shtr = wbook.getWorkSheet( this.getSheet().getSheetName() );
 
 				// TODO: testing -- this saves about 30MB in parsing the Reflexis 700+ sheet problem
 				CellRange cr = new CellRange( shtr, cellcoords, false );
 
-				//	Logger.logInfo(" init: " + cr);;
-				//	Logger.logInfo(x);
 				cr.setWorkBook( wbook );
 				ranges.add( cr );
 				BiffRec[] ch = cr.getCellRecs();

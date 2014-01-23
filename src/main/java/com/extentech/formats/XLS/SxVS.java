@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SXVS  0xE3
@@ -41,9 +42,7 @@ import com.extentech.toolkit.Logger;
  */
 public class SxVS extends XLSRecord implements XLSConstants
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( SxVS.class );
 	private short sourceType = -1;
 	public static final short TYPE_SHEET = 0x1;
 	public static final short TYPE_EXTERNAL = 0x0002;
@@ -57,10 +56,7 @@ public class SxVS extends XLSRecord implements XLSConstants
 	{
 		super.init();
 		sourceType = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "SXVS - sourceType:" + sourceType );
-		}
+			log.debug( "SXVS - sourceType:" + sourceType );
 	}
 
 	public short getSourceType()

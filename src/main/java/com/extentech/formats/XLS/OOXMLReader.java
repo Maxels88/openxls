@@ -35,8 +35,9 @@ import com.extentech.formats.OOXML.OOXMLConstants;
 import com.extentech.formats.OOXML.PivotCacheDefinition;
 import com.extentech.formats.OOXML.PivotTableDefinition;
 import com.extentech.formats.OOXML.Theme;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -62,6 +63,7 @@ import java.util.zip.ZipFile;
  */
 public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 {
+	private static final Logger log = LoggerFactory.getLogger( OOXMLReader.class );
 //	private int defaultXf= 0;	// usual for OOXML files; however, those which are converted from XLS may have default xf as 15 
 
 	/*****************************************************************************************************************************************/
@@ -94,10 +96,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 		bk.getWorkBook().setCalcMode( WorkBook.CALCULATE_EXPLICIT );   // don't calculate formulas on input
 		// TODO: read in format type (doc, macro-enabled doc, template, macro-enabled tempate) from CONTENT_LIST ???       
 		ZipEntry rels = getEntry( zip, "_rels/.rels" );
-		if( DEBUG )
-		{
-			Logger.logInfo( "parseNBind about to call parseRels on: " + rels.toString() );
-		}
+			log.debug( "parseNBind about to call parseRels on: " + rels.toString() );
 		mainContentList = parseRels( wrapInputStream( zip.getInputStream( rels ) ) );
 		bk.getWorkBook().getFactory().setFileName( fName );
 		bk.setDupeStringMode( WorkBookHandle.SHAREDUPES );
@@ -163,10 +162,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 			{
 				String[] c = (String[]) aCl;
 
-				if( DEBUG )
-				{
-					Logger.logInfo( "OOXMLReader.parse: " + c[0] + ":" + c[1] + ":" + c[2] );
-				}
+					log.debug( "OOXMLReader.parse: " + c[0] + ":" + c[1] + ":" + c[2] );
 
 				p = StringTool.getPath( c[1] );
 				p = parsePathForZip( p, parentDir );
@@ -204,7 +200,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 						}
 						catch( Exception e )
 						{
-							Logger.logWarn( "OOXMLAdapter couldn't get sheet number from rid:" + rId );
+							log.warn( "OOXMLAdapter couldn't get sheet number from rid:" + rId , e);
 						}
 						sheet = bk.getWorkSheet( sheetnum );
 						// since we're adding a lot of cells, put sheet in fast add mode    // put statement here AFTER sheet is set :)
@@ -242,7 +238,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 							}
 							catch( Exception e )
 							{
-								Logger.logWarn( "OOXMLAdapter.parse problem parsing rels in: " + bk.toString() + " " + e.toString() );
+								log.warn( "OOXMLAdapter.parse problem parsing rels in: " + bk.toString() + " " + e.toString(), e );
 							}
 						}
 						// reset fast add mode
@@ -250,7 +246,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 					}
 					catch( WorkSheetNotFoundException we )
 					{
-						Logger.logErr( "OOXMLAdapter.parse: " + we.toString() );
+						log.error( "OOXMLAdapter.parse: " + we.toString() );
 					}
 				}
 				else if( ooxmlElement.equals( "document" ) )
@@ -258,11 +254,8 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 					// workbook.xml
 					target = getEntry( zip, p + f );
 
-					if( DEBUG )
-					{
-						Logger.logInfo( "About to parseWBOOXML:" + bk.toString() );
-					}
-					pivotCaches = new HashMap<String, String>();
+						log.debug( "About to parseWBOOXML:" + bk.toString() );
+					pivotCaches = new HashMap<>();
 					parsewbOOXML( zip,
 					              bk,
 					              wrapInputStream( zip.getInputStream( target ) ),
@@ -270,7 +263,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 					              pivotCaches );    // seets, defined names, pivotcachedefinition ...  
 
 					// now parse wb content - sheets and their sub-contents (charts, images, oleobjects...)
-					pivotTables = new HashMap<String, WorkSheetHandle>();
+					pivotTables = new HashMap<>();
 					parseBookLevelElements( bk, sheet, zip, wbContentList, p, formulas, hyperlinks, inlineStrs, pivotCaches, pivotTables );
 
 					// after all sheet data has been added, now can add inline strings, if any
@@ -306,7 +299,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 						}
 						catch( Exception e )
 						{
-							Logger.logWarn( "OOXMLAdapter.parse problem parsing rels in: " + bk.toString() + " " + e.toString() );
+							log.warn( "OOXMLAdapter.parse problem parsing rels in: " + bk.toString() + " " + e.toString(), e );
 						}
 					}
 				}
@@ -340,13 +333,13 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 				}
 				else
 				{    // unknown type
-					Logger.logWarn( "OOXMLReader.parse:  XLSX Option Not yet Implemented " + ooxmlElement );
+					log.warn( "OOXMLReader.parse:  XLSX Option Not yet Implemented " + ooxmlElement );
 				}
 			}
 		}
 		catch( IOException e )
 		{
-			Logger.logErr( "OOXMLReader.parse failed: " + e.toString() );
+			log.error( "OOXMLReader.parse failed: " + e.toString() );
 		}
 	}
 
@@ -631,7 +624,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "OOXMLAdapter.parsewbOOXML failed: " + e.toString() );
+			log.error( "OOXMLAdapter.parsewbOOXML failed: " + e.toString() );
 		}
 		for( int i = 0; i < sheets.size(); i++ )
 		{
@@ -677,7 +670,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 		}
 		catch( IOException e )
 		{
-			Logger.logWarn( "OOXMLReader.parseWbOOXML: " + e.toString() );
+			log.warn( "OOXMLReader.parseWbOOXML: " + e.toString(), e );
 		}
 		// for workbook contents, MUST PROCESS themes before styles, sst and styles, etc. before SHEETS
 		reorderWbContentList( wbContentList );
@@ -765,7 +758,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "OOXMLAdapter.getCurrentElement: " + e.toString() );
+			log.error( "OOXMLAdapter.getCurrentElement: " + e.toString() );
 		}
 		return el.toString();
 	}
@@ -822,9 +815,9 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 		try
 		{
 			borders = new ArrayList();
-			fontmap = new ArrayList<Integer>();
-			fills = new ArrayList<Fill>();
-			dxfs = new ArrayList<Dxf>();
+			fontmap = new ArrayList<>();
+			fills = new ArrayList<>();
+			dxfs = new ArrayList<>();
 			fmts = new HashMap();
 			nXfs = 0;                                  // position in xfrecs array is vital as cells will reference the styleId/xfId
 			int indexedColor = 0;                          // index into COLOR_TABLE 
@@ -939,7 +932,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "OOXMLReader.parseStylesXML: " + e.toString() );
+			log.error( "OOXMLReader.parseStylesXML: " + e.toString() );
 		}
 	}
 
@@ -1185,8 +1178,8 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 							}
 							catch( OutOfMemoryError e )
 							{
-								// System.gc();
-								Logger.logWarn( "OOXMLAdapter.parse OOME setting PrintArea" );
+								log.error( "OOXMLAdapter.parse OOME setting PrintArea", e );
+								throw e;
 							}
 						}
 						else if( s[0].equals( "_xlnm.Print_Titles" ) )
@@ -1197,8 +1190,8 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 							}
 							catch( OutOfMemoryError e )
 							{
-								// System.gc();
-								Logger.logWarn( "OOXMLAdapter.parse OOME setting PrintTitles" );
+								log.error( "OOXMLAdapter.parse OOME setting PrintTitles", e );
+								throw e;
 							}
 						}
 						// TODO: handle other built-in named ranges
@@ -1224,12 +1217,13 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 				}
 				catch( Exception e )
 				{
-					//Logger.logErr("OOXMLAdapter.parse: failed creating Named Range:" + e.toString() + s[0] + ":" + s[2]);
+					log.warn( "Failed to addNames", e );
+					//log.error("OOXMLAdapter.parse: failed creating Named Range:" + e.toString() + s[0] + ":" + s[2]);
 				}
 			}
 			else
 			{
-				Logger.logErr( "OOXMLAdapter.parse: failed retrieving Named Range" );
+				log.error( "OOXMLAdapter.parse: failed retrieving Named Range" );
 			}
 		}
 	}
@@ -1341,7 +1335,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 				}
 				if( fStr.equals( "null" ) )
 				{ // when would this ever occur?
-					Logger.logWarn( "OOXMLAdapter.parse: invalid formula encountered at " + addr );
+					log.warn( "OOXMLAdapter.parse: invalid formula encountered at " + addr );
 				}
 
 				if( fType.equals( "array" ) )
@@ -1479,11 +1473,11 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 			}
 			catch( FunctionNotSupportedException e )
 			{
-				Logger.logErr( "OOXMLAdapter.parse: failed setting formula " + s[1] + " to cell " + s[0] + ": " + e.toString() );
+				log.error( "OOXMLAdapter.parse: failed setting formula " + s[1] + " to cell " + s[0] + ": " + e.toString() );
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "OOXMLAdapter.parse: failed setting formula " + s[1] + " to cell " + s[0] + ": " + e.toString() );
+				log.error( "OOXMLAdapter.parse: failed setting formula " + s[1] + " to cell " + s[0] + ": " + e.toString() );
 			}
 		}
 	}
@@ -1558,7 +1552,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 				}
 				catch( Exception e )
 				{
-					Logger.logErr( "OOXMLReader.refreshExternalFiles: error retrieving zip entries: " + e.toString() );
+					log.error( "OOXMLReader.refreshExternalFiles: error retrieving zip entries: " + e.toString() );
 				}
 
 			}

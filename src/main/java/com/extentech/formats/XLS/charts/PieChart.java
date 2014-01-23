@@ -27,16 +27,18 @@ import com.extentech.ExtenXLS.ChartSeriesHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.formats.XLS.FormatConstants;
 import com.extentech.formats.XLS.WorkBook;
-import com.extentech.toolkit.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PieChart extends ChartType
 {
+	private static final Logger log = LoggerFactory.getLogger( PieChart.class );
 	Pie pie = null;
 
 	public PieChart( GenericChartObject charttype, ChartFormat cf, WorkBook wb )
@@ -148,7 +150,7 @@ public class PieChart extends ChartType
 		// if have any series - should :)
 		if( series.size() == 0 )
 		{
-			Logger.logErr( "Pie.getSVG: error in series" );
+			log.error( "Pie.getSVG: error in series" );
 			return "";
 		}
 		int[] dls = getDataLabelInts(); // get array of data labels (can be specific per series ...)

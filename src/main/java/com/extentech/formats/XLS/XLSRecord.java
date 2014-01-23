@@ -29,7 +29,8 @@ import com.extentech.formats.LEO.BlockByteConsumer;
 import com.extentech.formats.LEO.BlockByteReader;
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -60,7 +61,7 @@ import java.util.List;
 
 public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSConstants
 {
-
+	private static final Logger log = LoggerFactory.getLogger( XLSRecord.class );
 	private static final long serialVersionUID = -106915096753184441L;
 
 	private short opcode;
@@ -69,7 +70,6 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	private transient BlockByteReader databuf;
 	private transient BlockByteReader encryptedDatabuf;
 	protected boolean isContinueMerged = false;
-	protected transient int DEBUGLEVEL = 0;
 	boolean isValueForCell;
 	boolean isFPNumber;
 	boolean isDoubleNumber = false;
@@ -458,7 +458,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		Xf clone = (Xf) source.getXfRec().clone();
 		Font fontClone = (Font) source.getXfRec().getFont().clone();
 
-		Logger.logInfo( source + ":" + source.getXfRec() + ":" + clone );
+		log.info( source + ":" + source.getXfRec() + ":" + clone );
 		int fid = -1;
 		int xid = -1;
 		// see if we have an equivalent Xf/Font combo
@@ -501,7 +501,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		}
 		catch( Exception e )
 		{
-			Logger.logInfo( "cloning XLSRecord " + this.getCellAddress() + " failed: " + e );
+			log.info( "cloning XLSRecord " + this.getCellAddress() + " failed: " + e );
 		}
 		return null;
 	}
@@ -548,15 +548,6 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 recordIdx = i;
 	 }
 	 */
-	/**
-	 * set the DEBUG level
-	 */
-	@Override
-	public void setDebugLevel( int b )
-	{
-		DEBUGLEVEL = b;
-	}
-
 	public int lastidx = -1;
 
 	/**
@@ -770,11 +761,8 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		}
 		if( (rownum > MAXROWS) || (col < 0) )
 		{
-			if( DEBUGLEVEL > -1 )
-			{
-				Logger.logWarn( "XLSRecord.getCellAddress() Row/Col info incorrect for Cell:" + ExcelTools.getAlphaVal( col ) + String.valueOf(
+				log.warn( "XLSRecord.getCellAddress() Row/Col info incorrect for Cell:" + ExcelTools.getAlphaVal( col ) + String.valueOf(
 						rownum ) );
-			}
 			return "";
 		}
 		return ExcelTools.getAlphaVal( col ) + rownum;
@@ -978,7 +966,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public double getDblVal()
 	{
-		return (double) Float.NaN;
+		return Float.NaN;
 	}
 
 	/**
@@ -1013,30 +1001,30 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public void setStringVal( String v )
 	{
-		Logger.logErr( "Setting String Val on generic XLSRecord, value not held" );
+		log.error( "Setting String Val on generic XLSRecord, value not held" );
 	}
 
 	@Override
 	public void setBooleanVal( boolean b )
 	{
-		Logger.logErr( "Setting Boolean Val on generic XLSRecord, value not held" );
+		log.error( "Setting Boolean Val on generic XLSRecord, value not held" );
 	}
 
 	@Override
 	public void setIntVal( int v )
 	{
-		Logger.logErr( "Setting int Val on generic XLSRecord, value not held" );
+		log.error( "Setting int Val on generic XLSRecord, value not held" );
 	}
 
 	public void setFloatVal( float v )
 	{
-		Logger.logErr( "Setting float Val on generic XLSRecord, value not held" );
+		log.error( "Setting float Val on generic XLSRecord, value not held" );
 	}
 
 	@Override
 	public void setDoubleVal( double v )
 	{
-		Logger.logErr( "Setting Double Val on generic XLSRecord, value not held" );
+		log.error( "Setting Double Val on generic XLSRecord, value not held" );
 	}
 
 	/**
@@ -1112,7 +1100,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 */
 	protected static XLSRecord getPrototype()
 	{
-		Logger.logWarn( "Attempt to get prototype XLSRecord failed.  There is no prototype record defined for this record type." );
+		log.warn( "Attempt to get prototype XLSRecord failed.  There is no prototype record defined for this record type." );
 		return null;
 	}
 
@@ -1206,7 +1194,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 			}
 			catch( IOException e )
 			{
-				Logger.logWarn( "ERROR: parsing record continues failed: " + this.toString() + ": " + e );
+				log.warn( "ERROR: parsing record continues failed: " + this.toString() + ": " + e );
 			}
 			Iterator it = cx.iterator();
 			while( it.hasNext() )
@@ -1225,7 +1213,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 				}
 				catch( IOException a )
 				{
-					Logger.logWarn( "ERROR: parsing record continues failed: " + this.toString() + ": " + a );
+					log.warn( "ERROR: parsing record continues failed: " + this.toString() + ": " + a );
 				}
 			}
 			this.data = out.toByteArray();

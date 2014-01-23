@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // TODO: Handle other types of External Names besides Add-Ins
 
@@ -56,9 +57,7 @@ import com.extentech.toolkit.Logger;
  */
 public final class Externname extends XLSRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Externname.class );
 	private static final long serialVersionUID = -7153354861666069899L;
 
 	@Override
@@ -113,7 +112,7 @@ public final class Externname extends XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "Exception excountered writing Externname: " + e.toString() );
+			log.warn( "Exception encountered writing Externname: " + e.toString(), e );
 		}
 		return x;
 //            cch = bts.length/2;

@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.XLS;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -39,11 +40,8 @@ import java.util.List;
  */
 public class ContinueHandler implements Serializable, XLSConstants
 {
-	/**
-	 *
-	 */
+	private static final Logger log = LoggerFactory.getLogger( ContinueHandler.class );
 	private static final long serialVersionUID = 164009339243774537L;
-	private static int DEBUGLEVEL = 0;
 	private static boolean processContinues = true; // debug setting
 	private BiffRec continued;
 	private boolean handleTxo = false;
@@ -84,10 +82,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 
 		if( nextOpcode == CONTINUE )
 		{
-			if( DEBUGLEVEL > 11 )
-			{
-				Logger.logInfo( "Next OPCODE IS CONTINUE: " + Integer.toHexString( nextOpcode ) );
-			}
+				log.trace( "Next OPCODE IS CONTINUE: {}", Integer.toHexString( nextOpcode ) );
 		}
 		if( (nextOpcode == CONTINUE) && (opcode != CONTINUE) )
 		{ // the continued rec
@@ -134,10 +129,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 				{
 					((Continue) rec).setPredecessor( splitContRec );
 				}
-				if( DEBUGLEVEL > 0 )
-				{
-					Logger.logWarn( "Warning:  Out of spec split txo continue record found, reconstructing." + splitPrevRec.toString() );
-				}
+					log.warn( "Warning:  Out of spec split txo continue record found, reconstructing." + splitPrevRec.toString() );
 
 			}
 			else
@@ -152,10 +144,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 				}
 				if( (continued.getOpcode() == SST) || (continued.getOpcode() == STRINGREC) )
 				{
-					if( DEBUGLEVEL > 2 )
-					{
-						Logger.logInfo( "Sst Continue.  grbit:" + ((Continue) rec).getGrbit() );
-					}
+						log.trace( "Sst Continue.  grbit:" + ((Continue) rec).getGrbit() );
 				}
 				else
 				{
@@ -201,10 +190,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 					}
 					catch( Exception e )
 					{
-						if( DEBUGLEVEL > 0 )
-						{
-							Logger.logErr( "ContinueHandler.txo parsing- encountered unknown Continue record" );
-						}
+							log.error( "ContinueHandler.txo parsing- encountered unknown Continue record" );
 					}
 					lastCont = (Continue) rec;
 				}
@@ -228,10 +214,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 				}
 				catch( Exception e )
 				{
-					if( DEBUGLEVEL > 0 )
-					{
-						Logger.logErr( "ContinueHandler.Obj parsing- encountered unknown Continue record" );
-					}
+						log.error( "ContinueHandler.Obj parsing- encountered unknown Continue record" );
 				}
 			}
 			else
@@ -318,7 +301,6 @@ public class ContinueHandler implements Serializable, XLSConstants
 		mso.setWorkBook( rec.getWorkBook() );
 		mso.setData( rec.getData() );
 		mso.setLength( rec.getData().length );
-		mso.setDebugLevel( this.DEBUGLEVEL );
 		mso.setStreamer( book.getStreamer() );
 		return mso;
 	}
@@ -460,21 +442,15 @@ public class ContinueHandler implements Serializable, XLSConstants
 
 			if( hasGrbit )
 			{
-				if( DEBUGLEVEL > 1 )
-				{
-					Logger.logInfo( "New Continue. HAS grbit." );
-					Logger.logInfo( "Continue GRBIT: " + String.valueOf( thisgr ) );
-				}
+					log.debug( "New Continue. HAS grbit." );
+					log.debug( "Continue GRBIT: " + String.valueOf( thisgr ) );
 				continuedata[0] = thisgr; // set a grbit on the new Continue
 				System.arraycopy( dta, dtapos, continuedata, 1, continuedata.length - 1 );
 			}
 			else
 			{
-				if( DEBUGLEVEL > 1 )
-				{
-					Logger.logInfo( "New Continue. NO grbit." );
-					Logger.logInfo( "Continue GRBIT: " + String.valueOf( dta[dtapos] & 0x1 ) );
-				}
+					log.debug( "New Continue. NO grbit." );
+					log.debug( "Continue GRBIT: " + String.valueOf( dta[dtapos] & 0x1 ) );
 				System.arraycopy( dta, dtapos, continuedata, 0, continuedata.length );
 			}
 
@@ -511,7 +487,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 		}
 		catch( Exception a )
 		{
-			Logger.logErr( "Streaming WorkBook Bytes for record:" + rec.toString() + " failed: " + a + " Output Corrupted." );
+			log.error( "Streaming WorkBook Bytes for record:" + rec.toString() + " failed: " + a + " Output Corrupted." );
 		}
 	}
 
@@ -584,21 +560,15 @@ public class ContinueHandler implements Serializable, XLSConstants
 
 			if( hasGrbit )
 			{
-				if( DEBUGLEVEL > 1 )
-				{
-					Logger.logInfo( "New Continue. HAS grbit." );
-					Logger.logInfo( "Continue GRBIT: " + String.valueOf( thisgr ) );
-				}
+					log.debug( "New Continue. HAS grbit." );
+					log.debug( "Continue GRBIT: " + String.valueOf( thisgr ) );
 				continuedata[0] = thisgr; // set a grbit on the new Continue
 				System.arraycopy( dta, dtapos, continuedata, 1, continuedata.length - 1 );
 			}
 			else
 			{
-				if( DEBUGLEVEL > 1 )
-				{
-					Logger.logInfo( "New Continue. NO grbit." );
-					Logger.logInfo( "Continue GRBIT: " + String.valueOf( dta[dtapos] & 0x1 ) );
-				}
+					log.debug( "New Continue. NO grbit." );
+					log.debug( "Continue GRBIT: " + String.valueOf( dta[dtapos] & 0x1 ) );
 				System.arraycopy( dta, dtapos, continuedata, 0, continuedata.length );
 			}
 
@@ -876,7 +846,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 		numconts++;
 		Continue[] retconts = new Continue[numconts];
 
-		Logger.logInfo( "Creating continues: " + numconts );
+		log.debug( "Creating continues: " + numconts );
 
 		byte[] dtx = null;
 		for( int x = 0; x < numconts; x++ )

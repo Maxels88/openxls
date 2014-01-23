@@ -137,10 +137,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 		super.init();
 		if( (this.getLength() - 4) <= 0 )
 		{
-			if( DEBUGLEVEL > -1 )
-			{
-				log.info( "no data in MULBLANK" );
-			}
+				log.debug( "no data in MULBLANK" );
 		}
 		else
 		{
@@ -161,10 +158,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 				colFirst = csav;
 				colLast--;
 			}
-			if( DEBUGLEVEL > 5 )
-			{
-				log.info( "INFO: MULBLANK range: " + colFirst + ":" + colLast );
-			}
+				log.debug( "INFO: MULBLANK range: " + colFirst + ":" + colLast );
 			int numblanks = (colLast - colFirst) + 1;
 //			blanks = new ArrayList();
 			if( numblanks < 1 )
@@ -431,7 +425,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 	 */
 	public ArrayList<Integer> getColReferences()
 	{
-		ArrayList<Integer> colRefs = new ArrayList<Integer>();
+		ArrayList<Integer> colRefs = new ArrayList<>();
 		for( int i = this.colFirst; i <= this.colLast; i++ )
 		{
 			colRefs.add( i );

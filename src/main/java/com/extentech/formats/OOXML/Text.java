@@ -27,7 +27,8 @@ import com.extentech.formats.XLS.Font;
 import com.extentech.formats.XLS.OOXMLAdapter;
 import com.extentech.formats.XLS.Sst;
 import com.extentech.formats.XLS.Unicodestring;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ import java.util.Stack;
 // TODO: preserve
 public class Text implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Text.class );
 	private static final long serialVersionUID = 5886384020139606328L;
 	private Unicodestring str = null;
 
@@ -101,7 +102,7 @@ public class Text implements OOXMLElement
 						}
 						if( formattingRuns == null )
 						{
-							formattingRuns = new ArrayList<short[]>();
+							formattingRuns = new ArrayList<>();
 						}
 						formattingRuns.add( new short[]{ Integer.valueOf( idx ).shortValue(), Integer.valueOf( fIndex ).shortValue() } );
 					}
@@ -138,7 +139,7 @@ public class Text implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "r.parseOOXML: " + e.toString() );
+			log.error( "r.parseOOXML: " + e.toString() );
 		}
 		Text oe = new Text( str );
 		return oe;

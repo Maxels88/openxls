@@ -87,16 +87,14 @@ package com.extentech.formats.XLS;
  */
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 
 public class SxFDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( SxFDB.class );
 	private static final long serialVersionUID = 9027599480633995587L;
 	private short ifdbParent, ifdbBase, csxoper, cisxoper, catm, grbit;
 	private String stFieldName;
@@ -139,7 +137,7 @@ public class SxFDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logInfo( "SXString.init: " + e );
+				log.warn( "SXString.init: " + e, e );
 			}
 		}
 		fAllAtoms = (grbit & 0x1) == 0x1;
@@ -154,10 +152,8 @@ public class SxFDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 		fNonDates = (grbit & 0x400) == 0x400;
 		fDateInField = (grbit & 0x4000) == 0x4000;        // at least one date field (SxDtr follows)
 		fCalculatedField = (grbit & 0x8000) == 0x8000;    // Sxformulas follow "A calculated field is a cache field (section 2.2.5.3.5) and does not correspond to a column in the source data (section 2.2.5.3.2). The values for a calculated field are calculated based on the formula specified for the calculated field"
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( this.toString() );
-		}
+
+			log.debug( "{}", this.toString() );
 	}
 
 	public String toString()
@@ -265,7 +261,7 @@ public class SxFDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logInfo( "SxFDB: " + e );
+				log.warn( "SxFDB: " + e, e );
 			}
 		}
 

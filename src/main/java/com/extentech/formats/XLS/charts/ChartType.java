@@ -35,10 +35,11 @@ import com.extentech.formats.XLS.WorkBook;
 import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.formats.cellformat.CellFormatFactory;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.BufferedWriter;
@@ -73,9 +74,7 @@ import java.util.HashMap;
  */
 public abstract class ChartType implements ChartConstants, Serializable
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( ChartType.class );
 	private static final long serialVersionUID = -7862828186455339066L;
 	protected GenericChartObject chartobj;
 	protected Legend legend = null;
@@ -990,7 +989,7 @@ public abstract class ChartType implements ChartConstants, Serializable
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "ChartType.parseChartType: " + e.toString() );
+			log.error( "ChartType.parseChartType: " + e.toString() );
 		}
 		return null;
 	}

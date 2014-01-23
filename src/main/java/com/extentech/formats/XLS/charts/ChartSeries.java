@@ -38,10 +38,11 @@ import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.formats.XLS.Xf;
 import com.extentech.formats.XLS.formulas.Ptg;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.Serializable;
@@ -52,9 +53,7 @@ import java.util.Vector;
 
 public class ChartSeries implements ChartConstants, Serializable
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( ChartSeries.class );
 	private static final long serialVersionUID = -7862828186455339066L;
 	private ArrayList<Object[]> series = new ArrayList();    // ALL series in chart MAPPED to chart that "owns" it
 	private JSONArray seriesJSON = null;            // save series JSON for update comparisons later
@@ -139,7 +138,7 @@ public class ChartSeries implements ChartConstants, Serializable
 			}
 			catch( Exception e )
 			{
-				Logger.logWarn( "ChartSeries.getMinMax: " + e.toString() );
+				log.error( "ChartSeries.getMinMax: " + e.toString() );
 			}
 		}
 		// Series colors, labels and values ***************************************************************
@@ -290,7 +289,7 @@ public class ChartSeries implements ChartConstants, Serializable
 					// error trap - shouldn't happen
 					if( ch.length != nseries )
 					{
-						Logger.logWarn( "ChartHandle.getSeriesInfo: unexpected Pie Chart structure" );
+						log.warn( "ChartHandle.getSeriesInfo: unexpected Pie Chart structure" );
 						nseries = Math.min( nseries, ch.length );
 					}
 					double[] seriesvals = new double[nseries];
@@ -631,7 +630,7 @@ public class ChartSeries implements ChartConstants, Serializable
 		}
 		catch( JSONException e )
 		{
-			Logger.logErr( "ChartSeries.getDataRangeJSON:  Error retrieving Series Information: " + e.toString() );
+			log.error( "ChartSeries.getDataRangeJSON:  Error retrieving Series Information: " + e.toString() );
 		}
 		// seriesJSON.getJSONArray("Series").length()
 		// seriesJSON.getJSONArray("Series").get(1) 
@@ -930,7 +929,7 @@ public class ChartSeries implements ChartConstants, Serializable
 						}
 						else if( (idx == -1) || ranges[idx].equals( "" ) )
 						{ // shoudln't!! can't have a textual refernce in place of a series or cat value (can you?)
-							Logger.logWarn( "ChartSeries.parseOOXML: unexpected text value" );
+							log.warn( "ChartSeries.parseOOXML: unexpected text value" );
 						}
 					}
 					else if( tnm.equals( "numCache" ) || tnm.equals( "strCache" ) || tnm.equals( "multiLvlStrRef" ) )
@@ -1007,7 +1006,7 @@ public class ChartSeries implements ChartConstants, Serializable
 								}
 								catch( Exception e )
 								{
-									Logger.logErr( "ChartSeries.parseOOXML: Error adjusting pivot range for " + parentChart + ":" + e.toString() );
+									log.error( "ChartSeries.parseOOXML: Error adjusting pivot range for " + parentChart + ":" + e.toString() );
 								} // problems parsing range - skp
 							}
 						}
@@ -1036,7 +1035,7 @@ public class ChartSeries implements ChartConstants, Serializable
 						{
 							if( (seriesidx > 0) && (parentChart instanceof PieChart) )
 							{
-								Logger.logWarn( "ChartSeries.parseOOXML:  more than 1 series encountered for a Pie-style chart" );
+								log.warn( "ChartSeries.parseOOXML:  more than 1 series encountered for a Pie-style chart" );
 							}
 							else
 							{
@@ -1070,7 +1069,7 @@ public class ChartSeries implements ChartConstants, Serializable
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "ChartSeries.parseOOXML: Error parsing series for " + parentChart + ":" + e.toString() );
+			log.error( "ChartSeries.parseOOXML: Error parsing series for " + parentChart + ":" + e.toString() );
 		}
 		return null;
 	}

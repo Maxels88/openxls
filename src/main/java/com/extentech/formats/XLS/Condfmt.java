@@ -28,8 +28,9 @@ import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.formats.OOXML.CfRule;
 import com.extentech.formats.OOXML.Dxf;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ import java.util.Iterator;
  */
 public final class Condfmt extends com.extentech.formats.XLS.XLSRecord
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Condfmt.class );
 	private FormatHandle formatHandle = null;
 
 	private static final long serialVersionUID = -7923448634000437926L;
@@ -413,7 +414,7 @@ public final class Condfmt extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Condfmt.parseOOXML: " + e.toString() );
+			log.error( "Condfmt.parseOOXML: " + e.toString() );
 		}
 		if( condfmt != null )
 		{

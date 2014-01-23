@@ -22,26 +22,21 @@
  */
 package com.extentech.formats.XLS;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>Obproj: Visual Basic Project (D3h)</b><br>
  */
 public final class Obproj extends com.extentech.formats.XLS.XLSRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Obproj.class );
 	private static final long serialVersionUID = 7952338892026147433L;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		if( DEBUGLEVEL > DEBUG_LOW )
-		{
-			Logger.logInfo( "Visual Basic Project Detected" );
-		}
-
+			log.debug( "Visual Basic Project Detected" );
 	}
 }

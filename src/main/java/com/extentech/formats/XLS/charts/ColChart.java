@@ -23,13 +23,15 @@
 package com.extentech.formats.XLS.charts;
 
 import com.extentech.formats.XLS.WorkBook;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ColChart extends ChartType
 {
+	private static final Logger log = LoggerFactory.getLogger( ColChart.class );
 	protected Bar col = null;
 
 	public ColChart( GenericChartObject charttype, ChartFormat cf, WorkBook wb )
@@ -73,7 +75,7 @@ public class ColChart extends ChartType
 		String[] legends = s.getLegends();
 		if( series.size() == 0 )
 		{
-			Logger.logErr( "Bar.getSVG: error in series" );
+			log.error( "Bar.getSVG: error in series" );
 			return "";
 		}
 		int n = series.size();

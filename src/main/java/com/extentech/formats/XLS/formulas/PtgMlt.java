@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.XLS.formulas;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
 
@@ -36,9 +37,7 @@ import java.lang.reflect.Array;
 */
 public class PtgMlt extends GenericPtg implements Ptg
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgMlt.class );
 	private static final long serialVersionUID = -2670754297349356254L;
 
 	@Override
@@ -116,7 +115,7 @@ public class PtgMlt extends GenericPtg implements Ptg
 				// there should always be only two ptg's in this, error if not.
 				if( o.length != 2 )
 				{
-					Logger.logWarn( "calculating formula failed, wrong number of values in PtgMlt" );
+					log.warn( "calculating formula failed, wrong number of values in PtgMlt" );
 					return new PtgErr( PtgErr.ERROR_VALUE );    // 20081203 KSC: handle error's ala Excel return null;
 				}
 				double o0 = 0, o1 = 0;

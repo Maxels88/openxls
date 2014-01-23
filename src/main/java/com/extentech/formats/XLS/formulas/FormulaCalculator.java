@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS.formulas;
 
 import com.extentech.formats.XLS.FunctionNotSupportedException;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Stack;
 
@@ -43,7 +44,7 @@ import java.util.Stack;
  */
 public class FormulaCalculator
 {
-
+	private static final Logger log = LoggerFactory.getLogger( FormulaCalculator.class );
 	/**
 	 * Calculates the value of calcStac  This is handled by
 	 * running through the stack, adding operands to tempstack until
@@ -98,8 +99,6 @@ public class FormulaCalculator
 		return finalptg;
 	}
 
-	private static boolean DEBUG = false; // just use this to see ptg calcing
-
 	/**
 	 * This is a very similar method to the handle ptg method in formula parser.
 	 * Instead of creating a tree however it calculates in the order recommended by
@@ -121,10 +120,7 @@ public class FormulaCalculator
 					return;
 				}
 				// we didn't use it, back it goes.
-				if( DEBUG )
-				{
-					Logger.logInfo( "opr: " + p.toString() );
-				}
+					log.debug( "opr: " + p.toString() );
 			}
 			// make sure we have the correct amount popped back in..
 			if( p.getIsBinaryOperator() )
@@ -169,25 +165,18 @@ public class FormulaCalculator
 			}
 
         	/* useful for debugging*/
-			if( DEBUG )
-			{
 				String adr = "";
 				if( p.getParentRec() != null )
 				{
 					adr = "addr: " + p.getParentRec().getCellAddress();
 				}
-				Logger.logInfo( adr + " val: " + p.toString() );
-			}
+				log.debug( adr + " val: " + p.toString() );
 			vals.push( p );// push it back on the stack
 
 		}
 		else if( p.getIsOperand() )
 		{
-
-			if( DEBUG )
-			{
-				Logger.logInfo( "opr: " + p.toString() );
-			}
+				log.debug( "opr: " + p.toString() );
 
 			vals.push( p );
 

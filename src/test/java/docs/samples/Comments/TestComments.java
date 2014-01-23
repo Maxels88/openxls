@@ -28,11 +28,12 @@ import com.extentech.ExtenXLS.DocumentObjectNotFoundException;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
 import com.extentech.formats.XLS.WorkSheetNotFoundException;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestComments
 {
-
+	private static final Logger log = LoggerFactory.getLogger( TestComments.class );
 	public WorkBookHandle book;
 	public WorkSheetHandle sheet;
 	String workingdir = System.getProperty( "user.dir" ) + "/docs/samples/Comments/";
@@ -73,7 +74,7 @@ public class TestComments
 		}
 		catch( Exception e )
 		{
-			Logger.logInfo( e.toString() );
+			log.info( e.toString() );
 		}
 	}
 
@@ -122,12 +123,12 @@ public class TestComments
 			sheet = book.getWorkSheet( 0 );
 			CommentHandle[] nhs = sheet.getCommentHandles();
 			// assert initial state - NOTE: getCommentText includes Author Name if present
-			Logger.logInfo( "A1: " + nhs[0].getCommentText() );    // "Ted:\nA note for cell A1"
-			Logger.logInfo( "Location" + nhs[0].getAddress() );    // "Sheet1!A1"
-			Logger.logInfo( "D2: " + nhs[1].getCommentText() );        // "Maya:\na note attached to cell D2";
-			Logger.logInfo( "Location" + nhs[1].getAddress() );    // "Sheet1!D2"
-			Logger.logInfo( "D8: " + nhs[2].getCommentText() );        // "James:\nThis is a longer comment attached to D8, it is also, along with D2, NOT hidden");
-			Logger.logInfo( "Location" + nhs[2].getAddress() );    // "Sheet1!D8"
+			log.info( "A1: " + nhs[0].getCommentText() );    // "Ted:\nA note for cell A1"
+			log.info( "Location" + nhs[0].getAddress() );    // "Sheet1!A1"
+			log.info( "D2: " + nhs[1].getCommentText() );        // "Maya:\na note attached to cell D2";
+			log.info( "Location" + nhs[1].getAddress() );    // "Sheet1!D2"
+			log.info( "D8: " + nhs[2].getCommentText() );        // "James:\nThis is a longer comment attached to D8, it is also, along with D2, NOT hidden");
+			log.info( "Location" + nhs[2].getAddress() );    // "Sheet1!D8"
 			// change 'em
 			nhs[0].setCommentText( "A new note for A1" );
 			nhs[2].setCommentText( "A considerably shorter note for D8" );
@@ -135,7 +136,7 @@ public class TestComments
 		}
 		catch( Exception e )
 		{
-			Logger.logInfo( e.toString() );
+			log.info( e.toString() );
 		}
 	}
 
@@ -156,7 +157,7 @@ public class TestComments
 		}
 		catch( Exception e )
 		{
-			Logger.logInfo( e.toString() );
+			log.info( e.toString() );
 		}
 	}
 
@@ -172,12 +173,12 @@ public class TestComments
 			sheet = book.getWorkSheet( 0 );
 			CommentHandle[] nhs = sheet.getCommentHandles();
 			nhs[0].show();    // make always shown - getIsHidden() should return false
-			Logger.logInfo( "Is Hidden? " + nhs[0].getIsHidden() );    // getIsHidden indicataes whether it is hidden - normal state - or always shown (false)
+			log.info( "Is Hidden? " + nhs[0].getIsHidden() );    // getIsHidden indicataes whether it is hidden - normal state - or always shown (false)
 			book.write( workingdir + "testNotesShowOUT.xls" );
 		}
 		catch( Exception e )
 		{
-			Logger.logInfo( e.toString() );
+			log.info( e.toString() );
 		}
 	}
 
@@ -193,12 +194,12 @@ public class TestComments
 			sheet = book.getWorkSheet( 0 );
 			CommentHandle[] nhs = sheet.getCommentHandles();
 			// assert initial state
-			Logger.logInfo( "Location of Comment= " + nhs[0].getAddress() ); //"Sheet1!A1"
-			Logger.logInfo( "Is Hidden? " + nhs[0].getIsHidden() );    // true
-			Logger.logInfo( "Location of Comment= " + nhs[1].getAddress() ); // "Sheet1!D2"
-			Logger.logInfo( "Is Hidden? " + nhs[1].getIsHidden() );    // false i.e it's always shown
-			Logger.logInfo( "Location of Comment= " + nhs[2].getAddress() ); // "Sheet1!D8"
-			Logger.logInfo( "Is Hidden? " + nhs[2].getIsHidden() );    // false
+			log.info( "Location of Comment= " + nhs[0].getAddress() ); //"Sheet1!A1"
+			log.info( "Is Hidden? " + nhs[0].getIsHidden() );    // true
+			log.info( "Location of Comment= " + nhs[1].getAddress() ); // "Sheet1!D2"
+			log.info( "Is Hidden? " + nhs[1].getIsHidden() );    // false i.e it's always shown
+			log.info( "Location of Comment= " + nhs[2].getAddress() ); // "Sheet1!D8"
+			log.info( "Is Hidden? " + nhs[2].getIsHidden() );    // false
 			nhs[0].show();    // show A1
 			nhs[0].setCommentText( nhs[0].getCommentText() + "\nSHOW" );
 			nhs[1].hide();
@@ -209,7 +210,7 @@ public class TestComments
 		}
 		catch( Exception e )
 		{
-			Logger.logInfo( e.toString() );
+			log.info( e.toString() );
 		}
 	}
 
@@ -241,13 +242,13 @@ public class TestComments
 			CommentHandle nh = sheet.createNote( "A1", noteTextWithFormats, "an author" );
 			if( !noteTextWithoutFormats.equals( nh.getCommentText() ) )
 			{
-				Logger.logInfo( "Note text does not equal expected" );
+				log.info( "Note text does not equal expected" );
 			}
 			book.write( workingdir + outputfile );
 		}
 		catch( Exception e )
 		{
-			Logger.logInfo( e.toString() );
+			log.info( e.toString() );
 		}
 	}
 }

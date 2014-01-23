@@ -25,7 +25,8 @@ package com.extentech.formats.XLS.charts;
 import com.extentech.formats.OOXML.OOXMLElement;
 import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -55,9 +56,7 @@ import java.util.Stack;
  */
 public class ThreeD extends GenericChartObject implements ChartObject
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( ThreeD.class );
 	private static final long serialVersionUID = -7501630910970731901L;
 	private short anRot = 0;
 	private short anElev = 15;
@@ -530,7 +529,7 @@ public class ThreeD extends GenericChartObject implements ChartObject
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "ThreeD.parseOOXML: " + e.toString() );
+			log.error( "ThreeD.parseOOXML: " + e.toString() );
 		}
 
 		return null;

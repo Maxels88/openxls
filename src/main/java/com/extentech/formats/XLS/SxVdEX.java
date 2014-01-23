@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SxVDEx	0x100
@@ -127,9 +128,7 @@ import com.extentech.toolkit.Logger;
  */
 public class SxVdEX extends XLSRecord implements XLSConstants
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( SxVdEX.class );
 	private static final long serialVersionUID = 2639291289806138985L;
 	private short citmAutoShow, isxdiAutoSort, isxdiAutoShow, ifmt;
 
@@ -144,10 +143,7 @@ public class SxVdEX extends XLSRecord implements XLSConstants
 		ifmt = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
 		// TODO: subName (variable): An optional SXVDEx_Opt structure that specifies the name of the aggregate function used to calculate this pivot field's subtotals. SHOULD<124> be present.
 
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "SXVDEX - citmAutoShow:" + citmAutoShow + " isxdiAutoSort:" + isxdiAutoSort + " isxdoAutoShow:" + isxdiAutoShow + " ifmt:" + ifmt );
-		}
+			log.debug( "SXVDEX - citmAutoShow:" + citmAutoShow + " isxdiAutoSort:" + isxdiAutoSort + " isxdoAutoShow:" + isxdiAutoShow + " ifmt:" + ifmt );
 	}
 
 	private byte[] PROTOTYPE_BYTES = new byte[]{ // default configuration

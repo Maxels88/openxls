@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -41,7 +42,7 @@ import java.util.Stack;
 // TODO: finish clientData element
 public class OneCellAnchor implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( OneCellAnchor.class );
 	private static final long serialVersionUID = -8498556079325357165L;
 	public static final short EMU = 1270;
 	private From from;
@@ -110,7 +111,7 @@ public class OneCellAnchor implements OOXMLElement
 		}
 		catch( Exception ex )
 		{
-			Logger.logErr( "oneCellAnchor.parseOOXML: " + ex.toString() );
+			log.error( "oneCellAnchor.parseOOXML: " + ex.toString() );
 		}
 		OneCellAnchor oca = new OneCellAnchor( f, e, o );
 		return oca;

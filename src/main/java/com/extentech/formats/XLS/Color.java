@@ -23,7 +23,6 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
 
 import java.io.Serializable;
 
@@ -33,11 +32,6 @@ import java.io.Serializable;
 
 public final class Color implements Serializable
 {
-
-	/**
-	 * serialVersionUID
-	 */
-	private static final long serialVersionUID = 5181253361814526629L;
 	byte[] data = null;
 	int myval = -1;
 
@@ -45,10 +39,6 @@ public final class Color implements Serializable
 	{
 		this.data = d;
 		myval = ByteTools.readInt( d[0], d[1], d[2], d[3] );
-		if( false )
-		{
-			Logger.logInfo( "New Color: " + Integer.toHexString( myval ) );
-		}
 	}
 
 	// methods from BiffRec

@@ -27,8 +27,9 @@ import com.extentech.ExtenXLS.DateConverter;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
 import com.extentech.formats.XLS.WorkSheetNotFoundException;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -50,7 +51,7 @@ import java.text.SimpleDateFormat;
  */
 public class HighPerformance
 {
-
+	private static final Logger log = LoggerFactory.getLogger( HighPerformance.class );
 	public static DateFormat in_format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 
 	public static void main( String[] args )
@@ -67,9 +68,9 @@ public class HighPerformance
 
 			// System.setProperty("com.extentech.ExtenXLS.cacheCellHandles","true");
 
-			Logger.logInfo( "ExtenXLS Version: " + WorkBookHandle.getVersion() );
+			log.info( "ExtenXLS Version: " + WorkBookHandle.getVersion() );
 			BufferedReader fileReader = null;
-			Logger.logInfo( "Begin test." );
+			log.info( "Begin test." );
 
 			try
 			{
@@ -79,7 +80,7 @@ public class HighPerformance
 
 				WorkSheetHandle sheetHandle;
 				sheetHandle = addWorkSheet( bookHandle, sheetNum );
-				//Logger.logInfo(bookHandle.getStats());
+				//log.info(bookHandle.getStats());
 
 				// See the valid list of format patterns in the
 				// API docs for FormatHandle
@@ -100,7 +101,7 @@ public class HighPerformance
 				int NumericFormat = formatSheet.getCell( "A2" ).getFormatId();
 				int DateFormat = formatSheet.getCell( "A3" ).getFormatId();
 
-				Logger.logInfo( "Starting adding cells." );
+				log.info( "Starting adding cells." );
 				String line = "1234	3			4 ZZZZZZZZZZZZ	640	2	6			2005-01-28 00:00:00	8	9	7477747	QA01898388			2005-01-28 00:00:00	2005-01-28 00:00:00		0	0	0	0	0	0	1805000	1805000		1805000		2	0				NL	8	7	SOME ACCOUNT INC	293881	72	AKZO ZZZZZZZZZZZZ				28-Jan-05	783321	802778	99999	1294092184	640	1857520	A\r\n";
 
 				/**
@@ -212,7 +213,7 @@ public class HighPerformance
 					row++;
 					if( recordNum % 1000 == 0 )
 					{
-						Logger.logInfo( recordNum + " Rows Added" );
+						log.info( recordNum + " Rows Added" );
 					}
 					if( recordNum % 65000 == 0 )
 					{
@@ -225,7 +226,7 @@ public class HighPerformance
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( e );
+				log.error("", e );
 			}
 			finally
 			{
@@ -233,26 +234,26 @@ public class HighPerformance
 
 				try
 				{
-					Logger.logInfo( "Begin writing XLS file..." );
+					log.info( "Begin writing XLS file..." );
 					// MUST use a buffered out for writing performance
 					BufferedOutputStream bout = new BufferedOutputStream( new FileOutputStream( oFile ) );
 					bookHandle.write( bout );
 					bout.flush();
 					bout.close();
-					Logger.logInfo( "Done writing XLS file." );
+					log.info( "Done writing XLS file." );
 				}
 				catch( Exception e1 )
 				{
-					Logger.logErr( e1 );
+					log.error( "",e1 );
 				}
-				Logger.logInfo( "Start reading XLS file." );
+				log.info( "Start reading XLS file." );
 				WorkBookHandle wbh = new WorkBookHandle( wd + "fastAddOut_" + z + ".xls" );
-				Logger.logInfo( "Done reading XLS file." );
+				log.info( "Done reading XLS file." );
 				wbh = null;
 				bookHandle = null;
 				System.gc();
 			}
-			Logger.logInfo( "End test." );
+			log.info( "End test." );
 		}
 	}
 

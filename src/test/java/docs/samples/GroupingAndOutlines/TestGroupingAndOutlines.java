@@ -25,7 +25,8 @@ package docs.samples.GroupingAndOutlines;
 import com.extentech.ExtenXLS.CellHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -35,7 +36,7 @@ import java.io.FileOutputStream;
  */
 public class TestGroupingAndOutlines
 {
-
+	private static final Logger log = LoggerFactory.getLogger( TestGroupingAndOutlines.class );
 	boolean CHANGEDATA = true;
 	String wd = System.getProperty( "user.dir" ) + "/docs/samples/GroupingAndOutlines/";
 
@@ -93,7 +94,7 @@ public class TestGroupingAndOutlines
 		catch( Exception ex )
 		{
 			// ex.printStackTrace();
-			Logger.logErr( "ERROR: Group/Outline test Logger.logErred: " + ex.getMessage() );
+			log.error( "ERROR: Group/Outline test log.errored: " + ex.getMessage() );
 		}
 		try
 		{
@@ -121,24 +122,24 @@ public class TestGroupingAndOutlines
 			CellHandle ch19 = sheet.getCell( "D6" );
 
 			// see that we 'hid' rows 4-7 and grouped them
-			Logger.logInfo( String.valueOf( ch3.getRow().getOutlineLevel() ) );
-			Logger.logInfo( String.valueOf( ch4.getRow().getOutlineLevel() ) );
-			Logger.logInfo( String.valueOf( ch5.getRow().getOutlineLevel() ) );
-			Logger.logInfo( String.valueOf( ch6.getRow().getOutlineLevel() ) );
-			Logger.logInfo( String.valueOf( ch5.getRow().isCollapsed() ) );
+			log.info( String.valueOf( ch3.getRow().getOutlineLevel() ) );
+			log.info( String.valueOf( ch4.getRow().getOutlineLevel() ) );
+			log.info( String.valueOf( ch5.getRow().getOutlineLevel() ) );
+			log.info( String.valueOf( ch6.getRow().getOutlineLevel() ) );
+			log.info( String.valueOf( ch5.getRow().isCollapsed() ) );
 
-			Logger.logInfo( String.valueOf( ch6.getCol().getOutlineLevel() ) );
-			Logger.logInfo( String.valueOf( ch12.getCol().getOutlineLevel() ) );
-			Logger.logInfo( String.valueOf( ch18.getCol().getOutlineLevel() ) );
-			Logger.logInfo( String.valueOf( ch19.getCol().getOutlineLevel() ) );
-			Logger.logInfo( String.valueOf( ch18.getCol().isCollapsed() ) );
+			log.info( String.valueOf( ch6.getCol().getOutlineLevel() ) );
+			log.info( String.valueOf( ch12.getCol().getOutlineLevel() ) );
+			log.info( String.valueOf( ch18.getCol().getOutlineLevel() ) );
+			log.info( String.valueOf( ch19.getCol().getOutlineLevel() ) );
+			log.info( String.valueOf( ch18.getCol().isCollapsed() ) );
 
 			testWrite( book );
 
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "ERROR: Could not verify proper Group/Outline in output file: " + e );
+			log.error( "ERROR: Could not verify proper Group/Outline in output file: " + e );
 		}
 
 	}
@@ -156,7 +157,7 @@ public class TestGroupingAndOutlines
 		}
 		catch( java.io.IOException e )
 		{
-			Logger.logInfo( "IOException in Tester.  " + e );
+			log.info( "IOException in Tester.  " + e );
 		}
 	}
 }

@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>Scl: Sheet Zoom (A0h)</b><br>
@@ -40,9 +41,7 @@ import com.extentech.toolkit.Logger;
 
 public final class Scl extends com.extentech.formats.XLS.XLSRecord
 {
-	/**
-	 *
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Scl.class );
 	private static final long serialVersionUID = -4595833226859365049L;
 	//	int num = 100; 20081231 KSC: default val is 1, making the calc (num/denum)*100
 	int num = 1;
@@ -61,10 +60,7 @@ public final class Scl extends com.extentech.formats.XLS.XLSRecord
 		bs[3] = 0;
 		setOpcode( SCL );
 		setLength( (short) 4 );
-		if( DEBUGLEVEL > DEBUG_LOW )
-		{
-			Logger.logInfo( "Scl.init()" + String.valueOf( this.offset ) );
-		}
+			log.trace( "Scl.init()" + String.valueOf( this.offset ) );
 		this.setData( bs );
 		this.originalsize = 4;
 	}
@@ -113,19 +109,16 @@ public final class Scl extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public float getZoom()
 	{
-		return ((float) num / (float) denum);
+		return ((float) num / denum);
 	}
 
 	@Override
 	public void init()
 	{
 		super.init();
-		num = (int) ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		denum = (int) ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		if( (DEBUGLEVEL > DEBUG_LOW) )
-		{
-			Logger.logInfo( "Scl.init() sheet zoom:" + getZoom() );
-		}
+		num = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		denum = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
+			log.debug( "Scl.init() sheet zoom:" + getZoom() );
 	}
 
 	private int[] gcd( int numerator, int denominator )

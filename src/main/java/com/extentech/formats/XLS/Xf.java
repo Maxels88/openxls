@@ -25,7 +25,8 @@ package com.extentech.formats.XLS;
 import com.extentech.ExtenXLS.FormatHandle;
 import com.extentech.formats.OOXML.Fill;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
 
@@ -60,7 +61,7 @@ import java.awt.Color;
 
 public class Xf extends com.extentech.formats.XLS.XLSRecord
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Xf.class );
 	private static final long serialVersionUID = -419388613530529316L;
 
 	int tableidx = -1;
@@ -263,12 +264,8 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	public void setMerged( boolean mgd )
 	{
 		byte[] rkdata = this.getData();
-		rkdata[9] = (byte) 0x78; // 0xf4 ?
-		if( DEBUGLEVEL > 1 )
-		{
-			Logger.logInfo( "Xf The merge style bit is: " + fMergeCell );
-		}
-
+		rkdata[9] = 0x78; // 0xf4 ?
+			log.trace( "Xf The merge style bit is: " + fMergeCell );
 	}
 
 	/**
@@ -321,12 +318,9 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		initXF();
 
 		pat = null;    // ensure reset if xf has changed
-		if( DEBUGLEVEL > DEBUG_LOW )
-		{
-			Logger.logInfo( "Xf.init() ifnt: " + ifnt + " ifmt: " + ifmt + ":" +
+			log.trace( "Xf.init() ifnt: " + ifnt + " ifmt: " + ifmt + ":" +
 					                this.toString() + " border: " + "l:" + this.getLeftBorderColor() + ":" + "b:" + this.getBottomBorderColor() + ":" + "r:" + this
 					.getRightBorderColor() + ":" + "t:" + this.getTopBorderColor() + ":" );
-		}
 	}
 
 	/**
@@ -357,10 +351,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		{
 			fMergeCell = 1;
 		}
-		if( DEBUGLEVEL > 5 )
-		{
-			Logger.logInfo( "Xf The merge cell bit is: " + fMergeCell + " and the int is " + flag );
-		}
+			log.trace( "Xf The merge cell bit is: " + fMergeCell + " and the int is " + flag );
 
 		iReadingOrder = (short) ((flag & 0xC0));// >> 6);	// reading order is byte 7-6 mask 0xCO
 		// USED_ATTRIB:	 bits 7-2 of byte 9 
@@ -422,9 +413,9 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		mystery = (byte) ((Iflag & 0x3800000) >> 25);
 		fls = (short) ((Iflag & 0xFC000000) >> 26); // fill pattern
 
-		if( (DEBUGLEVEL > 5) && (icvTop > 0) )
+		if( (icvTop > 0) )
 		{
-			Logger.logInfo( "Xf The cell outline is true" );
+			log.trace( "Xf The cell outline is true" );
 		}
 		// bytes 18, 19: fill pattern colors
 		icvColorFlag = ByteTools.readShort( this.getByteAt( 18 ), this.getByteAt( 19 ) );
@@ -816,7 +807,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		{
 			return 65;
 		}
-		return (int) icvTop;
+		return icvTop;
 	}
 
 	/**
@@ -839,7 +830,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		{
 			return 65;
 		}
-		return (int) icvBottom;
+		return icvBottom;
 	}
 
 	/**
@@ -862,7 +853,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		{
 			return 65;
 		}
-		return (int) icvLeft;
+		return icvLeft;
 	}
 
 	/**
@@ -941,7 +932,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		Iflag |= (icvBottom << 7);
 		Iflag |= ((short) t << 14);
 		Iflag |= (dgDiag << 21);
-		Iflag |= ((short) mystery << 25);
+		Iflag |= (mystery << 25);
 		Iflag |= (fls << 26);
 		this.updatePattern();
 	}
@@ -1105,7 +1096,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		Iflag |= (icvBottom << 7);
 		Iflag |= (icvDiag << 14);
 		Iflag |= (dgDiag << 21);
-		Iflag |= ((short) mystery << 25);
+		Iflag |= (mystery << 25);
 		Iflag |= (fls << 26);
 		byte[] nef = ByteTools.cLongToLEBytes( Iflag );
 		rkdata[14] = nef[0];
@@ -1428,7 +1419,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 
 	public int getHorizontalAlignment()
 	{
-		return (int) alc;
+		return alc;
 	}
 
 	public void setWrapText( boolean wraptext )
@@ -1459,7 +1450,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 
 	public int getVerticalAlignment()
 	{
-		return (int) alcV;
+		return alcV;
 	}
 
 	public void setRotation( int rot )

@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>Headerrec: Print Header on Each Page (14h)</b><br>
@@ -40,13 +41,10 @@ import com.extentech.toolkit.Logger;
  */
 public final class Headerrec extends com.extentech.formats.XLS.XLSRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Headerrec.class );
 	private static final long serialVersionUID = -8302043395108298631L;
 	int cch = -1;
 	String rgch = "";
-	boolean DEBUG = false;
 
 	@Override
 	public void setSheet( Sheet bs )
@@ -92,7 +90,7 @@ public final class Headerrec extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logInfo( "setting Footer text failed: " + e );
+			log.warn( "setting Footer text failed: " + e );
 		}
 		this.rgch = t;
 	}
@@ -112,15 +110,12 @@ public final class Headerrec extends com.extentech.formats.XLS.XLSRecord
 		byte[] b = this.getData();
 		if( this.getLength() > 4 )
 		{
-			int cch = (int) this.getByteAt( 0 );
+			int cch = this.getByteAt( 0 );
 			byte[] namebytes = this.getBytesAt( 0, this.getLength() - 4 );
 			Unicodestring fstr = new Unicodestring();
 			fstr.init( namebytes, false );
 			rgch = fstr.toString();
-			if( DEBUGLEVEL > DEBUG_LOW )
-			{
-				Logger.logInfo( "Header text: " + this.getHeaderText() );
-			}
+				log.debug( "Header text: " + this.getHeaderText() );
 		}
 	}
 

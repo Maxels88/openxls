@@ -27,8 +27,9 @@ import com.extentech.formats.LEO.BlockByteConsumer;
 import com.extentech.formats.LEO.BlockByteReader;
 import com.extentech.formats.LEO.LEOFile;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.ProgressListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -42,22 +43,10 @@ import java.util.LinkedHashMap;
  */
 public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, XLSConstants, Serializable
 {
-
 	public static final long serialVersionUID = 1233423412323l;
-	protected int DEBUGLEVEL = 100000;
-
+	private static final Logger log = LoggerFactory.getLogger( WorkBookFactory.class );
 	protected LEOFile myLEO;
 	private String fname;
-
-	public void setDebugLevel( int d )
-	{
-		DEBUGLEVEL = d;
-	}
-
-	public int getDebugLevel()
-	{
-		return DEBUGLEVEL;
-	}
 
 	// Methods from ProgressNotifier
 	private ProgressListener progresslistener;
@@ -203,7 +192,6 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 
 		myLEO = leo;
 
-		book.setDebugLevel( this.DEBUGLEVEL );
 		book.setFactory( this );
 		boolean infile = false;
 		boolean isWBBOF = true;
@@ -221,10 +209,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 			progresslistener.setMaxProgress( blen );
 		}
 		this.fireProgressChanged();
-		if( DEBUGLEVEL > 1 )
-		{
-			Logger.logInfo( "XLS File Size: " + String.valueOf( blen ) );
-		}
+			log.info( "XLS File Size: " + String.valueOf( blen ) );
 
 		for( int i = 0; i <= (blen - 4); )
 		{
@@ -293,17 +278,14 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 						}
 						catch( Exception e )
 						{
-							Logger.logErr( "error writing to dump file, " + "ceasing dump output: " + e );
+							log.error( "error writing to dump file, ceasing dump output: ", e );
 							WorkBookHandle.dump_input = null;
 						}
 					}
 
 					if( rec == null )
 					{ // Effectively an EOF
-						if( DEBUGLEVEL > 0 )
-						{
-							Logger.logInfo( "done parsing WorkBook storage." );
-						}
+							log.debug( "done parsing WorkBook storage." );
 						this.done = true;
 						this.progresstext = "Done Reading WorkBook.";
 						this.fireProgressChanged();
@@ -353,10 +335,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 					// end of Workbook
 					if( BofCount == -1 )
 					{
-						if( DEBUGLEVEL > 2 )
-						{
-							Logger.logInfo( "Last Bof" );
-						}
+							log.debug( "Last Bof" );
 						i += reclen;
 						thisrecpos = blen;
 					}
@@ -373,10 +352,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 
 			}
 		}
-		if( DEBUGLEVEL > 0 )
-		{
-			Logger.logInfo( "done" );
-		}
+			log.info( "done" );
 		progress = blen;
 		this.progresstext = "Done Reading WorkBook.";
 		this.fireProgressChanged();
@@ -415,7 +391,6 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 		rec.setByteReader( bytebuf );
 		rec.setLength( (short) datalen );
 		rec.setOffset( offset );
-		rec.setDebugLevel( this.DEBUGLEVEL );
 		rec.setStreamer( book.getStreamer() );
 
 		// send it to the CONTINUE handler
@@ -795,7 +770,6 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 				// System.out.println("A required record is not present: " +  op);
 				// Create a new Record
 				BiffRec rec = createMissingRequiredRecord( op, book, bs );
-				rec.setDebugLevel( this.DEBUGLEVEL );
 				int recPos = lastR.recordPos + 1;
 				try
 				{
@@ -1325,7 +1299,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Record Validation: Error creating missing record: " + opcode );
+			log.error( "Record Validation: Error creating missing record: " + opcode, e );
 		}
 		return record;
 
@@ -1378,14 +1352,14 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 	private void displayRecsInStream( LinkedHashMap<Short, R> map )
 	{
 		Iterator<Short> ii = map.keySet().iterator();
-		System.out.println( "Present Records" );
+		log.info( "Present Records" );
 		while( ii.hasNext() )
 		{
 			short op = ii.next();
 			R r = map.get( op );
 			if( r.isPresent )
 			{
-				System.out.println( op + " at " + r.recordPos );
+				log.info( op + " at " + r.recordPos );
 			}
 		}
 	}

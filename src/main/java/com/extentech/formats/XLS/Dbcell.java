@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.List;
@@ -73,10 +74,7 @@ import java.util.List;
  */
 public final class Dbcell extends com.extentech.formats.XLS.XLSRecord implements XLSConstants
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Dbcell.class );
 	private static final long serialVersionUID = -3169134298616400374L;
 	private Bof mybof;
 
@@ -325,15 +323,6 @@ public final class Dbcell extends com.extentech.formats.XLS.XLSRecord implements
 		for( int i = 0; i < numrecs; i++ )
 		{
 			rgdb[i] = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );
-		}
-		if( DEBUGLEVEL > 10 )
-		{
-			//     Logger.logInfo("DBCELL POINTER at: " + String.valueOf(dbRtrw));
-			for( int t = 0; t < rgdb.length; t++ )
-			{
-				Logger.logInfo( " rgdb" + t + ":" + String.valueOf( rgdb[t] ) );
-			}
-			Logger.logInfo( " num idxs: " + String.valueOf( numrecs ) );
 		}
 	}
 

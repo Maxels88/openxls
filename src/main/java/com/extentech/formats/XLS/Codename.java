@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 
@@ -34,10 +35,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class Codename extends com.extentech.formats.XLS.XLSRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Codename.class );
 	private static final long serialVersionUID = -8327865068784623792L;
 
 	private String stCodeName;
@@ -68,7 +66,7 @@ public class Codename extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( UnsupportedEncodingException e )
 		{
-			Logger.logWarn( "UnsupportedEncodingException in setting codename: " + e );
+			log.warn( "UnsupportedEncodingException in setting codename: " + e, e );
 		}
 
 	}
@@ -113,7 +111,7 @@ public class Codename extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( UnsupportedEncodingException e )
 		{
-			Logger.logInfo( "UnsupportedEncodingException in setting sheet name: " + e );
+			log.warn( "UnsupportedEncodingException in setting sheet name: " + e, e );
 		}
 		System.arraycopy( namebytes, 0, newdata, 3, namebytes.length );
 		newdata[0] = cch;

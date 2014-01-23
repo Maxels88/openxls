@@ -26,7 +26,8 @@ import com.extentech.ExtenXLS.CellRange;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
 import com.extentech.formats.XLS.WorkSheetNotFoundException;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -36,7 +37,7 @@ import java.io.FileOutputStream;
  */
 public class TestCellRanges
 {
-
+	private static final Logger log = LoggerFactory.getLogger( TestCellRanges.class );
 	String wd = System.getProperty( "user.dir" ) + "/docs/samples/CellRanges/";
 
 	static public void main( String[] args )
@@ -113,7 +114,7 @@ public class TestCellRanges
 		}
 		catch( java.io.IOException e )
 		{
-			Logger.logErr( "IOException in Tester.", e );
+			log.error( "IOException in Tester.", e );
 		}
 	}
 }

@@ -35,10 +35,10 @@ import com.extentech.formats.XLS.Obj;
 import com.extentech.formats.XLS.Sheet;
 import com.extentech.formats.XLS.XLSConstants;
 import com.extentech.formats.XLS.XLSRecord;
-import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
@@ -46,7 +46,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -85,6 +84,7 @@ import java.util.Vector;
  */
 public class Chart extends GenericChartObject implements ChartObject
 {
+	private static final Logger log = LoggerFactory.getLogger( Chart.class );
 	static final long serialVersionUID = 6702247464633674375l;
 
 	// Objects which define a chart -- REMEMBER TO UPDATE OOXMLChart copy constructor if modify below member vars
@@ -178,7 +178,7 @@ public class Chart extends GenericChartObject implements ChartObject
 		 fractional= ByteTools.readUnsignedShort(rkdata[14],rkdata[15]);
 		 dy= (float) integral;
 		 } catch (NumberFormatException e) {	// 20080414 KSC: parsing appears to be off - TODO Check out Chart record specs
-		 Logger.logErr("Chart.init: parsing dimensions failed: " + e);        	
+		 log.error("Chart.init: parsing dimensions failed: " + e);
 		 }
 
 		 if ((DEBUGLEVEL > 3))
@@ -330,7 +330,7 @@ public class Chart extends GenericChartObject implements ChartObject
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "initChartRecords: Error in Chart Records:  " + e.toString() );
+			log.error( "initChartRecords: Error in Chart Records:  " + e.toString() );
 		}
 
 		// Turn it into a static array initially to speed up random access
@@ -417,7 +417,7 @@ public class Chart extends GenericChartObject implements ChartObject
 					{
 						// it's not a defined chart object.  Add it in!!!  If we are missing a chart object containing other records we
 						// will not be able to write these out correctly.
-						Logger.logWarn( "Error in parsing chart. Please add the correct object (opcode: " + b.getOpcode() + ") to be a Chart Object" );
+						log.error( "Error in parsing chart. Please add the correct object (opcode: " + b.getOpcode() + ") to be a Chart Object" );
 					}
 				}
 				else
@@ -488,16 +488,6 @@ public class Chart extends GenericChartObject implements ChartObject
 		{
 			outputVec.addAll( postRecs );
 		}
-		if( !true )
-		{
-			for( Object anOutputVec : outputVec )
-			{
-				XLSRecord rec = (XLSRecord) anOutputVec;
-				Logger.logInfo( "rec:" + rec.toString() + "" );
-				Logger.logInfo( ByteTools.getByteDump( rec.getData(), 0 ) );
-				Logger.logInfo( "-------------------------------------------------" );
-			}
-		}
 		return outputVec;
 	}
 
@@ -546,7 +536,7 @@ public class Chart extends GenericChartObject implements ChartObject
 		}
 		catch( IOException e )
 		{
-			Logger.logErr( e );
+			log.error( "Error obtaining chart bytes", e );
 		}
 		return b;
 	}
@@ -570,7 +560,7 @@ public class Chart extends GenericChartObject implements ChartObject
 		}
 		catch( IOException e )
 		{
-			Logger.logErr( e );
+			log.error( "Error getting serial bytes", e );
 		}
 		return b;
 	}
@@ -1132,7 +1122,7 @@ public class Chart extends GenericChartObject implements ChartObject
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "Chart.populateForTransfer: " + e.toString() );
+				log.error( "Chart.populateForTransfer: " + e.toString() );
 			}
 		}
 
@@ -1161,7 +1151,7 @@ public class Chart extends GenericChartObject implements ChartObject
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "Chart.updateSheetRefs: " + e.toString() );
+				log.error( "Chart.updateSheetRefs: " + e.toString() );
 			}
 		}
 	}
@@ -1189,7 +1179,7 @@ public class Chart extends GenericChartObject implements ChartObject
 			}
 			catch( Exception e )
 			{
-				Logger.logWarn( "Unable to set title of chart to: " + str + " This chart object does not contain a title record" );
+				log.error( "Unable to set title of chart to: " + str + " This chart object does not contain a title record" );
 			}
 		}
 		else
@@ -1834,7 +1824,7 @@ public class Chart extends GenericChartObject implements ChartObject
 		}
 		else
 		{
-			Logger.logWarn( "Chart missing Msodrawing record. Chart has no coordinates." );
+			log.error( "Chart missing Msodrawing record. Chart has no coordinates." );
 		}
 		if( !metricsDirty )
 		{    // use adjusted values for w and h
@@ -1868,7 +1858,7 @@ public class Chart extends GenericChartObject implements ChartObject
 		}
 		else    // should NEVER happen
 		{
-			Logger.logWarn( "Chart missing coordinates." );
+			log.error( "Chart missing coordinates." );
 		}
 
 	}
@@ -2351,7 +2341,7 @@ public class Chart extends GenericChartObject implements ChartObject
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "Chart.getMetrics: " + e.toString() );
+				log.error( "Chart.getMetrics: " + e.toString() );
 			}
 		}
 		return chartMetrics;

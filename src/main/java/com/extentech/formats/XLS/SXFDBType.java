@@ -28,16 +28,14 @@ package com.extentech.formats.XLS;
  */
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
 public class SXFDBType extends XLSRecord implements XLSConstants, PivotCacheRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( SXFDBType.class );
 	private static final long serialVersionUID = 9027599480633995587L;
 	private short wTypeSql;
 
@@ -114,10 +112,7 @@ public class SXFDBType extends XLSRecord implements XLSConstants, PivotCacheReco
 	{
 		super.init();
 		wTypeSql = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "SXFDBType -" + Arrays.toString( this.getData() ) );
-		}
+			log.debug( "SXFDBType - {}", Arrays.toString( this.getData() ) );
 	}
 
 	/**

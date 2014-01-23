@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.OOXML;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -39,9 +40,9 @@ import java.util.Stack;
 //TODO: finish cNvGraphicFramePr.graphicFrameLocks element
 public class GraphicFrame implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( GraphicFrame.class );
 	private static final long serialVersionUID = 2494490998000511917L;
-	private HashMap<String, String> attrs = new HashMap<String, String>();
+	private HashMap<String, String> attrs = new HashMap<>();
 	private Graphic graphic = new Graphic();
 
 	private NvGraphicFramePr graphicFramePr = new NvGraphicFramePr();
@@ -70,7 +71,7 @@ public class GraphicFrame implements OOXMLElement
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		Graphic g = null;
 		NvGraphicFramePr gfp = null;
 		Xfrm x = null;
@@ -120,7 +121,7 @@ public class GraphicFrame implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "graphicFrame.parseOOXML: " + e.toString() );
+			log.error( "graphicFrame.parseOOXML: " + e.toString() );
 		}
 		GraphicFrame gf = new GraphicFrame( attrs, g, gfp, x );
 		return gf;
@@ -321,6 +322,7 @@ public class GraphicFrame implements OOXMLElement
  */
 class NvGraphicFramePr implements OOXMLElement
 {
+	private static final Logger log = LoggerFactory.getLogger( NvGraphicFramePr.class );
 	private static final long serialVersionUID = -47476384268955296L;
 	private CNvPr cp = new CNvPr();
 	private CNvGraphicFramePr nvpr = new CNvGraphicFramePr();
@@ -378,7 +380,7 @@ class NvGraphicFramePr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "nvGraphicFramePr.parseOOXML: " + e.toString() );
+			log.error( "nvGraphicFramePr.parseOOXML: " + e.toString() );
 		}
 		NvGraphicFramePr gfp = new NvGraphicFramePr( cp, nvpr );
 		return gfp;
@@ -502,9 +504,7 @@ class NvGraphicFramePr implements OOXMLElement
 // TODO: finish graphicFrameLocks
 class CNvGraphicFramePr implements OOXMLElement
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( CNvGraphicFramePr.class );
 	private static final long serialVersionUID = 769474804434194488L;
 
 	// private graphicFrameLocks gf= null;
@@ -546,7 +546,7 @@ class CNvGraphicFramePr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "cNvGraphicFramePr.parseOOXML: " + e.toString() );
+			log.error( "cNvGraphicFramePr.parseOOXML: " + e.toString() );
 		}
 		CNvGraphicFramePr cpr = new CNvGraphicFramePr();
 		return cpr;

@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 
@@ -91,9 +92,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class QsiSXTag extends XLSRecord implements XLSConstants
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( QsiSXTag.class );
 	private static final long serialVersionUID = 2639291289806138985L;
 	private short flags, ver, cchName;
 	private String name;
@@ -134,13 +133,10 @@ public class QsiSXTag extends XLSRecord implements XLSConstants
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logInfo( "encoding PivotTable name in QxiSXTag: " + e );
+				log.warn( "encoding PivotTable name in QxiSXTag: " + e, e );
 			}
 		}
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "QXISXTAG-" + " flags:" + flags + " verLast:" + verSxLastUpdated + " verMin:" + verSxUpdatableMin + " name:" + name );
-		}
+		log.debug( "QXISXTAG-" + " flags:" + flags + " verLast:" + verSxLastUpdated + " verMin:" + verSxUpdatableMin + " name:" + name );
 	}
 
 	/**
@@ -172,7 +168,7 @@ public class QsiSXTag extends XLSRecord implements XLSConstants
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logInfo( "encoding pivot table name in SXVI: " + e );
+				log.warn( "encoding pivot table name in SXVI: " + e, e );
 			}
 
 			//update the lengths:

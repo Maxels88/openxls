@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -63,9 +64,7 @@ import java.util.Arrays;
  */
 public class SxPI extends XLSRecord implements XLSConstants
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( SxPI.class );
 	private static final long serialVersionUID = 2639291289806138985L;
 	private SXPI_Item[] sxpis;
 
@@ -78,21 +77,18 @@ public class SxPI extends XLSRecord implements XLSConstants
 		{
 			if( (rgsxpi.length % 6) != 0 )
 			{
-				Logger.logWarn( "PivotTable: Irregular SxPI structure" );
+				log.warn( "PivotTable: Irregular SxPI structure" );
 			}
 			sxpis = new SXPI_Item[rgsxpi.length / 6];
 			for( int j = 0; j < sxpis.length; j++ )
 			{
 				sxpis[j] = new SXPI_Item( rgsxpi, j * 6 );
 			}
-			if( DEBUGLEVEL > 3 )
-			{
-				Logger.logInfo( "SXPI - n: " + sxpis.length + ": " + Arrays.toString( data ) );
-			}
+				log.debug( "SXPI - n: " + sxpis.length + ": " + Arrays.toString( data ) );
 		}
-		else if( DEBUGLEVEL > 3 )
+		else
 		{
-			Logger.logInfo( "SXPI - NULL" );
+			log.debug( "SXPI - NULL" );
 		}
 	}
 

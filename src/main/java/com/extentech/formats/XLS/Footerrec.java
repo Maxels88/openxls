@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>Footerrec: Print Footer on Each Page (15h)</b><br>
@@ -40,13 +41,10 @@ import com.extentech.toolkit.Logger;
  */
 public final class Footerrec extends com.extentech.formats.XLS.XLSRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Footerrec.class );
 	private static final long serialVersionUID = 227652250172483965L;
 	int cch = -1;
 	String rgch = "";
-	boolean DEBUG = false;
 
 	@Override
 	public void setSheet( Sheet bs )
@@ -92,7 +90,7 @@ public final class Footerrec extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logInfo( "setting Footer text failed: " + e );
+			log.warn( "setting Footer text failed: " + e );
 		}
 		this.rgch = t;
 	}
@@ -111,15 +109,12 @@ public final class Footerrec extends com.extentech.formats.XLS.XLSRecord
 		super.init();
 		if( this.getLength() > 4 )
 		{
-			int cch = (int) this.getByteAt( 0 );
+			int cch = this.getByteAt( 0 );
 			byte[] namebytes = this.getBytesAt( 0, this.getLength() - 4 );
 			Unicodestring fstr = new Unicodestring();
 			fstr.init( namebytes, false );
 			rgch = fstr.toString();
-			if( DEBUGLEVEL > DEBUG_LOW )
-			{
-				Logger.logInfo( "Footer text: " + this.getFooterText() );
-			}
+				log.debug( "Footer text: " + this.getFooterText() );
 		}
 	}
 

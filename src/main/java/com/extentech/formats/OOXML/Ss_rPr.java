@@ -26,7 +26,8 @@ import com.extentech.ExtenXLS.DocumentHandle;
 import com.extentech.ExtenXLS.FormatHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.formats.XLS.Font;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -43,9 +44,9 @@ import java.util.Iterator;
  */
 public class Ss_rPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Ss_rPr.class );
 	private static final long serialVersionUID = 8940630588129002652L;
-	private HashMap<String, String> attrs = new HashMap<String, String>();
+	private HashMap<String, String> attrs = new HashMap<>();
 	private Color color = null;
 
 	public Ss_rPr()
@@ -67,7 +68,7 @@ public class Ss_rPr implements OOXMLElement
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, WorkBookHandle bk )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		Color c = null;
 		try
 		{
@@ -151,7 +152,7 @@ public class Ss_rPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "rPr.parseOOXML: " + e.toString() );
+			log.error( "rPr.parseOOXML: " + e.toString() );
 		}
 		Ss_rPr r = new Ss_rPr( attrs, c );
 		return r;

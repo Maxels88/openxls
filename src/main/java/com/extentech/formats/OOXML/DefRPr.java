@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -43,7 +44,7 @@ import java.util.Stack;
 // TODO: FINISH CHILD ELEMENTS highlight TEXTUNDERLINE, TEXTUNDERLINEFILL, sym, hlinkClick, hlinkMouseOver
 public class DefRPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( DefRPr.class );
 	private static final long serialVersionUID = 6764149567499222506L;
 	private FillGroup fillGroup = null;
 	private EffectPropsGroup effect = null;
@@ -57,7 +58,7 @@ public class DefRPr implements OOXMLElement
 		EffectPropsGroup effect = null;
 		Ln l = null;
 		String latin = null, ea = null, cs = null;
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -121,7 +122,7 @@ public class DefRPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "defPr.parseOOXML: " + e.toString() );
+			log.error( "defPr.parseOOXML: " + e.toString() );
 		}
 		DefRPr dp = new DefRPr( fill, effect, l, attrs, latin, ea, cs );
 		return dp;
@@ -134,7 +135,7 @@ public class DefRPr implements OOXMLElement
 	 */
 	public HashMap<String, String> getTextProperties()
 	{
-		HashMap<String, String> textprops = new HashMap<String, String>();
+		HashMap<String, String> textprops = new HashMap<>();
 		textprops.putAll( attrs );
 		textprops.put( "latin_typeface", latin );
 		textprops.put( "ea_typeface", ea );
@@ -150,7 +151,7 @@ public class DefRPr implements OOXMLElement
 	 */
 	public DefRPr()
 	{
-		this.attrs = new HashMap<String, String>();
+		this.attrs = new HashMap<>();
 		this.attrs.put( "sz", "900" );
 		this.attrs.put( "b", "1" );
 		this.attrs.put( "i", "0" );
@@ -177,7 +178,7 @@ public class DefRPr implements OOXMLElement
 	 */
 	public DefRPr( String fontFace, int sz, boolean b, boolean i, String u, String strike, String clr )
 	{
-		this.attrs = new HashMap<String, String>();
+		this.attrs = new HashMap<>();
 		this.attrs.put( "sz", String.valueOf( sz ) );
 		this.attrs.put( "b", (b ? "1" : "0") );
 		this.attrs.put( "i", (i ? "1" : "0") );

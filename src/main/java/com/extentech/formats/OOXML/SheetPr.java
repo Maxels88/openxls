@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.OOXML;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -39,7 +40,7 @@ import java.util.Iterator;
 // TODO: Finish pageSetUpPr  + input into 2003 sheet settings **
 public class SheetPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( SheetPr.class );
 	private static final long serialVersionUID = 1781567781060400234L;
 	private HashMap<String, String> attrs;
 	private TabColor tab;
@@ -81,7 +82,7 @@ public class SheetPr implements OOXMLElement
 	 */
 	public static SheetPr parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		TabColor tab = null;
 		OutlinePr op = null;
 		PageSetupPr pr = null;
@@ -127,7 +128,7 @@ public class SheetPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "sheetPr.parseOOXML: " + e.toString() );
+			log.error( "sheetPr.parseOOXML: " + e.toString() );
 		}
 		SheetPr sp = new SheetPr( attrs, tab, op, pr );
 		return sp;
@@ -194,7 +195,7 @@ public class SheetPr implements OOXMLElement
 	{
 		if( attrs == null )
 		{
-			attrs = new HashMap<String, String>();
+			attrs = new HashMap<>();
 		}
 		attrs.put( "codeName", codename );
 	}
@@ -209,7 +210,7 @@ public class SheetPr implements OOXMLElement
  */
 class TabColor implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( TabColor.class );
 	private static final long serialVersionUID = -2862996863147633555L;
 	private HashMap<String, String> attrs;
 
@@ -225,7 +226,7 @@ class TabColor implements OOXMLElement
 
 	public static TabColor parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -255,7 +256,7 @@ class TabColor implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "tabColor.parseOOXML: " + e.toString() );
+			log.error( "tabColor.parseOOXML: " + e.toString() );
 		}
 		TabColor t = new TabColor( attrs );
 		return t;
@@ -293,7 +294,7 @@ class TabColor implements OOXMLElement
  */
 class OutlinePr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( OutlinePr.class );
 	private static final long serialVersionUID = 3030511803286369045L;
 	private HashMap<String, String> attrs;
 
@@ -309,7 +310,7 @@ class OutlinePr implements OOXMLElement
 
 	public static OutlinePr parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -339,7 +340,7 @@ class OutlinePr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "OutlinePr.parseOOXML: " + e.toString() );
+			log.error( "OutlinePr.parseOOXML: " + e.toString() );
 		}
 		OutlinePr op = new OutlinePr( attrs );
 		return op;
@@ -376,7 +377,7 @@ class OutlinePr implements OOXMLElement
  */
 class PageSetupPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( PageSetupPr.class );
 	private static final long serialVersionUID = 3030511803286369045L;
 	private boolean autoPageBreaks = true, fitToPage = false;
 
@@ -432,7 +433,7 @@ class PageSetupPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "PageSetupPr: " + e.toString() );
+			log.error( "PageSetupPr: " + e.toString() );
 		}
 		PageSetupPr pr = new PageSetupPr( autoPageBreaks, fitToPage );
 		return pr;

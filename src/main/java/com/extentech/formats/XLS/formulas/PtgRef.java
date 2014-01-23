@@ -35,8 +35,11 @@ import com.extentech.formats.XLS.WorkSheetNotFoundException;
 import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.formats.cellformat.CellFormatFactory;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 /**
  * ptgRef is a reference to a single cell.  It contains row and
@@ -68,11 +71,9 @@ import com.extentech.toolkit.StringTool;
  * @see Cell
  * @see XLSRecord
  */
-public class PtgRef extends GenericPtg implements Ptg
+public class PtgRef extends GenericPtg
 {
-	/**
-	 *
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgRef.class );
 	private static final long serialVersionUID = -7776520933300730470L;
 	protected int rw;
 	// TODO: We actually are talking about 2 different notions of relativity:
@@ -553,7 +554,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		}
 		else
 		{
-			Logger.logWarn( "PtgRef.setLocation() failed: NO record data: " + address );
+			log.warn( "PtgRef.setLocation() failed: NO record data: " + address );
 		}
 	}
 
@@ -785,7 +786,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		}
 		else
 		{
-			Logger.logWarn( "PtgRef.setLocation() failed: NO record data: " + rowcol.toString() );
+			log.warn( "PtgRef.setLocation() failed: NO record data: " + Arrays.toString( rowcol ) );
 		}
 	}
 
@@ -945,7 +946,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		}
 		else
 		{
-			Logger.logWarn( "PtgRef.setLocation() failed: NO record data: " + rowcol.toString() );
+			log.warn( "PtgRef.setLocation() failed: NO record data: " + Arrays.toString( rowcol ) );
 		}
 	}
 
@@ -1223,7 +1224,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		}
 		catch( Exception ex )
 		{
-			// no need to error here, sometimes this is called before its in Logger.logErr("PtgRef.removeFromRefTracker() failed.", ex);
+			// no need to error here, sometimes this is called before its in log.error("PtgRef.removeFromRefTracker() failed.", ex);
 		}
 	}
 
@@ -1244,7 +1245,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		}
 		catch( Exception ex )
 		{
-			Logger.logErr( "PtgRef.addToRefTracker() failed.", ex );
+			log.error( "PtgRef.addToRefTracker() failed.", ex );
 		}
 	}
 
@@ -1264,7 +1265,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		}
 		catch( Exception ex )
 		{
-			Logger.logErr( "updateInRefTracker() failed.", ex );
+			log.error( "updateInRefTracker() failed.", ex );
 		}
 	}
 
@@ -1328,7 +1329,7 @@ public class PtgRef extends GenericPtg implements Ptg
 		}
 		else
 		{ // TODO: convert to ref3d?
-			Logger.logWarn( "PtgRef.setExternalReference: unable to convert ref" );
+			log.warn( "PtgRef.setExternalReference: unable to convert ref" );
 		}
 	}
 

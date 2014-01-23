@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -39,7 +40,7 @@ import java.util.Stack;
  */
 public class Style implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Style.class );
 	private static final long serialVersionUID = -583023685473342509L;
 	private EffectRef effectRef;
 	private FontRef fontRef;
@@ -111,7 +112,7 @@ public class Style implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "style.parseOOXML: " + e.toString() );
+			log.error( "style.parseOOXML: " + e.toString() );
 		}
 		Style s = new Style( lr, flr, er, fr );
 		return s;
@@ -153,6 +154,7 @@ public class Style implements OOXMLElement
  */
 class EffectRef implements OOXMLElement
 {
+	private static final Logger log = LoggerFactory.getLogger( EffectRef.class );
 	private static final long serialVersionUID = -7572271663955122478L;
 	private int idx;
 	private ColorChoice colorChoice = null;
@@ -217,7 +219,7 @@ class EffectRef implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "effectRef.parseOOXML: " + e.toString() );
+			log.error( "effectRef.parseOOXML: " + e.toString() );
 		}
 		EffectRef er = new EffectRef( idx, c );
 		return er;
@@ -257,6 +259,8 @@ class EffectRef implements OOXMLElement
  */
 class FillRef implements OOXMLElement
 {
+	private static final Logger log = LoggerFactory.getLogger( FillRef.class );
+
 	private static final long serialVersionUID = 7691131082710785068L;
 	private int idx;
 	private ColorChoice colorChoice = null;
@@ -321,7 +325,7 @@ class FillRef implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "fillRef.parseOOXML: " + e.toString() );
+			log.error( "fillRef.parseOOXML: " + e.toString() );
 		}
 		FillRef fr = new FillRef( idx, c );
 		return fr;
@@ -357,7 +361,7 @@ class FillRef implements OOXMLElement
  */
 class FontRef implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( FontRef.class );
 	private static final long serialVersionUID = 2907761758443581273L;
 	private String idx = null;
 	private ColorChoice colorChoice = null;
@@ -422,7 +426,7 @@ class FontRef implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "fontRef.parseOOXML: " + e.toString() );
+			log.error( "fontRef.parseOOXML: " + e.toString() );
 		}
 		FontRef fr = new FontRef( idx, c );
 		return fr;
@@ -458,9 +462,7 @@ class FontRef implements OOXMLElement
  */
 class lnRef implements OOXMLElement
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( lnRef.class );
 	private static final long serialVersionUID = -4349076266006929729L;
 	private int idx;
 	private ColorChoice colorChoice = null;
@@ -525,7 +527,7 @@ class lnRef implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "lnRef.parseOOXML: " + e.toString() );
+			log.error( "lnRef.parseOOXML: " + e.toString() );
 		}
 		lnRef lr = new lnRef( idx, c );
 		return lr;

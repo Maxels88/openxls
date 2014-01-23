@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ import java.util.Stack;
  */
 public class GrpSp implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( GrpSp.class );
 	private static final long serialVersionUID = -3276180769601314853L;
 	private NvGrpSpPr nvpr = null;
 	private GrpSpPr sppr = null;
@@ -74,7 +75,7 @@ public class GrpSp implements OOXMLElement
 	{
 		NvGrpSpPr nvpr = null;
 		GrpSpPr sppr = null;
-		ArrayList<OOXMLElement> choice = new ArrayList<OOXMLElement>();
+		ArrayList<OOXMLElement> choice = new ArrayList<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -137,7 +138,7 @@ public class GrpSp implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "GrpSp.parseOOXML: " + e.toString() );
+			log.error( "GrpSp.parseOOXML: " + e.toString() );
 		}
 		GrpSp gf = new GrpSp( nvpr, sppr, choice );
 		return gf;
@@ -608,9 +609,7 @@ public class GrpSp implements OOXMLElement
  */
 class NvGrpSpPr implements OOXMLElement
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( NvGrpSpPr.class );
 	private static final long serialVersionUID = -4404072268706949318L;
 	CNvPr cp = null;
 	CNvGrpSpPr cgrpsppr = null;
@@ -664,7 +663,7 @@ class NvGrpSpPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "NvGrpSpPr.parseOOXML: " + e.toString() );
+			log.error( "NvGrpSpPr.parseOOXML: " + e.toString() );
 		}
 		NvGrpSpPr grpsppr = new NvGrpSpPr( cp, cgrpsppr );
 		return grpsppr;
@@ -782,7 +781,7 @@ class NvGrpSpPr implements OOXMLElement
 // TODO: FINISH scene3d, extLst
 class GrpSpPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( GrpSpPr.class );
 	private static final long serialVersionUID = 7464871024304781512L;
 	private Xfrm xf = null;
 	private String bwmode = null;
@@ -862,7 +861,7 @@ class GrpSpPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "GrpSpPr.parseOOXML: " + e.toString() );
+			log.error( "GrpSpPr.parseOOXML: " + e.toString() );
 		}
 		GrpSpPr g = new GrpSpPr( xf, bwmode, fill, effect );
 		return g;
@@ -910,7 +909,7 @@ class GrpSpPr implements OOXMLElement
  */
 class CNvGrpSpPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( CNvGrpSpPr.class );
 	private static final long serialVersionUID = -1106010927060582127L;
 	private GrpSpLocks gsl = null;
 
@@ -955,7 +954,7 @@ class CNvGrpSpPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "CNvGrpSpPr.parseOOXML: " + e.toString() );
+			log.error( "CNvGrpSpPr.parseOOXML: " + e.toString() );
 		}
 		CNvGrpSpPr c = new CNvGrpSpPr( gsl );
 		return c;
@@ -992,7 +991,7 @@ class CNvGrpSpPr implements OOXMLElement
  */
 class GrpSpLocks implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( GrpSpLocks.class );
 	private static final long serialVersionUID = -2592038952923879415L;
 	private HashMap<String, String> attrs;
 
@@ -1008,7 +1007,7 @@ class GrpSpLocks implements OOXMLElement
 
 	public static GrpSpLocks parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -1039,7 +1038,7 @@ class GrpSpLocks implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "CNvGrpSpPr.parseOOXML: " + e.toString() );
+			log.error( "CNvGrpSpPr.parseOOXML: " + e.toString() );
 		}
 		GrpSpLocks g = new GrpSpLocks( attrs );
 		return g;

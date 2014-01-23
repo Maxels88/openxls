@@ -24,7 +24,8 @@ package com.extentech.formats.XLS;
 
 import com.extentech.ExtenXLS.ExcelTools;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>NUMBER: BiffRec Value, Floating-Point Number (203h)</b><br>
@@ -46,10 +47,7 @@ import com.extentech.toolkit.Logger;
 
 public final class NumberRec extends XLSCellRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( NumberRec.class );
 	private static final long serialVersionUID = 7489308348300854345L;
 	//int t;
 	double fpnum;
@@ -105,10 +103,7 @@ public final class NumberRec extends XLSCellRecord
 //      get the long
 		fpnum = ByteTools.eightBytetoLEDouble( getBytesAt( 6, 8 ) );
 		setIsValueForCell( true );
-		if( DEBUGLEVEL > 5 )
-		{
-			Logger.logInfo( "NumberRec: " + getCellAddress() + ":" + getStringVal() );
-		}
+			log.trace( "NumberRec: " + getCellAddress() + ":" + getStringVal() );
 
 		String d = String.valueOf( fpnum );
 		if( d.length() > 12 )
@@ -203,7 +198,7 @@ public final class NumberRec extends XLSCellRecord
 	@Override
 	public void setIntVal( int i )
 	{
-		double d = (double) i;
+		double d = i;
 		setNumberVal( d );
 	}
 

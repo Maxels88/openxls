@@ -24,7 +24,8 @@ package com.extentech.formats.XLS;
 
 import com.extentech.ExtenXLS.ExcelTools;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>Colinfo: Column Formatting Information (7Dh)</b><br>
@@ -61,9 +62,7 @@ import com.extentech.toolkit.Logger;
 
 public final class Colinfo extends XLSRecord implements ColumnRange
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Colinfo.class );
 	private static final long serialVersionUID = 3048724897018541459L;
 	public static final int DEFAULT_COLWIDTH = 2340;    // why 2000???? excel reports 2340 ...?
 	private int colFirst, colLast, colWidth;
@@ -118,17 +117,14 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 	public void init()
 	{
 		super.init();
-		colFirst = (int) ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		colLast = (int) ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		colWidth = (int) ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		ixfe = (int) ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
+		colFirst = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		colLast = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
+		colWidth = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
+		ixfe = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
 		grbit = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
 		decodeGrbit();
-		if( DEBUGLEVEL > 5 )
-		{
-			Logger.logInfo( "Col: " + ExcelTools.getAlphaVal( colFirst ) + "-" + ExcelTools.getAlphaVal( colLast ) + "  ixfe: " + String.valueOf(
+			log.trace( "Col: " + ExcelTools.getAlphaVal( colFirst ) + "-" + ExcelTools.getAlphaVal( colLast ) + "  ixfe: " + String.valueOf(
 					ixfe ) + " width: " + colWidth );
-		}
 	}
 
 	public static Colinfo getPrototype( int colF, int colL, int wide, int formatIdx )
@@ -203,7 +199,7 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 		x = (int) (x + fudgefactor) * 256.0;
 		byte[] cl = ByteTools.shortToLEBytes( (short) x );
 		System.arraycopy( cl, 0, this.getData(), 4, 2 );
-		colWidth = (int) ByteTools.readShort( this.getData()[4], this.getData()[5] );
+		colWidth = ByteTools.readShort( this.getData()[4], this.getData()[5] );
 		// 20060609 KSC: APPEARS THAT grbit=0 means default column width so must set to either 2 or 6 ---
 		// there is NO documentation on this!
 		if( grbit == 0 )

@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.OOXML;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -36,7 +37,7 @@ import java.util.Stack;
  */
 public final class Layout implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Layout.class );
 	private static final long serialVersionUID = -6547994902298821138L;
 	private ManualLayout ml;
 
@@ -128,7 +129,7 @@ public final class Layout implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "layout.parseOOXML: " + e.toString() );
+			log.error( "layout.parseOOXML: " + e.toString() );
 		}
 		Layout l = new Layout( ml );
 		return l;
@@ -195,7 +196,7 @@ public final class Layout implements OOXMLElement
  */
 class ManualLayout implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( ManualLayout.class );
 	private static final long serialVersionUID = 6460833211809500902L;
 	String[] modes; // xMode, yMode, wMode, hMode 
 	String[] offs;    // x, y, w, h;
@@ -291,7 +292,7 @@ class ManualLayout implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "manualLayout.parseOOXML: " + e.toString() );
+			log.error( "manualLayout.parseOOXML: " + e.toString() );
 		}
 		ManualLayout l = new ManualLayout( target, modes, offs );
 		return l;

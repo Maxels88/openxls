@@ -23,14 +23,15 @@
 package com.extentech.formats.XLS.charts;
 
 import com.extentech.formats.XLS.WorkBook;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class StackedAreaChart extends AreaChart
 {
-
+	private static final Logger log = LoggerFactory.getLogger( StackedAreaChart.class );
 	public StackedAreaChart( GenericChartObject charttype, ChartFormat cf, WorkBook wb )
 	{
 		super( charttype, cf, wb );
@@ -70,7 +71,7 @@ public class StackedAreaChart extends AreaChart
 		// y value for each point= h/YMAX 
 		if( series.size() == 0 )
 		{
-			Logger.logErr( "Area.getSVG: error in series" );
+			log.error( "Area.getSVG: error in series" );
 			return "";
 		}
 		StringBuffer svg = new StringBuffer();

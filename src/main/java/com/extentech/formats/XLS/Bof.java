@@ -24,7 +24,8 @@ package com.extentech.formats.XLS;
 
 import com.extentech.formats.LEO.InvalidFileException;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <pre><b>Bof: Beginning of File Stream 0x809</b><br>
@@ -42,7 +43,7 @@ import com.extentech.toolkit.Logger;
  */
 public final class Bof extends UnencryptedXLSRecord
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Bof.class );
 	private static final long serialVersionUID = 3005631881544437570L;
 	short grbit;
 	String xlsver = "";
@@ -102,7 +103,7 @@ public final class Bof extends UnencryptedXLSRecord
 		oldlen = this.getLength();
 		if( oldlen < 16 )
 		{
-			Logger.logErr( "Not Excel '97 (BIFF8) or later version.  Unsupported file format." );
+			log.error( "Not Excel '97 (BIFF8) or later version.  Unsupported file format." );
 			throw new InvalidFileException( "InvalidFileException: Not Excel '97 (BIFF8) or later version.  Unsupported file format." );
 		}
 	}

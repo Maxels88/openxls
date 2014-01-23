@@ -25,15 +25,17 @@ package com.extentech.formats.XLS.charts;
 import com.extentech.ExtenXLS.ChartSeriesHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.formats.XLS.WorkBook;
-import com.extentech.toolkit.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BarChart extends ChartType
 {
+	private static final Logger log = LoggerFactory.getLogger( BarChart.class );
 	protected Bar bar = null;
 
 	public BarChart( GenericChartObject charttype, ChartFormat cf, WorkBook wb )
@@ -249,7 +251,7 @@ public class BarChart extends ChartType
 		String[] legends = s.getLegends();
 		if( series.size() == 0 )
 		{
-			Logger.logErr( "Bar.getSVG: error in series" );
+			log.error( "Bar.getSVG: error in series" );
 			return "";
 		}
 		StringBuffer svg = new StringBuffer();

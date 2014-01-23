@@ -26,7 +26,8 @@ import com.extentech.ExtenXLS.CellRange;
 import com.extentech.ExtenXLS.ExcelTools;
 import com.extentech.formats.XLS.SxAddl.SxcCache;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -38,9 +39,7 @@ import java.util.ArrayList;
  */
 public class SxStreamID extends XLSRecord implements XLSConstants
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( SxStreamID.class );
 	private short streamId = -1;
 	private static final long serialVersionUID = 2639291289806138985L;
 	private ArrayList subRecs = new ArrayList();
@@ -53,10 +52,7 @@ public class SxStreamID extends XLSRecord implements XLSConstants
 	{
 		super.init();
 		streamId = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "SXSTREAMID: streamid:" + streamId );
-		}
+			log.debug( "SXSTREAMID: streamid:" + streamId );
 	}
 
 	/**
@@ -121,7 +117,7 @@ public class SxStreamID extends XLSRecord implements XLSConstants
 			{
 				if( ((SxVS) br).getSourceType() != SxVS.TYPE_SHEET )
 				{
-					Logger.logErr( "SXSTREAMID.getCellRange:  Pivot Table Data Sources other than Sheet are not supported" );
+					log.error( "SXSTREAMID.getCellRange:  Pivot Table Data Sources other than Sheet are not supported" );
 					return null;
 				}
 			}
@@ -131,12 +127,12 @@ public class SxStreamID extends XLSRecord implements XLSConstants
 			}
 			else if( br.getOpcode() == DCONNAME )
 			{
-				Logger.logErr( "SXSTREAMID.getCellRange:  Name sources are not yet supported" );
+				log.error( "SXSTREAMID.getCellRange:  Name sources are not yet supported" );
 				return null;
 			}
 			else if( br.getOpcode() == DCONBIN )
 			{
-				Logger.logErr( "SXSTREAMID.getCellRange:  Name sources are not yet supported" );
+				log.error( "SXSTREAMID.getCellRange:  Name sources are not yet supported" );
 				return null;
 			}
 		}
@@ -157,7 +153,7 @@ public class SxStreamID extends XLSRecord implements XLSConstants
 			{
 				if( ((SxVS) br).getSourceType() != SxVS.TYPE_SHEET )
 				{
-					Logger.logErr( "SXSTREAMID.setCellRange:  Pivot Table Data Sources other than Sheet are not supported" );
+					log.error( "SXSTREAMID.setCellRange:  Pivot Table Data Sources other than Sheet are not supported" );
 					return;
 				}
 			}
@@ -168,12 +164,12 @@ public class SxStreamID extends XLSRecord implements XLSConstants
 			}
 			else if( br.getOpcode() == DCONNAME )
 			{
-				Logger.logErr( "SXSTREAMID.getCellRange:  Name sources are not yet supported" );
+				log.error( "SXSTREAMID.getCellRange:  Name sources are not yet supported" );
 				return;
 			}
 			else if( br.getOpcode() == DCONBIN )
 			{
-				Logger.logErr( "SXSTREAMID.getCellRange:  Name sources are not yet supported" );
+				log.error( "SXSTREAMID.getCellRange:  Name sources are not yet supported" );
 				return;
 			}
 		}
@@ -193,7 +189,7 @@ public class SxStreamID extends XLSRecord implements XLSConstants
 			{
 				if( ((SxVS) br).getSourceType() != SxVS.TYPE_SHEET )
 				{
-					Logger.logErr( "SXSTREAMID.setCellRange:  Pivot Table Data Sources other than Sheet are not supported" );
+					log.error( "SXSTREAMID.setCellRange:  Pivot Table Data Sources other than Sheet are not supported" );
 					return;
 				}
 			}
@@ -204,12 +200,12 @@ public class SxStreamID extends XLSRecord implements XLSConstants
 			}
 			else if( br.getOpcode() == DCONNAME )
 			{
-				Logger.logErr( "SXSTREAMID.getCellRange:  Name sources are not yet supported" );
+				log.error( "SXSTREAMID.getCellRange:  Name sources are not yet supported" );
 				return;
 			}
 			else if( br.getOpcode() == DCONBIN )
 			{
-				Logger.logErr( "SXSTREAMID.getCellRange:  Name sources are not yet supported" );
+				log.error( "SXSTREAMID.getCellRange:  Name sources are not yet supported" );
 				return;
 			}
 		}
@@ -232,7 +228,7 @@ public class SxStreamID extends XLSRecord implements XLSConstants
 		if( bk.getName( ref ) != null )
 		{
 			// DConName or DConBin
-			Logger.logErr( "PivotCache:  Name Data Sources are Not Supported" );
+			log.error( "PivotCache:  Name Data Sources are Not Supported" );
 		}
 		else
 		{    // assume it's a regular reference

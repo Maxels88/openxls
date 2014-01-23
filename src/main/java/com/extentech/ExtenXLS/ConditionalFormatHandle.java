@@ -24,7 +24,8 @@ package com.extentech.ExtenXLS;
 
 import com.extentech.formats.XLS.Cf;
 import com.extentech.formats.XLS.Condfmt;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -48,7 +49,7 @@ import java.util.ArrayList;
  */
 public class ConditionalFormatHandle implements Handle
 {
-
+	private static final Logger log = LoggerFactory.getLogger( ConditionalFormatHandle.class );
 	private Condfmt cndfmt = null;
 	private WorkSheetHandle worksheet;
 
@@ -199,7 +200,7 @@ public class ConditionalFormatHandle implements Handle
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Problem getting range for ConditionalFormatHandle.getXML().", e );
+			log.error( "Problem getting range for ConditionalFormatHandle.getXML().", e );
 		}
 		xml.append( ">" );
 		if( rules[0].getFirstCondition() != null )

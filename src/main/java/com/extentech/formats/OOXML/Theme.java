@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -36,7 +37,7 @@ import java.io.InputStream;
  */
 public class Theme implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Theme.class );
 	private static final long serialVersionUID = -9201334460078323287L;
 	/**
 	 * Generic "Office" Color Scheme TODO: Read from theme1.xml
@@ -192,7 +193,7 @@ public class Theme implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Theme.parseOOXML: " + e.toString() );
+			log.error( "Theme.parseOOXML: " + e.toString() );
 		}
 		return;
 	}

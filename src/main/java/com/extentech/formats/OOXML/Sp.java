@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -43,7 +44,7 @@ import java.util.Stack;
  */
 public class Sp implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Sp.class );
 	private static final long serialVersionUID = 7454285931503575078L;
 	private NvSpPr nvsp;
 	private SpPr sppr;
@@ -82,7 +83,7 @@ public class Sp implements OOXMLElement
 		SpPr sppr = null;
 		Style sty = null;
 		TxBody txb = null;
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -134,7 +135,7 @@ public class Sp implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "sp.parseOOXML: " + e.toString() );
+			log.error( "sp.parseOOXML: " + e.toString() );
 		}
 		Sp shp = new Sp( nvsp, sppr, sty, txb, attrs );
 		return shp;
@@ -342,7 +343,7 @@ public class Sp implements OOXMLElement
  */
 class NvSpPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( NvSpPr.class );
 	private static final long serialVersionUID = 9121235009516398367L;
 	private CNvPr cnv = null;
 	private CNvSpPr cnvsp = null;
@@ -396,7 +397,7 @@ class NvSpPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "txBody.parseOOXML: " + e.toString() );
+			log.error( "txBody.parseOOXML: " + e.toString() );
 		}
 		NvSpPr nvp = new NvSpPr( cnv, cnvsp );
 		return nvp;
@@ -513,7 +514,7 @@ class NvSpPr implements OOXMLElement
  */
 class CNvSpPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( CNvSpPr.class );
 	private static final long serialVersionUID = 7895953516797436713L;
 	private String txBox = null;
 	private SpLocks sp = null;
@@ -573,7 +574,7 @@ class CNvSpPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "cNvSpPr.parseOOXML: " + e.toString() );
+			log.error( "cNvSpPr.parseOOXML: " + e.toString() );
 		}
 		CNvSpPr cnv = new CNvSpPr( txBox, sp );
 		return cnv;
@@ -615,7 +616,7 @@ class CNvSpPr implements OOXMLElement
  */
 class SpLocks implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( SpLocks.class );
 	private static final long serialVersionUID = -3805557220039550941L;
 	private HashMap<String, String> attrs = null;
 
@@ -631,7 +632,7 @@ class SpLocks implements OOXMLElement
 
 	public static SpLocks parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -662,7 +663,7 @@ class SpLocks implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "spLocks.parseOOXML: " + e.toString() );
+			log.error( "spLocks.parseOOXML: " + e.toString() );
 		}
 		SpLocks sp = new SpLocks( attrs );
 		return sp;

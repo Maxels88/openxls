@@ -24,7 +24,8 @@ package com.extentech.formats.XLS;
 
 import com.extentech.ExtenXLS.DateConverter;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -53,9 +54,7 @@ import java.util.Locale;
  */
 public class SxAddl extends XLSRecord implements XLSConstants
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( SxAddl.class );
 	private static final long serialVersionUID = 2639291289806138985L;
 	private short sxc, sxd;
 
@@ -254,31 +253,19 @@ public class SxAddl extends XLSRecord implements XLSConstants
 								}
 								catch( UnsupportedEncodingException e )
 								{
-									Logger.logInfo( "encoding PivotTable caption name in Sxvd: " + e );
+									log.warn( "encoding PivotTable caption name in Sxvd: " + e, e );
 								}
-								if( DEBUGLEVEL > 3 )
-								{
-									Logger.logInfo( "SXADDL_sxcView: record=" + record + " name: " + name );
-								}
+									log.debug( "SXADDL_sxcView: record=" + record + " name: " + name );
 							}
-							else if( DEBUGLEVEL > 3 )
-							{
-								Logger.logInfo( "SXADDL_sxcView: record=" + record + " name: MULTIPLESEGMENTS" );
-							}
+								log.debug( "SXADDL_sxcView: record=" + record + " name: MULTIPLESEGMENTS" );
 						}
-						else if( DEBUGLEVEL > 3 )
-						{
-							Logger.logInfo( "SXADDL_sxcView: record=" + record + " name: null" );
-						}
+							log.debug( "SXADDL_sxcView: record=" + record + " name: null" );
 						break;
 					case sxdVer10Info:
 					case sxdTableStyleClient:
 					case sxdVerUpdInv:
-						if( DEBUGLEVEL > 3 )
-						{
-							Logger.logInfo( "SXADDL_sxcView: record=" + record + " data:" + Arrays.toString( this.getBytesAt( 6,
+							log.debug( "SXADDL_sxcView: record=" + record + " data:" + Arrays.toString( this.getBytesAt( 6,
 							                                                                                                  len - 6 ) ) );
-						}
 						break;
 				}
 				break;
@@ -291,30 +278,21 @@ public class SxAddl extends XLSRecord implements XLSConstants
 						byte verRefreshMin = this.getByteAt( 17 );
 						double lastdate = ByteTools.eightBytetoLEDouble( this.getBytesAt( 18, 8 ) );
 						java.util.Date ld = DateConverter.getDateFromNumber( lastdate );
-						if( DEBUGLEVEL > 3 )
-						{
 							java.text.DateFormat dateFormatter = java.text.DateFormat.getDateInstance( java.text.DateFormat.DEFAULT,
 							                                                                           Locale.getDefault() );
-							Logger.logInfo( "SXADDL_sxcCache: record=" + crec +
+							log.debug( "SXADDL_sxcCache: record=" + crec +
 									                " lastDate:" + dateFormatter.format( ld ) + " verLast:" + verLastRefresh + " verMin:" + verRefreshMin );
-						}
 						break;
 					default:
-						if( DEBUGLEVEL > 3 )
-						{
-							Logger.logInfo( "SXADDL_sxcCache: record=" + crec + " data:" + Arrays.toString( this.getBytesAt( 6,
+							log.debug( "SXADDL_sxcCache: record=" + crec + " data:" + Arrays.toString( this.getBytesAt( 6,
 							                                                                                                 len - 6 ) ) );
-						}
 						break;
 				}
 
 				break;
 			case sxcField12:
 				SxcField12 srec = SxcField12.lookup( sxd );
-				if( DEBUGLEVEL > 3 )
-				{
-					Logger.logInfo( "SXADDL_sxcField12: record=" + srec + " data:" + Arrays.toString( this.getBytesAt( 6, len - 6 ) ) );
-				}
+					log.debug( "SXADDL_sxcField12: record=" + srec + " data:" + Arrays.toString( this.getBytesAt( 6, len - 6 ) ) );
 				break;
 			case sxcField:
 			case sxcHierarchy:
@@ -334,11 +312,8 @@ public class SxAddl extends XLSRecord implements XLSConstants
 			case sxcSxcondfmt:
 			case sxcSxfilters12:
 			case sxcSxfilter12:
-				if( DEBUGLEVEL > 3 )
-				{
-					Logger.logInfo( "SXADDL: hdr: " + " sxc:" + sxc + " sxd:" + sxd + " data:" + Arrays.toString( this.getBytesAt( 6,
+					log.debug( "SXADDL: hdr: " + " sxc:" + sxc + " sxd:" + sxd + " data:" + Arrays.toString( this.getBytesAt( 6,
 					                                                                                                               len - 6 ) ) );
-				}
 				break;
 		}
 	}
@@ -429,7 +404,7 @@ public class SxAddl extends XLSRecord implements XLSConstants
 	{
 		if( (sxc != 0) && (sxd != 0) )
 		{
-			Logger.logErr( "Incorrect SXADDL_ record for view name" );
+			log.error( "Incorrect SXADDL_ record for view name" );
 		}
 
 		byte[] data = new byte[14];
@@ -441,7 +416,7 @@ public class SxAddl extends XLSRecord implements XLSConstants
 		}
 		catch( UnsupportedEncodingException e )
 		{
-			Logger.logInfo( "encoding pivot view name in SXADDL: " + e );
+			log.warn( "encoding pivot view name in SXADDL: " + e, e );
 		}
 
 		// update the lengths:

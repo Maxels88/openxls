@@ -23,9 +23,10 @@
 package com.extentech.ExtenXLS;
 
 import com.extentech.toolkit.CompatibleBigDecimal;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.ResourceLoader;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,7 +46,7 @@ import java.util.StringTokenizer;
 
 public class ExcelTools implements java.io.Serializable
 {
-
+	private static final Logger log = LoggerFactory.getLogger( ExcelTools.class );
 	private static final long serialVersionUID = 7622857355626065370L;
 
 	/**
@@ -292,7 +293,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 				{
 					if( o instanceof Number )
 					{
-						Logger.logWarn( "Unable to format date in " + pattern );
+						log.warn( "Unable to format date in " + pattern );
 					}
 				}
 			}
@@ -300,7 +301,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 			{
 				if( o instanceof Number )
 				{
-					Logger.logWarn( "Unable to format date in " + pattern );
+					log.warn( "Unable to format date in " + pattern );
 				}
 			}
 		}
@@ -583,9 +584,9 @@ return WorkBookHandle.simpledateformat.format(d);*/
 			{
 				usedmem *= -1;
 			}
-			Logger.logInfo( getLogDate() + " " + info );
-			Logger.logInfo( " time: " + elapsedsec + " millis" );
-			Logger.logInfo( " mem: " + usedmem + " bytes." );
+			log.info( getLogDate() + " " + info );
+			log.info( " time: " + elapsedsec + " millis" );
+			log.info( " mem: " + usedmem + " bytes." );
 		}
 		else
 		{
@@ -1659,7 +1660,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 		// Trap errors in range
 		// if (firstcellrow < 0 || lastcellrow < 0 || firstcellcol < 0 ||
 		// lastcellcol < 0)
-		// Logger.logErr("ExcelTools.getRangeCoords: Error in Range " + range);
+		// log.error("ExcelTools.getRangeCoords: Error in Range " + range);
 		return coords;
 	}
 }

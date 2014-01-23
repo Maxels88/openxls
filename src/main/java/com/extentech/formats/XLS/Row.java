@@ -24,7 +24,8 @@ package com.extentech.formats.XLS;
 
 import com.extentech.ExtenXLS.FormatHandle;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -82,7 +83,7 @@ import java.util.List;
 
 public final class Row extends com.extentech.formats.XLS.XLSRecord
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Row.class );
 	private static final long serialVersionUID = 6848429681761792740L;
 
 	private short colMic, colMac;
@@ -108,8 +109,8 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 		this.setOpcode( ROW );
 		byte[] dta = new byte[defaultsize];
 		dta[6] = (byte) 0xff;
-		dta[13] = (byte) 0x1;
-		dta[14] = (byte) 0xf;
+		dta[13] = 0x1;
+		dta[14] = 0xf;
 		this.setData( dta );
 		this.originalsize = defaultsize;
 		this.init();
@@ -134,10 +135,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setRowHeight( int x )
 	{
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "Updating Row Height: " + this.getRowNumber() + " to: " + x );
-		}
+			log.debug( "Updating Row Height: " + this.getRowNumber() + " to: " + x );
 		fUnsynced = true;  // set bit 6 = row height and default font DO NOT MATCH
 		updateGrbit();
 		// 10      miyRw       2       Row Height
@@ -165,10 +163,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	@Override
 	public void setRowNumber( int n )
 	{
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "Updating Row Number: " + this.getRowNumber() + " to: " + n );
-		}
+			log.debug( "Updating Row Number: " + this.getRowNumber() + " to: " + n );
 		rw = n;
 		byte[] rwb = ByteTools.shortToLEBytes( (short) rw );
 		System.arraycopy( rwb, 0, this.getData(), 0, 2 );
@@ -307,7 +302,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public BiffRec getCell( short d ) throws CellNotFoundException
 	{
-		return this.getSheet().getCell( this.getRowNumber(), (int) d );
+		return this.getSheet().getCell( this.getRowNumber(), d );
 	}
 
 	/**
@@ -323,7 +318,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 		{
 			// no cells in this row
 		}
-		return new ArrayList<BiffRec>();
+		return new ArrayList<>();
 	}
 
 	/**
@@ -408,7 +403,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 		rw = ByteTools.readUnsignedShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
 		colMic = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
 		colMac = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		miyRw = (int) ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
+		miyRw = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
 
 		// bytes 8 - 11 are reserved		
 		byte byte12 = this.getByteAt( 12 );
@@ -470,10 +465,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 		}
 		else
 		{
-			if( DEBUGLEVEL > -1 )
-			{
-				Logger.logWarn( "Missing Boundsheet in Row.prestream for Row: " + this.getRowNumber() + this.getCellAddress() );
-			}
+				log.warn( "Missing Boundsheet in Row.prestream for Row: " + this.getRowNumber() + this.getCellAddress() );
 		}
 
 		byte[] data = new byte[16];

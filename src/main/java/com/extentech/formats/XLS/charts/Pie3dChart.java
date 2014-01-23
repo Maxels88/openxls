@@ -23,13 +23,15 @@
 package com.extentech.formats.XLS.charts;
 
 import com.extentech.formats.XLS.WorkBook;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Pie3dChart extends PieChart
 {
+	private static final Logger log = LoggerFactory.getLogger( Pie3dChart.class );
 	public Pie3dChart( GenericChartObject charttype, ChartFormat cf, WorkBook wb )
 	{
 		super( charttype, cf, wb );
@@ -59,7 +61,7 @@ public class Pie3dChart extends PieChart
 		StringBuffer svg = new StringBuffer();
 		if( series.size() == 0 )
 		{
-			Logger.logErr( "Pie.getSVG: error in series" );
+			log.error( "Pie.getSVG: error in series" );
 			return "";
 		}
 		int[] dls = getDataLabelInts(); // get array of data labels (can be specific per series ...)

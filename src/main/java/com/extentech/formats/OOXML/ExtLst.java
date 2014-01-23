@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.OOXML;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -31,14 +32,14 @@ import java.util.Stack;
 // TODO: FINISH
 public class ExtLst implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( ExtLst.class );
 	private static final long serialVersionUID = -4122012942547055359L;
 	private HashMap<String, String> attrs = null;
 	private String nameSpace = null;
 
 	public ExtLst()
 	{
-		attrs = new HashMap<String, String>();
+		attrs = new HashMap<>();
 		attrs.put( "cx", new String( "0" ) );
 		attrs.put( "cy", new String( "0" ) );
 	}
@@ -57,7 +58,7 @@ public class ExtLst implements OOXMLElement
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		String ns = null;
 		try
 		{
@@ -90,7 +91,7 @@ public class ExtLst implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "extLst.parseOOXML: " + e.toString() );
+			log.error( "extLst.parseOOXML: " + e.toString() );
 		}
 		Ext e = new Ext( attrs, ns );
 		return e;

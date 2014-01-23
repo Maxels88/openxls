@@ -22,6 +22,9 @@
  */
 package com.extentech.toolkit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.File;
@@ -32,7 +35,7 @@ import java.io.InputStream;
 
 public class InFile extends DataInputStream
 {
-
+	private static final Logger log = LoggerFactory.getLogger( InFile.class );
 	StringBuffer sb = new StringBuffer();
 
 	public InFile( String filename ) throws FileNotFoundException
@@ -67,11 +70,11 @@ public class InFile extends DataInputStream
 		}
 		catch( FileNotFoundException e )
 		{
-			Logger.logInfo( "FNF Exception in InFile: " + e );
+			log.error( "FNF Exception in InFile: " + e, e );
 		}
 		catch( IOException e )
 		{
-			Logger.logInfo( "IO Exception in InFile: " + e );
+			log.error( "IO Exception in InFile: " + e, e );
 		}
 		return sb.toString();
 	}

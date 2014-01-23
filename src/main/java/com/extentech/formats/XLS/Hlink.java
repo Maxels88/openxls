@@ -25,7 +25,8 @@ package com.extentech.formats.XLS;
 import com.extentech.ExtenXLS.CellRange;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -49,100 +50,11 @@ import java.io.UnsupportedEncodingException;
  */
 public final class Hlink extends XLSRecord
 {
-
-	private static final long serialVersionUID = -4259979643231173799L;
 	int colFirst = -1, colLast = -1, rowFirst = -1, rowLast = -1;
+	private static final Logger log = LoggerFactory.getLogger( Hlink.class );
+	private static final long serialVersionUID = -4259979643231173799L;
 	private HLinkStruct linkStruct = null;
-
-	/**
-	 * set last/first cols/rows
-	 */
-	public void setRowFirst( int c )
-	{
-		byte[] b = ByteTools.shortToLEBytes( (short) c );
-		byte[] dt = this.getData();
-		System.arraycopy( b, 0, dt, 0, 2 );
-		this.rowFirst = c;
-	}
-
-	public int getRowFirst()
-	{
-		return rowFirst;
-	}
-
-	/**
-	 * set last/first cols/rows
-	 */
-	public void setRowLast( int c )
-	{
-		byte[] b = ByteTools.shortToLEBytes( (short) c );
-		byte[] dt = this.getData();
-		System.arraycopy( b, 0, dt, 2, 2 );
-		this.rowLast = c;
-	}
-
-	public int getRowLast()
-	{
-		return rowLast;
-	}
-
-	/**
-	 * set last/first cols/rows
-	 */
-	public void setColFirst( int c )
-	{
-		byte[] b = ByteTools.shortToLEBytes( (short) c );
-		byte[] dt = this.getData();
-		System.arraycopy( b, 0, dt, 4, 2 );
-		this.colFirst = c;
-	}
-
-	public int getColFirst()
-	{
-		return colFirst;
-	}
-
-	/**
-	 * set last/first cols/rows
-	 */
-	public void setColLast( int c )
-	{
-		byte[] b = ByteTools.shortToLEBytes( (short) c );
-		byte[] dt = this.getData();
-		System.arraycopy( b, 0, dt, 6, 2 );
-		this.colLast = c;
-	}
-
-	public int getColLast()
-	{
-		return colLast;
-	}
-
-	/**
-	 * get the URL for this Hlink
-	 */
-	public String getURL()
-	{
-		if( linkStruct == null )
-		{
-			return "";
-		}
-		return linkStruct.getUrl();
-	}
-
-	/**
-	 * return the description part of the hyperlink
-	 *
-	 * @return
-	 */
-	public String getDescription()
-	{
-		if( linkStruct == null )
-		{
-			return "";
-		}
-		return linkStruct.getLinkText();
-	}
+	private CellRange range = null;
 
 	public static XLSRecord getPrototype()
 	{
@@ -216,6 +128,96 @@ public final class Hlink extends XLSRecord
 		return retlab;
 	}
 
+	public int getRowFirst()
+	{
+		return rowFirst;
+	}
+
+	/**
+	 * set last/first cols/rows
+	 */
+	public void setRowFirst( int c )
+	{
+		byte[] b = ByteTools.shortToLEBytes( (short) c );
+		byte[] dt = this.getData();
+		System.arraycopy( b, 0, dt, 0, 2 );
+		this.rowFirst = c;
+	}
+
+	public int getRowLast()
+	{
+		return rowLast;
+	}
+
+	/**
+	 * set last/first cols/rows
+	 */
+	public void setRowLast( int c )
+	{
+		byte[] b = ByteTools.shortToLEBytes( (short) c );
+		byte[] dt = this.getData();
+		System.arraycopy( b, 0, dt, 2, 2 );
+		this.rowLast = c;
+	}
+
+	public int getColFirst()
+	{
+		return colFirst;
+	}
+
+	/**
+	 * set last/first cols/rows
+	 */
+	public void setColFirst( int c )
+	{
+		byte[] b = ByteTools.shortToLEBytes( (short) c );
+		byte[] dt = this.getData();
+		System.arraycopy( b, 0, dt, 4, 2 );
+		this.colFirst = c;
+	}
+
+	public int getColLast()
+	{
+		return colLast;
+	}
+
+	/**
+	 * set last/first cols/rows
+	 */
+	public void setColLast( int c )
+	{
+		byte[] b = ByteTools.shortToLEBytes( (short) c );
+		byte[] dt = this.getData();
+		System.arraycopy( b, 0, dt, 6, 2 );
+		this.colLast = c;
+	}
+
+	/**
+	 * get the URL for this Hlink
+	 */
+	public String getURL()
+	{
+		if( linkStruct == null )
+		{
+			return "";
+		}
+		return linkStruct.getUrl();
+	}
+
+	/**
+	 * return the description part of the hyperlink
+	 *
+	 * @return
+	 */
+	public String getDescription()
+	{
+		if( linkStruct == null )
+		{
+			return "";
+		}
+		return linkStruct.getLinkText();
+	}
+
 	/**
 	 * set link URL with description and test mark
 	 * note that either url or text mark must be present ...
@@ -228,16 +230,16 @@ public final class Hlink extends XLSRecord
 	{
 		try
 		{
-			if( url.equals( "" ) && textMark.equals( "" ) )
+			if( url.isEmpty() && textMark.isEmpty() )
 			{
-				Logger.logWarn( "HLINK.setURL:  no url or text mark specified" );
+				log.warn( "HLINK.setURL:  no url or text mark specified" );
 				return;
 			}
 			linkStruct.setUrl( url, desc, textMark );
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "setting URL " + url + " failed: " + e );
+			log.warn( "setting URL " + url + " failed: " + e );
 		}
 		byte[] bt = linkStruct.getBytes();
 		this.setData( bt );
@@ -251,7 +253,7 @@ public final class Hlink extends XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "setting URL " + url + " failed: " + e );
+			log.warn( "setting URL " + url + " failed: " + e );
 		}
 		byte[] bt = linkStruct.getBytes();
 		this.setData( bt );
@@ -270,23 +272,21 @@ public final class Hlink extends XLSRecord
 		return false;
 	}
 
-	private CellRange range = null;
-
 	@Override
 	public void init()
 	{
 		super.init();
 		int pos = 0;
-		rowFirst = (int) ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );
-		rowLast = (int) ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );
-		colFirst = (int) ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );
-		colLast = (int) ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );
+		rowFirst = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );
+		rowLast = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );
+		colFirst = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );
+		colLast = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );
 		Unicodestring ustr = new Unicodestring();
 
 		String nm = "";
 		if( this.getSheet() != null )
 		{
-			if( !this.getSheet().getSheetName().equals( "" ) )
+			if( !this.getSheet().getSheetName().isEmpty() )
 			{
 				nm = this.getSheet().getSheetName() + "!";
 			}
@@ -301,12 +301,9 @@ public final class Hlink extends XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "initializing Hlink record failed: " + e );
+			log.warn( "initializing Hlink record failed: " + e );
 		}
-		if( DEBUGLEVEL > 5 )
-		{
-			Logger.logInfo( "Hlink Cells: " + range.toString() );
-		}
+		log.trace( "Hlink Cells: " + range.toString() );
 
 		try
 		{
@@ -314,12 +311,9 @@ public final class Hlink extends XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "Hyperlink parse failed for Cells " + range.toString() + ": " + e );
+			log.warn( "Hyperlink parse failed for Cells " + range.toString() + ": " + e );
 		}
-		if( DEBUGLEVEL > 5 )
-		{
-			Logger.logInfo( "Hlink URL: " + linkStruct.getUrl() );
-		}
+		log.trace( "Hlink URL: " + linkStruct.getUrl() );
 	}
 
 	/**
@@ -358,7 +352,7 @@ public final class Hlink extends XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "initializing Hyperlink Cells failed: " + e );
+			log.warn( "initializing Hyperlink Cells failed: " + e );
 		}
 	}
 }
@@ -378,9 +372,23 @@ public final class Hlink extends XLSRecord
 class HLinkStruct implements XLSConstants, Serializable
 {
 	/**
-	 * serialVersionUID
+	 * fills the HLINK bytes based on the settings of
+	 * isLink
+	 * isAbsoluteLink
+	 * hasDescription
+	 * hasTextMark
+	 * hasTargetFrame
+	 * isUNCPath
+	 * <p/>
+	 * how these are set, before calling this method, determine
+	 * how the HLINK record bytes are written
+	 *
+	 * @param ur    URL string
+	 * @param desc    optional descrption
+	 * @param tm    optional text mark text as in:  ...#textmarktext
 	 */
-	private static final long serialVersionUID = -1915454683496117350L;
+	static final byte[] URL_GUID = { -32, -55, -22, 121, -7, -70, -50, 17, -116, -126, 0, -86, 0, 75, -87, 11 };
+	static final byte[] FILE_GUID = { 3, 3, 0, 0, 0, 0, 0, 0, -64, 0, 0, 0, 0, 0, 0, 70 };
 	boolean isLink = false;
 	boolean isAbsoluteLink = false;
 	boolean hasDescription = false;
@@ -388,6 +396,153 @@ class HLinkStruct implements XLSConstants, Serializable
 	boolean hasTargetFrame = false;
 	boolean isUNCPath = false;
 	byte grbit[] = new byte[4];
+	String url = "", linktext = "", textMark = "", targetFrame = "";
+	int int1 = -1, urlcch = -1, int4 = -1;
+	private static final Logger log = LoggerFactory.getLogger( HLinkStruct.class );
+	private static final long serialVersionUID = -1915454683496117350L;
+	private byte[] mybytes = null;
+
+	/**
+	 * Inner class with no documentation
+	 */
+	HLinkStruct( byte[] barr )
+	{
+		mybytes = barr;
+		int pos = 28;
+
+		System.arraycopy( barr, 28, grbit, 0, 4 );
+		decodeGrbit( grbit );
+		pos += 4;
+
+		/*
+		 * This section gets the display string for the Hyperlink, if it exists.
+		 */
+		if( hasDescription )
+		{
+			int cch = ByteTools.readInt( barr[pos++], barr[pos++], barr[pos++], barr[pos++] );
+			if( cch > 0 )
+			{ // 20070814 KSC: shouldn't be 0 and also hasDescription ...
+				try
+				{
+					byte[] descripbytes = new byte[(cch * 2) - 2];
+					System.arraycopy( barr, pos, descripbytes, 0, (cch * 2) - 2 );
+					linktext = new String( descripbytes, UNICODEENCODING );
+					pos += cch * 2;
+					log.debug( "Hlink.hlstruct Display URL: " + linktext );
+				}
+				catch( Exception e )
+				{
+					log.warn( "decoding Display URL in Hlink: " + e );
+				}
+			}
+		}
+		/*
+		 * if it has a target frame, read in
+		 */
+		if( hasTargetFrame )
+		{
+			int cch = ByteTools.readInt( barr[pos++], barr[pos++], barr[pos++], barr[pos++] );
+			if( cch > 0 )
+			{
+				try
+				{
+					byte[] tfbytes = new byte[(cch * 2) - 2];
+					System.arraycopy( barr, pos, tfbytes, 0, (cch * 2) - 2 );
+					targetFrame = new String( tfbytes, UNICODEENCODING );
+					log.trace( "Hlink.hlstruct targetFrame: " + targetFrame );
+					pos += (cch * 2);
+				}
+				catch( Exception e )
+				{
+					log.warn( "Hlink Decode of targetFrame failed: " + e );
+				}
+			}
+		}
+		/*
+		 * URL section:  non-local URL or Link in current file
+		 */
+		if( isLink )
+		{
+			byte[] GUID = new byte[16];
+			System.arraycopy( barr, pos, GUID, 0, 16 );
+			boolean bIsCurrentFileRef = java.util.Arrays.equals( GUID, FILE_GUID );
+			pos += 16;    // skip GUID
+			if( !bIsCurrentFileRef )
+			{    // then it's a URL or non-relative file path
+				urlcch = ByteTools.readInt( barr[pos++], barr[pos++], barr[pos++], barr[pos++] );
+				if( urlcch > 0 )
+				{
+					try
+					{
+						byte[] urlbytes = new byte[(urlcch) - 2];
+						System.arraycopy( barr, pos, urlbytes, 0, (urlcch) - 2 );
+						url = new String( urlbytes, UNICODEENCODING );
+						log.trace( "Hlink.hlstruct URL: " + url );
+						pos += urlcch;
+					}
+					catch( Exception e )
+					{
+						log.warn( "Hlink Decode of URL failed: " + e );
+					}
+				}
+			}
+			else
+			{    // (appears to be a) current file link (Actuality is different than documentation!)
+				int dirUps = ByteTools.readShort( barr[pos++], barr[pos++] );
+				urlcch = ByteTools.readInt( barr[pos++], barr[pos++], barr[pos++], barr[pos++] );
+				if( urlcch > 0 )
+				{
+					try
+					{
+						byte[] urlbytes = new byte[urlcch - 1];
+						System.arraycopy( barr, pos, urlbytes, 0, urlcch - 1 );
+						url = new String( urlbytes, DEFAULTENCODING );
+						log.trace( "Hlink.hlstruct File URL: " + url );
+						pos += urlcch + 24;    // add char count + avoid the 24 "unknown" bytes
+						int extraInfo = ByteTools.readInt( barr[pos++], barr[pos++], barr[pos++], barr[pos++] );
+						if( extraInfo > 0 )
+						{
+							pos += extraInfo;
+							int sz = ByteTools.readInt( barr[pos++], barr[pos++], barr[pos++], barr[pos++] );
+
+						}
+					}
+					catch( Exception e )
+					{
+						log.warn( "Hlink Decode of File URL failed: " + e );
+					}
+				}
+			}
+		}
+
+		if( hasTextMark )
+		{
+			int cch = ByteTools.readInt( barr[pos++], barr[pos++], barr[pos++], barr[pos++] );
+			if( cch > 0 )
+			{
+				try
+				{
+					byte[] tmbytes = new byte[(cch * 2) - 2];
+					System.arraycopy( barr, pos, tmbytes, 0, (cch * 2) - 2 );
+					textMark = new String( tmbytes, UNICODEENCODING );
+						log.trace( "Hlink.hlstruct textMark: " + textMark );
+					pos += (cch * 2);
+				}
+				catch( Exception e )
+				{
+						log.warn( "Hlink Decode of textmark failed: " + e );
+				}
+			}
+		}
+	}
+
+	/**
+	 * get the URL link text for this Hlink
+	 */
+	public String getLinkText()
+	{
+		return linktext;
+	}
 
 	/**
 	 * decodes option flag into vars
@@ -460,7 +615,8 @@ class HLinkStruct implements XLSConstants, Serializable
 		mybytes[28] = grbit[0];
 	}
 
-	boolean DEBUG = false;
+	// 20060406 KSC:  mods to setUrl:
+	// 	Added ability to set description + modified byte input to work mo' betta ... 
 
 	int getUrlPos()
 	{
@@ -472,32 +628,17 @@ class HLinkStruct implements XLSConstants, Serializable
 		return mybytes;
 	}
 
-	String url = "", linktext = "", textMark = "", targetFrame = "";
-	int int1 = -1, urlcch = -1, int4 = -1;
-	private byte[] mybytes = null;
-
 	/**
 	 * get the URL for this Hlink
 	 */
 	String getUrl()
 	{
-		if( textMark.equals( "" ) )
+		if( textMark.isEmpty() )
 		{
 			return url;
 		}
 		return url + "#" + textMark;
 	}
-
-	/**
-	 * get the URL link text for this Hlink
-	 */
-	public String getLinkText()
-	{
-		return linktext;
-	}
-
-	// 20060406 KSC:  mods to setUrl:
-	// 	Added ability to set description + modified byte input to work mo' betta ... 
 
 	/**
 	 * set the URL for this Hlink, description= URL <default>
@@ -553,25 +694,6 @@ class HLinkStruct implements XLSConstants, Serializable
 		setBytes( ur, desc, textMark );
 	}
 
-	/**
-	 * fills the HLINK bytes based on the settings of
-	 * isLink
-	 * isAbsoluteLink
-	 * hasDescription
-	 * hasTextMark
-	 * hasTargetFrame
-	 * isUNCPath
-	 * <p/>
-	 * how these are set, before calling this method, determine
-	 * how the HLINK record bytes are written
-	 *
-	 * @param ur    URL string
-	 * @param desc    optional descrption
-	 * @param tm    optional text mark text as in:  ...#textmarktext
-	 */
-	static final byte[] URL_GUID = { -32, -55, -22, 121, -7, -70, -50, 17, -116, -126, 0, -86, 0, 75, -87, 11 };
-	static final byte[] FILE_GUID = { 3, 3, 0, 0, 0, 0, 0, 0, -64, 0, 0, 0, 0, 0, 0, 70 };
-
 	void setBytes( String ur, String desc, String tm )
 	{
 		try
@@ -597,8 +719,8 @@ class HLinkStruct implements XLSConstants, Serializable
 				newbytes = ByteTools.append( descbytes, newbytes );
 				// copy trailing dumb str bytes in
 				newbytes = ByteTools.append( blankbytes, newbytes );
-			}			
-	
+			}
+
 			/* TODO:  Implement target frame right here
 			if (hasTargetFrame) {
 				// copy targetFrame bytes + length
@@ -608,12 +730,12 @@ class HLinkStruct implements XLSConstants, Serializable
 				byte[] newcchbytes = ByteTools.cLongToLEBytes(newcch/2 +1);
 				// copy cch of tm in...
 				newbytes = ByteTools.append(newcchbytes, newbytes);
-				
+
 				//copy bytes of tf in
 				newbytes = ByteTools.append(tfbytes, newbytes);
 
 				// copy trailing dumb str bytes in
-				newbytes = ByteTools.append(blankbytes, newbytes);		        
+				newbytes = ByteTools.append(blankbytes, newbytes);
 			}
 			*/
 
@@ -663,174 +785,8 @@ class HLinkStruct implements XLSConstants, Serializable
 		}
 		catch( UnsupportedEncodingException e )
 		{
-			Logger.logWarn( "Setting URL failed: " + ur + ": " + e );
-		}
-
-	}
-
-	/**
-	 * Inner class with no documentation
-	 */
-	HLinkStruct( byte[] barr )
-	{
-		mybytes = barr;
-		int pos = 28;
-
-		System.arraycopy( barr, 28, grbit, 0, 4 );
-		decodeGrbit( grbit );
-		pos += 4;
-
-		/*
-		 * This section gets the display string for the Hyperlink, if it exists.
-		 */
-		if( hasDescription )
-		{
-			int cch = ByteTools.readInt( barr[pos++], barr[pos++], barr[pos++], barr[pos++] );
-			if( cch > 0 )
-			{ // 20070814 KSC: shouldn't be 0 and also hasDescription ...
-				try
-				{
-					byte[] descripbytes = new byte[(cch * 2) - 2];
-					System.arraycopy( barr, pos, descripbytes, 0, (cch * 2) - 2 );
-					linktext = new String( descripbytes, UNICODEENCODING );
-					pos += cch * 2;
-					if( DEBUG )
-					{
-						Logger.logInfo( "Hlink.hlstruct Display URL: " + linktext );
-					}
-				}
-				catch( Exception e )
-				{
-					if( DEBUG )
-					{
-						Logger.logWarn( "decoding Display URL in Hlink: " + e );
-					}
-				}
-			}
-		}
-		/*
-		 * if it has a target frame, read in
-		 */
-		if( hasTargetFrame )
-		{
-			int cch = ByteTools.readInt( barr[pos++], barr[pos++], barr[pos++], barr[pos++] );
-			if( cch > 0 )
-			{
-				try
-				{
-					byte[] tfbytes = new byte[(cch * 2) - 2];
-					System.arraycopy( barr, pos, tfbytes, 0, (cch * 2) - 2 );
-					targetFrame = new String( tfbytes, UNICODEENCODING );
-					if( DEBUG )
-					{
-						Logger.logInfo( "Hlink.hlstruct targetFrame: " + targetFrame );
-					}
-					pos += (cch * 2);
-				}
-				catch( Exception e )
-				{
-					if( DEBUG )
-					{
-						Logger.logWarn( "Hlink Decode of targetFrame failed: " + e );
-					}
-				}
-			}
-		}
-		/*
-		 * URL section:  non-local URL or Link in current file   
-		 */
-		if( isLink )
-		{
-			byte[] GUID = new byte[16];
-			System.arraycopy( barr, pos, GUID, 0, 16 );
-			boolean bIsCurrentFileRef = java.util.Arrays.equals( GUID, FILE_GUID );
-			pos += 16;    // skip GUID
-			if( !bIsCurrentFileRef )
-			{    // then it's a URL or non-relative file path
-				urlcch = ByteTools.readInt( barr[pos++], barr[pos++], barr[pos++], barr[pos++] );
-				if( urlcch > 0 )
-				{
-					try
-					{
-						byte[] urlbytes = new byte[(urlcch) - 2];
-						System.arraycopy( barr, pos, urlbytes, 0, (urlcch) - 2 );
-						url = new String( urlbytes, UNICODEENCODING );
-						if( DEBUG )
-						{
-							Logger.logInfo( "Hlink.hlstruct URL: " + url );
-						}
-						pos += urlcch;
-					}
-					catch( Exception e )
-					{
-						if( DEBUG )
-						{
-							Logger.logWarn( "Hlink Decode of URL failed: " + e );
-						}
-					}
-				}
-			}
-			else
-			{    // (appears to be a) current file link (Actuality is different than documentation!)
-				int dirUps = ByteTools.readShort( barr[pos++], barr[pos++] );
-				urlcch = ByteTools.readInt( barr[pos++], barr[pos++], barr[pos++], barr[pos++] );
-				if( urlcch > 0 )
-				{
-					try
-					{
-						byte[] urlbytes = new byte[urlcch - 1];
-						System.arraycopy( barr, pos, urlbytes, 0, urlcch - 1 );
-						url = new String( urlbytes, DEFAULTENCODING );
-						if( DEBUG )
-						{
-							Logger.logInfo( "Hlink.hlstruct File URL: " + url );
-						}
-						pos += urlcch + 24;    // add char count + avoid the 24 "unknown" bytes
-						int extraInfo = ByteTools.readInt( barr[pos++], barr[pos++], barr[pos++], barr[pos++] );
-						if( extraInfo > 0 )
-						{
-							pos += extraInfo;
-							int sz = ByteTools.readInt( barr[pos++], barr[pos++], barr[pos++], barr[pos++] );
-
-						}
-					}
-					catch( Exception e )
-					{
-						if( DEBUG )
-						{
-							Logger.logWarn( "Hlink Decode of File URL failed: " + e );
-						}
-					}
-				}
-			}
-		}
-
-		if( hasTextMark )
-		{
-			int cch = ByteTools.readInt( barr[pos++], barr[pos++], barr[pos++], barr[pos++] );
-			if( cch > 0 )
-			{
-				try
-				{
-					byte[] tmbytes = new byte[(cch * 2) - 2];
-					System.arraycopy( barr, pos, tmbytes, 0, (cch * 2) - 2 );
-					textMark = new String( tmbytes, UNICODEENCODING );
-					if( DEBUG )
-					{
-						Logger.logInfo( "Hlink.hlstruct textMark: " + textMark );
-					}
-					pos += (cch * 2);
-				}
-				catch( Exception e )
-				{
-					if( DEBUG )
-					{
-						Logger.logWarn( "Hlink Decode of textmark failed: " + e );
-					}
-				}
-			}
+			log.warn( "Setting URL failed: " + ur + ": " + e );
 		}
 	}
-
 }
 

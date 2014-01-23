@@ -26,7 +26,8 @@ import com.extentech.ExtenXLS.FormatHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.formats.XLS.Font;
 import com.extentech.formats.XLS.FormatConstants;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -48,7 +49,7 @@ import java.util.Stack;
 //TODO: Finish endParaRPr children TEXTUNDERLINE, TEXTUNDERLINEFILL, sym, hlinkClick, hlinkMouseOver, 
 public class P implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( P.class );
 	private static final long serialVersionUID = 6302706683933521698L;
 	private TextRun run = null;
 	private PPr ppr = null;
@@ -99,7 +100,7 @@ public class P implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "p.parseOOXML: " + e.toString() );
+			log.error( "p.parseOOXML: " + e.toString() );
 
 		}
 		P pr = new P( ppr, run, ep );
@@ -216,7 +217,7 @@ public class P implements OOXMLElement
 	 */
 	public HashMap<String, String> getTextProperties()
 	{
-		HashMap<String, String> textprops = new HashMap<String, String>();
+		HashMap<String, String> textprops = new HashMap<>();
 		if( ppr != null )
 		{
 			// algn- left, right, centered, just, distributed
@@ -271,7 +272,7 @@ public class P implements OOXMLElement
 // TODO: Handle child elements: lnSpc, spcBef, spcAft, TEXTBULLETCOLOR, TEXTBULLETSIZE, TEXTBULLET, tabLst
 class PPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( PPr.class );
 	private static final long serialVersionUID = -6909210948618654877L;
 	private DefRPr dp;
 	private HashMap<String, String> attrs;
@@ -333,7 +334,7 @@ class PPr implements OOXMLElement
 	public static PPr parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
 	{
 		DefRPr dp = null;
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -369,7 +370,7 @@ class PPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "paraText.parseOOXML: " + e.toString() );
+			log.error( "paraText.parseOOXML: " + e.toString() );
 		}
 		PPr pt = new PPr( dp, attrs );
 		return pt;
@@ -411,7 +412,7 @@ class PPr implements OOXMLElement
 		{
 			return attrs;
 		}
-		return new HashMap<String, String>();
+		return new HashMap<>();
 	}
 }
 
@@ -430,7 +431,7 @@ class PPr implements OOXMLElement
 // TODO: Finish children TEXTUNDERLINE, TEXTUNDERLINEFILL, sym, hlinkClick, hlinkMouseOver, 
 class EndParaRPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( EndParaRPr.class );
 	private static final long serialVersionUID = -7094231887468090281L;
 	private HashMap<String, String> attrs = null;
 	private Ln l;
@@ -462,7 +463,7 @@ class EndParaRPr implements OOXMLElement
 
 	public static EndParaRPr parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		FillGroup fill = null;
 		EffectPropsGroup effect = null;
 		Ln l = null;
@@ -530,7 +531,7 @@ class EndParaRPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "endParaRPr.parseOOXML: " + e.toString() );
+			log.error( "endParaRPr.parseOOXML: " + e.toString() );
 		}
 		EndParaRPr oe = new EndParaRPr( attrs, l, fill, effect, latin, ea, cs );
 		return oe;

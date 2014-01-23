@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS.charts;
 
 import com.extentech.formats.XLS.WorkBookFactory;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 
@@ -49,10 +50,7 @@ import java.io.UnsupportedEncodingException;
 
 public final class SeriesText extends GenericChartObject implements ChartObject
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( SeriesText.class );
 	private static final long serialVersionUID = -3794355940075116165L;
 	protected int id = -1, cch = -1;
 	private String text = "";
@@ -95,7 +93,7 @@ public final class SeriesText extends GenericChartObject implements ChartObject
 		{
 			multi = 1;
 		}
-		cch = (int) this.getByteAt( 2 ) * multi;
+		cch = this.getByteAt( 2 ) * multi;
 		if( cch < 0 )
 		{
 			cch *= -1; // strangely it can be negative...
@@ -109,19 +107,15 @@ public final class SeriesText extends GenericChartObject implements ChartObject
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logInfo( "Unsupported Encoding error in SeriesText: " + e );
+				log.warn( "Unsupported Encoding error in SeriesText: " + e );
 			}
-			if( (DEBUGLEVEL > 10) )
-			{
-				Logger.logInfo( "Series Text Value: " + text );
-			}
+				log.trace( "Series Text Value: " + text );
 
 		}
 		catch( Exception ex )
 		{
-			Logger.logWarn( "SeriesText.init failed: " + ex );
+			log.warn( "SeriesText.init failed: " + ex );
 		}
-		//Logger.logInfo("Initialized SeriesText: "+ text);
 	}
 
 	public String toString()

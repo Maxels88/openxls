@@ -24,7 +24,8 @@ package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>RRTabID:  Revision Tab ID Record</b><br>
@@ -36,9 +37,7 @@ import com.extentech.toolkit.Logger;
  */
 public final class TabID extends com.extentech.formats.XLS.XLSRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( TabID.class );
 	private static final long serialVersionUID = 722748113519841817L;
 	CompatibleVector tabIDs = new CompatibleVector();
 
@@ -109,7 +108,7 @@ public final class TabID extends com.extentech.formats.XLS.XLSRecord
 		int sz = tabIDs.size();
 		if( ((sheet < 0) || (newpos < 0)) || ((sheet >= sz) || (newpos >= sz)) )
 		{
-			Logger.logWarn( "changing Sheet order failed: invalid Sheet Index: " + sheet + ":" + newpos );
+			log.warn( "changing Sheet order failed: invalid Sheet Index: " + sheet + ":" + newpos );
 			return false;
 		}
 		Object b = tabIDs.get( sheet );

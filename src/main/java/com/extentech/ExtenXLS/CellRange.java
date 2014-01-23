@@ -41,11 +41,12 @@ import com.extentech.formats.XLS.formulas.FormulaParser;
 import com.extentech.formats.XLS.formulas.GenericPtg;
 import com.extentech.formats.XLS.formulas.Ptg;
 import com.extentech.formats.XLS.formulas.PtgRef;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ import static com.extentech.ExtenXLS.JSONConstants.JSON_RANGE;
  */
 public class CellRange implements Serializable
 {
-
+	private static final Logger log = LoggerFactory.getLogger( CellRange.class );
 	Condfmt cfx = null;
 
 	/**
@@ -111,7 +112,6 @@ public class CellRange implements Serializable
 	public static final boolean REMOVE_MERGED_CELLS = true;
 	public static final boolean RETAIN_MERGED_CELLS = false;
 	//private Ptg myptg = null;
-	public boolean DEBUG = false;
 	private boolean isDirty = false;    // true if addCellsToRange without init
 	int firstcellrow = -1;
 	int firstcellcol = -1;
@@ -592,7 +592,7 @@ public class CellRange implements Serializable
 		}
 		catch( CellNotFoundException e )
 		{
-			Logger.logWarn( "CellRange unable to determine intersection of range: " + cr.toString() );
+			log.warn( "CellRange unable to determine intersection of range: " + cr.toString() );
 		}
 		return false;
 	}
@@ -691,7 +691,7 @@ public class CellRange implements Serializable
 	{
 		if( this.sheet == null )
 		{
-			Logger.logErr( "CellRange.setAsPrintArea() failed: " + this.toString() + " does not have a valid Sheet reference." );
+			log.warn( "CellRange.setAsPrintArea() failed: " + this.toString() + " does not have a valid Sheet reference." );
 			return;
 		}
 		sheet.setPrintArea( this );
@@ -769,12 +769,12 @@ public class CellRange implements Serializable
 		String sheetname = ch.getWorkSheetName();
 		if( sheetname == null )
 		{
-			Logger.logWarn( "Cell " + ch.toString() + " NOT added to Range: " + this.toString() );
+			log.warn( "Cell " + ch.toString() + " NOT added to Range: " + this.toString() );
 			return false;
 		}
 		if( !sheetname.equalsIgnoreCase( this.getSheet().getSheetName() ) )
 		{
-			Logger.logWarn( "Cell " + ch.toString() + " NOT added to Range: " + this.toString() );
+			log.warn( "Cell " + ch.toString() + " NOT added to Range: " + this.toString() );
 			return false;
 		}
 		int[] rc = { ch.getRowNum(), ch.getColNum() };
@@ -1072,7 +1072,7 @@ public class CellRange implements Serializable
 		catch( CellNotFoundException e1 )
 		{
 		}
-		ArrayList<ArrayList> outputCols = new ArrayList<ArrayList>();
+		ArrayList<ArrayList> outputCols = new ArrayList<>();
 		for( CellHandle cell : sortRow )
 		{
 			ArrayList cells = null;
@@ -1184,7 +1184,7 @@ public class CellRange implements Serializable
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		ArrayList<ArrayList<CellHandle>> outputRows = new ArrayList<ArrayList<CellHandle>>();
+		ArrayList<ArrayList<CellHandle>> outputRows = new ArrayList<>();
 		for( Object aSortCol : sortCol )
 		{
 			CellHandle cell = (CellHandle) aSortCol;
@@ -1499,7 +1499,7 @@ public class CellRange implements Serializable
 			}
 			else
 			{
-				Logger.logErr( "CellRange.getRangeCoords: Error in Range " + range );
+				log.error( "CellRange.getRangeCoords: Error in Range " + range );
 			}
 		}
 
@@ -1655,7 +1655,7 @@ public class CellRange implements Serializable
 			{
 				pm.setLocation( range );
 				Ptg[] p = pm.getComponents();
-				java.util.ArrayList<CellHandle> cellsfromcomplexrange = new java.util.ArrayList<CellHandle>();
+				java.util.ArrayList<CellHandle> cellsfromcomplexrange = new java.util.ArrayList<>();
 				for( int i = 0; i < p.length; i++ )
 				{
 					try
@@ -1773,7 +1773,7 @@ public class CellRange implements Serializable
 		}
 		catch( CellNotFoundException e )
 		{
-			Logger.logErr( "CellRange.getR1C1Range failed", e );
+			log.error( "CellRange.getR1C1Range failed", e );
 		}
 		return rc1x;
 	}
@@ -1867,10 +1867,7 @@ public class CellRange implements Serializable
 		}
 		if( this.range != null )
 		{// 20100106 KSC: handle ranges containing null cell[0] (i.e. ranges referencing cells not present and createBlanks==false)
-			if( this.DEBUG )
-			{
-				Logger.logWarn( "CellRange.update:  trying to access blank cells in range " + this.range );
-			}
+				log.warn( "CellRange.update:  trying to access blank cells in range " + this.range );
 			try
 			{
 				this.getRangeCoords();
@@ -2129,7 +2126,7 @@ public class CellRange implements Serializable
 
 	public Collection<CellHandle> calculateAffectedCellsOnSheet()
 	{
-		Set<CellHandle> affected = new HashSet<CellHandle>();
+		Set<CellHandle> affected = new HashSet<>();
 		for( CellHandle cell : cells )
 		{
 			if( cell != null )
@@ -2163,7 +2160,7 @@ public class CellRange implements Serializable
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Error obtaining CellRange " + range + " JSON: " + e );
+			log.warn( "Error obtaining CellRange " + range + " JSON: " + e );
 		}
 		return rangeArray;
 	}
@@ -2199,7 +2196,7 @@ public class CellRange implements Serializable
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Error obtaining CellRange " + range + " JSON: " + e );
+			log.warn( "Error obtaining CellRange " + range + " JSON: " + e );
 		}
 		return new JSONObject();
 	}
@@ -2227,7 +2224,7 @@ public class CellRange implements Serializable
 		}
 		catch( JSONException e )
 		{
-			Logger.logErr( "Error getting cellRange JSON: " + e );
+			log.warn( "Error getting cellRange JSON: " + e );
 		}
 		return theRange;
 	}
@@ -2239,7 +2236,7 @@ public class CellRange implements Serializable
 	 */
 	public ArrayList<CellHandle> getCellsByRow( int rownumber ) throws RowNotFoundException
 	{
-		ArrayList<CellHandle> al = new ArrayList<CellHandle>();
+		ArrayList<CellHandle> al = new ArrayList<>();
 		RowHandle r = this.getSheet().getRow( rownumber );
 		CellHandle[] cells = r.getCells();
 		int[] coords = null;
@@ -2269,7 +2266,7 @@ public class CellRange implements Serializable
 	 */
 	public ArrayList<CellHandle> getCellsByCol( String col ) throws ColumnNotFoundException
 	{
-		ArrayList<CellHandle> al = new ArrayList<CellHandle>();
+		ArrayList<CellHandle> al = new ArrayList<>();
 		ColHandle r = this.getSheet().getCol( col );
 		CellHandle[] cells = r.getCells();
 		int[] coords = null;

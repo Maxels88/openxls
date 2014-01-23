@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -41,7 +42,7 @@ import java.util.Stack;
 // TODO: handle lstStyle Text List Styles
 public class TxBody implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( TxBody.class );
 	private static final long serialVersionUID = 2407194628070113668L;
 	private BodyPr bPr;
 	private P para;
@@ -95,7 +96,7 @@ public class TxBody implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "txBody.parseOOXML: " + e.toString() );
+			log.error( "txBody.parseOOXML: " + e.toString() );
 		}
 		TxBody tBd = new TxBody( b, para );
 		return tBd;

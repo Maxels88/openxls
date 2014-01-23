@@ -22,12 +22,16 @@
  */
 package com.extentech.toolkit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
 public class ExtenClassLoader extends java.lang.ClassLoader
 {
+	private static final Logger log = LoggerFactory.getLogger( ExtenClassLoader.class );
 	private String targetClassName;
 
 	public ExtenClassLoader( String target )
@@ -98,7 +102,7 @@ public class ExtenClassLoader extends java.lang.ClassLoader
 		loadedClass = defineClass( name, bytes, 0, bytes.length );
 		if( loadedClass == null )
 		{
-			Logger.logInfo( "Class cannot be loaded: " + name );
+			log.error( "Class cannot be loaded: " + name );
 			throw new ClassFormatError();
 		}
 		if( resolve )

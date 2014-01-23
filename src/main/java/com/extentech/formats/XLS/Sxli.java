@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -225,11 +226,7 @@ import java.util.Arrays;
  */
 public class Sxli extends XLSRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
-	private static final long serialVersionUID = 4157827774990504633L;
+	private static final Logger log = LoggerFactory.getLogger( Sxli.class );	private static final long serialVersionUID = 4157827774990504633L;
 	ArrayList<SXLI_Item> items;
 	int nItemsPerLine;
 
@@ -242,10 +239,7 @@ public class Sxli extends XLSRecord
 		// total # items will be sx.cRw or sx.cCol
 		// per each pivot line, # items [see SXLI_Item.rgisxvi] will be sx.cDimRw or sx.cDimCol
 		items = SXLI_Item.parse( this.getData(), nItemsPerLine );
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "SXLI: rgsxli:" + items.toString() );
-		}
+			log.trace( "SXLI: rgsxli:" + items.toString() );
 	}
 
 	public String toString()
@@ -377,7 +371,7 @@ class SXLI_Item
 	public static ArrayList<SXLI_Item> parse( byte[] data, int nItemsPerLine )
 	{
 		pos = 0;
-		ArrayList<SXLI_Item> items = new ArrayList<SXLI_Item>();
+		ArrayList<SXLI_Item> items = new ArrayList<>();
 
 		while( pos < (data.length - 7) )
 		{

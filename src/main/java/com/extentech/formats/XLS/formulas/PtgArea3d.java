@@ -33,7 +33,8 @@ import com.extentech.formats.XLS.WorkBook;
 import com.extentech.formats.XLS.WorkSheetNotFoundException;
 import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -79,10 +80,7 @@ import java.util.ArrayList;
  */
 public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgArea3d.class );
 	private static final long serialVersionUID = -1176168076050592292L;
 
 	@Override
@@ -417,7 +415,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 		Boundsheet[] bsa = b.getExternSheet().getBoundSheets( this.ixti );
 		if( bsa[0] == null ) // 20080303 KSC: Catch Unresolved External refs
 		{
-			Logger.logErr( "PtgArea3d.getSheet: Unresolved External Worksheet" );
+			log.error( "PtgArea3d.getSheet: Unresolved External Worksheet" );
 		}
 		return bsa;
 	}
@@ -718,7 +716,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 		}
 		catch( WorkSheetNotFoundException e )
 		{
-			Logger.logErr( "Unable to set referenced sheet in PtgRef3d " + e );
+			log.error( "Unable to set referenced sheet in PtgRef3d " + e );
 		}
 	}
 
@@ -799,7 +797,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 			return comps;
 		}
 
-		ArrayList<Ptg> components = new ArrayList<Ptg>();
+		ArrayList<Ptg> components = new ArrayList<>();
 		try
 		{
 			// loop through the cols
@@ -866,7 +864,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "calculating range value in PtgArea3d failed.", e );
+			log.error( "calculating range value in PtgArea3d failed.", e );
 		}
 		PtgRef[] pref = new PtgRef[components.size()];
 		components.toArray( pref );

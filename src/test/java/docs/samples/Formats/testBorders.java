@@ -28,7 +28,8 @@ import com.extentech.ExtenXLS.FormatHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
 import com.extentech.formats.XLS.FormatConstants;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.BufferedOutputStream;
@@ -39,7 +40,7 @@ import java.io.FileOutputStream;
  */
 public class testBorders
 {
-
+	private static final Logger log = LoggerFactory.getLogger( testBorders.class );
 	String wd = System.getProperty( "user.dir" ) + "/docs/samples/Formats/";
 
 	/**
@@ -60,7 +61,7 @@ public class testBorders
 	 */
 	public void testit()
 	{
-		Logger.logInfo( "====================== TESTING borders on cells ======================" );
+		log.info( "====================== TESTING borders on cells ======================" );
 		WorkBookHandle tbo = new WorkBookHandle();
 		try
 		{
@@ -103,11 +104,11 @@ public class testBorders
 		}
 		catch( Exception ex )
 		{
-			Logger.logErr( "testCellBorder failed:" + ex.toString() );
+			log.error( "testCellBorder failed:" + ex.toString() );
 		}
 		testWrite( tbo );
 
-		Logger.logInfo( "====================== DONE TESTING borders on cells ======================" );
+		log.info( "====================== DONE TESTING borders on cells ======================" );
 
 	}
 
@@ -124,7 +125,7 @@ public class testBorders
 		}
 		catch( java.io.IOException e )
 		{
-			Logger.logInfo( "IOException in Tester.  " + e );
+			log.info( "IOException in Tester.  " + e );
 		}
 	}
 }

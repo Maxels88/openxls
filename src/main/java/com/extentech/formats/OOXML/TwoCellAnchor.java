@@ -25,7 +25,8 @@ package com.extentech.formats.OOXML;
 import com.extentech.ExtenXLS.ColHandle;
 import com.extentech.ExtenXLS.RowHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -45,7 +46,7 @@ import java.util.Stack;
 // TODO: finish clientData element
 public class TwoCellAnchor implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( TwoCellAnchor.class );
 	private static final long serialVersionUID = 4180396678197959710L;
 	// EMU = pixel * 914400 / Resolution (96?)
 	public static final short EMU = 1270;
@@ -130,7 +131,7 @@ public class TwoCellAnchor implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "twoCellAnchor.parseOOXML: " + e.toString() );
+			log.error( "twoCellAnchor.parseOOXML: " + e.toString() );
 		}
 		TwoCellAnchor tca = new TwoCellAnchor( editAs, f, t, o );
 		return tca;
@@ -610,7 +611,7 @@ public class TwoCellAnchor implements OOXMLElement
  */
 class From implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( From.class );
 	private static final long serialVersionUID = -4776435343244555855L;
 	private int[] bounds;
 
@@ -668,7 +669,7 @@ class From implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "from.parseOOXML: " + e.toString() );
+			log.error( "from.parseOOXML: " + e.toString() );
 		}
 		From f = new From( bounds );
 		return f;
@@ -723,7 +724,7 @@ class From implements OOXMLElement
  */
 class To implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( To.class );
 	private static final long serialVersionUID = 1500243445505400113L;
 	private int[] bounds;
 
@@ -781,7 +782,7 @@ class To implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "to.parseOOXML: " + e.toString() );
+			log.error( "to.parseOOXML: " + e.toString() );
 		}
 		To f = new To( bounds );
 		return f;

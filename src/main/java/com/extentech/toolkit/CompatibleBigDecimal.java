@@ -37,15 +37,15 @@ package com.extentech.toolkit;
  *
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
 public class CompatibleBigDecimal extends BigDecimal
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( CompatibleBigDecimal.class );
 	private static final long serialVersionUID = -6816994951413033200L;
 	private static Method _methodToString = null;
 
@@ -64,7 +64,7 @@ public class CompatibleBigDecimal extends BigDecimal
 			}
 			catch( NoSuchMethodException ex )
 			{
-				Logger.logWarn( "Error creating toString method in CompatibleBigDecimal" );
+				log.warn( "Error creating toString method in CompatibleBigDecimal", ex );
 			}
 		}
 	}
@@ -97,7 +97,7 @@ public class CompatibleBigDecimal extends BigDecimal
 			}
 			catch( Exception e )
 			{
-				Logger.logWarn( "Error in calling CompatibleBigDecimal.toString" );
+				log.warn( "Error in calling CompatibleBigDecimal.toString", e );
 			}
 		}
 		return null;

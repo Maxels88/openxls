@@ -24,7 +24,8 @@ package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.FormatHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -41,7 +42,7 @@ import java.util.Stack;
 // finish hslClr
 public class ColorChoice implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( ColorChoice.class );
 	private static final long serialVersionUID = -4117811305941771643L;
 	private SchemeClr s;
 	private SrgbClr srgb;
@@ -136,7 +137,7 @@ public class ColorChoice implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "ColorChoice.parseOOXML: " + e.toString() );
+			log.error( "ColorChoice.parseOOXML: " + e.toString() );
 		}
 		ColorChoice c = new ColorChoice( s, srgb, sys, scrgb, p );
 		c.setTheme( bk.getWorkBook().getTheme() );
@@ -227,7 +228,7 @@ public class ColorChoice implements OOXMLElement
  */
 class SchemeClr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( SchemeClr.class );
 	private static final long serialVersionUID = 2127868578801669266L;
 	private String val;
 	private ColorTransform clrTransform;
@@ -283,7 +284,7 @@ class SchemeClr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "schemeClr.parseOOXML: " + e.toString() );
+			log.error( "schemeClr.parseOOXML: " + e.toString() );
 		}
 		SchemeClr sc = new SchemeClr( val, clrTransform, bk.getWorkBook().getTheme() );
 		return sc;
@@ -324,7 +325,7 @@ class SchemeClr implements OOXMLElement
  */
 class SysClr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( SysClr.class );
 	private static final long serialVersionUID = 8307422721346337409L;
 	private String val; // This simple type specifies a system color
 	// value. This color is based upon the value
@@ -400,7 +401,7 @@ class SysClr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "sysClr.parseOOXML: " + e.toString() );
+			log.error( "sysClr.parseOOXML: " + e.toString() );
 		}
 		SysClr sc = new SysClr( val, lastClr, clrTransform );
 		return sc;
@@ -460,7 +461,7 @@ class SysClr implements OOXMLElement
  */
 class SrgbClr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( SrgbClr.class );
 	private static final long serialVersionUID = -999813417659560045L;
 	private String val;
 	private ColorTransform clrTransform;
@@ -520,7 +521,7 @@ class SrgbClr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "srgbClr.parseOOXML: " + e.toString() );
+			log.error( "srgbClr.parseOOXML: " + e.toString() );
 		}
 		SrgbClr sc = new SrgbClr( val, clrTransform );
 		return sc;
@@ -567,7 +568,7 @@ class SrgbClr implements OOXMLElement
  */
 class ScrgbClr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( ScrgbClr.class );
 	private static final long serialVersionUID = -8782954669829478560L;
 	private HashMap<String, String> attrs;
 	private ColorTransform clrTransform;
@@ -586,7 +587,7 @@ class ScrgbClr implements OOXMLElement
 
 	public static ScrgbClr parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		ColorTransform clrTransform = null;
 		try
 		{
@@ -623,7 +624,7 @@ class ScrgbClr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "scrgbClr.parseOOXML: " + e.toString() );
+			log.error( "scrgbClr.parseOOXML: " + e.toString() );
 		}
 		ScrgbClr sc = new ScrgbClr( attrs, clrTransform );
 		return sc;
@@ -673,7 +674,7 @@ class ScrgbClr implements OOXMLElement
 		bval *= 255;
 		if( clrTransform != null )
 		{
-			Logger.logWarn( "Scheme Color must process color transforms" );
+			log.warn( "Scheme Color must process color transforms" );
 		}
 		java.awt.Color c = new java.awt.Color( (int) rval, (int) gval, (int) bval );
 		return FormatHandle.getColorInt( c );
@@ -688,7 +689,7 @@ class ScrgbClr implements OOXMLElement
  */
 class PrstClr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( PrstClr.class );
 	private static final long serialVersionUID = -5773022185972396279L;
 	private String val;
 	private ColorTransform clrTransform;
@@ -748,7 +749,7 @@ class PrstClr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "prstClr.parseOOXML: " + e.toString() );
+			log.error( "prstClr.parseOOXML: " + e.toString() );
 		}
 		PrstClr sc = new PrstClr( val, clrTransform );
 		return sc;
@@ -777,7 +778,7 @@ class PrstClr implements OOXMLElement
 	{
 		if( clrTransform != null )
 		{
-			Logger.logWarn( "Preset Color must process color transforms" );
+			log.warn( "Preset Color must process color transforms" );
 		}
 		for( int i = 0; i < FormatHandle.COLORNAMES.length; i++ )
 		{
@@ -798,6 +799,7 @@ class PrstClr implements OOXMLElement
  */
 class ColorTransform
 {
+	private static final Logger log = LoggerFactory.getLogger( ColorTransform.class );
 	private int[] lum;
 	private int[] hue;
 	private int[] sat;
@@ -969,7 +971,7 @@ class ColorTransform
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "ColorTransform.parseOOXML: " + e.toString() );
+			log.error( "ColorTransform.parseOOXML: " + e.toString() );
 		}
 		return new ColorTransform( lum, hue, sat, alpha, tint, shade );
 	}

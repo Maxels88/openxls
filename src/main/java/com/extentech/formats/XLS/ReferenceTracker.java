@@ -37,7 +37,8 @@ import com.extentech.formats.XLS.formulas.PtgName;
 import com.extentech.formats.XLS.formulas.PtgRef;
 import com.extentech.formats.XLS.formulas.PtgRefErr;
 import com.extentech.formats.XLS.formulas.PtgRefErr3d;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -72,7 +73,7 @@ import java.util.Vector;
  */
 public class ReferenceTracker
 {
-
+	private static final Logger log = LoggerFactory.getLogger( ReferenceTracker.class );
 	// the sheets allow for faster refs
 	// each sheet contains a collection of rows.
 	private Map sheetMap = new HashMap();
@@ -643,7 +644,7 @@ public class ReferenceTracker
 				}
 				catch( Exception e )
 				{    // shouldn't happen
-					Logger.logErr( "ReferenceTracker.updateReferences:  Error in Formula Reference Location: " + e.toString() );
+					log.error( "ReferenceTracker.updateReferences:  Error in Formula Reference Location: " + e.toString() );
 					continue;
 				}
 				sht = GenericPtg.qualifySheetname( sht );
@@ -740,7 +741,7 @@ public class ReferenceTracker
 		{    // shouldn't happen!
 			if( !(ptgref instanceof PtgAreaErr3d) )    // if it's not already an error Ptg report error
 			{
-				Logger.logErr( "ReferenceTracker.shiftPtg:  Error in Formula Reference Location: " + e.toString() );
+				log.error( "ReferenceTracker.shiftPtg:  Error in Formula Reference Location: " + e.toString() );
 			}
 			return false;
 		}
@@ -879,7 +880,7 @@ public class ReferenceTracker
 			}
 			catch( Exception e )
 			{
-				Logger.logInfo( "ReferenceTracker.shiftPtg:  Shifting Formula Reference failed: " + e.toString() );
+				log.error( "ReferenceTracker.shiftPtg:  Shifting Formula Reference failed: " + e.toString() );
 			}
 		}
 
@@ -1080,7 +1081,7 @@ public class ReferenceTracker
 class TrackedPtgs extends TreeMap
 {
 	private static final long serialVersionUID = 1L;
-	static final long SECONDPTGFACTOR = (((long) XLSRecord.MAXCOLS + ((long) XLSRecord.MAXROWS * XLSRecord.MAXCOLS)));
+	static final long SECONDPTGFACTOR = ((XLSRecord.MAXCOLS + ((long) XLSRecord.MAXROWS * XLSRecord.MAXCOLS)));
 
 	/**
 	 * set the custom Comparitor for tracked Ptgs

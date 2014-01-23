@@ -101,14 +101,15 @@ import com.extentech.formats.XLS.charts.Units;
 import com.extentech.formats.XLS.charts.ValueRange;
 import com.extentech.formats.XLS.charts.YMult;
 import com.extentech.formats.XLS.formulas.Ptg;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Factory to create XLSRecords and Ptgs.
  */
 public class XLSRecordFactory implements XLSConstants
 {
-
+	private static final Logger log = LoggerFactory.getLogger( XLSRecordFactory.class );
 	/**
 	 * This class is static only, prohibit construction.
 	 */
@@ -1072,7 +1073,7 @@ public class XLSRecordFactory implements XLSConstants
 					record = new XLSRecord();
 			}
 			record.setOpcode( opcode );
-			Logger.logInfo( "Record: " + record.getClass().getName() );
+			log.debug( "Record: " + record.getClass().getName() );
 		}
 		catch( Exception e )
 		{

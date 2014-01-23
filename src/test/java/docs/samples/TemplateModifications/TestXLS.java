@@ -27,7 +27,8 @@ import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
 import com.extentech.formats.XLS.CellNotFoundException;
 import com.extentech.formats.XLS.WorkSheetNotFoundException;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
@@ -56,6 +57,7 @@ public class TestXLS
  */
 class testit
 {
+	private static final Logger log = LoggerFactory.getLogger( testit.class );
 	public static final String wd = System.getProperty( "user.dir" ) + "/docs/samples/TemplateModifications/";
 
 	public void test( String args )
@@ -171,7 +173,7 @@ class testit
 			}
 			catch( java.io.IOException e )
 			{
-				Logger.logInfo( "IOException in Tester.  " + e );
+				log.info( "IOException in Tester.  " + e );
 			}
 
 			System.out.println( "Writing: " + foutpath );

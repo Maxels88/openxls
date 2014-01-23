@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ import java.util.Stack;
 // TODO: Handle gradFill element shade properties
 public class FillGroup implements OOXMLElement
 {
+	private static final Logger log = LoggerFactory.getLogger( FillGroup.class );
 	private static final long serialVersionUID = 8320871291479597945L;
 	private BlipFill bf;
 	private GradFill gpf;
@@ -131,7 +133,7 @@ public class FillGroup implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "FillGroup.parseOOXML: " + e.toString() );
+			log.error( "FillGroup.parseOOXML: " + e.toString() );
 		}
 		FillGroup f = new FillGroup( bf, gpf, grpf, pf, sf );
 		return f;
@@ -271,7 +273,7 @@ public class FillGroup implements OOXMLElement
 // TODO: finish SHADEPROPERTIES
 class GradFill implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( GradFill.class );
 	private static final long serialVersionUID = 8965776942160065286L;
 	private GsLst g;
 	// private ShadeProps sp= null;
@@ -296,7 +298,7 @@ class GradFill implements OOXMLElement
 
 	public static GradFill parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		GsLst g = null;
 		// ShadeProps sp= null;
 		TileRect tr = null;
@@ -345,7 +347,7 @@ class GradFill implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "gradFill.parseOOXML: " + e.toString() );
+			log.error( "gradFill.parseOOXML: " + e.toString() );
 		}
 		GradFill gf = new GradFill( g, /* sp, */tr, attrs );
 		return gf;
@@ -398,9 +400,7 @@ class GradFill implements OOXMLElement
  */
 class BlipFill implements OOXMLElement
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( BlipFill.class );
 	private static final long serialVersionUID = -2030570462677450734L;
 	private HashMap<String, String> attrs = null;
 	private Blip blip = null;
@@ -434,7 +434,7 @@ class BlipFill implements OOXMLElement
 
 	public static BlipFill parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		Blip b = null;
 		SrcRect s = null;
 		FillMode f = null;
@@ -485,7 +485,7 @@ class BlipFill implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "blipFill.parseOOXML: " + e.toString() );
+			log.error( "blipFill.parseOOXML: " + e.toString() );
 		}
 		BlipFill bf = new BlipFill( ns, attrs, b, s, f );
 		return bf;
@@ -497,7 +497,7 @@ class BlipFill implements OOXMLElement
 		StringBuffer ooxml = new StringBuffer();
 		if( ns == null )
 		{
-			Logger.logErr( "Error: BlipFill Namespace is null" );
+			log.error( "Error: BlipFill Namespace is null" );
 		}
 		ooxml.append( "<" + ns + ":blipFill" );
 		// attributes
@@ -599,7 +599,7 @@ class BlipFill implements OOXMLElement
  */
 class SolidFill implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( SolidFill.class );
 	private static final long serialVersionUID = 3341509200573989744L;
 	private ColorChoice color;
 
@@ -665,7 +665,7 @@ class SolidFill implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "solidFill.parseOOXML: " + e.toString() );
+			log.error( "solidFill.parseOOXML: " + e.toString() );
 		}
 		SolidFill s = new SolidFill( c );
 		return s;
@@ -714,7 +714,7 @@ class SolidFill implements OOXMLElement
  */
 class PattFill implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( PattFill.class );
 	private static final long serialVersionUID = -1052627959661249692L;
 	private String prst;
 	private BgClr bg;
@@ -776,7 +776,7 @@ class PattFill implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "pattFill.parseOOXML: " + e.toString() );
+			log.error( "pattFill.parseOOXML: " + e.toString() );
 		}
 		PattFill p = new PattFill( prst, bg, fg );
 		return p;
@@ -815,6 +815,7 @@ class PattFill implements OOXMLElement
  */
 class GrpFill implements OOXMLElement
 {
+	private static final Logger log = LoggerFactory.getLogger( GrpFill.class );
 	private static final long serialVersionUID = 2388879629485740996L;
 
 	public static GrpFill parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -841,7 +842,7 @@ class GrpFill implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "grpFill.parseOOXML: " + e.toString() );
+			log.error( "grpFill.parseOOXML: " + e.toString() );
 		}
 		GrpFill g = new GrpFill();
 		return g;
@@ -870,7 +871,7 @@ class GrpFill implements OOXMLElement
  */
 class BgClr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( BgClr.class );
 	private static final long serialVersionUID = -879409152334931909L;
 	private ColorChoice colorChoice;
 
@@ -917,7 +918,7 @@ class BgClr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "bgClr.parseOOXML: " + e.toString() );
+			log.error( "bgClr.parseOOXML: " + e.toString() );
 		}
 		BgClr s = new BgClr( c );
 		return s;
@@ -950,6 +951,7 @@ class BgClr implements OOXMLElement
  */
 class FgClr implements OOXMLElement
 {
+	private static final Logger log = LoggerFactory.getLogger( FgClr.class );
 	private static final long serialVersionUID = 6836994790529289731L;
 	private ColorChoice colorChoice;
 
@@ -995,7 +997,7 @@ class FgClr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "fgClr.parseOOXML: " + e.toString() );
+			log.error( "fgClr.parseOOXML: " + e.toString() );
 		}
 		FgClr s = new FgClr( c );
 		return s;
@@ -1030,9 +1032,9 @@ class FgClr implements OOXMLElement
 // TODO: HANDLE THE MANY CHILDREN
 class Blip implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Blip.class );
 	private static final long serialVersionUID = 5188967633123620513L;
-	private HashMap<String, String> attrs = new HashMap<String, String>();
+	private HashMap<String, String> attrs = new HashMap<>();
 
 	public Blip()
 	{
@@ -1050,7 +1052,7 @@ class Blip implements OOXMLElement
 
 	public static Blip parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -1092,7 +1094,7 @@ class Blip implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "blip.parseOOXML: " + e.toString() );
+			log.error( "blip.parseOOXML: " + e.toString() );
 		}
 		Blip b = new Blip( attrs );
 		return b;
@@ -1181,7 +1183,7 @@ class Blip implements OOXMLElement
  */
 class TileRect implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( TileRect.class );
 	private static final long serialVersionUID = 5380575948049571420L;
 	private HashMap<String, String> attrs;
 
@@ -1197,7 +1199,7 @@ class TileRect implements OOXMLElement
 
 	public static TileRect parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -1228,7 +1230,7 @@ class TileRect implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "tileRect.parseOOXML: " + e.toString() );
+			log.error( "tileRect.parseOOXML: " + e.toString() );
 		}
 		TileRect t = new TileRect( attrs );
 		return t;
@@ -1266,7 +1268,7 @@ class TileRect implements OOXMLElement
  */
 class SrcRect implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( SrcRect.class );
 	private static final long serialVersionUID = -6407800173040857433L;
 	private HashMap<String, String> attrs = null;
 
@@ -1286,7 +1288,7 @@ class SrcRect implements OOXMLElement
 
 	public static SrcRect parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -1317,7 +1319,7 @@ class SrcRect implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "srcRect.parseOOXML: " + e.toString() );
+			log.error( "srcRect.parseOOXML: " + e.toString() );
 		}
 		SrcRect s = new SrcRect( attrs );
 		return s;
@@ -1357,7 +1359,7 @@ class SrcRect implements OOXMLElement
  */
 class FillRect implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( FillRect.class );
 	private static final long serialVersionUID = 7200764163180402065L;
 	private HashMap<String, String> attrs = null;
 
@@ -1377,7 +1379,7 @@ class FillRect implements OOXMLElement
 
 	public static FillRect parseOOXML( XmlPullParser xpp, Stack<?> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -1408,7 +1410,7 @@ class FillRect implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "fillRect.parseOOXML: " + e.toString() );
+			log.error( "fillRect.parseOOXML: " + e.toString() );
 		}
 		FillRect oe = new FillRect();
 		return oe;
@@ -1453,7 +1455,7 @@ class FillRect implements OOXMLElement
  */
 class FillMode implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( FillMode.class );
 	private static final long serialVersionUID = 967269629502516244L;
 	// Since both "child" elements are so small, just output OOXML "by hand"
 	private HashMap<String, String> attrs = null;
@@ -1477,7 +1479,7 @@ class FillMode implements OOXMLElement
 
 	public static FillMode parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		boolean tile = false;
 		try
 		{
@@ -1518,7 +1520,7 @@ class FillMode implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "FillMode.parseOOXML: " + e.toString() );
+			log.error( "FillMode.parseOOXML: " + e.toString() );
 		}
 		FillMode fm = new FillMode( attrs, tile );
 		return fm;
@@ -1574,7 +1576,7 @@ class FillMode implements OOXMLElement
  */
 class GsLst implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( GsLst.class );
 	private static final long serialVersionUID = 6576320251327916221L;
 	private ArrayList<Gs> gs;
 
@@ -1590,7 +1592,7 @@ class GsLst implements OOXMLElement
 
 	public static GsLst parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
 	{
-		ArrayList<Gs> g = new ArrayList<Gs>();
+		ArrayList<Gs> g = new ArrayList<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -1619,7 +1621,7 @@ class GsLst implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "gsLst.parseOOXML: " + e.toString() );
+			log.error( "gsLst.parseOOXML: " + e.toString() );
 		}
 		GsLst gl = new GsLst( g );
 		return gl;
@@ -1661,7 +1663,7 @@ class GsLst implements OOXMLElement
  */
 class Gs implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Gs.class );
 	private static final long serialVersionUID = 7626866241477598159L;
 	private String pos = null;
 	private ColorChoice colorChoice = null;
@@ -1715,7 +1717,7 @@ class Gs implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "gs.parseOOXML: " + e.toString() );
+			log.error( "gs.parseOOXML: " + e.toString() );
 		}
 		Gs g = new Gs( pos, c );
 		return g;

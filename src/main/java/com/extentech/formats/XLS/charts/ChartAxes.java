@@ -25,9 +25,10 @@ package com.extentech.formats.XLS.charts;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.formats.XLS.Font;
 import com.extentech.formats.cellformat.CellFormatFactory;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.Serializable;
@@ -52,9 +53,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ChartAxes implements ChartConstants, Serializable
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( ChartAxes.class );
 	private static final long serialVersionUID = -7862828186455339066L;
 	private AxisParent ap;
 	ArrayList axes = new ArrayList();
@@ -976,7 +975,7 @@ public class ChartAxes implements ChartConstants, Serializable
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "ChartAxes.getMetrics.  Error obtaining Series: " + e.toString() );
+			log.error( "ChartAxes.getMetrics.  Error obtaining Series: " + e.toString(), e );
 		}
 
 		// Label Offsets ...

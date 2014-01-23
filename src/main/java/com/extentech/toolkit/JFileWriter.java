@@ -22,6 +22,9 @@
  */
 package com.extentech.toolkit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -44,6 +47,7 @@ import java.nio.channels.FileChannel;
  */
 public class JFileWriter
 {
+	private static final Logger log = LoggerFactory.getLogger( JFileWriter.class );
 
 	java.lang.String path = "", filename = "", data = "";
 	byte newLine = Character.LINE_SEPARATOR;
@@ -65,8 +69,7 @@ public class JFileWriter
 
 	void printErr( String err )
 	{
-		Logger.logInfo( "Error in JFileWriter: " + err );
-		Logger.logWarn( "Error in JFileWriter: " + err );
+		log.error( "Error in JFileWriter: " + err );
 	}
 
 	/**
@@ -98,7 +101,7 @@ public class JFileWriter
 		}
 		catch( Exception e )
 		{
-			Logger.logInfo( "JFileWriter.appendToFile() IO Error : " + e.toString() );
+			log.error( "JFileWriter.appendToFile() IO Error : " + e.toString(), e );
 		}
 	}
 
@@ -146,7 +149,7 @@ public class JFileWriter
 		}
 		catch( IOException e )
 		{
-			Logger.logInfo( "JFileWriter IO Error : " + e.toString() );
+			log.error( "JFileWriter IO Error : " + e.toString(), e );
 		}
 		return true;
 	}
@@ -173,7 +176,7 @@ public class JFileWriter
 		}
 		catch( IOException e )
 		{
-			Logger.logInfo( "JFileWriter IO Error : " + e.toString() );
+			log.error( "JFileWriter IO Error : " + e.toString(), e );
 		}
 		return true;
 	}

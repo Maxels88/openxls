@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -37,7 +38,7 @@ import java.util.Stack;
  */
 public final class Marker implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Marker.class );
 	private static final long serialVersionUID = -5070227633357072878L;
 	private SpPr sp;
 	private String size;
@@ -106,7 +107,7 @@ public final class Marker implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "marker.parseOOXML: " + e.toString() );
+			log.error( "marker.parseOOXML: " + e.toString() );
 		}
 		Marker m = new Marker( symbol, size, sp );
 		return m;

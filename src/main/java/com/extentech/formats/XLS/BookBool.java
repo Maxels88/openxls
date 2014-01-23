@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>BOOKBOOL: Additional Workspace Information (DAh)</b><br>
@@ -41,7 +42,7 @@ import com.extentech.toolkit.Logger;
 
 public final class BookBool extends com.extentech.formats.XLS.XLSRecord
 {
-
+	private static final Logger log = LoggerFactory.getLogger( BookBool.class );
 	private static final long serialVersionUID = -4544323710670598072L;
 	short grbit;
 
@@ -50,10 +51,7 @@ public final class BookBool extends com.extentech.formats.XLS.XLSRecord
 	{
 		super.init();
 		grbit = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		if( DEBUGLEVEL > 5 )
-		{
-			Logger.logInfo( "BOOKBOOL: " + ((grbit == 0) ? "Save External Links" : "Don't Save External Links") );
-		}
+			log.debug( "BOOKBOOL: " + ((grbit == 0) ? "Save External Links" : "Don't Save External Links") );
 	}
 
 }

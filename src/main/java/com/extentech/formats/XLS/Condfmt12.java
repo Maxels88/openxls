@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.XLS;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Condfmt 12 is a FRT (Future record type) record that handles extended conditional formatting information that
@@ -33,15 +34,12 @@ import com.extentech.toolkit.Logger;
  */
 public class Condfmt12 extends XLSRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Condfmt12.class );
 	private static final long serialVersionUID = 3251845433389628844L;
 
 	@Override
 	public void init()
 	{
-		Logger.logWarn( "Future conditional record type (condfmt12) found, This conditional format cannot be modified by ExtenXLS" );
+		log.warn( "Future conditional record type (condfmt12) found, This conditional format cannot be modified by ExtenXLS" );
 	}
 }

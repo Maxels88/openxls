@@ -26,8 +26,9 @@ import com.extentech.ExtenXLS.FormatHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.formats.OOXML.Color;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.UnsupportedEncodingException;
@@ -70,9 +71,7 @@ import java.io.UnsupportedEncodingException;
 
 public final class Font extends com.extentech.formats.XLS.XLSRecord implements FormatConstants
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Font.class );
 	private static final long serialVersionUID = -398444997553403671L;
 	private short grbit = -1, cch = -1, dyHeight = -1, icv = -1, bls = -1, sss = -1, uls = -1, bFamily = -1;
 	private short bCharSet;
@@ -201,7 +200,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 
 		if( buflen < 0 )
 		{
-			Logger.logWarn( "could not parse font: length reported as " + buflen );
+			log.warn( "could not parse font: length reported as " + buflen );
 			return;
 		}
 
@@ -215,7 +214,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logErr( "Font name decoding failed.", e );
+				log.error( "Font name decoding failed.", e );
 			}
 		}
 		else
@@ -459,7 +458,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		}
 		catch( UnsupportedEncodingException e )
 		{
-			Logger.logWarn( "setting Font Name using Default Encoding failed: " + e );
+			log.error( "setting Font Name using Default Encoding failed: " + e );
 			namebytes = fn.getBytes();
 		}
 		cch = (short) (namebytes.length / 2);
@@ -472,7 +471,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		                  13 );// 20061027 KSC: keep 13th byte for sake of comparisons - 20070816 - revert to original
 		System.arraycopy( this.getBytesAt( 0, 14 ), 0, newdata, 0, 14 );
 		newdata[14] = (byte) cch;
-		newdata[15] = (byte) 1;
+		newdata[15] = 1;
 		System.arraycopy( namebytes, 0, newdata, 16, namebytes.length );
 		this.setData( newdata );
 		this.init();
@@ -1018,7 +1017,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Font.parseOOXML: " + e.toString() );
+			log.error( "Font.parseOOXML: " + e.toString() );
 		}
 		// for incremental styles, font size may not be set
 		int size = (sz == null) ? -1 : Font.PointsToFontHeight( new Double( sz ) );

@@ -30,7 +30,8 @@ import com.extentech.formats.LEO.Storage;
 import com.extentech.formats.LEO.StorageNotFoundException;
 import com.extentech.formats.LEO.StorageTable;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +46,7 @@ import java.util.HashMap;
  */
 public class PivotCache implements XLSConstants
 {
+	private static final Logger log = LoggerFactory.getLogger( PivotCache.class );
 	WorkBook book;
 	HashMap<Integer, Storage> caches = new HashMap();
 	HashMap<Integer, ArrayList<BiffRec>> pivotCacheRecs = new HashMap();
@@ -57,10 +59,6 @@ public class PivotCache implements XLSConstants
 		{
 			caches = new HashMap();
 			book = wbh.getWorkBook();
-			if( wbh.getDebugLevel() > 25 )
-			{        // KSC: TESTING: make > 25
-				Logger.logInfo( "PivotCache.init" );
-			}
 		}
 
 		while( child != null )
@@ -78,10 +76,6 @@ public class PivotCache implements XLSConstants
 				short opcode = ByteTools.readShort( headerbytes[0], headerbytes[1] );
 				int reclen = ByteTools.readShort( headerbytes[2], headerbytes[3] );
 				BiffRec rec = XLSRecordFactory.getBiffRecord( opcode );
-				if( wbh != null )
-				{
-					rec.setDebugLevel( wbh.getDebugLevel() ); // KSC: added to propogate debug level
-				}
 
 				// init the mighty rec
 				rec.setWorkBook( book );
@@ -129,10 +123,7 @@ System.out.println(rec.getClass().getName().substring(rec.getClass().getName().l
 		try
 		{
 			// KSC: TESTING
-			if( wbh.getDebugLevel() > 100 )
-			{
-				System.out.println( String.format( "creatpivotCache: ref: %s sid %d", ref, sId ) );
-			}
+				log.trace( String.format( "creatpivotCache: ref: %s sid %d", ref, sId ) );
 			/**
 			 * the Pivot Cache Storage specifies zero or more streams, each of which specify a PivotCache
 			 * The name of each stream (1) MUST be unique within the storage, and the name MUST be a four digit hexadecimal number stored as text.

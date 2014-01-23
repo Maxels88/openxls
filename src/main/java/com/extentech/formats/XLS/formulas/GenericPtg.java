@@ -29,13 +29,14 @@ import com.extentech.formats.XLS.FunctionNotSupportedException;
 import com.extentech.formats.XLS.Name;
 import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 
 public abstract class GenericPtg implements Ptg, Cloneable
 {
-
+	private static final Logger log = LoggerFactory.getLogger( GenericPtg.class );
 	double doublePrecision = 0.00000001;        // doubles/floats cannot be compared for exactness so use precision comparator
 	public static final long serialVersionUID = 666555444333222l;
 	byte ptgId;
@@ -251,7 +252,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Function not supported: " + this.parent_rec.toString() );
+			log.error( "Function not supported: " + this.parent_rec.toString() );
 		}
 
 		if( strx == null )
@@ -431,7 +432,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 			// we should be throwing something better
 			if( !(this instanceof PtgErr) )    // don't report an error if it's already an error
 			{
-				Logger.logErr( "GetIntVal failed for formula: " + this.getParentRec().toString() + " " + e );
+				log.error( "GetIntVal failed for formula: " + this.getParentRec().toString() + " " + e );
 			}
 			return 0;
 			///  RIIIIGHT!  throw new FormulaCalculationException();
@@ -459,7 +460,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 			pob = this.getValue();
 			if( pob == null )
 			{
-				Logger.logErr( "Unable to calculate Formula at " + this.getLocation() );
+				log.error( "Unable to calculate Formula at " + this.getLocation() );
 				return java.lang.Double.NaN;
 			}
 			d = (Double) pob;
@@ -501,7 +502,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 		}
 		catch( Throwable exp )
 		{
-			Logger.logErr( "Unexpected Exception in PtgCalculator.getDoubleValue()", exp );
+			log.error( "Unexpected Exception in PtgCalculator.getDoubleValue()", exp );
 		}
 		return d;
 	}
@@ -837,7 +838,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 			}
 			catch( Exception e )
 			{
-				Logger.logWarn( "Formula reference could not initialize:" + e.toString() );
+				log.error( "Formula reference could not initialize:" + e.toString() );
 			}
 		}
 	}

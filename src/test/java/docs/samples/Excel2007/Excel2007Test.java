@@ -24,7 +24,8 @@ package docs.samples.Excel2007;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -38,7 +39,7 @@ import java.io.FileOutputStream;
  */
 public class Excel2007Test
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Excel2007Test.class );
 	public WorkBookHandle book;
 	public WorkSheetHandle sheet;
 	private static boolean WRITE_AUTO = true;
@@ -60,9 +61,9 @@ public class Excel2007Test
 	{
 		Excel2007Test test = new Excel2007Test();
 		test.testRead();
-		Logger.logInfo( "Read: " + test.book.toString() + " SUCCESS!" );
+		log.info( "Read: " + test.book.toString() + " SUCCESS!" );
 		test.testWrite();
-		Logger.logInfo( "Write: " + test.book.toString() + " SUCCESS!" );
+		log.info( "Write: " + test.book.toString() + " SUCCESS!" );
 
 	}
 
@@ -106,7 +107,7 @@ public class Excel2007Test
 			// which auto-detects spreadsheet format
 			if( book.getIsExcel2007() )
 			{
-				Logger.logInfo( book.toString() + " is an Excel 2007/2010 XLSX spreadsheet." );
+				log.info( book.toString() + " is an Excel 2007/2010 XLSX spreadsheet." );
 			}
 
 			if( WRITE_AUTO )
@@ -143,7 +144,7 @@ public class Excel2007Test
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Exception in Excel2007Test.", e );
+			log.error( "Exception in Excel2007Test.", e );
 		}
 	}
 

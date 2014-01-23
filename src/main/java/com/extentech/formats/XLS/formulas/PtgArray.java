@@ -24,7 +24,8 @@ package com.extentech.formats.XLS.formulas;
 
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 
@@ -81,9 +82,7 @@ import java.io.UnsupportedEncodingException;
 // 20090119-22 KSC: Many, many changes changes
 public class PtgArray extends GenericPtg implements Ptg
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgArray.class );
 	private static final long serialVersionUID = 4416140231168551393L;
 	int nc = -1;
 	int nr = -1;
@@ -220,7 +219,7 @@ public class PtgArray extends GenericPtg implements Ptg
 					}
 					catch( UnsupportedEncodingException e )
 					{
-						Logger.logInfo( "decoding formula string in array failed: " + e );
+						log.warn( "decoding formula string in array failed: " + e, e );
 					}
 					arrVals.add( strVal );
 					i += strLen;
@@ -284,7 +283,7 @@ public class PtgArray extends GenericPtg implements Ptg
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Error Processing Array Formula: " + e.toString() );
+			log.error( "Error Processing Array Formula: " + e.toString() );
 			return;
 		}
 	}
@@ -361,7 +360,7 @@ public class PtgArray extends GenericPtg implements Ptg
 		arrStr = arrStr.substring( 1, arrStr.length() - 1 );
 		if( arrStr.indexOf( "{" ) != -1 )
 		{ // SHOULDN'T -- see FormulaParser.getPtgsFromFormulaString
-			Logger.logErr( "PtgArray.setVal: Multiple Arrays Encountered" );
+			log.error( "PtgArray.setVal: Multiple Arrays Encountered" );
 		}
 
 		// parse all array strings into rows, cols
@@ -485,14 +484,14 @@ public class PtgArray extends GenericPtg implements Ptg
 					}
 					catch( UnsupportedEncodingException z )
 					{
-						Logger.logWarn( "encoding formula array:" + z );
+						log.warn( "encoding formula array:" + z , z);
 					}
 				}
 				databytes = ByteTools.append( thisElement, databytes );
 			}
 			catch( Exception ex )
 			{
-				Logger.logWarn( "PtgArray.valuesIntoByteArray:  error parsing array element:" + ex );
+				log.warn( "PtgArray.valuesIntoByteArray:  error parsing array element:" + ex, ex );
 			}
 		}
 		return databytes;
@@ -668,7 +667,7 @@ public class PtgArray extends GenericPtg implements Ptg
 		}
 		catch( ArrayIndexOutOfBoundsException e )
 		{
-			Logger.logErr( "PtgArray.elementAt: error retrieving value at [" + row + "," + col + "]: " + e );
+			log.error( "PtgArray.elementAt: error retrieving value at [" + row + "," + col + "]: " + e );
 		}
 		return null;
 	}

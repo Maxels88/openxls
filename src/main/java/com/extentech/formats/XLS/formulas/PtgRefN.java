@@ -30,7 +30,8 @@ import com.extentech.formats.XLS.Shrfmla;
 import com.extentech.formats.XLS.WorkBook;
 import com.extentech.formats.XLS.XLSConstants;
 import com.extentech.formats.XLS.XLSRecord;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * PtgRefN is a modified PtgRef that is for shared formulas.
@@ -68,10 +69,7 @@ import com.extentech.toolkit.Logger;
  */
 public class PtgRefN extends PtgRef
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgRefN.class );
 	private static final long serialVersionUID = 2652944516984815274L;
 	/* private int formulaRow;
 	private int formulaCol;*/
@@ -165,7 +163,7 @@ public class PtgRefN extends PtgRef
 		}
 		else
 		{
-			Logger.logWarn( "PtgRefN.setLocation() failed: NO record data: " + rowcol.toString() );
+			log.warn( "PtgRefN.setLocation() failed: NO record data: " + rowcol.toString() );
 		}
 		hashcode = getHashCode();
 		if( useReferenceTracker )
@@ -266,7 +264,7 @@ public class PtgRefN extends PtgRef
 		}
 		else
 		{
-			Logger.logWarn( "PtgRefN.setLocation() failed: NO record data: " + address.toString() );
+			log.warn( "PtgRefN.setLocation() failed: NO record data: " + address.toString() );
 		}
 	}
 

@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.OOXML;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ import java.util.Stack;
  */
 public class AvLst implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( AvLst.class );
 	private static final long serialVersionUID = 4823524943145191780L;
 	private ArrayList gds = null;
 
@@ -75,7 +76,7 @@ public class AvLst implements OOXMLElement
 						lastTag.push( tnm );
 						if( gds == null )
 						{
-							gds = new ArrayList<Gd>();
+							gds = new ArrayList<>();
 						}
 						gds.add( (Gd) Gd.parseOOXML( xpp, lastTag ) );
 					}
@@ -94,7 +95,7 @@ public class AvLst implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "avLst.parseOOXML: " + e.toString() );
+			log.error( "avLst.parseOOXML: " + e.toString() );
 		}
 		AvLst av = new AvLst( gds );
 		return av;

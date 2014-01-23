@@ -24,7 +24,8 @@ package com.extentech.formats.XLS;
 
 import com.extentech.formats.XLS.charts.Chart;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -80,6 +81,7 @@ import java.util.ArrayList;
  */
 public final class Obj extends com.extentech.formats.XLS.XLSRecord
 {
+	private static final Logger log = LoggerFactory.getLogger( Obj.class );
 	private FtCmo ftCmo = null;    // FtCmo object contains common object properties such as object type
 	private static final long serialVersionUID = -4442755911399227290L;
 	// defines a PICTURE-type Object Record
@@ -386,10 +388,7 @@ obj.ftCmo.getRec()[17]= (byte)0x02;
 		}
 		catch( ArrayIndexOutOfBoundsException ae )
 		{
-			if( false )
-			{
-				Logger.logInfo( "Obj encountered in records" );
-			}
+				log.warn( "Obj encountered in records", ae );
 		}
 	}
 
@@ -954,10 +953,7 @@ obj.ftCmo.getRec()[17]= (byte)0x02;
 		}
 		catch( ArrayIndexOutOfBoundsException ae )
 		{
-			if( false )
-			{
-				Logger.logInfo( "Obj encountered in records" );
-			}
+				Obj.this.log.warn( "Obj encountered in records", ae );
 		}
 		return log.toString();
 	}

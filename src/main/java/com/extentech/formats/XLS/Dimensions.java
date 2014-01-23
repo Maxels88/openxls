@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>Dimensions 0x200: Describes the max BiffRec dimensions of a Sheet.</b><br>
@@ -53,10 +54,7 @@ import com.extentech.toolkit.Logger;
 
 public class Dimensions extends com.extentech.formats.XLS.XLSRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Dimensions.class );
 	private static final long serialVersionUID = 7156425132146869228L;
 	int rowFirst = 0;
 	int rowLast = 0;
@@ -130,7 +128,7 @@ public class Dimensions extends com.extentech.formats.XLS.XLSRecord
 		c++;
 		if( (c >= MAXCOLS_BIFF8) && !this.wkbook.getIsExcel2007() )
 		{
-			Logger.logWarn( "Dimensions.setColLast column: " + c + " is incompatible with pre Excel2007 versions." );
+			log.warn( "Dimensions.setColLast column: " + c + " is incompatible with pre Excel2007 versions." );
 		}
 
 		if( c >= MAXCOLS )
@@ -194,12 +192,6 @@ public class Dimensions extends com.extentech.formats.XLS.XLSRecord
 		{
 			this.setRowFirst( row ); // now incremented only in setRowXX
 		}
-
-		if( DEBUGLEVEL > 10 )
-		{
-			String shtnm = this.getSheet().getSheetName();
-			Logger.logInfo( shtnm + " dimensions: " + rowFirst + ":" + colFirst + "-" + rowLast + ":" + colLast );
-		}
 	}
 
 	/**
@@ -216,11 +208,5 @@ public class Dimensions extends com.extentech.formats.XLS.XLSRecord
 		{
 			this.setColFirst( col );
 		}
-		if( DEBUGLEVEL > 10 )
-		{
-			String shtnm = this.getSheet().getSheetName();
-			Logger.logInfo( shtnm + " dimensions: " + rowFirst + ":" + colFirst + "-" + rowLast + ":" + colLast );
-		}
 	}
-
 }

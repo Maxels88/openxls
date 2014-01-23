@@ -35,11 +35,12 @@ import com.extentech.formats.XLS.Font;
 import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.formats.cellformat.CellFormatFactory;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -108,9 +109,7 @@ import java.util.Stack;
  */
 public class Axis extends GenericChartObject implements ChartObject
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Axis.class );
 	private static final long serialVersionUID = -8592219101790307789L;
 	short wType = 0;
 	private TextDisp linkedtd = null;    // 20070730 KSC: hold axis legend TextDisp for this axis
@@ -896,7 +895,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		}
 		catch( JSONException e )
 		{
-			Logger.logErr( "Error getting Axis JSON: " + e );
+			log.error( "Error getting Axis JSON: " + e );
 		}
 		return axisJSON;
 	}
@@ -1277,7 +1276,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		}
 		catch( JSONException e )
 		{
-			Logger.logErr( "Error getting Axis JSON: " + e );
+			log.error( "Error getting Axis JSON: " + e );
 		}
 		return axisJSON;
 	}
@@ -1714,7 +1713,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Axis: " + e.toString() );
+			log.error( "Axis: " + e.toString() );
 		}
 	}
 
@@ -1757,7 +1756,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "parseGridLinesOOXML: " + e.toString() );
+			log.error( "parseGridLinesOOXML: " + e.toString() );
 		}
 	}
 
@@ -1804,7 +1803,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "parseDispUnitsOOXML: " + e.toString() );
+			log.error( "parseDispUnitsOOXML: " + e.toString() );
 		}
 	}
 
@@ -2921,6 +2920,7 @@ public class Axis extends GenericChartObject implements ChartObject
 
 class Scaling implements OOXMLElement
 {
+	private static final Logger log = LoggerFactory.getLogger( Scaling.class );
 	private String logBase, max, min, orientation;
 
 	public Scaling()
@@ -2995,7 +2995,7 @@ class Scaling implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "scaling.parseOOXML: " + e.toString() );
+			log.error( "scaling.parseOOXML: " + e.toString() );
 		}
 		Scaling s = new Scaling( logBase, max, min, orientation );
 		return s;

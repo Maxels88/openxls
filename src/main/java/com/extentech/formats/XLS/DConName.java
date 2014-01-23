@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 
@@ -56,9 +57,7 @@ import java.io.UnsupportedEncodingException;
 
 public class DConName extends XLSRecord implements XLSConstants
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( DConName.class );
 	private static final long serialVersionUID = 2639291289806138985L;
 	private short cchFile;
 	private String namedRange = null;
@@ -91,20 +90,16 @@ public class DConName extends XLSRecord implements XLSConstants
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logInfo( "encoding PivotTable name in DCONNAME: " + e );
+				log.warn( "encoding PivotTable name in DCONNAME: " + e, e );
 			}
 		}
 		cchFile = ByteTools.readShort( this.getByteAt( pos + cch ), this.getByteAt( pos + cch + 1 ) );
 		// either 0 or >=2
 		if( cchFile > 0 )
 		{
-			Logger.logWarn( "PivotTable: External Workbooks for Named Range Source are Unspported" );
+			log.warn( "PivotTable: External Workbooks for Named Range Source are Unsupported" );
 		}
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "DCONNAME: namedRange:" + namedRange + " cchFile: " + cchFile );
-		}
-
+			log.debug( "DCONNAME: namedRange:" + namedRange + " cchFile: " + cchFile );
 	}
 
 	/**

@@ -25,7 +25,8 @@ package com.extentech.formats.OOXML;
 import com.extentech.ExtenXLS.FormatHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.formats.XLS.Font;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Arrays;
@@ -48,7 +49,7 @@ import java.util.Arrays;
 // TODO: protection element
 public class Dxf implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Dxf.class );
 	private static final long serialVersionUID = -5999328795988018131L;
 	private Font font = null;
 	private NumFmt numFmt = null;
@@ -134,7 +135,7 @@ public class Dxf implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "dxf.parseOOXML: " + e.toString() );
+			log.error( "dxf.parseOOXML: " + e.toString() );
 		}
 		Dxf d = new Dxf( fnt, nf, f, a, b, bk );
 		return d;

@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -79,10 +80,7 @@ import java.util.ArrayList;
 
 public final class Txo extends com.extentech.formats.XLS.XLSRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Txo.class );
 	private static final long serialVersionUID = -7043468034346138525L;
 	Continue text, formattingruns; //20100430 KSC: garbagetxo is really a masked mso, garbagetxo;  // garbagetxo is a third continue that appears to be cropping up in infoteria files.  We are removing from the file stream currently, but may need to integrate
 	int state = 0;
@@ -137,7 +135,7 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( UnsupportedEncodingException e )
 		{
-			Logger.logInfo( "reading Text Object failed: " + e.toString() );
+			log.warn( "reading Text Object failed: " + e.toString(), e );
 		}
 		return s;
 	}
@@ -176,10 +174,7 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 		byte[] a = v.getBytes();
 		byte[] b = new byte[a.length + 1];
 		System.arraycopy( a, 0, b, 1, a.length );
-		if( DEBUGLEVEL > 1 )
-		{
-			Logger.logInfo( "Txo CHANGING: " + this.getStringVal() );
-		}
+			log.debug( "Txo CHANGING: " + this.getStringVal() );
 		// TODO: checked for Compressed UNICODE in text CONTINUE
 		b[0] = 0x0;
 		if( text != null )
@@ -194,10 +189,7 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 		this.getData()[10] = b[0];
 		this.getData()[11] = b[1];
 		cchText = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );    // reset text length
-		if( DEBUGLEVEL > 1 )
-		{
-			Logger.logInfo( " TO: " + this.getStringVal() );
-		}
+			log.debug( " TO: " + this.getStringVal() );
 	}
 
 	/**

@@ -36,8 +36,9 @@ import com.extentech.formats.XLS.formulas.PtgParen;
 import com.extentech.formats.XLS.formulas.PtgRef;
 import com.extentech.formats.XLS.formulas.PtgRef3d;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.List;
@@ -73,22 +74,26 @@ import java.util.Stack;
 
 public final class Ai extends GenericChartObject implements ChartObject
 {
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -6647823755603289012L;
-	private Stack expression;
-	protected int id = -1, ifmt = -1, cce = -1;
-	private short grbit = -1, rt = -1;
-	private boolean fCustomIfmt = false;
-	//private CompatibleVector xlsrecs = new CompatibleVector();
-	private SeriesText st = null;
 	// define the type of Ai record
 	public static final int TYPE_TEXT = 0;
 	public static final int TYPE_VALS = 1;
 	public static final int TYPE_CATEGORIES = 2;
 	public static final int TYPE_BUBBLES = 3;
-
+	// 20070801 KSC: since changeAiLocation now allows addition of new expression bytes, alter
+	// default prototype bytes here to not include any expression bytes ..
+	protected static byte[] AI_TYPE_LEGEND = new byte[]{ 0, 2, 0, 0, 0, 0, 0, 0 }; //, 7, 0, 58, 0, 0, 0, 0, 0, 0};
+	protected static byte[] AI_TYPE_SERIES = new byte[]{ 1, 2, 0, 0, 0, 0, 0, 0 }; //, 11, 0, 59, 0, 0, 1, 0, 1, 0, 1, 0, 3, 0};
+	protected static byte[] AI_TYPE_CATEGORY = new byte[]{ 2, 2, 0, 0, 0, 0, 0, 0 }; // 11, 0, 59, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0};
+	protected static byte[] AI_TYPE_BUBBLE = new byte[]{ 3, 1, 0, 0, 0, 0, 0, 0 };
+	protected static byte[] AI_TYPE_NULL_LEGEND = new byte[]{ 0, 1, 0, 0, 0, 0, 0, 0 };
+	protected int id = -1, ifmt = -1, cce = -1;
+	private static final Logger log = LoggerFactory.getLogger( Ai.class );
+	private static final long serialVersionUID = -6647823755603289012L;
+	private Stack expression;
+	private short grbit = -1, rt = -1;
+	private boolean fCustomIfmt = false;
+	//private CompatibleVector xlsrecs = new CompatibleVector();
+	private SeriesText st = null;
 	/**
 	 * This is for storage of the boundsheet name when the ai record is being moved from
 	 * one workbook to another.  In these cases, populate this value, and pull it back out
@@ -99,6 +104,24 @@ public final class Ai extends GenericChartObject implements ChartObject
 	private String boundName = "";
 	private String origSheetName = "";
 	private int boundXti = -1;
+
+	/**
+	 * Get a prototype with the specified ai types.
+	 * <p/>
+	 * 0 = Legend AI
+	 * 1=  Series Value Ai
+	 * 2 = Category Ai
+	 * 3 = Unknown, undocumented, but neccesarry AI
+	 * 4 = Blank Legend AI with no reference.
+	 */
+	public static ChartObject getPrototype( byte[] aiType )
+	{
+		Ai ai = new Ai();
+		ai.setOpcode( AI );
+		ai.setData( aiType );
+		ai.init();
+		return ai;
+	}
 
 	/**
 	 * returns the bound sheet name - must be called after populateForTransfer
@@ -119,6 +142,10 @@ public final class Ai extends GenericChartObject implements ChartObject
 	{
 		return boundXti;
 	}
+
+//	protected XLSRecord getRecord(int i){
+//		return (XLSRecord) xlsrecs.get(i);
+//	}
 
 	/**
 	 * Sets the boundsheet name for the data referenced in this AI.
@@ -145,7 +172,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 					}
 					catch( Exception e )
 					{
-						Logger.logErr( "Ai.populateForTransfer: Chart contains links to other data sources" );
+						log.error( "Ai.populateForTransfer: Chart contains links to other data sources" );
 					}
 				}
 				else if( p instanceof PtgRef3d )
@@ -158,7 +185,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 					}
 					catch( Exception e )
 					{
-						Logger.logErr( "Ai.populateForTransfer: Chart contains links to other data sources" );
+						log.error( "Ai.populateForTransfer: Chart contains links to other data sources" );
 					}
 				}
 				else if( p instanceof PtgMemFunc )
@@ -174,7 +201,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 						}
 						catch( Exception e )
 						{
-							Logger.logErr( "Ai.populateForTransfer: Chart contains links to other data sources" );
+							log.error( "Ai.populateForTransfer: Chart contains links to other data sources" );
 						}
 					}
 					else
@@ -187,7 +214,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 						}
 						catch( Exception e )
 						{
-							Logger.logErr( "Ai.populateForTransfer: Chart contains links to other data sources" );
+							log.error( "Ai.populateForTransfer: Chart contains links to other data sources" );
 						}
 					}
 				}
@@ -219,7 +246,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 		}
 		catch( ClassCastException e )
 		{
-			// Logger.logInfo("Error getting Chart String value: " + e);
+			// log.info("Error getting Chart String value: " + e);
 			return false;
 		}
 	}
@@ -237,10 +264,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 		}
 		catch( Exception e )
 		{
-			if( DEBUGLEVEL > 0 )
-			{
-				Logger.logWarn( "Error getting Chart String value: " + e );
-			}
+				log.warn( "Error getting Chart String value: " + e );
 			return getDefinition();
 		}
 		//TODO: figure out why this doesn't find the title -- see "reportS01Template.xls"
@@ -263,17 +287,38 @@ public final class Ai extends GenericChartObject implements ChartObject
 		return super.toString();
 	}
 
+	@Override
+	public void init()
+	{
+		super.init();
+		id = this.getByteAt( 0 );
+		// index id: (0=title or text, 1=series vals, 2=series cats, 3= bubbles
+		rt = this.getByteAt( 1 );
+		// reference type(0=default,1=text in formula bar, 2=worksheet, 4=error)
+		grbit = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
+		fCustomIfmt = (grbit & 0x1) == 0x1;
+		// flags
+		ifmt = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
+		// Index to number format
+		cce = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
+		// size of rgce (in bytes)
+		int pos = 8;
+		//  Parsed formula of link
+
+		// 	get the parsed expression
+		byte[] expressionbytes = this.getBytesAt( pos, cce );
+		expression = ExpressionParser.parseExpression( expressionbytes, this );
+		pos += cce;
+		log.trace( this.getName() + ":" + this.getDefinition() );
+	}
+
 	//	public void addRecord(BiffRec rec){
-//		xlsrecs.add(rec);	 
+//		xlsrecs.add(rec);
 //	}
 	public void setSeriesText( SeriesText s )
 	{
 		st = s;
 	}
-
-//	protected XLSRecord getRecord(int i){
-//		return (XLSRecord) xlsrecs.get(i);
-//	}
 
 	/**
 	 * set the Externsheet reference
@@ -292,10 +337,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 				PtgArea3d pt = (PtgArea3d) p;
 				pt.setIxti( (short) x );
 				pt.addToRefTracker();
-				if( DEBUGLEVEL > 3 )
-				{
-					Logger.logInfo( "Setting sheet reference for: " + pt.toString() + "  in Ai record." );
-				}
+				log.info( "Setting sheet reference for: " + pt.toString() + "  in Ai record." );
 				// register with the Externsheet reference
 				this.getWorkBook().getExternSheet().addPtgListener( pt );
 				updateRecord();
@@ -305,10 +347,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 				PtgRef3d pr = (PtgRef3d) p;
 				pr.setIxti( (short) x );
 				pr.addToRefTracker();
-				if( DEBUGLEVEL > 3 )
-				{
-					Logger.logInfo( "Setting sheet reference for: " + pr.toString() + "  in Ai record." );
-				}
+					log.debug( "Setting sheet reference for: " + pr.toString() + "  in Ai record." );
 				// register with the Externsheet reference
 				this.getWorkBook().getExternSheet().addPtgListener( pr );
 				updateRecord();
@@ -328,16 +367,13 @@ public final class Ai extends GenericChartObject implements ChartObject
 					((PtgArea3d) pr).addToRefTracker();
 					this.getWorkBook().getExternSheet().addPtgListener( (PtgArea3d) pr );
 				}
-				if( DEBUGLEVEL > 3 )
-				{
-					Logger.logInfo( "Setting sheet reference for: " + pr.toString() + "  in Ai record." );
-				}
+					log.debug( "Setting sheet reference for: " + pr.toString() + "  in Ai record." );
 				// register with the Externsheet reference
 				updateRecord();
 			}
 			else
 			{
-				Logger.logInfo( "Ai.setExternsheetRef: unknown Ptg" );
+				log.info( "Ai.setExternsheetRef: unknown Ptg" );
 			}
 		}
 	}
@@ -363,10 +399,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 					pt.setSheetName( this.getSheet().getSheetName() );    // 20100415 KSC: added
 					pt.setIxti( (short) newRef );
 					pt.addToRefTracker();    // 20080709 KSC
-					if( DEBUGLEVEL > 3 )
-					{
-						Logger.logInfo( "Setting sheet reference for: " + pt.toString() + "  in Ai record." );
-					}
+						log.debug( "Setting sheet reference for: " + pt.toString() + "  in Ai record." );
 					// register with the Externsheet reference
 					this.getWorkBook().getExternSheet().addPtgListener( pt );
 					updateRecord();
@@ -385,10 +418,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 					{
 						pr.addToRefTracker();
 					}
-					if( DEBUGLEVEL > 3 )
-					{
-						Logger.logInfo( "Setting sheet reference for: " + pr.toString() + "  in Ai record." );
-					}
+					log.debug( "Setting sheet reference for: " + pr.toString() + "  in Ai record." );
 					// register with the Externsheet reference
 					this.getWorkBook().getExternSheet().addPtgListener( pr );
 					updateRecord();
@@ -421,10 +451,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 						this.getWorkBook().getExternSheet().addPtgListener( (PtgArea3d) pr );
 					}
 				}
-				if( DEBUGLEVEL > 3 )
-				{
-					Logger.logInfo( "Setting sheet reference for: " + pr.toString() + "  in Ai record." );
-				}
+					log.debug( "Setting sheet reference for: " + pr.toString() + "  in Ai record." );
 				// register with the Externsheet reference
 				updateRecord();
 			}
@@ -465,14 +492,14 @@ public final class Ai extends GenericChartObject implements ChartObject
 						if( anExpression instanceof PtgArea3d )
 						{
 							PtgArea3d p = (PtgArea3d) anExpression;
-							Logger.logWarn( "External References are unsupported: External reference found in Chart: " + p.getSheetName() );
+							log.warn( "External References are unsupported: External reference found in Chart: " + p.getSheetName() );
 							p.setSheetName( boundName );    // set external reference to original boundsheet name
 							p.setExternalReference( origWorkBookName );
 							this.setExternsheetRef( p.getIxti() );
 						}
 						else
 						{
-							Logger.logInfo( "Ai.updateSheetRef:" );
+							log.info( "Ai.updateSheetRef:" );
 						}
 					}
 				}
@@ -488,21 +515,13 @@ public final class Ai extends GenericChartObject implements ChartObject
 			}
 			else
 			{// debugging 20100415
-//				Logger.logErr("Ai.updateSheetRef: boundxti is -1 for AI " + this.toString());
+//				log.error("Ai.updateSheetRef: boundxti is -1 for AI " + this.toString());
 			}
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Ai.updateSheetRef: " + e.toString() );
+			log.error( "Ai.updateSheetRef: " + e.toString() );
 		}
-	}
-
-	/**
-	 * get the display name
-	 */
-	String getName()
-	{
-		return "Chart Ai";
 	}
 
 	/**
@@ -528,8 +547,8 @@ public final class Ai extends GenericChartObject implements ChartObject
 		return sb.toString();
 	}
 
-	/*  Returns an array of ptgs that represent any BiffRec ranges in the formula.  
-		Ranges can either be in the format "C5" or "Sheet1!C4:D9"      
+	/*  Returns an array of ptgs that represent any BiffRec ranges in the formula.
+		Ranges can either be in the format "C5" or "Sheet1!C4:D9"
 	*/
 	public Ptg[] getCellRangePtgs() throws FormulaNotFoundException
 	{
@@ -558,7 +577,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 	}
 
 	/*  Returns the ptg that matches the string location sent to it.
-		this can either be in the format "C5" or a range, such as "C4:D9"      
+		this can either be in the format "C5" or a range, such as "C4:D9"
 	*/
 	public List getPtgsByLocation( String loc )
 	{
@@ -568,7 +587,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 		}
 		catch( FormulaNotFoundException e )
 		{
-			Logger.logWarn( "failed to update Chart Series Location: " + e );
+			log.warn( "failed to update Chart Series Location: " + e );
 		}
 		return null;
 	}
@@ -624,7 +643,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 					}
 					catch( Exception ex )
 					{
-						Logger.logErr( "Ai.changeAiLocation: Error updating Location in non-contiguous range " + ex.toString() );
+						log.error( "Ai.changeAiLocation: Error updating Location in non-contiguous range " + ex.toString() );
 					}
 				}
 				else
@@ -647,7 +666,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "Ai.changeAiLocation: Error updating Location to " + newLoc + ":" + e.toString() );
+				log.error( "Ai.changeAiLocation: Error updating Location to " + newLoc + ":" + e.toString() );
 				return false;
 			}
 		}
@@ -717,7 +736,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 			Object o = expression.elementAt( i );
 			Ptg ptg = (Ptg) o;
 			byte[] b = ptg.getRecord();
-			//	 must inc. size if Ptgs have inc.'d ... see changeAiLocation 
+			//	 must inc. size if Ptgs have inc.'d ... see changeAiLocation
 			int len = b.length;
 			if( (updated.length - offy) < len )
 			{
@@ -735,34 +754,6 @@ public final class Ai extends GenericChartObject implements ChartObject
 		this.setData( updated );
 	}
 
-	@Override
-	public void init()
-	{
-		super.init();
-		id = this.getByteAt( 0 );
-		// index id: (0=title or text, 1=series vals, 2=series cats, 3= bubbles
-		rt = this.getByteAt( 1 );
-		// reference type(0=default,1=text in formula bar, 2=worksheet, 4=error)
-		grbit = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		fCustomIfmt = (grbit & 0x1) == 0x1;
-		// flags
-		ifmt = (int) ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		// Index to number format
-		cce = (int) ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
-		// size of rgce (in bytes)
-		int pos = 8;
-		//  Parsed formula of link
-
-		// 	get the parsed expression
-		byte[] expressionbytes = this.getBytesAt( pos, cce );
-		expression = ExpressionParser.parseExpression( expressionbytes, this );
-		pos += cce;
-		if( DEBUGLEVEL > 10 )
-		{
-			Logger.logInfo( this.getName() + ":" + this.getDefinition() );
-		}
-	}
-
 	/**
 	 * set reference type(0=default,1=text in formula bar, 2=worksheet, 4=error)
 	 *
@@ -773,32 +764,6 @@ public final class Ai extends GenericChartObject implements ChartObject
 		rt = (short) i;
 		this.getData()[1] = (byte) rt;
 	}
-
-	/**
-	 * Get a prototype with the specified ai types.
-	 * <p/>
-	 * 0 = Legend AI
-	 * 1=  Series Value Ai
-	 * 2 = Category Ai
-	 * 3 = Unknown, undocumented, but neccesarry AI
-	 * 4 = Blank Legend AI with no reference.
-	 */
-	public static ChartObject getPrototype( byte[] aiType )
-	{
-		Ai ai = new Ai();
-		ai.setOpcode( AI );
-		ai.setData( aiType );
-		ai.init();
-		return ai;
-	}
-
-	// 20070801 KSC: since changeAiLocation now allows addition of new expression bytes, alter
-	// default prototype bytes here to not include any expression bytes ..
-	protected static byte[] AI_TYPE_LEGEND = new byte[]{ 0, 2, 0, 0, 0, 0, 0, 0 }; //, 7, 0, 58, 0, 0, 0, 0, 0, 0};
-	protected static byte[] AI_TYPE_SERIES = new byte[]{ 1, 2, 0, 0, 0, 0, 0, 0 }; //, 11, 0, 59, 0, 0, 1, 0, 1, 0, 1, 0, 3, 0};
-	protected static byte[] AI_TYPE_CATEGORY = new byte[]{ 2, 2, 0, 0, 0, 0, 0, 0 }; // 11, 0, 59, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0};
-	protected static byte[] AI_TYPE_BUBBLE = new byte[]{ 3, 1, 0, 0, 0, 0, 0, 0 };
-	protected static byte[] AI_TYPE_NULL_LEGEND = new byte[]{ 0, 1, 0, 0, 0, 0, 0, 0 };
 
 	public Stack getExpression()
 	{
@@ -831,5 +796,13 @@ public final class Ai extends GenericChartObject implements ChartObject
 	protected void finalize()
 	{
 		this.close();
+	}
+
+	/**
+	 * get the display name
+	 */
+	String getName()
+	{
+		return "Chart Ai";
 	}
 }

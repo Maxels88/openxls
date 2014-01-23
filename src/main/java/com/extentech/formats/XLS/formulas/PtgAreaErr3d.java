@@ -26,7 +26,8 @@ import com.extentech.formats.XLS.Boundsheet;
 import com.extentech.formats.XLS.Externsheet;
 import com.extentech.formats.XLS.WorkSheetNotFoundException;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An Erroneous BiffRec range spanning 3rd dimension of WorkSheets.
@@ -38,7 +39,7 @@ import com.extentech.toolkit.Logger;
  */
 public class PtgAreaErr3d extends PtgArea3d implements Ptg
 {
-
+	private static final Logger log = LoggerFactory.getLogger( PtgAreaErr3d.class );
 	// Excel can handle PtgRefErrors within formulas, as long as they are not the result so...
 
 	/**
@@ -115,7 +116,7 @@ public class PtgAreaErr3d extends PtgArea3d implements Ptg
 		}
 		catch( WorkSheetNotFoundException e )
 		{
-			Logger.logErr( "Unable to set referenced sheet in PtgRef3d " + e );
+			log.error( "Unable to set referenced sheet in PtgRef3d " + e );
 		}
 	}
 

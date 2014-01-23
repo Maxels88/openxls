@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.OOXML;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ import java.util.Iterator;
 // TODO: finish filterColumn children filters->filter, dataGroupItem
 public class AutoFilter implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( AutoFilter.class );
 	private static final long serialVersionUID = 7111401348177004218L;
 	private String ref = null;
 	private ArrayList<FilterColumn> filterColumns = null;
@@ -85,7 +86,7 @@ public class AutoFilter implements OOXMLElement
 					{
 						if( f == null )
 						{
-							f = new ArrayList<FilterColumn>();
+							f = new ArrayList<>();
 						}
 						f.add( FilterColumn.parseOOXML( xpp ) );
 					}
@@ -103,7 +104,7 @@ public class AutoFilter implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "autoFilter.parseOOXML: " + e.toString() );
+			log.error( "autoFilter.parseOOXML: " + e.toString() );
 		}
 		AutoFilter a = new AutoFilter( ref, f );
 		return a;
@@ -149,7 +150,7 @@ public class AutoFilter implements OOXMLElement
  */
 class FilterColumn implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( FilterColumn.class );
 	private static final long serialVersionUID = 5005589034415840928L;
 	private HashMap<String, String> attrs = null;
 	private Object filter = null;        // CHOICE of filter
@@ -168,7 +169,7 @@ class FilterColumn implements OOXMLElement
 
 	public static FilterColumn parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		Object filter = null;        // CHOICE of filter
 		try
 		{
@@ -218,7 +219,7 @@ class FilterColumn implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "filterColumn.parseOOXML: " + e.toString() );
+			log.error( "filterColumn.parseOOXML: " + e.toString() );
 		}
 		FilterColumn f = new FilterColumn( attrs, filter );
 		return f;
@@ -284,7 +285,7 @@ class FilterColumn implements OOXMLElement
  */
 class ColorFilter implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( ColorFilter.class );
 	private static final long serialVersionUID = 7077951504723033275L;
 	private HashMap<String, String> attrs = null;
 
@@ -300,7 +301,7 @@ class ColorFilter implements OOXMLElement
 
 	public static ColorFilter parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -330,7 +331,7 @@ class ColorFilter implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "colorFilter.parseOOXML: " + e.toString() );
+			log.error( "colorFilter.parseOOXML: " + e.toString() );
 		}
 		ColorFilter oe = new ColorFilter( attrs );
 		return oe;
@@ -372,7 +373,7 @@ class ColorFilter implements OOXMLElement
  */
 class DynamicFilter implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( DynamicFilter.class );
 	private static final long serialVersionUID = -473171074711686551L;
 	private HashMap<String, String> attrs = null;
 
@@ -388,7 +389,7 @@ class DynamicFilter implements OOXMLElement
 
 	public static DynamicFilter parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -418,7 +419,7 @@ class DynamicFilter implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "dynamicFilter.parseOOXML: " + e.toString() );
+			log.error( "dynamicFilter.parseOOXML: " + e.toString() );
 		}
 		DynamicFilter d = new DynamicFilter( attrs );
 		return d;
@@ -459,7 +460,7 @@ class DynamicFilter implements OOXMLElement
  */
 class IconFilter implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( IconFilter.class );
 	private static final long serialVersionUID = -5897037678209125965L;
 	private HashMap<String, String> attrs = null;
 
@@ -475,7 +476,7 @@ class IconFilter implements OOXMLElement
 
 	public static IconFilter parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -505,7 +506,7 @@ class IconFilter implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "iconFilter.parseOOXML: " + e.toString() );
+			log.error( "iconFilter.parseOOXML: " + e.toString() );
 		}
 		IconFilter i = new IconFilter( attrs );
 		return i;
@@ -542,7 +543,7 @@ class IconFilter implements OOXMLElement
  */
 class CustomFilters implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( CustomFilters.class );
 	private static final long serialVersionUID = -2491942158519963335L;
 	private boolean and = false;
 	private CustomFilter[] custfilter = null;
@@ -597,7 +598,7 @@ class CustomFilters implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "customFilters.parseOOXML: " + e.toString() );
+			log.error( "customFilters.parseOOXML: " + e.toString() );
 		}
 		CustomFilters c = new CustomFilters( and, custfilter );
 		return c;
@@ -647,7 +648,7 @@ class CustomFilters implements OOXMLElement
  */
 class CustomFilter implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( CustomFilter.class );
 	private static final long serialVersionUID = 7995078604042667255L;
 	private HashMap<String, String> attrs = null;
 
@@ -663,7 +664,7 @@ class CustomFilter implements OOXMLElement
 
 	public static CustomFilter parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -693,7 +694,7 @@ class CustomFilter implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "customFilter.parseOOXML: " + e.toString() );
+			log.error( "customFilter.parseOOXML: " + e.toString() );
 		}
 		CustomFilter c = new CustomFilter( attrs );
 		return c;
@@ -732,7 +733,7 @@ class CustomFilter implements OOXMLElement
  */
 class Top10 implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Top10.class );
 	private static final long serialVersionUID = 77735498689922082L;
 	private HashMap<String, String> attrs = null;
 
@@ -748,7 +749,7 @@ class Top10 implements OOXMLElement
 
 	public static Top10 parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -778,7 +779,7 @@ class Top10 implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "top10.parseOOXML: " + e.toString() );
+			log.error( "top10.parseOOXML: " + e.toString() );
 		}
 		Top10 t = new Top10( attrs );
 		return t;
@@ -819,7 +820,7 @@ class Top10 implements OOXMLElement
 // TODO: finish children
 class Filters implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Filters.class );
 	private static final long serialVersionUID = 921424089049938924L;
 	private HashMap<String, String> attrs = null;
 
@@ -835,7 +836,7 @@ class Filters implements OOXMLElement
 
 	public static Filters parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -872,7 +873,7 @@ class Filters implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "filters.parseOOXML: " + e.toString() );
+			log.error( "filters.parseOOXML: " + e.toString() );
 		}
 		Filters oe = new Filters( attrs );
 		return oe;

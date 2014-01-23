@@ -74,11 +74,6 @@ public interface BiffRec
 	public boolean isReadOnly();
 
 	/**
-	 * set the DEBUG level
-	 */
-	public abstract void setDebugLevel( int b );
-
-	/**
 	 * return the record index of this object
 	 */
 	public abstract int getRecordIndex();

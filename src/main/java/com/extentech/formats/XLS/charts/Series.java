@@ -38,7 +38,8 @@ import com.extentech.formats.XLS.OOXMLAdapter;
 import com.extentech.formats.XLS.WorkBook;
 import com.extentech.formats.XLS.XLSRecord;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Vector;
@@ -96,10 +97,7 @@ import java.util.Vector;
  */
 public final class Series extends GenericChartObject implements ChartObject
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Series.class );
 	private static final long serialVersionUID = 7290108485347063887L;
 	public static int SERIES_TYPE_NUMERIC = 1;
 	public static int SERIES_TYPE_STRING = 3;
@@ -115,16 +113,13 @@ public final class Series extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		sdtX = (int) ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		sdtY = (int) ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		cValx = (int) ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		cValy = (int) ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
-		sdtBSz = (int) ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
-		sdtValBSz = (int) ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );
-		if( DEBUGLEVEL > 10 )
-		{
-			Logger.logInfo( toString() );
-		}
+		sdtX = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		sdtY = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
+		cValx = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
+		cValy = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
+		sdtBSz = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
+		sdtValBSz = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );
+			log.trace("{}",toString() );
 	}
 
 	public Series()
@@ -314,7 +309,7 @@ public final class Series extends GenericChartObject implements ChartObject
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Series.setLegendRef: Error setting Legend Reference to '" + newLegendCell + "': " + e.toString() );
+			log.warn( "Series.setLegendRef: Error setting Legend Reference to '" + newLegendCell + "': " + e.toString() );
 		}
 		st.setText( legendText );
 	}
@@ -526,7 +521,7 @@ public final class Series extends GenericChartObject implements ChartObject
 		}
 		catch( Exception e )
 		{
-// not necessary to report        	Logger.logErr("Error setting Series Range: '"  + seriesRange + "'-" + e.toString()); 
+// not necessary to report        	log.error("Error setting Series Range: '"  + seriesRange + "'-" + e.toString());
 		} // it's OK to not have a valid range
 		series.addChartRecord( ai );
 //        parentChart.addAi(ai);        
@@ -701,7 +696,7 @@ public final class Series extends GenericChartObject implements ChartObject
 		DataFormat df = this.getDataFormatRec( false );
 		if( df != null )
 		{
-			return (int) df.getSeriesIndex();
+			return df.getSeriesIndex();
 		}
 		return -1;
 	}
@@ -716,7 +711,7 @@ public final class Series extends GenericChartObject implements ChartObject
 		DataFormat df = this.getDataFormatRec( false );
 		if( df != null )
 		{
-			return (int) df.getSeriesNumber();
+			return df.getSeriesNumber();
 		}
 		return -1;
 	}
@@ -810,7 +805,7 @@ public final class Series extends GenericChartObject implements ChartObject
 		DataFormat df = this.getDataFormatRec( false );
 		if( df == null )
 		{
-			Logger.logErr( "Series.getDataFormatRecSlice: cannot find data format record" );
+			log.warn( "Series.getDataFormatRecSlice: cannot find data format record" );
 			return null;
 		}
 		int seriesNumber = df.getSeriesNumber();
@@ -1018,7 +1013,7 @@ public final class Series extends GenericChartObject implements ChartObject
 		}
 		else
 		{
-			Logger.logErr( "Series.setPieSliceColor: unable to fnd pie slice record" );
+			log.warn( "Series.setPieSliceColor: unable to fnd pie slice record" );
 		}
 	}
 
@@ -1042,7 +1037,7 @@ public final class Series extends GenericChartObject implements ChartObject
 		}
 		else
 		{
-			Logger.logErr( "Series.setPieSliceColor: unable to fnd pie slice record" );
+			log.warn( "Series.setPieSliceColor: unable to fnd pie slice record" );
 		}
 	}
 
@@ -1452,7 +1447,7 @@ public final class Series extends GenericChartObject implements ChartObject
 		}
 		catch( NumberFormatException e )
 		{
-			Logger.logErr( "geteriesOOXML: Number format exception for Bubble Range: " + bubbleAi.toString() );
+			log.warn( "geteriesOOXML: Number format exception for Bubble Range: " + bubbleAi.toString() );
 		}
 		ooxml.append( "</c:numCache>" );
 		ooxml.append( "\r\n" );

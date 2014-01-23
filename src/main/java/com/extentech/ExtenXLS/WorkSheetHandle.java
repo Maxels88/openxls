@@ -57,8 +57,9 @@ import com.extentech.formats.XLS.formulas.GenericPtg;
 import com.extentech.formats.XLS.formulas.Ptg;
 import com.extentech.formats.XLS.formulas.PtgRef;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -67,7 +68,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -109,11 +109,10 @@ import java.util.Map;
  */
 public class WorkSheetHandle implements Handle
 {
-
+	private static final Logger log = LoggerFactory.getLogger( WorkSheetHandle.class );
 	private Boundsheet mysheet;
 	private WorkBook mybook;
 	WorkBookHandle wbh;
-	private int DEBUGLEVEL = 0;
 	private Hashtable dateFormats = new Hashtable();
 	private boolean cache = true;    //20080917 KSC: set var for caching, default to true [BugTracker 1862]
 	// public Map cellhandles = new HashMap();
@@ -1013,7 +1012,7 @@ public class WorkSheetHandle implements Handle
 		}
 		catch( Throwable e )
 		{
-			Logger.logWarn( "Serializing Sheet: " + this.toString() + " failed: " + e );
+			log.error( "Serializing Sheet: " + this.toString() + " failed: " + e, e );
 		}
 		return b;
 		//return mysheet.getSheetBytes();
@@ -1636,11 +1635,8 @@ public class WorkSheetHandle implements Handle
 					}
 					catch( Exception e )
 					{
-						if( DEBUGLEVEL > 0 )
-						{
-							Logger.logWarn( "WorkSheetHandle.shiftRow() could not adjust formula references in formula: " + copyCellHandle + " while inserting new row." + e
+							log.warn( "WorkSheetHandle.shiftRow() could not adjust formula references in formula: " + copyCellHandle + " while inserting new row." + e
 									.toString() );
-						}
 					}
 				}
 				else
@@ -1669,18 +1665,12 @@ public class WorkSheetHandle implements Handle
 					int[] lr = { rownum, oby.lastcellcol };
 					String newrng = sheetname + "!" + ExcelTools.formatLocation( fr ) + ":" + ExcelTools.formatLocation( lr );
 					newrng = GenericPtg.qualifySheetname( newrng );
-					if( DEBUGLEVEL > 10 )
-					{
-						Logger.logInfo( "WorksheetHandle.insertRow() created new Merge Range: " + newrng );
-					}
+						log.debug( "WorksheetHandle.insertRow() created new Merge Range: " + newrng );
 					// check if we've already created...
 					if( newmerges.get( newrng ) == null )
 					{
 						newmerge = new CellRange( newrng, this.wbh, true );
-						if( DEBUGLEVEL > 10 )
-						{
-							Logger.logInfo( "WorksheetHandle.insertRow() created new Merge Range: " + newrng );
-						}
+							log.debug( "WorksheetHandle.insertRow() created new Merge Range: " + newrng );
 						newmerges.put( newmerge.toString(), newmerge );
 					}
 				}
@@ -1771,7 +1761,7 @@ public class WorkSheetHandle implements Handle
 		int idz = mysheet.getImageVect().indexOf( name );
 		if( idz > 0 )
 		{
-			return (ImageHandle) mysheet.getImageVect().get( idz );
+			return mysheet.getImageVect().get( idz );
 		}
 		throw new ImageNotFoundException( "Could not find " + name + " in " + this.getSheetName() );
 	}
@@ -1815,10 +1805,7 @@ public class WorkSheetHandle implements Handle
 				n = "image" + anExtracted.getMsodrawing().getImageIndex();
 			}
 			String imgname = n + "." + anExtracted.getType();
-			if( DEBUGLEVEL > 0 )
-			{
-				Logger.logInfo( "Successfully extracted: " + outdir + imgname );
-			}
+				log.debug( "Successfully extracted: " + outdir + imgname );
 			try
 			{
 				FileOutputStream outimg = new FileOutputStream( outdir + imgname );
@@ -1828,7 +1815,7 @@ public class WorkSheetHandle implements Handle
 			}
 			catch( Exception ex )
 			{
-				Logger.logErr( "Could not extract images from: " + this );
+				log.error( "Could not extract images from: " + this );
 			}
 		}
 	}
@@ -1854,7 +1841,7 @@ public class WorkSheetHandle implements Handle
 			}
 			catch( Exception ex )
 			{
-				Logger.logErr( "extractChartToDirectory: Could not extract charts from: " + this + ":" + ex.toString() );
+				log.error( "extractChartToDirectory: Could not extract charts from: " + this + ":" + ex.toString() );
 			}
 
 		}
@@ -2043,18 +2030,6 @@ public class WorkSheetHandle implements Handle
 		else
 		{
 			BiffRec reca = mysheet.addValue( obj, rc, formatId );
-
-			if( DEBUGLEVEL > 1 )
-			{
-				if( reca != null )
-				{
-					Logger.logInfo( "WorkSheetHandle.add() " + reca.toString() + " Successfully Added." );
-				}
-				else
-				{
-					return null;
-				}
-			}
 		}
 
 		if( !mysheet.fastCellAdds )
@@ -2070,7 +2045,7 @@ public class WorkSheetHandle implements Handle
 			}
 			catch( CellNotFoundException e )
 			{
-				Logger.logInfo( "Adding Cell to row failed row:" + row + " col: " + col + " failed." );
+				log.warn( "Adding Cell to row failed row:" + row + " col: " + col + " failed." );
 				return null;
 			}
 		}
@@ -2118,13 +2093,10 @@ public class WorkSheetHandle implements Handle
 				ReferenceTracker rt = this.wbh.getWorkBook().getRefTracker();
 				rt.clearAffectedFormulaCells( reca );
 			}
-			if( DEBUGLEVEL > 1 )
-			{
 				if( reca != null )
 				{
-					Logger.logInfo( "WorkSheetHandle.add() " + reca.toString() + " Successfully Added." );
+					log.debug( "WorkSheetHandle.add() " + reca.toString() + " Successfully Added." );
 				}
-			}
 		}
 	}
 
@@ -2192,7 +2164,7 @@ public class WorkSheetHandle implements Handle
 		}
 		catch( CellNotFoundException e )
 		{
-			Logger.logInfo( "Adding Cell: " + address + " failed" );
+			log.debug( "Adding Cell: " + address + " failed" );
 			return null;
 		}
 	}
@@ -2240,7 +2212,7 @@ public class WorkSheetHandle implements Handle
 			}
 			catch( CellNotFoundException e )
 			{
-				Logger.logInfo( "Adding Cell: " + address + " failed" );
+				log.warn( "Adding Cell: " + address + " failed" );
 				return null;
 			}
 		}
@@ -2439,7 +2411,7 @@ public class WorkSheetHandle implements Handle
 			}
 			catch( CellNotFoundException exp )
 			{
-				Logger.logWarn( "adding date to WorkSheet failed: " + this.getSheetName() + ":" + row + ":" + col );
+				log.warn( "adding date to WorkSheet failed: " + this.getSheetName() + ":" + row + ":" + col );
 				return null;
 			}
 		}

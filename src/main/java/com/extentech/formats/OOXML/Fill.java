@@ -25,7 +25,8 @@ package com.extentech.formats.OOXML;
 import com.extentech.ExtenXLS.FormatHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.formats.XLS.Xf;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ import java.util.Iterator;
  */
 public class Fill implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Fill.class );
 	private static final long serialVersionUID = -4510508531435037641L;
 	private PatternFill patternFill = null;
 	private GradientFill gradientFill = null;
@@ -131,7 +132,7 @@ public class Fill implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "fill.parseOOXML: " + e.toString() );
+			log.error( "fill.parseOOXML: " + e.toString() );
 		}
 		Fill oe = new Fill( p, g, bk.getWorkBook().getTheme() );
 		return oe;
@@ -467,7 +468,7 @@ public class Fill implements OOXMLElement
  */
 class PatternFill implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( PatternFill.class );
 	private static final long serialVersionUID = -4399355217499895956L;
 	private String patternType = null;
 	private FgColor fgColor = null;
@@ -508,13 +509,13 @@ class PatternFill implements OOXMLElement
 		this.patternType = patternType;
 		if( (fg > -1) && (fg != 64) )
 		{
-			HashMap<String, String> attrs = new HashMap<String, String>();
+			HashMap<String, String> attrs = new HashMap<>();
 			attrs.put( "rgb", "FF" + FormatHandle.colorToHexString( FormatHandle.COLORTABLE[fg] ).substring( 1 ) );
 			this.fgColor = new FgColor( attrs );
 		}
 		if( (bg > -1) && (bg != 65) )
 		{
-			HashMap<String, String> attrs = new HashMap<String, String>();
+			HashMap<String, String> attrs = new HashMap<>();
 			attrs.put( "rgb", "FF" + FormatHandle.colorToHexString( FormatHandle.COLORTABLE[bg] ).substring( 1 ) );
 			this.bgColor = new BgColor( attrs );
 		}
@@ -525,7 +526,7 @@ class PatternFill implements OOXMLElement
 		this.patternType = patternType;
 		if( (fg > 0) || (fgCustom != null) )
 		{ // 64= default fg color
-			HashMap<String, String> attrs = new HashMap<String, String>();
+			HashMap<String, String> attrs = new HashMap<>();
 			if( fgCustom == null )
 			{
 				attrs.put( "indexed", String.valueOf( fg ) );
@@ -538,7 +539,7 @@ class PatternFill implements OOXMLElement
 		}
 		if( (bg > -1) || (bgCustom != null) )
 		{ // 65= default bg color
-			HashMap<String, String> attrs = new HashMap<String, String>();
+			HashMap<String, String> attrs = new HashMap<>();
 			if( bgCustom == null )
 			{
 				attrs.put( "indexed", String.valueOf( bg ) );
@@ -603,7 +604,7 @@ class PatternFill implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "patternFill.parseOOXML: " + e.toString() );
+			log.error( "patternFill.parseOOXML: " + e.toString() );
 		}
 		if( isDxf )
 		{
@@ -859,7 +860,7 @@ class PatternFill implements OOXMLElement
 	{
 		if( (t > 0) || (colorString != null) )
 		{ // 64= default fg color
-			HashMap<String, String> attrs = new HashMap<String, String>();
+			HashMap<String, String> attrs = new HashMap<>();
 			if( colorString == null )
 			{
 				attrs.put( "indexed", String.valueOf( t ) );
@@ -924,7 +925,7 @@ class PatternFill implements OOXMLElement
 	{
 		if( (t > 0) || (colorString != null) )
 		{    // 65= default bg color
-			HashMap<String, String> attrs = new HashMap<String, String>();
+			HashMap<String, String> attrs = new HashMap<>();
 			if( colorString == null )
 			{
 				attrs.put( "indexed", String.valueOf( t ) );
@@ -948,9 +949,7 @@ class PatternFill implements OOXMLElement
  */
 class GradientFill implements OOXMLElement
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( GradientFill.class );
 	private static final long serialVersionUID = 3633230059631047503L;
 	private HashMap<String, String> attrs = null;
 	private ArrayList<Stop> stops = null;
@@ -969,7 +968,7 @@ class GradientFill implements OOXMLElement
 
 	public static GradientFill parseOOXML( XmlPullParser xpp, WorkBookHandle bk )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		ArrayList<Stop> stops = null;
 		try
 		{
@@ -990,7 +989,7 @@ class GradientFill implements OOXMLElement
 					{
 						if( stops == null )
 						{
-							stops = new ArrayList<Stop>();
+							stops = new ArrayList<>();
 						}
 						stops.add( Stop.parseOOXML( xpp, bk ) );
 					}
@@ -1008,7 +1007,7 @@ class GradientFill implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "gradientFill.parseOOXML: " + e.toString() );
+			log.error( "gradientFill.parseOOXML: " + e.toString() );
 		}
 		GradientFill g = new GradientFill( attrs, stops );
 		return g;
@@ -1055,9 +1054,7 @@ class GradientFill implements OOXMLElement
  */
 class FgColor implements OOXMLElement
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( FgColor.class );
 	private static final long serialVersionUID = -1274598491373019241L;
 	private HashMap<String, String> attrs = null;
 
@@ -1073,7 +1070,7 @@ class FgColor implements OOXMLElement
 
 	protected FgColor( int c )
 	{
-		attrs = new HashMap<String, String>();
+		attrs = new HashMap<>();
 		attrs.put( "indexed", String.valueOf( c ) );
 	}
 
@@ -1084,7 +1081,7 @@ class FgColor implements OOXMLElement
 
 	protected static FgColor parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -1114,7 +1111,7 @@ class FgColor implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "fgColor.parseOOXML: " + e.toString() );
+			log.error( "fgColor.parseOOXML: " + e.toString() );
 		}
 		FgColor f = new FgColor( attrs );
 		return f;
@@ -1240,9 +1237,7 @@ class FgColor implements OOXMLElement
  */
 class BgColor implements OOXMLElement
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( BgColor.class );
 	private static final long serialVersionUID = 43028503491956217L;
 	private HashMap<String, String> attrs = null;
 
@@ -1258,7 +1253,7 @@ class BgColor implements OOXMLElement
 
 	protected BgColor( int c )
 	{
-		attrs = new HashMap<String, String>();
+		attrs = new HashMap<>();
 		attrs.put( "indexed", String.valueOf( c ) );
 	}
 
@@ -1269,7 +1264,7 @@ class BgColor implements OOXMLElement
 
 	public static BgColor parseOOXML( XmlPullParser xpp )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -1299,7 +1294,7 @@ class BgColor implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "bgColor.parseOOXML: " + e.toString() );
+			log.error( "bgColor.parseOOXML: " + e.toString() );
 		}
 		BgColor f = new BgColor( attrs );
 		return f;
@@ -1408,9 +1403,7 @@ class BgColor implements OOXMLElement
  */
 class Stop implements OOXMLElement
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Stop.class );
 	private static final long serialVersionUID = -9215564484103992694L;
 	private String position = null;
 	private Color c = null;
@@ -1462,7 +1455,7 @@ class Stop implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "stop.parseOOXML: " + e.toString() );
+			log.error( "stop.parseOOXML: " + e.toString() );
 		}
 		Stop s = new Stop( position, c );
 		return s;

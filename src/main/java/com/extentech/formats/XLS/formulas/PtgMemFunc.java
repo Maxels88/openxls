@@ -28,7 +28,8 @@ import com.extentech.formats.XLS.FunctionNotSupportedException;
 import com.extentech.formats.XLS.WorkBook;
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.FastAddVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -57,7 +58,7 @@ import java.util.Stack;
  */
 public class PtgMemFunc extends GenericPtg
 {
-
+	private static final Logger log = LoggerFactory.getLogger( PtgMemFunc.class );
 	public static final long serialVersionUID = 666555444333222l;
 
 	Stack<?> subexpression = null; //
@@ -90,11 +91,11 @@ public class PtgMemFunc extends GenericPtg
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "PtgMemFunc init: " + e.toString() );
+			log.error( "PtgMemFunc init: " + e.toString() );
 		}
 	}
 
-	ArrayList<String> refsheets = new ArrayList<String>();
+	ArrayList<String> refsheets = new ArrayList<>();
 
 	void populateVals() throws Exception
 	{
@@ -171,7 +172,7 @@ public class PtgMemFunc extends GenericPtg
 		}
 		catch( FunctionNotSupportedException e )
 		{
-			Logger.logWarn( "Function Unsupported error in PtgMemFunction: " + e );
+			log.warn( "Function Unsupported error in PtgMemFunction: " + e, e );
 			return null;
 		}
 	}
@@ -216,7 +217,7 @@ public class PtgMemFunc extends GenericPtg
 	{
 		// calculate subexpression to obtain ptgs
 		Object o = FormulaCalculator.calculateFormula( this.subexpression );
-		ArrayList<Ptg> components = new ArrayList<Ptg>();
+		ArrayList<Ptg> components = new ArrayList<>();
 		if( (o != null) && (o instanceof Ptg[]) )
 		{
 			// Firstly: take subexpression and remove reference-tracked elements; calcualted elements are ref-tracked below
@@ -255,7 +256,7 @@ public class PtgMemFunc extends GenericPtg
 				}
 				catch( Exception e )
 				{
-					Logger.logErr( "PtgMemFunc init: " + e.toString() );
+					log.error( "PtgMemFunc init: " + e.toString() );
 				}
 			}
 		}
@@ -390,7 +391,7 @@ public class PtgMemFunc extends GenericPtg
 		byte[] newData = new byte[3];    // 1st 3 bytes= id + cce (length of following data)
 		String sheetName = "";
 		WorkBook bk = null;
-		ArrayList<String> sheets = new ArrayList<String>();
+		ArrayList<String> sheets = new ArrayList<>();
 		try
 		{
 			bk = this.getParentRec().getWorkBook();
@@ -527,7 +528,7 @@ public class PtgMemFunc extends GenericPtg
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "PtgMemFunc setLocation failed for: " + complexrange + " " + e.toString() );
+			log.error( "PtgMemFunc setLocation failed for: " + complexrange + " " + e.toString() );
 		}
 
 	}
@@ -546,10 +547,10 @@ public class PtgMemFunc extends GenericPtg
 	 */
 	private Stack<Comparable> parseFmla( String complexrange )
 	{
-		Stack<Comparable> ops = new Stack<Comparable>();
+		Stack<Comparable> ops = new Stack<>();
 		int lastOp = 0;
 		boolean finishRange = false;
-		Stack<Comparable> refs = new Stack<Comparable>();
+		Stack<Comparable> refs = new Stack<>();
 		String ref = "";
 		boolean inquote = false;
 		String range = null;    // holds partial range

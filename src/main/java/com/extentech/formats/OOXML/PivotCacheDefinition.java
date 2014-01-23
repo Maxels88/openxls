@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -31,7 +32,7 @@ import java.io.InputStream;
 
 public class PivotCacheDefinition implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( PivotCacheDefinition.class );
 	private static final long serialVersionUID = -5070227633357072878L;
 	private String ref = null;
 	private String sheet = null;
@@ -83,7 +84,7 @@ public class PivotCacheDefinition implements OOXMLElement
 								if( !v.equals( "worksheet" ) )
 								{
 									// consolidation, external, scenario --
-									Logger.logWarn( "PivotCacheDefinition: Data Souce " + v + " Not Supported" );
+									log.warn( "PivotCacheDefinition: Data Souce " + v + " Not Supported" );
 									return null;
 								}
 							}
@@ -126,7 +127,7 @@ public class PivotCacheDefinition implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "PivotCacheDefinition.parseOOXML: " + e.toString() );
+			log.error( "PivotCacheDefinition.parseOOXML: " + e.toString() );
 		}
 
 		if( cacheid != null )

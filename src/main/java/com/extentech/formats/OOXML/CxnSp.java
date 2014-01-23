@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -37,9 +38,9 @@ import java.util.Stack;
 //TODO: finish nvCxnSpPr.cNvCxnSpPr element
 public class CxnSp implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( CxnSp.class );
 	private static final long serialVersionUID = -8492664135843926551L;
-	private HashMap<String, String> attrs = new HashMap<String, String>();
+	private HashMap<String, String> attrs = new HashMap<>();
 	private NvCxnSpPr nvc;
 	private SpPr spPr;
 	private Style style;
@@ -62,7 +63,7 @@ public class CxnSp implements OOXMLElement
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		NvCxnSpPr nvc = null;
 		SpPr sp = null;
 		Style s = null;
@@ -112,7 +113,7 @@ public class CxnSp implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "cxnSp.parseOOXML: " + e.toString() );
+			log.error( "cxnSp.parseOOXML: " + e.toString() );
 		}
 		CxnSp c = new CxnSp( attrs, nvc, sp, s );
 		return c;
@@ -327,7 +328,7 @@ public class CxnSp implements OOXMLElement
 // TODO: finish cNvCxnSpPr
 class NvCxnSpPr implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( NvCxnSpPr.class );
 	private static final long serialVersionUID = -4808617992996239153L;
 	private CNvPr cpr;
 //	private cNvCxnSpPr sppr= null;
@@ -381,7 +382,7 @@ class NvCxnSpPr implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "nvCxnSpPr.parseOOXML: " + e.toString() );
+			log.error( "nvCxnSpPr.parseOOXML: " + e.toString() );
 		}
 		NvCxnSpPr n = new NvCxnSpPr( cpr/*, sppr*/ );
 		return n;

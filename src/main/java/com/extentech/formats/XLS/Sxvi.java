@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 
@@ -91,10 +92,7 @@ import java.io.UnsupportedEncodingException;
 
 public class Sxvi extends XLSRecord
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Sxvi.class );
 	private static final long serialVersionUID = 6399665481118265257L;
 	byte[] data = null;
 	short itemtype = -1;
@@ -147,13 +145,10 @@ public class Sxvi extends XLSRecord
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logInfo( "encoding PivotTable caption name in Sxvd: " + e );
+				log.warn( "encoding PivotTable caption name in Sxvd: " + e, e );
 			}
 		}
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "SXVI - itemtype:" + itemtype + " iCache: " + iCache + " name:" + name );
-		}
+			log.debug( "SXVI - itemtype:" + itemtype + " iCache: " + iCache + " name:" + name );
 	}
 
 	public String toString()
@@ -256,7 +251,7 @@ public class Sxvi extends XLSRecord
 			}
 			catch( UnsupportedEncodingException e )
 			{
-				Logger.logInfo( "encoding pivot table name in SXVI: " + e );
+				log.warn( "encoding pivot table name in SXVI: " + e, e );
 			}
 
 			//update the lengths:

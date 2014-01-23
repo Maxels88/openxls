@@ -25,8 +25,9 @@ package docs.samples.PasswordProtection;
 import com.extentech.ExtenXLS.CellHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.toolkit.Logger;
 import junit.framework.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -38,6 +39,7 @@ import java.io.FileOutputStream;
  */
 public class testPasswordProtect
 {
+	private static final Logger log = LoggerFactory.getLogger( testPasswordProtect.class );
 	static String wd = System.getProperty( "user.dir" ) + "/docs/samples/PasswordProtection/";
 
 	public static void main( String[] args )
@@ -54,7 +56,7 @@ public class testPasswordProtect
 			sheet = book.getWorkSheet( "Sheet1" );
 			if( !sheet.getProtected() )
 			{
-				Logger.logErr( "Set Password Protection Failed!" );
+				log.error( "Set Password Protection Failed!" );
 			}
 
 			// set password/get password
@@ -63,7 +65,7 @@ public class testPasswordProtect
 		}
 		catch( Exception ex )
 		{
-			Logger.logErr( "error opening password protected file " + ex.toString() );
+			log.error( "error opening password protected file " + ex.toString() );
 		}
 	}
 
@@ -79,7 +81,7 @@ public class testPasswordProtect
 		try
 		{
 			File outputFile = new File( wd + excelFileName );
-			Logger.logInfo( "Begin TestPasswordProtect." );
+			log.info( "Begin TestPasswordProtect." );
 			FileOutputStream fileOutputStream = new FileOutputStream( outputFile );
 			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream( fileOutputStream );
 
@@ -87,7 +89,7 @@ public class testPasswordProtect
 
 			bufferedOutputStream.flush();
 			fileOutputStream.close();
-			Logger.logInfo( "TestPasswordProtect done." );
+			log.info( "TestPasswordProtect done." );
 		}
 		catch( java.io.IOException e )
 		{

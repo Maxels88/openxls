@@ -26,7 +26,8 @@ import com.extentech.ExtenXLS.CellHandle;
 import com.extentech.ExtenXLS.ImageHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -40,7 +41,7 @@ import java.io.FileOutputStream;
 */
 public class TestImages
 {
-
+	private static final Logger log = LoggerFactory.getLogger( TestImages.class );
 	// change to the folder containing the image files and spreadsheet templates
 	String workingdir = System.getProperty( "user.dir" ) + "/docs/samples/Images/";
 	int DEBUGLEVEL = 0;
@@ -154,7 +155,7 @@ public class TestImages
 			System.err.println( "testImages failed: " + e.toString() );
 		}
 		testWrite( tbo, workingdir + "testImagesOut.xls" );
-		WorkBookHandle newbook = new WorkBookHandle( workingdir + "testImagesOut.xls", 0 );
+		WorkBookHandle newbook = new WorkBookHandle( workingdir + "testImagesOut.xls" );
 		System.out.println( "Successfully read: " + newbook );
 	}
 
@@ -171,7 +172,7 @@ public class TestImages
 			image.setCoords( 200, 150, 800, 600 );
 			File fout = new File( workingdir + "_NBP_testWorkBookImage.jpg" );
 			image.write( new FileOutputStream( fout ) );
-			Logger.logInfo( "Successfully generated WorkBook thumbnail image at: " + fout.getCanonicalPath() );
+			log.info( "Successfully generated WorkBook thumbnail image at: " + fout.getCanonicalPath() );
 
 		}
 		catch( Exception e )
@@ -193,7 +194,7 @@ public class TestImages
 		}
 		catch( java.io.IOException e )
 		{
-			Logger.logInfo( "IOException in Tester.  " + e );
+			log.info( "IOException in Tester.  " + e );
 		}
 	}
 

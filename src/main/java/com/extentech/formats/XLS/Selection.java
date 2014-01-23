@@ -70,7 +70,7 @@ public class Selection extends com.extentech.formats.XLS.XLSRecord
 		// cref is count of ref structs -- each one is 6 bytes
 		refs = new rgref[cref];
 		int ctr = 9;
-		for( int i = 0; i < (int) cref; i++ )
+		for( int i = 0; i < cref; i++ )
 		{
 			byte[] b1 = new byte[6];
 			for( int x = 0; x < 6; x++ )

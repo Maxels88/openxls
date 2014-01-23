@@ -29,7 +29,8 @@ import com.extentech.formats.OOXML.Layout;
 import com.extentech.formats.OOXML.SpPr;
 import com.extentech.formats.OOXML.Title;
 import com.extentech.formats.OOXML.TxPr;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import java.util.HashMap;
 
 public class OOXMLChart extends Chart
 {
+	private static final Logger log = LoggerFactory.getLogger( OOXMLChart.class );
 	public String lang = "en-US";                                // default
 	public boolean roundedCorners = false;
 	public Title ttl = null;                                    // title element
@@ -488,7 +490,7 @@ public class OOXMLChart extends Chart
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "OOXMLChart.getOOXML: error generating OOXML.  Chart not created: " + e.toString() );
+			log.error( "OOXMLChart.getOOXML: error generating OOXML.  Chart not created: " + e.toString() );
 		}
 		return cooxml;    //.toString();
 	}

@@ -25,7 +25,8 @@ package com.extentech.formats.XLS.formulas;
 import com.extentech.ExtenXLS.ExcelTools;
 import com.extentech.formats.XLS.FunctionNotSupportedException;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ import java.util.Vector;
 */
 public class StatisticalCalculator
 {
-
+	private static final Logger log = LoggerFactory.getLogger( StatisticalCalculator.class );
 	/**
 	 * AVERAGE
 	 * Returns the average (arithmetic mean) of the arguments.
@@ -310,7 +311,7 @@ public class StatisticalCalculator
 				}
 				catch( Exception e )
 				{
-					Logger.logErr( "MathFunctionCalculator.calcAverageIfS:  error obtaining cell value: " + e.toString() );    // debugging only; take out when fully tested
+					log.error( "MathFunctionCalculator.calcAverageIfS:  error obtaining cell value: " + e.toString() );    // debugging only; take out when fully tested
 					; // keep going
 				}
 			}
@@ -2213,9 +2214,8 @@ PROB
 			}
 			catch( NumberFormatException e )
 			{
-				Logger.logErr( e );
+				log.error( "calcQuartile error", e );
 			}
-			;
 		}
 
 		Double[] dub = new Double[t.size()];

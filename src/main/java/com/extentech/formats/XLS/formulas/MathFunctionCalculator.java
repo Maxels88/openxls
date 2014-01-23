@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.XLS.formulas;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ import java.util.Random;
 
 public class MathFunctionCalculator
 {
-
+	private static final Logger log = LoggerFactory.getLogger( MathFunctionCalculator.class );
 	/**
 	 * SUM
 	 * Adds all the numbers in a range of cells.
@@ -879,7 +880,7 @@ Returns the matrix inverse of an array
 		}
 		catch( Exception e )
 		{
-//		Logger.logErr("MMULT: error in operands " + e.toString());
+//		log.error("MMULT: error in operands " + e.toString());
 		}
 		return PtgCalculator.getValueError();
 	}
@@ -1608,7 +1609,7 @@ Returns a subtotal in a list or database
 					}
 					catch( Exception e )
 					{    // don't report error
-						// Logger.logErr("MathFunctionCalculator.calcSumif:  error parsing " + e.toString());	// debugging only; take out when fully tested
+						// log.error("MathFunctionCalculator.calcSumif:  error parsing " + e.toString());	// debugging only; take out when fully tested
 					}
 					if( passes )
 					{
@@ -1635,7 +1636,7 @@ Returns a subtotal in a list or database
 					}
 					catch( Exception e )
 					{
-						Logger.logErr( "MathFunctionCalculator.calcSumif:  error obtaining cell value: " + e.toString() );    // debugging only; take out when fully tested
+						log.error( "MathFunctionCalculator.calcSumif:  error obtaining cell value: " + e.toString() );    // debugging only; take out when fully tested
 						; // keep going
 					}
 				}
@@ -1643,7 +1644,7 @@ Returns a subtotal in a list or database
 			}
 			catch( Exception e )
 			{
-				Logger.logWarn( "could not calculate SUMIF function: " + e.toString() );
+				log.warn( "could not calculate SUMIF function: " + e.toString(), e );
 			}
 		}
 		catch( Exception e )
@@ -1741,7 +1742,7 @@ Returns a subtotal in a list or database
 				}
 				catch( Exception e )
 				{
-					Logger.logErr( "MathFunctionCalculator.calcSumif:  error obtaining cell value: " + e.toString() );    // debugging only; take out when fully tested
+					log.error( "MathFunctionCalculator.calcSumif:  error obtaining cell value: " + e.toString() );    // debugging only; take out when fully tested
 					; // keep going
 				}
 			}

@@ -24,7 +24,8 @@ package com.extentech.ExtenXLS;
 
 //import java.text.SimpleDateFormat;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -56,6 +57,7 @@ import java.util.StringTokenizer;
  */
 public class DateConverter
 {
+	private static final Logger log = LoggerFactory.getLogger( DateConverter.class );
 	/**
 	 * The number of milliseconds in a day.
 	 */
@@ -730,7 +732,7 @@ public class DateConverter
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "Failed to parse date " + s + " format pattern: " + pat );
+			log.warn( "Failed to parse date " + s + " format pattern: " + pat );
 			return Calendar.getInstance().getTime();
 		}
 	}

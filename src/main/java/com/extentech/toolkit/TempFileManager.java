@@ -31,6 +31,8 @@
 package com.extentech.toolkit;
 
 import com.extentech.ExtenXLS.DocumentHandle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -51,7 +53,7 @@ import java.io.InputStream;
  */
 public class TempFileManager
 {
-
+	private static final Logger log = LoggerFactory.getLogger( TempFileManager.class );
 	public static String TEMPFILE_MANAGER_CLASSNAME = "com.extentech.extenxls.tempfilemanager";
 
 	public static File createTempFile( String prefix, String extension ) throws IOException
@@ -66,7 +68,7 @@ public class TempFileManager
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "Could not load custom TempFileGenerator: " + tmpfu + ". Falling back to default TempFileGenerator." );
+				log.error( "Could not load custom TempFileGenerator: " + tmpfu + ". Falling back to default TempFileGenerator." );
 			}
 		}
 		return new DefaultTempFileGeneratorImpl().createTempFile( prefix, extension );

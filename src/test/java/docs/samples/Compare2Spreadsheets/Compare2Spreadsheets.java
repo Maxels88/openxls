@@ -25,7 +25,8 @@ package docs.samples.Compare2Spreadsheets;
 import com.extentech.ExtenXLS.CellHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.List;
@@ -43,7 +44,7 @@ import java.util.Vector;
  */
 public class Compare2Spreadsheets
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Compare2Spreadsheets.class );
 	public static void main( String[] args )
 	{
 		Compare2Spreadsheets t1 = new Compare2Spreadsheets();
@@ -78,7 +79,7 @@ public class Compare2Spreadsheets
 
 		if( s1.length != s2.length )
 		{
-			Logger.logInfo( "These Workbooks do not have the same sheet count.  Original: " + s1.length + " vs. Compard:" + s2.length );
+			log.info( "These Workbooks do not have the same sheet count.  Original: " + s1.length + " vs. Compard:" + s2.length );
 		}
 
 		List matchedSheets = new Vector();

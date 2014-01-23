@@ -44,43 +44,43 @@ public class CalculationException extends Exception
 	 * Excel #NULL! error.
 	 * Indicates that a range intersection returned no cells.
 	 */
-	public static final byte NULL = (byte) 0x00;
+	public static final byte NULL = 0x00;
 
 	/**
 	 * Excel #DIV/0! error.
 	 * Indicates that the formula attempted to divide by zero.
 	 */
-	public static final byte DIV0 = (byte) 0x07;
+	public static final byte DIV0 = 0x07;
 
 	/**
 	 * Excel #VALUE! error.
 	 * Indicates that there was an operand type mismatch.
 	 */
-	public static final byte VALUE = (byte) 0x0F;
+	public static final byte VALUE = 0x0F;
 
 	/**
 	 * Excel #REF! error.
 	 * Indicates that a reference was made to a cell that doesn't exist.
 	 */
-	public static final byte REF = (byte) 0x17;
+	public static final byte REF = 0x17;
 
 	/**
 	 * Excel #NAME? error.
 	 * Indicates an unknown string was encountered in the formula.
 	 */
-	public static final byte NAME = (byte) 0x1D;
+	public static final byte NAME = 0x1D;
 
 	/**
 	 * Excel #NUM! error.
 	 * Indicates that a calculation result overflowed the number storage.
 	 */
-	public static final byte NUM = (byte) 0x24;
+	public static final byte NUM = 0x24;
 
 	/**
 	 * Excel #N/A error.
 	 * Indicates that a lookup (e.g. VLOOKUP) returned no results.
 	 */
-	public static final byte NA = (byte) 0x2A;
+	public static final byte NA = 0x2A;
 
 	/**
 	 * Custom circular exception error, internally stores as a #VALUE

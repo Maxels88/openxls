@@ -23,7 +23,8 @@
 package com.extentech.ExtenXLS;
 
 import com.extentech.formats.XLS.Note;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <pre>
@@ -35,7 +36,7 @@ import com.extentech.toolkit.Logger;
  */
 public class CommentHandle implements Handle
 {
-
+	private static final Logger log = LoggerFactory.getLogger( CommentHandle.class );
 	private Note note;
 
 	/**
@@ -92,7 +93,7 @@ public class CommentHandle implements Handle
 			}
 			catch( IllegalArgumentException e )
 			{
-				Logger.logErr( e.toString() );
+				log.error( e.toString() );
 			}
 		}
 	}

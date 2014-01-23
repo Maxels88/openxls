@@ -22,8 +22,6 @@
  */
 package com.extentech.ExtenXLS;
 
-import com.extentech.formats.XLS.XLSConstants;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,10 +35,6 @@ import java.io.OutputStream;
 @Deprecated
 public interface Document
 {
-	public static final int DEBUG_LOW = XLSConstants.DEBUG_LOW;
-	public static final int DEBUG_MEDIUM = XLSConstants.DEBUG_MEDIUM;
-	public static final int DEBUG_HIGH = XLSConstants.DEBUG_HIGH;
-
 	/**
 	 * get a non-Excel property
 	 *
@@ -69,14 +63,6 @@ public interface Document
 	 * @param WorkBook Name
 	 */
 	public abstract void setName( String nm );
-
-	/**
-	 * Set the Debugging level.  Higher values output more
-	 * debugging info during execution.
-	 *
-	 * @parameter int Debug level.  higher=more verbose
-	 */
-	public abstract void setDebugLevel( int l );
 
 	/**
 	 * Returns the name of this WorkBook

@@ -34,7 +34,8 @@ import com.extentech.formats.escher.MsofbtSpContainer;
 import com.extentech.formats.escher.MsofbtSpgr;
 import com.extentech.formats.escher.MsofbtSpgrContainer;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -81,6 +82,7 @@ import java.io.ByteArrayOutputStream;
 // TODO: MSOFBTCLIENTANCHOR may be substituted for MSOFBTANCHOR (clipboard), MSOFBTCHILDANCHOR (if shape is a child of a group shape)
 public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 {
+	private static final Logger log = LoggerFactory.getLogger( MSODrawing.class );
 	private static final long serialVersionUID = 8275831369787287975L;
 
 	public byte[] PROTOTYPE_BYTES = {
@@ -469,7 +471,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 				}
 				else
 				{
-					Logger.logInfo( "MSODrawing.init: unknown container encountered: " + fbt );
+					log.warn( "MSODrawing.init: unknown container encountered: " + fbt );
 				}
 				continue;
 			}
@@ -599,7 +601,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 					break;
 
 				default:
-					Logger.logInfo( "MSODrawing.init:  unknown subrecord encountered: " + fbt );
+					log.warn( "MSODrawing.init:  unknown subrecord encountered: " + fbt );
 			}
 		}
 	  	/* //DEBUGGING:  THESE CONTAINER LENGTH CALCULATIONS PASS FOR ALL thus far MSO's ENCOUNTERED
@@ -851,7 +853,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 						break;
 
 					default:
-						Logger.logInfo( "MSODrawing.updateRecord:  unknown subrecord encountered: " + fbt );
+						log.warn( "MSODrawing.updateRecord:  unknown subrecord encountered: " + fbt );
 						data = ByteTools.append( data, header );
 						spcontainer1atoms = ByteTools.append( data, spcontainer1atoms );
 						break;
@@ -885,7 +887,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
     
     	/*// debugging
     	if (!bIsHeader && SPCONTAINERLENGTH!=origSP)
-    		Logger.logErr("SPCONTAINERLENTH IS OFF: " + (SPCONTAINERLENGTH-origSP));
+    		log.error("SPCONTAINERLENTH IS OFF: " + (SPCONTAINERLENGTH-origSP));
     	 */
 		byte[] retData = new byte[SPCONTAINERLENGTH];
 		System.arraycopy( container, 0, retData, 0, container.length );
@@ -904,13 +906,13 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
         	
         	/*// debugging
         	if (SPCONTAINERLENGTH!=origSP)
-        		Logger.logErr("SPCONTAINERLENTH IS OFF: " + (SPCONTAINERLENGTH-origSP));
+        		log.error("SPCONTAINERLENTH IS OFF: " + (SPCONTAINERLENGTH-origSP));
 			/**/
 			// SPGRCONTAINER
 			int spgrcontainerlen = (SPCONTAINERLENGTH + otherSPCONTAINERLENGTH) - 8;
         	/*// debugging
     	  	if (spgrcontainerlen!=origSPGR)
-    	  		Logger.logErr("SPGRCONTAINERLENTH IS OFF: " + (spgrcontainerlen-origSPGR));
+    	  		log.error("SPGRCONTAINERLENTH IS OFF: " + (spgrcontainerlen-origSPGR));
     	  	/**/
 			MsofbtSpgrContainer msofbtSpgrContainer = new MsofbtSpgrContainer( MSODrawingConstants.MSOFBTSPGRCONTAINER, 0, 15 );
 			msofbtSpgrContainer.setLength( spgrcontainerlen );
@@ -920,7 +922,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 			int dgcontainerlen = (dgcontaineratoms.length + spgrcontainerlen + SOLVERCONTAINERLENGTH + 8);        // drawing container length
         	/*// debugging
     	  	if (dgcontainerlen!=origDG)
-    	  		Logger.logErr("DGCONTAINERLENTH IS OFF: " + (dgcontainerlen-origDG));
+    	  		log.error("DGCONTAINERLENTH IS OFF: " + (dgcontainerlen-origDG));
     	  	/**/
 			MsofbtDgContainer msofbtDgContainer = new MsofbtDgContainer( MSODrawingConstants.MSOFBTDGCONTAINER, 0, 15 );
 			msofbtDgContainer.setLength( dgcontainerlen );    //HEADERRECLENGTH + SPCONTAINERLENGTH + otherSPCONTAINERLENGTH);
@@ -1154,7 +1156,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 						break;
 
 					default:
-						Logger.logInfo( "MSODrawing.removeHeader:  unknown subrecord encountered: " + fbt );
+						log.warn( "MSODrawing.removeHeader:  unknown subrecord encountered: " + fbt );
 						data = ByteTools.append( data, header );
 						spcontainer1atoms = ByteTools.append( data, spcontainer1atoms );
 						break;
@@ -1172,7 +1174,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		SPCONTAINERLENGTH += container.length;    // include this header length    	
 
 		//if (!bIsHeader && SPCONTAINERLENGTH!=origSP)
-		//Logger.logErr("SPCONTAINERLENTH IS OFF: " + (SPCONTAINERLENGTH-origSP));
+		//log.error("SPCONTAINERLENTH IS OFF: " + (SPCONTAINERLENGTH-origSP));
 
 		byte[] retData = new byte[SPCONTAINERLENGTH];
 		System.arraycopy( container, 0, retData, 0, container.length );
@@ -1194,7 +1196,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( !isHeader() )
 		{
-			Logger.logErr( "Msodrawing.updateHeader is only applicable for the header drawing object" );
+			log.error( "Msodrawing.updateHeader is only applicable for the header drawing object" );
 			return;
 		}	  		  		
 	  	/*
@@ -1298,7 +1300,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 				}
 				else
 				{
-					Logger.logErr( "UpdateClientAnchorRecord: New Array Size=" + newrec.length );
+					log.error( "UpdateClientAnchorRecord: New Array Size=" + newrec.length );
 				}
 			}
 			else if( fbt == MSODrawingConstants.MSOFBTSPGRCONTAINER )
@@ -1698,7 +1700,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 			else
 			{
 				col = i;
-				colOffset = (short) Math.round( 1024 * (((double) (x - z)) / (double) w) );
+				colOffset = (short) Math.round( 1024 * (((double) (x - z)) / w) );
 				z = x;
 			}
 		}
@@ -1874,7 +1876,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 			else
 			{
 				col1 = i;
-				colOff1 = (short) (1024 * (((double) (w - z)) / (double) cw));
+				colOff1 = (short) (1024 * (((double) (w - z)) / cw));
 				z = w;
 			}
 		}
@@ -2147,7 +2149,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 				}
 				else
 				{
-					Logger.logErr( "UpdateClientAnchorRecord: New Array Size=" + newrec.length );
+					log.error( "UpdateClientAnchorRecord: New Array Size=" + newrec.length );
 				}
 				return;
 			}
@@ -2211,7 +2213,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 				}
 				else
 				{
-					Logger.logErr( "UpdateClientAnchorRecord: New Array Size=" + newrec.length );
+					log.error( "UpdateClientAnchorRecord: New Array Size=" + newrec.length );
 				}
 				return;
 			}

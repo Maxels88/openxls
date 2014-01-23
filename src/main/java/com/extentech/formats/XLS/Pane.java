@@ -149,7 +149,7 @@ public final class Pane extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public int getVisibleRow()
 	{
-		return (int) visRow;
+		return visRow;
 	}
 
 	/**
@@ -160,7 +160,7 @@ public final class Pane extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public int getVisibleCol()
 	{
-		return (int) visCol;
+		return visCol;
 	}
 
 	/**

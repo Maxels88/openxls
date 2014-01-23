@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.XLS.formulas;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
 
@@ -40,10 +41,7 @@ import java.lang.reflect.Array;
 */
 public class PtgNE extends GenericPtg implements Ptg
 {
-
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgNE.class );
 	private static final long serialVersionUID = 6901661166166179786L;
 
 	@Override
@@ -104,7 +102,7 @@ public class PtgNE extends GenericPtg implements Ptg
 				// there should always be only two ptg's in this, error if not.
 				if( (o == null) || (o.length != 2) )
 				{
-					Logger.logWarn( "calculating formula failed, wrong number of values in PtgNE" );
+					log.warn( "calculating formula failed, wrong number of values in PtgNE" );
 					return null;
 				}
 				// blank handling:

@@ -26,7 +26,8 @@ import com.extentech.formats.XLS.formulas.IxtiListener;
 import com.extentech.formats.XLS.formulas.Ptg;
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 
@@ -55,12 +56,9 @@ import java.util.Iterator;
 
 public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Externsheet.class );
 	private static final long serialVersionUID = -4460757130836967839L;
 	short cXTI = 0;
-	// int DEBUGLEVEL = 10;
 	CompatibleVector rgs = new CompatibleVector();
 
 	@Override
@@ -143,9 +141,9 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 			catch( WorkSheetNotFoundException e )
 			{
 				// don't error out on the external workbook sheet references
-				if( (DEBUGLEVEL > 1) && (t != 65535) && !rg.bIsExternal ) // 20080306 KSC: add external check ...
+				if(  (t != 65535) && !rg.bIsExternal ) // 20080306 KSC: add external check ...
 				{
-					Logger.logWarn( "Attempt to access Externsheet reference for sheet failed: " + e );
+					log.warn( "Attempt to access Externsheet reference for sheet failed: " + e );
 				}
 			}
 		}
@@ -208,10 +206,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 			}
 			catch( WorkSheetNotFoundException we )
 			{
-				if( DEBUGLEVEL > 1 )
-				{
-					Logger.logWarn( "Attempt to access Externsheet reference for sheet failed: " + we );
-				}
+					log.warn( "Attempt to access Externsheet reference for sheet failed: " + we );
 			}
 		}
 		return sheets;
@@ -263,17 +258,11 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 			}
 			catch( Exception e )
 			{
-				if( DEBUGLEVEL > 10 )
-				{
-					Logger.logWarn( "init of Externsheet record failed: " + e );
-				}
+					log.debug( "init of Externsheet record failed: " + e );
 			}
 			pos += 6;
 		}
-		if( DEBUGLEVEL > 10 )
-		{
-			Logger.logInfo( "Done Creating Externsheet" );
-		}
+			log.debug( "Done Creating Externsheet" );
 	}
 
 	/**
@@ -312,10 +301,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 	 */
 	void removeSheet( int sheetnum ) throws WorkSheetNotFoundException
 	{
-		if( DEBUGLEVEL > 10 )
-		{
-			Logger.logInfo( "Removing Sheet from Externsheet" );
-		}
+			log.debug( "Removing Sheet from Externsheet" );
 		// iterate the cXTI and check if this sheet is contained
 		Iterator it = rgs.iterator();
 		while( it.hasNext() )
@@ -399,10 +385,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 	 */
 	void addSheet( int firstSheet, int lastSheet ) throws WorkSheetNotFoundException
 	{
-		if( DEBUGLEVEL > 10 )
-		{
-			Logger.logInfo( "Adding new Sheet to Externsheet" );
-		}
+			log.debug( "Adding new Sheet to Externsheet" );
 
 		// KSC: Added logic to set correct supbook index for added XTI
 		byte[] bts = new byte[6];
@@ -509,7 +492,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		x.setLength( (short) 8 );
 		x.setOpcode( EXTERNSHEET );
 		byte[] dta = new byte[8];
-		dta[0] = (byte) 0x1; // put a reference to sheet1 in as initial value
+		dta[0] = 0x1; // put a reference to sheet1 in as initial value
 		x.setData( dta );
 		x.originalsize = 8;
 		x.init();
@@ -536,7 +519,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "ExternSheet.getPrototype error:" + e.toString() );
+			log.warn( "ExternSheet.getPrototype error:" + e.toString() );
 		}
 		return x;
 	}
@@ -561,10 +544,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 			}
 			catch( WorkSheetNotFoundException we )
 			{
-				if( DEBUGLEVEL > 10 )
-				{
-					Logger.logWarn( "Externsheet.getXtiReference:  Attempt to find Externsheet reference for sheet failed: " + we );
-				}
+					log.warn( "Externsheet.getXtiReference:  Attempt to find Externsheet reference for sheet failed: " + we );
 			}
 		}
 		return -1;
@@ -817,7 +797,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 
 		public int getSheet1()
 		{
-			return (int) this.sheet1num;
+			return this.sheet1num;
 		}
 
 		/**
@@ -832,7 +812,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 
 		public int getSheet2()
 		{
-			return (int) this.sheet2num;
+			return this.sheet2num;
 		}
 
 		public String toString()

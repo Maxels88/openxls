@@ -24,7 +24,8 @@ package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.FormatHandle;
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 /**
@@ -52,9 +53,7 @@ import org.xmlpull.v1.XmlPullParser;
  */
 public class Color implements OOXMLElement
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Color.class );
 	private static final long serialVersionUID = 2546003092245407502L;
 	private boolean auto = false;
 	public static int COLORTYPEINDEXED = 0;
@@ -206,7 +205,7 @@ public class Color implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "color.parseOOXML: " + e.toString() );
+			log.error( "color.parseOOXML: " + e.toString() );
 		}
 		Color c = new Color( element, auto, colortype, colorval, tint, type, bk.getWorkBook().getTheme() );
 		return c;
@@ -458,7 +457,7 @@ public class Color implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "color.parseColor: " + colortype + ":" + colorval + ": " + e.toString() );
+			log.error( "color.parseColor: " + colortype + ":" + colorval + ": " + e.toString() );
 		}
 	}
 

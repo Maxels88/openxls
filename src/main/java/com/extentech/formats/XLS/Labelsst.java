@@ -25,7 +25,8 @@ package com.extentech.formats.XLS;
 import com.extentech.ExtenXLS.DateConverter;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -51,9 +52,7 @@ import java.util.GregorianCalendar;
  */
 public final class Labelsst extends XLSCellRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Labelsst.class );
 	private static final long serialVersionUID = 467127849827595055L;
 	int isst;
 
@@ -67,7 +66,7 @@ public final class Labelsst extends XLSCellRecord
 		}
 		catch( NullPointerException e )
 		{
-			;
+			log.warn( "Error in Labelsst.setIsst", e );
 		}
 	}
 
@@ -112,7 +111,7 @@ public final class Labelsst extends XLSCellRecord
 		// get the row, col and ixfe information
 		super.initRowCol();
 		short s = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		ixfe = (int) s;
+		ixfe = s;
 		// get the length of the string
 		isst = ByteTools.readInt( this.getByteAt( 6 ), this.getByteAt( 7 ), this.getByteAt( 8 ), this.getByteAt( 9 ) );
 		this.setIsValueForCell( true );
@@ -311,7 +310,7 @@ public final class Labelsst extends XLSCellRecord
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Labelsst toString failed.", e );
+			log.error( "Labelsst toString failed.", e );
 			return "#ERR!";
 		}
 	}

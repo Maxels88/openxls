@@ -26,7 +26,8 @@ import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.formats.XLS.Font;
 import com.extentech.formats.XLS.WorkBook;
 import com.extentech.formats.XLS.charts.TextDisp;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -37,7 +38,7 @@ import java.util.Stack;
  */
 public class Title implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Title.class );
 	private static final long serialVersionUID = -3889674575558708481L;
 	private Layout layout = null;
 	private SpPr sp = null;
@@ -146,7 +147,7 @@ public class Title implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "title.parseOOXML: " + e.toString() );
+			log.error( "title.parseOOXML: " + e.toString() );
 		}
 		Title tt = new Title( ct, txpr, l, sp );
 		return tt;
@@ -239,7 +240,7 @@ public class Title implements OOXMLElement
  */
 class ChartText implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( ChartText.class );
 	private static final long serialVersionUID = -1175394918747218776L;
 	StrRef strref = null;
 	P para = null;
@@ -307,7 +308,7 @@ class ChartText implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "chartText.parseOOXML: " + e.toString() );
+			log.error( "chartText.parseOOXML: " + e.toString() );
 		}
 		ChartText ct = new ChartText( s, para, bpr );
 		return ct;

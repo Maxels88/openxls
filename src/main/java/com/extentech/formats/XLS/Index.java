@@ -24,7 +24,8 @@ package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 
@@ -67,17 +68,16 @@ import java.io.Serializable;
 
 public final class Index extends com.extentech.formats.XLS.XLSRecord implements XLSConstants
 {
-	/**
-	 * serialVersionUID
-	 */
+	int offsetStart = 0;
+	private static final Logger log = LoggerFactory.getLogger( Index.class );
 	private static final long serialVersionUID = -753407655976707961L;
+	private static int defaultsize = 16;
 	private int rwMic;
 	private int rwMac;
 	private int dbnum = 0;
 	//    private dbCellPointer[] dbcellarray; not used
 	private CompatibleVector dbcells = new CompatibleVector();
 	private int indexnum;
-	private static int defaultsize = 16;
 	private Dimensions dims;
 
 	/**
@@ -93,6 +93,82 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 		idx.setLength( (short) defaultsize );
 		idx.init();
 		return idx;
+	}
+
+	/**
+	 * get the index number for
+	 * addressing.
+	 */
+	public int getIndexNum()
+	{
+		return indexnum;
+	}
+
+	/**
+	 * set the index number for
+	 * addressing.
+	 */
+	public void setIndexNum( int n )
+	{
+		indexnum = n;
+	}
+
+	@Override
+	public void init()
+	{
+		super.init();
+		// 1st 4 are reseverd-0
+		rwMic = ByteTools.readInt( this.getBytesAt( 4, 4 ) );
+		rwMac = ByteTools.readInt( this.getBytesAt( 8, 4 ) );
+		// next 4 are position of defColWidth record - skip
+/* no need to read in dbcell offsets as we don't do anything with it
+ * 		int pos= 16;
+		int recsize= 4; // KSC added
+		int numdbcells = (this.getLength()-pos)/recsize;
+//		dbcellarray = new dbCellPointer[numdbcells];
+		// rest of data is position of dbCell records: rgibRw (variable): An array of FilePointer. Each FilePointer specifies the file position of each referenced DBCell record
+		for(int i = 0;i< numdbcells;i++){
+		    if(DEBUGLEVEL > 6)Logger.logInfo("Index -> initializing dbcell pointer: " + i);
+		    byte[] bite = this.getBytesAt(pos,4);
+		    dbCellPointer pointer = new dbCellPointer(bite);
+		    pos += 4;
+//		    dbcellarray[i] = pointer;
+		}
+//		*/
+	}
+
+	/**
+	 * Prestream for Index is going to create the correct size record, and populate the correct number of dbcells.
+	 * The actual values will not yet be populated, but the record sizes will be correct in order to get offsets
+	 * working correctly.
+	 * <p/>
+	 * Once offsets are correctly calculated in bytestreamer.stream, we can come back and
+	 * populate without the getIndex call overhead.
+	 */
+	@Override
+	public void preStream()
+	{
+		// rebuild the record with the correct length body data to fit the new dbcells
+		this.getData();
+		int arrsize = 16 + (dbcells.size() * 4);
+		byte[] newBytes = new byte[arrsize];
+		Dbcell dbc = null;
+		// KSC: Changed from copying 12 bytes to copying 16 bytes to keep DIMENSIONS reference
+		System.arraycopy( this.getData(), 0, newBytes, 0, 16 );
+		this.setData( newBytes );
+	}
+
+	/**
+	 * update the min/max cols and rows
+	 * 8       rwMic       4       First row that exists on the sheet
+	 * 12      rwMac       4       Last row that exists on the sheet, plus 1
+	 */
+	public void updateRowDimensions( int lowRow, int hiRow )
+	{
+		byte[] rw = ByteTools.cLongToLEBytes( lowRow );
+		System.arraycopy( rw, 0, this.getData(), 4, 4 );
+		rw = ByteTools.cLongToLEBytes( hiRow + 1 );
+		System.arraycopy( rw, 0, this.getData(), 8, 4 );
 	}
 
 	/**
@@ -121,24 +197,6 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 	}
 
 	/**
-	 * set the index number for
-	 * addressing.
-	 */
-	public void setIndexNum( int n )
-	{
-		indexnum = n;
-	}
-
-	/**
-	 * get the index number for
-	 * addressing.
-	 */
-	public int getIndexNum()
-	{
-		return indexnum;
-	}
-
-	/**
 	 * add an associated Dbcell object
 	 * to this INDEX.
 	 */
@@ -163,6 +221,19 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 		dbnum = 0;
 		dbcells = new CompatibleVector();
 	}
+
+	/** compute the location of Dbcell records using
+	 the INDEX dbcellpointers and the firstBof record position
+	 in the workbook.
+
+	 NOT USED
+	 *
+	 int getDbcellPosition(int pointernum){
+	 int firstBofloc = wkbook.getFirstBof().offset;
+	 byte[] b = dbcellarray[pointernum].cdb;
+	 int pointerloc = ByteTools.readInt(b[0],b[1],b[2],b[3]);
+	 return pointerloc + firstBofloc;
+	 }*/
 
 	/**
 	 * Update the Dbcell Pointers
@@ -233,42 +304,28 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 		return dbcs;
 	}
 
-	@Override
-	public void init()
-	{
-		super.init();
-		// 1st 4 are reseverd-0
-		rwMic = ByteTools.readInt( this.getBytesAt( 4, 4 ) );
-		rwMac = ByteTools.readInt( this.getBytesAt( 8, 4 ) );
-		// next 4 are position of defColWidth record - skip
-/* no need to read in dbcell offsets as we don't do anything with it
- * 		int pos= 16;
-		int recsize= 4; // KSC added		
-		int numdbcells = (this.getLength()-pos)/recsize;	
-//		dbcellarray = new dbCellPointer[numdbcells];
-		// rest of data is position of dbCell records: rgibRw (variable): An array of FilePointer. Each FilePointer specifies the file position of each referenced DBCell record
-		for(int i = 0;i< numdbcells;i++){
-		    if(DEBUGLEVEL > 6)Logger.logInfo("Index -> initializing dbcell pointer: " + i);
-		    byte[] bite = this.getBytesAt(pos,4);
-		    dbCellPointer pointer = new dbCellPointer(bite);
-		    pos += 4;
-//		    dbcellarray[i] = pointer;
-		}
-//		*/
-	}
-
-	/** compute the location of Dbcell records using
-	 the INDEX dbcellpointers and the firstBof record position
-	 in the workbook.
-
-	 NOT USED
+	/**
+	 * Called from streamer, this updates individual dbcell offset values.
+	 * <p/>
+	 * Will only run correctly if called sequentially, ie dboffset [0], [1], [2]
 	 *
-	 int getDbcellPosition(int pointernum){
-	 int firstBofloc = wkbook.getFirstBof().offset;
-	 byte[] b = dbcellarray[pointernum].cdb;
-	 int pointerloc = ByteTools.readInt(b[0],b[1],b[2],b[3]);
-	 return pointerloc + firstBofloc;
-	 }*/
+	 * @param DbcellNumber - which dbcell to update
+	 * @param DbOffset     - the pure offset from beginning of file
+	 */
+	void setDbcellPosition( int DbcellNumber, int DbOffset )
+	{
+		if( offsetStart == 0 )
+		{
+			offsetStart = this.getSheet().getMyBof().getOffset();
+		}
+		int insertOffset = DbOffset - offsetStart;
+		log.trace( "Setting DBBiffRec Position, offsetStart:" + offsetStart + " & InsertOffset = " + insertOffset );
+		offsetStart += insertOffset;
+		int insertloc = 16 + (DbcellNumber * 4);
+		byte[] off = ByteTools.cLongToLEBytes( insertOffset );
+		System.arraycopy( off, 0, data, insertloc, 4 );
+
+	}
 
 	/**
 	 * file offset to the Dbcell record
@@ -276,20 +333,20 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 	class dbCellPointer implements Serializable
 	{
 
-		/**
-		 * serialVersionUID
-		 */
-		private static final long serialVersionUID = -5132922970171084839L;
 		int cellloc = 0;
 		int datasiz = 0;
 		short s2, s3;
 		byte[] cdb = new byte[4];
+		/**
+		 * serialVersionUID
+		 */
+		private static final long serialVersionUID = -5132922970171084839L;
 
 		dbCellPointer( byte[] b )
 		{
 			cdb = b;
-			cellloc = (int) ByteTools.readShort( b[0], b[1] );
-			datasiz = (int) ByteTools.readShort( b[2], b[3] );
+			cellloc = ByteTools.readShort( b[0], b[1] );
+			datasiz = ByteTools.readShort( b[2], b[3] );
 		}
 
 		/**
@@ -308,68 +365,6 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 			System.arraycopy( ByteTools.shortToLEBytes( (short) datasiz ), 0, bite, 2, 2 );
 			return bite;
 		}
-	}
-
-	/**
-	 * update the min/max cols and rows
-	 * 8       rwMic       4       First row that exists on the sheet
-	 * 12      rwMac       4       Last row that exists on the sheet, plus 1
-	 */
-	public void updateRowDimensions( int lowRow, int hiRow )
-	{
-		byte[] rw = ByteTools.cLongToLEBytes( lowRow );
-		System.arraycopy( rw, 0, this.getData(), 4, 4 );
-		rw = ByteTools.cLongToLEBytes( hiRow + 1 );
-		System.arraycopy( rw, 0, this.getData(), 8, 4 );
-	}
-
-	/**
-	 * Called from streamer, this updates individual dbcell offset values.
-	 * <p/>
-	 * Will only run correctly if called sequentially, ie dboffset [0], [1], [2]
-	 *
-	 * @param DbcellNumber - which dbcell to update
-	 * @param DbOffset     - the pure offset from beginning of file
-	 */
-	void setDbcellPosition( int DbcellNumber, int DbOffset )
-	{
-		if( offsetStart == 0 )
-		{
-			offsetStart = this.getSheet().getMyBof().getOffset();
-		}
-		int insertOffset = DbOffset - offsetStart;
-		if( DEBUGLEVEL > 10 )
-		{
-			Logger.logInfo( "Setting DBBiffRec Position, offsetStart:" + offsetStart + " & InsertOffset = " + insertOffset );
-		}
-		offsetStart += insertOffset;
-		int insertloc = 16 + (DbcellNumber * 4);
-		byte[] off = ByteTools.cLongToLEBytes( insertOffset );
-		System.arraycopy( off, 0, data, insertloc, 4 );
-
-	}
-
-	int offsetStart = 0;
-
-	/**
-	 * Prestream for Index is going to create the correct size record, and populate the correct number of dbcells.
-	 * The actual values will not yet be populated, but the record sizes will be correct in order to get offsets
-	 * working correctly.
-	 * <p/>
-	 * Once offsets are correctly calculated in bytestreamer.stream, we can come back and
-	 * populate without the getIndex call overhead.
-	 */
-	@Override
-	public void preStream()
-	{
-		// rebuild the record with the correct length body data to fit the new dbcells
-		this.getData();
-		int arrsize = 16 + (dbcells.size() * 4);
-		byte[] newBytes = new byte[arrsize];
-		Dbcell dbc = null;
-		// KSC: Changed from copying 12 bytes to copying 16 bytes to keep DIMENSIONS reference
-		System.arraycopy( this.getData(), 0, newBytes, 0, 16 );
-		this.setData( newBytes );
 	}
 }
 

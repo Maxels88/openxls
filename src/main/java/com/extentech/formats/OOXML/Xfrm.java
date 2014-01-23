@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.OOXML;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
@@ -31,7 +32,7 @@ import java.util.Stack;
 
 class Xfrm implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Xfrm.class );
 	private static final long serialVersionUID = 5383438744617393878L;
 	private HashMap<String, String> attrs = null;
 	private Off o = null;
@@ -72,7 +73,7 @@ class Xfrm implements OOXMLElement
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		Off o = null;
 		Ext e = null;
 		String ns = null;
@@ -119,7 +120,7 @@ class Xfrm implements OOXMLElement
 		}
 		catch( Exception ex )
 		{
-			Logger.logErr( "xfrm.parseOOXML: " + ex.toString() );
+			log.error( "xfrm.parseOOXML: " + ex.toString() );
 		}
 		Xfrm x = new Xfrm( attrs, o, e, ns );
 		return x;
@@ -164,14 +165,14 @@ class Xfrm implements OOXMLElement
 
 class Off implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Off.class );
 	private static final long serialVersionUID = -7624630398053353694L;
 	private HashMap<String, String> attrs = null;
 	private String ns = "";
 
 	public Off()
 	{
-		attrs = new HashMap<String, String>();
+		attrs = new HashMap<>();
 		attrs.put( "x", new String( "0" ) );
 		attrs.put( "y", new String( "0" ) );
 	}
@@ -195,7 +196,7 @@ class Off implements OOXMLElement
 
 	public static Off parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		String ns = null;
 		try
 		{
@@ -228,7 +229,7 @@ class Off implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "off.parseOOXML: " + e.toString() );
+			log.error( "off.parseOOXML: " + e.toString() );
 		}
 		Off o = new Off( attrs, ns );
 		return o;

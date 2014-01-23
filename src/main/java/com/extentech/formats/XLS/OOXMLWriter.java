@@ -43,8 +43,9 @@ import com.extentech.formats.OOXML.SheetView;
 import com.extentech.formats.OOXML.TwoCellAnchor;
 import com.extentech.formats.XLS.charts.Chart;
 import com.extentech.formats.XLS.charts.OOXMLChart;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -66,7 +67,7 @@ import java.util.zip.ZipOutputStream;
  */
 public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 {
-
+	private static final Logger log = LoggerFactory.getLogger( OOXMLWriter.class );
 	/**
 	 * generates OOXML for a workbook (see specification above)
 	 * Creates the ZIP file and writes all files into proper directory structure re: OPC
@@ -189,12 +190,12 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 				else
 				{ // TESTING - remove when done!
 					// *********************************************************************
-					Logger.logWarn( "Unknown External Type " + type );
+					log.warn( "Unknown External Type " + type );
 				}
 			}
 			catch( IOException e )
 			{
-				Logger.logErr( "OOXMLWriter.writeSheetLevelExternalReferenceOOXML: " + e.toString() );
+				log.error( "OOXMLWriter.writeSheetLevelExternalReferenceOOXML: " + e.toString() );
 			}
 			try
 			{
@@ -1334,7 +1335,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "OOXMLWriter.writeSheetOOXML writing rows: " + e.toString() );
+				log.error( "OOXMLWriter.writeSheetOOXML writing rows: " + e.toString() );
 				e.printStackTrace();
 			}
 		}
@@ -1606,7 +1607,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 					}
 					catch( FormulaNotFoundException e )
 					{
-						Logger.logErr( "Error getting formula handle in OOXML Writer" );
+						log.error( "Error getting formula handle in OOXML Writer" );
 					}
 					break;
 				case CellHandle.TYPE_BOOLEAN:
@@ -1663,6 +1664,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 				}
 				catch( Exception e )
 				{
+					log.warn("getColOOXML failed", e);
 				}
 			}
 			colooxml.append( "</cols>" );
@@ -1698,7 +1700,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "OOXMLWriter.getImageOOXML: " + e.toString() );
+			log.error( "OOXMLWriter.getImageOOXML: " + e.toString() );
 			ret = "";
 		}
 		return ret;
@@ -1777,7 +1779,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 				}
 				catch( Exception e/*ChartNotFoundException c*/ )
 				{
-					Logger.logErr( "OOXMLWriter.writeDrawingObjects failed getting Chart: " + e.toString() );
+					log.error( "OOXMLWriter.writeDrawingObjects failed getting Chart: " + e.toString() );
 				}
 			}
 		}
@@ -1875,7 +1877,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "er: " + e.toString() );
+			log.error( "er: " + e.toString() );
 			ret = "";
 		}
 		return ret;

@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS.formulas;
 
 import com.extentech.formats.XLS.ReferenceTracker;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -103,8 +104,6 @@ import java.util.Vector;
  */
 public class DatabaseCalculator
 {
-	public static boolean DEBUG = false;
-
 	/**
 	 * Fetch a DB from the cache or create a new one
 	 * <p/>
@@ -126,7 +125,7 @@ public class DatabaseCalculator
 		}
 		//}
 		// create new
-		//Logger.logErr("getDB: " + operands.toString()+ "NOT cached.");
+		//log.error("getDB: " + operands.toString()+ "NOT cached.");
 		Ptg[] dbrange = PtgCalculator.getAllComponents( operands );
 		DB ret = DB.parseList( dbrange );
 		DBcache.getListDBs().put( operands.toString(), ret );
@@ -143,7 +142,7 @@ public class DatabaseCalculator
 			//Logger.logInfo("getCriteria: " + operands.toString()+ "using cache.");
 			return (Criteria) DBcache.getCriteriaDBs().get( operands.toString() );
 		}
-		//Logger.logErr("getCriteria: " + operands.toString()+ "NOT cached.");
+		//log.error("getCriteria: " + operands.toString()+ "NOT cached.");
 		Ptg[] criteria = PtgCalculator.getAllComponents( operands );
 		Criteria ret = Criteria.parseCriteria( criteria );
 		DBcache.getCriteriaDBs().put( operands.toString(), ret );
@@ -1056,6 +1055,7 @@ class DB
 
 class Criteria extends DB
 {
+	private static final Logger log = LoggerFactory.getLogger( Criteria.class );
 	public Criteria( int nCols, int nRows )
 	{
 		super( nCols, nRows );
@@ -1071,18 +1071,18 @@ class Criteria extends DB
 		Criteria crit = new Criteria( dblist.getNCols(), dblist.getNRows() );
 		crit.colHeaders = dblist.colHeaders;
 		crit.rows = dblist.rows;
-		if( DatabaseCalculator.DEBUG )
+		if( log.isDebugEnabled() )
 		{
-			Logger.logInfo( "\nCriteria:" );
+			log.debug( "\nCriteria:" );
 			for( int i = 0; i < crit.getNCols(); i++ )
 			{
-				Logger.logInfo( "\t" + crit.getCol( i ) );
+				log.debug( "\t" + crit.getCol( i ) );
 			}
 			for( int j = 0; j < crit.getNCols(); j++ )
 			{
 				for( int i = 0; i < crit.getNRows(); i++ )
 				{
-					Logger.logInfo( "\t" + crit.getCell( i, j ) );
+					log.debug( "\t" + crit.getCell( i, j ) );
 				}
 			}
 		}
@@ -1429,7 +1429,7 @@ class Criteria extends DB
 					}
 					else
 					{
-						Logger.logWarn( "DatabaseCalculator.Criteria.criteriaCheck4: wrong criteria count for db value count" );
+						log.warn( "DatabaseCalculator.Criteria.criteriaCheck4: wrong criteria count for db value count" );
 						return false;
 					}
 					String rt = curcrit.getValue().toString();

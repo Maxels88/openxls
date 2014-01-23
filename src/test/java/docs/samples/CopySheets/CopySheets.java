@@ -30,7 +30,8 @@ package docs.samples.CopySheets;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -42,7 +43,7 @@ import java.io.FileOutputStream;
  */
 public class CopySheets
 {
-
+	private static final Logger log = LoggerFactory.getLogger( CopySheets.class );
 	String wd = System.getProperty( "user.dir" ) + "/docs/samples/CopySheets/";
 
 	/**
@@ -52,8 +53,8 @@ public class CopySheets
 	 */
 	public static void main( String[] args )
 	{
-		Logger.logInfo( "ExtenXLS Version " + WorkBookHandle.getVersion() );
-		Logger.logInfo( "---- Testing Copy Sheet Functionality ---- " );
+		log.info( "ExtenXLS Version " + WorkBookHandle.getVersion() );
+		log.info( "---- Testing Copy Sheet Functionality ---- " );
 		CopySheets cx = new CopySheets();
 		try
 		{
@@ -61,9 +62,9 @@ public class CopySheets
 		}
 		catch( Exception ex )
 		{
-			Logger.logErr( "ERROR: CopySheets Failed: " + ex.toString() );
+			log.error( "ERROR: CopySheets Failed: " + ex.toString() );
 		}
-		Logger.logInfo( "---- Done with Copy Sheet ---- " );
+		log.info( "---- Done with Copy Sheet ---- " );
 
 	}
 
@@ -108,7 +109,7 @@ public class CopySheets
 		}
 		catch( java.io.IOException e )
 		{
-			Logger.logInfo( "IOException in Tester.  " + e );
+			log.info( "IOException in Tester.  " + e );
 		}
 	}
 

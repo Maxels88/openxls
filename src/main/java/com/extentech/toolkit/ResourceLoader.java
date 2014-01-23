@@ -24,6 +24,8 @@ package com.extentech.toolkit;
 
 import com.extentech.ExtenXLS.GetInfo;
 import com.extentech.naming.InitialContextImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -52,15 +54,10 @@ import java.util.zip.ZipOutputStream;
  */
 public class ResourceLoader extends InitialContextImpl implements Serializable, javax.naming.Context
 {
-
-	/**
-	 *
-	 *
-	 */
+	private static final Logger log = LoggerFactory.getLogger( ResourceLoader.class );
 	private static final long serialVersionUID = 12345245254L;
 	private String resloc = "";
 	private File propsfile = null;
-	public static boolean DEBUG = false;
 	private Properties resources = new Properties();
 
 	public String toString()
@@ -125,7 +122,7 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 				s = "resources/" + s; // StringTool.strip(s,".properties");
 			}
 		}
-		Logger.logInfo( "ResourceLoader INIT: " + s );
+		log.debug( "ResourceLoader INIT: " + s );
 
 		resloc = s;
 		try
@@ -148,7 +145,7 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 				}
 				catch( Exception ex )
 				{
-					Logger.logWarn( "Could not init Resourceloader from: " + propsfile.getAbsolutePath() );
+					log.error( "Could not init Resourceloader from: " + propsfile.getAbsolutePath(), ex );
 				}
 			}
 
@@ -175,7 +172,7 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 		}
 		catch( MissingResourceException mre )
 		{
-			Logger.logErr( "ResourceLoader getting resources failed: " + mre.toString() );
+			log.error( "ResourceLoader getting resources failed: " + mre.toString() );
 		}
 	}
 
@@ -224,7 +221,7 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 		}
 		catch( Exception mre )
 		{
-			Logger.logWarn( "Resource string: " + nm + " could not be set to " + v + " in:" + this.resloc );
+			log.error( "Resource string: " + nm + " could not be set to " + v + " in:" + this.resloc, mre );
 		}
 	}
 
@@ -264,29 +261,9 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 			obj = c.newInstance();
 			return obj;
 		}
-		catch( ClassFormatError t )
+		catch( Exception e )
 		{
-			Logger.logErr( t.toString() );
-			return null;
-		}
-		catch( ClassNotFoundException t )
-		{
-			Logger.logErr( t );
-			return null;
-		}
-		catch( ClassCastException t )
-		{
-			Logger.logErr( t );
-			return null;
-		}
-		catch( InstantiationException t )
-		{
-			Logger.logErr( t );
-			return null;
-		}
-		catch( IllegalAccessException t )
-		{
-			Logger.logErr( t );
+			log.error( "Error loading class {}", className,  e );
 			return null;
 		}
 	}
@@ -329,24 +306,15 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 		// 20070107 KSC: report error
 		if( u == null )
 		{
-			Logger.logErr( "ResourceLoader.getFilePathForResource: " + resource + " not found." );
+			log.error( "ResourceLoader.getFilePathForResource: " + resource + " not found." );
 			return null;
 		}
-		if( DEBUG )
-		{
-			Logger.logInfo( "ResourceLoader.getFilePathForResource() got:" + u.toString() );
-		}
+			log.debug( "ResourceLoader.getFilePathForResource() got:" + u.toString() );
 		String s = u.getFile();
 
-		if( DEBUG )
-		{
-			Logger.logInfo( "ResourceLoader.getFilePathForResource Decoding:" + s );
-		}
+			log.debug( "ResourceLoader.getFilePathForResource Decoding:" + s );
 		s = ResourceLoader.Decode( s );
-		if( DEBUG )
-		{
-			Logger.logInfo( "ResourceLoader.getFilePathForResource Decoded:" + s );
-		}
+			log.debug( "ResourceLoader.getFilePathForResource Decoded:" + s );
 
 		int i = s.indexOf( "!" );
 		if( i > -1 )
@@ -364,16 +332,12 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 					zipstring = zipstring.substring( 1 );
 				}
 			}
-			if( DEBUG )
-			{
-				Logger.logInfo( "Resourceloader.getFilePathForResource(): Successfully obtained " + zipstring );
-			}
+
+				log.debug( "Resourceloader.getFilePathForResource(): Successfully obtained " + zipstring );
 			return zipstring;
 		} // file is not in a jar
-		if( DEBUG )
-		{
-			Logger.logErr( "ResourceLoader.getFilePathForResource(): File is not in jar:" + s );
-		}
+
+			log.error( "ResourceLoader.getFilePathForResource(): File is not in jar:" + s );
 		return s;
 	}
 
@@ -400,7 +364,7 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "addFileToJar: Jar: " + tmp[0] + " File: " + tmp[1] + " : " + e.toString() );
+			log.error( "addFileToJar: Jar: " + tmp[0] + " File: " + tmp[1] + " : " + e.toString() );
 		}
 	}
 
@@ -474,10 +438,7 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 			URL u = ResourceLoader.class.getResource( resource );
 			s = u.getFile();
 		}
-		if( DEBUG )
-		{
-			Logger.logInfo( "Resource: " + resource + " found in: " + s );
-		}
+			log.debug( "Resource: " + resource + " found in: " + s );
 
 		// cut off the internal zip file part & the file:/
 		int begin = -1;
@@ -499,10 +460,7 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 				s = s.substring( 1 );
 			}
 		}
-		if( DEBUG )
-		{
-			Logger.logInfo( "ResourceLoader() after stripping:" + s );
-		}
+			log.debug( "ResourceLoader() after stripping:" + s );
 		int i = s.indexOf( "!" );
 		if( i > -1 )
 		{
@@ -513,16 +471,10 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 				i = zipstring.lastIndexOf( "\\" );
 			}
 			zipstring = zipstring.substring( 0, i );
-			if( DEBUG )
-			{
-				Logger.logInfo( "ResourceLoader() returning zipstring Final Working Directory Setting: " + zipstring );
-			}
+				log.debug( "ResourceLoader() returning zipstring Final Working Directory Setting: " + zipstring );
 			return zipstring;
 		}
-		if( DEBUG )
-		{
-			Logger.logInfo( "ResourceLoader() returning Final Working Directory Setting: " + s );
-		}
+			log.debug( "ResourceLoader() returning Final Working Directory Setting: " + s );
 		return s;
 	}
 
@@ -549,7 +501,7 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "ResourceLoader.Decode resource failed: " + e.toString() );
+				log.error( "ResourceLoader.Decode resource failed: " + e.toString() );
 			}
 		}
 		return ret;
@@ -577,7 +529,7 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "ResourceLoader.Decode resource failed: " + e.toString() );
+				log.error( "ResourceLoader.Decode resource failed: " + e.toString() );
 			}
 		}
 		return ret;
@@ -622,26 +574,20 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 					}
 					catch( Exception e )
 					{
-						;
-						if( false )
-						{
-							Logger.logWarn( "ResourceLoader.executeIfSupported() Method NOT supported: " + methname + " in " + ob.getClass()
-							                                                                                                     .getName() + " for arguments " + StringTool
+							log.warn( "ResourceLoader.executeIfSupported() Method NOT supported: " + methname + " in " + ob.getClass()
+							                                                                                               .getName() + " for arguments " + StringTool
 									.arrayToString( args ) );
-						}
 						return null;
 					}
 				}
 			}
-			if( false )
-			{
+			
 				if( t == mt.length )
 				{
-					Logger.logWarn( "ResourceLoader.executeIfSupported() Method NOT found: " + methname + " in " + ob.getClass()
+					log.warn( "ResourceLoader.executeIfSupported() Method NOT found: " + methname + " in " + ob.getClass()
 					                                                                                                 .getName() + " for arguments " + StringTool
 							.arrayToString( args ) );
 				}
-			}
 			return retob;
 		}
 		catch( NoSuchMethodError e )
@@ -682,19 +628,8 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "ResourceLoader.execute " + methname + " on " + ob.getClass().getName() + " failed: " + e.toString() );
-			e.printStackTrace();
+			log.error( "ResourceLoader.execute " + methname + " on " + ob.getClass().getName() + " failed: " + e.toString(), e );
 			return null;
 		}
-	}
-
-	/**
-	 * Sets the debugging level for the ResourceLoader
-	 *
-	 * @param b
-	 */
-	public void setDebug( boolean b )
-	{
-		DEBUG = b;
 	}
 }

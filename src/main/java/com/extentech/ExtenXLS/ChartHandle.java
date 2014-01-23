@@ -41,10 +41,11 @@ import com.extentech.formats.XLS.charts.ChartType;
 import com.extentech.formats.XLS.charts.OOXMLChart;
 import com.extentech.formats.XLS.charts.Series;
 import com.extentech.formats.XLS.charts.ThreeD;
-import com.extentech.toolkit.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -74,6 +75,7 @@ import java.util.Vector;
  */
 public class ChartHandle implements ChartConstants
 {
+	private static final Logger log = LoggerFactory.getLogger( ChartHandle.class );
 	// 20080114 KSC: delegate so visible 
 	public static final int BARCHART = ChartConstants.BARCHART;
 	public static final int COLCHART = ChartConstants.COLCHART;
@@ -135,6 +137,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	public ChartHandle( Chart c, WorkBookHandle wb )
 	{
+
 		//super();
 		mychart = c;
 		wbh = wb;
@@ -980,7 +983,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	private boolean setLocationPolicy( String loc, int l )
 	{
-		Logger.logErr( "ChartHandle.setLocationPolicy is broken" );
+		log.error( "ChartHandle.setLocationPolicy is broken" );
 		
 /* TODO: Refactor	    for(int x=0;x<mychart.aivals.size();x++){
 			Ai ser = (Ai)mychart.aivals.get(x);
@@ -1707,7 +1710,7 @@ public class ChartHandle implements ChartConstants
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "Error adding series: " + e.toString() );
+				log.error( "Error adding series: " + e.toString() );
 			}
 		}
 	}
@@ -1783,7 +1786,7 @@ public class ChartHandle implements ChartConstants
 		}
 		catch( CellNotFoundException e )
 		{
-			Logger.logErr( "ChartHandle.appendRowSeriesToChart: Unable to append series to chart: " + e );
+			log.error( "ChartHandle.appendRowSeriesToChart: Unable to append series to chart: " + e );
 		}
 		return null;
 	}
@@ -2240,7 +2243,7 @@ public class ChartHandle implements ChartConstants
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "ChartHandle.parseXML <" + xpp.getName() + ">: " + e.toString() );
+			log.warn( "ChartHandle.parseXML <" + xpp.getName() + ">: " + e.toString() );
 			// TODO: propogate Exception???
 		}
 	}
@@ -2369,7 +2372,7 @@ public class ChartHandle implements ChartConstants
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "ChartHandle.getOOXML: error generating OOXML.  Chart not created: " + e.toString() );
+			log.error( "ChartHandle.getOOXML: error generating OOXML.  Chart not created: " + e.toString() );
 		}
 		return cooxml.toString();
 	}
@@ -2594,7 +2597,7 @@ public class ChartHandle implements ChartConstants
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "ChartHandle.parseChartOOXML: " + e.toString() );
+			log.error( "ChartHandle.parseChartOOXML: " + e.toString() );
 		}
 	}
 
@@ -3414,7 +3417,7 @@ public class ChartHandle implements ChartConstants
 			}
 			catch( Exception e )
 			{
-				Logger.logWarn( "ChartHandle.getJSON failed getting zaxislable:" + e.toString() );
+				log.warn( "ChartHandle.getJSON failed getting zaxislable:" + e.toString() );
 			}
 			theChart.put( "titles", titles );
 
@@ -3505,7 +3508,7 @@ public class ChartHandle implements ChartConstants
 		}
 		catch( JSONException e )
 		{
-			Logger.logErr( "Error getting Chart JSON: " + e );
+			log.error( "Error getting Chart JSON: " + e );
 		}
 		return theChart.toString();
 	}
@@ -3530,7 +3533,7 @@ public class ChartHandle implements ChartConstants
 			}
 			catch( JSONException e )
 			{
-				Logger.logErr( "Error inputting JSON Object: " + e );
+				log.error( "Error inputting JSON Object: " + e );
 			}
 		}
 	}
@@ -3583,7 +3586,7 @@ public class ChartHandle implements ChartConstants
 			}
 			catch( Exception e )
 			{
-				Logger.logWarn( "ChartHandle.getCurrentSeries problem:" + e.toString() );
+				log.error( "ChartHandle.getCurrentSeries problem:" + e.toString() );
 			}
 
 			// Retrieve Axis Scale info
@@ -3605,7 +3608,7 @@ public class ChartHandle implements ChartConstants
 		}
 		catch( JSONException e )
 		{
-			Logger.logErr( "ChartHandle.getCurrentSeries: Error getting Series JSON: " + e );
+			log.error( "ChartHandle.getCurrentSeries: Error getting Series JSON: " + e );
 		}
 		return retJSON;
 	}
@@ -3637,7 +3640,7 @@ public class ChartHandle implements ChartConstants
 		}
 		catch( JSONException e )
 		{
-			Logger.logErr( "ChartHandle.getAllSeriesDataJSON: " + e );
+			log.error( "ChartHandle.getAllSeriesDataJSON: " + e );
 		}
 		return s.toString();
 	}

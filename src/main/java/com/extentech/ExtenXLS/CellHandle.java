@@ -52,10 +52,11 @@ import com.extentech.formats.XLS.charts.Ai;
 import com.extentech.formats.XLS.formulas.Ptg;
 import com.extentech.formats.XLS.formulas.PtgRef;
 import com.extentech.formats.cellformat.CellFormatFactory;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -123,11 +124,7 @@ import static com.extentech.ExtenXLS.JSONConstants.JSON_WORD_WRAP;
  */
 public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHandle>
 {
-
-	/**
-	 *
-	 *
-	 */
+	private static final Logger log = LoggerFactory.getLogger( CellHandle.class );
 	private static final long serialVersionUID = 4737120893891570607L;
 	/**
 	 * Cell types
@@ -149,7 +146,6 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	// reusing or creating new xfs is handled in FormatHandle/cloneXf and
 	// updateXf
 	// boolean useExistingXF = !false;
-	private boolean DEBUG = false;
 	private XLSRecord mycell;
 
 	/**
@@ -2040,7 +2036,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 				}
 				catch(/* 20070212 KSC: FunctionNotSupported */Exception a )
 				{
-					Logger.logWarn( "CellHandle.setVal() failed.  Setting Formula to " + obj.toString() + " failed: " + a );
+					log.warn( "CellHandle.setVal() failed.  Setting Formula to " + obj.toString() + " failed: " + a );
 				}
 			}
 		}
@@ -2396,10 +2392,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		CellRange mergerange = getMergedCellRange();
 		if( mergerange != null )
 		{
-			if( DEBUG )
-			{
-				Logger.logInfo( "CellHandle " + this.toString() + " getSpan() for range: " + mergerange.toString() );
-			}
+				log.debug( "CellHandle " + this.toString() + " getSpan() for range: " + mergerange.toString() );
 			int[] ret = { 0, 0 };
 			// if(check.toString().equals(this.toString())){ //it's the first in
 			// the range -- show it!
@@ -2410,7 +2403,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 			}
 			catch( Exception e )
 			{
-				Logger.logWarn( "CellHandle getting CellSpan failed: " + e );
+				log.warn( "CellHandle getting CellSpan failed: " + e );
 			}
 			// }
 			return ret;
@@ -2540,7 +2533,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 						}
 						catch( Exception e )
 						{
-							Logger.logWarn( "CellHandle.getXML formula calc failed: " + e.toString() );
+							log.warn( "CellHandle.getXML formula calc failed: " + e.toString() );
 						}
 					}
 					if( val instanceof Float )
@@ -2571,7 +2564,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 			}
 			catch( Exception e )
 			{
-				Logger.logErr( "ExtenXLS.getXML() failed getting type of Formula for: " + this.toString(), e );
+				log.warn( "ExtenXLS.getXML() failed getting type of Formula for: " + this.toString(), e );
 			}
 		}
 		if( this.isDate() )
@@ -2630,7 +2623,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 				}
 				catch( Exception e )
 				{
-					Logger.logErr( "CellHandle.getXML failed for: " + this.getCellAddress() + " in: " + this.getWorkBook().toString(), e );
+					log.error( "CellHandle.getXML failed for: " + this.getCellAddress() + " in: " + this.getWorkBook().toString(), e );
 					retval.append( "XML ERROR!" );
 				}
 			}
@@ -3055,7 +3048,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		                       .clearAffectedFormulaCellsOnSheet( this, this.getWorkSheetName() )
 		                       .values()
 		                       .iterator();
-		List<CellHandle> ret = new ArrayList<CellHandle>();
+		List<CellHandle> ret = new ArrayList<>();
 		while( its.hasNext() )
 		{
 			CellHandle cx = new CellHandle( (BiffRec) its.next(), this.wbh );
@@ -3234,7 +3227,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 			}
 			catch( Exception ex )
 			{
-				Logger.logWarn( "ExtenXLS.getJSONObject failed: " + ex.toString() );
+				log.error( "ExtenXLS.getJSONObject failed: " + ex.toString() );
 				val = "#ERR!";
 			}
 
@@ -3286,7 +3279,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 				}
 				catch( Exception e )
 				{
-					Logger.logErr( "ExtenXLS.getJSON() failed getting type of Formula for: " + toString(), e );
+					log.error( "ExtenXLS.getJSON() failed getting type of Formula for: " + toString(), e );
 				}
 			}
 
@@ -3449,7 +3442,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		}
 		catch( JSONException e )
 		{
-			Logger.logErr( "error getting JSON for the cell: " + e );
+			log.error( "error getting JSON for the cell: " + e );
 		}
 		return theCell;
 	}
@@ -3517,7 +3510,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		}
 		catch( Exception ex )
 		{
-			Logger.logErr( "CellHandle.copyCellHelper failed.", ex );
+			log.error( "CellHandle.copyCellHelper failed.", ex );
 		}
 		return newcell;
 	}

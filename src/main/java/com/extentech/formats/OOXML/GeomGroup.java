@@ -22,7 +22,8 @@
  */
 package com.extentech.formats.OOXML;
 
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
@@ -36,9 +37,7 @@ import java.util.Stack;
 //TODO: Finish custGeom child elements ahLst, cxnLst, rect (+ finish path element)
 public class GeomGroup implements OOXMLElement
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( GeomGroup.class );
 	private static final long serialVersionUID = -7202561792070909825L;
 	private PrstGeom p = null;
 	private CustGeom c = null;
@@ -96,7 +95,7 @@ public class GeomGroup implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "GeomGroup.parseOOXML: " + e.toString() );
+			log.error( "GeomGroup.parseOOXML: " + e.toString() );
 		}
 		GeomGroup g = new GeomGroup( p, c );
 		return g;
@@ -127,7 +126,7 @@ public class GeomGroup implements OOXMLElement
 
 class PrstGeom implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( PrstGeom.class );
 	private static final long serialVersionUID = 8327708502983472577L;
 	private String prst = null;
 	private AvLst avLst = null;
@@ -186,7 +185,7 @@ class PrstGeom implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "prstGeom.parseOOXML: " + e.toString() );
+			log.error( "prstGeom.parseOOXML: " + e.toString() );
 		}
 		PrstGeom p = new PrstGeom( prst, a );
 		return p;
@@ -225,7 +224,7 @@ class PrstGeom implements OOXMLElement
 // TODO: Finish child elements ahLst, cxnLst
 class CustGeom implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( CustGeom.class );
 	private static final long serialVersionUID = 4036207867619551810L;
 	private PathLst pathLst;
 	private GdLst gdLst;
@@ -306,7 +305,7 @@ class CustGeom implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "custGeom.parseOOXML: " + e.toString() );
+			log.error( "custGeom.parseOOXML: " + e.toString() );
 		}
 		CustGeom c = new CustGeom( p, g, a, cx, r );
 		return c;
@@ -360,7 +359,7 @@ class CustGeom implements OOXMLElement
  */
 class PathLst implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( PathLst.class );
 	private static final long serialVersionUID = -1996347204024728000L;
 	private ArrayList<Path> path;
 	private HashMap<String, String> attrs = null;
@@ -379,8 +378,8 @@ class PathLst implements OOXMLElement
 
 	public static PathLst parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
-		ArrayList<Path> p = new ArrayList<Path>();
+		HashMap<String, String> attrs = new HashMap<>();
+		ArrayList<Path> p = new ArrayList<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -417,7 +416,7 @@ class PathLst implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "pathLst.parseOOXML: " + e.toString() );
+			log.error( "pathLst.parseOOXML: " + e.toString() );
 		}
 		PathLst pl = new PathLst( attrs, p );
 		return pl;
@@ -461,7 +460,7 @@ class PathLst implements OOXMLElement
  */
 class Path implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Path.class );
 	private static final long serialVersionUID = 6906237439620322589L;
 	private HashMap<String, String> attrs = null;
 
@@ -477,7 +476,7 @@ class Path implements OOXMLElement
 
 	public static Path parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -517,7 +516,7 @@ class Path implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "path.parseOOXML: " + e.toString() );
+			log.error( "path.parseOOXML: " + e.toString() );
 		}
 		Path p = new Path( attrs );
 		return p;
@@ -554,7 +553,7 @@ class Path implements OOXMLElement
  */
 class GdLst implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( GdLst.class );
 	private static final long serialVersionUID = -7852193131141462744L;
 	private ArrayList<Gd> gds;
 
@@ -584,7 +583,7 @@ class GdLst implements OOXMLElement
 						lastTag.push( tnm );
 						if( gds == null )
 						{
-							gds = new ArrayList<Gd>();
+							gds = new ArrayList<>();
 						}
 						gds.add( (Gd) Gd.parseOOXML( xpp, lastTag ) );
 					}
@@ -603,7 +602,7 @@ class GdLst implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "gdLst.parseOOXML: " + e.toString() );
+			log.error( "gdLst.parseOOXML: " + e.toString() );
 		}
 		GdLst g = new GdLst( gds );
 		return g;
@@ -657,7 +656,7 @@ class GdLst implements OOXMLElement
  */
 class Rect implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Rect.class );
 	private static final long serialVersionUID = 2790708601254975676L;
 	private HashMap<String, String> attrs;
 
@@ -673,7 +672,7 @@ class Rect implements OOXMLElement
 
 	public static Rect parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -710,7 +709,7 @@ class Rect implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "rect.parseOOXML: " + e.toString() );
+			log.error( "rect.parseOOXML: " + e.toString() );
 		}
 		Rect r = new Rect( attrs );
 		return r;
@@ -751,7 +750,7 @@ class Rect implements OOXMLElement
  */
 class CxnLst implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( CxnLst.class );
 	private static final long serialVersionUID = -562847539163221621L;
 	private ArrayList<Cxn> cxns;
 
@@ -781,7 +780,7 @@ class CxnLst implements OOXMLElement
 						lastTag.push( tnm );
 						if( cxns == null )
 						{
-							cxns = new ArrayList<Cxn>();
+							cxns = new ArrayList<>();
 						}
 						cxns.add( Cxn.parseOOXML( xpp, lastTag ) );
 
@@ -801,7 +800,7 @@ class CxnLst implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "cxnLst.parseOOXML: " + e.toString() );
+			log.error( "cxnLst.parseOOXML: " + e.toString() );
 		}
 		CxnLst c = new CxnLst( cxns );
 		return c;
@@ -843,7 +842,7 @@ class CxnLst implements OOXMLElement
  */
 class Cxn implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Cxn.class );
 	private static final long serialVersionUID = -4193511102420582252L;
 	private HashMap<String, String> attrs;
 	private Pos pos = null;
@@ -862,7 +861,7 @@ class Cxn implements OOXMLElement
 
 	public static Cxn parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		Pos p = null;
 		try
 		{
@@ -900,7 +899,7 @@ class Cxn implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "cxn.parseOOXML: " + e.toString() );
+			log.error( "cxn.parseOOXML: " + e.toString() );
 		}
 		Cxn c = new Cxn( attrs, p );
 		return c;
@@ -947,7 +946,7 @@ class Cxn implements OOXMLElement
  */
 class Pos implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Pos.class );
 	private static final long serialVersionUID = 5500991309750603125L;
 	private HashMap<String, String> attrs;
 
@@ -963,7 +962,7 @@ class Pos implements OOXMLElement
 
 	public static Pos parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
-		HashMap<String, String> attrs = new HashMap<String, String>();
+		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -994,7 +993,7 @@ class Pos implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "pos.parseOOXML: " + e.toString() );
+			log.error( "pos.parseOOXML: " + e.toString() );
 		}
 		Pos p = new Pos( attrs );
 		return p;

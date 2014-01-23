@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * DConBin 0x1B5
@@ -76,9 +77,7 @@ import com.extentech.toolkit.Logger;
  */
 public class DConBin extends XLSRecord implements XLSConstants
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( DConBin.class );
 	private static final long serialVersionUID = 2639291289806138985L;
 	private byte nBuiltin;
 	private short cchFile;
@@ -91,12 +90,9 @@ public class DConBin extends XLSRecord implements XLSConstants
 		cchFile = ByteTools.readShort( this.getByteAt( 5 ), this.getByteAt( 6 ) );
 		if( cchFile > 0 )
 		{
-			Logger.logWarn( "PivotTable: External Workbooks for Built-in Named Range Source are Unspported" );
+			log.warn( "PivotTable: External Workbooks for Built-in Named Range Source are Unsupported" );
 		}
-		if( DEBUGLEVEL > 3 )
-		{
-			Logger.logInfo( "DCONBIN: nBuiltin:" + nBuiltin + " cchFile: " + cchFile );
-		}
+			log.debug( "DCONBIN: nBuiltin:" + nBuiltin + " cchFile: " + cchFile );
 	}
 
 	/**

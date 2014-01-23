@@ -29,10 +29,11 @@ import com.extentech.formats.XLS.Name;
 import com.extentech.formats.XLS.WorkSheetNotFoundException;
 import com.extentech.formats.XLS.formulas.Ptg;
 import com.extentech.toolkit.CompatibleVector;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.extentech.ExtenXLS.JSONConstants.JSON_CELL;
 import static com.extentech.ExtenXLS.JSONConstants.JSON_CELLS;
@@ -57,10 +58,10 @@ import static com.extentech.ExtenXLS.JSONConstants.JSON_CELLS;
  */
 public class NameHandle
 {
+	private static final Logger log = LoggerFactory.getLogger( NameHandle.class );
 
 	private Name myName;
 	private WorkBook mybook;
-	private int DEBUGLEVEL = -1;
 	private boolean createblanks = false;
 	private CellRange initialRange = null;
 
@@ -133,7 +134,7 @@ public class NameHandle
 		catch( WorkSheetNotFoundException e )
 		{
 			// this really shouldnt happen unless you are passing a scope in from a different workbook
-			Logger.logErr( "ERROR: setting new scope on name: " + e );
+			log.error( "ERROR: setting new scope on name: " + e );
 		}
 	}
 
@@ -198,7 +199,7 @@ public class NameHandle
 		{ // deal with snafu character names
 			if( Character.isLetterOrDigit( nmx.charAt( 0 ) ) )
 			{
-				Logger.logInfo( "NameHandle getting XML for name: " + nmx );
+				log.debug( "NameHandle getting XML for name: " + nmx );
 			}
 			else
 			{
@@ -248,7 +249,7 @@ public class NameHandle
 		{ // deal with snafu character names
 			if( Character.isLetterOrDigit( nmx.charAt( 0 ) ) )
 			{
-				Logger.logInfo( "NameHandle getting XML for name: " + nmx );
+				log.debug( "NameHandle getting XML for name: " + nmx );
 			}
 			else
 			{
@@ -277,7 +278,7 @@ public class NameHandle
 		}
 		catch( CellNotFoundException ex )
 		{
-			Logger.logErr( "NameHandle.getExpandedXML failed: ", ex );
+			log.error( "NameHandle.getExpandedXML failed: ", ex );
 		}
 		retXML.append( "</NamedRange>\n" );
 
@@ -303,7 +304,7 @@ public class NameHandle
 		}
 		catch( CellNotFoundException ex )
 		{
-			Logger.logErr( "NameHandle.setFormatId failed: ", ex );
+			log.error( "NameHandle.setFormatId failed: ", ex );
 		}
 	}
 
@@ -459,7 +460,7 @@ public class NameHandle
 		}
 		catch( FunctionNotSupportedException e )
 		{
-			Logger.logWarn( "NameHandle.setLocation :" + strloc + " failed: " + e.toString() );
+			log.error( "NameHandle.setLocation :" + strloc + " failed: " + e.toString() );
 		}
 	}
 
@@ -477,7 +478,7 @@ public class NameHandle
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Error getting named range location" + e );
+			log.error( "Error getting named range location", e );
 			return null;
 		}
 	}
@@ -520,10 +521,7 @@ public class NameHandle
 		}
 		catch( Exception e )
 		{
-			if( DEBUGLEVEL > -1 )
-			{
-				Logger.logWarn( "Could not parse expression string for name: " + this.getName() );
-			}
+				log.warn( "Could not parse expression string for name: {}", this.getName() );
 		}
 		return "#ERR";
 	}
@@ -619,7 +617,7 @@ public class NameHandle
 		}
 		catch( CellNotFoundException ex )
 		{
-			Logger.logErr( "NameHandle.getCellRangeXML failed: ", ex );
+			log.error( "NameHandle.getCellRangeXML failed: ", ex );
 		}
 		//	sbx.append("</Row>");
 		return sbx.toString();
@@ -659,7 +657,7 @@ public class NameHandle
 					}
 					catch( Exception ex )
 					{
-						Logger.logWarn( "Could not get cells for range: " + aRngz );
+						log.error( "Could not get cells for range: " + aRngz );
 					}
 				}
 			}
@@ -849,7 +847,7 @@ public class NameHandle
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Error creating JSON name handle: " + e );
+			log.error( "Error creating JSON name handle: " + e );
 		}
 		return theNameHandle.toString();
 	}
@@ -875,7 +873,7 @@ public class NameHandle
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Error getting NamedRange JSON: " + e );
+			log.error( "Error getting NamedRange JSON: " + e );
 		}
 		return theRange;
 	}

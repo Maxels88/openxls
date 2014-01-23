@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -36,7 +37,7 @@ import java.util.Stack;
  */
 public class Legend implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( Legend.class );
 	private static final long serialVersionUID = 419453456635220517L;
 	private String legendpos;    // actually an element but only contains 1 attribute: val
 	private LegendEntry le;
@@ -131,7 +132,7 @@ public class Legend implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "OOXMLAdapter.parseLegendElement: " + e.toString() );
+			log.error( "OOXMLAdapter.parseLegendElement: " + e.toString() );
 		}
 		Legend l = new Legend( legendpos, overlay, layout, le, shapeProps, txpr );
 		return l;
@@ -239,7 +240,7 @@ public class Legend implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logWarn( "Error creating 2007+ version Legend: " + e.toString() );
+			log.warn( "Error creating 2007+ version Legend: " + e.toString(), e );
 		}
 		return ooxmllegend;
 	}
@@ -254,7 +255,7 @@ public class Legend implements OOXMLElement
  */
 class LegendEntry implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( LegendEntry.class );
 	private static final long serialVersionUID = 1859347855337611982L;
 	private TxPr tx;
 	private int idx = -1;
@@ -315,7 +316,7 @@ class LegendEntry implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "legendEntry.parseOOXML: " + e.toString() );
+			log.error( "legendEntry.parseOOXML: " + e.toString() );
 		}
 		LegendEntry le = new LegendEntry( idx, delete, tx );
 		return le;

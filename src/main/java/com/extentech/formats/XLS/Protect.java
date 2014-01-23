@@ -23,7 +23,8 @@
 package com.extentech.formats.XLS;
 
 import com.extentech.toolkit.ByteTools;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <b>PROTECT: Protection Flag (12h)</b><br>
@@ -38,9 +39,7 @@ import com.extentech.toolkit.Logger;
  */
 public final class Protect extends com.extentech.formats.XLS.XLSRecord
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( Protect.class );
 	private static final long serialVersionUID = -2455962145433645632L;
 	private int fLock = 0;
 
@@ -77,10 +76,10 @@ public final class Protect extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		fLock = (int) ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		if( this.getIsLocked() && (DEBUGLEVEL > DEBUG_LOW) )
+		fLock = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		if( this.getIsLocked()  )
 		{
-			Logger.logInfo( "Workbook/Sheet Protection Enabled." );
+			log.debug( "Workbook/Sheet Protection Enabled." );
 		}
 	}
 

@@ -70,9 +70,10 @@ import com.extentech.ExtenXLS.Document;
 import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.formats.OOXML.OOXMLConstants;
 import com.extentech.formats.XML.UnicodeInputStream;
-import com.extentech.toolkit.Logger;
 import com.extentech.toolkit.StringTool;
 import com.extentech.toolkit.TempFileManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -137,7 +138,7 @@ import java.util.zip.ZipOutputStream;
  */
 public class OOXMLAdapter implements OOXMLConstants
 {
-	protected boolean DEBUG = !true;
+	private static final Logger log = LoggerFactory.getLogger( OOXMLAdapter.class );
 
 	ZipOutputStream zip;
 	Writer writer;
@@ -256,7 +257,7 @@ public class OOXMLAdapter implements OOXMLConstants
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "OOXMLAdapter.getStandaloneChartDrawingOOXML: " + e.toString() );
+			log.error( "OOXMLAdapter.getStandaloneChartDrawingOOXML: " + e.toString() );
 			ret = "";
 		}
 		return ret;
@@ -322,7 +323,7 @@ public class OOXMLAdapter implements OOXMLConstants
 		// TESTING - remove when done!
 		// *********************************************************************
 		{
-			Logger.logErr( "Unknown External Type: " + root );
+			log.error( "Unknown External Type: " + root );
 		}
 		return fname;
 	}
@@ -355,7 +356,7 @@ public class OOXMLAdapter implements OOXMLConstants
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "OOXMLAdapter addDeferredFile failed.", e );
+			log.error( "OOXMLAdapter addDeferredFile failed.", e );
 		}
 	}
 
@@ -503,7 +504,7 @@ public class OOXMLAdapter implements OOXMLConstants
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "Flush failing on zip entry, likely due to streaming first sheet " + e );
+			log.error( "Flush failing on zip entry, likely due to streaming first sheet " + e );
 		}
 
 		// Start the new entry in the ZIP file
@@ -576,12 +577,12 @@ public class OOXMLAdapter implements OOXMLConstants
 			while( e.hasMoreElements() )
 			{
 				ZipEntry ze = (ZipEntry) e.nextElement();
-				Logger.logInfo( ze.getName() );
+				log.info( ze.getName() );
 			}
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "getZipEntries: " + e.toString() );
+			log.error( "getZipEntries: " + e.toString() );
 		}
 	}
 
@@ -625,7 +626,7 @@ The preceding code points ranges contain the following controls which are only v
 		for( int i = 0; i < s.length(); i++ )
 		{
 			char c = s.charAt( i );
-			int charCode = (int) c;
+			int charCode = c;
 			if( (charCode == 0x9) ||
 					(charCode == 0xA) ||
 					(charCode == 0xD) ||
@@ -702,7 +703,7 @@ The preceding code points ranges contain the following controls which are only v
 		for( int i = 0; i < s.length(); i++ )
 		{
 			char c = s.charAt( i );
-			int charCode = (int) c;
+			int charCode = c;
 			if( (charCode >= 32) && (charCode <= 126) )
 			{
 				if( charCode == '&' )
@@ -833,7 +834,7 @@ The preceding code points ranges contain the following controls which are only v
 				}
 				catch( Exception ea )
 				{
-					Logger.logErr( "XML Exception in OOXMLAdapter.parseRels. Input file is out of spec.", ea );
+					log.error( "XML Exception in OOXMLAdapter.parseRels. Input file is out of spec.", ea );
 				}
 				eventType = xpp.next();
 			}
@@ -841,12 +842,12 @@ The preceding code points ranges contain the following controls which are only v
 		}
 		catch( org.xmlpull.v1.XmlPullParserException ex )
 		{
-			Logger.logErr( "XML Exception in OOXMLAdapter.parseRels. Input file is out of spec.", ex );
+			log.error( "XML Exception in OOXMLAdapter.parseRels. Input file is out of spec.", ex );
 
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "OOXMLAdapter.parseRels. " + e.toString() );
+			log.error( "OOXMLAdapter.parseRels. " + e.toString() );
 		}
 		return contentList;
 	}
@@ -1041,7 +1042,7 @@ The preceding code points ranges contain the following controls which are only v
 				}
 				catch( Exception e )
 				{
-					Logger.logErr( "Could not sort sheets", e );
+					log.error( "Could not sort sheets", e );
 					return;
 				}
 			}
@@ -1087,7 +1088,7 @@ The preceding code points ranges contain the following controls which are only v
 		}
 		catch( Exception e )
 		{    // wbh.getFile() can be an XLS file (as source) so Exception is almost always OK (do not report)
-			//Logger.logErr("OOXMLAdapter.refreshPassThroughFiles: could not retrieve source ooxml: " + e.toString()); 
+			//log.error("OOXMLAdapter.refreshPassThroughFiles: could not retrieve source ooxml: " + e.toString());
 		}
 	}
 
@@ -1098,6 +1099,7 @@ The preceding code points ranges contain the following controls which are only v
  */
 class intArray
 {
+
 	private int[] a = null;
 
 	public intArray( int[] a )

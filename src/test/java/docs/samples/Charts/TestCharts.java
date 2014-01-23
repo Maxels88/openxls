@@ -34,7 +34,8 @@ import com.extentech.ExtenXLS.WorkBookHandle;
 import com.extentech.ExtenXLS.WorkSheetHandle;
 import com.extentech.formats.XLS.ChartNotFoundException;
 import com.extentech.formats.XLS.WorkSheetNotFoundException;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -43,7 +44,7 @@ import java.io.PrintStream;
 
 public class TestCharts
 {
-
+	private static final Logger log = LoggerFactory.getLogger( TestCharts.class );
 	String wd = System.getProperty( "user.dir" ) + "/docs/samples/Charts/";
 
 	public static void main( String[] args )
@@ -165,7 +166,7 @@ public class TestCharts
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "CreateBubbleChart Failed " + e.toString() );
+			log.error( "CreateBubbleChart Failed " + e.toString() );
 		}
 	}
 
@@ -184,7 +185,7 @@ public class TestCharts
 		}
 		catch( WorkSheetNotFoundException e )
 		{
-			Logger.logErr( e );
+			log.error("", e );
 		}
 		sheet.add( Integer.valueOf( 212 ), "A1" );
 		sheet.add( Integer.valueOf( 54 ), "A2" );
@@ -222,7 +223,7 @@ public class TestCharts
 		}
 		catch( Exception ex )
 		{
-			Logger.logErr( "Problem accessing new chart.", ex );
+			log.error( "Problem accessing new chart.", ex );
 		}
 		this.testWrite( book, "NewChartOut.xls" );
 
@@ -325,7 +326,7 @@ public class TestCharts
 		}
 		catch( java.io.IOException e )
 		{
-			Logger.logInfo( "IOException in Tester.  " + e );
+			log.info( "IOException in Tester.  " + e );
 		}
 	}
 

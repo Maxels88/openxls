@@ -23,7 +23,8 @@
 package com.extentech.formats.OOXML;
 
 import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.toolkit.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.Stack;
@@ -33,7 +34,7 @@ import java.util.Stack;
  */
 public class ObjectChoice implements OOXMLElement
 {
-
+	private static final Logger log = LoggerFactory.getLogger( ObjectChoice.class );
 	private static final long serialVersionUID = 3548474869557092714L;
 	private CxnSp cxnSp = null;
 	private GraphicFrame graphicFrame = null;
@@ -115,7 +116,7 @@ public class ObjectChoice implements OOXMLElement
 		}
 		catch( Exception e )
 		{
-			Logger.logErr( "ObjectChoice.parseOOXML: " + e.toString() );
+			log.error( "ObjectChoice.parseOOXML: " + e.toString() );
 		}
 		ObjectChoice o = new ObjectChoice( c, g, grp, p, s );
 		return o;

@@ -22,6 +22,9 @@
  */
 package com.extentech.toolkit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
@@ -35,7 +38,7 @@ import java.util.StringTokenizer;
  */
 public class StringTool implements Serializable
 {
-
+	private static final Logger log = LoggerFactory.getLogger( StringTool.class );
 	// static final long serialVersionUID = -5757918511951798619l;
 	static final long serialVersionUID = -2761264230959133529l;
 
@@ -61,7 +64,7 @@ public class StringTool implements Serializable
 
 		String majorHTML = "<html><body>Testing <b>yes</b><ul><li>item1</li><li>item2</li><li>item3</li></ul><br/>newline<br/>newline2<BR/>newline3 yes no 124<>something <bR>newline4<b>bold</b></body></html>";
 
-		Logger.logInfo( StringTool.stripHTML( majorHTML ) );
+		log.info( StringTool.stripHTML( majorHTML ) );
 
 	}
 
@@ -139,7 +142,7 @@ public class StringTool implements Serializable
 		{
 			int pos = umat.lastIndexOf( upat ) + upat.length();
 			retval = matchstr.substring( pos );
-			Logger.logInfo( "foundpos: " + pos );
+			log.info( "foundpos: " + pos );
 		}
 		return retval;
 	}
