@@ -130,17 +130,20 @@ public class SxVdEX extends XLSRecord implements XLSConstants
 {
 	private static final Logger log = LoggerFactory.getLogger( SxVdEX.class );
 	private static final long serialVersionUID = 2639291289806138985L;
-	private short citmAutoShow, isxdiAutoSort, isxdiAutoShow, ifmt;
+	private short citmAutoShow;
+	private short isxdiAutoSort;
+	private short isxdiAutoShow;
+	private short ifmt;
 
 	@Override
 	public void init()
 	{
 		super.init();
 		// TODO: flags
-		citmAutoShow = this.getByteAt( 4 );
-		isxdiAutoSort = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		isxdiAutoShow = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
-		ifmt = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
+		citmAutoShow = getByteAt( 4 );
+		isxdiAutoSort = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+		isxdiAutoShow = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
+		ifmt = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );
 		// TODO: subName (variable): An optional SXVDEx_Opt structure that specifies the name of the aggregate function used to calculate this pivot field's subtotals. SHOULD<124> be present.
 
 			log.debug( "SXVDEX - citmAutoShow:" + citmAutoShow + " isxdiAutoSort:" + isxdiAutoSort + " isxdoAutoShow:" + isxdiAutoShow + " ifmt:" + ifmt );

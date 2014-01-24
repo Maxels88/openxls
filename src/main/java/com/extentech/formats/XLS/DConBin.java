@@ -86,8 +86,8 @@ public class DConBin extends XLSRecord implements XLSConstants
 	public void init()
 	{
 		super.init();
-		nBuiltin = this.getByteAt( 0 );
-		cchFile = ByteTools.readShort( this.getByteAt( 5 ), this.getByteAt( 6 ) );
+		nBuiltin = getByteAt( 0 );
+		cchFile = ByteTools.readShort( getByteAt( 5 ), getByteAt( 6 ) );
 		if( cchFile > 0 )
 		{
 			log.warn( "PivotTable: External Workbooks for Built-in Named Range Source are Unsupported" );
@@ -141,7 +141,7 @@ public class DConBin extends XLSRecord implements XLSConstants
 	public void setBuiltInType( int builtinType )
 	{
 		nBuiltin = (byte) builtinType;
-		this.getData()[0] = nBuiltin;
+		getData()[0] = nBuiltin;
 	}
 
 	/**

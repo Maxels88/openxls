@@ -96,7 +96,7 @@ public class PtgArea extends PtgRef implements Ptg
 		locax = null; // cache reset
 		ptgId = b[0];
 		record = b;
-		this.populateVals();
+		populateVals();
 	}
 
 	/*
@@ -127,7 +127,7 @@ public class PtgArea extends PtgRef implements Ptg
 		lastPtg = new PtgRef( temp2, parent_rec, false );        // don't add to ref tracker as it's part of area
 		lastPtg.sheetname = sheetname;
 		setWholeRowCol();
-		this.hashcode = getHashCode();
+		hashcode = getHashCode();
 	}
 
 	/**
@@ -191,12 +191,12 @@ public class PtgArea extends PtgRef implements Ptg
 			// cases of named range or if location sheet does not = parent_rec sheet, set sheet explicitly
 			String sht = null;    // usual case, don't need to set sheet
 			Boundsheet sh = parent_rec.getSheet();
-			if( (sh == null) || ((this.sheetname != null) && !this.sheetname.equals( sh.getSheetName() )) )
+			if( (sh == null) || ((sheetname != null) && !sheetname.equals( sh.getSheetName() )) )
 			{
-				if( (sh == null) || !GenericPtg.qualifySheetname( this.sheetname )
+				if( (sh == null) || !GenericPtg.qualifySheetname( sheetname )
 				                               .equals( GenericPtg.qualifySheetname( sh.getSheetName() ) ) )
 				{
-					sht = this.sheetname + "!";
+					sht = sheetname + "!";
 				}
 			}
 			// loop through the cols
@@ -266,9 +266,9 @@ public class PtgArea extends PtgRef implements Ptg
 	{
 		String chsheet = ch.getWorkSheetName();
 		String mysheet = "";
-		if( this.getParentRec() != null )
+		if( getParentRec() != null )
 		{
-			BiffRec b = this.getParentRec();
+			BiffRec b = getParentRec();
 			if( b.getSheet() != null )
 			{
 				mysheet = b.getSheet().getSheetName();
@@ -298,7 +298,7 @@ public class PtgArea extends PtgRef implements Ptg
 		{
 			try
 			{
-				sheetname = this.getSheetName();
+				sheetname = getSheetName();
 			}
 			catch( Exception e )
 			{
@@ -326,7 +326,7 @@ public class PtgArea extends PtgRef implements Ptg
 	 */
 	public boolean contains( int[] rc )
 	{
-		int[] thisRange = this.getIntLocation();
+		int[] thisRange = getIntLocation();
 		// test the first rc
 		if( rc[0] < thisRange[0] )
 		{
@@ -358,7 +358,7 @@ public class PtgArea extends PtgRef implements Ptg
 	@Override
 	public String getString()
 	{
-		return this.getLocation();
+		return getLocation();
 	}
 
 	/*
@@ -382,8 +382,8 @@ public class PtgArea extends PtgRef implements Ptg
 		firstPtg = ptg1;
 		lastPtg = ptg2;
 		parent_rec = parent;
-		this.hashcode = getHashCode();
-		this.updateRecord();
+		hashcode = getHashCode();
+		updateRecord();
 	}
 
 	/*
@@ -409,8 +409,8 @@ public class PtgArea extends PtgRef implements Ptg
 		lastPtg = new PtgRef( res, parent, false );
 		setWholeRowCol();
 		parent_rec = parent;
-		this.hashcode = getHashCode();
-		this.updateRecord();
+		hashcode = getHashCode();
+		updateRecord();
 	}
 
 	/*
@@ -435,8 +435,8 @@ public class PtgArea extends PtgRef implements Ptg
 		lastPtg = new PtgRef( res, parent, false );
 		setWholeRowCol();
 		parent_rec = parent;
-		this.hashcode = getHashCode();
-		this.updateRecord();
+		hashcode = getHashCode();
+		updateRecord();
 	}
 
 	/**
@@ -448,10 +448,10 @@ public class PtgArea extends PtgRef implements Ptg
 	{
 		if( (firstPtg.rw <= 1) && lastPtg.wholeCol ) // TODO: inconsistencies in 0-based or 1-based rows
 		{
-			this.wholeCol = true;
+			wholeCol = true;
 		}
-		this.wholeRow = lastPtg.wholeRow;
-		if( this.wholeCol )
+		wholeRow = lastPtg.wholeRow;
+		if( wholeCol )
 		{
 			useReferenceTracker = false;
 		}
@@ -544,9 +544,9 @@ public class PtgArea extends PtgRef implements Ptg
 	@Override
 	public void setLocation( String address )
 	{
-		String s[] = ExcelTools.stripSheetNameFromRange( address );
+		String[] s = ExcelTools.stripSheetNameFromRange( address );
 		setLocation( s );
-		this.hashcode = getHashCode();
+		hashcode = getHashCode();
 	}
 
 	/**
@@ -560,16 +560,16 @@ public class PtgArea extends PtgRef implements Ptg
 		locax = null; // cache reset
 		if( firstPtg == null )
 		{
-			this.record = new byte[]{ 0x25, 0, 0, 0, 0, 0, 0, 0, 0 };
+			record = new byte[]{ 0x25, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-			if( this.getParentRec() != null )
+			if( getParentRec() != null )
 			{
-				this.populateVals();
+				populateVals();
 			}
 		}
-		else if( this.useReferenceTracker )
+		else if( useReferenceTracker )
 		{
-			this.removeFromRefTracker();
+			removeFromRefTracker();
 		}
 		int i = loc[1].indexOf( ":" );
 		// handle single cell addresses as:  A1:A1
@@ -598,21 +598,21 @@ public class PtgArea extends PtgRef implements Ptg
 		}
 
 		// TODO: do we need to remove refs from tracker?
-		firstPtg.setParentRec( this.getParentRec() );
-		lastPtg.setParentRec( this.getParentRec() );
+		firstPtg.setParentRec( getParentRec() );
+		lastPtg.setParentRec( getParentRec() );
 
 		firstPtg.setUseReferenceTracker( false );
 		lastPtg.setUseReferenceTracker( false );
 		firstPtg.setLocation( firstloc );
 		lastPtg.setLocation( lastloc );
 		setWholeRowCol();
-		this.hashcode = getHashCode();
-		this.updateRecord();
-		if( this.useReferenceTracker )
+		hashcode = getHashCode();
+		updateRecord();
+		if( useReferenceTracker )
 		{// check of boolean useReferenceTracker
-			if( !this.getIsWholeCol() && !this.getIsWholeRow() )
+			if( !getIsWholeCol() && !getIsWholeRow() )
 			{
-				this.addToRefTracker();
+				addToRefTracker();
 			}
 			else
 			{
@@ -650,20 +650,20 @@ public class PtgArea extends PtgRef implements Ptg
 		if( firstPtg == null )
 		{
 			//this.record = new byte[] {0x25, 0, 0, 0, 0, 0, 0, 0, 0}; -- don't as can be called from PtgArea3d			
-			if( this.getParentRec() != null )
+			if( getParentRec() != null )
 			{
-				this.populateVals();
+				populateVals();
 			}
 		}
-		else if( this.useReferenceTracker )
+		else if( useReferenceTracker )
 		{
-			this.removeFromRefTracker();
+			removeFromRefTracker();
 		}
 
 		// TODO: do we need to remove refs from tracker?
-		firstPtg.setParentRec( this.getParentRec() );
+		firstPtg.setParentRec( getParentRec() );
 		firstPtg.setSheetName( sheetname );
-		lastPtg.setParentRec( this.getParentRec() );
+		lastPtg.setParentRec( getParentRec() );
 		lastPtg.setSheetName( sheetname );
 
 		firstPtg.setUseReferenceTracker( false );
@@ -674,11 +674,11 @@ public class PtgArea extends PtgRef implements Ptg
 		rc[1] = rowcol[3];
 		lastPtg.setLocation( rc );
 
-		this.hashcode = getHashCode();
-		this.updateRecord();
-		if( this.useReferenceTracker )    // check of boolean useReferenceTracker
+		hashcode = getHashCode();
+		updateRecord();
+		if( useReferenceTracker )    // check of boolean useReferenceTracker
 		{
-			this.addToRefTracker();
+			addToRefTracker();
 		}
 	}
 
@@ -698,7 +698,7 @@ public class PtgArea extends PtgRef implements Ptg
 		//String loc= null;
 		if( (firstPtg == null) || (lastPtg == null) )
 		{
-			this.populateVals();
+			populateVals();
 			if( (firstPtg == null) || (lastPtg == null) ) // we tried!
 			{
 				throw new AssertionError( "PtgArea.getLocationHelper null ptgs" );
@@ -707,8 +707,8 @@ public class PtgArea extends PtgRef implements Ptg
 		String s = firstPtg.getLocation();
 		String y = lastPtg.getLocation();
 
-		String loc1[] = ExcelTools.stripSheetNameFromRange( s );    // sheet, addr
-		String loc2[] = ExcelTools.stripSheetNameFromRange( y );    // sheet, addr
+		String[] loc1 = ExcelTools.stripSheetNameFromRange( s );    // sheet, addr
+		String[] loc2 = ExcelTools.stripSheetNameFromRange( y );    // sheet, addr
 
 		String sh1 = loc1[0];
 		String sh2 = loc2[0];
@@ -803,13 +803,13 @@ public class PtgArea extends PtgRef implements Ptg
 //        this.populateVals();
 		if( parent_rec != null )
 		{
-			if( this.parent_rec instanceof Formula )
+			if( parent_rec instanceof Formula )
 			{
-				((Formula) this.parent_rec).updateRecord();
+				((Formula) parent_rec).updateRecord();
 			}
-			else if( this.parent_rec instanceof Name )
+			else if( parent_rec instanceof Name )
 			{
-				((Name) this.parent_rec).updatePtgs();
+				((Name) parent_rec).updatePtgs();
 			}
 		}
 		firstPtg.setLocationPolicy( pols[0] );
@@ -838,11 +838,11 @@ public class PtgArea extends PtgRef implements Ptg
 	public Object getValue()
 	{
 		// 20080214 KSC: underlying cells may have changed ...if(refCell==null)
-		refCell = this.getRefCells();
+		refCell = getRefCells();
 		Object returnval = (double) 0;
 		String retstr = null;
 		String array = "";
-		boolean isArray = (this.parent_rec instanceof Array);
+		boolean isArray = (parent_rec instanceof Array);
 		for( BiffRec cel : refCell )
 		{
 			if( cel == null )
@@ -925,7 +925,7 @@ public class PtgArea extends PtgRef implements Ptg
 		{
 			return null;
 		}
-		String lu = this.toString();
+		String lu = toString();
 		Object p = parent_rec.getWorkBook().getRefTracker().getVlookups().get( lu );
 
 		if( p != null )
@@ -963,7 +963,7 @@ public class PtgArea extends PtgRef implements Ptg
 			// loop through the rows inside
 			int rowholder = startrow;
 			int pos = 0;
-			String sht = this.toString();
+			String sht = toString();
 			if( sht.indexOf( "!" ) > -1 )
 			{
 				sht = sht.substring( 0, sht.indexOf( "!" ) );
@@ -974,7 +974,7 @@ public class PtgArea extends PtgRef implements Ptg
 				int displayrow = rowholder + 1;
 				String loc = sht + "!" + displaycol + displayrow;
 
-				PtgRef pref = new PtgRef( loc, parent_rec, this.useReferenceTracker );
+				PtgRef pref = new PtgRef( loc, parent_rec, useReferenceTracker );
 
 				v[pos++] = pref;
 			}
@@ -985,7 +985,7 @@ public class PtgArea extends PtgRef implements Ptg
 		}
 
 		// cache
-		parent_rec.getWorkBook().getRefTracker().getVlookups().put( this.toString(), this );
+		parent_rec.getWorkBook().getRefTracker().getVlookups().put( toString(), this );
 		parent_rec.getWorkBook().getRefTracker().getLookupColCache().put( lu + ":" + colNum, v );
 		return v;
 	}
@@ -999,7 +999,7 @@ public class PtgArea extends PtgRef implements Ptg
 	public Ptg[] getRowComponents( int rowNum )
 	{
 		FastAddVector v = new FastAddVector();
-		Ptg[] allComponents = this.getComponents();
+		Ptg[] allComponents = getComponents();
 		for( Ptg allComponent : allComponents )
 		{
 			PtgRef p = (PtgRef) allComponent;
@@ -1065,7 +1065,7 @@ public class PtgArea extends PtgRef implements Ptg
 			{
 				try
 				{
-					bs = this.parent_rec.getWorkBook().getWorkSheetByName( sheetname );
+					bs = parent_rec.getWorkBook().getWorkSheetByName( sheetname );
 				}
 				catch( Exception ex )
 				{ // guard against NPEs

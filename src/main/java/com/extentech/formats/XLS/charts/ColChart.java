@@ -86,7 +86,8 @@ public class ColChart extends ChartType
 		StringBuffer svg = new StringBuffer();        // return svg
 		svg.append( "<g>\r\n" );
 
-		double barw = 0, yfactor = 0;    //
+		double barw = 0;    //
+		double yfactor = 0;
 		if( n > 0 )
 		{
 			barw = w / ((categories.length * (n + 1.0)) + 1);    // w/(#cats * nseries+1) + 1
@@ -142,15 +143,15 @@ public class ColChart extends ChartType
 		cooxml.append( "<c:barDir val=\"col\"/>" );
 		cooxml.append( "<c:grouping val=\"" );
 
-		if( this.is100PercentStacked() )
+		if( is100PercentStacked() )
 		{
 			cooxml.append( "percentStacked" );
 		}
-		else if( this.isStacked() )
+		else if( isStacked() )
 		{
 			cooxml.append( "stacked" );
 		}
-		else if( this.isClustered() )
+		else if( isClustered() )
 		{
 			cooxml.append( "clustered" );
 		}
@@ -163,7 +164,7 @@ public class ColChart extends ChartType
 		// vary colors???
 
 		// *** Series Data:	ser, cat, val for most chart types
-		cooxml.append( this.getParentChart().getChartSeries().getOOXML( this.getChartType(), false, 0 ) );
+		cooxml.append( getParentChart().getChartSeries().getOOXML( getChartType(), false, 0 ) );
 
 		// chart data labels, if any
 		//TODO: FINISH		    	
@@ -171,13 +172,13 @@ public class ColChart extends ChartType
 		//TODO: FINISH DR0P LINES    			
 		///    			if (this.hasDropLines() )	/* Area, Line, Stock*/
 		//				cooxml.append()
-		if( !this.getChartOption( "Gap" ).equals( "150" ) )
+		if( !getChartOption( "Gap" ).equals( "150" ) )
 		{
-			cooxml.append( "<c:gapWidth val=\"" + this.getChartOption( "Gap" ) + "\"/>" );    // default= 0
+			cooxml.append( "<c:gapWidth val=\"" + getChartOption( "Gap" ) + "\"/>" );    // default= 0
 		}
-		if( !this.getChartOption( "Overlap" ).equals( "0" ) )
+		if( !getChartOption( "Overlap" ).equals( "0" ) )
 		{
-			cooxml.append( "<c:overlap val=\"" + this.getChartOption( "Overlap" ) + "\"/>" );    // default= 0
+			cooxml.append( "<c:overlap val=\"" + getChartOption( "Overlap" ) + "\"/>" );    // default= 0
 		}
 		// Series Lines	
 		ChartLine cl = cf.getChartLinesRec();

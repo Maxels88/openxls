@@ -59,7 +59,8 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 	private static final long serialVersionUID = -5228830347211523997L;
 
 	short iEntry;    // *** this is the column number ***  oops!  not always!!!
-	Doper doper1, doper2;
+	Doper doper1;
+	Doper doper2;
 
 	// booleans used here for memory space/grbit fields, these are really 1/0 values.  whas the diff?
 	boolean wJoin;// true if custom filter conditions are ORed
@@ -96,17 +97,17 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		iEntry = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		iEntry = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		//parse out grbit flags
-		short grbit = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		this.decodeGrbit( grbit );
+		short grbit = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		decodeGrbit( grbit );
 		//parse both DOPERs
-		doper1 = parseDoper( this.getBytesAt( 4, 10 ) );
-		doper2 = parseDoper( this.getBytesAt( 14, 10 ) );
+		doper1 = parseDoper( getBytesAt( 4, 10 ) );
+		doper2 = parseDoper( getBytesAt( 14, 10 ) );
 		// parse string data, if any, appended to end of data record
-		if( this.getData().length > 25 )
+		if( getData().length > 25 )
 		{
-			byte[] rgch = this.getBytesAt( 25, this.getData().length - 25 );
+			byte[] rgch = getBytesAt( 25, getData().length - 25 );
 			int pos = 0;
 			if( doper1 instanceof StringDoper )
 			{
@@ -226,7 +227,8 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void evaluate()
 	{
-		Object val1, val2 = null;
+		Object val1;
+		Object val2 = null;
 		val1 = getVal( doper1 );    // get the doper value from the 1st doper/comparison, if any
 		boolean hasDoper2 = !(doper2 instanceof UnusedDoper);
 		if( hasDoper2 )
@@ -234,7 +236,8 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 			val2 = getVal( doper2 );
 		}
 
-		String op1 = "=", op2 = "";
+		String op1 = "=";
+		String op2 = "";
 		boolean passes = true;
 		if( !fSimple1 )
 		{
@@ -263,17 +266,17 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 		else if( (doper1 instanceof AllBlanksDoper) || (doper1 instanceof NoBlanksDoper) )
 		{
 			boolean filterBlanks = (doper1 instanceof NoBlanksDoper);
-			int n = this.getSheet().getNumRows();
+			int n = getSheet().getNumRows();
 			for( int i = 0; i < n; i++ )
 			{
-				Row r = this.getSheet().getRowByNumber( i );
+				Row r = getSheet().getRowByNumber( i );
 				if( r == null )
 				{// it's blank
 					// create a blank cell and then set to hidden?
 					if( filterBlanks )
 					{
-						this.getSheet().addValue( "", ExcelTools.formatLocation( new int[]{ i, iEntry } ) );
-						r = this.getSheet().getRowByNumber( i );
+						getSheet().addValue( "", ExcelTools.formatLocation( new int[]{ i, iEntry } ) );
+						r = getSheet().getRowByNumber( i );
 						r.setHidden( true );
 					}
 				}
@@ -305,7 +308,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 					}
 				}
 			}
-			Row[] rows = this.getSheet().getRows();
+			Row[] rows = getSheet().getRows();
 			if( !filterBlanks )
 			{ // easy; everything that is NOT BLANK is hidden
 				for( int i = 1; i < rows.length; i++ )
@@ -320,7 +323,7 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 		}
 		else
 		{ // all other criteria are based upon operator comparisons ...
-			Row[] rows = this.getSheet().getRows();
+			Row[] rows = getSheet().getRows();
 			for( int i = 1; i < rows.length; i++ )
 			{
 				try
@@ -390,14 +393,14 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 		// must go thru 1+ times as must gather up values then go back and set hidden ...
 		// identifies top n values then displays ALL rows that contain those values
 		ArrayList top10 = new ArrayList();
-		int n = ((!fPercent) ? wTop10 : (this.getSheet().getNumRows() / wTop10));
+		int n = ((!fPercent) ? wTop10 : (getSheet().getNumRows() / wTop10));
 		double[] maxVals = new double[n];
 		for( int i = 0; i < n; i++ )
 		{
 			maxVals[i] = Double.NEGATIVE_INFINITY;
 		}
 		double curmin = Double.NEGATIVE_INFINITY;
-		Row[] rows = this.getSheet().getRows();
+		Row[] rows = getSheet().getRows();
 		for( int i = 1; i < rows.length; i++ )
 		{
 			try
@@ -484,14 +487,14 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 		// must go thru 1+ times as must gather up values then go back and set hidden ...
 		// identifies bottom n values then displays ALL rows that contain those values
 		ArrayList bottomN = new ArrayList();
-		int n = ((!fPercent) ? wTop10 : (this.getSheet().getNumRows() / wTop10));
+		int n = ((!fPercent) ? wTop10 : (getSheet().getNumRows() / wTop10));
 		double[] minVals = new double[n];
 		for( int i = 0; i < n; i++ )
 		{
 			minVals[i] = Double.POSITIVE_INFINITY;
 		}
 		double curmax = Double.POSITIVE_INFINITY;
-		Row[] rows = this.getSheet().getRows();
+		Row[] rows = getSheet().getRows();
 		for( int i = 1; i < rows.length; i++ )
 		{
 			try
@@ -572,7 +575,8 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public String toString()
 	{
-		String op1 = "=", op2 = "";
+		String op1 = "=";
+		String op2 = "";
 		boolean hasDoper2 = ((doper2 != null) && !(doper2 instanceof UnusedDoper));
 		if( fTop10 )
 		{
@@ -968,7 +972,8 @@ public final class AutoFilter extends com.extentech.formats.XLS.XLSRecord
 	 */
 	private class Doper
 	{
-		byte vt, grbitSign;
+		byte vt;
+		byte grbitSign;
 		byte[] doperRec;
 
 		protected Doper( byte[] rec )

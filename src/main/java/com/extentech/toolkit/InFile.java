@@ -63,9 +63,9 @@ public class InFile extends DataInputStream
 	{
 		try
 		{
-			while( this.available() != 0 )
+			while( available() != 0 )
 			{
-				sb.append( this.readLine() );
+				sb.append( readLine() );
 			}
 		}
 		catch( FileNotFoundException e )

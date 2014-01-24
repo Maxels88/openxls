@@ -122,7 +122,8 @@ public class RadarChart extends ChartType
 			double angle = 90; // starts straight up
 			double[] curseries = (double[]) series.get( i );
 			String[] curranges = (String[]) s.getSeriesRanges().get( i );
-			double x0 = 0, y0 = 0;
+			double x0 = 0;
+			double y0 = 0;
 			for( int j = 0; j < curseries.length; j++ )
 			{
 				// get next point as a percentage of the radius
@@ -189,7 +190,7 @@ public class RadarChart extends ChartType
 		cooxml.append( "\r\n" );
 
 		String style = "standard";
-		if( this.getIsFilled() )
+		if( getIsFilled() )
 		{
 			style = "filled";
 		}
@@ -209,7 +210,7 @@ public class RadarChart extends ChartType
 		// vary colors???
 
 		// *** Series Data: ser, cat, val for most chart types
-		cooxml.append( this.getParentChart().getChartSeries().getOOXML( this.getChartType(), false, 0 ) );
+		cooxml.append( getParentChart().getChartSeries().getOOXML( getChartType(), false, 0 ) );
 
 		// chart data labels, if any
 		// TODO: FINISH

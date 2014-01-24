@@ -56,20 +56,21 @@ public final class Label extends XLSCellRecord
 	public void init()
 	{
 		super.init();
-		short s, s1;
+		short s;
+		short s1;
 		// get the row, col and ixfe information
-		s = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		s = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		rw = s;
-		s = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
+		s = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
 		col = s;
-		s = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
+		s = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
 		ixfe = s;
 		// get the length of the string
-		s1 = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
+		s1 = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
 		cch = s1;
-		if( this.getByteAt( 8 ) > 1 )
+		if( getByteAt( 8 ) > 1 )
 		{ // TODO KSC: Is this the correct indicator to read bytes as unicode??
-			byte[] namebytes = this.getBytesAt( 8, this.getLength() - 8 );
+			byte[] namebytes = getBytesAt( 8, getLength() - 8 );
 			val = new String( namebytes );
 		}
 		else
@@ -78,7 +79,7 @@ public final class Label extends XLSCellRecord
 			try
 			{
 				Unicodestring thistr = null;
-				byte[] tmpBytes = this.getBytesAt( 6, (cch * 2) + 4 );  // i.e. (cch * 2) - 2
+				byte[] tmpBytes = getBytesAt( 6, (cch * 2) + 4 );  // i.e. (cch * 2) - 2
 				thistr = new Unicodestring();
 				thistr.init( tmpBytes, false );
 				val = thistr.toString();
@@ -88,8 +89,8 @@ public final class Label extends XLSCellRecord
 				log.warn( "ERROR Label.init: decoding string failed: " + e , e);
 			}
 		}
-		this.setIsValueForCell( true );
-		this.isString = true;
+		setIsValueForCell( true );
+		isString = true;
 	}
 
 	@Override
@@ -104,13 +105,13 @@ public final class Label extends XLSCellRecord
 		System.arraycopy( blen, 0, newbytes, 6, 2 );
 		byte[] strbytes = v.getBytes();
 		System.arraycopy( strbytes, 0, newbytes, 8, newstrlen );
-		this.setData( newbytes );
-		this.init();
+		setData( newbytes );
+		init();
 	}
 
 	void setStringVal( String v, boolean b )
 	{
-		this.setStringVal( v );
+		setStringVal( v );
 	}
 
 	@Override

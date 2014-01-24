@@ -163,11 +163,11 @@ public final class Formula extends XLSCellRecord
 			throw new IllegalStateException( "can't init a formula without record bytes" );
 		}
 		super.initRowCol();
-		ixfe = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		grbit = ByteTools.readShort( this.getByteAt( 14 ), this.getByteAt( 15 ) );
+		ixfe = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+		grbit = ByteTools.readShort( getByteAt( 14 ), getByteAt( 15 ) );
 
 		// get the cached value bytes from the record
-		byte[] currVal = this.getBytesAt( 6, 8 );
+		byte[] currVal = getBytesAt( 6, 8 );
 
 		// Is this a non-numeric value?
 		if( (currVal[6] == (byte) 0xFF) && (currVal[7] == (byte) 0xFF) )
@@ -218,14 +218,14 @@ public final class Formula extends XLSCellRecord
 			}
 		}
 
-		if( this.getSheet() == null )
+		if( getSheet() == null )
 		{
-			this.setSheet( this.wkbook.getLastbound() );
+			setSheet( wkbook.getLastbound() );
 		}
 
 			try
 			{
-				log.debug( "Formula " + this.getCellAddress() + this.getFormulaString() );
+				log.debug( "Formula " + getCellAddress() + getFormulaString() );
 			}
 			catch( Exception e )
 			{
@@ -235,13 +235,13 @@ public final class Formula extends XLSCellRecord
 		// The expression needs to be parsed on input in order to add it to
 		// the reference tracker
 		//TODO: Add a no calculation / read only mode without ref tracking
-		this.populateExpression();
+		populateExpression();
 		// Perform some special handling for formulas with indirect references
 		if( containsIndirectFunction )
 		{
-			this.registerIndirectFunction();
+			registerIndirectFunction();
 		}
-		this.dirty = false;
+		dirty = false;
 	}
 
 	/**
@@ -256,19 +256,19 @@ public final class Formula extends XLSCellRecord
 			return;
 		}
 
-		if( this.isArrayFormula() )
+		if( isArrayFormula() )
 		{
-			Array a = this.getArray();
+			Array a = getArray();
 			if( a != null )
 			{
-				this.getSheet().removeRecFromVec( a );
+				getSheet().removeRecFromVec( a );
 			}
 		}
-		if( this.hasAttachedString() )
+		if( hasAttachedString() )
 		{    // remove that too
 			if( string != null )
 			{
-				this.getSheet().removeRecFromVec( string );
+				getSheet().removeRecFromVec( string );
 			}
 			string = null;
 		}
@@ -438,7 +438,7 @@ public final class Formula extends XLSCellRecord
 	 */
 	protected void registerIndirectFunction()
 	{
-		this.getWorkBook().addIndirectFormula( this );
+		getWorkBook().addIndirectFormula( this );
 	}
 
 	/**
@@ -450,10 +450,10 @@ public final class Formula extends XLSCellRecord
 	 */
 	protected void calculateIndirectFunction()
 	{
-		this.clearCachedValue();
+		clearCachedValue();
 		try
 		{
-			this.calculateFormula();
+			calculateFormula();
 		}
 		catch( FunctionNotSupportedException e )
 		{
@@ -465,7 +465,7 @@ public final class Formula extends XLSCellRecord
 			// want to throw an exception and crap out on the book loading
 			// but the client should be informed in some way.  Also a generic exception is caught
 			// because our code does not bubble a calc exception up.
-			log.error( "Error registering lookup for INDIRECT() function at cell: " + this.getCellAddress() + " : " + e );
+			log.error( "Error registering lookup for INDIRECT() function at cell: " + getCellAddress() + " : " + e );
 		}
 	}
 
@@ -483,14 +483,14 @@ public final class Formula extends XLSCellRecord
 
 		try
 		{
-			short length = ByteTools.readShort( this.getByteAt( 20 ), this.getByteAt( 21 ) );
+			short length = ByteTools.readShort( getByteAt( 20 ), getByteAt( 21 ) );
 
 			if( (length + 22) > data.length )
 			{
 				throw new Exception( "cce longer than record" );
 			}
 
-			expression = ExpressionParser.parseExpression( this.getBytesAt( 22, reclen - 22 ), this, length );
+			expression = ExpressionParser.parseExpression( getBytesAt( 22, reclen - 22 ), this, length );
 
 			// If this is a shared formula reference, do some special init
 			if( isSharedFormula() )
@@ -556,13 +556,13 @@ public final class Formula extends XLSCellRecord
 			{
 				// If this is the host cell, fail silently. This method will be
 				// re-called by the ShrFmla record's init method.
-				if( this.getCellAddress().equals( pointer.getReferent() ) )
+				if( getCellAddress().equals( pointer.getReferent() ) )
 				{
 					return;
 				}
 
 				// Otherwise, complain and clear fShrFmla
-				throw new FormulaNotFoundException( "FORMULA at " + this.getCellAddress() + " refers to missing SHRFMLA at " + pointer.getReferent() );
+				throw new FormulaNotFoundException( "FORMULA at " + getCellAddress() + " refers to missing SHRFMLA at " + pointer.getReferent() );
 			}
 		}
 
@@ -599,7 +599,7 @@ public final class Formula extends XLSCellRecord
 	public String getFormulaString()
 	{
 		populateExpression();
-		if( !this.isArrayFormula() )
+		if( !isArrayFormula() )
 		{
 			return FormulaParser.getFormulaString( this );
 		}
@@ -616,7 +616,7 @@ public final class Formula extends XLSCellRecord
 		populateExpression();
 		if( loc.indexOf( "!" ) == -1 )
 		{
-			loc = this.getSheet().getSheetName() + "!" + loc;
+			loc = getSheet().getSheetName() + "!" + loc;
 		}
 
 		return ExpressionParser.getPtgsByLocation( loc, expression );
@@ -640,7 +640,7 @@ public final class Formula extends XLSCellRecord
 		populateExpression();
 		try
 		{
-			List dx = this.getPtgsByLocation( loc );
+			List dx = getPtgsByLocation( loc );
 			Iterator lx = dx.iterator();
 			while( lx.hasNext() )
 			{
@@ -667,7 +667,7 @@ public final class Formula extends XLSCellRecord
 	public void updateRecord()
 	{
 		dirty = true;
-		if( this.data == null )
+		if( data == null )
 		{
 			setData( new byte[6] );    // happens when newly init'ing a formula
 		}
@@ -792,11 +792,11 @@ public final class Formula extends XLSCellRecord
 		{
 			value = new byte[8];
 			// byte 0 specifies the marker type
-			value[1] = 0x00;
+			value[1] = (byte) 0x00;
 			// byte 2 is used by bool and boolerr
-			value[3] = 0x00;
-			value[4] = 0x00;
-			value[5] = 0x00;
+			value[3] = (byte) 0x00;
+			value[4] = (byte) 0x00;
+			value[5] = (byte) 0x00;
 			value[6] = (byte) 0xFF;
 			value[7] = (byte) 0xFF;
 
@@ -804,32 +804,32 @@ public final class Formula extends XLSCellRecord
 			{
 				if( !isErrorValue( (String) writeValue ) )
 				{
-					value[2] = 0x00;
+					value[2] = (byte) 0x00;
 					String sval = (String) writeValue;
 					if( sval.equals( "" ) || (string == null) )
 					{    // the latter can occur when input from XLSX; a cachedvalue is set without an associated StringRec
-						value[0] = 0x03; // means empty
+						value[0] = (byte) 0x03; // means empty
 					}
 					else
 					{
-						value[0] = 0x00;
+						value[0] = (byte) 0x00;
 						string.setStringVal( sval );
 					}
 				}
 				else
 				{
-					value[0] = 0x02;    // error code
+					value[0] = (byte) 0x02;    // error code
 					value[2] = CalculationException.getErrorCode( (String) writeValue );
 				}
 			}
 			else if( writeValue instanceof Boolean )
 			{
-				value[0] = 0x01;
-				value[2] = ((Boolean) writeValue ? (byte) 0x01 : (byte) 0x00);
+				value[0] = (byte) 0x01;
+				value[2] = (((Boolean) writeValue).booleanValue() ? (byte) 0x01 : (byte) 0x00);
 			}
 			else if( writeValue instanceof CalculationException )
 			{
-				value[0] = 0x02;
+				value[0] = (byte) 0x02;
 				value[2] = ((CalculationException) writeValue).getErrorCode();
 			}
 			else
@@ -850,10 +850,10 @@ public final class Formula extends XLSCellRecord
 
 		// Expression Ptgs (rgce)
 		int offset = 22;
-		for( byte[] aPtgdata : ptgdata )
+		for( int idx = 0; idx < ptgdata.length; idx++ )
 		{
-			System.arraycopy( aPtgdata, 0, newdata, offset, aPtgdata.length );
-			offset += aPtgdata.length;
+			System.arraycopy( ptgdata[idx], 0, newdata, offset, ptgdata[idx].length );
+			offset += ptgdata[idx].length;
 		}
 
 		// Expression Extra Data (rgb)
@@ -958,7 +958,7 @@ public final class Formula extends XLSCellRecord
 		}
 		catch( Exception e )
 		{
-			log.error( "Formula.getFloatVal failed for: " + this.toString(), e );
+			log.error( "Formula.getFloatVal failed for: " + toString(), e );
 		}
 
 		try
@@ -997,7 +997,7 @@ public final class Formula extends XLSCellRecord
 		}
 		catch( Exception e )
 		{
-			log.error( "getBooleanVal failed for: " + this.toString(), e );
+			log.error( "getBooleanVal failed for: " + toString(), e );
 		}
 
 		try
@@ -1030,7 +1030,7 @@ public final class Formula extends XLSCellRecord
 		}
 		catch( Exception e )
 		{
-			log.error( "Formula.getDblVal failed for: " + this.toString(), e );
+			log.error( "Formula.getDblVal failed for: " + toString(), e );
 		}
 
 		String s = String.valueOf( obx );
@@ -1090,7 +1090,7 @@ public final class Formula extends XLSCellRecord
 		}
 		catch( Exception e )
 		{
-			log.error( "Formula.getStringVal failed for: " + this.toString(), e );
+			log.error( "Formula.getStringVal failed for: " + toString(), e );
 		}
 		// if null, return empty string
 		if( obx == null )
@@ -1153,11 +1153,11 @@ public final class Formula extends XLSCellRecord
 			recurseCount.set( depth + 1 );
 			if( depth > WorkBookHandle.RECURSION_LEVELS_ALLOWED )
 			{
-				log.warn( "Recursion levels reached in calculating formula " + this.getCellAddressWithSheet() + ". Possible circular reference.  Recursion levels can be set through WorkBookHandle.setFormulaRecursionLevels" );
+				log.warn( "Recursion levels reached in calculating formula " + getCellAddressWithSheet() + ". Possible circular reference.  Recursion levels can be set through WorkBookHandle.setFormulaRecursionLevels" );
 				cachedValue = new CalculationException( CalculationException.CIR_ERR );
 				return cachedValue;
 			}
-			return this.calculateInternal();
+			return calculateInternal();
 		}
 		finally
 		{
@@ -1181,20 +1181,19 @@ public final class Formula extends XLSCellRecord
 		populateExpression();
 		try
 		{
-			cachedValue = FormulaCalculator.calculateFormula( this.expression );
+			cachedValue = FormulaCalculator.calculateFormula( expression );
 		}
 		catch( StackOverflowError e )
 		{
-			log.warn( "Stack overflow while calculating " + this.getCellAddressWithSheet() + ". Possible circular reference." );
+			log.warn( "Stack overflow while calculating " + getCellAddressWithSheet() + ". Possible circular reference." );
 			cachedValue = new CalculationException( CalculationException.CIR_ERR );
 			return cachedValue;
 		}
 
 		if( cachedValue == null )
 		{
-			throw new FunctionNotSupportedException( "Unable to calculate Formula " + this.getFormulaString() + " at: " + this.getSheet()
-			                                                                                                                  .getSheetName() + "!" + this
-					.getCellAddress() );
+			throw new FunctionNotSupportedException( "Unable to calculate Formula " + getFormulaString() + " at: " + getSheet()
+			                                                                                                                  .getSheetName() + "!" + getCellAddress() );
 		}
 
 		if( cachedValue.toString().equals( "#CIR_ERR!" ) )
@@ -1227,8 +1226,8 @@ public final class Formula extends XLSCellRecord
 			try
 			{
 				pxp = (PtgExp) expression.elementAt( 0 );
-				rowA = this.getRowNumber() - pxp.getRwFirst();
-				colA = this.getColNumber() - pxp.getColFirst();
+				rowA = getRowNumber() - pxp.getRwFirst();
+				colA = getColNumber() - pxp.getColFirst();
 				// now, if it's a 1-dimensional array e.g {1,2,3,4,5}, nr=1, nc= 5
 				// if formula address is traversing rows then switch
 				if( (rows.length == 1) && (rowA > 0) && (colA == 0) )
@@ -1257,9 +1256,9 @@ public final class Formula extends XLSCellRecord
 			}
 				log.debug( "Cached Value: {}", cachedValue );
 		}
-		if( this.getAttatchedString() != null )
+		if( getAttatchedString() != null )
 		{
-			this.getAttatchedString().setStringVal( String.valueOf( cachedValue ) );
+			getAttatchedString().setStringVal( String.valueOf( cachedValue ) );
 		}
 
 		updateRecord();
@@ -1375,7 +1374,7 @@ public final class Formula extends XLSCellRecord
 	{
 		if( newValue == null )
 		{
-			this.clearCachedValue();
+			clearCachedValue();
 		}
 		else
 		{
@@ -1595,7 +1594,7 @@ public final class Formula extends XLSCellRecord
 	{
 		if( !closed )
 		{
-			this.close();
+			close();
 		}
 	}
 
@@ -1608,9 +1607,9 @@ public final class Formula extends XLSCellRecord
 	public void replacePtg( Ptg thisptg, Ptg ptgErr )
 	{
 		ptgErr.setParentRec( this );
-		int idx = this.expression.indexOf( thisptg );
-		this.expression.remove( idx );
-		this.expression.insertElementAt( ptgErr, idx );
+		int idx = expression.indexOf( thisptg );
+		expression.remove( idx );
+		expression.insertElementAt( ptgErr, idx );
 	}
 
 }

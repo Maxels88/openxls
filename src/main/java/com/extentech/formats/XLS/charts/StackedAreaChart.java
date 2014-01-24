@@ -77,7 +77,8 @@ public class StackedAreaChart extends AreaChart
 		StringBuffer svg = new StringBuffer();
 		int[] dls = getDataLabelInts(); // get array of data labels (can be specific per series ...)
 
-		double xfactor = 0, yfactor = 0;    //
+		double xfactor = 0;    //
+		double yfactor = 0;
 		if( categories.length > 1 )
 		{
 			xfactor = w / (categories.length - 1);    // w/#categories
@@ -137,7 +138,7 @@ public class StackedAreaChart extends AreaChart
 						{
 							labels = "";
 						}
-						labels = "<text x='" + (x + (w / 2)) + "' y='" + yy + "' vertical-align='middle' " + this.getDataLabelFontSVG() + " style='text-align:middle;'>" + l + "</text>\r\n";
+						labels = "<text x='" + (x + (w / 2)) + "' y='" + yy + "' vertical-align='middle' " + getDataLabelFontSVG() + " style='text-align:middle;'>" + l + "</text>\r\n";
 					}
 					else if( showValue || showValueLabel )
 					{ // labels at each data point
@@ -146,7 +147,7 @@ public class StackedAreaChart extends AreaChart
 							labels = "";
 						}
 						double yy = (((y + h) - ((yval - (curseries[j] * .5)) * yfactor)));
-						labels += "<text x='" + x1 + "' y='" + yy + "' style='text-anchor: middle;' " + this.getDataLabelFontSVG()/*+" fill='"+getDarkColor()+"'*/ + ">" + l + "</text>\r\n";
+						labels += "<text x='" + x1 + "' y='" + yy + "' style='text-anchor: middle;' " + getDataLabelFontSVG()/*+" fill='"+getDarkColor()+"'*/ + ">" + l + "</text>\r\n";
 					}
 				}
 			}

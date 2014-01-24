@@ -238,7 +238,7 @@ public class Sxli extends XLSRecord
 		nItemsPerLine = (sx.hasRowPivotItemsRecord() ? sx.cDimCol : sx.cDimRw);
 		// total # items will be sx.cRw or sx.cCol
 		// per each pivot line, # items [see SXLI_Item.rgisxvi] will be sx.cDimRw or sx.cDimCol
-		items = SXLI_Item.parse( this.getData(), nItemsPerLine );
+		items = SXLI_Item.parse( getData(), nItemsPerLine );
 			log.trace( "SXLI: rgsxli:" + items.toString() );
 	}
 
@@ -276,7 +276,7 @@ public class Sxli extends XLSRecord
 	{
 		if( !appendLast )
 		{ // add all
-			this.data = new byte[0];
+			data = new byte[0];
 			for( SXLI_Item sxitem : items )
 			{
 				data = ByteTools.append( sxitem.getData(), data );
@@ -320,7 +320,7 @@ class SXLI_Item
 
 		ITEMTYPE( String s )
 		{
-			this.itm = s;
+			itm = s;
 		}
 
 		public static int get( String s )
@@ -351,16 +351,16 @@ class SXLI_Item
 
 	;
 
-	short cSic, /* 0x0000 specifies that no pivot items in the rgisxvi array are identical to the first pivot items in the previous pivot line item in this record.
+	short cSic; /* 0x0000 specifies that no pivot items in the rgisxvi array are identical to the first pivot items in the previous pivot line item in this record.
 				 */
-			itmType, /* see ITEMTYPE enum */
-			isxviMac; /* number of pivot items on the pivot line */
+	short itmType; /* see ITEMTYPE enum */
+	short isxviMac; /* number of pivot items on the pivot line */
 	byte iData; /* specifies a data item index as specified in Data Items, for an SXDI record specifying a data item used for a subtotal.  This field MUST be 0 if the cDimData field of the preceding SxView record is 0 or if the fGrand field equals */
-	boolean fMultiDataName, /* specifies whether the data field name is used for the total or the subtotal */
-			fSbt, /* Specifies whether this pivot line is a subtotal. */
-			fBlock, /* Specifies whether this pivot line is a block total */
-			fGrand, /* Specifies whether this pivot line is a grand total. */
-			fMultiDataOnAxis; /* Specifies whether a pivot line entry in this pivot line is a data item index. */
+	boolean fMultiDataName; /* specifies whether the data field name is used for the total or the subtotal */
+	boolean fSbt; /* Specifies whether this pivot line is a subtotal. */
+	boolean fBlock; /* Specifies whether this pivot line is a block total */
+	boolean fGrand; /* Specifies whether this pivot line is a grand total. */
+	boolean fMultiDataOnAxis; /* Specifies whether a pivot line entry in this pivot line is a data item index. */
 	byte[] rgisxvi; /* An array of 2-byte signed integers that specifies a pivot line entry. 
 						Each element of this array is either a pivot item index or a data item index. 
 						0x7FFF means blank, no pivot item

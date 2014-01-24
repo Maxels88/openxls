@@ -96,7 +96,7 @@ public class LEOHeader implements Serializable
 	 */
 	protected boolean init()
 	{
-		return this.init( this.data );
+		return init( data );
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class LEOHeader implements Serializable
 	 */
 	protected boolean init( ByteBuffer dta )
 	{
-		this.data = dta;
+		data = dta;
 		int pos;
 
 		if( dta.limit() < 1 )
@@ -202,7 +202,7 @@ public class LEOHeader implements Serializable
 	 */
 	public int getExtraDIFATStart()
 	{
-		return this.extraDIFATStart;
+		return extraDIFATStart;
 	}
 
 	/**
@@ -226,7 +226,7 @@ public class LEOHeader implements Serializable
 	 */
 	public int[] getDIFAT()
 	{
-		int numblks = Math.min( this.numFATSectors, 109 ); // more than 109 goes into DIFAT
+		int numblks = Math.min( numFATSectors, 109 ); // more than 109 goes into DIFAT
 		int[] FAT = new int[numblks];
 		int pos = DIFATPOSITION;    // START OF DIFAT (indexes the FAT)
 		data.position( pos );    // start of the 1st 109 secIds (4 bytes each==436 bytes)
@@ -243,7 +243,7 @@ public class LEOHeader implements Serializable
 	 */
 	public ByteBuffer getBytes()
 	{
-		return this.data;
+		return data;
 	}
 
 	/**
@@ -329,13 +329,13 @@ public class LEOHeader implements Serializable
 	void initMajickBytes()
 	{
 		// create the majick number
-		this.data.position( 0 );
+		data.position( 0 );
 		data.put( majick );
 	}
 
 	void setData( ByteBuffer dta )
 	{
-		this.data = dta;
+		data = dta;
 	}
 
 	/**
@@ -349,7 +349,7 @@ public class LEOHeader implements Serializable
 		data.position( pos );
 		for( int aFAT : FAT )
 		{
-			if( (FAT.length * 4) >= (this.data.limit() - 4) )
+			if( (FAT.length * 4) >= (data.limit() - 4) )
 			{
 				// TODO: Create extra DIFAT sectors FAT.length too big...
 				log.error( "WARNING: LEOHeader.setFAT() creating Extra FAT Sectors Not Implemented.  Output file too large." );
@@ -378,7 +378,7 @@ public class LEOHeader implements Serializable
 	void setMiniFATStart( int i )
 	{
 		int pos = 0x3c;
-		this.miniFATStart = i;
+		miniFATStart = i;
 		data.position( pos );
 		data.putInt( i );
 		miniFATStart = i;

@@ -61,19 +61,19 @@ public class Pic implements OOXMLElement
 	public Pic( HashMap<String, String> attrs, NvPicPr nv, BlipFill bf, SpPr sp, Style s )
 	{
 		this.attrs = attrs;
-		this.nvPicPr = nv;
-		this.blipFill = bf;
-		this.spPr = sp;
-		this.style = s;
+		nvPicPr = nv;
+		blipFill = bf;
+		spPr = sp;
+		style = s;
 	}
 
 	public Pic( Pic p )
 	{
-		this.attrs = p.attrs;
-		this.nvPicPr = p.nvPicPr;
-		this.blipFill = p.blipFill;
-		this.spPr = p.spPr;
-		this.style = p.style;
+		attrs = p.attrs;
+		nvPicPr = p.nvPicPr;
+		blipFill = p.blipFill;
+		spPr = p.spPr;
+		style = p.style;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -372,7 +372,7 @@ public class Pic implements OOXMLElement
 	 */
 	public void setSppr( SpPr sp )
 	{
-		this.spPr = sp;
+		spPr = sp;
 	}
 }
 
@@ -394,8 +394,8 @@ class NvPicPr implements OOXMLElement
 
 	public NvPicPr()
 	{    // set common defaults
-		this.cpr = new CNvPr();
-		this.ppr = new CNvPicPr();
+		cpr = new CNvPr();
+		ppr = new CNvPicPr();
 	}
 
 	public NvPicPr( CNvPr cpr, CNvPicPr ppr )
@@ -406,8 +406,8 @@ class NvPicPr implements OOXMLElement
 
 	public NvPicPr( NvPicPr n )
 	{
-		this.cpr = n.cpr;
-		this.ppr = n.ppr;
+		cpr = n.cpr;
+		ppr = n.ppr;
 	}
 
 	public static NvPicPr parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -575,7 +575,7 @@ class CNvPicPr implements OOXMLElement
 
 	public CNvPicPr( CNvPicPr c )
 	{
-		this.preferRelativeResize = c.preferRelativeResize;
+		preferRelativeResize = c.preferRelativeResize;
 	}
 
 	public static CNvPicPr parseOOXML( XmlPullParser xpp, Stack<String> lastTag )

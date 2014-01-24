@@ -36,7 +36,7 @@ public class InvalidFileException extends RuntimeException
 
 	public InvalidFileException( String er )
 	{
-		this.err = er;
+		err = er;
 	}
 
 	public String toString()

@@ -75,8 +75,8 @@ public class BlockByteReader implements Serializable
 
 	public BlockByteReader( List blokz, int len )
 	{
-		this.blockmap = blokz;
-		this.length = len;
+		blockmap = blokz;
+		length = len;
 	}
 
 	public boolean isReadOnly()
@@ -95,7 +95,7 @@ public class BlockByteReader implements Serializable
 		try
 		{
 			int SIZE = BIGBLOCK.SIZE; // normal case
-			if( this.length < StorageTable.BIGSTORAGE_SIZE )
+			if( length < StorageTable.BIGSTORAGE_SIZE )
 			{
 				SIZE = SMALLBLOCK.SIZE;
 			}
@@ -110,17 +110,17 @@ public class BlockByteReader implements Serializable
 			}
 			if( (check + 4) > SIZE )
 			{ // SPANNER!
-				Block bx = (Block) this.blockmap.get( block );
+				Block bx = (Block) blockmap.get( block );
 				int l1 = ((SIZE * (block + 1)) - startpos);
 				int s2 = startpos % SIZE;
 				byte[] b1 = bx.getBytes( s2, s2 + l1 );
-				bx = (Block) this.blockmap.get( block + 1 );
+				bx = (Block) blockmap.get( block + 1 );
 				l1 = 4 - l1;
 				byte[] b2 = bx.getBytes( 0, l1 );
 				return ByteTools.append( b2, b1 );
 			}
 
-			Block bx = (Block) this.blockmap.get( block );
+			Block bx = (Block) blockmap.get( block );
 			startpos -= (block * SIZE);
 			return bx.getBytes( startpos, startpos + 4 );
 		}
@@ -138,7 +138,7 @@ public class BlockByteReader implements Serializable
 	 */
 	public byte get( BlockByteConsumer rec, int startpos )
 	{
-		byte ret = this.get( rec, startpos, 1 )[0];
+		byte ret = get( rec, startpos, 1 )[0];
 		return ret;
 	}
 
@@ -154,7 +154,7 @@ public class BlockByteReader implements Serializable
 		//	we only want to add the offset when
 		//  we are fetching data from 'within' a record, ie: rkdata.get(i)
 		int recoffy = rec.getOffset();
-		if( this.getApplyRelativePosition() )
+		if( getApplyRelativePosition() )
 		{
 
 			startpos += 4; // add the offset
@@ -177,7 +177,7 @@ public class BlockByteReader implements Serializable
 			                                                           .getName() + "," + startpos + "," + (startpos + len) + ") failed - OUT OF BOUNDS." );
 		}
 		// get the block byte boundaries
-		int[] pos = this.getReadPositions( startpos, len );
+		int[] pos = getReadPositions( startpos, len );
 		int numblocks = pos.length / 3;
 		int blkdef = 0;
 		//	backingByteBuffer = blokx.getByteBuffer();
@@ -187,7 +187,7 @@ public class BlockByteReader implements Serializable
 		{
 			try
 			{ // inlining byte read
-				Block b1 = (Block) this.blockmap.get( pos[blkdef++] );
+				Block b1 = (Block) blockmap.get( pos[blkdef++] );
 				out.write( b1.getBytes( pos[blkdef++], pos[blkdef++] ) );
 			}
 			catch( Exception a )
@@ -307,7 +307,7 @@ public class BlockByteReader implements Serializable
 	 */
 	public int[] getReadPositions( int startpos, int len )
 	{
-		return getReadPositions( startpos, len, (this.length >= StorageTable.BIGSTORAGE_SIZE) );
+		return getReadPositions( startpos, len, (length >= StorageTable.BIGSTORAGE_SIZE) );
 	}
 
 	/**
@@ -320,7 +320,7 @@ public class BlockByteReader implements Serializable
 	 */
 	public int[] getFileOffsets( int start, int size )
 	{
-		int[] smap = this.getReadPositions( start, size );
+		int[] smap = getReadPositions( start, size );
 		int[] fmap = new int[(smap.length / 3) * 2];
 
 		int offset = 0;
@@ -330,7 +330,7 @@ public class BlockByteReader implements Serializable
 		for( int sidx = 0; sidx < smap.length; sidx += 3 )
 		{
 			prev = block;
-			block = (Block) this.blockmap.get( smap[sidx] );
+			block = (Block) blockmap.get( smap[sidx] );
 
 			if( (prev == null) || ((block.getOriginalPos() + smap[sidx + 1]) != (prev.getOriginalPos() + smap[sidx - 1])) )
 			{
@@ -349,7 +349,7 @@ public class BlockByteReader implements Serializable
 	public String getFileOffsetString( int start, int size )
 	{
 		String ret = "";
-		int[] map = this.getFileOffsets( start, size );
+		int[] map = getFileOffsets( start, size );
 
 		for( int idx = 0; idx < map.length; idx += 2 )
 		{

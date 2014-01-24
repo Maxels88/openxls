@@ -130,11 +130,11 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	public Xf( int f )
 	{
 		byte[] bl = { 0, 0, 0, 0, 1, 0, 32, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, -64, 32 };
-		this.setOpcode( XF );
-		this.setLength( (short) (bl.length) );
-		this.setData( bl );
-		this.setFont( f );
-		this.init();
+		setOpcode( XF );
+		setLength( (short) (bl.length) );
+		setData( bl );
+		setFont( f );
+		init();
 	}
 
 	/**
@@ -143,12 +143,12 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	public Xf( int f, WorkBook wkbook )
 	{
 		byte[] bl = { 0, 0, 0, 0, 1, 0, 32, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, -64, 32 };
-		this.setOpcode( XF );
-		this.setLength( (short) (bl.length) );
-		this.setData( bl );
+		setOpcode( XF );
+		setLength( (short) (bl.length) );
+		setData( bl );
 		super.setWorkBook( wkbook );    // set workbook but don't insert rec or add to xfrecs
-		this.setFont( f );
-		this.init();
+		setFont( f );
+		init();
 	}
 
 	/**
@@ -161,13 +161,13 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	public Xf( Font f, WorkBook wkbook )
 	{
 		byte[] bl = { 0, 0, 0, 0, 1, 0, 32, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, -64, 32 };
-		this.setOpcode( XF );
-		this.setLength( (short) (bl.length) );
+		setOpcode( XF );
+		setLength( (short) (bl.length) );
 		myFont = f;
 		System.arraycopy( ByteTools.shortToLEBytes( (short) f.getIdx() ), 0, bl, 0, 2 );
-		this.setData( bl );
+		setData( bl );
 		super.setWorkBook( wkbook );    // set workbook but don't insert rec or add to xfrecs
-		this.init();
+		init();
 	}
 
 	/**
@@ -190,28 +190,28 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		String f = "unknown";        //Handle missing formats
 		try
 		{
-			f = this.getFormatPattern();
+			f = getFormatPattern();
 		}
 		catch( Exception e )
 		{
 			;
 		}
-		String thisToString = " format:" + f + " fill:" + this.getFillPattern() +
-				" fg:" + this.getForegroundColor() +
-				" bg:" + this.getBackgroundColor() +
+		String thisToString = " format:" + f + " fill:" + getFillPattern() +
+				" fg:" + getForegroundColor() +
+				" bg:" + getBackgroundColor() +
 				" border:[" +
-				this.getTopBorderLineStyle() + "-" + this.getTopBorderColor() + ":" +
-				this.getLeftBorderLineStyle() + "-" + this.getLeftBorderColor() + ":" +
-				this.getBottomBorderLineStyle() + "-" + this.getBottomBorderColor() + ":" +
-				this.getRightBorderLineStyle() + "-" + this.getRightBorderColor() + "]" +
-				"W:" + this.getWrapText() +
-				"R:" + this.getRotation() +
-				"H:" + this.getHorizontalAlignment() + "V:" + this.getVerticalAlignment() +
-				"I:" + this.getIndent() +
-				"L:" + this.isLocked() +
-				"F:" + this.isFormulaHidden() +
-				"D:" + this.getRightToLeftReadingOrder();
-		return this.getFont().toString() + thisToString;
+				getTopBorderLineStyle() + "-" + getTopBorderColor() + ":" +
+				getLeftBorderLineStyle() + "-" + getLeftBorderColor() + ":" +
+				getBottomBorderLineStyle() + "-" + getBottomBorderColor() + ":" +
+				getRightBorderLineStyle() + "-" + getRightBorderColor() + "]" +
+				"W:" + getWrapText() +
+				"R:" + getRotation() +
+				"H:" + getHorizontalAlignment() + "V:" + getVerticalAlignment() +
+				"I:" + getIndent() +
+				"L:" + isLocked() +
+				"F:" + isFormulaHidden() +
+				"D:" + getRightToLeftReadingOrder();
+		return getFont().toString() + thisToString;
 	}
 
 	/**
@@ -246,9 +246,9 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	protected void populateForTransfer()
 	{
-		myFont = this.getFont();
-		myFormat = this.getWorkBook().getFormat( ifmt );
-		this.getData();
+		myFont = getFont();
+		myFormat = getWorkBook().getFormat( ifmt );
+		getData();
 	}
 
 	public boolean getMerged()
@@ -263,7 +263,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	// marginal!
 	public void setMerged( boolean mgd )
 	{
-		byte[] rkdata = this.getData();
+		byte[] rkdata = getData();
 		rkdata[9] = 0x78; // 0xf4 ?
 			log.trace( "Xf The merge style bit is: " + fMergeCell );
 	}
@@ -275,12 +275,12 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		ifnt = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		ifnt = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		ifnt = (short) (ifnt & 0xffff);
-		ifmt = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
+		ifmt = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
 		ifmt = (short) (ifmt & 0xffff);
 
-		short flag = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
+		short flag = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
 		// is the cell locked?
 		if( (flag & 0x1) == 0x1 )
 		{
@@ -319,8 +319,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 
 		pat = null;    // ensure reset if xf has changed
 			log.trace( "Xf.init() ifnt: " + ifnt + " ifmt: " + ifmt + ":" +
-					                this.toString() + " border: " + "l:" + this.getLeftBorderColor() + ":" + "b:" + this.getBottomBorderColor() + ":" + "r:" + this
-					.getRightBorderColor() + ":" + "t:" + this.getTopBorderColor() + ":" );
+					           toString() + " border: " + "l:" + getLeftBorderColor() + ":" + "b:" + getBottomBorderColor() + ":" + "r:" + getRightBorderColor() + ":" + "t:" + getTopBorderColor() + ":" );
 	}
 
 	/**
@@ -331,7 +330,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		short flag;
 
 		// bytes 6, 7: alignment, rotation, text break
-		flag = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
+		flag = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
 		alc = (short) (flag & 0x7);
 		if( (flag & 0x8) == 0x8 )
 		{
@@ -341,7 +340,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		trot = (short) ((flag & 0xFF00) >> 8);
 
 		// byte 8: indent, reading order, shrink
-		flag = this.getByteAt( 8 );
+		flag = getByteAt( 8 );
 		cIndent = (short) (flag & 0xF);
 		if( (flag & 0x10) == 0x10 )
 		{
@@ -355,7 +354,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 
 		iReadingOrder = (short) ((flag & 0xC0));// >> 6);	// reading order is byte 7-6 mask 0xCO
 		// USED_ATTRIB:	 bits 7-2 of byte 9 
-		flag = this.getByteAt( 9 );
+		flag = getByteAt( 9 );
 		/* for all these flags, a cleared bit means use Parent Style XF attribute
 		 if set, means the attributes of THIS xf is used		
 		bit mask 	meaning 
@@ -393,19 +392,19 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		}
 
 		// BORDER Section
-		flag = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );
+		flag = ByteTools.readShort( getByteAt( 10 ), getByteAt( 11 ) );
 		dgLeft = (short) (flag & 0xF);
 		dgRight = (short) ((flag & 0xF0) >> 4);
 		dgTop = (short) ((flag & 0xF00) >> 8);
 		dgBottom = (short) ((flag & 0xF000) >> 12);
 
-		flag = ByteTools.readShort( this.getByteAt( 12 ), this.getByteAt( 13 ) );
+		flag = ByteTools.readShort( getByteAt( 12 ), getByteAt( 13 ) );
 		icvLeft = (short) (flag & 0x7f);
 		icvRight = (short) ((flag & 0x3F80) >> 7);
 		grbitDiag = (short) ((flag & 0xC000) >> 15);
 
 		// bytes 14-17 color and fill
-		Iflag = ByteTools.readInt( this.getByteAt( 14 ), this.getByteAt( 15 ), this.getByteAt( 16 ), this.getByteAt( 17 ) );
+		Iflag = ByteTools.readInt( getByteAt( 14 ), getByteAt( 15 ), getByteAt( 16 ), getByteAt( 17 ) );
 		icvTop = (short) (Iflag & 0x7F);
 		icvBottom = (short) ((Iflag & 0x3F80) >> 7);
 		icvDiag = (short) ((Iflag & 0x1FC000) >> 14);
@@ -418,7 +417,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 			log.trace( "Xf The cell outline is true" );
 		}
 		// bytes 18, 19: fill pattern colors
-		icvColorFlag = ByteTools.readShort( this.getByteAt( 18 ), this.getByteAt( 19 ) );
+		icvColorFlag = ByteTools.readShort( getByteAt( 18 ), getByteAt( 19 ) );
 		icvFore = (short) (icvColorFlag & 0x7F);                // = Pattern Color
 		icvBack = (short) ((icvColorFlag & 0x3F80) >> 7);    // = Pattern Background Color
 		if( (icvColorFlag & 0x4000) == 0x4000 )
@@ -439,7 +438,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		{
 			return myFont;
 		}
-		myFont = this.getWorkBook().getFont( ifnt );
+		myFont = getWorkBook().getFont( ifnt );
 		return myFont;
 	}
 
@@ -462,7 +461,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 			}
 		}
 
-		Format fmt = this.getWorkBook().getFormat( ifmt );
+		Format fmt = getWorkBook().getFormat( ifmt );
 		if( fmt == null )
 		{
 			return false;
@@ -549,7 +548,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 			}
 		}
 		// probably a built-in format that is not a currency format
-		Format fmt = this.getWorkBook().getFormat( ifmt );
+		Format fmt = getWorkBook().getFormat( ifmt );
 		if( fmt == null )
 		{
 			return false;
@@ -574,7 +573,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		{
 			return (short) fill.getFgColorAsInt( getWorkBook().getTheme() );
 		}
-		return this.icvFore;
+		return icvFore;
 	}
 
 	/**
@@ -588,7 +587,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		{
 			return fill.getFgColorAsRGB( getWorkBook().getTheme() );
 		}
-		return FormatHandle.colorToHexString( FormatHandle.getColor( this.icvFore ) );
+		return FormatHandle.colorToHexString( FormatHandle.getColor( icvFore ) );
 
 	}
 
@@ -603,11 +602,11 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		{
 			return fill.getBgColorAsRGB( getWorkBook().getTheme() );
 		}
-		if( this.icvBack == 65 ) // default background color
+		if( icvBack == 65 ) // default background color
 		{
 			return "#FFFFFF";    // return white
 		}
-		return FormatHandle.colorToHexString( FormatHandle.getColor( this.icvBack ) );
+		return FormatHandle.colorToHexString( FormatHandle.getColor( icvBack ) );
 	}
 
 	/**
@@ -619,11 +618,11 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		{
 			return (short) fill.getBgColorAsInt( getWorkBook().getTheme() );
 		}
-		if( this.icvBack == 65 ) // default background color
+		if( icvBack == 65 ) // default background color
 		{
 			return 64; // return white
 		}
-		return this.icvBack;
+		return icvBack;
 	}
 
 	/**
@@ -642,14 +641,14 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		String[][] fmts = FormatConstantsImpl.getBuiltinFormats();
 		for( String[] fmt1 : fmts )
 		{
-			if( this.ifmt == Integer.parseInt( fmt1[1], 16 ) )
+			if( ifmt == Integer.parseInt( fmt1[1], 16 ) )
 			{
 				pat = fmt1[0];
 				return pat;
 			}
 		}
 
-		Format fmt = this.getWorkBook().getFormat( ifmt );
+		Format fmt = getWorkBook().getFormat( ifmt );
 		if( fmt != null )
 		{
 			pat = fmt.toString();
@@ -663,14 +662,14 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setFormatPattern( String pattern )
 	{
-		this.pat = pattern;
+		pat = pattern;
 
-		if( this.getWorkBook() == null )
+		if( getWorkBook() == null )
 		{
 			throw new IllegalStateException( "attempting to set format pattern but workbook is null" );
 		}
 
-		this.setFormat( addFormatPattern( getWorkBook(), pattern ) );
+		setFormat( addFormatPattern( getWorkBook(), pattern ) );
 	}
 
 	/**
@@ -704,9 +703,9 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	{
 		ifmt = ifm;
 		byte[] nef = ByteTools.shortToLEBytes( ifmt );
-		this.getData()[2] = nef[0];
-		this.getData()[3] = nef[1];
-		this.pat = null;    // 20080228 KSC: flag to re-input
+		getData()[2] = nef[0];
+		getData()[3] = nef[1];
+		pat = null;    // 20080228 KSC: flag to re-input
 	}
 
 	/**
@@ -716,12 +715,12 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	{
 		ifnt = (short) ifn;
 		byte[] nef = ByteTools.shortToLEBytes( ifnt );
-		this.getData()[0] = nef[0];
-		this.getData()[1] = nef[1];
+		getData()[0] = nef[0];
+		getData()[1] = nef[1];
 		// reset the pointer for xf's and font's brought from other workbooks.
-		if( this.getWorkBook() != null )
+		if( getWorkBook() != null )
 		{
-			myFont = this.getWorkBook().getFont( ifn );
+			myFont = getWorkBook().getFont( ifn );
 		}
 	}
 
@@ -739,7 +738,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	public void setPattern( int t )
 	{
 		fls = (short) t;
-		this.updatePattern();
+		updatePattern();
 		if( fill != null )
 		{
 			fill.setFillPattern( t );
@@ -764,27 +763,27 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 
 	public short getBottomBorderLineStyle()
 	{
-		return this.dgBottom;
+		return dgBottom;
 	}
 
 	public short getTopBorderLineStyle()
 	{
-		return this.dgTop;
+		return dgTop;
 	}
 
 	public short getLeftBorderLineStyle()
 	{
-		return this.dgLeft;
+		return dgLeft;
 	}
 
 	public short getRightBorderLineStyle()
 	{
-		return this.dgRight;
+		return dgRight;
 	}
 
 	public short getDiagBorderLineStyle()
 	{
-		return this.dgDiag;
+		return dgDiag;
 	}
 
 	/**
@@ -934,7 +933,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		Iflag |= (dgDiag << 21);
 		Iflag |= (mystery << 25);
 		Iflag |= (fls << 26);
-		this.updatePattern();
+		updatePattern();
 	}
 
 	/**
@@ -946,7 +945,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		dgRight = t;
 		dgTop = t;
 		dgBottom = t;
-		this.updateBorders();
+		updateBorders();
 	}
 
 	/**
@@ -983,7 +982,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		catch( ArrayIndexOutOfBoundsException e )
 		{
 		}
-		this.updateBorders();
+		updateBorders();
 	}
 
 	/**
@@ -1020,31 +1019,31 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		catch( ArrayIndexOutOfBoundsException e )
 		{
 		}
-		this.updateBorderColors();
+		updateBorderColors();
 	}
 
 	public void setTopBorderLineStyle( short t )
 	{
 		dgTop = t;
-		this.updateBorders();
+		updateBorders();
 	}
 
 	public void setBottomBorderLineStyle( short t )
 	{
 		dgBottom = t;
-		this.updateBorders();
+		updateBorders();
 	}
 
 	public void setLeftBorderLineStyle( short t )
 	{
 		dgLeft = t;
-		this.updateBorders();
+		updateBorders();
 	}
 
 	public void setRightBorderLineStyle( short t )
 	{
 		dgRight = t;
-		this.updateBorders();
+		updateBorders();
 	}
 
 	public void updateBorders()
@@ -1056,8 +1055,8 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		borderflag = (short) ((borderflag | ((dgBottom) << 12)));
 		//byte[] rkdata = this.getData();
 		byte[] bords = ByteTools.shortToLEBytes( borderflag );
-		this.getData()[10] = bords[0];
-		this.getData()[11] = bords[1];
+		getData()[10] = bords[0];
+		getData()[11] = bords[1];
 		setAttributeFlag();
 	}
 
@@ -1066,13 +1065,13 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void removeBorders()
 	{
-		this.dgBottom = 0;
-		this.dgTop = 0;
-		this.dgDiag = 0;
-		this.dgLeft = 0;
-		this.dgRight = 0;
-		this.dgBottom = 0;
-		this.updateBorders();
+		dgBottom = 0;
+		dgTop = 0;
+		dgDiag = 0;
+		dgLeft = 0;
+		dgRight = 0;
+		dgBottom = 0;
+		updateBorders();
 	}
 
 	public void updateBorderColors()
@@ -1082,7 +1081,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 
 	public void updatePattern()
 	{
-		byte[] rkdata = this.getData();
+		byte[] rkdata = getData();
 		short thisFlag = 0;
 		thisFlag |= icvLeft;
 		thisFlag |= (icvRight << 7);
@@ -1105,7 +1104,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		rkdata[17] = nef[3];
 		// update format cache upon change
 		pat = null;
-		this.wkbook.updateFormatCache( this );
+		wkbook.updateFormatCache( this );
 	}
 
 	/**
@@ -1135,8 +1134,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 					                 t,
 					                 FormatHandle.colorToHexString( clr ),
 					                 icvBack,
-					                 null,
-					                 this.getWorkBook().getTheme() );
+					                 null, getWorkBook().getTheme() );
 				}
 				else
 				{
@@ -1148,7 +1146,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		{
 			fill.setFgColor( t );
 		}
-		this.updateColors();
+		updateColors();
 	}
 
 	/**
@@ -1173,8 +1171,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 					                 icvFore,
 					                 null,
 					                 t,
-					                 FormatHandle.colorToHexString( clr ),
-					                 this.getWorkBook().getTheme() );
+					                 FormatHandle.colorToHexString( clr ), getWorkBook().getTheme() );
 				}
 				else
 				{
@@ -1187,12 +1184,12 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 			fill.setBgColor( t );
 		}
 
-		this.updateColors();
+		updateColors();
 	}
 
 	void updateColors()
 	{
-		byte[] rkdata = this.getData();
+		byte[] rkdata = getData();
 		byte[] nef = ByteTools.shortToLEBytes( icvColorFlag );
 		rkdata[18] = nef[0];
 		rkdata[19] = nef[1];
@@ -1200,7 +1197,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		icvBack = (short) ((icvColorFlag & 0x3F80) >> 7);
 		// update format cache upon change
 		pat = null;
-		this.wkbook.updateFormatCache( this );
+		wkbook.updateFormatCache( this );
 	}
 
 	/**
@@ -1235,7 +1232,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		{
 			return fill.isBackgroundSolid();
 		}
-		byte[] rkdata = this.getData();
+		byte[] rkdata = getData();
 		return (rkdata[17] == (byte) PATTERN_SOLID);
 	}
 
@@ -1251,7 +1248,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	private void setAttributeFlag()
 	{
 		setToCellXF();
-		byte[] rkdata = this.getData();
+		byte[] rkdata = getData();
 		byte used_attrib = rkdata[9];
 		byte borderFlag = (byte) (((dgBottom > 0) || (dgTop > 0) || (dgLeft > 0) || (dgRight > 0) || (dgDiag > 0)) ? 1 : 0);    // if border is set
 		if( borderFlag == 1 )
@@ -1300,7 +1297,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		{
 			icvDiag = 64;
 		}
-		this.updatePattern();
+		updatePattern();
 	}
 
 	/**
@@ -1313,8 +1310,8 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 			fStyle = 0;
 			byte flag = (byte) fLocked;
 			flag = (byte) ((flag | ((fHidden) << 1)));
-			this.getData()[4] = flag;
-			this.getData()[5] = 0;   // upper bits are style parent rec index
+			getData()[4] = flag;
+			getData()[5] = 0;   // upper bits are style parent rec index
 		}
 	}
 
@@ -1354,9 +1351,9 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	public void setIndent( int indent )
 	{ // indent # = 3 spaces
 		cIndent = (short) indent;    // mask = 0xF, 4 bits,
-		byte b = (byte) (this.getData()[8] & 0xF0);
+		byte b = (byte) (getData()[8] & 0xF0);
 		b |= (cIndent);    // 1st 4 bits
-		this.getData()[8] = b;
+		getData()[8] = b;
 		if( (alc != FormatConstants.ALIGN_LEFT) || (alc != FormatConstants.ALIGN_RIGHT) )    // indent only valid for Left and Right (apparently
 		{
 			setHorizontalAlignment( FormatConstants.ALIGN_LEFT );
@@ -1400,10 +1397,10 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		{
 			iReadingOrder = 0;
 		}
-		byte b = this.getData()[8];
+		byte b = getData()[8];
 		b |= (iReadingOrder);
-		this.getData()[8] = b;
-		this.wkbook.updateFormatCache( this );
+		getData()[8] = b;
+		wkbook.updateFormatCache( this );
 		setAttributeFlag();
 	}
 
@@ -1476,12 +1473,12 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		res = (short) (res | tempfWrap);
 		res = (short) (res | tempAlcV);
 		res = (short) (res | tempTrot);
-		byte[] rkdata = this.getData();
+		byte[] rkdata = getData();
 		byte[] bords = ByteTools.shortToLEBytes( res );
 		rkdata[6] = bords[0];
 		rkdata[7] = bords[1];
 		// update format cache upon change
-		this.wkbook.updateFormatCache( this );
+		wkbook.updateFormatCache( this );
 	}
 
 	/**
@@ -1493,7 +1490,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	{
 		StringBuffer sb = new StringBuffer( "<XF" );
 		sb.append( ">" );
-		Font myf = this.getFont();
+		Font myf = getFont();
 		// font info...
 		sb.append( "<font name=\"" + myf.getFontName() );
 		sb.append( "\" size=\"" + myf.getFontHeightInPoints() );
@@ -1548,11 +1545,11 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 
 		// get the alignment..
 		sb.append( "<Alignment" );
-		sb.append( " Horizontal=\"" + FormatHandle.HORIZONTAL_ALIGNMENTS[this.getHorizontalAlignment()] + "\"" );
+		sb.append( " Horizontal=\"" + FormatHandle.HORIZONTAL_ALIGNMENTS[getHorizontalAlignment()] + "\"" );
 		sb.append( " />" );
 
 		// get the background color
-		if( wkbook.colorTable[getForegroundColor()] != Color.WHITE )
+		if( !wkbook.colorTable[getForegroundColor()].equals( Color.WHITE ) )
 		{
 			sb.append( "<Interior Color=\"" +
 					           FormatHandle.colorToHexString( wkbook.colorTable[getForegroundColor()] ) +
@@ -1586,7 +1583,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public boolean isFormulaHidden()
 	{
-		return (this.fHidden == 0x1);
+		return (fHidden == 0x1);
 	}
 
 	/**
@@ -1598,11 +1595,11 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( hd )
 		{
-			this.fHidden = 0x1;
+			fHidden = 0x1;
 		}
 		else
 		{
-			this.fHidden = 0x0;
+			fHidden = 0x0;
 		}
 		updateLockedHidden();
 	}
@@ -1614,7 +1611,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public boolean isLocked()
 	{
-		return (this.fLocked == 0x1);
+		return (fLocked == 0x1);
 	}
 
 	/**
@@ -1624,20 +1621,20 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public boolean isShrinkToFit()
 	{
-		return (this.fShrinkToFit == 0x1);
+		return (fShrinkToFit == 0x1);
 	}
 
 	public void setShrinkToFit( boolean b )
 	{
 		if( b )
 		{
-			this.fShrinkToFit = 0x1;
-			this.getData()[9] |= 0x10;
+			fShrinkToFit = 0x1;
+			getData()[9] |= 0x10;
 		}
 		else
 		{
-			this.fShrinkToFit = 0x0;    // turn off bit 4
-			this.getData()[9] &= 0xF7;    // set bit 4
+			fShrinkToFit = 0x0;    // turn off bit 4
+			getData()[9] &= 0xF7;    // set bit 4
 		}
 	}
 
@@ -1650,11 +1647,11 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( lk )
 		{
-			this.fLocked = 0x1;
+			fLocked = 0x1;
 		}
 		else
 		{
-			this.fLocked = 0x0;
+			fLocked = 0x0;
 		}
 		updateLockedHidden();
 	}
@@ -1682,13 +1679,13 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 		flag = (short) (flag | tempFH);
 		flag = (short) (flag | tempST);
 
-		byte[] dx = this.getData();
+		byte[] dx = getData();
 		byte[] nef = ByteTools.shortToLEBytes( flag );
 		dx[4] = nef[0];
 		dx[5] = nef[1];
 		// update format cache upon change
 		pat = null;
-		this.wkbook.updateFormatCache( this );
+		wkbook.updateFormatCache( this );
 	}
 
 	/**
@@ -1839,10 +1836,10 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setFill( Fill f )
 	{
-		this.fill = (Fill) f.cloneElement();
-		fls = (short) this.fill.getFillPatternInt();
-		icvFore = (short) this.fill.getFgColorAsInt( getWorkBook().getTheme() );
-		icvBack = (short) this.fill.getBgColorAsInt( getWorkBook().getTheme() );
+		fill = (Fill) f.cloneElement();
+		fls = (short) fill.getFillPatternInt();
+		icvFore = (short) fill.getFgColorAsInt( getWorkBook().getTheme() );
+		icvBack = (short) fill.getBgColorAsInt( getWorkBook().getTheme() );
 	}
 
 	/**
@@ -1850,7 +1847,7 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public Fill getFill()
 	{
-		return this.fill;
+		return fill;
 	}
 
 	/**
@@ -1860,8 +1857,8 @@ public class Xf extends com.extentech.formats.XLS.XLSRecord
 	public void close()
 	{
 		super.close();
-		this.myFont.close();
-		this.myFormat = null;
+		myFont.close();
+		myFormat = null;
 	}
 
 }

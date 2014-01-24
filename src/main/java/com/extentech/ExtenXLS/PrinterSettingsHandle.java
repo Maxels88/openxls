@@ -280,7 +280,7 @@ public class PrinterSettingsHandle implements Handle
 		if( leftMargin == null )
 		{
 			leftMargin = new LeftMargin();
-			this.sheet.addMarginRecord( leftMargin );
+			sheet.addMarginRecord( leftMargin );
 		}
 		return leftMargin.getMargin();
 	}
@@ -293,7 +293,7 @@ public class PrinterSettingsHandle implements Handle
 		if( rightMargin == null )
 		{
 			rightMargin = new RightMargin();
-			this.sheet.addMarginRecord( rightMargin );
+			sheet.addMarginRecord( rightMargin );
 		}
 		return rightMargin.getMargin();
 	}
@@ -306,7 +306,7 @@ public class PrinterSettingsHandle implements Handle
 		if( topMargin == null )
 		{
 			topMargin = new TopMargin();
-			this.sheet.addMarginRecord( topMargin );
+			sheet.addMarginRecord( topMargin );
 		}
 		return topMargin.getMargin();
 	}
@@ -319,7 +319,7 @@ public class PrinterSettingsHandle implements Handle
 		if( bottomMargin == null )
 		{
 			bottomMargin = new BottomMargin();
-			this.sheet.addMarginRecord( bottomMargin );
+			sheet.addMarginRecord( bottomMargin );
 		}
 		return bottomMargin.getMargin();
 	}
@@ -565,7 +565,7 @@ public class PrinterSettingsHandle implements Handle
 		if( leftMargin == null )
 		{
 			leftMargin = new LeftMargin();
-			this.sheet.addMarginRecord( leftMargin );
+			sheet.addMarginRecord( leftMargin );
 		}
 		leftMargin.setMargin( value );
 	}
@@ -578,7 +578,7 @@ public class PrinterSettingsHandle implements Handle
 		if( rightMargin == null )
 		{
 			rightMargin = new RightMargin();
-			this.sheet.addMarginRecord( rightMargin );
+			sheet.addMarginRecord( rightMargin );
 		}
 		rightMargin.setMargin( value );
 	}
@@ -591,7 +591,7 @@ public class PrinterSettingsHandle implements Handle
 		if( topMargin == null )
 		{
 			topMargin = new TopMargin();
-			this.sheet.addMarginRecord( topMargin );
+			sheet.addMarginRecord( topMargin );
 		}
 		topMargin.setMargin( value );
 	}
@@ -604,7 +604,7 @@ public class PrinterSettingsHandle implements Handle
 		if( bottomMargin == null )
 		{
 			bottomMargin = new BottomMargin();
-			this.sheet.addMarginRecord( bottomMargin );
+			sheet.addMarginRecord( bottomMargin );
 		}
 		bottomMargin.setMargin( value );
 	}

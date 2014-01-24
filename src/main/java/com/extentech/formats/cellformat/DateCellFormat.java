@@ -38,7 +38,7 @@ public class DateCellFormat extends SimpleDateFormat implements CellFormat
 	DateCellFormat( String date, String text )
 	{
 		super( date );
-		this.text_format = text;
+		text_format = text;
 	}
 
 	@Override
@@ -53,10 +53,10 @@ public class DateCellFormat extends SimpleDateFormat implements CellFormat
 
 		if( cell.getCellType() == Cell.TYPE_STRING )
 		{
-			return String.format( this.text_format, (String) cell.getVal() );
+			return String.format( text_format, (String) cell.getVal() );
 		}
 
 		Calendar date = DateConverter.getCalendarFromCell( cell );
-		return this.format( date.getTime() );
+		return format( date.getTime() );
 	}
 }

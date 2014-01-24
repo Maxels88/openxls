@@ -139,25 +139,25 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		this.setOpcode( ARRAY );
+		setOpcode( ARRAY );
 // NO NOT TRUE!!!!!        super.setIsValueForCell(true); // this ensures that it gets picked up by the Formula...
 // will get "picked up" by formula due to WorkBook.addRecord code
 // isValueForCell will DELETE THE CELL if remove/change NOT WHAT WE WANT HERE
-		rwFirst = (short) com.extentech.toolkit.ByteTools.readInt( this.getByteAt( 0 ), this.getByteAt( 1 ), (byte) 0, (byte) 0 );
-		rwLast = (short) com.extentech.toolkit.ByteTools.readInt( this.getByteAt( 2 ), this.getByteAt( 3 ), (byte) 0, (byte) 0 );
+		rwFirst = (short) com.extentech.toolkit.ByteTools.readInt( getByteAt( 0 ), getByteAt( 1 ), (byte) 0, (byte) 0 );
+		rwLast = (short) com.extentech.toolkit.ByteTools.readInt( getByteAt( 2 ), getByteAt( 3 ), (byte) 0, (byte) 0 );
 
-		colFirst = (short) ByteTools.readUnsignedShort( this.getByteAt( 4 ), (byte) 0 );
-		colLast = (short) ByteTools.readUnsignedShort( this.getByteAt( 5 ), (byte) 0 );
-		grbit = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
-		cce = ByteTools.readShort( this.getByteAt( 12 ), this.getByteAt( 13 ) );
-		rgce = this.getBytesAt( 14, this.cce );
+		colFirst = (short) ByteTools.readUnsignedShort( getByteAt( 4 ), (byte) 0 );
+		colLast = (short) ByteTools.readUnsignedShort( getByteAt( 5 ), (byte) 0 );
+		grbit = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
+		cce = ByteTools.readShort( getByteAt( 12 ), getByteAt( 13 ) );
+		rgce = getBytesAt( 14, cce );
 
 		expression = ExpressionParser.parseExpression( rgce, this );
 
 		// for PtgArray and PtgMemAreas, have Constant Array Tokens following expression 
 		// this length is NOT included in cce 		
 		int posExtraData = cce + 14;
-		int len = this.getData().length;
+		int len = getData().length;
 		for( Object anExpression : expression )
 		{
 			if( anExpression instanceof PtgArray )
@@ -165,7 +165,7 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 				try
 				{
 					byte[] b = new byte[(len - posExtraData)];
-					System.arraycopy( this.getData(), posExtraData, b, 0, len - posExtraData );
+					System.arraycopy( getData(), posExtraData, b, 0, len - posExtraData );
 					PtgArray pa = (PtgArray) anExpression;
 					posExtraData += pa.setArrVals( b );
 				}
@@ -181,7 +181,7 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 					PtgMemArea pm = (PtgMemArea) anExpression;
 					byte[] b = new byte[pm.getnTokens() + 8];
 					System.arraycopy( pm.getRecord(), 0, b, 0, 7 );
-					System.arraycopy( this.getData(), posExtraData, b, 7, pm.getnTokens() );
+					System.arraycopy( getData(), posExtraData, b, 7, pm.getnTokens() );
 					pm.init( b );
 					posExtraData += pm.getnTokens();
 				}
@@ -191,7 +191,7 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 				}
 			}
 		}
-			log.debug( "Array encountered at: " + this.wkbook.getLastbound()
+			log.debug( "Array encountered at: " + wkbook.getLastbound()
 			                                                      .getSheetName() + "!" + ExcelTools.getAlphaVal( colFirst ) + (rwFirst + 1) + ":" + ExcelTools
 					.getAlphaVal( colLast ) + (rwLast + 1) );
 	}
@@ -203,7 +203,7 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 	@Override
 	public void setSheet( Sheet b )
 	{
-		this.worksheet = b;
+		worksheet = b;
 		// add to array formula references since this is the parent 
 		if( expression != null )
 		{ // it's been initted
@@ -227,7 +227,7 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 // will get "picked up" by formula due to WorkBook.addRecord code
 // isValueForCell will DELETE THE CELL if remove/change NOT WHAT WE WANT HERE
 		// TODO: ever a case of rwFirst!=rwLast, colFirst!=colLast ?????
-		this.setOpcode( ARRAY );
+		setOpcode( ARRAY );
 		rwFirst = (short) rw;
 		rwLast = (short) rw;
 		colFirst = (byte) col;
@@ -236,7 +236,7 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 		fmla = fmla.substring( 1, fmla.length() - 1 );     // parse formula string and add stack to Array record
 		Stack newptgs = FormulaParser.getPtgsFromFormulaString( this, fmla );
 		expression = newptgs;
-		this.updateRecord();
+		updateRecord();
 
 	}
 
@@ -261,7 +261,7 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 		int pos = 0;
 		// 20090824 KSC: [BugTracker 2683] 
 		// use setOpcode rather than setting 1st byte as it's a record not a ptg		newdata[0]= (byte) XLSConstants.ARRAY;			pos++;
-		this.setOpcode( ARRAY );
+		setOpcode( ARRAY );
 		System.arraycopy( ByteTools.shortToLEBytes( rwFirst ), 0, newdata, pos, 2 );
 		pos += 2;
 		System.arraycopy( ByteTools.shortToLEBytes( rwLast ), 0, newdata, pos, 2 );
@@ -298,7 +298,7 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 		}
 		System.arraycopy( rgce, 0, newdata, 14, cce );
 		newdata = ByteTools.append( arraybytes, newdata );
-		this.setData( newdata );
+		setData( newdata );
 	}
 
 	/**
@@ -336,7 +336,7 @@ public final class Array extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setParentRec( Formula f )
 	{
-		this.parentRec = f;
+		parentRec = f;
 	}
 
 	/**

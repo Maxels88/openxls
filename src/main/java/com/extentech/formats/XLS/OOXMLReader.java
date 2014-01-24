@@ -573,7 +573,8 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 						// (to deal with later) function, functionGroupId -- Specifies a boolean value that indicates that the defined name refers to a user-defined function/add-in ...
 						// xlm (External Function)
 						// (should deal with) hidden, localSheetId 
-						String nm = "", id = "";
+						String nm = "";
+						String id = "";
 						for( int i = 0; i < xpp.getAttributeCount(); i++ )
 						{
 							String n = xpp.getAttributeName( i );
@@ -600,7 +601,8 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 					}
 					else if( tnm.equals( "pivotCache" ) )
 					{
-						String cid = "", rid = "";
+						String cid = "";
+						String rid = "";
 						for( int i = 0; i < xpp.getAttributeCount(); i++ )
 						{
 							String n = xpp.getAttributeName( i );
@@ -854,7 +856,8 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 					}
 					else if( tnm.equals( "numFmt" ) )
 					{
-						int fmtId = 0, newFmtId = 0;
+						int fmtId = 0;
+						int newFmtId = 0;
 						String xmlFormatPattern = "";
 						for( int i = 0; i < xpp.getAttributeCount(); i++ )
 						{
@@ -883,7 +886,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 						{
 							if( eventType == XmlPullParser.START_TAG )
 							{
-								this.parseCellXf( xpp, bk );
+								parseCellXf( xpp, bk );
 							}
 							else if( (eventType == XmlPullParser.END_TAG) && xpp.getName().equals( "cellXfs" ) )
 							{
@@ -947,7 +950,10 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 		String tnm = xpp.getName();
 		if( tnm.equals( "xf" ) )
 		{
-			int f = 0, fmtId = -1, fillId = -1, borderId = -1;
+			int f = 0;
+			int fmtId = -1;
+			int fillId = -1;
+			int borderId = -1;
 			for( int i = 0; i < xpp.getAttributeCount(); i++ )
 			{
 				String nm = xpp.getAttributeName( i );

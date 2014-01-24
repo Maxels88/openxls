@@ -60,8 +60,8 @@ public final class Prot4rev extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		fRevLock = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		if( this.getIsLocked() )
+		fRevLock = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		if( getIsLocked() )
 		{
 			log.info( "Shared Workbook Protection Enabled." );
 			// throw new InvalidFileException("Shared Workbook Protection Enabled.  Unsupported file format.");

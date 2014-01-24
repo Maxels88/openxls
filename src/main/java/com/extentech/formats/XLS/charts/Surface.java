@@ -51,7 +51,7 @@ public class Surface extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		grbit = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		grbit = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		fFillSurface = (grbit & 0x1) == 0x1;
 		f3DPhoneShade = (grbit & 0x2) == 0x2;
 		chartType = ChartConstants.SURFACECHART;
@@ -61,8 +61,8 @@ public class Surface extends GenericChartObject implements ChartObject
 	private void updateRecord()
 	{
 		byte[] b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	public static XLSRecord getPrototype()
@@ -166,7 +166,7 @@ public class Surface extends GenericChartObject implements ChartObject
 	{
 		JSONObject typeJSON = new JSONObject();
 		String dojoType;
-		if( !this.isStacked() )
+		if( !isStacked() )
 		{
 			dojoType = "Areas";
 		}

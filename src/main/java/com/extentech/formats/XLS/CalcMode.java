@@ -51,7 +51,7 @@ public final class CalcMode extends com.extentech.formats.XLS.XLSRecord
 			0000H = manually
 			0001H = automatically (default)
          */
-		calcmode = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		calcmode = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 	}
 
 	/**
@@ -85,8 +85,8 @@ public final class CalcMode extends com.extentech.formats.XLS.XLSRecord
 			}
 			calcmode = (short) mode;
 			byte[] b = ByteTools.shortToLEBytes( calcmode );
-			this.getData()[0] = b[0];
-			this.getData()[1] = b[1];
+			getData()[0] = b[0];
+			getData()[1] = b[1];
 		}
 	}
 

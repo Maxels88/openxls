@@ -92,7 +92,7 @@ public class PtgAtr extends GenericPtg implements Ptg
 	public String getString()
 	{
 	    /* We may not want any text from this record.. */
-		this.init();
+		init();
 		if( bitAttrIf > 0 )
 		{
 			return "";  //"IF("; this is already taken care of by another ptg.
@@ -128,7 +128,7 @@ public class PtgAtr extends GenericPtg implements Ptg
 
 	public String toString()
 	{
-		return this.getString() + this.getString2();
+		return getString() + getString2();
 	}
 
 	/**
@@ -170,7 +170,7 @@ public class PtgAtr extends GenericPtg implements Ptg
 	@Override
 	public boolean getIsControl()
 	{
-		this.init();
+		init();
 		if( getIsPrimitiveOperator() )
 		{
 			return false;
@@ -213,7 +213,7 @@ public class PtgAtr extends GenericPtg implements Ptg
 	@Override
 	public boolean getIsPrimitiveOperator()
 	{
-		this.init();
+		init();
 		if( bitAttrSpace > 0 )
 		{
 			return true;
@@ -269,7 +269,7 @@ public class PtgAtr extends GenericPtg implements Ptg
 	*///[25, 2, 10, 0]		grbit= 2
 	public void init()
 	{
-		grbit = this.getRecord()[1];
+		grbit = getRecord()[1];
         /* john, the following syntax was not reliable, switched with syntax below....
            bitAttrIf       = ((grbit &     0x2)  >>  4);
         */
@@ -347,7 +347,7 @@ public class PtgAtr extends GenericPtg implements Ptg
 	public Ptg calculatePtg( Ptg[] pthing ) throws FunctionNotSupportedException, CalculationException
 	{
 		Ptg returnPtg = null;
-		if( this.bitAttrSum > 0 )
+		if( bitAttrSum > 0 )
 		{
 			returnPtg = MathFunctionCalculator.calcSum( pthing );
 		}

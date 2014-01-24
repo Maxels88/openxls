@@ -48,7 +48,7 @@ public class Radar extends GenericChartObject implements ChartObject
 	{
 		super.init();
 		chartType = ChartConstants.RADARCHART;
-		grbit = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		grbit = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		fRdrAxLab = (grbit & 0x1) == 0x1;
 		fHasShadow = (grbit & 0x2) == 0x2;
 	}
@@ -57,8 +57,8 @@ public class Radar extends GenericChartObject implements ChartObject
 	private void updateRecord()
 	{
 		byte[] b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	public static XLSRecord getPrototype()

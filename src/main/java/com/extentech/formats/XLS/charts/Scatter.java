@@ -55,9 +55,9 @@ public class Scatter extends GenericChartObject implements ChartObject
 	{
 		super.init();
 		// 20070703 KSC:
-		pcBubbleSizeRatio = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		wBubbleSize = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		grbit = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
+		pcBubbleSizeRatio = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		wBubbleSize = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		grbit = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
 		fBubbles = (grbit & 0x1) == 0x1;
 		fShowNegBubbles = (grbit & 0x2) == 0x2;
 		fHasShadow = (grbit & 0x4) == 0x4;
@@ -78,28 +78,28 @@ public class Scatter extends GenericChartObject implements ChartObject
 		grbit = ByteTools.updateGrBit( grbit, fShowNegBubbles, 1 );
 		grbit = ByteTools.updateGrBit( grbit, fHasShadow, 2 );
 		byte[] b = ByteTools.shortToLEBytes( pcBubbleSizeRatio );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 		b = ByteTools.shortToLEBytes( wBubbleSize );
-		this.getData()[2] = b[0];
-		this.getData()[3] = b[1];
+		getData()[2] = b[0];
+		getData()[3] = b[1];
 		b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 	}
 
 	public void setAsScatterChart()
 	{
 		fBubbles = false;
 		chartType = ChartConstants.SCATTERCHART;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	public void setAsBubbleChart()
 	{
 		fBubbles = true;
 		chartType = ChartConstants.BUBBLECHART;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	public static XLSRecord getPrototype()

@@ -87,7 +87,7 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 	public void init()
 	{
 		super.init();
-		int datalen = this.getData().length;    //getLength();
+		int datalen = getData().length;    //getLength();
 
 		if( datalen <= 0 )
 		{
@@ -96,14 +96,14 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 		else
 		{
 			super.initRowCol();
-			short s = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
+			short s = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
 			colFirst = s;
 			col = colFirst;
-			s = ByteTools.readShort( this.getByteAt( datalen - 2 ), this.getByteAt( datalen - 1 ) );
+			s = ByteTools.readShort( getByteAt( datalen - 2 ), getByteAt( datalen - 1 ) );
 			colLast = s;
 			// get the records data only
 			datalen = datalen - 6;
-			byte[] rkdatax = this.getBytesAt( 4, datalen );
+			byte[] rkdatax = getBytesAt( 4, datalen );
 			numRkRecs = datalen / 6;
 			//rkrecs = new Rk[numRkRecs]; Now its a vector
 			rkrecs = new ArrayList( numRkRecs );
@@ -113,7 +113,7 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 			// a new 6-byte Rk for each.
 			for( int i = 4; i < rkdatax.length; )
 			{
-				byte[] rkd = this.getBytesAt( i, 6 );
+				byte[] rkd = getBytesAt( i, 6 );
 				Rk r = new Rk();
 				r.init( rkd, rw, rkcol++ );
 					log.trace( " rk@" + (rkcol - 1) + ":" + r.getStringVal() );
@@ -128,7 +128,7 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 				rkrecs.add( r );
 				reccount++;
 			}
-				log.trace( "Done adding Rk recs to: " + this.getCellAddress() );
+				log.trace( "Done adding Rk recs to: " + getCellAddress() );
 		}
 	}
 
@@ -172,15 +172,15 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 		}
 		Mulrk newmul = new Mulrk();
 		newmul.colFirst = (short) splitcol;
-		newmul.colLast = this.colLast;
-		this.colLast = splitcol - 1;
-		Iterator rkr = this.getRecs().iterator();
+		newmul.colLast = colLast;
+		colLast = splitcol - 1;
+		Iterator rkr = getRecs().iterator();
 		while( rkr.hasNext() )
 		{
 			Rk r = (Rk) rkr.next();
 			if( r.getRowNumber() >= splitcol )
 			{
-				this.deleteRk( r );
+				deleteRk( r );
 				newmul.addRk( r );
 			}
 		}
@@ -212,7 +212,7 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 				rkrecs.remove( i );
 			}
 		}
-		this.updateRks();
+		updateRks();
 		return rez;
 	}
 
@@ -222,7 +222,7 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 	public void setRow( int i )
 	{
 		byte[] r = ByteTools.shortToLEBytes( (short) i );
-		System.arraycopy( r, 0, this.getData(), 0, 2 );
+		System.arraycopy( r, 0, getData(), 0, 2 );
 		rw = i;
 	}
 
@@ -232,14 +232,14 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 	 */
 	void updateRks()
 	{
-		if( this.getRecs().size() < 1 )
+		if( getRecs().size() < 1 )
 		{
-			this.getSheet().removeRecFromVec( this );
+			getSheet().removeRecFromVec( this );
 			return;
 		}
 		byte[] tmp = new byte[4];
 		System.arraycopy( getData(), 0, tmp, 0, 4 );
-		Iterator it = this.getRecs().iterator();
+		Iterator it = getRecs().iterator();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try
 		{
@@ -255,6 +255,6 @@ public final class Mulrk extends com.extentech.formats.XLS.XLSRecord implements 
 		{
 			log.warn( "parsing record continues failed: " + a );
 		}
-		this.setData( out.toByteArray() );
+		setData( out.toByteArray() );
 	}
 }

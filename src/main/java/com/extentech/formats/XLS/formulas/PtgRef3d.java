@@ -149,7 +149,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 		record = new byte[PTG_REF3D_LENGTH];
 		ptgId = 0x5A;  // id varies with type of token see above and setPtgType below
 		record[0] = ptgId; // ""
-		this.is3dRef = true;
+		is3dRef = true;
 	}
 
 	/**
@@ -178,10 +178,10 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 
 	public PtgRef3d( boolean addToRefTracker )
 	{
-		this.setUseReferenceTracker( addToRefTracker );
+		setUseReferenceTracker( addToRefTracker );
 		ptgId = 0x5A;  // TODO: id varies with type of token see above
 		record[0] = ptgId; // ""
-		this.is3dRef = true;
+		is3dRef = true;
 
 	}
 
@@ -189,7 +189,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 	{
 		this();
 		setLocation( addr );
-		this.is3dRef = true;
+		is3dRef = true;
 	}
 
 	@Override
@@ -234,7 +234,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 	{
 		if( useReferenceTracker && !getIsRefErr() )
 		{
-			this.getParentRec().getWorkBook().getRefTracker().removeCellRange( this );
+			getParentRec().getWorkBook().getRefTracker().removeCellRange( this );
 		}
 		sheetname = null;
 		if( s[0] != null )
@@ -245,7 +245,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 		{
 			try
 			{    // if not provided, assume that parent rec sheet is correct
-				sheetname = this.getParentRec().getSheet().getSheetName();
+				sheetname = getParentRec().getSheet().getSheetName();
 			}
 			catch( NullPointerException e )
 			{
@@ -293,11 +293,11 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 					int boundnum = xsht.getXtiReference( s[0], s[0] );
 					if( boundnum == -1 )
 					{    // can't resolve
-						this.setIxti( (short) xsht.insertLocation( boundnum, boundnum ) );
+						setIxti( (short) xsht.insertLocation( boundnum, boundnum ) );
 					}
 					else
 					{
-						this.setIxti( (short) boundnum );
+						setIxti( (short) boundnum );
 					}
 				}
 				catch( Exception ex )
@@ -318,7 +318,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 	@Override
 	public void setLocation( String address )
 	{
-		String s[] = ExcelTools.stripSheetNameFromRange( address );
+		String[] s = ExcelTools.stripSheetNameFromRange( address );
 		setLocation( s );
 	}
 
@@ -329,7 +329,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 	public void populateVals()
 	{
 		ixti = ByteTools.readShort( record[1], record[2] );
-		this.sheetname = this.getSheetName();
+		sheetname = getSheetName();
 
 		rw = readRow( record[3], record[4] );
 		short column = ByteTools.readShort( record[5], record[6] );
@@ -351,8 +351,8 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 		}
 		col = (short) (column & 0x3fff);
 		setRelativeRowCol();  // set formulaRow/Col for relative references if necessary
-		this.getIntLocation();    // sets the wholeRow and/or wholeCol flag for certain refs
-		this.hashcode = super.getHashCode();
+		getIntLocation();    // sets the wholeRow and/or wholeCol flag for certain refs
+		hashcode = super.getHashCode();
 	}
 
 	/**
@@ -362,8 +362,8 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 	public void setLocation( String address, short ix )
 	{
 		ixti = ix;
-		String s[] = ExcelTools.stripSheetNameFromRange( address );
-		this.setLocation( s );
+		String[] s = ExcelTools.stripSheetNameFromRange( address );
+		setLocation( s );
 	}
 
 	public String toString()
@@ -420,8 +420,8 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 		{
 			int xloc = xsht.insertLocation( boundnum, boundnum );
 			setIxti( (short) xloc );
-			this.sheetname = null;    // 20100218 KSC: RESET
-			this.getSheetName();
+			sheetname = null;    // 20100218 KSC: RESET
+			getSheetName();
 			locax = null;
 		}
 		catch( WorkSheetNotFoundException e )
@@ -442,9 +442,9 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 			// NOTE: Our tests error when PtgRefs have fully qualified range syntax
 			if( sheetname == null )
 			{
-				sheetname = this.getSheetName();
+				sheetname = getSheetName();
 			}
-			if( this.sheetname != null )
+			if( sheetname != null )
 			{
 				if( sheetname.equals( "#REF!" ) )
 				{
@@ -486,13 +486,13 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 		record = tmp;
 		if( parent_rec != null )
 		{
-			if( this.parent_rec instanceof Formula )
+			if( parent_rec instanceof Formula )
 			{
-				((Formula) this.parent_rec).updateRecord();
+				((Formula) parent_rec).updateRecord();
 			}
-			else if( this.parent_rec instanceof Name )
+			else if( parent_rec instanceof Name )
 			{
-				((Name) this.parent_rec).updatePtgs();
+				((Name) parent_rec).updatePtgs();
 			}
 		}
 
@@ -506,7 +506,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 			WorkBook wb = parent_rec.getWorkBook();
 			if( (wb != null) && (wb.getExternSheet() != null) )
 			{
-				Boundsheet[] bsa = wb.getExternSheet().getBoundSheets( this.ixti );
+				Boundsheet[] bsa = wb.getExternSheet().getBoundSheets( ixti );
 				if( (bsa == null) || (bsa[0] == null) )
 				{// 20080303 KSC: Catch Unresolved External refs
 					if( parent_rec instanceof Formula )
@@ -535,14 +535,14 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 	@Override
 	public String getSheetName()
 	{
-		if( this.sheetname == null )
+		if( sheetname == null )
 		{
 			if( parent_rec != null )
 			{
 				WorkBook wb = parent_rec.getWorkBook();
 				if( (wb != null) && (wb.getExternSheet() != null) )
 				{    // 20080306 KSC: new way is to get sheet names rather than sheets as can be external refs
-					String[] sheets = wb.getExternSheet().getBoundSheetNames( this.ixti );
+					String[] sheets = wb.getExternSheet().getBoundSheetNames( ixti );
 					if( (sheets != null) && (sheets[0] != null) )
 					{
 						sheetname = sheets[0];
@@ -561,7 +561,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 	{
 		if( sheetname == null )
 		{
-			sheetname = this.getSheetName();
+			sheetname = getSheetName();
 		}
 		refCell = super.getRefCells();
 		return refCell;
@@ -585,7 +585,7 @@ public class PtgRef3d extends PtgRef implements Ptg, IxtiListener
 	public Ptg[] getColComponents( int colNum )
 	{
 		FastAddVector v = new FastAddVector();
-		int[] x = this.getIntLocation();
+		int[] x = getIntLocation();
 		if( x[1] == colNum )
 		{
 			v.add( this );

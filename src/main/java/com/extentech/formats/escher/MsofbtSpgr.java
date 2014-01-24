@@ -37,7 +37,10 @@ public class MsofbtSpgr extends EscherRecord
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 5591214948365806058L;
-	int left = 0, top = 0, right = 0, bottom = 0;
+	int left = 0;
+	int top = 0;
+	int right = 0;
+	int bottom = 0;
 
 	public MsofbtSpgr( int fbt, int inst, int version )
 	{
@@ -47,7 +50,10 @@ public class MsofbtSpgr extends EscherRecord
 	@Override
 	protected byte[] getData()
 	{
-		byte[] leftBytes, topBytes, rightBytes, bottomBytes;
+		byte[] leftBytes;
+		byte[] topBytes;
+		byte[] rightBytes;
+		byte[] bottomBytes;
 		leftBytes = ByteTools.cLongToLEBytes( left );
 		topBytes = ByteTools.cLongToLEBytes( top );
 		rightBytes = ByteTools.cLongToLEBytes( right );
@@ -59,7 +65,7 @@ public class MsofbtSpgr extends EscherRecord
 		System.arraycopy( rightBytes, 0, retBytes, 8, 4 );
 		System.arraycopy( bottomBytes, 0, retBytes, 12, 4 );
 
-		this.setLength( retBytes.length );
+		setLength( retBytes.length );
 
 		return retBytes;
 	}

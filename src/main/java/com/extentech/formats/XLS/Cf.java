@@ -263,8 +263,8 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	public Cf( Condfmt f )
 	{
 		this();
-		setData( this.PROTOTYPE_BYTES );
-		this.setCondfmt( f );
+		setData( PROTOTYPE_BYTES );
+		setCondfmt( f );
 	}
 
 	/** Pattern Formatting Block */
@@ -275,13 +275,13 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		data = this.getData();
-		ct = this.getByteAt( 0 );
-		cp = this.getByteAt( 1 );
-		cce1 = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		cce2 = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
+		data = getData();
+		ct = getByteAt( 0 );
+		cp = getByteAt( 1 );
+		cce1 = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		cce2 = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
 		//parsing of formula refs
-		flags = ByteTools.readInt( this.getByteAt( 6 ), this.getByteAt( 7 ), this.getByteAt( 8 ), this.getByteAt( 9 ) );
+		flags = ByteTools.readInt( getByteAt( 6 ), getByteAt( 7 ), getByteAt( 8 ), getByteAt( 9 ) );
 		// Font formatting Block 
 		bHasFontBlock = ((flags & 0x04000000) == 0x04000000);
 		// Border Formatting Block
@@ -437,7 +437,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 			pos = postest;
 		}
 		// 1st formula data= pos->cce1
-		byte[] function = this.getBytesAt( pos, cce1 );
+		byte[] function = getBytesAt( pos, cce1 );
 		try
 		{
 			expression1 = ExpressionParser.parseExpression( function, this, cce1 );
@@ -448,7 +448,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		}
 		pos += cce1;
 		// 2nd formula data= pos+cce1->cce2
-		function = this.getBytesAt( pos, cce2 );
+		function = getBytesAt( pos, cce2 );
 		if( cce2 > 0 )
 		{
 			try
@@ -578,7 +578,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 			newdata[4] = b[0];
 			newdata[5] = b[1];
 		}
-		this.setData( newdata );
+		setData( newdata );
 //        this.init(); DO NOT DO AS can overwrite OOXML-specifics
 	}
 
@@ -657,7 +657,8 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 			if( n.indexOf( "border" ) == 0 )
 			{ // parse the border settings
 				String[] vs = StringTool.getTokensUsingDelim( v, " " );
-				int sz = -1, cz = -1;
+				int sz = -1;
+				int cz = -1;
 				int stl = -1;
 				String clr = null;
 				try
@@ -915,7 +916,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setOperator( String s )
 	{
-		this.cp = getConditionFromString( s );
+		cp = getConditionFromString( s );
 		if( cp == 0x0 )
 		{    // no comparison
 			expression1 = ExpressionParser.parseExpression( s.getBytes(), this );
@@ -949,7 +950,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setOperator( int op )
 	{
-		this.cp = (short) op;
+		cp = (short) op;
 	}
 
 	/**
@@ -975,7 +976,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public short getOperator()
 	{
-		return this.cp;
+		return cp;
 
 	}
 
@@ -988,7 +989,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	protected void setType( int type )
 	{
-		this.ct = (short) type;
+		ct = (short) type;
 	}
 
 	/**
@@ -1000,7 +1001,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public short getType()
 	{
-		return this.ct;
+		return ct;
 	}
 
 	/**
@@ -1010,7 +1011,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public String getTypeString()
 	{
-		return Cf.translateType( this.ct );
+		return Cf.translateType( ct );
 
 	}
 
@@ -1029,8 +1030,8 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 			try
 			{
 				int[] r = { 0, 0 };
-				formula1 = FormulaParser.getFormulaFromString( s, this.getSheet(), r );
-				formula1.setWorkBook( this.getWorkBook() );
+				formula1 = FormulaParser.getFormulaFromString( s, getSheet(), r );
+				formula1.setWorkBook( getWorkBook() );
 				expression1 = formula1.getExpression();
 			}
 			catch( Exception e )
@@ -1066,7 +1067,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 				try
 				{
 					int[] r = { 0, 0 };
-					formula2 = FormulaParser.getFormulaFromString( s, this.getSheet(), r );
+					formula2 = FormulaParser.getFormulaFromString( s, getSheet(), r );
 					expression2 = formula1.getExpression();
 				}
 				catch( Exception e )
@@ -1075,7 +1076,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 				}
 			}
 		}
-		this.cce2 = s.length();
+		cce2 = s.length();
 	}
 
 	/**
@@ -1115,7 +1116,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		}
 		if( patternFillColor != -1 )
 		{
-			return FormatHandle.colorToHexString( this.getColorTable()[patternFillColor] );
+			return FormatHandle.colorToHexString( getColorTable()[patternFillColor] );
 		}
 		return null;
 	}
@@ -1137,7 +1138,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		}
 		if( patternFillColorBack != -1 )
 		{
-			return FormatHandle.colorToHexString( this.getColorTable()[patternFillColorBack] );
+			return FormatHandle.colorToHexString( getColorTable()[patternFillColorBack] );
 		}
 		return null;
 	}
@@ -1179,7 +1180,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	public void setFontEscapement( int fontEscapementFlag )
 	{
 		this.fontEscapementFlag = fontEscapementFlag;
-		this.fontEscapementFlagModifiedFlag = 0;    // set modified
+		fontEscapementFlagModifiedFlag = 0;    // set modified
 		bHasFontBlock = true;
 //		if (font!=null)
 //			font.setScript(ss);
@@ -1195,19 +1196,19 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( (flags & BORDER_MODIFIED_LEFT) == 0 )
 		{
-			this.borderLineStylesLeft = (short) (this.borderLineStylesFlag & BORDER_LINESTYLE_LEFT);
+			borderLineStylesLeft = (short) (borderLineStylesFlag & BORDER_LINESTYLE_LEFT);
 		}
 		if( (flags & BORDER_MODIFIED_RIGHT) == 0 )
 		{
-			this.borderLineStylesRight = (short) ((this.borderLineStylesFlag & BORDER_LINESTYLE_RIGHT) >> 4);
+			borderLineStylesRight = (short) ((borderLineStylesFlag & BORDER_LINESTYLE_RIGHT) >> 4);
 		}
 		if( (flags & BORDER_MODIFIED_TOP) == 0 )
 		{
-			this.borderLineStylesTop = (short) ((this.borderLineStylesFlag & BORDER_LINESTYLE_TOP) >> 8);
+			borderLineStylesTop = (short) ((borderLineStylesFlag & BORDER_LINESTYLE_TOP) >> 8);
 		}
 		if( (flags & BORDER_MODIFIED_BOTTOM) == 0 )
 		{
-			this.borderLineStylesBottom = (short) ((this.borderLineStylesFlag & BORDER_LINESTYLE_BOTTOM) >> 12);
+			borderLineStylesBottom = (short) ((borderLineStylesFlag & BORDER_LINESTYLE_BOTTOM) >> 12);
 		}
 		bHasBorderBlock = true;
 	}
@@ -1262,19 +1263,19 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( (flags & BORDER_MODIFIED_LEFT) == 0 )
 		{
-			this.borderLineColorLeft = (short) (this.borderLineColorsFlag & BORDER_LINECOLOR_LEFT);
+			borderLineColorLeft = (short) (borderLineColorsFlag & BORDER_LINECOLOR_LEFT);
 		}
 		if( (flags & BORDER_MODIFIED_RIGHT) == 0 )
 		{
-			this.borderLineColorRight = (short) ((this.borderLineColorsFlag & BORDER_LINECOLOR_RIGHT) >> 7);
+			borderLineColorRight = (short) ((borderLineColorsFlag & BORDER_LINECOLOR_RIGHT) >> 7);
 		}
 		if( (flags & BORDER_MODIFIED_TOP) == 0 )
 		{
-			this.borderLineColorTop = (short) ((this.borderLineColorsFlag & BORDER_LINECOLOR_TOP) >> 16);
+			borderLineColorTop = (short) ((borderLineColorsFlag & BORDER_LINECOLOR_TOP) >> 16);
 		}
 		if( (flags & BORDER_MODIFIED_BOTTOM) == 0 )
 		{
-			this.borderLineColorBottom = (short) ((this.borderLineColorsFlag & BORDER_LINECOLOR_BOTTOM) >> 23);
+			borderLineColorBottom = (short) ((borderLineColorsFlag & BORDER_LINECOLOR_BOTTOM) >> 23);
 		}
 	}
 
@@ -1323,8 +1324,8 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 /* 		below appears correct in testing		this.patternFillColor = (short)(this.patternFillColorsFlag & PATTERN_FILL_COLOR);	
 		this.patternFillColorBack = (short)((this.patternFillColorsFlag & PATTERN_FILL_BACK_COLOR) >> 7);
 */
-		this.patternFillColor = (short) ((this.patternFillColorsFlag & PATTERN_FILL_BACK_COLOR) >> 7);
-		this.patternFillColorBack = (short) (this.patternFillColorsFlag & PATTERN_FILL_COLOR);
+		patternFillColor = (short) ((patternFillColorsFlag & PATTERN_FILL_BACK_COLOR) >> 7);
+		patternFillColorBack = (short) (patternFillColorsFlag & PATTERN_FILL_COLOR);
 		bHasPatternBlock = true;
 	}
 
@@ -1350,7 +1351,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	@Override
 	public Font getFont()
 	{
-		if( !this.bHasFontBlock )
+		if( !bHasFontBlock )
 		{
 			return null;
 		}
@@ -1359,8 +1360,8 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		{
 			return font;
 		}
-		int t = this.fontHeight;
-		int x = this.fontWeight;
+		int t = fontHeight;
+		int x = fontWeight;
 		if( t == -1 )
 		{
 			t = 180;
@@ -1383,27 +1384,25 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 
 	public java.awt.Color[] getBorderColors()
 	{
-		if( !this.bHasBorderBlock )
+		if( !bHasBorderBlock )
 		{
 			return null;
 		}
 		java.awt.Color[] test = {
-				this.getColorTable()[this.getBorderLineColorTop()],
-				this.getColorTable()[this.getBorderLineColorLeft()],
-				this.getColorTable()[this.getBorderLineColorBottom()],
-				this.getColorTable()[this.getBorderLineColorRight()]
+				getColorTable()[getBorderLineColorTop()], getColorTable()[getBorderLineColorLeft()],
+				getColorTable()[getBorderLineColorBottom()], getColorTable()[getBorderLineColorRight()]
 		};
 		return test;
 	}
 
 	public int[] getAllBorderColors()
 	{
-		if( !this.bHasBorderBlock )
+		if( !bHasBorderBlock )
 		{
 			return null;
 		}
 		int[] test = {
-				this.getBorderLineColorTop(), this.getBorderLineColorLeft(), this.getBorderLineColorBottom(), this.getBorderLineColorRight()
+				getBorderLineColorTop(), getBorderLineColorLeft(), getBorderLineColorBottom(), getBorderLineColorRight()
 		};
 		return test;
 	}
@@ -1415,15 +1414,12 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public int[] getBorderStyles()
 	{
-		if( !this.bHasBorderBlock )
+		if( !bHasBorderBlock )
 		{
 			return null;
 		}
 		int[] test = {
-				this.getBorderLineStylesTop(),
-				this.getBorderLineStylesLeft(),
-				this.getBorderLineStylesBottom(),
-				this.getBorderLineStylesRight(),
+				getBorderLineStylesTop(), getBorderLineStylesLeft(), getBorderLineStylesBottom(), getBorderLineStylesRight(),
 				-1
 		};    // diag
 		return test;
@@ -1431,21 +1427,21 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 
 	public int[] getBorderSizes()
 	{
-		if( !this.bHasBorderBlock )
+		if( !bHasBorderBlock )
 		{
 			return null;
 		}
-		boolean hasTop = this.getBorderLineStylesTop() > 0;
-		boolean hasLeft = this.getBorderLineStylesLeft() > 0;
-		boolean hasBottom = this.getBorderLineStylesBottom() > 0;
-		boolean hasRight = this.getBorderLineStylesRight() > 0;
+		boolean hasTop = getBorderLineStylesTop() > 0;
+		boolean hasLeft = getBorderLineStylesLeft() > 0;
+		boolean hasBottom = getBorderLineStylesBottom() > 0;
+		boolean hasRight = getBorderLineStylesRight() > 0;
 		int[] test = { (hasTop ? 1 : 0), (hasLeft ? 1 : 0), (hasBottom ? 1 : 0), (hasRight ? 1 : 0), 0 };
 		return test;
 	}
 
 	public int getForegroundColor()
 	{
-		if( !this.bHasPatternBlock )
+		if( !bHasPatternBlock )
 		{
 			return -1;
 		}
@@ -1453,11 +1449,11 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		{
 			return fill.getFgColorAsInt( getWorkBook().getTheme() );
 		}
-		if( this.patternFillStyle == 1 )
+		if( patternFillStyle == 1 )
 		{
-			return this.patternFillColorBack;
+			return patternFillColorBack;
 		}
-		return this.patternFillColor;
+		return patternFillColor;
 	}
 
 	/**
@@ -1465,7 +1461,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public int getFontOptsPosture()
 	{
-		return (short) (this.fontOptsFlag & FONT_OPTIONS_POSTURE);
+		return (short) (fontOptsFlag & FONT_OPTIONS_POSTURE);
 	}
 
 	/**
@@ -1473,7 +1469,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setFontOptsPosture( int fontOptsPosture )
 	{
-		this.fontOptsFlag = (short) (this.fontOptsFlag & FONT_OPTIONS_POSTURE);
+		fontOptsFlag = (short) (fontOptsFlag & FONT_OPTIONS_POSTURE);
 		bHasFontBlock = true;
 	}
 
@@ -1482,7 +1478,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public int getFontOptsCancellation()
 	{
-		return (short) ((this.fontOptsFlag & FONT_OPTIONS_CANCELLATION) >> 7);
+		return (short) ((fontOptsFlag & FONT_OPTIONS_CANCELLATION) >> 7);
 	}
 
 	/**
@@ -1500,14 +1496,14 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( italic )
 		{
-			this.fontOptsFlag = this.fontOptsFlag | 0x2;    // set italic
-			this.fontModifiedOptionsFlag = this.fontModifiedOptionsFlag | 0x2;
+			fontOptsFlag = fontOptsFlag | 0x2;    // set italic
+			fontModifiedOptionsFlag = fontModifiedOptionsFlag | 0x2;
 			bHasFontBlock = true;
 		}
 		else
 		{    // todo: is below correct?
-			this.fontOptsFlag = this.fontOptsFlag ^ 0x2;    // clear italic bit
-			this.fontModifiedOptionsFlag = this.fontModifiedOptionsFlag ^ 0x2;
+			fontOptsFlag = fontOptsFlag ^ 0x2;    // clear italic bit
+			fontModifiedOptionsFlag = fontModifiedOptionsFlag ^ 0x2;
 		}
 		if( font != null )
 		{
@@ -1552,9 +1548,9 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setFontEscapementSuper()
 	{
-		this.fontEscapementFlag = FONT_ESCAPEMENT_SUPER;
-		this.fontEscapementFlagModifiedFlag = 0;    // 
-		this.bHasFontBlock = true;
+		fontEscapementFlag = FONT_ESCAPEMENT_SUPER;
+		fontEscapementFlagModifiedFlag = 0;    //
+		bHasFontBlock = true;
 	}
 
 	/**
@@ -1570,9 +1566,9 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setFontEscapementSub()
 	{
-		this.fontEscapementFlag = FONT_ESCAPEMENT_SUB;
-		this.fontEscapementFlagModifiedFlag = 0;    // 
-		this.bHasFontBlock = true;
+		fontEscapementFlag = FONT_ESCAPEMENT_SUB;
+		fontEscapementFlagModifiedFlag = 0;    //
+		bHasFontBlock = true;
 	}
 
 	/**
@@ -1588,8 +1584,8 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setBorderLineStylesLeft( int b )
 	{
-		this.borderLineStylesLeft = b;
-		this.updateBorderLineStylesFlag();
+		borderLineStylesLeft = b;
+		updateBorderLineStylesFlag();
 	}
 
 	/**
@@ -1605,8 +1601,8 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setBorderLineStylesRight( int b )
 	{
-		this.borderLineStylesRight = b;
-		this.updateBorderLineStylesFlag();
+		borderLineStylesRight = b;
+		updateBorderLineStylesFlag();
 	}
 
 	/**
@@ -1622,8 +1618,8 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setBorderLineStylesTop( int b )
 	{
-		this.borderLineStylesTop = b;
-		this.updateBorderLineStylesFlag();
+		borderLineStylesTop = b;
+		updateBorderLineStylesFlag();
 	}
 
 	/**
@@ -1639,8 +1635,8 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setBorderLineStylesBottom( int b )
 	{
-		this.borderLineStylesBottom = b;
-		this.updateBorderLineStylesFlag();
+		borderLineStylesBottom = b;
+		updateBorderLineStylesFlag();
 	}
 
 	/**
@@ -1648,7 +1644,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public int getBorderLineColorLeft()
 	{
-		if( borderLineColorLeft > this.getColorTable().length )
+		if( borderLineColorLeft > getColorTable().length )
 		{
 			return 0;
 		}
@@ -1667,7 +1663,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		this.borderLineColorLeft = borderLineColorLeft;
 		// 20091028 KSC: insure flag denotes borderlinecolor is modified
 		flags = flags & (BORDER_MODIFIED_LEFT - 1);    // set flags to denote border top is modified (set bit=0)
-		this.updateBorderLineColorsFlag();
+		updateBorderLineColorsFlag();
 	}
 
 	/**
@@ -1675,7 +1671,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public int getBorderLineColorRight()
 	{
-		if( borderLineColorRight > this.getColorTable().length )
+		if( borderLineColorRight > getColorTable().length )
 		{
 			return 0;
 		}
@@ -1694,7 +1690,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		this.borderLineColorRight = borderLineColorRight;
 		// 20091028 KSC: insure flag denotes borderlinecolor is modified
 		flags = flags & (BORDER_MODIFIED_RIGHT - 1);    // set flags to denote border top is modified (set bit=0)
-		this.updateBorderLineColorsFlag();
+		updateBorderLineColorsFlag();
 	}
 
 	/**
@@ -1702,7 +1698,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public int getBorderLineColorTop()
 	{
-		if( borderLineColorTop > this.getColorTable().length )
+		if( borderLineColorTop > getColorTable().length )
 		{
 			return 0;
 		}
@@ -1718,11 +1714,11 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setBorderLineColorTop( int b )
 	{
-		this.borderLineColorTop = b;
+		borderLineColorTop = b;
 		// 20091028 KSC: insure flag denotes borderlinecolor is modified
 		flags = flags & (BORDER_MODIFIED_TOP - 1);    // set flags to denote border top is modified (set bit=0)
-		this.updateBorderLineColorsFlag();
-		if( this.borderLineColorTop != b )
+		updateBorderLineColorsFlag();
+		if( borderLineColorTop != b )
 		{
 			log.warn( "setBorderLineColorTop failed" );
 		}
@@ -1733,7 +1729,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public int getBorderLineColorBottom()
 	{
-		if( borderLineColorBottom > this.getColorTable().length )
+		if( borderLineColorBottom > getColorTable().length )
 		{
 			return 0;
 		}
@@ -1749,11 +1745,11 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setBorderLineColorBottom( int b )
 	{
-		this.borderLineColorBottom = b;
+		borderLineColorBottom = b;
 		// 20091028 KSC: insure flag denotes borderlinecolor is modified
 		flags = flags & (BORDER_MODIFIED_BOTTOM - 1);    // set flags to denote border top is modified (set bit=0)
-		this.updateBorderLineColorsFlag();
-		if( this.borderLineColorBottom != b )
+		updateBorderLineColorsFlag();
+		if( borderLineColorBottom != b )
 		{
 			log.warn( "borderLineColorBottom failed" );
 		}
@@ -1775,7 +1771,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setPatternFillStyle( int p )
 	{
-		this.patternFillStyle = p;
+		patternFillStyle = p;
 		bHasPatternBlock = true;
 	}
 
@@ -1796,12 +1792,12 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setPatternFillColor( int p, String custom )
 	{
-		this.patternFillColor = p;
+		patternFillColor = p;
 		if( fill != null )
 		{
 			fill.setFgColor( p );
 		}
-		this.updatePatternFillColorsFlag();
+		updatePatternFillColorsFlag();
 	}
 
 	/**
@@ -1821,12 +1817,12 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setPatternFillColorBack( int p )
 	{
-		this.patternFillColorBack = p;
+		patternFillColorBack = p;
 		if( fill != null )
 		{
 			fill.setBgColor( p );
 		}
-		this.updatePatternFillColorsFlag();
+		updatePatternFillColorsFlag();
 	}
 
 	/**
@@ -1863,8 +1859,8 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setFontWeight( int f )
 	{
-		this.fontWeight = f;
-		this.fontOptsFlag = this.fontOptsFlag & 0xFD;    // turn off bit 1 = style bit	
+		fontWeight = f;
+		fontOptsFlag = fontOptsFlag & 0xFD;    // turn off bit 1 = style bit
 		bHasFontBlock = true;
 		if( font != null )
 		{
@@ -1886,7 +1882,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	public void setFontUnderlineStyle( int fontUnderlineStyle )
 	{
 		this.fontUnderlineStyle = fontUnderlineStyle;
-		this.fontUnderlineModifiedFlag = 0;    // set modified flag
+		fontUnderlineModifiedFlag = 0;    // set modified flag
 		bHasFontBlock = true;
 		if( font != null )
 		{
@@ -1938,7 +1934,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	private void resetFormulaRef()
 	{
 		// TODO: test what happens when A1 is a valid part of the expression
-		Stack expr = this.getFormula1().getExpression();
+		Stack expr = getFormula1().getExpression();
 		Iterator itx = expr.iterator();
 		if( refPos > -1 )
 		{
@@ -1953,7 +1949,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	private void setFormulaRef( Ptg refcell ) throws FormulaNotFoundException
 	{
 		// TODO: test what happens when A1 is a valid part of the expression
-		Stack expr = this.getFormula1().getExpression();
+		Stack expr = getFormula1().getExpression();
 		Iterator itx = expr.iterator();
 
 		int[] rc = refcell.getIntLocation();
@@ -1998,14 +1994,14 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 			Object val2 = null;
 			Object val1 = null;
 
-			if( this.cp != 0x0 ) // calcs later
+			if( cp != 0x0 ) // calcs later
 			{
-				val1 = this.getFormula1().calculateFormula();
+				val1 = getFormula1().calculateFormula();
 			}
 
-			if( this.cce2 > 0 )
+			if( cce2 > 0 )
 			{
-				val2 = this.getFormula2().calculateFormula();
+				val2 = getFormula2().calculateFormula();
 			}
 
 			Object valX = refcell.getValue();
@@ -2020,7 +2016,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 			{
 				d1 = new Double( val1.toString() );
 				dX = new Double( valX.toString() );
-				if( this.cce2 > 0 )
+				if( cce2 > 0 )
 				{ // we have a second value
 					d2 = new Double( val2.toString() );
 				}
@@ -2032,11 +2028,11 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 			}
 
 			// handle evaluated condition
-			switch( this.cp )
+			switch( cp )
 			{
 				case 0x0:    // No comparison (only valid for formula type, see above)
 					setFormulaRef( refcell );
-					val1 = this.getFormula1().calculateFormula();
+					val1 = getFormula1().calculateFormula();
 					return (Boolean) val1;
 
 				case 01:    // Between
@@ -2146,12 +2142,12 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	public String getConditionString()
 	{
 //    	 handle evaluated condition
-		switch( this.cp )
+		switch( cp )
 		{
 			case 0x0:    // No comparison (only valid for formula type, see above)
 				// okay annoying, but apparenlty there is a ptgRef to A1 in these that should
 				// be replaced with our ptg... whatever!!
-				return this.expression1.toString() + this.expression2.toString();
+				return expression1.toString() + expression2.toString();
 
 			case 01:    // Between
 				// expression2 for the other bounds ... 
@@ -2202,12 +2198,12 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		if( formula1 == null )
 		{ // hasn't been set
 			formula1 = new Formula();
-			formula1.setWorkBook( this.getWorkBook() );
-			if( this.getSheet() == null )
+			formula1.setWorkBook( getWorkBook() );
+			if( getSheet() == null )
 			{
-				this.setSheet( this.condfmt.getSheet() ); // help!
+				setSheet( condfmt.getSheet() ); // help!
 			}
-			formula1.setSheet( this.getSheet() );
+			formula1.setSheet( getSheet() );
 			formula1.setExpression( expression1 );
 		}
 // 20101216 KSC: WHY????    	formula1.setCachedValue(null);	
@@ -2224,17 +2220,17 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		if( (formula2 == null) && (cce2 > 0) )
 		{ // hasn't been set
 			formula2 = new Formula();
-			formula2.setWorkBook( this.getWorkBook() );
-			if( this.getSheet() == null )
+			formula2.setWorkBook( getWorkBook() );
+			if( getSheet() == null )
 			{
-				this.setSheet( this.condfmt.getSheet() ); // help!
+				setSheet( condfmt.getSheet() ); // help!
 			}
-			formula2.setSheet( this.getSheet() );
+			formula2.setSheet( getSheet() );
 			formula2.setExpression( expression2 );
 		}
 		if( formula2 != null )
 		{
-			formula2.setSheet( this.getSheet() );
+			formula2.setSheet( getSheet() );
 // 20101216 KSC: WHY???			formula2.setCachedValue(null);
 		}
 		return formula2;
@@ -2558,7 +2554,8 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 			xml.append( cfx.getConditionString() );
 			xml.append( "</Qualifier>" );
 		}
-		Object val1, val2;
+		Object val1;
+		Object val2;
 		if( cfx.cp != 0x0 )
 		{ // calcer
 			xml.append( "<Value1>" );
@@ -2746,7 +2743,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 
 		// first deal with dfx's (differential xf's) - part of styles.xml; here we need to add dxf element to dxf's plus trap dxfId    	
 		Dxf dxf = new Dxf();
-		if( this.bHasFontBlock )
+		if( bHasFontBlock )
 		{
 			if( font != null )
 			{
@@ -2754,10 +2751,10 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 			}
 			else
 			{
-				dxf.createFont( this.fontWeight, this.getFontItalic(), this.fontUnderlineStyle, this.fontColorIndex, this.fontHeight );
+				dxf.createFont( fontWeight, getFontItalic(), fontUnderlineStyle, fontColorIndex, fontHeight );
 			}
 		}
-		if( this.bHasPatternBlock )
+		if( bHasPatternBlock )
 		{
 			if( fill != null )
 			{
@@ -2765,16 +2762,13 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 			}
 			else
 			{
-				dxf.createFill( this.patternFillStyle, this.patternFillColor, this.patternFillColorBack, bk );
+				dxf.createFill( patternFillStyle, patternFillColor, patternFillColorBack, bk );
 			}
 		}
-		if( this.bHasBorderBlock )
+		if( bHasBorderBlock )
 		{
-			dxf.createBorder( bk, this.getBorderStyles(), new int[]{
-					this.getBorderLineColorTop(),
-					this.getBorderLineColorLeft(),
-					this.getBorderLineColorBottom(),
-					this.getBorderLineColorRight()
+			dxf.createBorder( bk, getBorderStyles(), new int[]{
+					getBorderLineColorTop(), getBorderLineColorLeft(), getBorderLineColorBottom(), getBorderLineColorRight()
 			} );
 		}
 		// TODO: check if this dxf already exists ****************************************************************************
@@ -2789,7 +2783,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
     	*/
 		// TODO: ct==0 translates to ??
 		// NOTE: types 3 and above are 2007 version (OOXML)-specific
-		switch( this.ct )
+		switch( ct )
 		{
 			case 1:
 				ooxml.append( " type=\"cellIs\"" );
@@ -2846,13 +2840,13 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 				ooxml.append( " type=\"uniqueValues\"" );
 				break;
 		}
-		if( (this.ct == 3) && (containsText != null) )// containsText	- shouldn't be null!
+		if( (ct == 3) && (containsText != null) )// containsText	- shouldn't be null!
 		{
 			ooxml.append( " text=\"" + containsText + "\"" );
 		}
 
 		// operator
-		switch( this.cp )
+		switch( cp )
 		{
 			case 01:    // Between
 				ooxml.append( " operator=\"between\"" );
@@ -2897,14 +2891,14 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 		// stopIfTrue == looks like this is set by default
 		ooxml.append( " stopIfTrue=\"1\"" );
 		ooxml.append( ">" );
-		if( this.getFormula1() != null )
+		if( getFormula1() != null )
 		{
-			ooxml.append( "<formula>" + OOXMLAdapter.stripNonAsciiRetainQuote( this.getFormula1().getFormulaString() )
+			ooxml.append( "<formula>" + OOXMLAdapter.stripNonAsciiRetainQuote( getFormula1().getFormulaString() )
 			                                        .substring( 1 ) + "</formula>" );
 		}
-		if( this.getFormula2() != null )
+		if( getFormula2() != null )
 		{
-			ooxml.append( "<formula>" + OOXMLAdapter.stripNonAsciiRetainQuote( this.getFormula2().getFormulaString() )
+			ooxml.append( "<formula>" + OOXMLAdapter.stripNonAsciiRetainQuote( getFormula2().getFormulaString() )
 			                                        .substring( 1 ) + "</formula>" );
 		}
 

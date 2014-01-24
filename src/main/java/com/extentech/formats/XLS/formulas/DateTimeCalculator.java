@@ -762,7 +762,8 @@ public class DateTimeCalculator
 	 */
 	protected static Ptg calcYearFrac( Ptg[] operands )
 	{
-		long startDate, endDate;
+		long startDate;
+		long endDate;
 		try
 		{
 			GregorianCalendar d = getDateFromPtg( operands[0] );

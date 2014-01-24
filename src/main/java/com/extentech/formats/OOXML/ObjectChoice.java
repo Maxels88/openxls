@@ -49,20 +49,20 @@ public class ObjectChoice implements OOXMLElement
 
 	public ObjectChoice( CxnSp c, GraphicFrame g, GrpSp grp, Pic p, Sp s )
 	{
-		this.cxnSp = c;
-		this.graphicFrame = g;
-		this.grpSp = grp;
-		this.pic = p;
-		this.sp = s;
+		cxnSp = c;
+		graphicFrame = g;
+		grpSp = grp;
+		pic = p;
+		sp = s;
 	}
 
 	public ObjectChoice( ObjectChoice oc )
 	{
-		this.cxnSp = oc.cxnSp;
-		this.graphicFrame = oc.graphicFrame;
-		this.grpSp = oc.grpSp;
-		this.pic = oc.pic;
-		this.sp = oc.sp;
+		cxnSp = oc.cxnSp;
+		graphicFrame = oc.graphicFrame;
+		grpSp = oc.grpSp;
+		pic = oc.pic;
+		sp = oc.sp;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -163,7 +163,7 @@ public class ObjectChoice implements OOXMLElement
 	public boolean hasImage()
 	{
 		// o will be a pic element or a group shape containing a pic element, it's blipFill.blip child references the rId of the embedded file  
-		if( this.getEmbed() != null )
+		if( getEmbed() != null )
 		{
 			return true;
 		}
@@ -187,7 +187,7 @@ public class ObjectChoice implements OOXMLElement
 	 */
 	public boolean hasChart()
 	{
-		return this.getChartRId() != null;
+		return getChartRId() != null;
 	}
 
 	/**

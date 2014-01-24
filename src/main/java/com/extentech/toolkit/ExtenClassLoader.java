@@ -58,7 +58,7 @@ public class ExtenClassLoader extends java.lang.ClassLoader
 			File file = null;
 			FileInputStream stream = null;
 			//  name = name.substring(name.indexOf(wd)+wd.length()); // strip the working directory
-			name = this.wd + "/" + name;
+			name = wd + "/" + name;
 			name = StringTool.replaceChars( ".", name, "/" );
 			file = new File( name + ".class" );
 			classBytes = new byte[(int) file.length()];

@@ -47,11 +47,11 @@ public class Codename extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		byte[] wtf = this.getBytesAt( 0, this.getLength() );
-		cch = this.getByteAt( 0 );
-		grbitChr = this.getByteAt( 2 );
+		byte[] wtf = getBytesAt( 0, getLength() );
+		cch = getByteAt( 0 );
+		grbitChr = getByteAt( 2 );
 
-		byte[] namebytes = this.getBytesAt( 3, cch );
+		byte[] namebytes = getBytesAt( 3, cch );
 
 		try
 		{
@@ -97,7 +97,7 @@ public class Codename extends com.extentech.formats.XLS.XLSRecord
 			grbitChr = 0x1;
 			modnamelen = (newname.length() * 2);
 		}
-		byte[] newdata = new byte[(this.getData().length - oldnamelen) + modnamelen];
+		byte[] newdata = new byte[(getData().length - oldnamelen) + modnamelen];
 		try
 		{
 			if( grbitChr == 0x1 )
@@ -116,8 +116,8 @@ public class Codename extends com.extentech.formats.XLS.XLSRecord
 		System.arraycopy( namebytes, 0, newdata, 3, namebytes.length );
 		newdata[0] = cch;
 		newdata[2] = grbitChr;
-		this.setData( newdata );
-		this.init();
+		setData( newdata );
+		init();
 	}
 
 }

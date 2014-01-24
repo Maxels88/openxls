@@ -77,8 +77,10 @@ public class DConRef extends XLSRecord implements XLSConstants
 {
 	private static final Logger log = LoggerFactory.getLogger( DConRef.class );
 	private static final long serialVersionUID = 2639291289806138985L;
-	private short rwFirst, rwLast;
-	private short colFirst, colLast;
+	private short rwFirst;
+	private short rwLast;
+	private short colFirst;
+	private short colLast;
 	private short cchFile;
 	private String fileName = null;
 	private byte refType = 0;
@@ -90,11 +92,11 @@ public class DConRef extends XLSRecord implements XLSConstants
 	public void init()
 	{
 		super.init();
-		rwFirst = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		rwLast = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		colFirst = (short) this.getByteAt( 4 );
-		colLast = (short) this.getByteAt( 5 );
-		cchFile = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
+		rwFirst = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		rwLast = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		colFirst = (short) getByteAt( 4 );
+		colLast = (short) getByteAt( 5 );
+		cchFile = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
 		if( cchFile > 0 )
 		{
 			//A - fHighByte (1 bit): A bit that specifies whether the characters in rgb are double-byte characters.
@@ -102,14 +104,14 @@ public class DConRef extends XLSRecord implements XLSConstants
 			// 0x1  All the characters in the string are saved as double-byte characters in rgb.
 			// reserved (7 bits): MUST be zero, and MUST be ignored.
 
-			byte encoding = this.getByteAt( 8 );
-			refType = this.getByteAt( 9 );    // 1= simple-file-path-dcon 2= self-reference
+			byte encoding = getByteAt( 8 );
+			refType = getByteAt( 9 );    // 1= simple-file-path-dcon 2= self-reference
 
 			if( refType != 2 )    // TODO: handle external refs ...
 			{
 				log.warn( "PivotTable: External Data Sources are not supported" );
 			}
-			byte[] tmp = this.getBytesAt( 10, (cchFile - 1) * (encoding + 1) );
+			byte[] tmp = getBytesAt( 10, (cchFile - 1) * (encoding + 1) );
 			try
 			{
 				if( encoding == 0 )
@@ -165,7 +167,7 @@ public class DConRef extends XLSRecord implements XLSConstants
 		rwLast = (short) rc[2];
 		colLast = (short) rc[3];
 		// update record
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.shortToLEBytes( rwFirst );
 		data[0] = b[0];
 		data[1] = b[1];
@@ -187,7 +189,7 @@ public class DConRef extends XLSRecord implements XLSConstants
 		cchFile = (short) ((short) sheetName.length() + 1);
 		fileName = sheetName;
 		byte[] data = new byte[10];
-		System.arraycopy( this.getData(), 0, data, 0, 6 );
+		System.arraycopy( getData(), 0, data, 0, 6 );
 		byte[] b = ByteTools.shortToLEBytes( cchFile );
 		data[6] = b[0];    // cch
 		data[7] = b[1];
@@ -201,7 +203,7 @@ public class DConRef extends XLSRecord implements XLSConstants
 		catch( UnsupportedEncodingException e )
 		{
 		}
-		this.setData( data );
+		setData( data );
 	}
 
 	/**

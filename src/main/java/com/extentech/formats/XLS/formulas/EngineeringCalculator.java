@@ -525,7 +525,8 @@ public class EngineeringCalculator
 		String[] liquidMeasureUnits = { "tsp", "tbs", "oz", "cup", "pt", "uk_pt", "qt", "gal", "l" };
 
 		// for any metric unit, may be prefixed with 
-		String fromPrefix = "", toPrefix = "";
+		String fromPrefix = "";
+		String toPrefix = "";
 		String[] metricPrefixes = { "E", "P", "T", "G", "M", "k", "h", "e", "d", "c", "m", "u", "n", "p", "f", "a" };
 
 		// first, see if fromUnits and toUnits are in list of acceptable units
@@ -577,7 +578,8 @@ public class EngineeringCalculator
 		// at here, we know that the prefixes and units are found, but we don't know if they match or make sense ...
 		double result = 0;
 		double from = 0;
-		int i, j = -1;
+		int i;
+		int j = -1;
 
 		// WEIGHT conversion
 		if( (i = findUnits( fromUnits, weightUnits )) >= 0 )
@@ -1601,8 +1603,10 @@ public class EngineeringCalculator
 	{
 		final double eps = 1.E-8; // we want only ~1.E-7
 		final int kmax = 50; // this can be reached with ~30-40
-		double an, ak = x;
-		double erfo, erf = ak;
+		double an;
+		double ak = x;
+		double erfo;
+		double erf = ak;
 		int k = 1;
 		do
 		{
@@ -1680,7 +1684,9 @@ public class EngineeringCalculator
 		};
 	         /*  constant for A&S 7.1.26 */
 		final double p = .3275911;
-		double erf, r = 0, t = 1.0 / (1 + (p * x));
+		double erf;
+		double r = 0;
+		double t = 1.0 / (1 + (p * x));
 		for( int i = 4; i >= 0; i-- )
 		{
 			r = a[i] + r * t;
@@ -2266,7 +2272,8 @@ public class EngineeringCalculator
 		String complexString1 = StringTool.allTrim( operands[0].getString() );
 		String complexString2 = StringTool.allTrim( operands[1].getString() );
 
-		Complex c1, c2;
+		Complex c1;
+		Complex c2;
 
 		try
 		{
@@ -2713,7 +2720,8 @@ public class EngineeringCalculator
 		String complexString1 = StringTool.allTrim( operands[0].getString() );
 		String complexString2 = StringTool.allTrim( operands[1].getString() );
 
-		Complex c1, c2;
+		Complex c1;
+		Complex c2;
 		try
 		{
 			c1 = imParseComplexNumber( complexString1 );
@@ -2998,14 +3006,14 @@ class Complex
 
 	Complex()
 	{
-		this.suffix = "i";
+		suffix = "i";
 	}
 
 	Complex( double r, double i )
 	{
-		this.real = r;
-		this.imaginary = i;
-		this.suffix = "i";
+		real = r;
+		imaginary = i;
+		suffix = "i";
 	}
 }	
 

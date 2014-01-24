@@ -65,19 +65,22 @@ public class ThreeD extends GenericChartObject implements ChartObject
 	private short pcDepth = 100;
 	private short pcGap = 150;
 	private short grbit = 0; //
-	private boolean fPerspective, fCluster, f3dScaling, f2DWalls; // 20070905 KSC: parse grbit
+	private boolean fPerspective;
+	private boolean fCluster;
+	private boolean f3dScaling;
+	private boolean f2DWalls; // 20070905 KSC: parse grbit
 
 	@Override
 	public void init()
 	{
 		super.init();
-		anRot = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		anElev = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		pcDist = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		pcHeight = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
-		pcDepth = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
-		pcGap = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );
-		grbit = ByteTools.readShort( this.getByteAt( 12 ), this.getByteAt( 13 ) );
+		anRot = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		anElev = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		pcDist = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+		pcHeight = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
+		pcDepth = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );
+		pcGap = ByteTools.readShort( getByteAt( 10 ), getByteAt( 11 ) );
+		grbit = ByteTools.readShort( getByteAt( 12 ), getByteAt( 13 ) );
 		fPerspective = (grbit & 0x1) == 0x1;
 		fCluster = (grbit & 0x2) == 0x2;
 		f3dScaling = (grbit & 0x4) == 0x4;
@@ -101,26 +104,26 @@ public class ThreeD extends GenericChartObject implements ChartObject
 	private void updateRecord()
 	{
 		byte[] b = ByteTools.shortToLEBytes( anRot );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 		b = ByteTools.shortToLEBytes( anElev );
-		this.getData()[2] = b[0];
-		this.getData()[3] = b[1];
+		getData()[2] = b[0];
+		getData()[3] = b[1];
 		b = ByteTools.shortToLEBytes( pcDist );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 		b = ByteTools.shortToLEBytes( pcHeight );
-		this.getData()[6] = b[0];
-		this.getData()[7] = b[1];
+		getData()[6] = b[0];
+		getData()[7] = b[1];
 		b = ByteTools.shortToLEBytes( pcDepth );
-		this.getData()[8] = b[0];
-		this.getData()[9] = b[1];
+		getData()[8] = b[0];
+		getData()[9] = b[1];
 		b = ByteTools.shortToLEBytes( pcGap );
-		this.getData()[10] = b[0];
-		this.getData()[11] = b[1];
+		getData()[10] = b[0];
+		getData()[11] = b[1];
 		b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[12] = b[0];
-		this.getData()[13] = b[1];
+		getData()[12] = b[0];
+		getData()[13] = b[1];
 	}
 
 	/**
@@ -313,8 +316,8 @@ public class ThreeD extends GenericChartObject implements ChartObject
 		fCluster = bIsClustered;
 		grbit = ByteTools.updateGrBit( grbit, fCluster, 1 );
 		byte[] b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[12] = b[0];
-		this.getData()[13] = b[1];
+		getData()[12] = b[0];
+		getData()[13] = b[1];
 	}
 
 	/**
@@ -345,8 +348,8 @@ public class ThreeD extends GenericChartObject implements ChartObject
 	{
 		anRot = (short) rot;
 		byte[] b = ByteTools.shortToLEBytes( anRot );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	/**
@@ -358,8 +361,8 @@ public class ThreeD extends GenericChartObject implements ChartObject
 	{
 		anElev = (short) elev;
 		byte[] b = ByteTools.shortToLEBytes( anElev );
-		this.getData()[2] = b[0];
-		this.getData()[3] = b[1];
+		getData()[2] = b[0];
+		getData()[3] = b[1];
 	}
 
 	/**
@@ -371,8 +374,8 @@ public class ThreeD extends GenericChartObject implements ChartObject
 	{
 		pcDist = (short) dist;
 		byte[] b = ByteTools.shortToLEBytes( pcDist );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 	}
 
 	/**
@@ -385,8 +388,8 @@ public class ThreeD extends GenericChartObject implements ChartObject
 	{
 		pcHeight = (short) dist;
 		byte[] b = ByteTools.shortToLEBytes( pcHeight );
-		this.getData()[6] = b[0];
-		this.getData()[7] = b[1];
+		getData()[6] = b[0];
+		getData()[7] = b[1];
 	}
 
 	/**
@@ -398,8 +401,8 @@ public class ThreeD extends GenericChartObject implements ChartObject
 	{
 		pcDepth = (short) depth;
 		byte[] b = ByteTools.shortToLEBytes( pcDepth );
-		this.getData()[8] = b[0];
-		this.getData()[9] = b[1];
+		getData()[8] = b[0];
+		getData()[9] = b[1];
 	}
 
 	/**
@@ -411,8 +414,8 @@ public class ThreeD extends GenericChartObject implements ChartObject
 	{
 		pcGap = (short) gap;
 		byte[] b = ByteTools.shortToLEBytes( pcGap );
-		this.getData()[10] = b[0];
-		this.getData()[11] = b[1];
+		getData()[10] = b[0];
+		getData()[11] = b[1];
 	}
 
 	public int getPcGap()

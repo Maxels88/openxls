@@ -132,7 +132,7 @@ public class PtgStr extends GenericPtg implements Ptg
 		cch = (short) (b[1] & 0xff); // this is the cch
 		ptgId = b[0];
 		record = b;
-		this.populateVals();
+		populateVals();
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class PtgStr extends GenericPtg implements Ptg
 	public void setVal( String s )
 	{
 		tempstr = s;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	@Override

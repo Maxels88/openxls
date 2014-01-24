@@ -60,14 +60,15 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = -3526272512004348462L;
-	private short yi, xi;
+	private short yi;
+	private short xi;
 	private short iss;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		byte[] rkdata = this.getData();
+		byte[] rkdata = getData();
 		xi = ByteTools.readShort( rkdata[0], rkdata[1] );
 		yi = ByteTools.readShort( rkdata[2], rkdata[3] );
 		iss = (short) ByteTools.readUnsignedShort( rkdata[4], rkdata[5] );
@@ -77,12 +78,12 @@ public class DataFormat extends GenericChartObject implements ChartObject
 
 	public void initNew()
 	{
-		this.setOpcode( DATAFORMAT );
-		this.setData( PROTOTYPE_BYTES );
-		this.init();
+		setOpcode( DATAFORMAT );
+		setData( PROTOTYPE_BYTES );
+		init();
 		Chart3DBarShape cs = new Chart3DBarShape();
 		cs.setOpcode( CHART3DBARSHAPE );    // creates default bar shape==0, 0
-		this.addChartRecord( cs );
+		addChartRecord( cs );
 	}
 
 	/**
@@ -150,11 +151,11 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	public void setPointNumber( int idx )
 	{
 		xi = (short) idx;
-		byte[] rkdata = this.getData();
+		byte[] rkdata = getData();
 		byte[] num = ByteTools.shortToLEBytes( (short) idx );
 		rkdata[0] = num[0];
 		rkdata[1] = num[1];
-		this.setData( rkdata );
+		setData( rkdata );
 	}
 
 	/**
@@ -163,21 +164,21 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	public void setSeriesIndex( int idx )
 	{
 		yi = (short) idx;
-		byte[] rkdata = this.getData();
+		byte[] rkdata = getData();
 		byte[] num = ByteTools.shortToLEBytes( (short) idx );
 		rkdata[2] = num[0];
 		rkdata[3] = num[1];
-		this.setData( rkdata );
+		setData( rkdata );
 	}
 
 	public void setSeriesNumber( int idx )
 	{
 		iss = (short) idx;
-		byte[] rkdata = this.getData();
+		byte[] rkdata = getData();
 		byte[] num = ByteTools.shortToLEBytes( (short) idx );
 		rkdata[4] = num[0];
 		rkdata[5] = num[1];
-		this.setData( rkdata );
+		setData( rkdata );
 	}
 
 	public short getSeriesIndex()
@@ -198,18 +199,18 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	private AttachedLabel getAttachedLabelRec( boolean bCreate )
 	{
 		AttachedLabel al = null;
-		al = (AttachedLabel) Chart.findRec( this.chartArr, AttachedLabel.class );
+		al = (AttachedLabel) Chart.findRec( chartArr, AttachedLabel.class );
 		if( (al == null) && bCreate )
 		{ // basic options are handled via AttachedLabel rec
 			al = (AttachedLabel) AttachedLabel.getPrototype();
-			int z = Chart.findRecPosition( this.chartArr, MarkerFormat.class );
+			int z = Chart.findRecPosition( chartArr, MarkerFormat.class );
 			if( z > 0 )
 			{
 				chartArr.add( z + 1, al );
 			}
 			else
 			{
-				this.addChartRecord( al );
+				addChartRecord( al );
 			}
 		}
 		return al;
@@ -217,14 +218,14 @@ public class DataFormat extends GenericChartObject implements ChartObject
 
 	private AreaFormat getAreaFormatRec( boolean bCreate )
 	{
-		AreaFormat af = (AreaFormat) Chart.findRec( this.chartArr, AreaFormat.class );
+		AreaFormat af = (AreaFormat) Chart.findRec( chartArr, AreaFormat.class );
 		if( af == null )
 		{
 			af = (AreaFormat) AreaFormat.getPrototype( 0 );
-			this.addChartRecord( LineFormat.getPrototype() );
-			this.addChartRecord( af );
-			this.addChartRecord( PieFormat.getPrototype() );
-			this.addChartRecord( MarkerFormat.getPrototype() );
+			addChartRecord( LineFormat.getPrototype() );
+			addChartRecord( af );
+			addChartRecord( PieFormat.getPrototype() );
+			addChartRecord( MarkerFormat.getPrototype() );
 		}
 		return af;
 	}
@@ -234,7 +235,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public short getShape()
 	{
-		Chart3DBarShape cs = (Chart3DBarShape) Chart.findRec( this.chartArr, Chart3DBarShape.class );
+		Chart3DBarShape cs = (Chart3DBarShape) Chart.findRec( chartArr, Chart3DBarShape.class );
 		return cs.getShape();
 	}
 
@@ -245,7 +246,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setShape( int shape )
 	{
-		Chart3DBarShape cs = (Chart3DBarShape) Chart.findRec( this.chartArr, Chart3DBarShape.class );
+		Chart3DBarShape cs = (Chart3DBarShape) Chart.findRec( chartArr, Chart3DBarShape.class );
 		cs.setShape( (short) shape );
 	}
 
@@ -256,15 +257,15 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setSmoothLines( boolean smooth )
 	{
-		Serfmt sf = (Serfmt) Chart.findRec( this.chartArr, Serfmt.class );
+		Serfmt sf = (Serfmt) Chart.findRec( chartArr, Serfmt.class );
 		if( sf == null )
 		{
 			if( smooth )
 			{
 				setHasLines();
 				sf = (Serfmt) Serfmt.getPrototype();
-				int i = Chart.findRecPosition( this.chartArr, PieFormat.class );
-				this.chartArr.add( i + 1, sf );
+				int i = Chart.findRecPosition( chartArr, PieFormat.class );
+				chartArr.add( i + 1, sf );
 				sf.setSmoothedLine( true );
 			}
 		}
@@ -281,7 +282,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public boolean getSmoothedLines()
 	{
-		Serfmt sf = (Serfmt) Chart.findRec( this.chartArr, Serfmt.class );
+		Serfmt sf = (Serfmt) Chart.findRec( chartArr, Serfmt.class );
 		if( sf != null )
 		{
 			return sf.getSmoothLine();
@@ -296,7 +297,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public boolean getHasLines()
 	{
-		LineFormat l = (LineFormat) Chart.findRec( this.chartArr, LineFormat.class );
+		LineFormat l = (LineFormat) Chart.findRec( chartArr, LineFormat.class );
 		if( l != null )
 		{
 			return l.getLineStyle() != LineFormat.NONE;
@@ -318,7 +319,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setHasLines( int lineStyle )
 	{
-		LineFormat l = (LineFormat) Chart.findRec( this.chartArr, LineFormat.class );
+		LineFormat l = (LineFormat) Chart.findRec( chartArr, LineFormat.class );
 		if( l == null )
 		{    // these come as a group - assume none or only has Chart3DBarShape ...
 			int z = Chart.findRecPosition( chartArr, Chart3DBarShape.class ) + 1;
@@ -348,15 +349,15 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setHas3DBubbles( boolean b )
 	{
-		Serfmt sf = (Serfmt) Chart.findRec( this.chartArr, Serfmt.class );
+		Serfmt sf = (Serfmt) Chart.findRec( chartArr, Serfmt.class );
 		if( sf == null )
 		{
 			if( b )
 			{
 				sf = (Serfmt) Serfmt.getPrototype();
-				int i = Chart.findRecPosition( this.chartArr, PieFormat.class );
-				sf.setParentChart( this.getParentChart() );
-				this.chartArr.add( i + 1, sf );
+				int i = Chart.findRecPosition( chartArr, PieFormat.class );
+				sf.setParentChart( getParentChart() );
+				chartArr.add( i + 1, sf );
 				sf.setHas3dBubbles( true );
 			}
 		}
@@ -373,7 +374,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public boolean getHas3DBubbles()
 	{
-		Serfmt sf = (Serfmt) Chart.findRec( this.chartArr, Serfmt.class );
+		Serfmt sf = (Serfmt) Chart.findRec( chartArr, Serfmt.class );
 		if( sf != null )
 		{
 			return sf.get3DBubbles();
@@ -387,7 +388,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public boolean getHasShadow()
 	{
-		Serfmt sf = (Serfmt) Chart.findRec( this.chartArr, Serfmt.class );
+		Serfmt sf = (Serfmt) Chart.findRec( chartArr, Serfmt.class );
 		if( sf != null )
 		{
 			return sf.hasShadow();
@@ -403,15 +404,15 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setHasShadow( boolean b )
 	{
-		Serfmt sf = (Serfmt) Chart.findRec( this.chartArr, Serfmt.class );
+		Serfmt sf = (Serfmt) Chart.findRec( chartArr, Serfmt.class );
 		if( sf == null )
 		{
 			if( b )
 			{
 				sf = (Serfmt) Serfmt.getPrototype();
-				int i = Chart.findRecPosition( this.chartArr, PieFormat.class );
-				sf.setParentChart( this.getParentChart() );
-				this.chartArr.add( i + 1, sf );
+				int i = Chart.findRecPosition( chartArr, PieFormat.class );
+				sf.setParentChart( getParentChart() );
+				chartArr.add( i + 1, sf );
 				sf.setHasShadow( true );
 			}
 		}
@@ -428,11 +429,11 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setPercentage( int p )
 	{
-		PieFormat pf = (PieFormat) Chart.findRec( this.chartArr, PieFormat.class );
+		PieFormat pf = (PieFormat) Chart.findRec( chartArr, PieFormat.class );
 		if( pf == null )
 		{
 			setHasLines( LineFormat.NONE );
-			pf = (PieFormat) Chart.findRec( this.chartArr, PieFormat.class );
+			pf = (PieFormat) Chart.findRec( chartArr, PieFormat.class );
 		}
 		pf.setPercentage( (short) p );
 	}
@@ -442,7 +443,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public int getPercentage()
 	{
-		PieFormat pf = (PieFormat) Chart.findRec( this.chartArr, PieFormat.class );
+		PieFormat pf = (PieFormat) Chart.findRec( chartArr, PieFormat.class );
 		if( pf != null )
 		{
 			return pf.getPercentage();
@@ -464,7 +465,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setDataLabels( String type )
 	{
-		AttachedLabel al = this.getAttachedLabelRec( true );
+		AttachedLabel al = getAttachedLabelRec( true );
 		al.setType( type, "1" );
 	}
 
@@ -475,7 +476,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public boolean getHasDataLabels()
 	{
-		return (this.getAttachedLabelRec( false ) != null);
+		return (getAttachedLabelRec( false ) != null);
 	}
 
 	/**
@@ -492,7 +493,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public String getDataLabelType( String type )
 	{
-		AttachedLabel al = this.getAttachedLabelRec( false );
+		AttachedLabel al = getAttachedLabelRec( false );
 		if( al != null )
 		{
 			return al.getType( type );
@@ -513,7 +514,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public String getDataLabelType()
 	{
-		AttachedLabel al = this.getAttachedLabelRec( false );
+		AttachedLabel al = getAttachedLabelRec( false );
 		if( al != null )
 		{
 			return al.getType();
@@ -528,7 +529,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public int getDataLabelTypeInt()
 	{
-		AttachedLabel al = this.getAttachedLabelRec( false );
+		AttachedLabel al = getAttachedLabelRec( false );
 		if( al != null )
 		{
 			return al.getTypeInt();
@@ -548,7 +549,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setHasDataLabels( int dl )
 	{
-		AttachedLabel al = this.getAttachedLabelRec( true );
+		AttachedLabel al = getAttachedLabelRec( true );
 		al.setType( (short) dl );
 	}
 
@@ -570,7 +571,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	public int getMarkerFormat()
 	{
 		// default actually looks like: 2, 1, 5, 4 ...
-		MarkerFormat mf = (MarkerFormat) Chart.findRec( this.chartArr, MarkerFormat.class );
+		MarkerFormat mf = (MarkerFormat) Chart.findRec( chartArr, MarkerFormat.class );
 		if( mf != null )
 		{
 			return mf.getMarkerFormat();
@@ -593,32 +594,32 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setMarkerFormat( int marker )
 	{
-		MarkerFormat mf = (MarkerFormat) Chart.findRec( this.chartArr, MarkerFormat.class );
+		MarkerFormat mf = (MarkerFormat) Chart.findRec( chartArr, MarkerFormat.class );
 		if( mf == null )
 		{
 			if( chartArr.isEmpty() )
 			{    // these records come in a set
 				Chart3DBarShape cs = new Chart3DBarShape();
 				cs.setOpcode( CHART3DBARSHAPE );    // creates default bar shape==0, 0
-				this.addChartRecord( cs );
+				addChartRecord( cs );
 				LineFormat lf = (LineFormat) LineFormat.getPrototype();
-				lf.setParentChart( this.parentChart );
+				lf.setParentChart( parentChart );
 				lf.setLineStyle( 5 );
 				chartArr.add( lf );
 				AreaFormat af = (AreaFormat) AreaFormat.getPrototype();
-				af.setParentChart( this.parentChart );
+				af.setParentChart( parentChart );
 				chartArr.add( af );
 				PieFormat pf = (PieFormat) PieFormat.getPrototype();
-				pf.setParentChart( this.parentChart );
+				pf.setParentChart( parentChart );
 				chartArr.add( pf );
 				mf = (MarkerFormat) MarkerFormat.getPrototype();
-				mf.setParentChart( this.parentChart );
+				mf.setParentChart( parentChart );
 				chartArr.add( mf );
 			}
 			else
 			{    // shouldn't get here but it goes
 				mf = (MarkerFormat) MarkerFormat.getPrototype();
-				mf.setParentChart( this.parentChart );
+				mf.setParentChart( parentChart );
 				int z = Chart.findRecPosition( chartArr, PieFormat.class );
 				if( z > -1 )
 				{
@@ -690,7 +691,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	public String getBgColor()
 	{
-		String bg = Frame.getBgColor( this.chartArr );
+		String bg = Frame.getBgColor( chartArr );
 		return bg;
 	}
 
@@ -739,7 +740,7 @@ public class DataFormat extends GenericChartObject implements ChartObject
 			s.chartArr.add(s.chartArr.size()-1, df);	// -1 to skip SERTOCRT rec
 		}
 */
-		AreaFormat af = (AreaFormat) Chart.findRec( this.chartArr, AreaFormat.class );
+		AreaFormat af = (AreaFormat) Chart.findRec( chartArr, AreaFormat.class );
 		return af;
 	}
 
@@ -750,16 +751,16 @@ public class DataFormat extends GenericChartObject implements ChartObject
 	 */
 	private AreaFormat getAreaFormat()
 	{
-		AreaFormat af = (AreaFormat) Chart.findRec( this.chartArr, AreaFormat.class );
+		AreaFormat af = (AreaFormat) Chart.findRec( chartArr, AreaFormat.class );
 		if( af == null )
 		{
 			af = (AreaFormat) AreaFormat.getPrototype( 0 );
 			// NOTE: below list of records is what has been observed in Excel 2003 chart files -
 			// unsure if need marker format always ?
-			this.addChartRecord( LineFormat.getPrototype() );
-			this.addChartRecord( af );
-			this.addChartRecord( PieFormat.getPrototype() );
-			this.addChartRecord( MarkerFormat.getPrototype() );
+			addChartRecord( LineFormat.getPrototype() );
+			addChartRecord( af );
+			addChartRecord( PieFormat.getPrototype() );
+			addChartRecord( MarkerFormat.getPrototype() );
 		}
 		return af;
 	}

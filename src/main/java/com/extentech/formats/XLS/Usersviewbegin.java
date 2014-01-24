@@ -136,7 +136,7 @@ public final class Usersviewbegin extends com.extentech.formats.XLS.XLSRecord
 		setData( b );
 		setOpcode( USERSVIEWBEGIN );
 		setLength( (short) 6 );
-		this.init();
+		init();
 	}
 
 	// grbit fields
@@ -147,22 +147,22 @@ public final class Usersviewbegin extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		short num1 = ByteTools.readShort( this.getByteAt( 16 ), this.getByteAt( 17 ) );
-		short num2 = ByteTools.readShort( this.getByteAt( 18 ), this.getByteAt( 19 ) );
+		short num1 = ByteTools.readShort( getByteAt( 16 ), getByteAt( 17 ) );
+		short num2 = ByteTools.readShort( getByteAt( 18 ), getByteAt( 19 ) );
 		tabid = ByteTools.readInt( num2, num1 );
-		num1 = ByteTools.readShort( this.getByteAt( 20 ), this.getByteAt( 21 ) );
-		num2 = ByteTools.readShort( this.getByteAt( 22 ), this.getByteAt( 23 ) );
+		num1 = ByteTools.readShort( getByteAt( 20 ), getByteAt( 21 ) );
+		num2 = ByteTools.readShort( getByteAt( 22 ), getByteAt( 23 ) );
 		wScale = ByteTools.readInt( num1, num2 );
-		num1 = ByteTools.readShort( this.getByteAt( 24 ), this.getByteAt( 25 ) );
-		num2 = ByteTools.readShort( this.getByteAt( 26 ), this.getByteAt( 27 ) );
+		num1 = ByteTools.readShort( getByteAt( 24 ), getByteAt( 25 ) );
+		num2 = ByteTools.readShort( getByteAt( 26 ), getByteAt( 27 ) );
 		icv = ByteTools.readInt( num1, num2 );
-		num1 = ByteTools.readShort( this.getByteAt( 24 ), this.getByteAt( 25 ) );
-		num2 = ByteTools.readShort( this.getByteAt( 26 ), this.getByteAt( 27 ) );
+		num1 = ByteTools.readShort( getByteAt( 24 ), getByteAt( 25 ) );
+		num2 = ByteTools.readShort( getByteAt( 26 ), getByteAt( 27 ) );
 		pnnSel = ByteTools.readInt( num1, num2 );
-		num1 = ByteTools.readShort( this.getByteAt( 28 ), this.getByteAt( 29 ) );
-		num2 = ByteTools.readShort( this.getByteAt( 30 ), this.getByteAt( 31 ) );
+		num1 = ByteTools.readShort( getByteAt( 28 ), getByteAt( 29 ) );
+		num2 = ByteTools.readShort( getByteAt( 30 ), getByteAt( 31 ) );
 		grbit = ByteTools.readInt( num1, num2 );
-		this.decodeGrbit();
+		decodeGrbit();
 			log.debug( "Usersviewbegin Tab Index: " + tabid );
 	}
 
@@ -197,10 +197,10 @@ public final class Usersviewbegin extends com.extentech.formats.XLS.XLSRecord
 			grbit = (0xFFFFFFEF & grbit);
 		}
 		// update the record bytes
-		byte[] b = this.getData();
-		byte grbytes[] = ByteTools.cLongToLEBytes( grbit );
+		byte[] b = getData();
+		byte[] grbytes = ByteTools.cLongToLEBytes( grbit );
 		System.arraycopy( grbytes, 0, b, 28, 4 );
-		this.setData( b );
+		setData( b );
 	}
 
 	/**

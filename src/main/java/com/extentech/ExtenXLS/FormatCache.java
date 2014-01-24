@@ -59,7 +59,7 @@ public class FormatCache
 		{
 			Object oby = mpx.get( itx.next() );
 			FormatHandle thisfmt = (FormatHandle) oby;
-			thisfmt = this.get( thisfmt );
+			thisfmt = get( thisfmt );
 		}
 	}
 

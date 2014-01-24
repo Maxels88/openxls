@@ -120,7 +120,7 @@ public final class Dbcell extends com.extentech.formats.XLS.XLSRecord implements
 				newData[pointer++] = b[1];
 			}
 		}
-		this.setData( newData );
+		setData( newData );
 	}
 
 	/**
@@ -159,9 +159,9 @@ public final class Dbcell extends com.extentech.formats.XLS.XLSRecord implements
 	{
 		if( rwct > 0 )
 		{
-			Row rw1 = this.myrows[0];
+			Row rw1 = myrows[0];
 			int i = rw1.getOffset();
-			int y = this.getOffset();
+			int y = getOffset();
 			return y - i;
 		}
 		return -1;
@@ -226,7 +226,7 @@ public final class Dbcell extends com.extentech.formats.XLS.XLSRecord implements
 	byte[] getDBCELLPointerPos()
 	{
 		int bofpos = mybof.offset;
-		int thispos = this.offset;
+		int thispos = offset;
 		int diff = thispos - bofpos;
 		return ByteTools.cLongToLEBytes( diff );
 	}
@@ -316,13 +316,13 @@ public final class Dbcell extends com.extentech.formats.XLS.XLSRecord implements
 	public void init()
 	{
 		super.init();
-		dbRtrw = ByteTools.readInt( this.getByteAt( 0 ), this.getByteAt( 1 ), this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		numrecs = (this.getLength() - 8) / 2;
+		dbRtrw = ByteTools.readInt( getByteAt( 0 ), getByteAt( 1 ), getByteAt( 2 ), getByteAt( 3 ) );
+		numrecs = (getLength() - 8) / 2;
 		int pos = 4;
 		rgdb = new short[numrecs];
 		for( int i = 0; i < numrecs; i++ )
 		{
-			rgdb[i] = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );
+			rgdb[i] = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) );
 		}
 	}
 

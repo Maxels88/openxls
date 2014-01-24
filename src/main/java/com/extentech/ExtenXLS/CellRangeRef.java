@@ -32,9 +32,14 @@ import com.extentech.formats.XLS.WorkSheetNotFoundException;
  */
 public class CellRangeRef implements Cloneable
 {
-	private int first_col, first_row, last_col, last_row;
-	private String first_sheet_name, last_sheet_name;
-	private WorkSheetHandle first_sheet, last_sheet;
+	private int first_col;
+	private int first_row;
+	private int last_col;
+	private int last_row;
+	private String first_sheet_name;
+	private String last_sheet_name;
+	private WorkSheetHandle first_sheet;
+	private WorkSheetHandle last_sheet;
 
 	/**
 	 * Private nullary constructor for use by static pseudo-constructors.
@@ -59,9 +64,9 @@ public class CellRangeRef implements Cloneable
 	public int numCells()
 	{
 		int ret = -1;
-		int numrows = this.last_row - this.first_row;
+		int numrows = last_row - first_row;
 		numrows++;
-		int numcols = this.last_col - this.first_col;
+		int numcols = last_col - first_col;
 		numcols++;
 		ret = numrows * numcols;
 		return ret;
@@ -70,8 +75,8 @@ public class CellRangeRef implements Cloneable
 	public CellRangeRef( int first_row, int first_col, int last_row, int last_col, String first_sheet, String last_sheet )
 	{
 		this( first_row, first_col, last_row, last_col );
-		this.first_sheet_name = first_sheet;
-		this.last_sheet_name = last_sheet;
+		first_sheet_name = first_sheet;
+		last_sheet_name = last_sheet;
 	}
 
 	public CellRangeRef( int first_row, int first_col, int last_row, int last_col, WorkSheetHandle first_sheet, WorkSheetHandle last_sheet )
@@ -247,7 +252,7 @@ public class CellRangeRef implements Cloneable
 	 */
 	public boolean isMultiSheet()
 	{
-		return ((first_sheet != null) && (last_sheet != null) && (first_sheet != last_sheet)) || ((first_sheet_name != null) && (last_sheet_name != null) && (first_sheet_name != last_sheet_name));
+		return ((first_sheet != null) && (last_sheet != null) && (!first_sheet.equals( last_sheet ))) || ((first_sheet_name != null) && (last_sheet_name != null) && (first_sheet_name != last_sheet_name));
 	}
 
 	/**
@@ -314,7 +319,7 @@ public class CellRangeRef implements Cloneable
 	 */
 	public boolean contains( CellRangeRef range )
 	{
-		return (this.first_row <= range.first_row) && (this.last_row >= range.last_row) && (this.first_col <= range.first_col) && (this.last_col >= range.last_col);
+		return (first_row <= range.first_row) && (last_row >= range.last_row) && (first_col <= range.first_col) && (last_col >= range.last_col);
 	}
 
 	/**
@@ -331,7 +336,7 @@ public class CellRangeRef implements Cloneable
 			return false;
 		}
 
-		return this.toString().equals( other.toString() );
+		return toString().equals( other.toString() );
 	}
 
 	/**

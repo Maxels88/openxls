@@ -62,7 +62,7 @@ public class RootStorage extends com.extentech.formats.LEO.Storage
 		}
 		for( Block b1 : bs )
 		{
-			this.addBlock( b1 );
+			addBlock( b1 );
 		}
 	}
 

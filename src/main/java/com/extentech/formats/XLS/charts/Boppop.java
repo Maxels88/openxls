@@ -81,8 +81,13 @@ public class Boppop extends GenericChartObject implements ChartObject
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 8071801452993935943L;
-	boolean fAutoSplit, fHasShadow;
-	short split, iSplitPos, pcSplitPercent, pcPieSize, pcGap;
+	boolean fAutoSplit;
+	boolean fHasShadow;
+	short split;
+	short iSplitPos;
+	short pcSplitPercent;
+	short pcPieSize;
+	short pcGap;
 	float numSplitValue;
 	byte pst;
 
@@ -90,7 +95,7 @@ public class Boppop extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		byte[] data = this.getData();
+		byte[] data = getData();
 		pst = data[0];
 		fAutoSplit = (data[1] == 1);
 		split = ByteTools.readShort( data[2], data[3] );
@@ -98,7 +103,7 @@ public class Boppop extends GenericChartObject implements ChartObject
 		pcSplitPercent = ByteTools.readShort( data[6], data[7] );
 		pcPieSize = ByteTools.readShort( data[8], data[9] );
 		pcGap = ByteTools.readShort( data[10], data[11] );
-		numSplitValue = (float) ByteTools.eightBytetoLEDouble( this.getBytesAt( 12, 8 ) );
+		numSplitValue = (float) ByteTools.eightBytetoLEDouble( getBytesAt( 12, 8 ) );
 		fHasShadow = (data[20] & 1) == 1;
 		chartType = OFPIECHART;
 	}
@@ -134,7 +139,7 @@ public class Boppop extends GenericChartObject implements ChartObject
 		{
 			pst = 2;
 		}
-		this.getData()[0] = pst;
+		getData()[0] = pst;
 	}
 
 	/**
@@ -147,8 +152,8 @@ public class Boppop extends GenericChartObject implements ChartObject
 	{
 		pcGap = (short) g;
 		byte[] b = ByteTools.shortToLEBytes( pcGap );
-		this.getData()[10] = b[0];
-		this.getData()[11] = b[1];
+		getData()[10] = b[0];
+		getData()[11] = b[1];
 	}
 
 	/**
@@ -169,8 +174,8 @@ public class Boppop extends GenericChartObject implements ChartObject
 	{
 		pcPieSize = (short) s;
 		byte[] b = ByteTools.shortToLEBytes( pcPieSize );
-		this.getData()[8] = b[0];
-		this.getData()[9] = b[1];
+		getData()[8] = b[0];
+		getData()[9] = b[1];
 	}
 
 	/**
@@ -193,11 +198,11 @@ public class Boppop extends GenericChartObject implements ChartObject
 	public void setSplitType( int t )
 	{
 		fAutoSplit = false;
-		this.getData()[1] = 0;
+		getData()[1] = 0;
 		split = (short) t;
 		byte[] b = ByteTools.shortToLEBytes( split );
-		this.getData()[2] = b[0];
-		this.getData()[3] = b[1];
+		getData()[2] = b[0];
+		getData()[3] = b[1];
 	}
 
 	/**
@@ -215,11 +220,11 @@ public class Boppop extends GenericChartObject implements ChartObject
 		if( s == null )
 		{
 			fAutoSplit = true;
-			this.getData()[1] = 0;
+			getData()[1] = 0;
 			return;
 		}
 		fAutoSplit = false;
-		this.getData()[1] = 0;
+		getData()[1] = 0;
 		if( s.equals( "pos" ) )
 		{
 			split = 0;
@@ -237,8 +242,8 @@ public class Boppop extends GenericChartObject implements ChartObject
 			split = 3;
 		}
 		byte[] b = ByteTools.shortToLEBytes( split );
-		this.getData()[2] = b[0];
-		this.getData()[3] = b[1];
+		getData()[2] = b[0];
+		getData()[3] = b[1];
 	}
 
 	/**
@@ -290,8 +295,8 @@ public class Boppop extends GenericChartObject implements ChartObject
 	{
 		iSplitPos = (short) sp;
 		byte[] b = ByteTools.shortToLEBytes( iSplitPos );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 	}
 
 	/**

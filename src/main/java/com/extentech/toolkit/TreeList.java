@@ -389,7 +389,7 @@ class TreeList extends AbstractList
 		 */
 		void setValue( Object obj )
 		{
-			this.value = obj;
+			value = obj;
 		}
 
 		/**
@@ -426,7 +426,7 @@ class TreeList extends AbstractList
 					return result;
 				}
 			}
-			if( (value == null) ? (value == object) : value.equals( object ) )
+			if( (value == null) ? (value.equals( object )) : value.equals( object ) )
 			{
 				return index;
 			}
@@ -943,9 +943,9 @@ class TreeList extends AbstractList
 		{
 			super();
 			this.parent = parent;
-			this.expectedModCount = parent.modCount;
-			this.next = ((parent.root == null) ? null : parent.root.get( fromIndex ));
-			this.nextIndex = fromIndex;
+			expectedModCount = parent.modCount;
+			next = ((parent.root == null) ? null : parent.root.get( fromIndex ));
+			nextIndex = fromIndex;
 		}
 
 		/**

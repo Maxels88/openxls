@@ -53,10 +53,10 @@ public final class Guts extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		dxRwGut = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		dyColGut = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		iLevelRwMac = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		iLevelColMac = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
+		dxRwGut = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		dyColGut = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		iLevelRwMac = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+		iLevelColMac = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
 
 			log.debug( "INFO: Guts settings: dxRwGut:" + dxRwGut + " dyColGut:" + dyColGut + " iLevelRwMac:" + iLevelRwMac + " iLevelColMac:" + iLevelColMac );
 	}
@@ -111,7 +111,7 @@ public final class Guts extends com.extentech.formats.XLS.XLSRecord
 		newbytes = ByteTools.append( ByteTools.shortToLEBytes( dyColGut ), newbytes );
 		newbytes = ByteTools.append( ByteTools.shortToLEBytes( iLevelRwMac ), newbytes );
 		newbytes = ByteTools.append( ByteTools.shortToLEBytes( iLevelColMac ), newbytes );
-		this.setData( newbytes );
+		setData( newbytes );
 
 	}
 }

@@ -47,14 +47,14 @@ public final class DefColWidth extends com.extentech.formats.XLS.XLSRecord
 	@Override
 	public void init()
 	{
-		byte[] mydata = this.getData();
+		byte[] mydata = getData();
 		defWid = ByteTools.readShort( mydata[0], mydata[1] );
 	}
 
 	public void setDefaultColWidth( int t )
 	{
-		this.defWid = (short) t;
-		byte[] mydata = this.getData();
+		defWid = (short) t;
+		byte[] mydata = getData();
 		byte[] heightbytes = ByteTools.shortToLEBytes( (short) t );
 		mydata[0] = heightbytes[0];
 		mydata[1] = heightbytes[1];

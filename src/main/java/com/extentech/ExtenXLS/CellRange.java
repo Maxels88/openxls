@@ -120,7 +120,8 @@ public class CellRange implements Serializable
 	private boolean createBlanks = false;
 	private boolean initializeCells = true;
 	public transient CellHandle[] cells;
-	protected transient String range, sheetname;
+	protected transient String range;
+	protected transient String sheetname;
 	protected transient com.extentech.ExtenXLS.WorkBook mybook;
 	private transient WorkSheetHandle sheet = null;
 	private int[] myrowints;
@@ -133,7 +134,8 @@ public class CellRange implements Serializable
 	protected int externalLink2 = 0;
 
 	FormatHandle fmtr = null;
-	boolean wholeCol = false, wholeRow = false;
+	boolean wholeCol = false;
+	boolean wholeRow = false;
 
 	/**
 	 * Protected constructor for creating result ranges.
@@ -178,15 +180,15 @@ public class CellRange implements Serializable
 			throw new IllegalArgumentException( "the source range must have a single resolved sheet" );
 		}
 
-		mybook = this.sheet.getWorkBook();
-		sheetname = this.sheet.getSheetName();
+		mybook = sheet.getWorkBook();
+		sheetname = sheet.getSheetName();
 
 		// This is inefficient, but fixing it would require rewriting init.
-		this.range = source.toString();
+		range = source.toString();
 
 		try
 		{
-			this.init();
+			init();
 		}
 		catch( CellNotFoundException e )
 		{
@@ -272,18 +274,18 @@ public class CellRange implements Serializable
 	 */
 	public void unMergeCells() throws Exception
 	{
-		BiffRec[] mycells = this.getCellRecs();
+		BiffRec[] mycells = getCellRecs();
 		for( BiffRec mycell : mycells )
 		{
 			mycell.setMergeRange( null ); // unset the range of merged cells
 			mycell.getXfRec().setMerged( false );
 		}
-		Mergedcells mc = this.getSheet().getSheet().getMergedCellsRec();
+		Mergedcells mc = getSheet().getSheet().getMergedCellsRec();
 		if( mc != null )
 		{
 			mc.removeCellRange( this );
 		}
-		this.ismerged = false;
+		ismerged = false;
 	}
 
 	/**
@@ -294,7 +296,7 @@ public class CellRange implements Serializable
 	 */
 	public void setFormatID( int fmtID ) throws Exception
 	{
-		BiffRec[] mycells = this.getCellRecs();
+		BiffRec[] mycells = getCellRecs();
 		for( BiffRec mycell : mycells )
 		{
 			mycell.setXFRecord( fmtID );
@@ -308,10 +310,10 @@ public class CellRange implements Serializable
 	 */
 	public void setURL( String url ) throws Exception
 	{
-		BiffRec[] mycells = this.getCellRecs();
+		BiffRec[] mycells = getCellRecs();
 		for( BiffRec mycell : mycells )
 		{
-			new CellHandle( mycell, this.mybook ).setURL( url );
+			new CellHandle( mycell, mybook ).setURL( url );
 		}
 	}
 
@@ -322,14 +324,14 @@ public class CellRange implements Serializable
 	 */
 	public void mergeCells( boolean remove )
 	{
-		this.createBlanks();
+		createBlanks();
 		if( remove )
 		{
-			this.mergeCellsClearFollowingCells();
+			mergeCellsClearFollowingCells();
 		}
 		else
 		{
-			this.mergeCellsKeepFollowingCells();
+			mergeCellsKeepFollowingCells();
 		}
 	}
 
@@ -339,13 +341,13 @@ public class CellRange implements Serializable
 	 */
 	private void mergeCellsClearFollowingCells()
 	{
-		BiffRec[] mycells = this.getCellRecs();
+		BiffRec[] mycells = getCellRecs();
 
 		// mycells[0].setMergeRange(this); // set the range of merged cells
 		Xf r = mycells[0].getXfRec();
 		if( r == null )
 		{
-			fmtr = new FormatHandle( this.getWorkBook() );
+			fmtr = new FormatHandle( getWorkBook() );
 			fmtr.addCell( mycells[0] );
 			r = mycells[0].getXfRec();
 		}
@@ -354,7 +356,7 @@ public class CellRange implements Serializable
 		{
 			if( mycells[t] != null )
 			{
-				mycells[t].setSheet( this.getSheet().getMysheet() );
+				mycells[t].setSheet( getSheet().getMysheet() );
 			}
 			mycells[t].setMergeRange( this ); // set the range of merged cells
 			if( t > 0 )
@@ -368,13 +370,13 @@ public class CellRange implements Serializable
 				}
 			}
 		}
-		Mergedcells mc = this.getSheet().getSheet().getMergedCellsRec();
+		Mergedcells mc = getSheet().getSheet().getMergedCellsRec();
 		if( mc == null )
 		{
-			mc = this.getSheet().getSheet().addMergedCellRec();
+			mc = getSheet().getSheet().addMergedCellRec();
 		}
 		mc.addCellRange( this );
-		this.ismerged = true;
+		ismerged = true;
 	}
 
 	/**
@@ -382,27 +384,27 @@ public class CellRange implements Serializable
 	 */
 	private void mergeCellsKeepFollowingCells()
 	{
-		BiffRec[] mycells = this.getCellRecs();
+		BiffRec[] mycells = getCellRecs();
 		for( BiffRec mycell : mycells )
 		{
 			mycell.setMergeRange( this ); // set the range of merged cells
 			Xf r = mycell.getXfRec();
 			if( r == null )
 			{
-				fmtr = new FormatHandle( this.getWorkBook() );
+				fmtr = new FormatHandle( getWorkBook() );
 				fmtr.addCellRange( this );
 				r = mycell.getXfRec();
 			}
 			r.setMerged( true );
 		}
 
-		Mergedcells mc = this.getSheet().getSheet().getMergedCellsRec();
+		Mergedcells mc = getSheet().getSheet().getMergedCellsRec();
 		if( mc == null )
 		{
-			mc = this.getSheet().getSheet().addMergedCellRec();
+			mc = getSheet().getSheet().addMergedCellRec();
 		}
 		mc.addCellRange( this );
-		this.ismerged = true;
+		ismerged = true;
 	}
 
 	/**
@@ -607,9 +609,9 @@ public class CellRange implements Serializable
 	{
 		String chsheet = cxx.getWorkSheetName();
 		String mysheet = "";
-		if( this.getSheet() != null )
+		if( getSheet() != null )
 		{
-			mysheet = this.getSheet().getSheetName();
+			mysheet = getSheet().getSheetName();
 		}
 		if( !chsheet.equalsIgnoreCase( mysheet ) )
 		{
@@ -671,17 +673,17 @@ public class CellRange implements Serializable
 	 */
 	public CellRange( WorkSheetHandle sht, int[] coords, boolean cb ) throws Exception
 	{
-		this.createBlanks = cb;
-		this.sheet = sht;
-		this.mybook = sht.wbh;
+		createBlanks = cb;
+		sheet = sht;
+		mybook = sht.wbh;
 		sheetname = sht.getSheetName();
 		sheetname = GenericPtg.qualifySheetname( sheetname );
 		String addr = sheetname + "!";
 		String c1 = ExcelTools.getAlphaVal( coords[1] ) + String.valueOf( coords[0] + 1 );
 		String c2 = ExcelTools.getAlphaVal( coords[3] ) + String.valueOf( coords[2] + 1 );
 		addr += c1 + ":" + c2;
-		this.range = addr;
-		this.init();
+		range = addr;
+		init();
 	}
 
 	/**
@@ -689,9 +691,9 @@ public class CellRange implements Serializable
 	 */
 	public void setAsPrintArea()
 	{
-		if( this.sheet == null )
+		if( sheet == null )
 		{
-			log.warn( "CellRange.setAsPrintArea() failed: " + this.toString() + " does not have a valid Sheet reference." );
+			log.warn( "CellRange.setAsPrintArea() failed: " + toString() + " does not have a valid Sheet reference." );
 			return;
 		}
 		sheet.setPrintArea( this );
@@ -728,7 +730,7 @@ public class CellRange implements Serializable
 	 */
 	public CellRange( String r )
 	{
-		this.range = r;
+		range = r;
 	}
 
 	/**
@@ -769,12 +771,12 @@ public class CellRange implements Serializable
 		String sheetname = ch.getWorkSheetName();
 		if( sheetname == null )
 		{
-			log.warn( "Cell " + ch.toString() + " NOT added to Range: " + this.toString() );
+			log.warn( "Cell " + ch.toString() + " NOT added to Range: " + toString() );
 			return false;
 		}
-		if( !sheetname.equalsIgnoreCase( this.getSheet().getSheetName() ) )
+		if( !sheetname.equalsIgnoreCase( getSheet().getSheetName() ) )
 		{
-			log.warn( "Cell " + ch.toString() + " NOT added to Range: " + this.toString() );
+			log.warn( "Cell " + ch.toString() + " NOT added to Range: " + toString() );
 			return false;
 		}
 		int[] rc = { ch.getRowNum(), ch.getColNum() };
@@ -821,7 +823,7 @@ public class CellRange implements Serializable
 		//if (myptg != null && myptg instanceof PtgRef)
 		//	addPtgInfo = true;
 		// format the new range String
-		String newrange = this.getSheet().getSheetName() + "!";
+		String newrange = getSheet().getSheetName() + "!";
 		String newcellrange = "";
 		//if (addPtgInfo && !((PtgRef) myptg).isColRel())
 		//	newcellrange += "$";
@@ -836,7 +838,7 @@ public class CellRange implements Serializable
 		//if (addPtgInfo && !((PtgRef) myptg).isColRel())
 		//	newcellrange += "$";
 		newcellrange += String.valueOf( lastcellrow );
-		this.range = newrange + newcellrange;
+		range = newrange + newcellrange;
 		isDirty = true;
 
 		/*if (addPtgInfo) {
@@ -844,9 +846,9 @@ public class CellRange implements Serializable
 			return true;
 		}*/
 
-		if( (this.parent != null) && (this.parent.getOpcode() == XLSConstants.NAME) )
+		if( (parent != null) && (parent.getOpcode() == XLSConstants.NAME) )
 		{
-			((Name) parent).setLocation( this.range );    // ensure named range expression is updated, as well as any formula references are cleared of cache
+			((Name) parent).setLocation( range );    // ensure named range expression is updated, as well as any formula references are cleared of cache
 		}
 
 		return false;
@@ -893,7 +895,7 @@ public class CellRange implements Serializable
 	 */
 	public BiffRec[] getCellRecs()
 	{
-		CellHandle[] ch = this.getCells();
+		CellHandle[] ch = getCells();
 		BiffRec[] ret = new BiffRec[ch.length];
 		for( int t = 0; t < ret.length; t++ )
 		{
@@ -925,7 +927,7 @@ public class CellRange implements Serializable
 	 */
 	public int getIncrementAmount() throws Exception
 	{
-		CellHandle[] ch = this.getCells();
+		CellHandle[] ch = getCells();
 		if( ch.length == 1 )
 		{
 			throw new Exception( "Cannot have increment with non-range cell" );
@@ -977,10 +979,10 @@ public class CellRange implements Serializable
 		{
 			return;
 		}
-		this.setWorkBook( bk );
+		setWorkBook( bk );
 		try
 		{
-			this.init();
+			init();
 		}
 		catch( CellNotFoundException e )
 		{
@@ -1007,12 +1009,12 @@ public class CellRange implements Serializable
 		{
 			return;
 		}
-		this.setWorkBook( bk );
+		setWorkBook( bk );
 		try
 		{
 			if( !"".equals( this.range ) )
 			{
-				this.init();
+				init();
 			}
 		}
 		catch( CellNotFoundException e )
@@ -1053,8 +1055,8 @@ public class CellRange implements Serializable
 	 */
 	public void sort( int rownumber, Comparator<CellHandle> comparator, boolean ascending ) throws RowNotFoundException
 	{
-		this.createBlanks();
-		ArrayList<CellHandle> sortRow = this.getCellsByRow( rownumber );
+		createBlanks();
+		ArrayList<CellHandle> sortRow = getCellsByRow( rownumber );
 		Collections.sort( sortRow, comparator );
 		if( !ascending )
 		{
@@ -1064,7 +1066,7 @@ public class CellRange implements Serializable
 		int[] coords = null;
 		try
 		{
-			coords = this.getRangeCoords();
+			coords = getRangeCoords();
 			// fix stupid wrong offsets;
 			coords[0] = coords[0]--;
 			coords[2] = coords[2]--;
@@ -1078,7 +1080,7 @@ public class CellRange implements Serializable
 			ArrayList cells = null;
 			try
 			{
-				cells = this.getCellsByCol( ExcelTools.getAlphaVal( cell.getColNum() ) );
+				cells = getCellsByCol( ExcelTools.getAlphaVal( cell.getColNum() ) );
 			}
 			catch( ColumnNotFoundException e )
 			{
@@ -1086,14 +1088,14 @@ public class CellRange implements Serializable
 			}
 			outputCols.add( cells );
 		}
-		this.removeCells();
+		removeCells();
 		for( int i = coords[1]; i <= coords[3]; i++ )
 		{
 			ArrayList cells = outputCols.get( i - coords[1] );
 			for( Object cell1 : cells )
 			{
 				CellHandle cell = (CellHandle) cell1;
-				Boundsheet bs = this.getSheet().getBoundsheet();
+				Boundsheet bs = getSheet().getBoundsheet();
 				cell.getCell().setCol( (short) i );
 				bs.addCell( (CellRec) cell.getCell() );
 			}
@@ -1107,13 +1109,13 @@ public class CellRange implements Serializable
 	 */
 	private void createBlanks()
 	{
-		if( !this.createBlanks )
+		if( !createBlanks )
 		{
-			this.createBlanks = true;
-			this.initializeCells = true;
+			createBlanks = true;
+			initializeCells = true;
 			try
 			{
-				this.init();
+				init();
 			}
 			catch( CellNotFoundException e )
 			{
@@ -1132,7 +1134,7 @@ public class CellRange implements Serializable
 	public void sort( int rownumber, boolean ascending ) throws RowNotFoundException
 	{
 		Comparator<CellHandle> cp = new CellComparator();
-		this.sort( rownumber, cp, ascending );
+		sort( rownumber, cp, ascending );
 	}
 
 	/**
@@ -1152,19 +1154,19 @@ public class CellRange implements Serializable
 	 */
 	public void sort( String columnName, Comparator comparator, boolean ascending ) throws ColumnNotFoundException
 	{
-		if( !this.createBlanks )
+		if( !createBlanks )
 		{
 			// we cannot have empty cells in this operation
-			this.createBlanks = true;
+			createBlanks = true;
 			try
 			{
-				this.init();
+				init();
 			}
 			catch( CellNotFoundException e )
 			{
 			}
 		}
-		ArrayList sortCol = this.getCellsByCol( columnName );
+		ArrayList sortCol = getCellsByCol( columnName );
 		Collections.sort( sortCol, comparator );
 		if( !ascending )
 		{
@@ -1174,7 +1176,7 @@ public class CellRange implements Serializable
 		int[] coords = null;
 		try
 		{
-			coords = this.getRangeCoords();
+			coords = getRangeCoords();
 			// fix stupid wrong offsets;
 			coords[0] = coords[0]--;
 			coords[2] = coords[2]--;
@@ -1191,7 +1193,7 @@ public class CellRange implements Serializable
 			ArrayList<CellHandle> cells = null;
 			try
 			{
-				cells = this.getCellsByRow( cell.getRowNum() );
+				cells = getCellsByRow( cell.getRowNum() );
 			}
 			catch( RowNotFoundException e )
 			{
@@ -1199,14 +1201,14 @@ public class CellRange implements Serializable
 			}
 			outputRows.add( cells );
 		}
-		this.removeCells();
+		removeCells();
 		for( int i = coords[0]; i <= coords[2]; i++ )
 		{
 			ArrayList cells = outputRows.get( i - coords[0] );
 			for( Object cell1 : cells )
 			{
 				CellHandle cell = (CellHandle) cell1;
-				Boundsheet bs = this.getSheet().getBoundsheet();
+				Boundsheet bs = getSheet().getBoundsheet();
 				cell.getCell().setRowNumber( i - 1 );
 				bs.addCell( (CellRec) cell.getCell() );
 			}
@@ -1225,7 +1227,7 @@ public class CellRange implements Serializable
 	public void sort( String columnName, boolean ascending ) throws ColumnNotFoundException
 	{
 		Comparator cp = new CellComparator();
-		this.sort( columnName, cp, ascending );
+		sort( columnName, cp, ascending );
 	}
 
 	public static String xmlResponsePre = "<CellRange>";
@@ -1238,9 +1240,9 @@ public class CellRange implements Serializable
 	 */
 	public String getXML()
 	{
-		StringBuffer sb = new StringBuffer( "<CellRange Range=\"" + this.getRange() + "\">" );
+		StringBuffer sb = new StringBuffer( "<CellRange Range=\"" + getRange() + "\">" );
 		// StringBuffer sb = new StringBuffer(xmlResponsePre);
-		CellHandle[] cx = this.getCells();
+		CellHandle[] cx = getCells();
 		sb.append( "\r\n" );
 		// append cellxml
 		for( CellHandle aCx : cx )
@@ -1269,7 +1271,7 @@ public class CellRange implements Serializable
 		{
 			sbx.append( "<?xml version=\"1\" encoding=\"utf-8\"?>" );
 		}
-		sbx.append( "<CellRange Range=\"" + this.getRange() + "\">" );
+		sbx.append( "<CellRange Range=\"" + getRange() + "\">" );
 		sbx.append( getXML() );
 		sbx.append( "</NameHandle>" );
 		return sbx.toString();
@@ -1308,13 +1310,13 @@ public class CellRange implements Serializable
 	 */
 	public CellRange( CellHandle[] newcells ) throws CellNotFoundException
 	{
-		this.setWorkBook( newcells[0].getWorkBook() );
-		this.sheet = newcells[0].getWorkSheetHandle();
+		setWorkBook( newcells[0].getWorkBook() );
+		sheet = newcells[0].getWorkSheetHandle();
 		for( CellHandle newcell : newcells )
 		{
-			this.addCellToRange( newcell );
+			addCellToRange( newcell );
 		}
-		this.init();
+		init();
 	}
 
 	/**
@@ -1329,14 +1331,14 @@ public class CellRange implements Serializable
 	 */
 	public CellRange( CellHandle[] newcells, boolean createblanks ) throws CellNotFoundException
 	{
-		this.createBlanks = createblanks;
-		this.setWorkBook( newcells[0].getWorkBook() );
-		this.sheet = newcells[0].getWorkSheetHandle();
+		createBlanks = createblanks;
+		setWorkBook( newcells[0].getWorkBook() );
+		sheet = newcells[0].getWorkSheetHandle();
 		for( CellHandle newcell : newcells )
 		{
-			this.addCellToRange( newcell );
+			addCellToRange( newcell );
 		}
-		this.init();
+		init();
 	}
 
 	/**
@@ -1362,7 +1364,7 @@ public class CellRange implements Serializable
 	 */
 	public void setWorkBook( com.extentech.ExtenXLS.WorkBook bk )
 	{
-		this.mybook = bk;
+		mybook = bk;
 	}
 
 	/**
@@ -1386,12 +1388,12 @@ public class CellRange implements Serializable
 		{
 			if( s[2] == null )
 			{
-				this.range = sheetname + "!" + temprange;
+				range = sheetname + "!" + temprange;
 			}
 			else
 			{
 				s[2] = GenericPtg.qualifySheetname( s[2] );
-				this.range = sheetname + ":" + s[2] + "!" + temprange;
+				range = sheetname + ":" + s[2] + "!" + temprange;
 			}
 		}
 		
@@ -1427,7 +1429,8 @@ public class CellRange implements Serializable
 			retr[4] = numcells;
 			return retr;
 		}
-		String startcell = "", endcell = "";
+		String startcell = "";
+		String endcell = "";
 		int lastcolon = temprange.lastIndexOf( ":" );
 		endcell = temprange.substring( lastcolon + 1 );
 		if( lastcolon == -1 ) // no range
@@ -1526,7 +1529,7 @@ public class CellRange implements Serializable
 	 */
 	public int[] getRangeCoords() throws CellNotFoundException
 	{
-		int[] ordinalValues = this.getCoords();
+		int[] ordinalValues = getCoords();
 		ordinalValues[0] += 1;
 		ordinalValues[2] += 1;
 		return ordinalValues;
@@ -1551,7 +1554,7 @@ public class CellRange implements Serializable
 	{
 		if( !FormulaParser.isComplexRange( range ) )
 		{
-			int[] coords = this.getRangeCoords();
+			int[] coords = getRangeCoords();
 			int rowctr = coords[0];
 			int firstcellcol = coords[1];
 			int lastcellcol = coords[3];
@@ -1565,14 +1568,14 @@ public class CellRange implements Serializable
 					if( sheetname.equals( "" ) ) // 20080214 KSC - is this a good idea?
 					// default to work sheet 0
 					{
-						sheetname = this.mybook.getWorkSheet( 0 ).getSheetName();
+						sheetname = mybook.getWorkSheet( 0 ).getSheetName();
 					}
 				}
 				if( sheetname == null )
 				{
-					if( this.sheet != null )
+					if( sheet != null )
 					{
-						sheetname = this.sheet.getSheetName();
+						sheetname = sheet.getSheetName();
 					}
 					else
 					{
@@ -1595,13 +1598,13 @@ public class CellRange implements Serializable
 				}
 				sheet = mybook.getWorkSheet( s );
 				// if wholerow or wholecol, don't gather cells
-				if( this.wholeCol || this.wholeRow )
+				if( wholeCol || wholeRow )
 				{
 					return;
 				}
 				cells = new CellHandle[numcells];
 				boolean resetFastAdds = false;
-				if( sheet.getFastCellAdds() && this.createBlanks )
+				if( sheet.getFastCellAdds() && createBlanks )
 				{
 					resetFastAdds = true;
 					sheet.setFastCellAdds( false );
@@ -1619,7 +1622,7 @@ public class CellRange implements Serializable
 					{
 						// use caching 20080917 KSC: PROBLEM HERE [Claritas
 						// BugTracker 1862]
-						if( this.initializeCells )
+						if( initializeCells )
 						{
 							cells[i] = sheet.getCell( rowctr - 1, cellctr, sheet.getUseCache() ); // 20080917 KSC: use cache
 						}
@@ -1628,7 +1631,7 @@ public class CellRange implements Serializable
 					}
 					catch( CellNotFoundException e )
 					{
-						if( this.createBlanks )
+						if( createBlanks )
 						{
 							cells[i] = sheet.add( null, rowctr - 1, cellctr );
 						}
@@ -1649,7 +1652,7 @@ public class CellRange implements Serializable
 		{    // gather cells for a complex range ...
 			com.extentech.formats.XLS.formulas.PtgMemFunc pm = new com.extentech.formats.XLS.formulas.PtgMemFunc();
 			XLSRecord b = new XLSRecord();
-			b.setWorkBook( this.mybook.getWorkBook() );
+			b.setWorkBook( mybook.getWorkBook() );
 			pm.setParentRec( b );
 			try
 			{
@@ -1664,7 +1667,7 @@ public class CellRange implements Serializable
 					}
 					catch( CellNotFoundException e )
 					{
-						if( this.createBlanks )
+						if( createBlanks )
 						{
 							cells[i] = sheet.add( null, p[i].getLocation() );
 						}
@@ -1700,12 +1703,12 @@ public class CellRange implements Serializable
 			return;
 		}
 
-		this.initializeCells = true;
+		initializeCells = true;
 		this.createBlanks = createBlanks;
 
 		try
 		{
-			this.init();
+			init();
 		}
 		catch( CellNotFoundException e )
 		{
@@ -1764,7 +1767,7 @@ public class CellRange implements Serializable
 		String rc1x = "R";
 		try
 		{
-			int[] rc1 = this.getRangeCoords();
+			int[] rc1 = getRangeCoords();
 			rc1x += rc1[0] + 1;        // rangecoords are already 1-based
 			rc1x += "C" + rc1[1];
 			rc1x += ":R" + (rc1[2] + 1);
@@ -1788,7 +1791,7 @@ public class CellRange implements Serializable
 		range = rng;
 		try
 		{
-			this.init();
+			init();
 		}
 		catch( CellNotFoundException e )
 		{
@@ -1858,19 +1861,19 @@ public class CellRange implements Serializable
 				// 20090901 KSC: apparently can be null
 				if( cx != null )
 				{
-					this.addCellToRange( cx );
+					addCellToRange( cx );
 				}
 			}
-			this.myrowints = null;
-			this.mycolints = null;
+			myrowints = null;
+			mycolints = null;
 			return true;
 		}
-		if( this.range != null )
+		if( range != null )
 		{// 20100106 KSC: handle ranges containing null cell[0] (i.e. ranges referencing cells not present and createBlanks==false)
-				log.warn( "CellRange.update:  trying to access blank cells in range " + this.range );
+				log.warn( "CellRange.update:  trying to access blank cells in range " + range );
 			try
 			{
-				this.getRangeCoords();
+				getRangeCoords();
 				return true;
 			}
 			catch( CellNotFoundException e )
@@ -1898,8 +1901,8 @@ public class CellRange implements Serializable
 	 */
 	public void setSheet( WorkSheetHandle aSheet )
 	{
-		this.sheet = aSheet;
-		this.sheetname = aSheet.getSheetName();
+		sheet = aSheet;
+		sheetname = aSheet.getSheetName();
 	}
 
 	/**
@@ -1926,7 +1929,7 @@ public class CellRange implements Serializable
 	 */
 	public CellRange copy( WorkSheetHandle sheet, int row, int col, int what )
 	{
-		CellRange result = new CellRange( sheet, row, col, this.getWidth(), this.getHeight() );
+		CellRange result = new CellRange( sheet, row, col, getWidth(), getHeight() );
 
 		int first_col = col;
 
@@ -2178,10 +2181,10 @@ public class CellRange implements Serializable
 		try
 		{
 			JSONObject crObj = new JSONObject();
-			crObj.put( JSON_RANGE, this.getRange() );
+			crObj.put( JSON_RANGE, getRange() );
 			JSONArray rangeArray = new JSONArray();
 			// should this possibly be full
-			CellHandle[] cells = this.getCells();
+			CellHandle[] cells = getCells();
 			for( CellHandle cell : cells )
 			{
 				JSONObject result = new JSONObject();
@@ -2237,12 +2240,12 @@ public class CellRange implements Serializable
 	public ArrayList<CellHandle> getCellsByRow( int rownumber ) throws RowNotFoundException
 	{
 		ArrayList<CellHandle> al = new ArrayList<>();
-		RowHandle r = this.getSheet().getRow( rownumber );
+		RowHandle r = getSheet().getRow( rownumber );
 		CellHandle[] cells = r.getCells();
 		int[] coords = null;
 		try
 		{
-			coords = this.getRangeCoords();
+			coords = getRangeCoords();
 		}
 		catch( CellNotFoundException e )
 		{
@@ -2267,12 +2270,12 @@ public class CellRange implements Serializable
 	public ArrayList<CellHandle> getCellsByCol( String col ) throws ColumnNotFoundException
 	{
 		ArrayList<CellHandle> al = new ArrayList<>();
-		ColHandle r = this.getSheet().getCol( col );
+		ColHandle r = getSheet().getCol( col );
 		CellHandle[] cells = r.getCells();
 		int[] coords = null;
 		try
 		{
-			coords = this.getRangeCoords();
+			coords = getRangeCoords();
 			coords[0] = coords[0] - 1;
 			coords[2] = coords[2] - 1;
 		}

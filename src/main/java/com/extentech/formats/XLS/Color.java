@@ -37,7 +37,7 @@ public final class Color implements Serializable
 
 	public Color( byte[] d )
 	{
-		this.data = d;
+		data = d;
 		myval = ByteTools.readInt( d[0], d[1], d[2], d[3] );
 	}
 
@@ -50,6 +50,6 @@ public final class Color implements Serializable
 
 	public byte[] read()
 	{
-		return this.data;
+		return data;
 	}
 }

@@ -81,8 +81,8 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		grbit = ByteTools.readShort( this.getByteAt( 16 ), this.getByteAt( 17 ) );
-		drawingOrder = ByteTools.readShort( this.getByteAt( 18 ), this.getByteAt( 19 ) );
+		grbit = ByteTools.readShort( getByteAt( 16 ), getByteAt( 17 ) );
+		drawingOrder = ByteTools.readShort( getByteAt( 18 ), getByteAt( 19 ) );
 		fVaried = ((grbit & 0x1) == 0x1);
 	}
 
@@ -93,8 +93,8 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	private void updateRecord()
 	{
 		byte[] b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[16] = b[0];
-		this.getData()[17] = b[1];
+		getData()[16] = b[0];
+		getData()[17] = b[1];
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 		}
 		else
 		{
-			DataFormat df = this.getDataFormatRec( false );
+			DataFormat df = getDataFormatRec( false );
 			if( df != null )
 			{
 				return df.getHas3DBubbles();
@@ -170,7 +170,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 */
 	public boolean is3DClustered()
 	{
-		ThreeD td = (ThreeD) Chart.findRec( this.chartArr, ThreeD.class );
+		ThreeD td = (ThreeD) Chart.findRec( chartArr, ThreeD.class );
 		if( td != null )
 		{
 			return td.isClustered();
@@ -251,7 +251,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setPercentage( int p )
 	{
-		DataFormat df = this.getDataFormatRec( true );
+		DataFormat df = getDataFormatRec( true );
 		df.setPercentage( p );
 	}
 
@@ -269,7 +269,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setBarShape( int shape )
 	{
-		DataFormat df = this.getDataFormatRec( true );
+		DataFormat df = getDataFormatRec( true );
 		// THIS DOES NOT MAKE SENSE ACCORDING TO DOC BUT IS WHAT EXCEL DOES
 		df.setPointNumber( 0 );
 		df.setSeriesIndex( 0 );
@@ -307,19 +307,19 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 				op.equals( "Cluster" ) || op.equals( "ThreeDScaling" ) || op.equals( "TwoDWalls" ) || op.equals( "PcGap" ) || op.equals(
 				"PcDepth" ) || op.equals( "PcHeight" ) || op.equals( "PcDist" ) || op.equals( "AnElev" ) || op.equals( "AnRot" ) )
 		{
-			ThreeD td = this.getThreeDRec( true );
+			ThreeD td = getThreeDRec( true );
 			td.setChartOption( op, val );
 		}
 		else if( op.equals( "ShowValueLabel" ) || // Attached Label Options
 				op.equals( "ShowValueAsPercent" ) || op.equals( "ShowLabelAsPercent" ) || op.equals( "ShowLabel" ) || op.equals(
 				"ShowSeriesName" ) || op.equals( "ShowBubbleLabel" ) )
 		{
-			DataFormat df = this.getDataFormatRec( true );
+			DataFormat df = getDataFormatRec( true );
 			df.setDataLabels( op );
 		}
 		else if( op.equalsIgnoreCase( "SmoothedLine" ) || op.equalsIgnoreCase( "ThreeDBubbles" ) || op.equalsIgnoreCase( "ArShadow" ) )
 		{
-			DataFormat df = this.getDataFormatRec( true );
+			DataFormat df = getDataFormatRec( true );
 			if( op.equalsIgnoreCase( "SmoothedLine" ) )
 			{
 				df.setSmoothLines( true );
@@ -345,21 +345,21 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	// The preceding chart group type MUST be of type bar, pie, line, area, or surface.
 	public ThreeD getThreeDRec( boolean bCreate )
 	{
-		ThreeD td = (ThreeD) Chart.findRec( this.chartArr, ThreeD.class );
+		ThreeD td = (ThreeD) Chart.findRec( chartArr, ThreeD.class );
 		if( (td == null) && bCreate )
 		{ // add ThreeD rec
-			for( int i = 0; i < this.chartArr.size(); i++ )
+			for( int i = 0; i < chartArr.size(); i++ )
 			{
-				BiffRec b = this.chartArr.get( i );
+				BiffRec b = chartArr.get( i );
 				if( b.getOpcode() == CHARTFORMATLINK )
 				{
-					if( ((i + 1) < chartArr.size()) && (this.chartArr.get( i + 1 ).getOpcode() == SERIESLIST) )
+					if( ((i + 1) < chartArr.size()) && (chartArr.get( i + 1 ).getOpcode() == SERIESLIST) )
 					{
 						i++;    // rare that SeriesList record appears
 					}
 					td = (ThreeD) ThreeD.getPrototype();
-					td.setParentChart( this.getParentChart() );
-					this.chartArr.add( i + 1, td );
+					td.setParentChart( getParentChart() );
+					chartArr.add( i + 1, td );
 					break;
 				}
 			}
@@ -374,36 +374,36 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 */
 	private TextDisp getDataLegendTextDisp( int type )
 	{
-		int i = Chart.findRecPosition( this.chartArr, Legend.class );
+		int i = Chart.findRecPosition( chartArr, Legend.class );
 		TextDisp td = null;
-		if( (this.chartArr.size() <= (i + 1)) || (this.chartArr.get( i + 1 ).getClass() != DefaultText.class) )
+		if( (chartArr.size() <= (i + 1)) || (chartArr.get( i + 1 ).getClass() != DefaultText.class) )
 		{ // then add one
 			DefaultText d = (DefaultText) DefaultText.getPrototype();
 			d.setType( (short) type );
-			d.setParentChart( this.getParentChart() );
-			this.chartArr.add( ++i, d );
-			td = (TextDisp) TextDisp.getPrototype( ObjectLink.TYPE_DATAPOINTS, "", this.getWorkBook() );
-			td.setParentChart( this.getParentChart() );
-			this.chartArr.add( ++i, td );
+			d.setParentChart( getParentChart() );
+			chartArr.add( ++i, d );
+			td = (TextDisp) TextDisp.getPrototype( ObjectLink.TYPE_DATAPOINTS, "", getWorkBook() );
+			td.setParentChart( getParentChart() );
+			chartArr.add( ++i, td );
 		}
 		else
 		{
-			DefaultText d = (DefaultText) this.chartArr.get( i + 1 );
+			DefaultText d = (DefaultText) chartArr.get( i + 1 );
 			if( d.getType() != type )
 			{ // / add a new one
 				i += 2; // add after TextDisp
 				d = (DefaultText) DefaultText.getPrototype();
 				d.setType( (short) type );
-				d.setParentChart( this.getParentChart() );
-				this.chartArr.add( ++i, d );
-				td = (TextDisp) TextDisp.getPrototype( ObjectLink.TYPE_DATAPOINTS, "", this.getWorkBook() );
-				td.setParentChart( this.getParentChart() );
-				this.chartArr.add( ++i, td );
+				d.setParentChart( getParentChart() );
+				chartArr.add( ++i, d );
+				td = (TextDisp) TextDisp.getPrototype( ObjectLink.TYPE_DATAPOINTS, "", getWorkBook() );
+				td.setParentChart( getParentChart() );
+				chartArr.add( ++i, td );
 			}
 			else
 			{ // it's the correct one
 				i += 2;
-				td = (TextDisp) this.chartArr.get( i );
+				td = (TextDisp) chartArr.get( i );
 			}
 		}
 		return td;
@@ -418,11 +418,11 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 */
 	private DataFormat getDataFormatRec( boolean bCreate )
 	{
-		DataFormat df = (DataFormat) Chart.findRec( this.chartArr, DataFormat.class );
+		DataFormat df = (DataFormat) Chart.findRec( chartArr, DataFormat.class );
 		if( (df == null) && bCreate )
 		{ // create dataformat
-			df = (DataFormat) DataFormat.getPrototypeWithFormatRecs( this.getParentChart() );
-			this.addChartRecord( df );
+			df = (DataFormat) DataFormat.getPrototypeWithFormatRecs( getParentChart() );
+			addChartRecord( df );
 		}
 		return df;
 	}
@@ -441,7 +441,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 */
 	public String getDataLabels()
 	{
-		DataFormat df = this.getDataFormatRec( false );
+		DataFormat df = getDataFormatRec( false );
 		if( df != null )
 		{
 			return df.getDataLabelType();
@@ -456,7 +456,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 */
 	public boolean getHasLines()
 	{
-		DataFormat df = this.getDataFormatRec( false );
+		DataFormat df = getDataFormatRec( false );
 		if( df != null )
 		{
 			return df.getHasLines();
@@ -469,7 +469,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setHasLines()
 	{
-		DataFormat df = this.getDataFormatRec( true );
+		DataFormat df = getDataFormatRec( true );
 		df.setHasLines();
 	}
 
@@ -479,7 +479,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setHasLines( int lineStyle )
 	{
-		DataFormat df = this.getDataFormatRec( true );
+		DataFormat df = getDataFormatRec( true );
 		df.setHasLines( lineStyle );
 	}
 
@@ -490,7 +490,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 */
 	public boolean getHasSmoothLines()
 	{
-		DataFormat df = this.getDataFormatRec( false );
+		DataFormat df = getDataFormatRec( false );
 		if( df != null )
 		{
 			return df.getSmoothedLines();
@@ -503,7 +503,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setHasSmoothLines( boolean b )
 	{
-		DataFormat df = this.getDataFormatRec( true );
+		DataFormat df = getDataFormatRec( true );
 		df.setSmoothLines( b );
 	}
 
@@ -542,7 +542,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setHas3DBubbles( boolean has3dBubbles )
 	{
-		DataFormat df = this.getDataFormatRec( true );
+		DataFormat df = getDataFormatRec( true );
 		df.setHas3DBubbles( has3dBubbles );
 
 	}
@@ -566,15 +566,15 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	public int getDataLabelsInt()
 	{
 		int datalabels = 0;
-		int z = Chart.findRecPosition( this.chartArr, DataLabExtContents.class );
+		int z = Chart.findRecPosition( chartArr, DataLabExtContents.class );
 
 		// here we are assuming that the TextDisp is of the proper ObjectLink=4 type ... 
-		if( (z > 0) && (this.chartArr.get( z - 1 ) instanceof TextDisp) )
+		if( (z > 0) && (chartArr.get( z - 1 ) instanceof TextDisp) )
 		{ // Extended Label -- add to attachedlabel, if any
 			DataLabExtContents dl = (DataLabExtContents) chartArr.get( z );
 			datalabels = dl.getTypeInt(); // if so, no fontx record ... use default???
 		}
-		DataFormat df = this.getDataFormatRec( false );
+		DataFormat df = getDataFormatRec( false );
 		if( df != null )
 		{
 			datalabels |= df.getDataLabelTypeInt();
@@ -594,7 +594,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setHasDataLabels( int dl )
 	{
-		DataFormat df = this.getDataFormatRec( true );
+		DataFormat df = getDataFormatRec( true );
 		df.setHasDataLabels( dl );
 	}
 
@@ -612,7 +612,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	public int getBarShape()
 	{
 		int shape = SHAPEDEFAULT;
-		DataFormat df = this.getDataFormatRec( false );
+		DataFormat df = getDataFormatRec( false );
 		if( df != null )
 		{
 			shape = df.getShape();
@@ -639,7 +639,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	{
 		int markertype = 8; // default= circles
 		// default actually looks like: 2, 1, 5, 4 ...
-		DataFormat df = this.getDataFormatRec( false );
+		DataFormat df = getDataFormatRec( false );
 		if( df != null )
 		{
 			return df.getMarkerFormat();
@@ -661,7 +661,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setMarkers( int markerFormat )
 	{
-		DataFormat df = this.getDataFormatRec( true );
+		DataFormat df = getDataFormatRec( true );
 		df.setMarkerFormat( markerFormat );
 	}
 
@@ -692,11 +692,11 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 			if( (op == DROPBAR) || (op == LEGEND) || (op == THREED) || (op == CHARTFORMATLINK) )
 			{
 				cl = (ChartLine) cl.getPrototype();
-				cl.setParentChart( this.getParentChart() );
+				cl.setParentChart( getParentChart() );
 				chartArr.add( ++i, cl );
-				cl.setParentChart( this.getParentChart() );    // ensure can find
+				cl.setParentChart( getParentChart() );    // ensure can find
 				LineFormat lf = (LineFormat) LineFormat.getPrototype( 0, 1 );
-				lf.setParentChart( this.getParentChart() );
+				lf.setParentChart( getParentChart() );
 				chartArr.add( ++i, lf );
 				break;
 			}
@@ -770,19 +770,19 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 		{
 			// create necessary records to describe up/down bars  
 			Dropbar upBar = (Dropbar) Dropbar.getPrototype();
-			upBar.setParentChart( this.getParentChart() );
+			upBar.setParentChart( getParentChart() );
 			Dropbar downBar = (Dropbar) Dropbar.getPrototype();
-			downBar.setParentChart( this.getParentChart() );
+			downBar.setParentChart( getParentChart() );
 			LineFormat lf = (LineFormat) LineFormat.getPrototype();
-			lf.setParentChart( this.getParentChart() );
+			lf.setParentChart( getParentChart() );
 			AreaFormat af = (AreaFormat) AreaFormat.getPrototype();
-			af.setParentChart( this.getParentChart() );
+			af.setParentChart( getParentChart() );
 			upBar.chartArr.add( lf );
 			upBar.chartArr.add( af );
 			lf = (LineFormat) LineFormat.getPrototype();
-			lf.setParentChart( this.getParentChart() );
+			lf.setParentChart( getParentChart() );
 			af = (AreaFormat) AreaFormat.getPrototype();
-			af.setParentChart( this.getParentChart() );
+			af.setParentChart( getParentChart() );
 			downBar.chartArr.add( lf );
 			downBar.chartArr.add( af );
 
@@ -926,8 +926,8 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	{
 		drawingOrder = (short) order;
 		byte[] b = ByteTools.shortToLEBytes( drawingOrder );
-		this.getData()[18] = b[0];
-		this.getData()[19] = b[1];
+		getData()[18] = b[0];
+		getData()[19] = b[1];
 	}
 
 	private byte[] PROTOTYPE_BYTES = new byte[]{
@@ -1024,7 +1024,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	@Override
 	public String getChartOption( String op )
 	{
-		DataFormat df = this.getDataFormatRec( false );
+		DataFormat df = getDataFormatRec( false );
 		try
 		{
 			if( op.equals( "Percentage" ) )
@@ -1049,7 +1049,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 					op.equals( "Cluster" ) || op.equals( "ThreeDScaling" ) || op.equals( "TwoDWalls" ) || op.equals( "PcGap" ) || op.equals(
 					"PcDepth" ) || op.equals( "PcHeight" ) || op.equals( "PcDist" ) || op.equals( "AnElev" ) || op.equals( "AnRot" ) )
 			{
-				ThreeD td = this.getThreeDRec( false );
+				ThreeD td = getThreeDRec( false );
 				if( td != null )
 				{
 					return td.getChartOption( op );

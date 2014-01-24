@@ -56,13 +56,22 @@ public final class Labelsst extends XLSCellRecord
 	private static final long serialVersionUID = 467127849827595055L;
 	int isst;
 
+	public Labelsst()
+	{
+	}
+
+	Labelsst( int row, int col )
+	{
+		super( row, col );
+	}
+
 	void setIsst( int i )
 	{
 		isst = i;
-		System.arraycopy( ByteTools.cLongToLEBytes( isst ), 0, this.getData(), 6, 4 );
+		System.arraycopy( ByteTools.cLongToLEBytes( isst ), 0, getData(), 6, 4 );
 		try
 		{
-			this.getWorkBook().getSharedStringTable().initSharingOnStrings( isst );
+			getWorkBook().getSharedStringTable().initSharingOnStrings( isst );
 		}
 		catch( NullPointerException e )
 		{
@@ -110,19 +119,19 @@ public final class Labelsst extends XLSCellRecord
 		// this.initCacheBytes(0,10);
 		// get the row, col and ixfe information
 		super.initRowCol();
-		short s = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
+		short s = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
 		ixfe = s;
 		// get the length of the string
-		isst = ByteTools.readInt( this.getByteAt( 6 ), this.getByteAt( 7 ), this.getByteAt( 8 ), this.getByteAt( 9 ) );
-		this.setIsValueForCell( true );
-		this.isString = true;
-		this.resetCacheBytes();
+		isst = ByteTools.readInt( getByteAt( 6 ), getByteAt( 7 ), getByteAt( 8 ), getByteAt( 9 ) );
+		setIsValueForCell( true );
+		isString = true;
+		resetCacheBytes();
 		// init shared string info.
 		if( isst != -1 )
 		{// not initialized - OOXML use - MUST be set later using setIsst
 			try
 			{
-				this.getWorkBook().getSharedStringTable().initSharingOnStrings( isst );
+				getWorkBook().getSharedStringTable().initSharingOnStrings( isst );
 			}
 			catch( NullPointerException e )
 			{
@@ -135,14 +144,14 @@ public final class Labelsst extends XLSCellRecord
 
 	void initUnsharedString()
 	{
-		unsharedstr = this.getWorkBook().getSharedStringTable().getUStringAt( isst );
+		unsharedstr = getWorkBook().getSharedStringTable().getUStringAt( isst );
 	}
 
 	public Unicodestring getUnsharedString()
 	{
 		if( unsharedstr == null )
 		{
-			this.initUnsharedString();
+			initUnsharedString();
 		}
 		return unsharedstr;
 	}
@@ -159,8 +168,8 @@ public final class Labelsst extends XLSCellRecord
 		{
 			return false;
 		}
-		this.isst = sst.insertUnicodestring( unsharedstr.toString() );
-		this.setIsst( isst );
+		isst = sst.insertUnicodestring( unsharedstr.toString() );
+		setIsst( isst );
 		return true;
 	}
 
@@ -176,7 +185,7 @@ public final class Labelsst extends XLSCellRecord
 		{
 			return unsharedstr.toString();
 		}
-		return this.getWorkBook().getSharedStringTable().getUStringAt( isst ).toCachingString();
+		return getWorkBook().getSharedStringTable().getUStringAt( isst ).toCachingString();
 	}
 
 	/**
@@ -213,7 +222,7 @@ public final class Labelsst extends XLSCellRecord
 		}
 		catch( NumberFormatException n )
 		{
-			this.getXfRec();
+			getXfRec();
 			if( myxf.isDatePattern() )
 			{ // use it
 				try
@@ -223,10 +232,6 @@ public final class Labelsst extends XLSCellRecord
 					java.util.Date d = WorkBookHandle.simpledateformat.parse( s );
 					Calendar c = new GregorianCalendar();
 					c.setTime( d );
-					if( c == null )
-					{
-						return Double.NaN;
-					}
 					return DateConverter.getXLSDateVal( c );
 				}
 				catch( Exception e )
@@ -249,29 +254,29 @@ public final class Labelsst extends XLSCellRecord
 	@Override
 	public void setStringVal( String v )
 	{
-		String ov = this.getStringVal();
+		String ov = getStringVal();
 		if( v.equals( ov ) )
 		{
 			return;
 		}
-		if( this.getSheet().getWorkBook().getSharedStringTable().isSharedString( isst ) )
+		if( getSheet().getWorkBook().getSharedStringTable().isSharedString( isst ) )
 		{
-			isst = this.getSheet().getWorkBook().getSharedStringTable().insertUnicodestring( v );
+			isst = getSheet().getWorkBook().getSharedStringTable().insertUnicodestring( v );
 			System.arraycopy( ByteTools.cLongToLEBytes( isst ), 0, getData(), 6, 4 );
 			init();
 			// reset unsharedstr (see getStringVal) specifically to fix OOXML t="s" setStringVal
-			Unicodestring str = this.getSheet().getWorkBook().getSharedStringTable().getUStringAt( isst );
-			this.unsharedstr = str;
+			Unicodestring str = getSheet().getWorkBook().getSharedStringTable().getUStringAt( isst );
+			unsharedstr = str;
 		}
 		else
 		{
-			Unicodestring str = this.getSheet().getWorkBook().getSharedStringTable().getUStringAt( isst );
+			Unicodestring str = getSheet().getWorkBook().getSharedStringTable().getUStringAt( isst );
 			//ensure reclen and datalen are maintained correctly:
 			int origLen = str.getLength();
 			str.updateUnicodeString( v );
 			int delta = str.getLength() - origLen;
-			this.getSheet().getWorkBook().getSharedStringTable().adjustSstLength( delta );
-			this.unsharedstr = str;
+			getSheet().getWorkBook().getSharedStringTable().adjustSstLength( delta );
+			unsharedstr = str;
 		}
 	}
 
@@ -282,21 +287,21 @@ public final class Labelsst extends XLSCellRecord
 	// 20090520 KSC: for OOXML, must use entire Unicode string so retain formatting info
 	public void setStringVal( Unicodestring v )
 	{
-		if( v.equals( this.getUnsharedString() ) )
+		if( v.equals( getUnsharedString() ) )
 		{
 			return;
 		}
-		isst = this.getSheet()
+		isst = getSheet()
 		           .getWorkBook()
 		           .getSharedStringTable()
 		           .find( v );    // find this particular unicode string (including formatting)
 		if( isst == -1 )
 		{
-			isst = this.getSheet().getWorkBook().getSharedStringTable().insertUnicodestring( v );
+			isst = getSheet().getWorkBook().getSharedStringTable().insertUnicodestring( v );
 		}
 		System.arraycopy( ByteTools.cLongToLEBytes( isst ), 0, getData(), 6, 4 );
 		init();
-		this.unsharedstr = v;
+		unsharedstr = v;
 	}
 
 	/**
@@ -306,7 +311,7 @@ public final class Labelsst extends XLSCellRecord
 	{
 		try
 		{
-			return "LABELSST:" + this.getCellAddress() + ":" + getStringVal();
+			return "LABELSST:" + getCellAddress() + ":" + getStringVal();
 		}
 		catch( Exception e )
 		{

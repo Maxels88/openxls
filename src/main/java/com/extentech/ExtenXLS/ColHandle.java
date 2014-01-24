@@ -54,17 +54,16 @@ import java.util.List;
  */
 public class ColHandle
 {
-	private static final Logger log = LoggerFactory.getLogger( ColHandle.class );
-
 	// TODO: read 1st font in file to set DEFAULT_ZERO_CHAR_WIDTH ... eventually ...
 	public static final double DEFAULT_ZERO_CHAR_WIDTH = 7.0; // width of '0' char in default font + conversion 1.3
 	public static final int COL_UNITS_TO_PIXELS = (int) (256 / DEFAULT_ZERO_CHAR_WIDTH);  // = 36.57
 	public static final int DEFAULT_COLWIDTH = Colinfo.DEFAULT_COLWIDTH;
-
+	private static final Logger log = LoggerFactory.getLogger( ColHandle.class );
 	private Colinfo myCol;
 	private FormatHandle formatter;
 	private WorkBook wbh;
 	private WorkSheetHandle mySheet;
+	private int lastsz = 0; // the last checked col width
 
 	/**
 	 * creates a new  ColHandle from a Colinfo Object and reference to a worksheet (WorkSheetHandle Object)
@@ -77,173 +76,6 @@ public class ColHandle
 		myCol = c;
 		wbh = sheet.getWorkBook();
 		mySheet = sheet;
-	}
-
-	private int lastsz = 0; // the last checked col width
-
-	/**
-	 * resizes this column to fit the width of all displayed, non-wrapped text.
-	 * <br>NOTE: as the Excel autofit implementation is undocumented, this is an approximation
-	 */
-	public void autoFit()
-	{
-		// KSC: make more betta :)
-		double w = 0;
-		CellHandle[] cxt = this.getCells();
-		for( CellHandle aCxt : cxt )
-		{
-			String s = aCxt.getFormattedStringVal();    //StringVal();
-			FormatHandle fh = aCxt.getFormatHandle();
-			Font ef = fh.getFont();
-			int style = java.awt.Font.PLAIN;
-			if( ef.getBold() )
-			{
-				style |= java.awt.Font.BOLD;
-			}
-			if( ef.getItalic() )
-			{
-				style |= java.awt.Font.ITALIC;
-			}
-			int h = (int) ef.getFontHeightInPoints();
-			java.awt.Font f = new java.awt.Font( ef.getFontName(), style, h );
-			double newW = 0;
-			if( !aCxt.getFormatHandle().getWrapText() ) // normal case, no wrap
-			{
-				newW = StringTool.getApproximateStringWidth( f, s );
-			}
-			else    // wrap - use current column width?????
-			{
-				newW = this.getWidth() / COL_UNITS_TO_PIXELS;
-			}
-			w = Math.max( w, newW );
-		/*
-		int strlen = cstr.length();
-	    int csz = strlen *= cxt[t].getFontSize();
-	    int factor= 28;	// KSC: was 50 + added factor to guard below
-	    if((csz*factor)>lastsz)
-		this.setWidth(csz*factor);
-		*/
-		}
-		if( w == 0 )
-		{
-			return;    // keep original width ... that's what Excel does for blank columns ...
-		}
-		// convert pixels to excel column units basically ExtenXLS.COLUNITSTOPIXELS in double form
-		this.setWidth( (int) Math.floor( (w / DEFAULT_ZERO_CHAR_WIDTH) * 256.0 ) );
-	}
-
-	/**
-	 * sets the width of this Column in Characters or Excel units.
-	 * <br>
-	 * The default Excel column width is set to 8.43 Characters,
-	 * based on the default font and font size,
-	 * <br>
-	 * NOTE: The last Cell in the column having its width
-	 * set will be the resulting width of the column
-	 *
-	 * @param int i - desired Column width in Characters (Excel units)
-	 */
-	public void setWidthInChars( int newWidth )
-	{
-        /* if an image falls upon this column, 
-         * adjust image width so that it does not change
-         */
-		ArrayList iAdjust = new ArrayList();
-		ImageHandle[] images = myCol.getSheet().getImages();
-		if( images != null )
-		{
-			// for each image that falls over this column, trap index + original width -- to be reset after setting col width
-			for( int z = 0; z < images.length; z++ )
-			{
-				ImageHandle ih = images[z];
-				int c0 = ih.getCol();
-				int c1 = ih.getCol1();
-				int col = myCol.getColFirst();    // should only be one, right?
-				if( (col >= c0) && (col <= c1) )
-				{
-					int w = ih.getWidth();
-					iAdjust.add( new int[]{ z, w } );
-				}
-			}
-		}
-
-		myCol.setColWidthInChars( newWidth );
-		for( Object anIAdjust : iAdjust )
-		{
-			ImageHandle ih = images[((int[]) anIAdjust)[0]];
-			ih.setWidth( ((int[]) anIAdjust)[1] );
-		}
-	}
-
-	/**
-	 * sets the width of this Column in internal units, described as follows:
-	 * <br>
-	 * default width of the columns in 1/256 of the width of the zero character,
-	 * using default font.
-	 * <br>The Default Excel Column, whose width in Characters or Excel Units, is 8.43, has a width in these units of 2300.
-	 * <p>NOTE:
-	 * The last Cell in the column having its width
-	 * set will be the resulting width of the column
-	 *
-	 * @param int i - desired Column width in internal units
-	 */
-	public void setWidth( int newWidth )
-	{
-        /* if an image falls upon this column, 
-         * adjust image width so that it does not change
-         */
-		ArrayList iAdjust = new ArrayList();
-		ImageHandle[] images = myCol.getSheet().getImages();
-		if( images != null )
-		{
-			// for each image that falls over this column, trap index + original width -- to be reset after setting col width  
-			for( int z = 0; z < images.length; z++ )
-			{
-				ImageHandle ih = images[z];
-				int c0 = ih.getCol();
-				int c1 = ih.getCol1();
-				int col = myCol.getColFirst();    // should only be one, right?
-				if( (col >= c0) && (col <= c1) )
-				{
-					int w = ih.getWidth();
-					iAdjust.add( new int[]{ z, w } );
-				}
-			}
-		}
-		lastsz = newWidth;
-		myCol.setColWidth( newWidth );
-		// now adjust any of the images that we noted above
-		for( Object anIAdjust : iAdjust )
-		{
-			ImageHandle ih = images[((int[]) anIAdjust)[0]];
-			ih.setWidth( ((int[]) anIAdjust)[1] );
-		}
-	}
-
-	/**
-	 * returns the width of this Column in internal units
-	 * defined as follows:
-	 * <br>
-	 * default width of the columns in 1/256 of the width of the zero character,
-	 * using default font.
-	 * <br>The Default Excel Column, whose width in Excel Units or Characters is 8.43, has a width in these units of 2300.
-	 *
-	 * @return int Column width in internal units
-	 */
-	public int getWidth()
-	{
-		return myCol.getColWidth();
-	}
-
-	/**
-	 * returns the width of this Column in Characters or regular Excel units
-	 * <br>NOTE: this value is a calculated value that should be close but still is an approximation of Excel units
-	 *
-	 * @return int Column width in Excel units
-	 */
-	public int getWidthInChars()
-	{
-		return myCol.getColWidthInChars();
 	}
 
 	/**
@@ -277,17 +109,168 @@ public class ColHandle
 	}
 
 	/**
-	 * sets the format id (an index to a Format record) for this Column
-	 * <br>This sets the default formatting for the Column
-	 * such that any cell that does not specifically set it's own formatting
-	 * will display this Column formatting
-	 *
-	 * @param int i - ID representing the Format to set this Column
-	 * @see FormatHandle
+	 * resizes this column to fit the width of all displayed, non-wrapped text.
+	 * <br>NOTE: as the Excel autofit implementation is undocumented, this is an approximation
 	 */
-	public void setFormatId( int i )
+	public void autoFit()
 	{
-		myCol.setIxfe( i );
+		// KSC: make more betta :)
+		double w = 0;
+		CellHandle[] cxt = getCells();
+		for( CellHandle aCxt : cxt )
+		{
+			String s = aCxt.getFormattedStringVal();    //StringVal();
+			FormatHandle fh = aCxt.getFormatHandle();
+			Font ef = fh.getFont();
+			int style = java.awt.Font.PLAIN;
+			if( ef.getBold() )
+			{
+				style |= java.awt.Font.BOLD;
+			}
+			if( ef.getItalic() )
+			{
+				style |= java.awt.Font.ITALIC;
+			}
+			int h = (int) ef.getFontHeightInPoints();
+			java.awt.Font f = new java.awt.Font( ef.getFontName(), style, h );
+			double newW = 0;
+			if( !aCxt.getFormatHandle().getWrapText() ) // normal case, no wrap
+			{
+				newW = StringTool.getApproximateStringWidth( f, s );
+			}
+			else    // wrap - use current column width?????
+			{
+				newW = getWidth() / COL_UNITS_TO_PIXELS;
+			}
+			w = Math.max( w, newW );
+		/*
+		int strlen = cstr.length();
+	    int csz = strlen *= cxt[t].getFontSize();
+	    int factor= 28;	// KSC: was 50 + added factor to guard below
+	    if((csz*factor)>lastsz)
+		this.setWidth(csz*factor);
+		*/
+		}
+		if( w == 0 )
+		{
+			return;    // keep original width ... that's what Excel does for blank columns ...
+		}
+		// convert pixels to excel column units basically ExtenXLS.COLUNITSTOPIXELS in double form
+		setWidth( (int) Math.floor( (w / DEFAULT_ZERO_CHAR_WIDTH) * 256.0 ) );
+	}
+
+	/**
+	 * returns the width of this Column in internal units
+	 * defined as follows:
+	 * <br>
+	 * default width of the columns in 1/256 of the width of the zero character,
+	 * using default font.
+	 * <br>The Default Excel Column, whose width in Excel Units or Characters is 8.43, has a width in these units of 2300.
+	 *
+	 * @return int Column width in internal units
+	 */
+	public int getWidth()
+	{
+		return myCol.getColWidth();
+	}
+
+	/**
+	 * sets the width of this Column in internal units, described as follows:
+	 * <br>
+	 * default width of the columns in 1/256 of the width of the zero character,
+	 * using default font.
+	 * <br>The Default Excel Column, whose width in Characters or Excel Units, is 8.43, has a width in these units of 2300.
+	 * <p>NOTE:
+	 * The last Cell in the column having its width
+	 * set will be the resulting width of the column
+	 *
+	 * @param int i - desired Column width in internal units
+	 */
+	public void setWidth( int newWidth )
+	{
+	    /* if an image falls upon this column,
+         * adjust image width so that it does not change
+         */
+		ArrayList iAdjust = new ArrayList();
+		ImageHandle[] images = myCol.getSheet().getImages();
+		if( images != null )
+		{
+			// for each image that falls over this column, trap index + original width -- to be reset after setting col width
+			for( int z = 0; z < images.length; z++ )
+			{
+				ImageHandle ih = images[z];
+				int c0 = ih.getCol();
+				int c1 = ih.getCol1();
+				int col = myCol.getColFirst();    // should only be one, right?
+				if( (col >= c0) && (col <= c1) )
+				{
+					int w = ih.getWidth();
+					iAdjust.add( new int[]{ z, w } );
+				}
+			}
+		}
+		lastsz = newWidth;
+		myCol.setColWidth( newWidth );
+		// now adjust any of the images that we noted above
+		for( Object anIAdjust : iAdjust )
+		{
+			ImageHandle ih = images[((int[]) anIAdjust)[0]];
+			ih.setWidth( ((int[]) anIAdjust)[1] );
+		}
+	}
+
+	/**
+	 * returns the width of this Column in Characters or regular Excel units
+	 * <br>NOTE: this value is a calculated value that should be close but still is an approximation of Excel units
+	 *
+	 * @return int Column width in Excel units
+	 */
+	public int getWidthInChars()
+	{
+		return myCol.getColWidthInChars();
+	}
+
+	/**
+	 * sets the width of this Column in Characters or Excel units.
+	 * <br>
+	 * The default Excel column width is set to 8.43 Characters,
+	 * based on the default font and font size,
+	 * <br>
+	 * NOTE: The last Cell in the column having its width
+	 * set will be the resulting width of the column
+	 *
+	 * @param int i - desired Column width in Characters (Excel units)
+	 */
+	public void setWidthInChars( int newWidth )
+	{
+        /* if an image falls upon this column,
+         * adjust image width so that it does not change
+         */
+		ArrayList iAdjust = new ArrayList();
+		ImageHandle[] images = myCol.getSheet().getImages();
+		if( images != null )
+		{
+			// for each image that falls over this column, trap index + original width -- to be reset after setting col width
+			for( int z = 0; z < images.length; z++ )
+			{
+				ImageHandle ih = images[z];
+				int c0 = ih.getCol();
+				int c1 = ih.getCol1();
+				int col = myCol.getColFirst();    // should only be one, right?
+				if( (col >= c0) && (col <= c1) )
+				{
+					int w = ih.getWidth();
+					iAdjust.add( new int[]{ z, w } );
+				}
+			}
+		}
+
+		myCol.setColWidthInChars( newWidth );
+		for( Object anIAdjust : iAdjust )
+		{
+			ImageHandle ih = images[((int[]) anIAdjust)[0]];
+			ih.setWidth( ((int[]) anIAdjust)[1] );
+		}
 	}
 
 	/**
@@ -304,6 +287,20 @@ public class ColHandle
 	}
 
 	/**
+	 * sets the format id (an index to a Format record) for this Column
+	 * <br>This sets the default formatting for the Column
+	 * such that any cell that does not specifically set it's own formatting
+	 * will display this Column formatting
+	 *
+	 * @param int i - ID representing the Format to set this Column
+	 * @see FormatHandle
+	 */
+	public void setFormatId( int i )
+	{
+		myCol.setIxfe( i );
+	}
+
+	/**
 	 * returns the FormatHandle (a Format Object describing visual properties) for this Column
 	 * <br>NOTE: The Column format record describes the default formatting for each cell contained
 	 * within the column
@@ -312,26 +309,11 @@ public class ColHandle
 	 */
 	public FormatHandle getFormatHandle()
 	{
-		if( this.formatter == null )
+		if( formatter == null )
 		{
-			this.setFormatHandle();
+			setFormatHandle();
 		}
-		return this.formatter;
-	}
-
-	/**
-	 * sets the FormatHandle (a Format Object describing visual properties) for this Column
-	 * <br>NOTE: The Column format record describes the default formatting for each cell contained
-	 * within the column
-	 */
-	private void setFormatHandle()
-	{
-		if( formatter != null )
-		{
-			return;
-		}
-		formatter = new FormatHandle( wbh, this.getFormatId() );
-		formatter.setColHandle( this );
+		return formatter;
 	}
 
 	/**
@@ -363,20 +345,26 @@ public class ColHandle
 	 */
 	public CellHandle[] getCells()
 	{
-		List mycells;
+		List<? extends BiffRec> mycells;
 		try
 		{
-			mycells = this.mySheet.getBoundsheet().getCellsByCol( this.getColFirst() );
+			Boundsheet boundsheet = mySheet.getBoundsheet();
+			int colFirst = getColFirst();
+			mycells = boundsheet.getCellsByCol( colFirst );
 		}
 		catch( CellNotFoundException e )
 		{
 			return new CellHandle[0];
 		}
+
 		CellHandle[] ch = new CellHandle[mycells.size()];
 		for( int t = 0; t < ch.length; t++ )
 		{
 			Object o = mycells.get( t );
-			log.debug( "getCells() - processing index " + t + ", " + ((o == null) ? "<NULL>" : o.getClass().getName()) );
+			if( log.isTraceEnabled() )
+			{
+				log.trace( "getCells() - processing index " + t + ", " + ((o == null) ? "<NULL>" : o.getClass().getName()) );
+			}
 			ch[t] = new CellHandle( (BiffRec) o, null );
 			ch[t].setWorkSheetHandle( null );
 		}
@@ -397,7 +385,7 @@ public class ColHandle
 			BiffRec b;
 			try
 			{
-				b = aR.myRow.getCell( (short) this.getColFirst() );
+				b = aR.myRow.getCell( (short) getColFirst() );
 				if( (b != null) && (b.getMergeRange() != null) )
 				{
 					return true;
@@ -412,23 +400,13 @@ public class ColHandle
 	}
 
 	/**
-	 * sets whether to collapse this Column
+	 * Returns the Outline level (depth) of this Column
 	 *
-	 * @param boolean b - true to collapse this Column
+	 * @return int outline level
 	 */
-	public void setCollapsed( boolean b )
+	public int getOutlineLevel()
 	{
-		this.myCol.setCollapsed( b );
-	}
-
-	/**
-	 * sets whether to hide or show this Column
-	 *
-	 * @param boolean b - true to hide this Column, false to show
-	 */
-	public void setHidden( boolean b )
-	{
-		this.myCol.setHidden( b );
+		return myCol.getOutlineLevel();
 	}
 
 	/**
@@ -438,17 +416,7 @@ public class ColHandle
 	 */
 	public void setOutlineLevel( int x )
 	{
-		this.myCol.setOutlineLevel( x );
-	}
-
-	/**
-	 * Returns the Outline level (depth) of this Column
-	 *
-	 * @return int outline level
-	 */
-	public int getOutlineLevel()
-	{
-		return myCol.getOutlineLevel();
+		myCol.setOutlineLevel( x );
 	}
 
 	/**
@@ -462,6 +430,16 @@ public class ColHandle
 	}
 
 	/**
+	 * sets whether to collapse this Column
+	 *
+	 * @param boolean b - true to collapse this Column
+	 */
+	public void setCollapsed( boolean b )
+	{
+		myCol.setCollapsed( b );
+	}
+
+	/**
 	 * returns true if this Column is hidden
 	 *
 	 * @return true if this Column is hidden, false if not
@@ -469,5 +447,30 @@ public class ColHandle
 	public boolean isHidden()
 	{
 		return myCol.isHidden();
+	}
+
+	/**
+	 * sets whether to hide or show this Column
+	 *
+	 * @param boolean b - true to hide this Column, false to show
+	 */
+	public void setHidden( boolean b )
+	{
+		myCol.setHidden( b );
+	}
+
+	/**
+	 * sets the FormatHandle (a Format Object describing visual properties) for this Column
+	 * <br>NOTE: The Column format record describes the default formatting for each cell contained
+	 * within the column
+	 */
+	private void setFormatHandle()
+	{
+		if( formatter != null )
+		{
+			return;
+		}
+		formatter = new FormatHandle( wbh, getFormatId() );
+		formatter.setColHandle( this );
 	}
 }

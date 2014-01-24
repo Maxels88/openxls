@@ -45,7 +45,7 @@ public final class Password extends XLSRecord
 		super();
 		setOpcode( PASSWORD );
 		setLength( (short) 2 );
-		this.originalsize = 2;
+		originalsize = 2;
 	}
 
 	/**
@@ -192,7 +192,7 @@ public final class Password extends XLSRecord
 		super.init();
 		hash = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 
-		Boundsheet sheet = this.getSheet();
+		Boundsheet sheet = getSheet();
 		if( sheet != null )
 		{
 			sheet.getProtectionManager().addRecord( this );

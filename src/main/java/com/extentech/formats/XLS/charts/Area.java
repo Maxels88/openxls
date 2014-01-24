@@ -43,13 +43,15 @@ public class Area extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = -4600344312324775780L;
 	private short grbit = 0;
-	protected boolean fStacked = false, f100 = false, fHasShadow = false;
+	protected boolean fStacked = false;
+	protected boolean f100 = false;
+	protected boolean fHasShadow = false;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		grbit = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		grbit = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		fStacked = ((grbit & 0x1) == 0x1);
 		f100 = ((grbit & 0x2) == 0x2);
 		fHasShadow = ((grbit & 0x4) == 0x4);
@@ -62,8 +64,8 @@ public class Area extends GenericChartObject implements ChartObject
 		grbit = ByteTools.updateGrBit( grbit, f100, 1 );
 		grbit = ByteTools.updateGrBit( grbit, fHasShadow, 2 );
 		byte[] b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	public static XLSRecord getPrototype()
@@ -117,22 +119,22 @@ public class Area extends GenericChartObject implements ChartObject
 		boolean bHandled = false;
 		if( op.equalsIgnoreCase( "Stacked" ) )
 		{
-			this.fStacked = val.equals( "true" );
+			fStacked = val.equals( "true" );
 			bHandled = true;
 		}
 		else if( op.equalsIgnoreCase( "PercentageDisplay" ) )
 		{
-			this.f100 = val.equals( "true" );
+			f100 = val.equals( "true" );
 			bHandled = true;
 		}
 		else if( op.equalsIgnoreCase( "Shadow" ) )
 		{
-			this.fHasShadow = val.equals( "true" );
+			fHasShadow = val.equals( "true" );
 			bHandled = true;
 		}
 		if( bHandled )
 		{
-			this.updateRecord();
+			updateRecord();
 		}
 		return bHandled;
 	}
@@ -144,15 +146,15 @@ public class Area extends GenericChartObject implements ChartObject
 	public String getOptionsXML()
 	{
 		StringBuffer sb = new StringBuffer();
-		if( this.fStacked )
+		if( fStacked )
 		{
 			sb.append( " Stacked=\"true\"" );
 		}
-		if( this.f100 )
+		if( f100 )
 		{
 			sb.append( " PercentageDisplay=\"true\"" );
 		}
-		if( this.fHasShadow )
+		if( fHasShadow )
 		{
 			sb.append( " Shadow=\"true\"" );
 		}

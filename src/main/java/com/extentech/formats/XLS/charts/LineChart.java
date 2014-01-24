@@ -116,7 +116,8 @@ public class LineChart extends ChartType
 		int n = series.size();
 		int[] dls = getDataLabelInts(); // get array of data labels (can be specific per series ...)
 		int[] markers = getMarkerFormats();
-		double xfactor = 0, yfactor = 0;    //
+		double xfactor = 0;    //
+		double yfactor = 0;
 		if( categories.length != 0 )
 		{
 			xfactor = w / (categories.length);    // w/#categories
@@ -153,12 +154,11 @@ public class LineChart extends ChartType
 						xx += 10;    // scoot over for markers
 					}
 					labels += "<text x='" + xx + "' y='" + (((y + h) - (curseries[j] * yfactor))) +
-							"' " + this.getDataLabelFontSVG() + ">" + l + "</text>\r\n";
+							"' " + getDataLabelFontSVG() + ">" + l + "</text>\r\n";
 				}
 			}
 			// 1st line is black
-			svg.append( "<polyline " + getScript( "" ) + " fill='none' fill-opacity='0' " + getStrokeSVG( 4,
-			                                                                                              this.getDarkColor() ) + " points='" + points + "'" + "/>\r\n" );
+			svg.append( "<polyline " + getScript( "" ) + " fill='none' fill-opacity='0' " + getStrokeSVG( 4, getDarkColor() ) + " points='" + points + "'" + "/>\r\n" );
 			// 2nd line is the series color
 			svg.append( "<polyline " + getScript( "" ) + "  id='series_" + (i + 1) + "' fill='none' fill-opacity='0' stroke='" + seriescolors[i] + "' stroke-opacity='1' stroke-width='3' stroke-linecap='butt' stroke-linejoin='miter' stroke-miterlimit='4'" +
 					            " points='" + points + "'" +
@@ -198,11 +198,11 @@ public class LineChart extends ChartType
 		cooxml.append( "\r\n" );
 		cooxml.append( "<c:grouping val=\"" );
 
-		if( this.is100PercentStacked() )
+		if( is100PercentStacked() )
 		{
 			cooxml.append( "percentStacked" );
 		}
-		else if( this.isStacked() )
+		else if( isStacked() )
 		{
 			cooxml.append( "stacked" );
 		}
@@ -217,20 +217,20 @@ public class LineChart extends ChartType
 		// vary colors???
 
 		// *** Series Data:	ser, cat, val for most chart types
-		cooxml.append( this.getParentChart().getChartSeries().getOOXML( this.getChartType(), false, 0 ) );
+		cooxml.append( getParentChart().getChartSeries().getOOXML( getChartType(), false, 0 ) );
 
 		// chart data labels, if any
 		//TODO: FINISH dlbls		    	
 		//cooxml.append(getDataLabelsOOXML(cf));
 
 		//dropLines
-		ChartLine cl = this.cf.getChartLinesRec( ChartLine.TYPE_DROPLINE );
+		ChartLine cl = cf.getChartLinesRec( ChartLine.TYPE_DROPLINE );
 		if( cl != null )
 		{
 			cooxml.append( cl.getOOXML() );
 		}
 		// hiLowLines
-		cl = this.cf.getChartLinesRec( ChartLine.TYPE_HILOWLINE );
+		cl = cf.getChartLinesRec( ChartLine.TYPE_HILOWLINE );
 		if( cl != null )
 		{
 			cooxml.append( cl.getOOXML() );

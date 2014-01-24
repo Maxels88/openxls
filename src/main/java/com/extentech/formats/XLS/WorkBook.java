@@ -94,7 +94,9 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	public static int ALLOWDUPES = 0;
 	public static int SHAREDUPES = 1;
 
-	private int bofct = 0, eofct = 0, indexnum = 0;
+	private int bofct = 0;
+	private int eofct = 0;
+	private int indexnum = 0;
 	private int defaultIxfe = 15;
 	private int CalcMode = CALCULATE_AUTO;
 	private int defaultLanguage = 0;    // default language code for the current workbook
@@ -226,9 +228,9 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		lastSPID = Math.max( lastSPID,
 		                     msodg.getSpidMax() ); // 20090508 KSC: lastSPID should also account for charts [BUGTRACKER 2372 copyChartToSheet error]
 		// 20071217 KSC: clear out imageMap before inputting!
-		for( int x = 0; x < this.getWorkSheets().length; x++ )
+		for( int x = 0; x < getWorkSheets().length; x++ )
 		{
-			(this.getWorkSheets()[x]).imageMap.clear();
+			(getWorkSheets()[x]).imageMap.clear();
 		}
 		for( int i = 0; i < msodg.getMsodrawingrecs().size(); i++ )
 		{    // 20070914 KSC: store msodrawingrecs with MSODrawingGroup instead of here
@@ -270,14 +272,14 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			{
 				msodg.mergeRecords( (MSODrawingGroup) msodgMerge.get( i ) );  // merges and removes secondary msodrawinggroups 
 				// 20071003 KSC: get rid of secondary msodg's, will be created upon createMSODGContinues
-				this.getStreamer().removeRecord( (MSODrawingGroup) msodgMerge.get( i ) ); // remove existing continues from stream				
+				getStreamer().removeRecord( (MSODrawingGroup) msodgMerge.get( i ) ); // remove existing continues from stream
 			}
 			while( msodgMerge.size() > 1 )
 			{
 				msodgMerge.remove( msodgMerge.size() - 1 );
 			}
 			msodg.parse();
-			this.initImages();
+			initImages();
 		}
 	}
 
@@ -303,7 +305,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				MSODrawing rec = (MSODrawing) msodg.getMsodrawingrecs().get( z );
 				if( rec.getSheet().equals( bs ) )
 				{
-					if( (rec != msdHeader) && !rec.isHeader() )
+					if( (!rec.equals( msdHeader )) && !rec.isHeader() )
 					{    // added header check- seems like *can* have multiple header recs in charts!
 						spContainerLength += rec.getSPContainerLength();
 						otherContainerLength += rec.getSOLVERContainerLength();
@@ -337,7 +339,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	{
 		this.msodg = msodg;
 		this.msodg.setWorkBook( this );
-		this.msodg.setStreamer( this.getStreamer() );
+		this.msodg.setStreamer( getStreamer() );
 	}
 
 	/**
@@ -352,7 +354,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			return msodg;
 		}
-		this.setMSODrawingGroup( (MSODrawingGroup) MSODrawingGroup.getPrototype() );
+		setMSODrawingGroup( (MSODrawingGroup) MSODrawingGroup.getPrototype() );
 		return msodg;
 	}
 
@@ -383,14 +385,14 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		ret += "ExtenXLS Version:     " + WorkBookHandle.getVersion() + rex;
 		ret += "Excel Version:        " + getXLSVersionString() + rex;
 		ret += "-------------------------------------------------\r\n";
-		ret += "Statistics for:       " + this.toString() + rex;
-		ret += "Number of Worksheets: " + this.getNumWorkSheets() + rex;
-		ret += "Number of Cells:      " + this.getNumCells() + rex;
-		ret += "Number of Formulas:   " + this.getNumFormulas() + rex;
-		ret += "Number of Charts:     " + this.getChartVect().size() + rex;
-		ret += "Number of Fonts:      " + this.getNumFonts() + rex;
-		ret += "Number of Formats:    " + this.getNumFormats() + rex;
-		ret += "Number of Xfs:        " + this.getNumXfs() + rex;
+		ret += "Statistics for:       " + toString() + rex;
+		ret += "Number of Worksheets: " + getNumWorkSheets() + rex;
+		ret += "Number of Cells:      " + getNumCells() + rex;
+		ret += "Number of Formulas:   " + getNumFormulas() + rex;
+		ret += "Number of Charts:     " + getChartVect().size() + rex;
+		ret += "Number of Fonts:      " + getNumFonts() + rex;
+		ret += "Number of Formats:    " + getNumFormats() + rex;
+		ret += "Number of Xfs:        " + getNumXfs() + rex;
 		// ret += "StringTable:          " + this.stringTable.toString() + rex;        
 		ret += "-------------------------------------------------\r\n";
 		return ret;
@@ -403,12 +405,12 @@ public class WorkBook implements Serializable, XLSConstants, Book
 
 	private void addMergedcells( Mergedcells c )
 	{
-		this.mergecelllookup.add( c );
+		mergecelllookup.add( c );
 	}
 
 	private void addHlink( Hlink r )
 	{
-		this.hlinklookup.add( r );
+		hlinklookup.add( r );
 	}
 
 	/**
@@ -416,22 +418,22 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public void prestream()
 	{
-		if( this.getMSODrawingGroup() != null )
+		if( getMSODrawingGroup() != null )
 		{
-			this.getMSODrawingGroup().prestream();
+			getMSODrawingGroup().prestream();
 		}
 	}
 
 	public Chart[] getCharts()
 	{
-		Chart[] chts = new Chart[this.charts.size()];
+		Chart[] chts = new Chart[charts.size()];
 		return (Chart[]) charts.toArray( chts );
 	}
 
 	public Supbook[] getSupBooks()
 	{
-		Supbook[] sbs = new Supbook[this.supBooks.size()];
-		return (Supbook[]) this.supBooks.toArray( sbs );
+		Supbook[] sbs = new Supbook[supBooks.size()];
+		return (Supbook[]) supBooks.toArray( sbs );
 	}
 
 	/**
@@ -500,13 +502,13 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			return null;
 		}
-		for( int i = 0; i < this.supBooks.size(); i++ )
+		for( int i = 0; i < supBooks.size(); i++ )
 		{
-			if( ((Supbook) this.supBooks.get( i )).isExternalRecord() )
+			if( ((Supbook) supBooks.get( i )).isExternalRecord() )
 			{
-				if( externalWorkbook.equalsIgnoreCase( ((Supbook) this.supBooks.get( i )).getExternalWorkBook() ) )
+				if( externalWorkbook.equalsIgnoreCase( ((Supbook) supBooks.get( i )).getExternalWorkBook() ) )
 				{
-					sb = (Supbook) this.supBooks.get( i );
+					sb = (Supbook) supBooks.get( i );
 				}
 			}
 		}
@@ -515,7 +517,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			sb = (Supbook) Supbook.getExternalPrototype( externalWorkbook );
 			int loc = ((Supbook) supBooks.get( supBooks.size() - 1 )).getRecordIndex();    // must have at least one global supbook present
 			streamer.addRecordAt( sb, loc + 1 );    // external supbooks appear to be before "normal" supbooks [BugTracker 1434]
-			this.supBooks.add( sb );    // 20080714 KSC: add at beginning -- correct in all cases? 
+			supBooks.add( sb );    // 20080714 KSC: add at beginning -- correct in all cases?
 //          this.addRecord(sb,false); // "" no need
 		}
 		return sb;
@@ -529,9 +531,9 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public int getSupbookIndex( Supbook sb )
 	{
-		for( int i = 0; i < this.supBooks.size(); i++ )
+		for( int i = 0; i < supBooks.size(); i++ )
 		{
-			if( this.supBooks.get( i ) == sb )
+			if( supBooks.get( i ).equals( sb ) )
 			{
 				return i;
 			}
@@ -551,7 +553,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 
 	protected void addPivotTable( Sxview sx )
 	{
-		this.ptViews.put( sx.getTableName(), sx );    // Pivot Table View ==Top-level record for a Pivot Table
+		ptViews.put( sx.getTableName(), sx );    // Pivot Table View ==Top-level record for a Pivot Table
 	}
 
 	/**
@@ -617,7 +619,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			try
 			{
-				this.CalcMode = Integer.parseInt( cm.toString() );
+				CalcMode = Integer.parseInt( cm.toString() );
 			}
 			catch( Exception e )
 			{
@@ -626,13 +628,13 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		if( System.getProperties().get( "com.extentech.ExtenXLS.sharedupes" ) != null )
 		{
-			this.sharedupes = System.getProperties().get( "com.extentech.ExtenXLS.sharedupes" ).equals( "true" );
-			if( this.sharedupes )
+			sharedupes = System.getProperties().get( "com.extentech.ExtenXLS.sharedupes" ).equals( "true" );
+			if( sharedupes )
 			{
-				this.setDupeStringMode( WorkBook.SHAREDUPES );
+				setDupeStringMode( WorkBook.SHAREDUPES );
 			}
 		}
-		this.initBuiltinFormats();
+		initBuiltinFormats();
 		// re-init color table: initial state of color table if Pallete record exists, changes may occur
 		colorTable = new java.awt.Color[FormatHandle.COLORTABLE.length];
 		for( int i = 0; i < FormatHandle.COLORTABLE.length; i++ )
@@ -695,7 +697,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			// its a sheet level name
 			try
 			{
-				Boundsheet b = this.getWorkSheetByNumber( n.getItab() - 1 );// one based pointer
+				Boundsheet b = getWorkSheetByNumber( n.getItab() - 1 );// one based pointer
 				b.addLocalName( n );
 				n.setSheet( b );
 			}
@@ -723,13 +725,13 @@ public class WorkBook implements Serializable, XLSConstants, Book
 					{
 					}
 					// if original does not have a location set, use this one instead
-					this.names.remove( this.names.indexOf( existo ) );
-					this.bookNameRecs.remove( sName );
+					names.remove( names.indexOf( existo ) );
+					bookNameRecs.remove( sName );
 				}
 			}
-			this.bookNameRecs.put( sName, n );
+			bookNameRecs.put( sName, n );
 		}
-		this.names.add( n );
+		names.add( n );
 		if( (myexternsheet != null) && (n.getExternsheet() == null) )
 		{
 			try
@@ -779,7 +781,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public int addExternalName( String n )
 	{
-		this.externalnames.add( n );
+		externalnames.add( n );
 		return externalnames.size();    // one-based index
 	}
 
@@ -808,7 +810,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	{
 		if( t > 0 )
 		{
-			return (String) this.externalnames.get( t - 1 );    // one-based index
+			return (String) externalnames.get( t - 1 );    // one-based index
 		}
 		return "";
 	}
@@ -820,13 +822,13 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public void addDefaultExternsheet()
 	{
-		Supbook sbb = (Supbook) Supbook.getPrototype( this.getNumWorkSheets() );
-		int l = this.stringTable.getRecordIndex();
+		Supbook sbb = (Supbook) Supbook.getPrototype( getNumWorkSheets() );
+		int l = stringTable.getRecordIndex();
 		streamer.addRecordAt( sbb, l++ );
 		supBooks.add( sbb );
 		Externsheet ex = (Externsheet) Externsheet.getPrototype( 0x0000, 0x0000, this );
 		streamer.addRecordAt( ex, l );
-		this.addRecord( ex, false );
+		addRecord( ex, false );
 	}
 
 	/**
@@ -849,9 +851,9 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			return i + 1;
 		}
-		if( this.getExternSheet() == null )
+		if( getExternSheet() == null )
 		{
-			this.addDefaultExternsheet();
+			addDefaultExternsheet();
 		}
 
 		// not found; add a new EXTERNNAME record to list of add-ins
@@ -862,16 +864,16 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			if( myADDINSUPBOOK == null )
 			{
 				Supbook sb = (Supbook) Supbook.getAddInPrototype();
-				loc = this.getExternSheet().getRecordIndex();
+				loc = getExternSheet().getRecordIndex();
 				streamer.addRecordAt( sb, loc++ );
-				this.addRecord( sb, false );
+				addRecord( sb, false );
 				myADDINSUPBOOK = sb;
 				supBooks.add( sb );
-				int externref = this.getExternSheet().getVirtualReference();
+				int externref = getExternSheet().getVirtualReference();
 				// Add EXTERNNAME record after ADD-IN SUPBOOK record and after existing EXTERNNAME records
 				Externname exn = (Externname) Externname.getPrototype( s );
 				streamer.addRecordAt( exn, loc++ );
-				this.addRecord( exn, false );
+				addRecord( exn, false );
 			}
 			else
 			{
@@ -879,7 +881,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				// Add EXTERNNAME record after ADD-IN SUPBOOK record and after existing EXTERNNAME records
 				Externname exn = (Externname) Externname.getPrototype( s );
 				streamer.addRecordAt( exn, loc + externalnames.size() );
-				this.addRecord( exn, false );
+				addRecord( exn, false );
 			}
 
 		}
@@ -905,7 +907,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public Name[] getWorkbookScopedNames()
 	{
-		ArrayList a = new ArrayList( this.bookNameRecs.values() );
+		ArrayList a = new ArrayList( bookNameRecs.values() );
 		Name[] n = new Name[a.size()];
 		a.toArray( n );
 		return n;
@@ -940,7 +942,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public void removeFormula( Formula fmla )
 	{
-		this.formulashash.remove( fmla.getCellAddressWithSheet() );
+		formulashash.remove( fmla.getCellAddressWithSheet() );
 		formulas.remove( fmla );
 		fmla.destroy();
 	}
@@ -955,7 +957,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public int getRecalculationMode()
 	{
-		return this.calcmoderec.getRecalcuationMode();
+		return calcmoderec.getRecalcuationMode();
 	}
 
 	/**
@@ -966,7 +968,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public void setRecalcuationMode( int mode )
 	{
-		this.calcmoderec.setRecalculationMode( mode );
+		calcmoderec.setRecalculationMode( mode );
 	}
 
 	/**
@@ -977,7 +979,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public Name getName( int t )
 	{
-		return (Name) this.names.get( t - 1 );
+		return (Name) names.get( t - 1 );
 	}
 
 	/**
@@ -1019,7 +1021,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			IlblListener x = (IlblListener) i.next();
 			if( x.getStoredName().equalsIgnoreCase( theName ) )
 			{
-				x.setIlbl( (short) this.getNameNumber( theName ) );
+				x.setIlbl( (short) getNameNumber( theName ) );
 				x.addListener();
 			}
 		}
@@ -1038,10 +1040,10 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	public Name getName( String nameRef )
 	{
 		nameRef = nameRef.toUpperCase();    // case-insensitive
-		Object o = this.bookNameRecs.get( nameRef );
+		Object o = bookNameRecs.get( nameRef );
 		if( o == null )
 		{
-			Boundsheet[] shts = this.getWorkSheets();
+			Boundsheet[] shts = getWorkSheets();
 			for( Boundsheet sht : shts )
 			{
 				o = sht.getName( nameRef );
@@ -1062,7 +1064,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public Name getScopedName( String nameRef )
 	{
-		Object o = this.bookNameRecs.get( nameRef.toUpperCase() );    // case-insensitive
+		Object o = bookNameRecs.get( nameRef.toUpperCase() );    // case-insensitive
 		if( o == null )
 		{
 			return null;
@@ -1082,7 +1084,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	{
 		for( int i = 0; i < names.size(); i++ )
 		{
-			Name n = (Name) this.names.get( i );
+			Name n = (Name) names.get( i );
 			if( n.getName().equalsIgnoreCase( nameStr ) )
 			{
 				return i + 1;
@@ -1093,7 +1095,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		myName = new Name( this, nameStr );
 //        myName = new Name(this, true);
 //        myName.setName(nameStr);
-		Name[] nmx = this.getNames();
+		Name[] nmx = getNames();
 		int namepos = -1;
 		if( nmx.length >= 1 )
 		{
@@ -1101,11 +1103,11 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		else
 		{
-			namepos = this.getExternSheet().getRecordIndex();
+			namepos = getExternSheet().getRecordIndex();
 		}
 		namepos++;
-		this.getStreamer().addRecordAt( myName, namepos );
-		return this.getNameNumber( nameStr );
+		getStreamer().addRecordAt( myName, namepos );
+		return getNameNumber( nameStr );
 	}
 
 	/**
@@ -1136,7 +1138,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public int getMatchingFontIndex( Font f )
 	{
-		Map fontmap = this.getFontRecsAsXML();
+		Map fontmap = getFontRecsAsXML();
 		Object o = fontmap.get( "<FONT><" + f.getXML() + "/></FONT>" );
 		if( o != null )
 		{
@@ -1154,11 +1156,11 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public int insertFont( Font x )
 	{
-		int insertIdx = this.getFont( this.getNumFonts() ).getRecordIndex();
+		int insertIdx = getFont( getNumFonts() ).getRecordIndex();
 		// perform default add rec actions
-		this.getStreamer().addRecordAt( x, insertIdx + 1 );
+		getStreamer().addRecordAt( x, insertIdx + 1 );
 		x.setIdx( -1 ); // flag to add into font array
-		this.addRecord( x, false );    // also adds to font array so no need for additional addFont below 
+		addRecord( x, false );    // also adds to font array so no need for additional addFont below
 		return fonts.indexOf( x );
 	}
 
@@ -1194,7 +1196,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			t--;
 		}
-		if( this.fonts.size() >= t )
+		if( fonts.size() >= t )
 		{
 			if( t >= fonts.size() )
 			{
@@ -1203,7 +1205,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			}
 			return (Font) fonts.get( t );
 		}
-		return (Font) this.fonts.get( 0 );
+		return (Font) fonts.get( 0 );
 	}
 
 	/**
@@ -1298,7 +1300,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 
 	public TabID getTabID()
 	{
-		return this.tabs;
+		return tabs;
 	}
 
 	/**
@@ -1306,7 +1308,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	void setDefaultRowHeightRec( DefaultRowHeight dr )
 	{
-		this.drh = dr;
+		drh = dr;
 	}
 
 	/**
@@ -1327,7 +1329,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public void setDefaultColWidth( int t )
 	{
-		Boundsheet[] b = this.getWorkSheets();
+		Boundsheet[] b = getWorkSheets();
 		for( Boundsheet aB : b )
 		{
 			aB.setDefaultColumnWidth( t );
@@ -1347,15 +1349,15 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public void setSelectedSheet( Boundsheet bs )
 	{
-		Boundsheet[] bsx = this.getWorkSheets();
+		Boundsheet[] bsx = getWorkSheets();
 		for( Boundsheet aBsx : bsx )
 		{
-			if( aBsx != bs )
+			if( !aBsx.equals( bs ) )
 			{
 				aBsx.setSelected( false );
 			}
 		}
-		this.win1.setCurrentTab( bs );
+		win1.setCurrentTab( bs );
 	}
 
 	Formula lastFormula = null;
@@ -1390,13 +1392,13 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		// get the relevant Boundsheet for this rec
 		if( rec instanceof Bof )
 		{
-			if( this.getFirstBof() == null )
+			if( getFirstBof() == null )
 			{
-				this.setFirstBof( (Bof) rec );
+				setFirstBof( (Bof) rec );
 			}
 			if( bofct == eofct )
 			{ // not a chart or other non Sheet Bof
-				this.setLastBOF( (Bof) rec );
+				setLastBOF( (Bof) rec );
 			}
 			if( ((Bof) rec).isChartBof() )
 			{
@@ -1404,12 +1406,12 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			}
 		}
 
-		if( this.lastBOF == null )
+		if( lastBOF == null )
 		{
 			log.debug( "WorkBook: NULL Last BOF" );
 		}
-		long lb = this.lastBOF.getLbPlyPos();
-		if( !this.lastBOF.isValidBIFF8() )
+		long lb = lastBOF.getLbPlyPos();
+		if( !lastBOF.isValidBIFF8() )
 		{
 			lb += 8;
 		}
@@ -1421,7 +1423,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			lbplypos = bs.getLbPlyPos();
 		}
 
-		if( (bs != null) )
+		if( bs != null )
 		{ // &&){ 
 			lastbound = bs;
 			if( addtorec )
@@ -1521,7 +1523,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 
 			case MERGEDCELLS:
 				bs.addMergedCellsRec( (Mergedcells) rec );
-				this.addMergedcells( (Mergedcells) rec );
+				addMergedcells( (Mergedcells) rec );
 				break;
 
 			// give protection records to the relevant ProtectionManager
@@ -1538,7 +1540,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				}
 				else
 				{
-					manager = this.getProtectionManager();
+					manager = getProtectionManager();
 				}
 				manager.addRecord( rec );
 				break;
@@ -1564,13 +1566,13 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				Index id = (Index) rec;
 				id.setIndexNum( indexnum++ );
 				indexes.add( indexes.size(), id );
-				this.setLastINDEX( id );
+				setLastINDEX( id );
 				if( bs == null )
 				{
 					log.error( "ERROR: WorkBook.addRecord( Index ) error: BAD LBPLYPOS.  The wrong LB:" + lbplypos );
 					try
 					{
-						bs = this.getWorkSheetByNumber( indexnum - 1 );
+						bs = getWorkSheetByNumber( indexnum - 1 );
 						log.warn( " The RIGHT LB:" + bs.getLbPlyPos() );
 					}
 					catch( WorkSheetNotFoundException e )
@@ -1592,7 +1594,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				break;
 
 			case FORMULA:
-				this.addFormula( (Formula) rec );
+				addFormula( (Formula) rec );
 				lastFormula = (Formula) rec;
 				break;
 
@@ -1615,7 +1617,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			case DATE1904:
 				if( ((NineteenOhFour) rec).is1904 )
 				{
-					this.dateFormat = DateConverter.DateFormat.LEGACY_1904;
+					dateFormat = DateConverter.DateFormat.LEGACY_1904;
 				}
 				break; 
                     
@@ -1625,7 +1627,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 
 			case HLINK:
 				Hlink hl = (Hlink) rec;
-				this.addHlink( hl );
+				addHlink( hl );
 				break;
 
 			case DSF:
@@ -1673,7 +1675,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				break;
 
 			case EOF:
-				this.lasteof = (Eof) rec;
+				lasteof = (Eof) rec;
 				eofct++;
 				if( eofct == bofct )
 				{
@@ -1695,7 +1697,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				// before COUNTRY RECORD (= 2 before 1st SUPBOOK record - true in all cases?)
 				countryRec = (XLSRecord) rec;
 				// USA=1, Canada=1, Japan=81, China=86, Thailand= 66, Korea= 82, India=91 ... 
-				this.defaultLanguage = ((Country) rec).getDefaultLanguage();
+				defaultLanguage = ((Country) rec).getDefaultLanguage();
 				break;
 
 			case SUPBOOK:   // KSC: must store ordinal positions of SupBooks, for adding Externsheets
@@ -1729,7 +1731,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 					sh.selected = true;
 				}
 
-				this.addWorkSheet( sh.getLbPlyPos(), sh );
+				addWorkSheet( sh.getLbPlyPos(), sh );
 				break;
 
 			case MULRK:
@@ -1737,20 +1739,20 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				Iterator xit = mul.getRecs().iterator();
 				while( xit.hasNext() )
 				{
-					this.addRecord( ((Rk) xit.next()), false );
+					addRecord( ((Rk) xit.next()), false );
 				}
 				break;
 
 			case SST:
-				this.setSharedStringTable( (Sst) rec );
+				setSharedStringTable( (Sst) rec );
 				break;
 
 			case EXTSST:
-				((Extsst) rec).setSst( this.getSharedStringTable() );
+				((Extsst) rec).setSst( getSharedStringTable() );
 				break;
 
 			case SXSTREAMID:
-				this.ptstream.add( rec );    // Pivot Stream                   
+				ptstream.add( rec );    // Pivot Stream
 				break;
 
 			case SXVS:
@@ -1784,7 +1786,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			case QSISXTAG:
 				try
 				{
-					Sxview sx = (Sxview) this.ptViews.values().toArray()[this.ptViews.size() - 1];
+					Sxview sx = (Sxview) ptViews.values().toArray()[ptViews.size() - 1];
 					sx.addSubrecord( rec );
 				}
 				catch( Exception e )
@@ -1794,7 +1796,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				break;
 
 			case TABID:
-				this.tabs = (TabID) rec;
+				tabs = (TabID) rec;
 				break;
 
 			case NAME:
@@ -1802,11 +1804,11 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				break;
 
 			case CALCMODE:
-				this.calcmoderec = (CalcMode) rec;
+				calcmoderec = (CalcMode) rec;
 				break;
 
 			case WINDOW1:
-				this.win1 = (Window1) rec;
+				win1 = (Window1) rec;
 				break;
 
 			case WINDOW2:
@@ -1835,9 +1837,9 @@ public class WorkBook implements Serializable, XLSConstants, Book
 
 			case PHONETIC:
 				// TODO: this isn't necessary anymore!  look at and remove 
-				if( this.currdrw != null )
+				if( currdrw != null )
 				{
-					this.currdrw.setMystery( (Phonetic) rec );
+					currdrw.setMystery( (Phonetic) rec );
 				}
 				break;
 
@@ -1868,7 +1870,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				break;
 
 			case USERSVIEWBEGIN:
-				this.usersview = (Usersviewbegin) rec;
+				usersview = (Usersviewbegin) rec;
 				break;
 
 			case WSBOOL:
@@ -1893,7 +1895,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			case XF:
 				try
 				{
-					this.addXf( (Xf) rec );
+					addXf( (Xf) rec );
 				}
 				catch( Exception e )
 				{
@@ -1929,7 +1931,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		else if( lbplypos != null )
 		{
-			bs = this.getWorkSheet( lbplypos );
+			bs = getWorkSheet( lbplypos );
 		}
 		else
 		{
@@ -1944,7 +1946,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	@Override
 	public ContinueHandler getContinueHandler()
 	{
-		return this.contHandler;
+		return contHandler;
 	}
 
 	/**
@@ -1956,7 +1958,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			usersview = new Usersviewbegin();
 			streamer.addRecord( usersview );
-			this.addRecord( usersview, false );
+			addRecord( usersview, false );
 		}
 		return usersview;
 	}
@@ -1968,7 +1970,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	@Override
 	public void setFactory( WorkBookFactory r )
 	{
-		this.factory = r;
+		factory = r;
 	}
 
 	/**
@@ -1976,7 +1978,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public int getNumWorkSheets()
 	{
-		return this.boundsheets.size();
+		return boundsheets.size();
 	}
 
 	/**
@@ -2014,7 +2016,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			try
 			{
-				Boundsheet b = this.getWorkSheetByNumber( i );
+				Boundsheet b = getWorkSheetByNumber( i );
 				BiffRec[] cz = b.getCells();
 				for( BiffRec aCz : cz )
 				{
@@ -2054,7 +2056,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		cellname = cellname.toUpperCase();
 		try
 		{
-			Boundsheet bs = this.getWorkSheetByName( sheetname );
+			Boundsheet bs = getWorkSheetByName( sheetname );
 			BiffRec ret = bs.getCell( cellname );
 			if( ret == null )
 			{
@@ -2084,7 +2086,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			log.warn( "WorkBook.addWorkSheet() attempting to add null sheet." );
 			return;
 		}
-		this.lastbound = sheet;
+		lastbound = sheet;
 			log.debug( "Workbook Adding Sheet: " + sheet.getSheetName() + ":" + String.valueOf( lbplypos ) );
 		workSheets.put( lbplypos, sheet );
 		boundsheets.add( sheet );
@@ -2096,14 +2098,14 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public boolean removeName( Name n )
 	{
-		if( this.names.contains( n ) )
+		if( names.contains( n ) )
 		{
-			this.names.remove( n );
+			names.remove( n );
 			if( n.getItab() != 0 )
 			{
 				try
 				{
-					this.getWorkSheetByNumber( n.getItab() - 1 ).removeLocalName( n );
+					getWorkSheetByNumber( n.getItab() - 1 ).removeLocalName( n );
 				}
 				catch( WorkSheetNotFoundException e )
 				{
@@ -2111,14 +2113,14 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			}
 			else
 			{
-				this.bookNameRecs.remove( n.toString().toUpperCase() );    // case-insensitive
+				bookNameRecs.remove( n.toString().toUpperCase() );    // case-insensitive
 			}
 		}
 		ArrayList al = n.getIlblListeners();
-		this.orphanedPtgNames.addAll( al );
+		orphanedPtgNames.addAll( al );
 
-		this.updateNameIlbls();
-		return this.getStreamer().removeRecord( n );
+		updateNameIlbls();
+		return getStreamer().removeRecord( n );
 	}
 
 	/**
@@ -2175,14 +2177,14 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		Name[] namesOnSheet = sheet.getAllNames();
 		for( Name aNamesOnSheet : namesOnSheet )
 		{
-			this.removeName( aNamesOnSheet );
+			removeName( aNamesOnSheet );
 		}
 
 		//Remove Externsheet ref before removing sheet
 		// update any Externsheet references...
 		try
 		{
-			Externsheet ext = this.getExternSheet();
+			Externsheet ext = getExternSheet();
 			if( ext != null )
 			{
 				ext.removeSheet( sheet.getSheetNum() );
@@ -2206,27 +2208,27 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 
 		// decrement the tab ids...
-		this.tabs.removeRecord();
-		this.updateScopedNamedRanges();
+		tabs.removeRecord();
+		updateScopedNamedRanges();
 
 		// update wb chart cache - remove charts referenced by deleted sheet
 		for( int i = getChartVect().size() - 1; i >= 0; i-- )
 		{
-			if( ((Chart) this.getChartVect().get( i )).getSheet() == sheet )
+			if( ((Chart) getChartVect().get( i )).getSheet().equals( sheet ) )
 			{
-				this.getChartVect().remove( i );
+				getChartVect().remove( i );
 			}
 		}
 
-		if( this.getNumWorkSheets() == 0 )
+		if( getNumWorkSheets() == 0 )
 		{
 			return; // empty book
 		}
 		try
 		{ // set the next sheet selected...
-			while( sheetNum <= this.getNumWorkSheets() )
+			while( sheetNum <= getNumWorkSheets() )
 			{
-				Boundsheet s2 = this.getWorkSheetByNumber( sheetNum++ );
+				Boundsheet s2 = getWorkSheetByNumber( sheetNum++ );
 				s2.setSelected( true );
 				if( !s2.getHidden() )
 				{
@@ -2239,7 +2241,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			try
 			{
-				Boundsheet s2 = this.getWorkSheetByNumber( 0 );
+				Boundsheet s2 = getWorkSheetByNumber( 0 );
 				s2.setSelected( true );
 			}
 			catch( Exception ee )
@@ -2310,7 +2312,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			log.warn( "WorkBook.getWorkSheetByName failed: " + ex.toString() );
 		}
-		throw new WorkSheetNotFoundException( "Worksheet " + bstr + " not found in " + this.toString() );
+		throw new WorkSheetNotFoundException( "Worksheet " + bstr + " not found in " + toString() );
 	}
 
 	/**
@@ -2320,7 +2322,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public Boundsheet getWorkSheetByHash( String s ) throws WorkSheetNotFoundException
 	{
-		Boundsheet[] bs = this.getWorkSheets();
+		Boundsheet[] bs = getWorkSheets();
 		for( Boundsheet b : bs )
 		{
 			if( b.getSheetHash().equalsIgnoreCase( s ) )
@@ -2382,7 +2384,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public AbstractList getSheetVect()
 	{
-		return this.boundsheets;
+		return boundsheets;
 	}
 
 	/**
@@ -2427,15 +2429,15 @@ public class WorkBook implements Serializable, XLSConstants, Book
 
 	public String toString()
 	{
-		return this.getFileName();
+		return getFileName();
 	}
 
 	@Override
 	public String getFileName()
 	{
-		if( this.factory != null ) // 2003-vers
+		if( factory != null ) // 2003-vers
 		{
-			return this.factory.getFileName();
+			return factory.getFileName();
 		}
 		return "New Spreadsheet";
 	}
@@ -2491,10 +2493,10 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	int insertXf( Xf x )
 	{
-		int insertIdx = this.getXf( this.getNumXfs() - 1 ).getRecordIndex();
+		int insertIdx = getXf( getNumXfs() - 1 ).getRecordIndex();
 		// perform default add rsec actions
-		this.getStreamer().addRecordAt( x, insertIdx + 1 );
-		this.addRecord( x, false );    // updates xfrecs + formatcache
+		getStreamer().addRecordAt( x, insertIdx + 1 );
+		addRecord( x, false );    // updates xfrecs + formatcache
 		x.ixfe = x.tableidx;
 		return x.tableidx;
 	}
@@ -2508,7 +2510,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		for( int i = xfrecs.size() - 1; i > 0; i-- )
 		{
 			Xf xf = (Xf) xfrecs.get( i );
-			this.streamer.removeRecord( xf );
+			streamer.removeRecord( xf );
 			xfrecs.remove( i );
 
 		}
@@ -2528,7 +2530,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	{
 		xfrecs.add( xf );
 		xf.tableidx = xfrecs.size() - 1;    // flag that it's been added to records
-		this.updateFormatCache( xf );    // links tostring of xf to xf rec for updating/reuse purposes         		
+		updateFormatCache( xf );    // links tostring of xf to xf rec for updating/reuse purposes
 		return xf.tableidx;
 	}
 
@@ -2585,12 +2587,12 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	@Override
 	public ByteStreamer getStreamer()
 	{
-		return this.streamer;
+		return streamer;
 	}
 
 	public void setSubStream( ByteStreamer s )
 	{
-		this.streamer = s;
+		streamer = s;
 	}
 
 	/**
@@ -2618,7 +2620,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	@Override
 	public WorkBookFactory getFactory()
 	{
-		return this.factory;
+		return factory;
 	}
 
 	/**
@@ -2630,7 +2632,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	public void copyWorkSheet( String SourceSheetName, String NewSheetName ) throws Exception
 	{
 		Boundsheet origSheet = null;
-		origSheet = this.getWorkSheetByName( SourceSheetName );
+		origSheet = getWorkSheetByName( SourceSheetName );
 		List chts = origSheet.getCharts();    // 20080630 KSC: Added
 		for( Object cht : chts )
 		{
@@ -2638,23 +2640,23 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			cxi.populateForTransfer();
 		}
 		byte[] inbytes = origSheet.getSheetBytes();
-		this.addBoundsheet( inbytes, SourceSheetName, NewSheetName, null, false );
-		Boundsheet bnd = this.getWorkSheetByName( NewSheetName );
+		addBoundsheet( inbytes, SourceSheetName, NewSheetName, null, false );
+		Boundsheet bnd = getWorkSheetByName( NewSheetName );
 		// handle moving the built-in name records.  These handle such items as print area, header/footer, etc
-		Name[] ns = this.getNames();
+		Name[] ns = getNames();
 		for( Name n1 : ns )
 		{ // 20100404 KSC: take out +1?
 			if( n1.getItab() == (origSheet.getSheetNum() + 1) )
 			{
 				// it's a built in record, move it to the new sheet
 				int sheetnum = bnd.getSheetNum();
-				int xref = this.getExternSheet( true ).insertLocation( sheetnum, sheetnum );
+				int xref = getExternSheet( true ).insertLocation( sheetnum, sheetnum );
 				Name n = (Name) n1.clone();
 				n.setExternsheetRef( xref );
 				n.updateSheetReferences( bnd );
 				n.setSheet( bnd );
 				n.setItab( (short) (bnd.getSheetNum() + 1) );
-				this.insertName( n );
+				insertName( n );
 			}
 		}
 	}
@@ -2696,8 +2698,8 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public void copyChartToSheet( String chartname, String sheetname ) throws ChartNotFoundException, WorkSheetNotFoundException
 	{
-		Chart ct = this.getChart( chartname );
-		Boundsheet sht = this.getWorkSheetByName( sheetname );
+		Chart ct = getChart( chartname );
+		Boundsheet sht = getWorkSheetByName( sheetname );
 		byte[] bt = ct.getChartBytes();
 		sht.addChart( bt, chartname, ct.getCoords() );
 	}
@@ -2739,7 +2741,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		destChart.setTitle( NewChartName );
 		destChart.setId( boundsht.lastObjId + 1 );    // track last obj id per sheet ...
-		this.charts.add( destChart );
+		charts.add( destChart );
 		boundsht.getCharts().add( destChart );    // should really have two lists???
 		return destChart;
 	}
@@ -2755,12 +2757,12 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	{
 		if( msodg == null )
 		{
-			this.setMSODrawingGroup( (MSODrawingGroup) MSODrawingGroup.getPrototype() );
+			setMSODrawingGroup( (MSODrawingGroup) MSODrawingGroup.getPrototype() );
 			msodg.initNewMSODrawingGroup();    // generate and add required records for drawing records        	
 		}
 		msodg.addMsodrawingrec( mso );
 		MSODrawing hdr = msodg.getMsoHeaderRec( sht );
-		if( (hdr != null) && (hdr != mso) )
+		if( (hdr != null) && (!hdr.equals( mso )) )
 		{ // already have a header rec
 			if( sht.getCharts().size() > 0 )
 			{
@@ -2773,7 +2775,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			mso.setIsHeader();
 			hdr = mso;
 		}
-		this.updateMsodrawingHeaderRec( sht );
+		updateMsodrawingHeaderRec( sht );
 		msodg.dirtyflag = true;    // flag to reset SPIDs on write
 		msodg.setSpidMax( ++lastSPID );
 		msodg.updateRecord();
@@ -2790,10 +2792,10 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public void addPreChart()
 	{
-		this.addExternsheet();
+		addExternsheet();
 		if( msodg == null )
 		{
-			this.setMSODrawingGroup( (MSODrawingGroup) MSODrawingGroup.getPrototype() );
+			setMSODrawingGroup( (MSODrawingGroup) MSODrawingGroup.getPrototype() );
 			msodg.initNewMSODrawingGroup();    // generate and add required records for drawing records        	
 		}
 
@@ -2805,7 +2807,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public void deleteChart( String chartname, Boundsheet sheet ) throws ChartNotFoundException
 	{
-		Chart chart = this.getChart( chartname );
+		Chart chart = getChart( chartname );
 		// TODO: Update Dimensions record??
 		List recs = chart.getXLSrecs();
 		// first rec SHOULD BE MsoDrawing!!!        
@@ -2819,7 +2821,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			log.error( "deleteChart: expected Msodrawing record" );
 		}
         /* shouldn't be necessary to remove chart recs as they are separated upon init of workbook and reassebmbled upon write*/
-		this.removeChart( chartname );
+		removeChart( chartname );
 	}
 
 	/**
@@ -2848,7 +2850,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 
 		if( destSheet != null )
 		{
-			this.addBoundsheet( destSheet, origSheetName, NewSheetName, origWorkBookName, SSTPopulatedBoundsheet );
+			addBoundsheet( destSheet, origSheetName, NewSheetName, origWorkBookName, SSTPopulatedBoundsheet );
 		}
 	}
 
@@ -2907,8 +2909,8 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	                           boolean SSTPopulatedBoundsheet )
 	{
 		bound.streamer = streamer;
-		boolean old_allowdupes = this.isSharedupes();
-		this.setDupeStringMode( ALLOWDUPES );
+		boolean old_allowdupes = isSharedupes();
+		setDupeStringMode( ALLOWDUPES );
 
 		bound.mc.clear();
 		bound.setWorkBook( this );
@@ -2916,7 +2918,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		//Check if sheetname already exists!        
 		try
 		{
-			while( this.getWorkSheetByName( newSheetName ) != null )
+			while( getWorkSheetByName( newSheetName ) != null )
 			{
 				newSheetName = newSheetName + "Copy";
 			}
@@ -2934,7 +2936,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			try
 			{    // lastbound must be reset because other operations could alter
-				lastbound = this.getWorkSheetByNumber( this.getNumWorkSheets() - 1 );
+				lastbound = getWorkSheetByNumber( getNumWorkSheets() - 1 );
 				x = (XLSRecord) lastbound.getSheetRecs().get( lastbound.getSheetRecs().size() - 1 );
 			}
 			catch( Exception e )
@@ -2948,7 +2950,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		else
 		{
-			x = this.lasteof;
+			x = lasteof;
 		}
 		// last record is a junkrec.  We are going to move that down and put in the new BOF here
 		// TODO: recvecOffset position when no sheets??????
@@ -2958,7 +2960,8 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		int newloc = x.offset;
 		// modify the boundsheet rec for its new location/info/name
-		int listenerpos = -1, newoffset = -1;
+		int listenerpos = -1;
+		int newoffset = -1;
 		if( lastbound != null )
 		{
 			listenerpos = lastbound.getRecordIndex();
@@ -2984,7 +2987,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		newloc += newbof.getLength() + 4;
 		newbof.setOffset( newloc );
 		bound.setBOF( newbof );
-		this.addRecord( newbof, false );
+		addRecord( newbof, false );
 
 		recvecOffset += 1; // move it past that last Eof
 		newoffset = newloc + newbof.getLength() + 4;
@@ -2992,7 +2995,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		// insert the actual boundsheet record into the recvec
 		streamer.addRecordAt( bound, listenerpos + 1 );
 
-		this.addRecord( bound, false );
+		addRecord( bound, false );
 
 		// modify the TabID record to reflect new sheet
 		tabs.addNewRecord();
@@ -3002,13 +3005,13 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		copying = true;
 
 		// Add an externsheet ref for the new sheet         
-		if( this.myexternsheet == null )
+		if( myexternsheet == null )
 		{
-			this.addExternsheet();
+			addExternsheet();
 		}
 		try
 		{
-			int sheetref = this.getNumWorkSheets() - 1;
+			int sheetref = getNumWorkSheets() - 1;
 			myexternsheet.insertLocation( sheetref, sheetref );
 		}
 		catch( Exception e )
@@ -3022,7 +3025,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			Chart chart = (Chart) cht;    // obviously algorithm has changed and chart is NOT removed :) [discovered by Shigeo/Infoteria/formatbroken273193.sce] // 20080702 KSC: since it's removed, don't inc index
 			chart.updateSheetRefs( bound.getSheetName(), origWorkBookName );
-			this.charts.add( chart );
+			charts.add( chart );
 		}
 
 		bound.lastObjId = 1;    //  see if resetting obj id helps in file open errors; if so, must reset Note obj id's as well ... 
@@ -3032,7 +3035,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		for( int z = 1; z < numrecs; z++ )
 		{
 			XLSRecord xl = (XLSRecord) newrecs.get( z );
-			this.addRecord( xl, false );
+			addRecord( xl, false );
 				try
 				{
 					log.trace( "Copying: " + xl.toString() + ":" + String.valueOf( newoffset ) + ":" + xl.getLength() );
@@ -3083,7 +3086,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				}
 				if( msodg == null )
 				{
-					this.setMSODrawingGroup( (MSODrawingGroup) MSODrawingGroup.getPrototype() );
+					setMSODrawingGroup( (MSODrawingGroup) MSODrawingGroup.getPrototype() );
 					msodg.initNewMSODrawingGroup();    // generate and add required records for drawing records
 					msodg.addMsodrawingrec( mso );    // only add when msodg is null b/c otherwise it's added via the addRecord statement above
 				}
@@ -3097,8 +3100,8 @@ public class WorkBook implements Serializable, XLSConstants, Book
 						mso.updateImageIndex( idx );
 					}
 				}
-				mso.setSPID( this.lastSPID );
-				msodg.setSpidMax( ++this.lastSPID );
+				mso.setSPID( lastSPID );
+				msodg.setSpidMax( ++lastSPID );
 				// resets drawing id's - necessarily correct?				msodg.dirtyflag= true;	// flag to reset SPIDs on write
 			}
 			xl.setOffset( newoffset );
@@ -3116,12 +3119,12 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		updateTransferedCellReferences( bound, origSheetName, origWorkBookName );
 
 		// associate the records in the sheet
-		this.setSharedupes( old_allowdupes );
+		setSharedupes( old_allowdupes );
 
 		if( SSTPopulatedBoundsheet )
 		{
 			// bring over the sst
-			Sst sst = this.getSharedStringTable();
+			Sst sst = getSharedStringTable();
 			BiffRec[] b = bound.getCells();
 			for( BiffRec aB : b )
 			{
@@ -3134,7 +3137,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			}
 		}
 
-		if( this.getNumWorkSheets() > 1 )
+		if( getNumWorkSheets() > 1 )
 		{
 			bound.setSelected( false );
 		}
@@ -3156,16 +3159,16 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	private void updateTransferedCellReferences( Boundsheet bound, String origSheetName, String origWorkBookName )
 	{
-		HashMap localFonts = (HashMap) this.getFontRecsAsXML();
+		HashMap localFonts = (HashMap) getFontRecsAsXML();
 		List boundFonts = bound.getTransferFonts();        // ALL fonts in the source workbook
-		HashMap localXfs = (HashMap) this.getXfrecsAsString();
+		HashMap localXfs = (HashMap) getXfrecsAsString();
 		List boundXfs = bound.getTransferXfs();
 		// Set the workbook on all the cells
 		Row[] rows = bound.getRows();
 		for( Row row : rows )
 		{
 			row.setWorkBook( this );
-			if( row.getIxfe() != this.getDefaultIxfe() )
+			if( row.getIxfe() != getDefaultIxfe() )
 			{
 				transferFormatRecs( row, localFonts, boundFonts, localXfs, boundXfs );    // 20080709 KSC: handle default ixfe for row
 			}
@@ -3177,7 +3180,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				BiffRec b = (BiffRec) rowcells.next();
 				if( b.getOpcode() == MULBLANK )
 				{
-					if( aMul == b )
+					if( aMul.equals( b ) )
 					{
 						c++;
 					}
@@ -3294,7 +3297,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 								{
 									if( ptg instanceof PtgArea3d )
 									{ // PtgRef3d, etc.
-										this.getWorkSheetByName( ptg.getSheetName() );
+										getWorkSheetByName( ptg.getSheetName() );
 										ptg.setLocation( ptg.toString() );    // reset ixti if nec.
 									}
 									// otherwise, we're good
@@ -3339,7 +3342,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	                                 List boundXfs )
 	{
 		int oldXfNum = b.getIxfe();
-		int localNum = this.transferFormatRecs( oldXfNum, localFonts, boundFonts, localXfs, boundXfs );
+		int localNum = transferFormatRecs( oldXfNum, localFonts, boundFonts, localXfs, boundXfs );
 		if( localNum != -1 )
 		{
 			b.setIxfe( localNum );
@@ -3387,7 +3390,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				}
 				else
 				{ // it's a new font for this workbook, add it in
-					localfNum = this.insertFont( thisFont ) + 1;
+					localfNum = insertFont( thisFont ) + 1;
 					localFonts.put( xmlFont, localfNum );
 				}
 
@@ -3408,7 +3411,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				Object xfNum = localXfs.get( xmlxf );
 				if( xfNum == null )
 				{ // insert it into the book
-					localNum = this.insertXf( localxf );
+					localNum = insertXf( localxf );
 					localXfs.put( xmlxf, localNum );
 				}
 				else  // already exists in the destination
@@ -3423,18 +3426,18 @@ public class WorkBook implements Serializable, XLSConstants, Book
 
 	public void setStringEncodingMode( int mode )
 	{
-		this.getSharedStringTable().setStringEncodingMode( mode );
+		getSharedStringTable().setStringEncodingMode( mode );
 	}
 
 	public void setDupeStringMode( int mode )
 	{
 		if( mode == ALLOWDUPES )
 		{
-			this.setSharedupes( false );
+			setSharedupes( false );
 		}
 		else if( mode == SHAREDUPES )
 		{
-			this.setSharedupes( true );
+			setSharedupes( true );
 		}
 	}
 
@@ -3445,7 +3448,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public Chart getChart( String chartname ) throws ChartNotFoundException
 	{
-		AbstractList cv = this.getChartVect();
+		AbstractList cv = getChartVect();
 		Chart cht = null;
 		// Get by MSODG Drawing Name
 		for( int x = 0; x < cv.size(); x++ )
@@ -3487,7 +3490,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public void removeChart( String chartname ) throws ChartNotFoundException
 	{
-		AbstractList cv = this.getChartVect();
+		AbstractList cv = getChartVect();
 		Chart cht = null;
 		for( int x = 0; x < cv.size(); x++ )
 		{
@@ -3520,7 +3523,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			sid = 0;    // initial cache id if none already present
 		}
-		List records = this.getStreamer().records;
+		List records = getStreamer().records;
 		int z = -1;
 		for( int i = records.size() - 1; (i > 0) && (z == -1); i-- )
 		{
@@ -3557,12 +3560,12 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 
 		TableStyles tx = (TableStyles) TableStyles.getPrototype();    // see if this is really necessary ...
-		this.getStreamer().addRecordAt( tx, z++ );
+		getStreamer().addRecordAt( tx, z++ );
 		SxStreamID sxid = (SxStreamID) SxStreamID.getPrototype();
-		this.getStreamer().addRecordAt( sxid, z++ );
-		this.ptstream.add( sxid );    // Pivot Cache -                     
+		getStreamer().addRecordAt( sxid, z++ );
+		ptstream.add( sxid );    // Pivot Cache -
 		sxid.setStreamID( sid );    // cache id
-		this.getStreamer().records.addAll( z, sxid.addInitialRecords( this, ref, sheetName ) );
+		getStreamer().records.addAll( z, sxid.addInitialRecords( this, ref, sheetName ) );
 
 		return sid;
 	}
@@ -3658,22 +3661,22 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	{
 		if( myexternsheet == null )
 		{
-			int numsheets = this.getNumWorkSheets();
+			int numsheets = getNumWorkSheets();
 			Supbook sb = (Supbook) Supbook.getPrototype( numsheets );
 			// put it in after the last boundsheet record
 			try
 			{
-				Boundsheet b = this.getWorkSheetByNumber( numsheets - 1 );
+				Boundsheet b = getWorkSheetByNumber( numsheets - 1 );
 				int loc = b.getRecordIndex() + 1;
 				if( streamer.getRecordAt( loc ).getOpcode() == COUNTRY )
 				{
 					loc++;
 				}
 				streamer.addRecordAt( sb, loc );    // 20080306 KSC: do first 'cause externsheet now references global sb store 
-				this.addRecord( sb, false );
+				addRecord( sb, false );
 				Externsheet ex = (Externsheet) Externsheet.getPrototype( 0, 0, this );
 				streamer.addRecordAt( ex, loc + 1 );// 20080306 KSC: must inc loc since now inserting after sb           
-				this.addRecord( ex, false );
+				addRecord( ex, false );
 				myexternsheet = ex;
 			}
 			catch( WorkSheetNotFoundException e )
@@ -3734,9 +3737,9 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	public Map getXfrecsAsString()
 	{
 		Map retMap = new HashMap();
-		for( int xfNum = 1; xfNum < this.getNumXfs(); xfNum++ )
+		for( int xfNum = 1; xfNum < getNumXfs(); xfNum++ )
 		{
-			Xf x = this.getXf( xfNum );
+			Xf x = getXf( xfNum );
 			String xml = x.toString();
 			retMap.put( xml, xfNum );
 		}
@@ -3753,9 +3756,9 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	public Map getFontRecsAsXML()
 	{
 		Map retMap = new HashMap();
-		for( int i = this.fonts.size() - 1; i >= 0; i-- )
+		for( int i = fonts.size() - 1; i >= 0; i-- )
 		{
-			Font fnt = (Font) this.fonts.get( i );
+			Font fnt = (Font) fonts.get( i );
 			String xml = "<FONT><" + fnt.getXML() + "/></FONT>";
 			retMap.put( xml, fnt.getIdx() );
 		}
@@ -3785,9 +3788,9 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public void addFormula( Formula rec )
 	{
-		this.formulas.add( rec );
+		formulas.add( rec );
 		String shn = rec.getSheet().getSheetName() + "!" + rec.getCellAddress();
-		this.formulashash.put( shn, rec );
+		formulashash.put( shn, rec );
 	}
 
 	public boolean isSharedupes()
@@ -3807,7 +3810,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public boolean is1904()
 	{
-		return this.dateFormat == DateConverter.DateFormat.LEGACY_1904;
+		return dateFormat == DateConverter.DateFormat.LEGACY_1904;
 	}
 
 	/**
@@ -3815,7 +3818,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public DateConverter.DateFormat getDateFormat()
 	{
-		return this.dateFormat;
+		return dateFormat;
 	}
 
 	public ReferenceTracker getRefTracker()
@@ -3899,10 +3902,10 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public boolean defaultLanguageIsDBCS()
 	{
-		return ((this.defaultLanguage == 81) ||
-				(this.defaultLanguage == 886) ||
-				(this.defaultLanguage == 86) ||
-				(this.defaultLanguage == 82));
+		return ((defaultLanguage == 81) ||
+				(defaultLanguage == 886) ||
+				(defaultLanguage == 86) ||
+				(defaultLanguage == 82));
 		// PROBLEM WITH THIS:  POSSIBLE TO BE SET AS DBCS DEFAULT LANGUAGE
 		// BUT HAVE NON-DBCS TEXT or VISA VERSA
     	
@@ -3963,7 +3966,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			if( !getWorkSheetByNumber( firstSheet ).getHidden() )
 			{
-				return this.firstSheet;
+				return firstSheet;
 			}
 		}
 		catch( Exception x )
@@ -3972,7 +3975,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 
 		// first sheet is hidden -- fix
-		for( int t = 0; t < this.getNumWorkSheets(); t++ )
+		for( int t = 0; t < getNumWorkSheets(); t++ )
 		{
 			try
 			{
@@ -4016,7 +4019,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public String[] getAllStrings()
 	{
-		ArrayList al = this.getSharedStringTable().getAllStrings();
+		ArrayList al = getSharedStringTable().getAllStrings();
 		String[] s = new String[al.size()];
 		s = (String[]) al.toArray( s );
 		return s;
@@ -4061,7 +4064,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				tabs.removeRecord();
 			}
 		}
-		Object[] recs = this.getStreamer().getBiffRecords();
+		Object[] recs = getStreamer().getBiffRecords();
 		boolean resetVars = (recs[0] != null);
 		boundsheets.clear();
 		for( int i = 0; i < formulas.size(); i++ )
@@ -4069,20 +4072,20 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			Formula f = (Formula) formulas.get( i );
 			f.close();
 		}
-		this.formulas.clear();
-		if( this.refTracker != null )
+		formulas.clear();
+		if( refTracker != null )
 		{
-			this.refTracker.clearCaches();
+			refTracker.clearCaches();
 		}
-		this.formulashash.clear();
+		formulashash.clear();
 		// TODO: handle
-		this.indirectFormulas.clear();
-		this.charts.clear();
-		this.chartTemp.clear();
+		indirectFormulas.clear();
+		charts.clear();
+		chartTemp.clear();
 		if( firstBOF != null )
 		{
 			firstBOF.close();
-			this.firstBOF = null;
+			firstBOF = null;
 		}
 		if( lasteof != null )
 		{
@@ -4121,14 +4124,14 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		if( lastbound != null )
 		{
 			lastbound.close();
-			this.lastbound = null;
+			lastbound = null;
 		}
 		if( lastFormula != null )
 		{
 			lastFormula.close();
-			this.lastFormula = null;
+			lastFormula = null;
 		}
-		this.workSheets.clear();
+		workSheets.clear();
 	}
 
 	protected void closeRecords()
@@ -4142,11 +4145,11 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	{
 		closeSheets();
 
-		if( this.isExcel2007 )
+		if( isExcel2007 )
 		{
 			try
 			{
-				String externalDir = OOXMLAdapter.getTempDir( this.getFactory().getFileName() );
+				String externalDir = OOXMLAdapter.getTempDir( getFactory().getFileName() );
 				OOXMLAdapter.deleteDir( new File( externalDir ) );
 			}
 			catch( Exception e )
@@ -4164,63 +4167,63 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			Name n = (Name) bookNameRecs.get( ii.next() );
 			n.close();
 		}
-		this.bookNameRecs.clear();
+		bookNameRecs.clear();
 		for( int i = 0; i < xfrecs.size(); i++ )
 		{
 			Xf x = (Xf) xfrecs.get( i );
 			x.close();
 		}
-		this.xfrecs.clear();
-		this.formatCache.clear();
-		this.formatlookup.clear();
-		this.formats.clear();
-		this.fonts.clear();
-		if( this.dxfs != null )
+		xfrecs.clear();
+		formatCache.clear();
+		formatlookup.clear();
+		formats.clear();
+		fonts.clear();
+		if( dxfs != null )
 		{
-			this.dxfs.clear();
+			dxfs.clear();
 		}
 		for( int i = 0; i < msodgMerge.size(); i++ )
 		{
 			MSODrawingGroup m = (MSODrawingGroup) msodgMerge.get( i );
 			m.close();
 		}
-		this.msodgMerge.clear();
-		if( this.msodg != null )
+		msodgMerge.clear();
+		if( msodg != null )
 		{
 			msodg.close();
 			msodg = null;
 		}
 		// TODO: handle
-		this.mergecelllookup.clear();
-		this.hlinklookup.clear();
-		this.externalnames.clear();
+		mergecelllookup.clear();
+		hlinklookup.clear();
+		externalnames.clear();
 		for( int i = 0; i < names.size(); i++ )
 		{
 			Name n = (Name) names.get( i );
 			n.close();
 		}
-		this.names.clear();
+		names.clear();
 		for( int i = 0; i < indexes.size(); i++ )
 		{
 			Index ind = (Index) indexes.get( i );
 			ind.close();
 		}
-		this.indexes.clear();
+		indexes.clear();
 		if( lastidx != null )
 		{
 			lastidx.close();
 			lastidx = null;
 		}
-		if( this.stringTable != null )
+		if( stringTable != null )
 		{
-			this.stringTable.close();
-			this.stringTable = null;
+			stringTable.close();
+			stringTable = null;
 		}
 
 		if( countryRec != null )
 		{
-			this.countryRec.close();
-			this.countryRec = null;
+			countryRec.close();
+			countryRec = null;
 		}
 		if( win1 != null )
 		{
@@ -4228,42 +4231,42 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			win1 = null;
 		}
 
-		if( this.drh != null )
+		if( drh != null )
 		{
-			this.drh.close();
+			drh.close();
 			drh = null;
 		}
 
 		// integration point for subclasses
-		this.closeRecords();
+		closeRecords();
 
-		this.contHandler = new ContinueHandler( this );
-		if( this.currai != null )
+		contHandler = new ContinueHandler( this );
+		if( currai != null )
 		{
-			this.currai.close();
-			this.currai = null;
+			currai.close();
+			currai = null;
 		}
 		if( calcmoderec != null )
 		{
 			calcmoderec.close();
 			calcmoderec = null;
 		}
-		this.currchart = null;
-		this.currdrw = null;
-		if( this.protector != null )
+		currchart = null;
+		currdrw = null;
+		if( protector != null )
 		{
-			this.protector.close();
-			this.protector = null;
+			protector.close();
+			protector = null;
 		}
-		if( this.myexternsheet != null )
+		if( myexternsheet != null )
 		{
-			this.myexternsheet.close();
-			this.myexternsheet = null;
+			myexternsheet.close();
+			myexternsheet = null;
 		}
-		if( this.refTracker != null )
+		if( refTracker != null )
 		{
-			this.refTracker.close();
-			this.refTracker = null;
+			refTracker.close();
+			refTracker = null;
 		}
 		if( tabs != null )
 		{
@@ -4271,7 +4274,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			tabs = null;
 		}
 		// TODO: deal
-		this.factory = null;
+		factory = null;
 		streamer = createByteStreamer();
 		if( xl2k != null )
 		{

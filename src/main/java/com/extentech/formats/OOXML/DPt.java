@@ -53,19 +53,19 @@ public class DPt implements OOXMLElement
 		this.idx = idx;
 		this.invertIfNegative = invertIfNegative;
 		this.bubble3D = bubble3D;
-		this.marker = m;
-		this.spPr = sp;
+		marker = m;
+		spPr = sp;
 		this.explosion = explosion;
 	}
 
 	public DPt( DPt d )
 	{
-		this.idx = d.idx;
-		this.invertIfNegative = d.invertIfNegative;
-		this.bubble3D = d.bubble3D;
-		this.marker = d.marker;
-		this.spPr = d.spPr;
-		this.explosion = d.explosion;
+		idx = d.idx;
+		invertIfNegative = d.invertIfNegative;
+		bubble3D = d.bubble3D;
+		marker = d.marker;
+		spPr = d.spPr;
+		explosion = d.explosion;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )

@@ -59,8 +59,8 @@ public class CfRule implements OOXMLElement
 
 	public CfRule( CfRule cf )
 	{
-		this.attrs = cf.attrs;
-		this.formulas = cf.formulas;
+		attrs = cf.attrs;
+		formulas = cf.formulas;
 	}
 
 	/**
@@ -153,11 +153,11 @@ public class CfRule implements OOXMLElement
 	 */
 	public int getDxfId()
 	{
-		if( this.attrs != null )
+		if( attrs != null )
 		{
 			try
 			{
-				return Integer.valueOf( this.attrs.get( "dxfId" ) );
+				return Integer.valueOf( attrs.get( "dxfId" ) );
 			}
 			catch( Exception e )
 			{
@@ -176,9 +176,9 @@ public class CfRule implements OOXMLElement
 	 */
 	public void setDxfId( int dxfId )
 	{
-		if( this.attrs == null )
+		if( attrs == null )
 		{
-			this.attrs = new HashMap<>();
+			attrs = new HashMap<>();
 		}
 		attrs.put( "dxfId", Integer.valueOf( dxfId ).toString() );
 	}

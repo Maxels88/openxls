@@ -76,8 +76,8 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void removeCellRange( CellRange rng )
 	{
-		this.ranges.remove( rng );
-		this.update();
+		ranges.remove( rng );
+		update();
 	}
 
 	/**
@@ -88,7 +88,7 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 	public void addCellRange( CellRange rng )
 	{
 		//  rng.setIsmerge(true);
-		this.ranges.add( rng );
+		ranges.add( rng );
 	}
 
 	/**
@@ -114,9 +114,9 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( ranges.size() > MAXRANGES )
 		{
-			this.handleMultiRec();
+			handleMultiRec();
 		}
-		this.nummerges = ranges.size();
+		nummerges = ranges.size();
 		int datasz = nummerges * 8;
 		datasz += 2;
 		data = new byte[datasz];
@@ -156,7 +156,7 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 			data[pos++] = colmax[1];
 
 		}
-		this.setData( data );
+		setData( data );
 	}
 
 	/**
@@ -172,7 +172,7 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 		{
 			return;
 		}
-		this.nummerges = MAXRANGES;
+		nummerges = MAXRANGES;
 		Mergedcells mcfresh = (Mergedcells) Mergedcells.getPrototype();
 		List substa = ranges.subList( MAXRANGES, ranges.size() );
 		Iterator ita = substa.iterator();
@@ -185,13 +185,13 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 		{
 			ranges.remove( removes.next() );
 		}
-		this.getWorkBook().addRecord( mcfresh, false );
+		getWorkBook().addRecord( mcfresh, false );
 
-		int idx = this.getRecordIndex() + 1;
-		mcfresh.setSheet( this.getSheet() );
-		this.getSheet().addMergedCellsRec( mcfresh );
+		int idx = getRecordIndex() + 1;
+		mcfresh.setSheet( getSheet() );
+		getSheet().addMergedCellsRec( mcfresh );
 		//Logger.logInfo("ADDING Mergedcells at idx: " + idx);
-		this.getStreamer().addRecordAt( mcfresh, idx );
+		getStreamer().addRecordAt( mcfresh, idx );
 		mcfresh.init();
 		mcfresh.update();
 	}
@@ -203,7 +203,7 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void initCells( WorkBookHandle wbook )
 	{
-		nummerges = ByteTools.readShort( this.getByteAt( 0 ), getByteAt( 1 ) );
+		nummerges = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		ranges = new CompatibleVector();
 		int pos = 2; // pointer to the indexes
 		for( int x = 0; x < nummerges; x++ )
@@ -215,7 +215,7 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 			cellcoords[3] = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) ); // last row
 			try
 			{
-				WorkSheetHandle shtr = wbook.getWorkSheet( this.getSheet().getSheetName() );
+				WorkSheetHandle shtr = wbook.getWorkSheet( getSheet().getSheetName() );
 
 				// TODO: testing -- this saves about 30MB in parsing the Reflexis 700+ sheet problem
 				CellRange cr = new CellRange( shtr, cellcoords, false );
@@ -231,7 +231,7 @@ public final class Mergedcells extends com.extentech.formats.XLS.XLSRecord
 					{
 						if( aCh.getOpcode() == MULBLANK )
 						{
-							if( aMul == aCh )
+							if( aMul.equals( aCh ) )
 							{
 								continue;    // skip- already handled
 							}

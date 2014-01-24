@@ -48,7 +48,7 @@ public class Surface3DChart extends SurfaceChart
 		// wireframe
 
 		// *** Series Data:	ser, cat, val for most chart types
-		cooxml.append( this.getParentChart().getChartSeries().getOOXML( this.getChartType(), false, 0 ) );
+		cooxml.append( getParentChart().getChartSeries().getOOXML( getChartType(), false, 0 ) );
 
 		// bandfmts
 

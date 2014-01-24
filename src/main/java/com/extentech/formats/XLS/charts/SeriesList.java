@@ -44,12 +44,12 @@ public class SeriesList extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		int nseries = ByteTools.readShort( this.getData()[0], this.getData()[1] );
+		int nseries = ByteTools.readShort( getData()[0], getData()[1] );
 		seriesmap = new int[nseries];
 		for( int i = 0; i < nseries; i++ )
 		{
 			int idx = ((i + 1) * 2);
-			seriesmap[i] = ByteTools.readShort( this.getData()[idx], this.getData()[idx + 1] );
+			seriesmap[i] = ByteTools.readShort( getData()[idx], getData()[idx + 1] );
 		}
 	}
 

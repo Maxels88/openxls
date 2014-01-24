@@ -42,14 +42,15 @@ public class MsofbtSp extends EscherRecord
 	@Override
 	public byte[] getData()
 	{
-		byte[] idBytes, flagBytes;
+		byte[] idBytes;
+		byte[] flagBytes;
 		idBytes = ByteTools.cLongToLEBytes( id );
 		flagBytes = ByteTools.cLongToLEBytes( grfPersistence );
 		byte[] retData = new byte[8];
 		System.arraycopy( idBytes, 0, retData, 0, 4 );
 		System.arraycopy( flagBytes, 0, retData, 4, 4 );
 
-		this.setLength( 8 );
+		setLength( 8 );
 		return retData;
 
 	}

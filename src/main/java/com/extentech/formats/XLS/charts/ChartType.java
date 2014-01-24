@@ -378,8 +378,8 @@ public abstract class ChartType implements ChartConstants, Serializable
 		// 2 Value Axes:  Scatter, Bubble
 		// NO Axes:  Pie, Doughnut, PieOfPie, BarOfPie
 
-		ChartAxes ca = this.getParentChart().getAxes();
-		int chartType = this.getChartType();
+		ChartAxes ca = getParentChart().getAxes();
+		int chartType = getChartType();
 		if( options.contains( ChartOptions.STACKED ) )            // bar/col types, line, area
 		{
 			chartobj.setIsStacked( true );
@@ -437,7 +437,7 @@ public abstract class ChartType implements ChartConstants, Serializable
 			{    // surface charts ALWAYS have a 3 record as does pyramid, cone and cylinder charts
 				if( (chartType != BUBBLECHART) && (chartType != SCATTERCHART) )    // supposed to be also donught, radar as well ...
 				{
-					threeD = this.initThreeD( chartType );
+					threeD = initThreeD( chartType );
 				}
 				else if( chartType == BUBBLECHART )
 				{ // scatter charts have no 3d option
@@ -519,8 +519,8 @@ public abstract class ChartType implements ChartConstants, Serializable
 					threeD.setChartOption( "ThreeDScaling", "false" );
 					threeD.setChartOption( "Perspective", "true" );
 				}
-				this.setChartOption( "Percentage", "25" );
-				this.setChartOption( "SmoothedLine", "true" );
+				setChartOption( "Percentage", "25" );
+				setChartOption( "SmoothedLine", "true" );
 				ca.setChartOption( XAXIS, "CrossBetween", "false" );
 				if( options.contains( ChartOptions.THREED ) )
 				{
@@ -536,29 +536,29 @@ public abstract class ChartType implements ChartConstants, Serializable
 			case BUBBLECHART:
 				if( options.contains( ChartOptions.THREED ) )
 				{
-					this.setChartOption( "Percentage", "25" );
-					this.setChartOption( "SmoothedLine", "true" );
-					this.setChartOption( "ThreeDBubbles", "true" );
+					setChartOption( "Percentage", "25" );
+					setChartOption( "SmoothedLine", "true" );
+					setChartOption( "ThreeDBubbles", "true" );
 				}
 				break;
 			case PIECHART: // Pie
 				cf.setVaryColor( true ); // Should be true for all pie charts ...
 				if( options.contains( ChartOptions.EXPLODED ) )
 				{
-					this.setChartOption( "SmoothedLine", "true" );
-					this.setChartOption( "Percentage", "25" );
+					setChartOption( "SmoothedLine", "true" );
+					setChartOption( "Percentage", "25" );
 				}
 				if( use3Ddefaults && options.contains( ChartOptions.THREED ) )
 				{
-					this.setChartOption( "AnRot", "236" );
+					setChartOption( "AnRot", "236" );
 				}
 				ca.removeAxes();
 				break;
 			case DOUGHNUTCHART:
 				if( options.contains( ChartOptions.EXPLODED ) )
 				{
-					this.setChartOption( "SmoothedLine", "true" );
-					this.setChartOption( "Percentage", "25" );
+					setChartOption( "SmoothedLine", "true" );
+					setChartOption( "Percentage", "25" );
 				}
 				cf.setVaryColor( true ); // Should be true for all pie charts ...
 				ca.removeAxes();
@@ -629,7 +629,7 @@ public abstract class ChartType implements ChartConstants, Serializable
 				// Shaped Bar/Col charts are all 3d 
 				if( threeD == null )
 				{
-					threeD = this.initThreeD( chartType );
+					threeD = initThreeD( chartType );
 				}
 				if( use3Ddefaults )
 				{
@@ -1129,10 +1129,11 @@ public abstract class ChartType implements ChartConstants, Serializable
 		JSONObject chartObjectJSON = new JSONObject();
 
 		// Type JSON
-		chartObjectJSON.put( "type", this.getTypeJSON() );
+		chartObjectJSON.put( "type", getTypeJSON() );
 
 		// Deal with Series
-		double yMax = 0.0, yMin = 0.0;
+		double yMax = 0.0;
+		double yMin = 0.0;
 		int nSeries = 0;
 		JSONArray seriesJSON = new JSONArray();
 		JSONArray seriesCOLORS = new JSONArray();
@@ -1824,13 +1825,13 @@ public abstract class ChartType implements ChartConstants, Serializable
 			BufferedWriter writer = new BufferedWriter( new FileWriter( f ) );
 			util u = new util();
 
-			java.util.Vector v = this.getParentChart().getAllSeries();
+			java.util.Vector v = getParentChart().getAllSeries();
 			for( Object aV : v )
 			{
 				u.writeRecs( (BiffRec) aV, writer, 0 );
 			}
 			writer.newLine();
-			ArrayList<com.extentech.formats.XLS.XLSRecord> chartArr = this.cf.chartArr;
+			ArrayList<com.extentech.formats.XLS.XLSRecord> chartArr = cf.chartArr;
 			for( XLSRecord aChartArr : chartArr )
 			{
 				u.writeRecs( aChartArr, writer, 0 );

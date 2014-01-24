@@ -88,7 +88,7 @@ public class PtgMemArea extends GenericPtg
 	{
 		ptgId = b[0];
 		record = b;
-		this.populateVals();
+		populateVals();
 	}
 
 	public int getnTokens()
@@ -108,7 +108,7 @@ public class PtgMemArea extends GenericPtg
 		System.arraycopy( record, 0, retbytes, 0, record.length );
 		retbytes = ByteTools.append( b, retbytes );
 		record = retbytes;
-		this.populateVals();
+		populateVals();
 		// TODO: 
 	}
 
@@ -206,13 +206,13 @@ public class PtgMemArea extends GenericPtg
 			byte[] subexp;
 			subexp = new byte[cce];
 			System.arraycopy( record, 7, subexp, 0, cce );
-			subexpression = ExpressionParser.parseExpression( subexp, this.parent_rec );
+			subexpression = ExpressionParser.parseExpression( subexp, parent_rec );
 			// subexpression stack in form of:  REFERENCE, REFERENCE, OP [,REFERENCE, OP] ...
 			// op can be one of:  PtgUnion [,] PtgIsect [ ] or PtgRange [:]
 			// calculate subexpression to obtain ptgs
 			try
 			{
-				Object o = FormulaCalculator.calculateFormula( this.subexpression );
+				Object o = FormulaCalculator.calculateFormula( subexpression );
 				ArrayList components = new ArrayList();
 				if( (o != null) && (o instanceof Ptg[]) )
 				{

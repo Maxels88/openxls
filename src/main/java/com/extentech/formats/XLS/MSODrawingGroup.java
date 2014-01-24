@@ -116,14 +116,14 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 	public void removeMsodrawingrec( MSODrawing rec, Boundsheet sheet, boolean removeObjRec )
 	{
 		int imgIdx = rec.getImageIndex() - 1;
-		int refCnt = this.getCRef( imgIdx );
+		int refCnt = getCRef( imgIdx );
 		boolean wasHeader = rec.bIsHeader;
 		if( refCnt > 0 )
 		{
-			this.decCRef( imgIdx );
+			decCRef( imgIdx );
 		}
 		msoRecs.remove( rec );
-		this.updateRecord();    // update msodg rec
+		updateRecord();    // update msodg rec
 		int idx = rec.getRecordIndex();    // chart mso's have been taken out of streamer so idx will be -1
 		if( idx > -1 )
 		{
@@ -134,10 +134,10 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 			}
 		}
 
-		if( this.getMsodrawingrecs().size() == 0 )
+		if( getMsodrawingrecs().size() == 0 )
 		{    // no more drawing recs, delete this msodg
 			sheet.removeRecFromVec( this );
-			this.getWorkBook().msodg = null;
+			getWorkBook().msodg = null;
 			// TODO: Unsure if there are other circumstances where MsodrawingSelection should be removed ... watch out for it
 			// KSC: TODO: Necessary????  Appears so for delete chart ...(WHY??????)
 			BiffRec b = sheet.getSheetRec( MSODRAWINGSELECTION );
@@ -151,9 +151,9 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 			if( wasHeader )
 			{ // we just removed the header; set 1st one to it
 				MSODrawing mso = null;
-				for( int z = 0; z < this.getMsodrawingrecs().size(); z++ )
+				for( int z = 0; z < getMsodrawingrecs().size(); z++ )
 				{
-					mso = (MSODrawing) this.getMsodrawingrecs().get( z );
+					mso = (MSODrawing) getMsodrawingrecs().get( z );
 					if( mso.getSheet().equals( sheet ) && mso.isShape )
 					{
 						mso.setIsHeader();    // make this one the header rec
@@ -161,7 +161,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 					}
 				}
 			}
-			this.wkbook.updateMsodrawingHeaderRec( sheet );
+			wkbook.updateMsodrawingHeaderRec( sheet );
 		}
 	}
 
@@ -195,7 +195,10 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 		return msoRecs;
 	}
 
-	int spidMax = 1024, numIdClusters = 2, numShapes = 1, numDrawings = 1;
+	int spidMax = 1024;
+	int numIdClusters = 2;
+	int numShapes = 1;
+	int numDrawings = 1;
 
 	private ArrayList imageData = new ArrayList();
 	private ArrayList imageType = new ArrayList();  // parallel array with imageData
@@ -319,12 +322,12 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 		// add unknown record that appears just before MSODrawingGroup
 		XLSRecord rec = new XLSRecord();
 		rec.setOpcode( (short) 0x1C1 );
-		rec.setData( this.PROTOTYPE_1C1 );
+		rec.setData( PROTOTYPE_1C1 );
 		streamer.addRecordAt( rec, index++ );
 		// add MSODrawingGroup
 		streamer.addRecordAt( this, index );
 		// also need msymystery record + msoselection ...
-		Boundsheet[] b = this.getWorkBook().getWorkSheets();
+		Boundsheet[] b = getWorkBook().getWorkSheets();
 		for( Boundsheet aB : b )
 		{
 			int z = aB.getIndexOf( PHONETIC );
@@ -333,7 +336,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 				Phonetic p = new Phonetic();
 				p.setData( p.PROTOTYPE_BYTES );
 				p.setOpcode( XLSRecord.PHONETIC );
-				p.setStreamer( this.getStreamer() );
+				p.setStreamer( getStreamer() );
 				aB.insertSheetRecordAt( p, aB.getIndexOf( SELECTION ) + 1 );
 			}
 /* truly necessary???    		if (i==0) { // msodrawingselection only for 1st sheet???????
@@ -894,7 +897,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 		{
 			rec.mergeAndRemoveContinues();        // now that data is merged, get rid of continues ...
 		}
-		byte[] prevData = this.getBytes();
+		byte[] prevData = getBytes();
 		byte[] newData = rec.getBytes();
 		byte[] totalData = new byte[newData.length];
 		if( prevData != null )
@@ -907,7 +910,7 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 		{
 			totalData = newData;
 		}
-		this.setData( totalData );
+		setData( totalData );
 	}
 
 	/**
@@ -928,21 +931,21 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 	// continue handling
 	public void mergeAndRemoveContinues()
 	{
-		if( !this.isContinueMerged && this.hasContinues() )
+		if( !isContinueMerged && hasContinues() )
 		{
 			super.mergeContinues();
 		}
-		if( this.hasContinues() )
+		if( hasContinues() )
 		{
 			// now that data is merged, get rid of continues ...
-			Iterator it = this.continues.iterator();
+			Iterator it = continues.iterator();
 			while( it.hasNext() )
 			{
 				Continue ci = (Continue) it.next();
-				this.getStreamer().removeRecord( ci ); // remove existing continues from stream
+				getStreamer().removeRecord( ci ); // remove existing continues from stream
 			}
 			super.removeContinues();
-			this.continues = null;
+			continues = null;
 		}
 	}
 
@@ -1005,10 +1008,10 @@ public final class MSODrawingGroup extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void addDrawingRecord( int spidMax, MSODrawing rec )
 	{
-		this.numDrawings++;
+		numDrawings++;
 		incCRef( rec.imageIndex - 1 );  // increment cRef
 		this.spidMax = spidMax;
-		this.updateRecord();        // given all information, generate appropriate bytes
+		updateRecord();        // given all information, generate appropriate bytes
 	}
 
 	/**

@@ -86,11 +86,14 @@ public final class Ai extends GenericChartObject implements ChartObject
 	protected static byte[] AI_TYPE_CATEGORY = new byte[]{ 2, 2, 0, 0, 0, 0, 0, 0 }; // 11, 0, 59, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0};
 	protected static byte[] AI_TYPE_BUBBLE = new byte[]{ 3, 1, 0, 0, 0, 0, 0, 0 };
 	protected static byte[] AI_TYPE_NULL_LEGEND = new byte[]{ 0, 1, 0, 0, 0, 0, 0, 0 };
-	protected int id = -1, ifmt = -1, cce = -1;
+	protected int id = -1;
+	protected int ifmt = -1;
+	protected int cce = -1;
 	private static final Logger log = LoggerFactory.getLogger( Ai.class );
 	private static final long serialVersionUID = -6647823755603289012L;
 	private Stack expression;
-	private short grbit = -1, rt = -1;
+	private short grbit = -1;
+	private short rt = -1;
 	private boolean fCustomIfmt = false;
 	//private CompatibleVector xlsrecs = new CompatibleVector();
 	private SeriesText st = null;
@@ -224,7 +227,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 
 	public void setLegend( String newLegend )
 	{
-		this.setRt( 1 );
+		setRt( 1 );
 		st.setText( newLegend );
 		expression = null;    // if setting to a string, no expression!
 	}
@@ -291,25 +294,25 @@ public final class Ai extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		id = this.getByteAt( 0 );
+		id = getByteAt( 0 );
 		// index id: (0=title or text, 1=series vals, 2=series cats, 3= bubbles
-		rt = this.getByteAt( 1 );
+		rt = getByteAt( 1 );
 		// reference type(0=default,1=text in formula bar, 2=worksheet, 4=error)
-		grbit = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
+		grbit = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
 		fCustomIfmt = (grbit & 0x1) == 0x1;
 		// flags
-		ifmt = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
+		ifmt = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
 		// Index to number format
-		cce = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
+		cce = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
 		// size of rgce (in bytes)
 		int pos = 8;
 		//  Parsed formula of link
 
 		// 	get the parsed expression
-		byte[] expressionbytes = this.getBytesAt( pos, cce );
+		byte[] expressionbytes = getBytesAt( pos, cce );
 		expression = ExpressionParser.parseExpression( expressionbytes, this );
 		pos += cce;
-		log.trace( this.getName() + ":" + this.getDefinition() );
+		log.trace( getName() + ":" + getDefinition() );
 	}
 
 	//	public void addRecord(BiffRec rec){
@@ -326,7 +329,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 	 */
 	public void setExternsheetRef( int x ) throws WorkSheetNotFoundException
 	{
-		byte[] dt = this.getData();
+		byte[] dt = getData();
 		int pos = 8;
 
 		for( Object anExpression : expression )
@@ -339,7 +342,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 				pt.addToRefTracker();
 				log.info( "Setting sheet reference for: " + pt.toString() + "  in Ai record." );
 				// register with the Externsheet reference
-				this.getWorkBook().getExternSheet().addPtgListener( pt );
+				getWorkBook().getExternSheet().addPtgListener( pt );
 				updateRecord();
 			}
 			else if( p instanceof PtgRef3d )
@@ -349,7 +352,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 				pr.addToRefTracker();
 					log.debug( "Setting sheet reference for: " + pr.toString() + "  in Ai record." );
 				// register with the Externsheet reference
-				this.getWorkBook().getExternSheet().addPtgListener( pr );
+				getWorkBook().getExternSheet().addPtgListener( pr );
 				updateRecord();
 			}
 			else if( p instanceof PtgMemFunc )
@@ -359,13 +362,13 @@ public final class Ai extends GenericChartObject implements ChartObject
 				{
 					((PtgRef3d) pr).setIxti( (short) x );
 					((PtgRef3d) pr).addToRefTracker();
-					this.getWorkBook().getExternSheet().addPtgListener( (PtgRef3d) pr );
+					getWorkBook().getExternSheet().addPtgListener( (PtgRef3d) pr );
 				}
 				else
 				{    // should be a PtgArea3d
 					((PtgArea3d) pr).setIxti( (short) x );
 					((PtgArea3d) pr).addToRefTracker();
-					this.getWorkBook().getExternSheet().addPtgListener( (PtgArea3d) pr );
+					getWorkBook().getExternSheet().addPtgListener( (PtgArea3d) pr );
 				}
 					log.debug( "Setting sheet reference for: " + pr.toString() + "  in Ai record." );
 				// register with the Externsheet reference
@@ -396,12 +399,12 @@ public final class Ai extends GenericChartObject implements ChartObject
 				if( oRef == oldRef )
 				{    // got the one to update
 					pt.removeFromRefTracker();    // 20100506 KSC: added
-					pt.setSheetName( this.getSheet().getSheetName() );    // 20100415 KSC: added
+					pt.setSheetName( getSheet().getSheetName() );    // 20100415 KSC: added
 					pt.setIxti( (short) newRef );
 					pt.addToRefTracker();    // 20080709 KSC
 						log.debug( "Setting sheet reference for: " + pt.toString() + "  in Ai record." );
 					// register with the Externsheet reference
-					this.getWorkBook().getExternSheet().addPtgListener( pt );
+					getWorkBook().getExternSheet().addPtgListener( pt );
 					updateRecord();
 				}
 			}
@@ -412,7 +415,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 				if( oRef == oldRef )
 				{
 					pr.removeFromRefTracker();
-					pr.setSheetName( this.getSheet().getSheetName() );    // 20100415 KSC: added
+					pr.setSheetName( getSheet().getSheetName() );    // 20100415 KSC: added
 					pr.setIxti( (short) newRef );
 					if( !pr.getIsRefErr() )
 					{
@@ -420,7 +423,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 					}
 					log.debug( "Setting sheet reference for: " + pr.toString() + "  in Ai record." );
 					// register with the Externsheet reference
-					this.getWorkBook().getExternSheet().addPtgListener( pr );
+					getWorkBook().getExternSheet().addPtgListener( pr );
 					updateRecord();
 				}
 			}
@@ -433,10 +436,10 @@ public final class Ai extends GenericChartObject implements ChartObject
 					if( oRef == oldRef )
 					{
 						((PtgRef3d) pr).removeFromRefTracker();    // 20100506 KSC: added
-						((PtgArea3d) pr).setSheetName( this.getSheet().getSheetName() );    // 20100415 KSC: added
+						((PtgArea3d) pr).setSheetName( getSheet().getSheetName() );    // 20100415 KSC: added
 						((PtgRef3d) pr).setIxti( (short) newRef );
 						((PtgRef3d) pr).addToRefTracker();
-						this.getWorkBook().getExternSheet().addPtgListener( (PtgRef3d) pr );
+						getWorkBook().getExternSheet().addPtgListener( (PtgRef3d) pr );
 					}
 				}
 				else
@@ -445,10 +448,10 @@ public final class Ai extends GenericChartObject implements ChartObject
 					if( oRef == oldRef )
 					{
 						((PtgRef3d) pr).removeFromRefTracker();    // 20100506 KSC: added
-						((PtgArea3d) pr).setSheetName( this.getSheet().getSheetName() );    // 20100415 KSC: added
+						((PtgArea3d) pr).setSheetName( getSheet().getSheetName() );    // 20100415 KSC: added
 						((PtgArea3d) pr).setIxti( (short) newRef );
 						((PtgArea3d) pr).addToRefTracker();
-						this.getWorkBook().getExternSheet().addPtgListener( (PtgArea3d) pr );
+						getWorkBook().getExternSheet().addPtgListener( (PtgArea3d) pr );
 					}
 				}
 					log.debug( "Setting sheet reference for: " + pr.toString() + "  in Ai record." );
@@ -478,11 +481,11 @@ public final class Ai extends GenericChartObject implements ChartObject
 				{
 					if( !boundName.equalsIgnoreCase( origSheetName ) )
 					{    // Ai reference is on a dfferent sheet, see if it exists in new workbook
-						newSheetNum = this.getWorkBook().getWorkSheetByName( boundName ).getSheetNum();
+						newSheetNum = getWorkBook().getWorkSheetByName( boundName ).getSheetNum();
 					}
 					else    // Ai reference is on same sheet, point now to new sheet
 					{
-						newSheetNum = this.getWorkBook().getWorkSheetByName( newSheetName ).getSheetNum();
+						newSheetNum = getWorkBook().getWorkSheetByName( newSheetName ).getSheetNum();
 					}
 				}
 				catch( Exception e )
@@ -495,7 +498,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 							log.warn( "External References are unsupported: External reference found in Chart: " + p.getSheetName() );
 							p.setSheetName( boundName );    // set external reference to original boundsheet name
 							p.setExternalReference( origWorkBookName );
-							this.setExternsheetRef( p.getIxti() );
+							setExternsheetRef( p.getIxti() );
 						}
 						else
 						{
@@ -505,10 +508,10 @@ public final class Ai extends GenericChartObject implements ChartObject
 				}
 				if( newSheetNum != -1 )
 				{
-					this.setSheet( this.getWorkBook().getWorkSheetByName( newSheetName ) ); // 20100415 KSC: set Ai sheet ref to new sheet
-					Externsheet xsht = this.getWorkBook().getExternSheet( true );    // create if necessary
+					setSheet( getWorkBook().getWorkSheetByName( newSheetName ) ); // 20100415 KSC: set Ai sheet ref to new sheet
+					Externsheet xsht = getWorkBook().getExternSheet( true );    // create if necessary
 					int newXRef = xsht.insertLocation( newSheetNum, newSheetNum );
-					this.setExternsheetRef( boundXti, newXRef );
+					setExternsheetRef( boundXti, newXRef );
 					boundXti = newXRef;    // 20100506 KSC: reset
 					boundName = newSheetName;    // ""
 				}
@@ -598,7 +601,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 
 	public boolean setLocationPolicy( String loc, int l )
 	{
-		List dx = this.getPtgsByLocation( loc );
+		List dx = getPtgsByLocation( loc );
 		Iterator lx = dx.iterator();
 		while( lx.hasNext() )
 		{
@@ -650,12 +653,12 @@ public final class Ai extends GenericChartObject implements ChartObject
 				{
 					p.setLocation( aiLoc );    // updates ref. tracker
 					expression.set( 0, p );    // update expression with new Ptg
-					if( this.getType() == Ai.TYPE_TEXT )
+					if( getType() == Ai.TYPE_TEXT )
 					{    // must reset text for SeriesText as well
 						try
 						{
 							Object o = p.getValue();
-							this.setText( o.toString() );
+							setText( o.toString() );
 						}
 						catch( Exception e )
 						{
@@ -707,7 +710,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 		}
 		if( (z == -1) && newLoc.equals( "" ) )
 		{// no reference -- happens on legends, category ai's ...
-			this.getData()[1] = 1;    // text reference rather than worksheet reference
+			getData()[1] = 1;    // text reference rather than worksheet reference
 			return false;
 		}
 		ptg = PtgRef.createPtgRefFromString( newLoc, this );
@@ -728,7 +731,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 	public void updateRecord()
 	{
 		int offy = 8; // the start of the parsed expression
-		byte[] rkdata = this.getData();
+		byte[] rkdata = getData();
 		byte[] updated = new byte[rkdata.length];
 		System.arraycopy( rkdata, 0, updated, 0, offy );
 		for( int i = 0; i < expression.size(); i++ )
@@ -751,7 +754,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 			System.arraycopy( b, 0, updated, offy, len );
 			offy = offy + len;
 		}
-		this.setData( updated );
+		setData( updated );
 	}
 
 	/**
@@ -762,7 +765,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 	public void setRt( int i )
 	{
 		rt = (short) i;
-		this.getData()[1] = (byte) rt;
+		getData()[1] = (byte) rt;
 	}
 
 	public Stack getExpression()
@@ -795,7 +798,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 	@Override
 	protected void finalize()
 	{
-		this.close();
+		close();
 	}
 
 	/**

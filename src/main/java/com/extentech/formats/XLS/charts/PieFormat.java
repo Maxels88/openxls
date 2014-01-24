@@ -42,8 +42,8 @@ public class PieFormat extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		this.getData();
-		percentage = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		getData();
+		percentage = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 
 	}
 
@@ -74,8 +74,8 @@ public class PieFormat extends GenericChartObject implements ChartObject
 	private void updateRecord()
 	{
 		byte[] b = ByteTools.shortToLEBytes( percentage );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	@Override

@@ -63,7 +63,7 @@ public class AttachedLabel extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		grbit = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		grbit = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 	}
 
 	public static XLSRecord getPrototype()
@@ -133,8 +133,8 @@ public class AttachedLabel extends GenericChartObject implements ChartObject
 	{
 		grbit = type;
 		byte[] b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	/**
@@ -176,8 +176,8 @@ public class AttachedLabel extends GenericChartObject implements ChartObject
 			grbit = ByteTools.updateGrBit( grbit, bSet, 6 );
 		}
 		byte[] bb = ByteTools.shortToLEBytes( grbit );
-		this.getData()[0] = bb[0];
-		this.getData()[1] = bb[1];
+		getData()[0] = bb[0];
+		getData()[1] = bb[1];
 	}
 
 	/**
@@ -250,13 +250,13 @@ public class AttachedLabel extends GenericChartObject implements ChartObject
 		}
 		grbit = t;
 		byte[] b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	public String toString()
 	{
-		return this.getType();
+		return getType();
 	}
 
 }

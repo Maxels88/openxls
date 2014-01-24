@@ -61,7 +61,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 	@Override
 	public Name getName()
 	{
-		WorkBook b = this.getParentRec().getSheet().getWorkBook();
+		WorkBook b = getParentRec().getSheet().getWorkBook();
 		// the externsheet reference is negative, there seems to be a problem
 		// off the docs.  Just use a placeholder boundsheet, as the PtgRef3D internally will
 		// get the value correctly
@@ -71,7 +71,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 		try
 		{
 			n = b.getName( ilbl );
-			n.setSheet( this.getParentRec().getSheet() );
+			n.setSheet( getParentRec().getSheet() );
 		}
 		catch( Exception e )
 		{
@@ -99,7 +99,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 	{
 		ptgId = b[0];
 		record = b;
-		this.populateVals();
+		populateVals();
 	}
 
 	private void populateVals()
@@ -124,7 +124,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 	public Object getValue()
 	{
 
-		WorkBook b = this.getParentRec().getSheet().getWorkBook();
+		WorkBook b = getParentRec().getSheet().getWorkBook();
 		String externalname = null;
 		try
 		{
@@ -144,7 +144,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 
 	public String toString()
 	{
-		if( this.parent_rec.getSheet() != null )
+		if( parent_rec.getSheet() != null )
 		{
 			return (String) getValue();
 		}
@@ -197,7 +197,7 @@ public class PtgNameX extends PtgName implements Ptg, IxtiListener
 		ptgId = 0x39;    // PtgNameX
 		record = new byte[PTG_NAMEX_LENGTH];
 		record[0] = ptgId;
-		WorkBook b = this.getParentRec().getSheet().getWorkBook();
+		WorkBook b = getParentRec().getSheet().getWorkBook();
 		ilbl = b.getExtenalNameNumber( name );
 		ixti = (short) b.getExternSheet().getVirtualReference();
 		byte[] bb = ByteTools.shortToLEBytes( ixti );

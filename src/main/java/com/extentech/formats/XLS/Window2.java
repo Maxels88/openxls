@@ -92,21 +92,22 @@ public class Window2 extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		short s1, s2;
+		short s1;
+		short s2;
 
-		grbit = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		rwTop = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		colLeft = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
+		grbit = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		rwTop = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		colLeft = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
 
-		s1 = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
-		s2 = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
+		s1 = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
+		s2 = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );
 		icvHdr = ByteTools.readInt( s1, s2 );
 
 		// the following do not necessarily exist in VB-manipulated windows
-		if( this.getLength() > 10 )
+		if( getLength() > 10 )
 		{
-			wScaleSLV = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );
-			wScaleNorm = ByteTools.readShort( this.getByteAt( 12 ), this.getByteAt( 13 ) );
+			wScaleSLV = ByteTools.readShort( getByteAt( 10 ), getByteAt( 11 ) );
+			wScaleNorm = ByteTools.readShort( getByteAt( 12 ), getByteAt( 13 ) );
 		}
 	}
 
@@ -114,13 +115,13 @@ public class Window2 extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( b )
 		{
-			this.getData()[1] |= 0x2;
+			getData()[1] |= 0x2;
 		}
 		else
 		{
-			this.getData()[1] &= 0xFD;
+			getData()[1] &= 0xFD;
 		}
-		grbit = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		grbit = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 	}
 
 	/**
@@ -136,10 +137,10 @@ public class Window2 extends com.extentech.formats.XLS.XLSRecord
 	// add get/set for Window2 options
 	public void setGrbit()
 	{
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.shortToLEBytes( (short) grbit );
 		System.arraycopy( b, 0, data, 0, 2 );
-		this.setData( data );
+		setData( data );
 
 	}
 
@@ -158,7 +159,7 @@ public class Window2 extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = grbit & ~BITMASK_SHOWFORMULARESULTS;
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	public boolean getShowGridlines()
@@ -176,7 +177,7 @@ public class Window2 extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = grbit & ~BITMASK_SHOWGRIDLINES;
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	public boolean getShowSheetHeaders()
@@ -194,24 +195,24 @@ public class Window2 extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = grbit & ~BITMASK_SHOWSHEETHEADERS;
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	public int getScaleNorm()
 	{
 		//return wScaleSLV;
-		return this.wScaleNorm;
+		return wScaleNorm;
 	}
 
 	public void setScaleNorm( int zm )
 	{
 		wScaleNorm = zm;
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.shortToLEBytes( (short) zm );
 		// wScaleSLV 10,11
 		// wScaleNorm 12,13;
 		System.arraycopy( b, 0, data, 12, 2 );
-		this.setData( data );
+		setData( data );
 	}
 
 	public boolean getShowZeroValues()
@@ -229,7 +230,7 @@ public class Window2 extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = grbit & ~BITMASK_SHOWZEROVALUES;
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	public boolean getShowOutlineSymbols()
@@ -247,7 +248,7 @@ public class Window2 extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = grbit & ~BITMASK_SHOWOUTLINESYMBOLS;
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	/**
@@ -270,7 +271,7 @@ public class Window2 extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = grbit | BITMASK_SHOWINPRINTPREVIEW;
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	public boolean getFreezePanes()
@@ -288,7 +289,7 @@ public class Window2 extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = grbit & ~BITMASK_FREEZEPANES;
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	public boolean getManualGridLineColor()
@@ -306,7 +307,7 @@ public class Window2 extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = grbit & ~BITMASK_GRIDLINECOLOR;
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 	/*	// TODO: finish these
 	static final int BITMASK_COLUMNDIRECTION= 0x0040;

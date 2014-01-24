@@ -83,7 +83,7 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 
 	void setSst( Sst s )
 	{
-		this.mysst = s;
+		mysst = s;
 		s.setExtsst( this );
 	}
 
@@ -103,11 +103,11 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 		debug = true;
 
 		super.init();
-		Dsst = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		Dsst = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		int bpos = 2;
 		if( false )
 		{
-			byte[] b = this.getData();
+			byte[] b = getData();
 			while( bpos < b.length )
 			{
 				int sststartpos = ByteTools.readInt( b[bpos++], b[bpos++], b[bpos++], b[bpos++] );
@@ -125,9 +125,9 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 	void setDsst( int newdst )
 	{
 		byte[] newdt = ByteTools.shortToLEBytes( (short) newdst );
-		this.getData()[0] = newdt[0];
-		this.getData()[1] = newdt[1];
-		this.Dsst = (short) newdst;
+		getData()[0] = newdt[0];
+		getData()[1] = newdt[1];
+		Dsst = (short) newdst;
 	}
 
 	/**
@@ -166,7 +166,13 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 		int sststartpos = mysst.getOffset() + 12;
 
 		Isstinf[] mynewstinfs = new Isstinf[totissts];
-		int continueStrPos = 0, lastContinueStrPos = 0, strlen = 0, off3 = 0, bytepos = 2, sstpos = 0, contoff = 0;
+		int continueStrPos = 0;
+		int lastContinueStrPos = 0;
+		int strlen = 0;
+		int off3 = 0;
+		int bytepos = 2;
+		int sstpos = 0;
+		int contoff = 0;
 		byte[] bd = new byte[((totissts) * 8) + 2];
 		byte[] numStrsPer = ByteTools.shortToLEBytes( (short) newdsst );
 		bd[0] = numStrsPer[0];
@@ -245,10 +251,10 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 
 			lastContinueStrPos = continueStrPos;
 		}
-		this.setData( bd );
-		this.setDsst( newdsst );
+		setData( bd );
+		setDsst( newdsst );
 		//int orsz = this.getOriginalDataSize();
-		int newsz = this.getLength();
+		int newsz = getLength();
 			log.debug( "Done creating Isstinfs" );
 	}
 
@@ -257,7 +263,7 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 	{
 		try
 		{
-			this.updateIsstinfs();
+			updateIsstinfs();
 		}
 		catch( Exception e )
 		{

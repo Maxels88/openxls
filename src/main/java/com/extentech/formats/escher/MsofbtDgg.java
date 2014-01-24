@@ -31,7 +31,10 @@ public class MsofbtDgg extends EscherRecord
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = -7933328640935994167L;
-	int spidMax = 1024, numIdClusters, numShapes, numDrawings;
+	int spidMax = 1024;
+	int numIdClusters;
+	int numShapes;
+	int numDrawings;
 	/* 20071115 KSC: Unused at this point IdClusters[] clusters = new IdClusters[1];
 	
 	public class IdClusters{
@@ -55,7 +58,10 @@ public class MsofbtDgg extends EscherRecord
 	@Override
 	protected byte[] getData()
 	{
-		byte[] spidMaxBytes, cidclBytes, cspSavedBytes, cdgSavedBytes;
+		byte[] spidMaxBytes;
+		byte[] cidclBytes;
+		byte[] cspSavedBytes;
+		byte[] cdgSavedBytes;
 //		spidMaxBytes = ByteTools.cLongToLEBytes(spidMax+numShapes);	20071113 KSC: can't assume this
 		spidMaxBytes = ByteTools.cLongToLEBytes( spidMax );
 		numIdClusters = spidMax / 1024 + (((spidMax % 1024) != 0) ? 1 : 0);    // 20080903 KSC: # id clusters is based upon # shapes used
@@ -94,7 +100,7 @@ public class MsofbtDgg extends EscherRecord
 		System.arraycopy(b2, 0, retBytes, pos+4, 4);
 		pos+=8;
 		*/
-		this.setLength( retBytes.length );
+		setLength( retBytes.length );
 		return retBytes;
 	}
 	
@@ -142,6 +148,6 @@ public class MsofbtDgg extends EscherRecord
 	 */
 	public void setSpidMax( int spid )
 	{
-		this.spidMax = spid;
+		spidMax = spid;
 	}
 }

@@ -43,7 +43,7 @@ public class RightMargin extends XLSRecord
 
 	public RightMargin()
 	{
-		this.setOpcode( RIGHTMARGIN );
+		setOpcode( RIGHTMARGIN );
 		margin = 0.75;    // default
 		setData( ByteTools.doubleToLEByteArray( margin ) );
 	}

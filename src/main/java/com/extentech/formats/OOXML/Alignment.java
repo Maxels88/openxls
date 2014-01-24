@@ -51,7 +51,7 @@ public class Alignment implements OOXMLElement
 
 	public Alignment( Alignment a )
 	{
-		this.attrs = a.attrs;
+		attrs = a.attrs;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp )

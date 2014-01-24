@@ -53,7 +53,7 @@ public class SurfaceChart extends ChartType
 			cooxml.append( "<c:wireframe val=\"1\"/>" );
 		}
 		// *** Series Data:	ser, cat, val for most chart types
-		cooxml.append( this.getParentChart().getChartSeries().getOOXML( this.getChartType(), false, 0 ) );
+		cooxml.append( getParentChart().getChartSeries().getOOXML( getChartType(), false, 0 ) );
 
 		// bandfmts
 

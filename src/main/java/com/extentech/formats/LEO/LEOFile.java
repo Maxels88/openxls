@@ -127,7 +127,7 @@ public class LEOFile implements Serializable
 	{
 		try
 		{
-			this.close();
+			close();
 		}
 		catch( Exception e )
 		{
@@ -144,12 +144,12 @@ public class LEOFile implements Serializable
 	{
 		if( fname.indexOf( ".ser" ) > -1 )
 		{
-			this.initFromPrototype( fname );
+			initFromPrototype( fname );
 			return;
 		}
-		this.fileName = fname;
+		fileName = fname;
 		fb = LEOFile.readFile( fname );
-		this.initWrapper( fb.getBuffer() );
+		initWrapper( fb.getBuffer() );
 	}
 
 	/**
@@ -172,7 +172,7 @@ public class LEOFile implements Serializable
 			}
 			ByteBuffer bbf = ByteBuffer.wrap( b );
 			bbf.order( ByteOrder.LITTLE_ENDIAN );
-			this.initWrapper( bbf );
+			initWrapper( bbf );
 		}
 		catch( Exception e )
 		{
@@ -192,9 +192,9 @@ public class LEOFile implements Serializable
 	public LEOFile( File fpath, boolean usetempfile, boolean encryptedXLSX )
 	{
 		this.encryptedXLSX = encryptedXLSX;
-		this.fileName = fpath.getAbsolutePath();
+		fileName = fpath.getAbsolutePath();
 		fb = LEOFile.readFile( fpath, usetempfile );
-		this.initWrapper( fb.getBuffer() );
+		initWrapper( fb.getBuffer() );
 	}
 
 	/**
@@ -224,9 +224,9 @@ public class LEOFile implements Serializable
 	 */
 	public LEOFile( File fpath, boolean usetempfile )
 	{
-		this.fileName = fpath.getAbsolutePath();
+		fileName = fpath.getAbsolutePath();
 		fb = LEOFile.readFile( fpath, usetempfile );
-		this.initWrapper( fb.getBuffer() );
+		initWrapper( fb.getBuffer() );
 	}
 
 	/**
@@ -235,9 +235,9 @@ public class LEOFile implements Serializable
 	 */
 	public LEOFile( File fpath )
 	{
-		this.fileName = fpath.getAbsolutePath();
+		fileName = fpath.getAbsolutePath();
 		fb = LEOFile.readFile( fpath );
-		this.initWrapper( fb.getBuffer() );
+		initWrapper( fb.getBuffer() );
 	}
 
 	/**
@@ -247,7 +247,7 @@ public class LEOFile implements Serializable
 	 */
 	public LEOFile( ByteBuffer bytebuff )
 	{
-		this.initWrapper( bytebuff );
+		initWrapper( bytebuff );
 	}
 
 	/**
@@ -257,7 +257,7 @@ public class LEOFile implements Serializable
 	 */
 	public void initWrapper( ByteBuffer bytebuff )
 	{
-		int[] FAT = this.init( bytebuff );
+		int[] FAT = init( bytebuff );
 		if( FAT != null )
 		{
 			directories.initDirectories( bigBlocks, FAT );
@@ -272,7 +272,7 @@ public class LEOFile implements Serializable
 
 	public void clearAfterInit()
 	{
-		this.bigBlocks.clear();
+		bigBlocks.clear();
 	}
 
 	/**
@@ -284,7 +284,7 @@ public class LEOFile implements Serializable
 	public void readEncryptedFile( File encryptedFile )
 	{
 		fb = readFile( encryptedFile );
-		this.initWrapper( fb.getBuffer() );
+		initWrapper( fb.getBuffer() );
 	}
 
 	public String getFileName()
@@ -325,7 +325,7 @@ public class LEOFile implements Serializable
 		{
 			try
 			{
-				Storage doc = this.directories.getDirectoryByName( "WordDocument" );
+				Storage doc = directories.getDirectoryByName( "WordDocument" );
 			}
 			catch( StorageNotFoundException e )
 			{
@@ -347,7 +347,7 @@ public class LEOFile implements Serializable
 		{
 			try
 			{
-				Storage doc = this.directories.getDirectoryByName( "_SX_DB_CUR" );
+				Storage doc = directories.getDirectoryByName( "_SX_DB_CUR" );
 			}
 			catch( StorageNotFoundException e )
 			{
@@ -377,9 +377,9 @@ public class LEOFile implements Serializable
 		File target = TempFileManager.createTempFile( "ExtenXLS_temp", ".leo" );
 		JFileWriter.writeToFile( stream, target );
 
-		this.fileName = target.getAbsolutePath();
+		fileName = target.getAbsolutePath();
 		fb = LEOFile.readFile( target );
-		this.initWrapper( fb.getBuffer() );
+		initWrapper( fb.getBuffer() );
 		target.deleteOnExit();
 		target.delete();
 	}
@@ -500,7 +500,7 @@ public class LEOFile implements Serializable
 		while( e.hasMoreElements() )
 		{
 			Storage thisStore = (Storage) e.nextElement();
-			if( (thisStore != book) && (thisStore != rootStore) )
+			if( (!thisStore.equals( book )) && (!thisStore.equals( rootStore )) )
 			{ // && thisStore!=encryptionInfo?
 				storages.add( thisStore );
 				if( thisStore.getBlockType() == Block.SMALL )
@@ -825,7 +825,7 @@ public class LEOFile implements Serializable
 	 */
 	final static void initSmallBlockIndex( int[] newidx, Block b )
 	{
-		while( b.hasNext() && !(b == b.next()) )
+		while( b.hasNext() && !(b.equals( b.next() )) )
 		{
 			int origps = b.getBlockIndex();
 			if( origps < 0 )
@@ -1024,7 +1024,7 @@ public class LEOFile implements Serializable
 			BIGBLOCK bbd = new BIGBLOCK();
 			bbd.init( bbuf, i, pos );
 			pos += BIGBLOCK.SIZE;
-			this.bigBlocks.add( bbd );
+			bigBlocks.add( bbd );
 		}
 
 		// Encrypted workbooks can have random overages.
@@ -1033,7 +1033,7 @@ public class LEOFile implements Serializable
 		if( encryptionStorageOverageLen > 0 )
 		{
 			int filepos = len * BIGBLOCK.SIZE;
-			if( this.encryptedXLSX )
+			if( encryptedXLSX )
 			{
 				bbuf.position( filepos );
 				encryptionStorageOverage = new byte[encryptionStorageOverageLen];
@@ -1044,7 +1044,7 @@ public class LEOFile implements Serializable
 				BIGBLOCK bbd = new BIGBLOCK();
 				bbd.init( bbuf, len, pos );    // filepos);
 				pos += encryptionStorageOverageLen;
-				this.bigBlocks.add( bbd );
+				bigBlocks.add( bbd );
 			}
 		}
 
@@ -1055,7 +1055,7 @@ public class LEOFile implements Serializable
 		// is a valid WorkBook File?
 		if( !header.init( bbuf ) )
 		{
-			throw new InvalidFileException( this.getFileName() + " is not a valid OLE File." );
+			throw new InvalidFileException( getFileName() + " is not a valid OLE File." );
 		}
 
 			log.debug( "Header: " );

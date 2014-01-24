@@ -50,7 +50,7 @@ public class Fontx extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		ifnt = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		ifnt = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 	}
 
 	public static XLSRecord getPrototype()
@@ -79,7 +79,7 @@ public class Fontx extends GenericChartObject implements ChartObject
 		int n = 0;
 		try
 		{
-			n = this.getWorkBook().getNumFonts();
+			n = getWorkBook().getNumFonts();
 		}
 		catch( Exception e )
 		{
@@ -93,9 +93,9 @@ public class Fontx extends GenericChartObject implements ChartObject
 
 	public void setIfnt( int id )
 	{
-		this.ifnt = (short) id;
-		byte[] b = ByteTools.shortToLEBytes( this.ifnt );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		ifnt = (short) id;
+		byte[] b = ByteTools.shortToLEBytes( ifnt );
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 }

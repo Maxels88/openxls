@@ -273,7 +273,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	public String[] getAllStrings()
 	{
-		return this.mybook.getAllStrings();
+		return mybook.getAllStrings();
 	}
 
 	/**
@@ -285,7 +285,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	@Override
 	public java.awt.Color[] getColorTable()
 	{
-		return this.getWorkBook().getColorTable();
+		return getWorkBook().getColorTable();
 	}
 
 	/**
@@ -353,7 +353,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 			throw new CellNotFoundException( address + " not found.  You need to specify a location in the format: Sheet1!A1" );
 		}
 		String sheetstr = address.substring( 0, shtpos );
-		WorkSheetHandle sht = this.getWorkSheet( sheetstr );
+		WorkSheetHandle sht = getWorkSheet( sheetstr );
 		String celstr = address.substring( shtpos + 1 );
 		return sht.getCell( celstr );
 	}
@@ -372,7 +372,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	public CellRange[] getCellRanges()
 	{
-		return this.mybook.getRefTracker().getCellRanges();
+		return mybook.getRefTracker().getCellRanges();
 	}
 
 	/**
@@ -403,7 +403,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 		Sxview[] sxv = mybook.getAllPivotTableViews();
 		if( (sxv == null) || (sxv.length == 0) )
 		{
-			throw new PivotTableNotFoundException( "There are no PivotTables defined in: " + this.getName() );
+			throw new PivotTableNotFoundException( "There are no PivotTables defined in: " + getName() );
 		}
 		PivotTableHandle[] pth = new PivotTableHandle[sxv.length];
 		for( int t = 0; t < pth.length; t++ )
@@ -543,11 +543,11 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	public ImageHandle[] getImages()
 	{
 		List ret = new Vector();
-		for( int t = 0; t < this.getNumWorkSheets(); t++ )
+		for( int t = 0; t < getNumWorkSheets(); t++ )
 		{
 			try
 			{
-				ImageHandle[] r = this.getWorkSheet( t ).getImages();
+				ImageHandle[] r = getWorkSheet( t ).getImages();
 				for( ImageHandle aR : r )
 				{
 					ret.add( aR );
@@ -571,11 +571,11 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	public ImageHandle getImage( String imagename ) throws ImageNotFoundException
 	{
-		for( int t = 0; t < this.getNumWorkSheets(); t++ )
+		for( int t = 0; t < getNumWorkSheets(); t++ )
 		{
 			try
 			{
-				ImageHandle[] r = this.getWorkSheet( t ).getImages();
+				ImageHandle[] r = getWorkSheet( t ).getImages();
 				for( ImageHandle aR : r )
 				{
 					if( aR.getName().equals( imagename ) )
@@ -589,7 +589,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 				;
 			}
 		}
-		throw new ImageNotFoundException( "Image not found: " + imagename + " in " + this.toString() );
+		throw new ImageNotFoundException( "Image not found: " + imagename + " in " + toString() );
 	}
 
 	/**
@@ -756,7 +756,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	@Override
 	public CellHandle[] getCells()
 	{
-		BiffRec[] allcz = this.mybook.getCells();
+		BiffRec[] allcz = mybook.getCells();
 		CellHandle[] ret = new CellHandle[allcz.length];
 		Mulblank aMul = null;
 		short c = -1;
@@ -767,7 +767,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 			{
 				// handle Mulblanks: ref a range of cells; to get correct cell address,
 				// traverse thru range and set cellhandle ref to correct column
-				if( allcz[t] == aMul )
+				if( allcz[t].equals( aMul ) )
 				{
 					c++;
 				}
@@ -871,9 +871,9 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 		int format;
 		if( ooxml )
 		{
-			if( this.getIsExcel2007() )
+			if( getIsExcel2007() )
 			{
-				format = this.getFormat( path );
+				format = getFormat( path );
 			}
 			else
 			{
@@ -896,7 +896,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 
 		try
 		{
-			this.write( new File( path ), format );
+			write( new File( path ), format );
 		}
 		catch( Exception e )
 		{
@@ -920,9 +920,9 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 		int format;
 		if( ooxml )
 		{
-			if( this.getIsExcel2007() )
+			if( getIsExcel2007() )
 			{
-				format = this.getFormat();
+				format = getFormat();
 			}
 			else
 			{
@@ -936,11 +936,11 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 
 		try
 		{
-			if( (format > WorkBookHandle.FORMAT_XLS) && (this.file != null) )
+			if( (format > WorkBookHandle.FORMAT_XLS) && (file != null) )
 			{
 				OOXMLAdapter.refreshPassThroughFiles( this );
 			}
-			this.write( dest, format );
+			write( dest, format );
 		}
 		catch( Exception e )
 		{
@@ -954,9 +954,9 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	@Override
 	public int getFormat()
 	{
-		String name = this.getFileName().toLowerCase();
+		String name = getFileName().toLowerCase();
 
-		if( this.getIsExcel2007() )
+		if( getIsExcel2007() )
 		{
 			if( OOXMLAdapter.hasMacros( this ) )
 			{
@@ -976,7 +976,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 		{
 			return getFormat();
 		}
-		if( this.getIsExcel2007() )
+		if( getIsExcel2007() )
 		{
 			if( OOXMLAdapter.hasMacros( this ) )
 			{
@@ -990,7 +990,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	@Override
 	public String getFileExtension()
 	{
-		switch( this.getFormat() )
+		switch( getFormat() )
 		{
 			case FORMAT_XLSX:
 				return ".xlsx";
@@ -1031,7 +1031,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	{
 		if( format == FORMAT_NATIVE )
 		{
-			format = this.getFormat();
+			format = getFormat();
 		}
 
 		switch( format )
@@ -1042,7 +1042,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 			case FORMAT_XLTM:
 				try
 				{
-					if( this.file != null )
+					if( file != null )
 					{
 						OOXMLAdapter.refreshPassThroughFiles( this );
 					}
@@ -1065,7 +1065,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 			case FORMAT_XLS:
 				try
 				{
-					this.mybook.getStreamer().writeOut( dest );
+					mybook.getStreamer().writeOut( dest );
 				}
 				catch( com.extentech.formats.XLS.WorkBookException e )
 				{
@@ -1096,7 +1096,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	@Deprecated
 	public void writeXLSXBytes( OutputStream dest, int format ) throws Exception
 	{
-		this.write( dest, format );
+		write( dest, format );
 	}
 
 	/**
@@ -1109,7 +1109,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	@Deprecated
 	public void writeXLSXBytes( OutputStream dest ) throws Exception
 	{
-		this.write( dest, true );
+		write( dest, true );
 	}
 
 	/**
@@ -1124,7 +1124,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	public boolean getIsExcel2007()
 	{
-		return this.mybook.getIsExcel2007();
+		return mybook.getIsExcel2007();
 	}
 
 	/**
@@ -1139,7 +1139,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	public void setIsExcel2007( boolean isExcel2007 )
 	{
-		this.mybook.setIsExcel2007( isExcel2007 );
+		mybook.setIsExcel2007( isExcel2007 );
 	}
 
 	/**
@@ -1158,7 +1158,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	@Deprecated
 	public StringBuffer writeBytes( OutputStream dest )
 	{
-		StringBuffer sb = this.mybook.getStreamer().writeOut( dest );
+		StringBuffer sb = mybook.getStreamer().writeOut( dest );
 		return sb;
 	}
 
@@ -1170,7 +1170,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	public WorkBookHandle()
 	{
 //    	Xf.DEFAULTIXFE= 15; // reset to default in cases of having previously read Excel2007 template which may have set defaultXF differently
-		this.initDefault();
+		initDefault();
 	}
 
 	/**
@@ -1186,8 +1186,8 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	public WorkBookHandle( boolean Excel2007 )
 	{
-		this.initDefault();
-		this.setIsExcel2007( Excel2007 );
+		initDefault();
+		setIsExcel2007( Excel2007 );
 	}
 
 	/**
@@ -1211,7 +1211,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 		{
 			throw new InvalidFileException( "WorkBook could not be instantiated: " + e.toString() );
 		}
-		this.initFromLeoFile( myLEOFile );
+		initFromLeoFile( myLEOFile );
 	}
 
 	/**
@@ -1221,7 +1221,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	public WorkBookHandle( InputStream inx )
 	{
-		this.initFromStream( inx );
+		initFromStream( inx );
 	}
 
 	/**
@@ -1229,12 +1229,12 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	private void initFromLeoFile( LEOFile leo )
 	{
-		this.myLEOFile = leo;
+		myLEOFile = leo;
 		try
 		{
 			BlockByteReader bar = myLEOFile.getXLSBlockBytes();
-			this.initBytes( bar );
-			this.setIsExcel2007( false );
+			initBytes( bar );
+			setIsExcel2007( false );
 			myLEOFile.clearAfterInit();
 		}
 		catch( Exception e )
@@ -1260,10 +1260,10 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 			File target = TempFileManager.createTempFile( "WBP", ".tmp" );
 
 			JFileWriter.writeToFile( input, target );
-			this.initFromFile( target.getAbsoluteFile() );
-			if( this.myLEOFile != null )// it would be if XLSX or XLSM ... 20090323 KSC
+			initFromFile( target.getAbsoluteFile() );
+			if( myLEOFile != null )// it would be if XLSX or XLSM ... 20090323 KSC
 			{
-				this.myLEOFile.closefb();
+				myLEOFile.closefb();
 			}
 			//this.myLEOFile.close();	// close now flushes buffers + storages ...
 			input.close();
@@ -1309,7 +1309,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 				fous.write( barray );
 				fous.flush();
 				fous.close();
-				this.initFromFile( ftmp );
+				initFromFile( ftmp );
 				return;
 			}
 			catch( Exception e )
@@ -1327,7 +1327,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 			try
 			{
 				BlockByteReader bar = myLEOFile.getXLSBlockBytes();
-				this.initBytes( bar );
+				initBytes( bar );
 			}
 			catch( Throwable e )
 			{
@@ -1378,8 +1378,8 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	public WorkBookHandle( String filePath )
 	{
 		File f = new File( filePath );
-		this.initFromFile( f );
-		this.file = f;        // XXX KSC: Save for potential re-input of pass-through ooxml files
+		initFromFile( f );
+		file = f;        // XXX KSC: Save for potential re-input of pass-through ooxml files
 	}
 
 	/**
@@ -1390,7 +1390,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	public WorkBookHandle( File fx )
 	{
-		this.initFromFile( fx );
+		initFromFile( fx );
 	}
 
 	protected void initWorkBookFactory()
@@ -1405,9 +1405,9 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	{
 		// do before parseNBind so can set myfactory & fname
 		// set state vars for this workbookhandle
-		this.initWorkBookFactory();
+		initWorkBookFactory();
 
-		myfactory.setFileName( this.name );
+		myfactory.setFileName( name );
 
 		if( plist != null )
 		{
@@ -1420,8 +1420,8 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 			WorkBookHandle bk = new WorkBookHandle();
 			bk.removeAllWorkSheets();
 			oe.parseNBind( bk, fname );
-			this.sheethandles = bk.sheethandles;
-			this.mybook = bk.mybook;
+			sheethandles = bk.sheethandles;
+			mybook = bk.mybook;
 		}
 		catch( Exception e )
 		{
@@ -1464,10 +1464,10 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 		{
 			log.error( "Invalid XLSX/OOXML File.", e1 );
 		}
-		this.name = fname;        // 20081231 KSC: set here
+		name = fname;        // 20081231 KSC: set here
 		if( finch.toUpperCase().startsWith( "PK" ) )
 		{ // it's a zip file... give XLSX parsing a shot
-			if( this.file != null )
+			if( file != null )
 			{
 				OOXMLAdapter.refreshPassThroughFiles( this );
 			}
@@ -1485,7 +1485,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 			if( (finch.indexOf( "," ) > -1) && (finch.indexOf( "," ) > -1) )
 			{
 				// init a blank workbook
-				this.initDefault();
+				initDefault();
 
 				// map CSV into workbook
 				try
@@ -1504,7 +1504,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 		}
 		if( myLEOFile.hasWorkBook() )
 		{
-			this.initFromLeoFile( myLEOFile );
+			initFromLeoFile( myLEOFile );
 		}
 		else
 		{
@@ -1522,7 +1522,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	public WorkBookHandle( ProgressListener pn )
 	{
-		this.plist = pn;
+		plist = pn;
 		try
 		{
 			byte[] b = getPrototypeBook();
@@ -1534,7 +1534,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 		{
 			throw new InvalidFileException( "WorkBook could not be instantiated: " + e.toString() );
 		}
-		this.initFromLeoFile( myLEOFile );
+		initFromLeoFile( myLEOFile );
 	}
 
 	/**
@@ -1548,8 +1548,8 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	public WorkBookHandle( String fname, ProgressListener pn )
 	{
-		this.plist = pn;
-		this.initFromFile( new File( fname ) );
+		plist = pn;
+		initFromFile( new File( fname ) );
 	}
 
 	/**
@@ -1559,7 +1559,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	protected WorkBookHandle( LEOFile leo )
 	{
-		this.initFromLeoFile( leo );
+		initFromLeoFile( leo );
 	}
 
 	/**
@@ -1567,7 +1567,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	protected synchronized void initBytes( BlockByteReader blockByteReader )
 	{
-		this.initWorkBookFactory();
+		initWorkBookFactory();
 
 		if( plist != null )
 		{
@@ -1589,7 +1589,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 				;
 			}
 		}
-		this.postLoad();
+		postLoad();
 	}
 
 	/**
@@ -1709,7 +1709,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 				for( int i = 0; i < numsheets; i++ )
 				{
 					Boundsheet bs = mybook.getWorkSheetByNumber( i );
-					bs.setWorkBook( this.mybook );
+					bs.setWorkBook( mybook );
 					sheets[i] = new WorkSheetHandle( bs, this );
 				}
 				return sheets;
@@ -1772,7 +1772,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 			Boundsheet bs = mybook.getWorkSheetByName( handstr );
 			if( bs != null )
 			{
-				bs.setWorkBook( this.mybook );
+				bs.setWorkBook( mybook );
 				WorkSheetHandle ret = new WorkSheetHandle( bs, this );
 				sheethandles.put( handstr, ret );
 				return ret;
@@ -1790,7 +1790,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	public WorkSheetHandle getActiveSheet() throws WorkSheetNotFoundException
 	{
-		return this.getWorkSheet( this.getWorkBook().getSelectedSheetNum() );
+		return getWorkSheet( getWorkBook().getSelectedSheetNum() );
 	}
 
 	/**
@@ -1804,7 +1804,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	@Override
 	public com.extentech.formats.XLS.WorkBook getWorkBook()
 	{
-		return this.mybook;
+		return mybook;
 	}
 
 	/**
@@ -1931,7 +1931,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 		}
 		mybook.getRefTracker().clearPtgLocationCaches( NewSheetName );
 		// update the merged cells (requires a WBH, that's why it's here)
-		WorkSheetHandle wsh = this.getWorkSheet( NewSheetName );
+		WorkSheetHandle wsh = getWorkSheet( NewSheetName );
 		if( wsh != null )
 		{
 			List mc = wsh.getMysheet().getMergedCellsRecs();
@@ -2015,7 +2015,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 			}
 		}
 		// KSC: Clear out lookup caches!
-		this.getWorkBook().getRefTracker().clearLookupCaches();
+		getWorkBook().getRefTracker().clearLookupCaches();
 		mybook.setCalcMode( calcmode );    // reset
 	}
 
@@ -2034,16 +2034,16 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 
 		try
 		{
-			Object ob = this.mybook.getTabID().getTabIDs().get( 0 );
-			this.mybook.getTabID().getTabIDs().removeAllElements();
-			this.mybook.getTabID().getTabIDs().add( ob );
-			this.mybook.getTabID().updateRecord();
+			Object ob = mybook.getTabID().getTabIDs().get( 0 );
+			mybook.getTabID().getTabIDs().removeAllElements();
+			mybook.getTabID().getTabIDs().add( ob );
+			mybook.getTabID().updateRecord();
 		}
 		catch( Exception ex )
 		{
 			;
 		}
-		WorkSheetHandle[] ws = this.getWorkSheets();
+		WorkSheetHandle[] ws = getWorkSheets();
 		try
 		{
 			for( WorkSheetHandle w : ws )
@@ -2062,8 +2062,8 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 		{
 			; // in case sheets already gone...
 		}
-		this.sheethandles.clear();
-		this.mybook.closeSheets();    // replaced below with this
+		sheethandles.clear();
+		mybook.closeSheets();    // replaced below with this
 		
 /* WHY ARE WE DOING THIS??? 
 		// init new book		
@@ -2100,10 +2100,10 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	public WorkBookHandle getNoSheetWorkBook()
 	{
 		// to avoid ByteStreamer.stream records expansion
-		Object[] recs = this.getWorkBook().getStreamer().getBiffRecords();
-		byte[] gb = this.getBytes();
+		Object[] recs = getWorkBook().getStreamer().getBiffRecords();
+		byte[] gb = getBytes();
 		WorkBookHandle ret = new WorkBookHandle( gb );
-		this.getWorkBook().getStreamer().setBiffRecords( Arrays.asList( recs ) );
+		getWorkBook().getStreamer().setBiffRecords( Arrays.asList( recs ) );
 		ret.removeAllWorkSheets();
 		return ret;
 	}
@@ -2121,7 +2121,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	{
 		try
 		{
-			WorkSheetHandle sheet = this.addWorkSheet( sourceBook.getWorkSheet( sourceSheetName ), destSheetName );
+			WorkSheetHandle sheet = addWorkSheet( sourceBook.getWorkSheet( sourceSheetName ), destSheetName );
 			return true;
 		}
 		catch( WorkSheetNotFoundException e )
@@ -2146,7 +2146,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	{
 		try
 		{
-			WorkSheetHandle sheet = this.addWorkSheet( sourceBook.getWorkSheet( sourceSheetName ), destSheetName );
+			WorkSheetHandle sheet = addWorkSheet( sourceBook.getWorkSheet( sourceSheetName ), destSheetName );
 			return true;
 		}
 		catch( WorkSheetNotFoundException e )
@@ -2240,7 +2240,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	public WorkSheetHandle addWorkSheet( WorkSheetHandle sourceSheet )
 	{
-		return this.addWorkSheet( sourceSheet, sourceSheet.getSheetName() );
+		return addWorkSheet( sourceSheet, sourceSheet.getSheetName() );
 	}
 
 	/**
@@ -2266,7 +2266,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 		{
 			mybook.addBoundsheet( bao, sourceSheet.getSheetName(), NewSheetName, StringTool.stripPath( sourceSheet.getWorkBook()
 			                                                                                                      .getName() ), true );
-			WorkSheetHandle wsh = this.getWorkSheet( NewSheetName );
+			WorkSheetHandle wsh = getWorkSheet( NewSheetName );
 			if( wsh != null )
 			{
 				List mc = wsh.getMysheet().getMergedCellsRecs();
@@ -2325,8 +2325,8 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 		{
 			ObjectInputStream ois = new ObjectInputStream( new ByteArrayInputStream( getPrototypeChart() ) );
 			Chart newchart = (Chart) ois.readObject();
-			newchart.setWorkBook( this.getWorkBook() );
-			if( this.getIsExcel2007() )
+			newchart.setWorkBook( getWorkBook() );
+			if( getIsExcel2007() )
 			{
 				newchart = new OOXMLChart( newchart, this );
 			}
@@ -2416,16 +2416,16 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	public WorkSheetHandle createWorkSheet( String name, int sheetpos )
 	{
-		if( sheetpos > this.getNumWorkSheets() )
+		if( sheetpos > getNumWorkSheets() )
 		{
-			sheetpos = this.getNumWorkSheets();
+			sheetpos = getNumWorkSheets();
 		}
 		if( sheetpos < 0 )
 		{
 			sheetpos = 0;
 		}
 
-		WorkSheetHandle s = this.createWorkSheet( name );
+		WorkSheetHandle s = createWorkSheet( name );
 		s.setTabIndex( sheetpos );
 		return s;
 	}
@@ -2441,8 +2441,8 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	{
 		try
 		{
-			this.getWorkSheet( name );
-			throw new WorkBookException( "Attempting to add worksheet with duplicate name. " + name + " already exists in " + this.toString(),
+			getWorkSheet( name );
+			throw new WorkBookException( "Attempting to add worksheet with duplicate name. " + name + " already exists in " + toString(),
 			                             WorkBookException.RUNTIME_ERROR );
 		}
 		catch( WorkSheetNotFoundException ex )
@@ -2458,8 +2458,8 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 			mybook.addBoundsheet( bo, null, name, null, false );
 			try
 			{
-				WorkSheetHandle bs = this.getWorkSheet( name );
-				if( this.mybook.getNumWorkSheets() == 1 )
+				WorkSheetHandle bs = getWorkSheet( name );
+				if( mybook.getNumWorkSheets() == 1 )
 				{
 					bs.setSelected( true ); //it's the only sheet so select!
 				}
@@ -2488,7 +2488,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	@Override
 	public FormatHandle[] getFormats()
 	{
-		List l = this.mybook.getXfrecs();
+		List l = mybook.getXfrecs();
 		FormatHandle[] formats = new FormatHandle[l.size()];
 		Iterator its = l.iterator();
 		int i = 0;
@@ -2500,7 +2500,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 			try
 			{
 				formats[i] = new FormatHandle();
-				formats[i].setWorkBook( this.getWorkBook() );
+				formats[i].setWorkBook( getWorkBook() );
 				formats[i].setXf( x );
 			}
 			catch( Exception ex )
@@ -2528,7 +2528,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 //	    int cfxe = this.getWorkBook().getNumXfs() + 50000; // there would have to be 50k styles on the sheet to conflict here....
 
 		List retl = new Vector();
-		AbstractList v = this.mybook.getSheetVect();
+		AbstractList v = mybook.getSheetVect();
 
 		Iterator its = v.iterator();
 

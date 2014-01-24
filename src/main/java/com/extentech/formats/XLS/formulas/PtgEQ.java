@@ -79,7 +79,7 @@ public class PtgEQ extends GenericPtg implements Ptg
 
 	public String toString()
 	{
-		return this.getString();
+		return getString();
 	}
 
 	@Override
@@ -144,7 +144,7 @@ public class PtgEQ extends GenericPtg implements Ptg
 					}
 				}
 			}
-			if( o[0] == o[1] )
+			if( o[0].equals( o[1] ) )
 			{
 				res = true;
 			}
@@ -194,7 +194,8 @@ public class PtgEQ extends GenericPtg implements Ptg
 					{
 						secondOp = Array.get( o[i + 1], j );    // second array index j
 					}
-					double fd = 0, sd = 0;
+					double fd = 0;
+					double sd = 0;
 					try
 					{
 						fd = new Double( firstOp.toString() );

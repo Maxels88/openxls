@@ -51,7 +51,7 @@ public class SxStreamID extends XLSRecord implements XLSConstants
 	public void init()
 	{
 		super.init();
-		streamId = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		streamId = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 			log.debug( "SXSTREAMID: streamid:" + streamId );
 	}
 
@@ -98,8 +98,8 @@ public class SxStreamID extends XLSRecord implements XLSConstants
 	{
 		streamId = (short) sid;
 		byte[] b = ByteTools.shortToLEBytes( streamId );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	/**
@@ -222,7 +222,7 @@ public class SxStreamID extends XLSRecord implements XLSConstants
 	public ArrayList addInitialRecords( WorkBook bk, String ref, String sheetName )
 	{
 		ArrayList initialrecs = new ArrayList();
-		int sid = this.getStreamID();
+		int sid = getStreamID();
 		SxVS sxvs = (SxVS) SxVS.getPrototype();
 		addInit( initialrecs, sxvs, bk );
 		if( bk.getName( ref ) != null )
@@ -264,6 +264,6 @@ public class SxStreamID extends XLSRecord implements XLSConstants
 	{
 		rec.setWorkBook( bk );
 		initialrecs.add( rec );
-		this.addSubrecord( rec );
+		addSubrecord( rec );
 	}
 }

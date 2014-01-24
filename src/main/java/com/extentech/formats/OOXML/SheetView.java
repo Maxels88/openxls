@@ -59,15 +59,15 @@ public class SheetView implements OOXMLElement
 	public SheetView( HashMap<String, Object> attrs, Pane p, ArrayList<Selection> selections )
 	{
 		this.attrs = attrs;
-		this.pane = p;
+		pane = p;
 		this.selections = selections;
 	}
 
 	public SheetView( SheetView s )
 	{
-		this.attrs = s.attrs;
-		this.pane = s.pane;
-		this.selections = s.selections;
+		attrs = s.attrs;
+		pane = s.pane;
+		selections = s.selections;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp )
@@ -161,7 +161,7 @@ public class SheetView implements OOXMLElement
 	 */
 	public Object getAttr( String key )
 	{
-		return this.attrs.get( key );
+		return attrs.get( key );
 	}
 
 	/**
@@ -172,7 +172,7 @@ public class SheetView implements OOXMLElement
 	 */
 	public void setAttr( String key, Object val )
 	{
-		this.attrs.put( key, val );
+		attrs.put( key, val );
 	}
 
 	/**
@@ -182,12 +182,12 @@ public class SheetView implements OOXMLElement
 	 */
 	public void removeAttr( String key )
 	{
-		this.attrs.remove( key );
+		attrs.remove( key );
 	}
 
 	public void removeSelection()
 	{
-		this.removeAttr( "tabSelected" );
+		removeAttr( "tabSelected" );
 		selections = new ArrayList<>();
 	}
 
@@ -200,7 +200,7 @@ public class SheetView implements OOXMLElement
 	 */
 	public String getAttrS( String key )
 	{
-		Object o = this.attrs.get( key );
+		Object o = attrs.get( key );
 		if( o == null )
 		{
 			return "";
@@ -230,7 +230,7 @@ class Pane implements OOXMLElement
 
 	public Pane( Pane p )
 	{
-		this.attrs = p.attrs;
+		attrs = p.attrs;
 	}
 
 	public static Pane parseOOXML( XmlPullParser xpp )
@@ -315,7 +315,7 @@ class Selection implements OOXMLElement
 
 	public Selection( Selection s )
 	{
-		this.attrs = s.attrs;
+		attrs = s.attrs;
 	}
 
 	public static Selection parseOOXML( XmlPullParser xpp )

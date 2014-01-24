@@ -67,16 +67,17 @@ public class YMult extends GenericChartObject implements ChartObject
 	 */
 
 	private static final long serialVersionUID = -6166267220292885486L;
-	short axmid, grbit;
+	short axmid;
+	short grbit;
 	double numLabelMultiplier;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		axmid = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		numLabelMultiplier = ByteTools.eightBytetoLEDouble( this.getBytesAt( 6, 8 ) );
-		grbit = ByteTools.readShort( this.getByteAt( 14 ), this.getByteAt( 15 ) );
+		axmid = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+		numLabelMultiplier = ByteTools.eightBytetoLEDouble( getBytesAt( 6, 8 ) );
+		grbit = ByteTools.readShort( getByteAt( 14 ), getByteAt( 15 ) );
 	}
 
 	// TODO: Prototype Bytes
@@ -166,8 +167,8 @@ public class YMult extends GenericChartObject implements ChartObject
 		}
 		axmid = (short) m;
 		byte[] b = ByteTools.shortToLEBytes( axmid );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 	}
 
 	/**
@@ -225,8 +226,8 @@ public class YMult extends GenericChartObject implements ChartObject
 			axmid = 0;
 		}
 		byte[] b = ByteTools.shortToLEBytes( axmid );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 	}
 
 	// dispUnits -> builtInUnit (val:  billions,
@@ -240,9 +241,9 @@ public class YMult extends GenericChartObject implements ChartObject
 		numLabelMultiplier = m;
 		axmid = -1;    // custom
 		byte[] b = ByteTools.shortToLEBytes( axmid );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 		b = ByteTools.doubleToLEByteArray( numLabelMultiplier );
-		System.arraycopy( b, 0, this.getData(), 6, 8 );
+		System.arraycopy( b, 0, getData(), 6, 8 );
 	}
 }

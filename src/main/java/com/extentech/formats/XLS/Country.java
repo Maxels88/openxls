@@ -46,11 +46,11 @@ public final class Country extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		this.getData();
+		getData();
 	}
 
 	public int getDefaultLanguage()
 	{
-		return ByteTools.readShort( this.getData()[0], this.getData()[1] );
+		return ByteTools.readShort( getData()[0], getData()[1] );
 	}
 }

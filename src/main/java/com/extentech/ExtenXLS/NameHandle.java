@@ -75,8 +75,8 @@ public class NameHandle
 		mybook = cr.getWorkBook();
 		initialRange = cr; // cache
 		myName = new Name( mybook.getWorkBook(), namestr );
-		this.setName( namestr );
-		this.setLocation( cr.toString() );
+		setName( namestr );
+		setLocation( cr.toString() );
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class NameHandle
 	{
 		mybook = myb;
 		myName = new Name( mybook.getWorkBook(), namestr );
-		this.setName( namestr );
+		setName( namestr );
 	}
 
 	/**
@@ -165,8 +165,8 @@ public class NameHandle
 	{
 		mybook = book;
 		myName = new Name( mybook.getWorkBook(), name );
-		this.setName( name );
-		this.setLocation( location );
+		setName( name );
+		setLocation( location );
 		mybook.getWorkBook().associateDereferencedNames( myName );
 	}
 
@@ -296,7 +296,7 @@ public class NameHandle
 		// TODO: why doesn't this work with myName?
 		try
 		{
-			CellHandle[] cs = this.getCells();
+			CellHandle[] cs = getCells();
 			for( CellHandle c : cs )
 			{
 				c.setFormatId( i );
@@ -385,7 +385,7 @@ public class NameHandle
 
 		if( !found )
 		{
-			this.addRow( objarr );
+			addRow( objarr );
 		}
 	}
 
@@ -414,7 +414,7 @@ public class NameHandle
 
 		//for(int t=0;t<cxx.length;t++)
 		//	if(cxx[t]!=null)rngs[0].addCellToRange(cxx[t]);
-		rngs[0] = new CellRange( this.myName.getLocation(), mybook, createblanks );
+		rngs[0] = new CellRange( myName.getLocation(), mybook, createblanks );
 	}
 
 	/**
@@ -447,12 +447,12 @@ public class NameHandle
 		// if there is no sheetname, and no sheet, then this is an unusable name and cannot be added
 		if( (strloc.indexOf( "!" ) == -1) && (strloc.indexOf( "=" ) == -1) )
 		{
-			if( this.get2DSheetName() == null )
+			if( get2DSheetName() == null )
 			{
-				this.remove();
+				remove();
 				throw new IllegalArgumentException( "Named Range References must include a Sheet name." );
 			}
-			strloc = this.get2DSheetName() + "!" + strloc;
+			strloc = get2DSheetName() + "!" + strloc;
 		}
 		try
 		{
@@ -521,7 +521,7 @@ public class NameHandle
 		}
 		catch( Exception e )
 		{
-				log.warn( "Could not parse expression string for name: {}", this.getName() );
+				log.warn( "Could not parse expression string for name: {}", getName() );
 		}
 		return "#ERR";
 	}
@@ -536,7 +536,7 @@ public class NameHandle
 		boolean success = false;
 		try
 		{
-			success = this.myName.getWorkBook().removeName( myName );
+			success = myName.getWorkBook().removeName( myName );
 		}
 		catch( Exception e )
 		{
@@ -574,7 +574,7 @@ public class NameHandle
 		{
 			sbx.append( "<?xml version=\"1\" encoding=\"utf-8\"?>" );
 		}
-		sbx.append( "<NameHandle Name=\"" + this.getName() + "\">" );
+		sbx.append( "<NameHandle Name=\"" + getName() + "\">" );
 		sbx.append( getCellRangeXML() );
 		sbx.append( "</NameHandle>" );
 		return sbx.toString();
@@ -590,7 +590,7 @@ public class NameHandle
 		StringBuffer sbx = new StringBuffer();
 		try
 		{
-			CellHandle[] celx = this.getCells();
+			CellHandle[] celx = getCells();
 			RowHandle rowhold = null;
 			for( int x = 0; x < celx.length; x++ )
 			{
@@ -638,7 +638,7 @@ public class NameHandle
 		try
 		{
 			CompatibleVector cellhandles = new CompatibleVector();
-			CellRange[] rngz = this.getCellRanges();
+			CellRange[] rngz = getCellRanges();
 			if( rngz != null )
 			{
 				for( CellRange aRngz : rngz )
@@ -699,7 +699,7 @@ public class NameHandle
 		}
 		// 20100217 KSC: try a better way (that can handle 3D refs and complex cell ranges)
 		String loc = myName.getLocation();    // may contain one or more ranges, separated by ","'s if complex
-		WorkSheetHandle[] sheets = this.getReferencedSheets();
+		WorkSheetHandle[] sheets = getReferencedSheets();
 		// handle commas within quoted sheet names (TestExtenXLSEngine.TestQuotedSheetsWithCommansInNRs)
 		// NOTE that sheetnames must be properly qualified for the split to work below 
 		String[] nranges = loc.split( ",(?=([^'|\"]*'[^'|\"]*'|\")*[^'|\"]*$)" );
@@ -714,7 +714,7 @@ public class NameHandle
 				r = sheets[i] + "!" + r;
 			}
 			ranges[i] = new CellRange( r, mybook, createblanks );
-			ranges[i].setParent( this.myName );
+			ranges[i].setParent( myName );
 		}
 
 		return ranges;
@@ -732,11 +732,11 @@ public class NameHandle
 		Boundsheet[] bs = myName.getBoundSheets();
 		if( bs == null )
 		{
-			throw new WorkSheetNotFoundException( "Worksheet for Named Range: " + this.toString() + ":" + this.myName.getExpressionString() );
+			throw new WorkSheetNotFoundException( "Worksheet for Named Range: " + toString() + ":" + myName.getExpressionString() );
 		}
 		if( bs[0] == null )
 		{
-			throw new WorkSheetNotFoundException( "Worksheet for Named Range: " + this.toString() + ":" + this.myName.getExpressionString() );
+			throw new WorkSheetNotFoundException( "Worksheet for Named Range: " + toString() + ":" + myName.getExpressionString() );
 		}
 		WorkSheetHandle[] ret = new WorkSheetHandle[bs.length];
 		for( int x = 0; x < ret.length; x++ )
@@ -805,7 +805,7 @@ public class NameHandle
 		JSONObject theNameHandle = new JSONObject();
 		try
 		{
-			theNameHandle.put( "name", this.getName() );
+			theNameHandle.put( "name", getName() );
 			theNameHandle.put( "cellrange", myName.getLocation() );
 
 			if( celldata )
@@ -889,13 +889,13 @@ public class NameHandle
 	{
 		try
 		{
-			return this.myName.getBoundSheets()[0].getSheetName();
+			return myName.getBoundSheets()[0].getSheetName();
 		}
 		catch( Exception e )
 		{
 			try
 			{
-				return this.myName.getSheet().getSheetName();
+				return myName.getSheet().getSheetName();
 			}
 			catch( Exception ex )
 			{

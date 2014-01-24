@@ -61,11 +61,11 @@ public class FillGroup implements OOXMLElement
 
 	public FillGroup( FillGroup f )
 	{
-		this.bf = f.bf;
-		this.gpf = f.gpf;
-		this.grpf = f.grpf;
-		this.pf = f.pf;
-		this.sf = f.sf;
+		bf = f.bf;
+		gpf = f.gpf;
+		grpf = f.grpf;
+		pf = f.pf;
+		sf = f.sf;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -290,10 +290,10 @@ class GradFill implements OOXMLElement
 
 	public GradFill( GradFill gf )
 	{
-		this.g = gf.g;
+		g = gf.g;
 		// this.sp= gf.sp;
-		this.tr = gf.tr;
-		this.attrs = gf.attrs;
+		tr = gf.tr;
+		attrs = gf.attrs;
 	}
 
 	public static GradFill parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -418,18 +418,18 @@ class BlipFill implements OOXMLElement
 	{
 		this.ns = ns;
 		this.attrs = attrs;
-		this.blip = b;
-		this.srcRect = s;
-		this.fillMode = f;
+		blip = b;
+		srcRect = s;
+		fillMode = f;
 	}
 
 	public BlipFill( BlipFill bf )
 	{
-		this.ns = bf.ns;
-		this.attrs = bf.attrs;
-		this.blip = bf.blip;
-		this.srcRect = bf.srcRect;
-		this.fillMode = bf.fillMode;
+		ns = bf.ns;
+		attrs = bf.attrs;
+		blip = bf.blip;
+		srcRect = bf.srcRect;
+		fillMode = bf.fillMode;
 	}
 
 	public static BlipFill parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -605,17 +605,17 @@ class SolidFill implements OOXMLElement
 
 	public SolidFill()
 	{ // no-param constructor, set up common defaults
-		this.color = new ColorChoice( null, new SrgbClr( "000000", null ), null, null, null );
+		color = new ColorChoice( null, new SrgbClr( "000000", null ), null, null, null );
 	}
 
 	public SolidFill( ColorChoice c )
 	{
-		this.color = c;
+		color = c;
 	}
 
 	public SolidFill( SolidFill s )
 	{
-		this.color = s.color;
+		color = s.color;
 	}
 
 	/**
@@ -629,7 +629,7 @@ class SolidFill implements OOXMLElement
 		{
 			clr = "FFFFFF";
 		}
-		this.color = new ColorChoice( null, new SrgbClr( clr, null ), null, null, null );
+		color = new ColorChoice( null, new SrgbClr( clr, null ), null, null, null );
 	}
 
 	public static SolidFill parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -676,9 +676,9 @@ class SolidFill implements OOXMLElement
 	{
 		StringBuffer ooxml = new StringBuffer();
 		ooxml.append( "<a:solidFill>" );
-		if( this.color != null )
+		if( color != null )
 		{
-			ooxml.append( this.color.getOOXML() );
+			ooxml.append( color.getOOXML() );
 		}
 		ooxml.append( "</a:solidFill>" );
 		return ooxml.toString();
@@ -697,7 +697,7 @@ class SolidFill implements OOXMLElement
 	 */
 	public void setColor( String clr )
 	{
-		this.color = new ColorChoice( null, new SrgbClr( clr, null ), null, null, null );
+		color = new ColorChoice( null, new SrgbClr( clr, null ), null, null, null );
 	}
 
 	public int getColor()
@@ -729,9 +729,9 @@ class PattFill implements OOXMLElement
 
 	public PattFill( PattFill p )
 	{
-		this.prst = p.prst;
-		this.bg = p.bg;
-		this.fg = p.fg;
+		prst = p.prst;
+		bg = p.bg;
+		fg = p.fg;
 	}
 
 	public static PattFill parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -877,12 +877,12 @@ class BgClr implements OOXMLElement
 
 	public BgClr( ColorChoice c )
 	{
-		this.colorChoice = c;
+		colorChoice = c;
 	}
 
 	public BgClr( BgClr s )
 	{
-		this.colorChoice = s.colorChoice;
+		colorChoice = s.colorChoice;
 	}
 
 	public static BgClr parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -929,9 +929,9 @@ class BgClr implements OOXMLElement
 	{
 		StringBuffer ooxml = new StringBuffer();
 		ooxml.append( "<a:bgClr>" );
-		if( this.colorChoice != null )
+		if( colorChoice != null )
 		{
-			ooxml.append( this.colorChoice.getOOXML() );
+			ooxml.append( colorChoice.getOOXML() );
 		}
 		ooxml.append( "</a:bgClr>" );
 		return ooxml.toString();
@@ -957,12 +957,12 @@ class FgClr implements OOXMLElement
 
 	public FgClr( ColorChoice c )
 	{
-		this.colorChoice = c;
+		colorChoice = c;
 	}
 
 	public FgClr( FgClr s )
 	{
-		this.colorChoice = s.colorChoice;
+		colorChoice = s.colorChoice;
 	}
 
 	public static FgClr parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -1008,9 +1008,9 @@ class FgClr implements OOXMLElement
 	{
 		StringBuffer ooxml = new StringBuffer();
 		ooxml.append( "<a:fgClr>" );
-		if( this.colorChoice != null )
+		if( colorChoice != null )
 		{
-			ooxml.append( this.colorChoice.getOOXML() );
+			ooxml.append( colorChoice.getOOXML() );
 		}
 		ooxml.append( "</a:fgClr>" );
 		return ooxml.toString();
@@ -1047,7 +1047,7 @@ class Blip implements OOXMLElement
 
 	public Blip( Blip b )
 	{
-		this.attrs = b.attrs;
+		attrs = b.attrs;
 	}
 
 	public static Blip parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -1194,7 +1194,7 @@ class TileRect implements OOXMLElement
 
 	public TileRect( TileRect t )
 	{
-		this.attrs = t.attrs;
+		attrs = t.attrs;
 	}
 
 	public static TileRect parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -1283,7 +1283,7 @@ class SrcRect implements OOXMLElement
 
 	public SrcRect( SrcRect s )
 	{
-		this.attrs = s.attrs;
+		attrs = s.attrs;
 	}
 
 	public static SrcRect parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -1374,7 +1374,7 @@ class FillRect implements OOXMLElement
 
 	public FillRect( FillRect f )
 	{
-		this.attrs = f.attrs;
+		attrs = f.attrs;
 	}
 
 	public static FillRect parseOOXML( XmlPullParser xpp, Stack<?> lastTag )
@@ -1473,8 +1473,8 @@ class FillMode implements OOXMLElement
 
 	public FillMode( FillMode f )
 	{
-		this.attrs = f.attrs;
-		this.tile = f.tile;
+		attrs = f.attrs;
+		tile = f.tile;
 	}
 
 	public static FillMode parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -1531,7 +1531,7 @@ class FillMode implements OOXMLElement
 	{
 		StringBuffer ooxml = new StringBuffer();
 		// Since both "child" elements are so small, just output OOXML "by hand"
-		if( this.tile )
+		if( tile )
 		{
 			ooxml.append( "<a:tile" );
 		}
@@ -1550,7 +1550,7 @@ class FillMode implements OOXMLElement
 				ooxml.append( " " + key + "=\"" + val + "\"" );
 			}
 		}
-		if( this.tile )
+		if( tile )
 		{
 			ooxml.append( "/>" );
 		}
@@ -1582,12 +1582,12 @@ class GsLst implements OOXMLElement
 
 	public GsLst( ArrayList<Gs> g )
 	{
-		this.gs = g;
+		gs = g;
 	}
 
 	public GsLst( GsLst gl )
 	{
-		this.gs = gl.gs;
+		gs = gl.gs;
 	}
 
 	public static GsLst parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -1671,13 +1671,13 @@ class Gs implements OOXMLElement
 	public Gs( String pos, ColorChoice c )
 	{
 		this.pos = pos;
-		this.colorChoice = c;
+		colorChoice = c;
 	}
 
 	public Gs( Gs g )
 	{
-		this.pos = g.pos;
-		this.colorChoice = g.colorChoice;
+		pos = g.pos;
+		colorChoice = g.colorChoice;
 	}
 
 	public static Gs parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -1727,7 +1727,7 @@ class Gs implements OOXMLElement
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
-		ooxml.append( "<a:gs pos=\"" + this.pos + "\">" );
+		ooxml.append( "<a:gs pos=\"" + pos + "\">" );
 		ooxml.append( colorChoice.getOOXML() );
 		ooxml.append( "</a:gs>" );
 		return ooxml.toString();

@@ -82,7 +82,8 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 {
 	private static final Logger log = LoggerFactory.getLogger( Txo.class );
 	private static final long serialVersionUID = -7043468034346138525L;
-	Continue text, formattingruns; //20100430 KSC: garbagetxo is really a masked mso, garbagetxo;  // garbagetxo is a third continue that appears to be cropping up in infoteria files.  We are removing from the file stream currently, but may need to integrate
+	Continue text;
+	Continue formattingruns; //20100430 KSC: garbagetxo is really a masked mso, garbagetxo;  // garbagetxo is a third continue that appears to be cropping up in infoteria files.  We are removing from the file stream currently, but may need to integrate
 	int state = 0;
 	short grbit = 0;
 	short cchText = 0;
@@ -94,17 +95,17 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		int datalen = this.getLength(); // should be 18
+		int datalen = getLength(); // should be 18
 
-		grbit = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		rot = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		cchText = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );
-		cbRuns = ByteTools.readShort( this.getByteAt( 12 ), this.getByteAt( 13 ) );
+		grbit = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		rot = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		cchText = ByteTools.readShort( getByteAt( 10 ), getByteAt( 11 ) );
+		cbRuns = ByteTools.readShort( getByteAt( 12 ), getByteAt( 13 ) );
 
-		this.setIsValueForCell( false );
+		setIsValueForCell( false );
 		// -- not always true... does it bother anybody though?
-		this.isString = true;
-		this.isContinueMerged = true;
+		isString = true;
+		isContinueMerged = true;
 	}
 
 	/**
@@ -168,13 +169,13 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 		}
 		else // no formatting present:
 		{
-			this.setFormattingRuns( null );    // reset formatting runs
+			setFormattingRuns( null );    // reset formatting runs
 		}
 		// get the length of the first CONTINUE
 		byte[] a = v.getBytes();
 		byte[] b = new byte[a.length + 1];
 		System.arraycopy( a, 0, b, 1, a.length );
-			log.debug( "Txo CHANGING: " + this.getStringVal() );
+			log.debug( "Txo CHANGING: " + getStringVal() );
 		// TODO: checked for Compressed UNICODE in text CONTINUE
 		b[0] = 0x0;
 		if( text != null )
@@ -186,10 +187,10 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 			text = Continue.getTextContinues( v );
 		}
 		b = ByteTools.shortToLEBytes( (short) a.length );
-		this.getData()[10] = b[0];
-		this.getData()[11] = b[1];
-		cchText = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );    // reset text length
-			log.debug( " TO: " + this.getStringVal() );
+		getData()[10] = b[0];
+		getData()[11] = b[1];
+		cchText = ByteTools.readShort( getByteAt( 10 ), getByteAt( 11 ) );    // reset text length
+			log.debug( " TO: " + getStringVal() );
 	}
 
 	/**
@@ -220,7 +221,10 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 			StringBuffer txt = new StringBuffer();
 			short[] frs = new short[2];
 			ArrayList formattingRuns = new ArrayList();
-			boolean b, it, st, u;
+			boolean b;
+			boolean it;
+			boolean st;
+			boolean u;
 			b = it = st = u = false;
 			String font = "Arial";    // default
 			int sz = 10;                // default
@@ -307,10 +311,10 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 						{
 							f.setStricken( st );
 						}
-						int fIndex = this.getWorkBook().getFontIdx( f );  // index for specific font formatting
+						int fIndex = getWorkBook().getFontIdx( f );  // index for specific font formatting
 						if( fIndex == -1 )  // must insert new font
 						{
-							fIndex = this.getWorkBook().insertFont( f ) + 1;
+							fIndex = getWorkBook().insertFont( f ) + 1;
 						}
 						frs[1] = (short) fIndex;
 						formattingRuns.add( frs );
@@ -322,7 +326,7 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 				formattingRuns.add( new short[]{
 						(short) txt.toString().length(), 15
 				} ); // 20100430 KSC: add "extra" formatting run -- necessary for Excel 2003
-				this.setFormattingRuns( formattingRuns );
+				setFormattingRuns( formattingRuns );
 			}
 			return txt.toString();
 		}
@@ -339,8 +343,8 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setStringVal( Unicodestring txt )
 	{
-		this.setStringVal( txt.getStringVal() );
-		this.setFormattingRuns( txt.getFormattingRuns() );
+		setStringVal( txt.getStringVal() );
+		setFormattingRuns( txt.getFormattingRuns() );
 	}
 
 	/**
@@ -355,8 +359,8 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 	public java.util.ArrayList getFormattingRuns()
 	{
 		java.util.ArrayList formattingRuns = new java.util.ArrayList();
-		int frcontinues = this.getSheet().getSheetRecs().indexOf( this ) + 2;
-		Continue fr = (Continue) this.getSheet().getSheetRecs().get( frcontinues );
+		int frcontinues = getSheet().getSheetRecs().indexOf( this ) + 2;
+		Continue fr = (Continue) getSheet().getSheetRecs().get( frcontinues );
 		byte[] frdata = fr.getData();
 		int nFormattingRuns = (frdata.length / 8);
 		if( nFormattingRuns <= 1 )
@@ -365,7 +369,8 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 		}
 		for( int i = 0; i < (nFormattingRuns * 8); )
 		{
-			short idx, font;
+			short idx;
+			short font;
 			idx = ByteTools.readShort( frdata[i++], frdata[i++] );
 			font = ByteTools.readShort( frdata[i++], frdata[i++] );
 			formattingRuns.add( new short[]{ idx, font } );
@@ -404,13 +409,13 @@ public final class Txo extends com.extentech.formats.XLS.XLSRecord
 				System.arraycopy( fontIndex, 0, frs, (i * 8) + 2, 2 );
 			}
 		}
-		int frcontinues = this.getSheet().getSheetRecs().indexOf( this ) + 2;
-		Continue fr = (Continue) this.getSheet().getSheetRecs().get( frcontinues );
+		int frcontinues = getSheet().getSheetRecs().indexOf( this ) + 2;
+		Continue fr = (Continue) getSheet().getSheetRecs().get( frcontinues );
 		fr.setData( frs );
 		cbRuns = (short) frs.length;
 		byte[] b = ByteTools.shortToLEBytes( cbRuns );
-		this.getData()[12] = b[0];
-		this.getData()[13] = b[1];
+		getData()[12] = b[0];
+		getData()[13] = b[1];
 
 	}
 

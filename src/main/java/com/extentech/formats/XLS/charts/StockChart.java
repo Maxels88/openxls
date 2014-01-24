@@ -48,20 +48,20 @@ public class StockChart extends LineChart
 		cooxml.append( "\r\n" );
 
 		// *** Series Data:	ser, cat, val for most chart types
-		cooxml.append( this.getParentChart().getChartSeries().getOOXML( this.getChartType(), false, 0 ) );
+		cooxml.append( getParentChart().getChartSeries().getOOXML( getChartType(), false, 0 ) );
 
 		// chart data labels, if any
 		//TODO: FINISH dlbls
 		//cooxml.append(getDataLabelsOOXML(cf));
 
 		//dropLines
-		ChartLine cl = this.cf.getChartLinesRec( ChartLine.TYPE_DROPLINE );
+		ChartLine cl = cf.getChartLinesRec( ChartLine.TYPE_DROPLINE );
 		if( cl != null )
 		{
 			cooxml.append( cl.getOOXML() );
 		}
 		// hiLowLines
-		cl = this.cf.getChartLinesRec( ChartLine.TYPE_HILOWLINE );
+		cl = cf.getChartLinesRec( ChartLine.TYPE_HILOWLINE );
 		if( cl != null )
 		{
 			cooxml.append( cl.getOOXML() );

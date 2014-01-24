@@ -89,8 +89,16 @@ public class SxDB extends XLSRecord implements PivotCacheRecord
 	private static final Logger log = LoggerFactory.getLogger( SxDB.class );
 	private static final long serialVersionUID = 9027599480633995587L;
 	private int crdbdb;
-	private short idstm, grbit, cfdbdb, cfdbTot, crdbUsed, vsType, cchWho;
-	private boolean fInvalid, fRefreshOnLoad, fEnableRefresh;    // significant bit fields
+	private short idstm;
+	private short grbit;
+	private short cfdbdb;
+	private short cfdbTot;
+	private short crdbUsed;
+	private short vsType;
+	private short cchWho;
+	private boolean fInvalid;
+	private boolean fRefreshOnLoad;
+	private boolean fEnableRefresh;    // significant bit fields
 	private String rgb;
 
 	// TODO: doesnt cfdbdb==cfdbTot always??
@@ -101,24 +109,24 @@ public class SxDB extends XLSRecord implements PivotCacheRecord
 	public void init()
 	{
 		super.init();
-			log.trace( "SXDB -{}",Arrays.toString( this.getData() ) );
-		crdbdb = ByteTools.readInt( this.getBytesAt( 0, 4 ) );                    // # cache records
-		idstm = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );    // streamid
-		grbit = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );    //
+			log.trace( "SXDB -{}",Arrays.toString( getData() ) );
+		crdbdb = ByteTools.readInt( getBytesAt( 0, 4 ) );                    // # cache records
+		idstm = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );    // streamid
+		grbit = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );    //
 		// 8,9 = unused
-		cfdbdb = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );    // # cache fields
-		cfdbTot = ByteTools.readShort( this.getByteAt( 12 ), this.getByteAt( 13 ) );
-		crdbUsed = ByteTools.readShort( this.getByteAt( 14 ), this.getByteAt( 15 ) );    // # used - filtering
+		cfdbdb = ByteTools.readShort( getByteAt( 10 ), getByteAt( 11 ) );    // # cache fields
+		cfdbTot = ByteTools.readShort( getByteAt( 12 ), getByteAt( 13 ) );
+		crdbUsed = ByteTools.readShort( getByteAt( 14 ), getByteAt( 15 ) );    // # used - filtering
 // KSC: TESTING		
 //if (cfdbdb!=cfdbTot)
 		//Logger.logWarn("SXDB: all cache items are not being used");
-		vsType = ByteTools.readShort( this.getByteAt( 16 ), this.getByteAt( 17 ) );
-		cchWho = ByteTools.readShort( this.getByteAt( 18 ), this.getByteAt( 19 ) );
+		vsType = ByteTools.readShort( getByteAt( 16 ), getByteAt( 17 ) );
+		cchWho = ByteTools.readShort( getByteAt( 18 ), getByteAt( 19 ) );
 		if( cchWho > 0 )
 		{
-			byte encoding = this.getByteAt( 20 );
+			byte encoding = getByteAt( 20 );
 
-			byte[] tmp = this.getBytesAt( 21, (cchWho) * (encoding + 1) );
+			byte[] tmp = getBytesAt( 21, (cchWho) * (encoding + 1) );
 			try
 			{
 				if( encoding == 0 )
@@ -144,7 +152,7 @@ public class SxDB extends XLSRecord implements PivotCacheRecord
 				" cfdbTot:" + cfdbTot +
 				" sid:" + idstm +
 				" vsType: " + vsType +
-				Arrays.toString( this.getRecord() );
+				Arrays.toString( getRecord() );
 	}
 
 	private byte[] PROTOTYPE_BYTES = new byte[]{
@@ -182,9 +190,9 @@ public class SxDB extends XLSRecord implements PivotCacheRecord
 	public byte[] getRecord()
 	{
 		byte[] b = new byte[4];
-		System.arraycopy( ByteTools.shortToLEBytes( this.getOpcode() ), 0, b, 0, 2 );
-		System.arraycopy( ByteTools.shortToLEBytes( (short) this.getData().length ), 0, b, 2, 2 );
-		return ByteTools.append( this.getData(), b );
+		System.arraycopy( ByteTools.shortToLEBytes( getOpcode() ), 0, b, 0, 2 );
+		System.arraycopy( ByteTools.shortToLEBytes( (short) getData().length ), 0, b, 2, 2 );
+		return ByteTools.append( getData(), b );
 	}
 
 	/**
@@ -195,7 +203,7 @@ public class SxDB extends XLSRecord implements PivotCacheRecord
 	public void setNCacheRecords( int n )
 	{
 		crdbdb = (short) n;
-		System.arraycopy( ByteTools.cLongToLEBytes( (crdbdb) ), 0, this.getData(), 0, 4 );
+		System.arraycopy( ByteTools.cLongToLEBytes( (crdbdb) ), 0, getData(), 0, 4 );
 //		crdbUsed= (short)n;		// TODO: filtering affects this! 
 //		System.arraycopy( ByteTools.shortToLEBytes(crdbUsed), 0, this.getData(), 14, 2);
 	}
@@ -229,8 +237,8 @@ public class SxDB extends XLSRecord implements PivotCacheRecord
 	{
 		idstm = (short) sid;
 		byte[] b = ByteTools.shortToLEBytes( idstm );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 	}
 
 	/**
@@ -243,12 +251,12 @@ public class SxDB extends XLSRecord implements PivotCacheRecord
 	{
 		cfdbdb = (short) n;
 		byte[] b = ByteTools.shortToLEBytes( cfdbdb );
-		this.getData()[10] = b[0];
-		this.getData()[11] = b[1];
+		getData()[10] = b[0];
+		getData()[11] = b[1];
 		cfdbTot = (short) n;
 		b = ByteTools.shortToLEBytes( cfdbTot );
-		this.getData()[12] = b[0];
-		this.getData()[13] = b[1];
+		getData()[12] = b[0];
+		getData()[13] = b[1];
 	}
 
 	/**

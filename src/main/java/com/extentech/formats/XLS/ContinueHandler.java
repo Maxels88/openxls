@@ -56,7 +56,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 
 	public ContinueHandler( WorkBook b )
 	{
-		this.book = b;
+		book = b;
 	}
 
 	/**
@@ -91,29 +91,29 @@ public class ContinueHandler implements Serializable, XLSConstants
 				continued.init();
 				continued = null;
 			}
-			this.continued = rec;
-			this.splitPrevRec = this.continued;
+			continued = rec;
+			splitPrevRec = continued;
 			// if the rec is a Txo, we need to process special
 			if( continued instanceof Txo )
 			{
-				this.handleTxo = true;
+				handleTxo = true;
 				lastTxo = (Txo) continued;
 				lastObj = null;
-				this.handleObj = false;    // ""
+				handleObj = false;    // ""
 			}
 			else if( continued instanceof Obj )
 			{
-				this.handleObj = true;
+				handleObj = true;
 				lastObj = (Obj) continued;
 				// obj records need to be init'd before setsheet
 				lastObj.init();
 				lastTxo = null;
-				this.handleTxo = false;    // ""
+				handleTxo = false;    // ""
 			}
 			else
 			{
-				this.handleTxo = false;
-				this.handleObj = false;
+				handleTxo = false;
+				handleObj = false;
 			}
 			lastCont = null;
 		}
@@ -236,7 +236,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 		         /* If Formula Attached String was a continue, Formula cachedValue WAS NOT init-ed. Do here.*/
 				if( continued.getOpcode() == STRINGREC )
 				{
-					this.book.lastFormula.setCachedValue( continued.getStringVal() );
+					book.lastFormula.setCachedValue( continued.getStringVal() );
 				}
 				continued = null;
 			}
@@ -841,7 +841,8 @@ public class ContinueHandler implements Serializable, XLSConstants
 	{
 
 		int clen = dta.length - start;
-		int len = 0, pos = 0;
+		int len = 0;
+		int pos = 0;
 		int numconts = clen / MAXRECLEN;
 		numconts++;
 		Continue[] retconts = new Continue[numconts];

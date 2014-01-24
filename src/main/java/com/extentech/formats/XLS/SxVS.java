@@ -55,7 +55,7 @@ public class SxVS extends XLSRecord implements XLSConstants
 	public void init()
 	{
 		super.init();
-		sourceType = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		sourceType = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 			log.debug( "SXVS - sourceType:" + sourceType );
 	}
 
@@ -68,8 +68,8 @@ public class SxVS extends XLSRecord implements XLSConstants
 	{
 		sourceType = (short) st;
 		byte[] b = ByteTools.shortToLEBytes( sourceType );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	public static XLSRecord getPrototype()

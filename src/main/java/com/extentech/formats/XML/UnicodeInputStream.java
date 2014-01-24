@@ -116,8 +116,9 @@ public class UnicodeInputStream extends InputStream
 			return;
 		}
 
-		byte bom[] = new byte[BOM_SIZE];
-		int n, unread;
+		byte[] bom = new byte[BOM_SIZE];
+		int n;
+		int unread;
 		n = internalIn.read( bom, 0, bom.length );
 
 		if( (bom[0] == (byte) 0xEF) && (bom[1] == (byte) 0xBB) &&

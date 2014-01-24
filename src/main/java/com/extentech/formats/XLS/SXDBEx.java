@@ -49,10 +49,10 @@ public class SXDBEx extends XLSRecord implements XLSConstants, PivotCacheRecord
 	public void init()
 	{
 		super.init();
-			log.debug( "SXDBEx - {}", Arrays.toString( this.getData() ) );
+			log.debug( "SXDBEx - {}", Arrays.toString( getData() ) );
 		// numDate 0-8 last refresh date
-		lastdate = ByteTools.eightBytetoLEDouble( this.getBytesAt( 0, 8 ) );
-		nformulas = ByteTools.readInt( this.getBytesAt( 8, 4 ) );    // # SXFormula records
+		lastdate = ByteTools.eightBytetoLEDouble( getBytesAt( 0, 8 ) );
+		nformulas = ByteTools.readInt( getBytesAt( 8, 4 ) );    // # SXFormula records
 	}
 
 	public String toString()
@@ -62,7 +62,7 @@ public class SXDBEx extends XLSRecord implements XLSConstants, PivotCacheRecord
 		try
 		{
 			return "SXDBEx: nFormulas:" + nformulas + " last Date:" + dateFormatter.format( ld ) +
-					Arrays.toString( this.getRecord() );
+					Arrays.toString( getRecord() );
 		}
 		catch( Exception e )
 		{
@@ -92,7 +92,7 @@ public class SXDBEx extends XLSRecord implements XLSConstants, PivotCacheRecord
 	{
 		nformulas = n;
 		byte[] b = ByteTools.cLongToLEBytes( n );
-		System.arraycopy( b, 0, this.getData(), 8, 4 );
+		System.arraycopy( b, 0, getData(), 8, 4 );
 	}
 
 	public int getnFormulas()
@@ -109,9 +109,9 @@ public class SXDBEx extends XLSRecord implements XLSConstants, PivotCacheRecord
 	public byte[] getRecord()
 	{
 		byte[] b = new byte[4];
-		System.arraycopy( ByteTools.shortToLEBytes( this.getOpcode() ), 0, b, 0, 2 );
-		System.arraycopy( ByteTools.shortToLEBytes( (short) this.getData().length ), 0, b, 2, 2 );
-		return ByteTools.append( this.getData(), b );
+		System.arraycopy( ByteTools.shortToLEBytes( getOpcode() ), 0, b, 0, 2 );
+		System.arraycopy( ByteTools.shortToLEBytes( (short) getData().length ), 0, b, 2, 2 );
+		return ByteTools.append( getData(), b );
 
 	}
 }

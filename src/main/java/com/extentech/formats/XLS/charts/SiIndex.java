@@ -61,6 +61,6 @@ public class SiIndex extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		type = ByteTools.readShort( this.getData()[0], this.getData()[1] );
+		type = ByteTools.readShort( getData()[0], getData()[1] );
 	}
 }

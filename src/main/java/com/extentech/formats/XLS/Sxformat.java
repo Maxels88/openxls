@@ -47,7 +47,7 @@ public class Sxformat extends XLSRecord implements XLSConstants
 	public void init()
 	{
 		super.init();
-		if( this.getLength() <= 0 )
+		if( getLength() <= 0 )
 		{  // Is this record populated?
 				log.debug( "no data in Sxformat" );
 		}

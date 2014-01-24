@@ -60,7 +60,7 @@ public final class DefaultRowHeight extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		rwh = ByteTools.readShort( this.getData()[2], this.getData()[3] );
+		rwh = ByteTools.readShort( getData()[2], getData()[3] );
 	}
 
 	@Override
@@ -80,9 +80,9 @@ public final class DefaultRowHeight extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setDefaultRowHeight( int t )
 	{
-		this.rwh = (short) t;
-		byte[] mydata = this.getData();
-		byte[] heightbytes = ByteTools.shortToLEBytes( this.rwh );
+		rwh = (short) t;
+		byte[] mydata = getData();
+		byte[] heightbytes = ByteTools.shortToLEBytes( rwh );
 		mydata[2] = heightbytes[0];
 		mydata[3] = heightbytes[1];
 	}
@@ -93,8 +93,8 @@ public final class DefaultRowHeight extends com.extentech.formats.XLS.XLSRecord
 	@Override
 	public void setSheet( Sheet bs )
 	{
-		this.worksheet = bs;
-		((Boundsheet) bs).setDefaultRowHeight( this.rwh / 20.0 );
+		worksheet = bs;
+		((Boundsheet) bs).setDefaultRowHeight( rwh / 20.0 );
 	}
 
 }

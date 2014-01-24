@@ -64,7 +64,7 @@ public class Writeaccess extends com.extentech.formats.XLS.XLSRecord
 				System.arraycopy( nameb, 0, newb, 0, nameb.length );
 			}
 			strname.init( newb, false );
-			this.setData( newb );
+			setData( newb );
 		}
 		catch( UnsupportedEncodingException e )
 		{

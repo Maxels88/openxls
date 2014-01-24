@@ -105,7 +105,7 @@ public class PtgRange extends GenericPtg implements Ptg
 			String sourceSheet = null;
 			try
 			{
-				sourceSheet = this.getParentRec().getSheet().getSheetName();
+				sourceSheet = getParentRec().getSheet().getSheetName();
 			}
 			catch( NullPointerException ne )
 			{
@@ -143,21 +143,21 @@ public class PtgRange extends GenericPtg implements Ptg
 							if( !comp.equals( "#REF!" ) && !comp.equals( "#NULL!" ) )
 							{
 								PtgRef3d pr = new PtgRef3d( false );
-								pr.setParentRec( this.getParentRec() );
+								pr.setParentRec( getParentRec() );
 								pr.setLocation( comp );
 								a.add( pr );
 							}
 							else
 							{
 								PtgRefErr3d pr = new PtgRefErr3d();
-								pr.setParentRec( this.getParentRec() );
+								pr.setParentRec( getParentRec() );
 								a.add( pr );
 							}
 						}
 						else
 						{
 							PtgArea3d pa = new PtgArea3d( false );
-							pa.setParentRec( this.getParentRec() );
+							pa.setParentRec( getParentRec() );
 							pa.setLocation( comp );
 							Ptg[] pcs = pa.getComponents();
 							if( pcs != null )
@@ -184,14 +184,14 @@ public class PtgRange extends GenericPtg implements Ptg
 							{
 								PtgRef pr = new PtgRef();
 								pr.setUseReferenceTracker( false );
-								pr.setParentRec( this.getParentRec() );
+								pr.setParentRec( getParentRec() );
 								pr.setLocation( loc );
 								a.add( pr );
 							}
 							else
 							{
 								PtgRef3d pr = new PtgRef3d( false );
-								pr.setParentRec( this.getParentRec() );
+								pr.setParentRec( getParentRec() );
 								pr.setLocation( loc );
 								a.add( pr );
 							}
@@ -199,7 +199,7 @@ public class PtgRange extends GenericPtg implements Ptg
 						else
 						{
 							PtgArea3d pa = new PtgArea3d( false );
-							pa.setParentRec( this.getParentRec() );
+							pa.setParentRec( getParentRec() );
 							pa.setLocation( loc );
 							a.add( pa );
 						}
@@ -320,7 +320,7 @@ public class PtgRange extends GenericPtg implements Ptg
 			// For performance reasons, instantiate a PtgMystery as a lightweight GenericPtg which holds intermediary values in it's vars
 			GenericPtg retp = new PtgMystery();
 			PtgArea3d pa = new PtgArea3d( false );
-			pa.setParentRec( this.getParentRec() );
+			pa.setParentRec( getParentRec() );
 			// TODO: 3d ranges????
 			pa.setSheetName( sheet );
 			pa.setLocation( rng );

@@ -49,7 +49,14 @@ public class FrtWrapper extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = -4527467252753642328L;
 	private int type;
-	public static final int DEFAULTTEXT = 0, TEXTDISPWITHDATALABELS = 1, BEGIN = 2, POS = 3, AI = 4, OBJECTLINK = 5, END = 6, TEXTDISP = 7;
+	public static final int DEFAULTTEXT = 0;
+	public static final int TEXTDISPWITHDATALABELS = 1;
+	public static final int BEGIN = 2;
+	public static final int POS = 3;
+	public static final int AI = 4;
+	public static final int OBJECTLINK = 5;
+	public static final int END = 6;
+	public static final int TEXTDISP = 7;
 
 	@Override
 	public void init()

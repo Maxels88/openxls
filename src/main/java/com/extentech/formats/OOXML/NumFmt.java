@@ -49,7 +49,8 @@ public class NumFmt implements OOXMLElement
 {
 	private static final Logger log = LoggerFactory.getLogger( NumFmt.class );
 	private static final long serialVersionUID = -206715418106414662L;
-	private String formatCode, numFmtId;
+	private String formatCode;
+	private String numFmtId;
 	private boolean sourceLinked = false;
 
 	public NumFmt( String formatCode, String numFmtId, boolean sourceLinked )
@@ -61,14 +62,15 @@ public class NumFmt implements OOXMLElement
 
 	public NumFmt( NumFmt n )
 	{
-		this.formatCode = n.formatCode;
-		this.numFmtId = n.numFmtId;
-		this.sourceLinked = n.sourceLinked;
+		formatCode = n.formatCode;
+		numFmtId = n.numFmtId;
+		sourceLinked = n.sourceLinked;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp )
 	{
-		String formatCode = null, numFmtId = null;
+		String formatCode = null;
+		String numFmtId = null;
 		boolean sourceLinked = false;
 		try
 		{

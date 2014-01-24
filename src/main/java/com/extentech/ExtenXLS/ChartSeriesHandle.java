@@ -126,7 +126,7 @@ public class ChartSeriesHandle
 		ai.changeAiLocation( ai.toString(), seriesRange );
 		try
 		{    // 20070711 KSC: update value (series) count for series
-			int coords[] = com.extentech.ExtenXLS.ExcelTools.getRangeCoords( seriesRange );
+			int[] coords = com.extentech.ExtenXLS.ExcelTools.getRangeCoords( seriesRange );
 			myseries.setValueCount( coords[4] );
 			myseries.getParentChart().setMetricsDirty();
 		}
@@ -156,7 +156,7 @@ public class ChartSeriesHandle
 		ai.changeAiLocation( ai.toString(), categoryRange );
 		try
 		{    // 20070711 KSC: update Category Count for this series
-			int coords[] = com.extentech.ExtenXLS.ExcelTools.getRangeCoords( categoryRange );
+			int[] coords = com.extentech.ExtenXLS.ExcelTools.getRangeCoords( categoryRange );
 			myseries.setCategoryCount( coords[4] );
 			myseries.getParentChart().setMetricsDirty();
 		}
@@ -185,7 +185,7 @@ public class ChartSeriesHandle
 			ai.setRt( 2 );
 			try
 			{    // also update Bubble Count for this series
-				int coords[] = com.extentech.ExtenXLS.ExcelTools.getRangeCoords( bubbleSizes );
+				int[] coords = com.extentech.ExtenXLS.ExcelTools.getRangeCoords( bubbleSizes );
 				myseries.setBubbleCount( coords[4] );
 				myseries.getParentChart().setMetricsDirty();
 			}
@@ -206,7 +206,7 @@ public class ChartSeriesHandle
 	 */
 	public void setSeriesLegend( String legend )
 	{
-		myseries.setLegend( legend, this.wbh );
+		myseries.setLegend( legend, wbh );
 		myseries.getParentChart().setMetricsDirty();
 	}
 
@@ -323,10 +323,10 @@ public class ChartSeriesHandle
 	 */
 	public void setSeries( String legendRef, String series, String cat, String bubble )
 	{
-		this.setSeriesLegendRef( legendRef );
-		this.setSeriesRange( series );
-		this.setCategoryRange( cat );
-		this.setBubbleRange( bubble );
+		setSeriesLegendRef( legendRef );
+		setSeriesRange( series );
+		setCategoryRange( cat );
+		setBubbleRange( bubble );
 		myseries.getParentChart().setMetricsDirty();
 	}
 

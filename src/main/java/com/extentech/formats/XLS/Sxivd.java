@@ -85,12 +85,12 @@ public class Sxivd extends XLSRecord
 	public void init()
 	{
 		super.init();
-			log.trace( "SXIVD - n: " + this.getData().length + " array:" + Arrays.toString( this.getData() ) );
+			log.trace( "SXIVD - n: " + getData().length + " array:" + Arrays.toString( getData() ) );
 	}
 
 	public String toString()
 	{
-		return "SXIVD - n: " + this.getData().length + " array:" + Arrays.toString( this.getData() );
+		return "SXIVD - n: " + getData().length + " array:" + Arrays.toString( getData() );
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class Sxivd extends XLSRecord
 	 */
 	public void addField( int fieldNumber )
 	{
-		data = this.getData();
+		data = getData();
 		byte[] b = ByteTools.shortToLEBytes( (short) fieldNumber );
 		data = ByteTools.append( b, data );
 	}
@@ -115,7 +115,7 @@ public class Sxivd extends XLSRecord
 	public void setRowOrColItems( int[] items )
 	{
 		byte[] data = intToByteArray( items );
-		this.setData( data );
+		setData( data );
 	}
 
 	public static XLSRecord getPrototype()

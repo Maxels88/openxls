@@ -47,9 +47,9 @@ public class Title implements OOXMLElement
 
 	public Title( ChartText ct, TxPr txpr, Layout l, SpPr sp )
 	{
-		this.layout = l;
+		layout = l;
 		this.sp = sp;
-		this.chartText = ct;
+		chartText = ct;
 		this.txpr = txpr;
 	}
 
@@ -60,8 +60,8 @@ public class Title implements OOXMLElement
 	 */
 	public Title( String t )
 	{
-		this.chartText = new ChartText( t );
-		this.sp = new SpPr( "c" );
+		chartText = new ChartText( t );
+		sp = new SpPr( "c" );
 		// no spPr
 	}
 
@@ -73,12 +73,12 @@ public class Title implements OOXMLElement
 	public Title( TextDisp td, WorkBook bk )
 	{
 		P para = new P( td.getFont( bk ), td.toString() );
-		this.chartText = new ChartText( null, para, null );
+		chartText = new ChartText( null, para, null );
 	}
 
 	public void setLayout( double x, double y )
 	{
-		this.layout = new Layout( null, new double[]{ x, y, -1, -1 } );
+		layout = new Layout( null, new double[]{ x, y, -1, -1 } );
 	}
 
 	/**
@@ -176,22 +176,22 @@ public class Title implements OOXMLElement
 	{
 		StringBuffer tooxml = new StringBuffer();
 		tooxml.append( "<c:title>" );
-		if( this.chartText != null )
+		if( chartText != null )
 		{
 			tooxml.append( chartText.getOOXML() );
 		}
-		if( this.layout != null )
+		if( layout != null )
 		{
 			tooxml.append( layout.getOOXML() );
 		}
 		// TODO: overlay
-		if( this.sp != null )
+		if( sp != null )
 		{
 			tooxml.append( sp.getOOXML() );
 		}
-		if( this.txpr != null )
+		if( txpr != null )
 		{
-			tooxml.append( this.txpr.getOOXML() );
+			tooxml.append( txpr.getOOXML() );
 		}
 		tooxml.append( "</c:title>" );
 		return tooxml.toString();
@@ -200,7 +200,7 @@ public class Title implements OOXMLElement
 	@Override
 	public OOXMLElement cloneElement()
 	{
-		return new Title( this.chartText, this.txpr, this.layout, this.sp );
+		return new Title( chartText, txpr, layout, sp );
 	}
 
 	public String getTitle()
@@ -254,12 +254,12 @@ class ChartText implements OOXMLElement
 	 */
 	public ChartText( String s )
 	{
-		this.para = new P( s );
+		para = new P( s );
 	}
 
 	public ChartText( StrRef s, P para, BodyPr bpr )
 	{
-		this.strref = s;
+		strref = s;
 		this.para = para;
 		this.bpr = bpr;
 	}
@@ -357,7 +357,7 @@ class ChartText implements OOXMLElement
 	@Override
 	public OOXMLElement cloneElement()
 	{
-		return new ChartText( this.strref, this.para, this.bpr );
+		return new ChartText( strref, para, bpr );
 	}
 
 	/**
@@ -392,9 +392,11 @@ class ChartText implements OOXMLElement
 		 * PLUS-- fill, line, blipFill, cs/ea/latin font (attribute: typeface)
 		 * ****
 		 */
-		int w = 400, u = 0;
+		int w = 400;
+		int u = 0;
 		double h = 200; // default
-		boolean b = false, i = false;
+		boolean b = false;
+		boolean i = false;
 		String face = "Arial";
 		if( textprops.get( "b" ) != null )
 		{

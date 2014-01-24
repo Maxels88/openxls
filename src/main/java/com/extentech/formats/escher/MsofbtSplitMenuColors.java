@@ -31,7 +31,10 @@ public class MsofbtSplitMenuColors extends EscherRecord
 	 */
 	private static final long serialVersionUID = 5888748984363726576L;
 	//These values are from experimental records.
-	int fillColor = 0x800000D, lineColor = 0x800000C, shadowColor = 0x8000017, _3dColor = 0x100000f7;
+	int fillColor = 0x800000D;
+	int lineColor = 0x800000C;
+	int shadowColor = 0x8000017;
+	int _3dColor = 0x100000f7;
 
 	public MsofbtSplitMenuColors( int fbt, int inst, int version )
 	{
@@ -54,8 +57,8 @@ public class MsofbtSplitMenuColors extends EscherRecord
 		System.arraycopy( shadowColorBytes, 0, totalBytes, 8, 4 );
 		System.arraycopy( _3dColorBytes, 0, totalBytes, 12, 4 );
 
-		this.setLength( 16 );
-		this.setInst( 4 );
+		setLength( 16 );
+		setInst( 4 );
 
 		return totalBytes;
 	}

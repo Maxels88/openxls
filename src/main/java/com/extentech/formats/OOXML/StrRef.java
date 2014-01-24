@@ -40,8 +40,8 @@ public class StrRef implements OOXMLElement
 
 	public StrRef( String f, StrCache s )
 	{
-		this.stringRef = f;
-		this.strCache = s;
+		stringRef = f;
+		strCache = s;
 	}
 
 	/**
@@ -112,11 +112,11 @@ public class StrRef implements OOXMLElement
 	{
 		StringBuffer tooxml = new StringBuffer();
 		tooxml.append( "<c:strRef>" );
-		if( this.stringRef != null )
+		if( stringRef != null )
 		{
-			tooxml.append( "<c:f>" + this.stringRef + "</c:f>" );
+			tooxml.append( "<c:f>" + stringRef + "</c:f>" );
 		}
-		if( this.strCache != null )
+		if( strCache != null )
 		{
 			tooxml.append( strCache.getOOXML() );
 		}
@@ -127,7 +127,7 @@ public class StrRef implements OOXMLElement
 	@Override
 	public OOXMLElement cloneElement()
 	{
-		return new StrRef( this.stringRef, this.strCache );
+		return new StrRef( stringRef, strCache );
 	}
 
 }
@@ -139,7 +139,8 @@ class StrCache implements OOXMLElement
 {
 	private static final Logger log = LoggerFactory.getLogger( StrCache.class );
 	private static final long serialVersionUID = -4914374179641060956L;
-	private int ptCount = -1, idx = -1;
+	private int ptCount = -1;
+	private int idx = -1;
 	private String pt = null;
 
 	public StrCache( int ptCount, int idx, String pt )
@@ -158,7 +159,8 @@ class StrCache implements OOXMLElement
 	 */
 	public static StrCache parseOOXML( XmlPullParser xpp, Stack lastTag )
 	{
-		int ptCount = -1, idx = -1;
+		int ptCount = -1;
+		int idx = -1;
 		String pt = null;
 
 		/**
@@ -214,9 +216,9 @@ class StrCache implements OOXMLElement
 	{
 		StringBuffer tooxml = new StringBuffer();
 		tooxml.append( "<c:strCache>" );
-		tooxml.append( "<c:ptCount val=\"" + this.ptCount + "\"/>" );
-		tooxml.append( "<c:pt idx=\"" + this.idx + "\">" );
-		tooxml.append( "<c:v>" + this.pt + "</c:v>" );
+		tooxml.append( "<c:ptCount val=\"" + ptCount + "\"/>" );
+		tooxml.append( "<c:pt idx=\"" + idx + "\">" );
+		tooxml.append( "<c:v>" + pt + "</c:v>" );
 		tooxml.append( "</c:pt>" );
 		tooxml.append( "</c:strCache>" );
 		return tooxml.toString();
@@ -225,7 +227,7 @@ class StrCache implements OOXMLElement
 	@Override
 	public OOXMLElement cloneElement()
 	{
-		return new StrCache( this.ptCount, this.idx, this.pt );
+		return new StrCache( ptCount, idx, pt );
 	}
 
 }

@@ -49,7 +49,9 @@ public class JFileWriter
 {
 	private static final Logger log = LoggerFactory.getLogger( JFileWriter.class );
 
-	java.lang.String path = "", filename = "", data = "";
+	java.lang.String path = "";
+	java.lang.String filename = "";
+	java.lang.String data = "";
 	byte newLine = Character.LINE_SEPARATOR;
 
 	public void setPath( String p )

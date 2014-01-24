@@ -33,7 +33,10 @@ package com.extentech.toolkit;
 public class MD4Digest
 {
 
-	private int H1, H2, H3, H4;         // IV's
+	private int H1;
+	private int H2;
+	private int H3;
+	private int H4;         // IV's
 	private int[] X = new int[16];
 	private int xOff;
 	private static final int BYTE_LENGTH = 64;
@@ -54,9 +57,9 @@ public class MD4Digest
 	public byte[] getDigest( byte[] data )
 	{
 
-		this.update( data, 0, data.length );
+		update( data, 0, data.length );
 		byte[] digest = new byte[16];
-		this.doFinal( digest, 0 );
+		doFinal( digest, 0 );
 
 		return digest;
 

@@ -77,7 +77,8 @@ public class ImageHandle implements Serializable
 	 */
 	public double getAspectRatio()
 	{
-		double height, width;
+		double height;
+		double width;
 		double aspectRatio = 0;
 		height = getHeight() / 122.27;  //(convert to in)
 		width = getWidth() / 57.06;     //(convert to in)
@@ -99,9 +100,12 @@ public class ImageHandle implements Serializable
 	public static final int WIDTH = 2;
 	public static final int HEIGHT = 3;
 
-	private String imageName = " ", shapeName = "";
-	private short height, width;
-	private short x, y;
+	private String imageName = " ";
+	private String shapeName = "";
+	private short height;
+	private short width;
+	private short x;
+	private short y;
 	private int image_type = -1;
 
 	// OOXML-specific
@@ -209,7 +213,7 @@ public class ImageHandle implements Serializable
 	 */
 	public boolean equals( Object another )
 	{
-		if( another.toString().equals( this.toString() ) )
+		if( another.toString().equals( toString() ) )
 		{
 			return true;
 		}
@@ -246,7 +250,7 @@ public class ImageHandle implements Serializable
 				}
 				else
 				{
-					this.image_type = MSODrawingConstants.IMAGE_TYPE_PNG;
+					image_type = MSODrawingConstants.IMAGE_TYPE_PNG;
 				}
 
 			}
@@ -263,7 +267,7 @@ public class ImageHandle implements Serializable
 				log.warn( "Java ImageIO could not decode image bytes for " + imageName + ":" + ex.toString() );
 				if( false )
 				{    // 20081028 KSC: don't overwrite original image bytes
-					String imgname = "failed_image_read_" + this.imageName + "." + imageFormat;
+					String imgname = "failed_image_read_" + imageName + "." + imageFormat;
 					FileOutputStream outimg = new FileOutputStream( imgname );
 					outimg.write( imageBytes );
 					outimg.flush();
@@ -273,14 +277,14 @@ public class ImageHandle implements Serializable
 			}
 			// 20070924 KSC: bounds[2] = width;
 			// "" bounds[3] = height;
-			this.imageName = "UnnamedImage";
+			imageName = "UnnamedImage";
 		}
 		catch( Exception e )
 		{
 			log.warn( "Problem creating ImageHandle:" + e.toString() + " Please see BugTrack article: http://extentech.com/uimodules/docs/docs_detail.jsp?meme_id=1431&showall=true", e );
 			if( false )
 			{ // debug image parse probs
-				String imgname = "failed_image_read_" + this.imageName + "." + imageFormat;
+				String imgname = "failed_image_read_" + imageName + "." + imageFormat;
 				try
 				{
 					FileOutputStream outimg = new FileOutputStream( imgname );
@@ -301,12 +305,12 @@ public class ImageHandle implements Serializable
 	 */
 	public void update() throws Exception
 	{
-		if( this.thisMsodrawing == null )
+		if( thisMsodrawing == null )
 		{
 			throw new Exception( "ImageHandle.Update: Image Not initialzed" );
 		}
-		this.thisMsodrawing.updateRecord();    //this.thisMsodrawing.getSPID());
-		this.mysheet.getWorkBook().updateMsodrawingHeaderRec( this.mysheet );
+		thisMsodrawing.updateRecord();    //this.thisMsodrawing.getSPID());
+		mysheet.getWorkBook().updateMsodrawingHeaderRec( mysheet );
 	}
 
 	/**
@@ -317,9 +321,9 @@ public class ImageHandle implements Serializable
 	 */
 	public boolean isActive()
 	{
-		if( this.thisMsodrawing != null )
+		if( thisMsodrawing != null )
 		{
-			return this.thisMsodrawing.isActive();
+			return thisMsodrawing.isActive();
 		}
 		return true;    // default
 	}
@@ -468,8 +472,8 @@ public class ImageHandle implements Serializable
 		{// save for later
 			this.x = (short) x;
 			this.y = (short) y;
-			this.width = (short) w;
-			this.height = (short) h;
+			width = (short) w;
+			height = (short) h;
 		}
 	}
 
@@ -663,7 +667,7 @@ public class ImageHandle implements Serializable
 	public void write( OutputStream out ) throws IOException
 	{
 		// TODO: write the image bytes out
-		out.write( this.imageBytes );
+		out.write( imageBytes );
 	}
 
 	/**
@@ -684,9 +688,9 @@ public class ImageHandle implements Serializable
 	 */
 	public boolean remove()
 	{
-		this.mysheet.removeImage( this );
+		mysheet.removeImage( this );
 		// blow out the image rec
-		this.thisMsodrawing.remove( true );
+		thisMsodrawing.remove( true );
 		return true;
 	}
 
@@ -725,7 +729,7 @@ public class ImageHandle implements Serializable
 		{
 			return shapeName;
 		}
-		return this.imageName;
+		return imageName;
 	}
 
 	/**
@@ -735,7 +739,7 @@ public class ImageHandle implements Serializable
 	 */
 	public String getImageName()
 	{
-		return this.imageName;
+		return imageName;
 	}
 
 	/**
@@ -753,13 +757,13 @@ public class ImageHandle implements Serializable
 	 */
 	public void setName( String name )
 	{
-		this.imageName = name;
+		imageName = name;
 		// NOTE: updating mso code causes corruption in certain Infoteria files- must look at
-		if( (this.thisMsodrawing != null) && !this.thisMsodrawing.getName().equals( name ) )
+		if( (thisMsodrawing != null) && !thisMsodrawing.getName().equals( name ) )
 		{
-			this.thisMsodrawing.setImageName( name );    // update is done in setImageName
-			this.thisMsodrawing.getWorkBook()
-			                   .updateMsodrawingHeaderRec( this.getSheet() );    // must update header if change mso's - Claritas image insert regression bug (testImages.testInsertImageCorruption)
+			thisMsodrawing.setImageName( name );    // update is done in setImageName
+			thisMsodrawing.getWorkBook()
+			                   .updateMsodrawingHeaderRec( getSheet() );    // must update header if change mso's - Claritas image insert regression bug (testImages.testInsertImageCorruption)
 		}
 	}
 
@@ -779,11 +783,11 @@ public class ImageHandle implements Serializable
 			shapeName = "";
 		}
 		// only set name/update record if names have changed
-		if( (this.thisMsodrawing != null) && !shapeName.equals( this.thisMsodrawing.getShapeName() ) )
+		if( (thisMsodrawing != null) && !shapeName.equals( thisMsodrawing.getShapeName() ) )
 		{
-			this.thisMsodrawing.setShapeName( shapeName );    // update is done in setShapeName
-			this.thisMsodrawing.getWorkBook()
-			                   .updateMsodrawingHeaderRec( this.getSheet() );    // 20100202 KSC: must update header if change mso's - Claritas image insert regression bug (testImages.testInsertImageCorruption)
+			thisMsodrawing.setShapeName( shapeName );    // update is done in setShapeName
+			thisMsodrawing.getWorkBook()
+			                   .updateMsodrawingHeaderRec( getSheet() );    // 20100202 KSC: must update header if change mso's - Claritas image insert regression bug (testImages.testInsertImageCorruption)
 		}
 	}
 
@@ -806,7 +810,7 @@ public class ImageHandle implements Serializable
 	public void setImageBytes( byte[] imageBytes )
 	{
 		this.imageBytes = imageBytes;
-		mysheet.getWorkBook().getMSODrawingGroup().setImageBytes( this.imageBytes, mysheet, this.thisMsodrawing, this.getName() );
+		mysheet.getWorkBook().getMSODrawingGroup().setImageBytes( this.imageBytes, mysheet, thisMsodrawing, getName() );
 	}
 
 	/**
@@ -820,8 +824,8 @@ public class ImageHandle implements Serializable
 		JSONObject ch = new JSONObject();
 		try
 		{
-			ch.put( "name", this.getImageName() );
-			short[] coords = this.getCoords();
+			ch.put( "name", getImageName() );
+			short[] coords = getCoords();
 
 			// short[] coords =  { x, y, width, height };
 
@@ -832,7 +836,7 @@ public class ImageHandle implements Serializable
 			// ch.put("width", width); // for some reason COORDS wrong for width
 
 			ch.put( "height", coords[ImageHandle.HEIGHT] );
-			ch.put( "type", this.getType() );
+			ch.put( "type", getType() );
 
 		}
 		catch( JSONException e )
@@ -859,7 +863,7 @@ public class ImageHandle implements Serializable
         this.setCoords(coords[0], coords[1], coords[2], coords[3]);
         */ 
     	/* other way, set with all original coordinates */
-		this.setBounds( im.getBounds() );
+		setBounds( im.getBounds() );
 	}
 
 	/**
@@ -870,7 +874,7 @@ public class ImageHandle implements Serializable
 	public String getXML( int rId )
 	{
 		StringBuffer sb = new StringBuffer();
-		short[] bounds = this.getBounds();
+		short[] bounds = getBounds();
 		final int EMU = 1270;    // 1 pt= 1270 EMUs		-- for consistency with OOXML
 
 		sb.append( "<twoCellAnchor editAs=\"oneCell\">" );
@@ -895,9 +899,9 @@ public class ImageHandle implements Serializable
 		sb.append( "<pic>" );
 		sb.append( "\r\n" );
 		sb.append( "<nvPicPr>" );
-		sb.append( "<cNvPr id=\"" + this.getMsodrawing().getSPID() + "\"" );
-		sb.append( " name=\"" + this.getImageName() + "\"" );
-		sb.append( " descr=\"" + this.getShapeName() + "\"/>" );
+		sb.append( "<cNvPr id=\"" + getMsodrawing().getSPID() + "\"" );
+		sb.append( " name=\"" + getImageName() + "\"" );
+		sb.append( " descr=\"" + getShapeName() + "\"/>" );
 		sb.append( "<cNvPicPr>" );
 		sb.append( "<picLocks noChangeAspect=\"1\" noChangeArrowheads=\"1\"/>" );
 		sb.append( "</cNvPicPr>" );
@@ -913,7 +917,10 @@ public class ImageHandle implements Serializable
 		// shape properties
 		sb.append( "<spPr>"/* bwMode=\"auto\">"*/ );
 		sb.append( "<xfrm>" );
-		int x = this.getX() * EMU, y = this.getY() * EMU, cx = this.getWidth() * EMU, cy = this.getHeight() * EMU;
+		int x = getX() * EMU;
+		int y = getY() * EMU;
+		int cx = getWidth() * EMU;
+		int cy = getHeight() * EMU;
 		sb.append( "<off x=\"" + x + "\" y=\"" + y + "\"/>" );        // offsets= location
 		sb.append( "<ext cx=\"" + cx + "\" cy=\"" + cy + "\"/>" );    // extents= size of bounding box enclosing pic in EMUs
 		sb.append( "</xfrm>" );
@@ -938,9 +945,9 @@ public class ImageHandle implements Serializable
 	 */
 	public String getOOXML( int rId )
 	{
-		TwoCellAnchor t = new TwoCellAnchor( this.editMovement );
-		t.setAsImage( rId, this.getImageName(), this.getShapeName(), this.getMsodrawing().getSPID(), this.getSpPr() );
-		t.setBounds( TwoCellAnchor.convertBoundsFromBIFF8( this.getSheet(), this.getBounds() ) );    // adjust BIFF8 bounds to OOXML units
+		TwoCellAnchor t = new TwoCellAnchor( editMovement );
+		t.setAsImage( rId, getImageName(), getShapeName(), getMsodrawing().getSPID(), getSpPr() );
+		t.setBounds( TwoCellAnchor.convertBoundsFromBIFF8( getSheet(), getBounds() ) );    // adjust BIFF8 bounds to OOXML units
 		return t.getOOXML();
 		// missing in <xdr:pic>
 		// <xdr:nvPicPr><xdr:cNvPicPr><a:picLocks noChangeArrowheads="1">

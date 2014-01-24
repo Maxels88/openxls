@@ -29,19 +29,15 @@ package com.extentech.formats.XLS;
  * For example: changing a float BiffRec value to a String containing non-numeric
  * characters would throw one of these.
  */
-public class CellTypeMismatchException extends java.lang.NumberFormatException
+public class CellTypeMismatchException extends NumberFormatException
 {
-
-	/**
-	 * serialVersionUID
-	 */
 	private static final long serialVersionUID = 8664358251873265167L;
 	String cellname = "";
 
 	public CellTypeMismatchException( String n )
 	{
 		super();
-		this.cellname = n;
+		cellname = n;
 	}
 
 	public String toString()

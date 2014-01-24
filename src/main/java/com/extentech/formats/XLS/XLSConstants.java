@@ -39,7 +39,13 @@ public interface XLSConstants
 	static final short WK_FILE = 0x100;
 
 	// Cell types
-	public static final int TYPE_BLANK = -1, TYPE_STRING = 0, TYPE_FP = 1, TYPE_INT = 2, TYPE_FORMULA = 3, TYPE_BOOLEAN = 4, TYPE_DOUBLE = 5;
+	public static final int TYPE_BLANK = -1;
+	public static final int TYPE_STRING = 0;
+	public static final int TYPE_FP = 1;
+	public static final int TYPE_INT = 2;
+	public static final int TYPE_FORMULA = 3;
+	public static final int TYPE_BOOLEAN = 4;
+	public static final int TYPE_DOUBLE = 5;
 
 	// Book Options and constants
 

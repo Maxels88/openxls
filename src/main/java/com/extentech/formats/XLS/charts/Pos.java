@@ -99,8 +99,12 @@ public class Pos extends GenericChartObject implements ChartObject
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 7920967716354683818L;
-	short rndTopLt, rndTopRt;
-	int x1, y1, x2, y2;
+	short rndTopLt;
+	short rndTopRt;
+	int x1;
+	int y1;
+	int x2;
+	int y2;
 	public static final int TYPE_TEXTDISP = 0;
 	public static final int TYPE_LEGEND = 1;
 	public static final int TYPE_PLOTAREA = 2;
@@ -115,12 +119,12 @@ public class Pos extends GenericChartObject implements ChartObject
 		// 2= parent of this rec determines
 		// 3= offset to default
 		// 5= relative, in 1/4000 of the w or h of the chart
-		rndTopLt = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		rndTopRt = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		x1 = ByteTools.readInt( this.getBytesAt( 4, 4 ) );
-		y1 = ByteTools.readInt( this.getBytesAt( 8, 4 ) );
-		x2 = ByteTools.readInt( this.getBytesAt( 12, 4 ) );
-		y2 = ByteTools.readInt( this.getBytesAt( 16, 4 ) );
+		rndTopLt = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		rndTopRt = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		x1 = ByteTools.readInt( getBytesAt( 4, 4 ) );
+		y1 = ByteTools.readInt( getBytesAt( 8, 4 ) );
+		x2 = ByteTools.readInt( getBytesAt( 12, 4 ) );
+		y2 = ByteTools.readInt( getBytesAt( 16, 4 ) );
 	}
 
 	// TODO: Get def and parse options accordingly!
@@ -145,33 +149,33 @@ public class Pos extends GenericChartObject implements ChartObject
 		{
 			case TYPE_PLOTAREA:
 			case TYPE_TEXTDISP:
-				this.getData()[0] = 2;
-				this.getData()[1] = 0;
+				getData()[0] = 2;
+				getData()[1] = 0;
 				break;
 			case TYPE_LEGEND:
-				this.getData()[0] = 5;
-				this.getData()[1] = 2;
+				getData()[0] = 5;
+				getData()[1] = 2;
 				break;
 			case TYPE_DATATABLE:
-				this.getData()[0] = 3;
-				this.getData()[1] = 0;
+				getData()[0] = 3;
+				getData()[1] = 0;
 		}
-		this.getData()[2] = 2;
-		this.getData()[3] = 0;
+		getData()[2] = 2;
+		getData()[3] = 0;
 	}
 
 	public void setX( int x )
 	{
 		x1 = x;
 		byte[] b = ByteTools.cLongToLEBytes( x );
-		System.arraycopy( b, 0, this.getData(), 4, 4 );
+		System.arraycopy( b, 0, getData(), 4, 4 );
 	}
 
 	public void setY( int y )
 	{
 		y1 = y;
 		byte[] b = ByteTools.cLongToLEBytes( y );
-		System.arraycopy( b, 0, this.getData(), 8, 4 );
+		System.arraycopy( b, 0, getData(), 8, 4 );
 	}
 
 	/**
@@ -185,7 +189,7 @@ public class Pos extends GenericChartObject implements ChartObject
 		{
 			x2 = w;
 			byte[] b = ByteTools.cLongToLEBytes( x2 );
-			System.arraycopy( b, 0, this.getData(), 12, 4 );
+			System.arraycopy( b, 0, getData(), 12, 4 );
 		} // else throw exception?
 	}
 
@@ -199,10 +203,10 @@ public class Pos extends GenericChartObject implements ChartObject
 	 */
 	public void setAutosizeLegend()
 	{
-		if( this.rndTopLt == 5 )
+		if( rndTopLt == 5 )
 		{// it's a legend Pos
-			this.rndTopRt = 2;// set to autoposition
-			this.getData()[2] = 2;
+			rndTopRt = 2;// set to autoposition
+			getData()[2] = 2;
 		}
 	}
 

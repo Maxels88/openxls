@@ -131,12 +131,31 @@ public class TextDisp extends GenericChartObject implements ChartObject
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = -7862828186455339066L;
-	private short grbit = 0, grbit2 = 0;
-	private short at = 2, vat = 1, wBkgMode = 1, icvText = 0, trot = 0, dlp;
-	private int x = 0, y = 0, dx = 0, dy = 0;
+	private short grbit = 0;
+	private short grbit2 = 0;
+	private short at = 2;
+	private short vat = 1;
+	private short wBkgMode = 1;
+	private short icvText = 0;
+	private short trot = 0;
+	private short dlp;
+	private int x = 0;
+	private int y = 0;
+	private int dx = 0;
+	private int dy = 0;
 	private java.awt.Color rgbText = null;
-	private boolean fAutoColor, fShowKey, fShowValue, fVert, fAutoText, fGenerated, fDeleted, fAutoMode;
-	private boolean fShowLblPct, fShowPct, fShowBubbleSizes, fShowCatLabel;
+	private boolean fAutoColor;
+	private boolean fShowKey;
+	private boolean fShowValue;
+	private boolean fVert;
+	private boolean fAutoText;
+	private boolean fGenerated;
+	private boolean fDeleted;
+	private boolean fAutoMode;
+	private boolean fShowLblPct;
+	private boolean fShowPct;
+	private boolean fShowBubbleSizes;
+	private boolean fShowCatLabel;
 
 	@Override
 	public void init()
@@ -150,10 +169,10 @@ public class TextDisp extends GenericChartObject implements ChartObject
 		                              ((data[5] < 0) ? (255 + data[5]) : data[5]),
 		                              ((data[6] < 0) ? (255 + data[6]) : data[6]) );
 //		rgbText= ByteTools.readInt(this.getBytesAt(4, 4));
-		x = ByteTools.readInt( this.getBytesAt( 8, 4 ) );
-		y = ByteTools.readInt( this.getBytesAt( 12, 4 ) );
-		dx = ByteTools.readInt( this.getBytesAt( 16, 4 ) );
-		dy = ByteTools.readInt( this.getBytesAt( 20, 4 ) );
+		x = ByteTools.readInt( getBytesAt( 8, 4 ) );
+		y = ByteTools.readInt( getBytesAt( 12, 4 ) );
+		dx = ByteTools.readInt( getBytesAt( 16, 4 ) );
+		dy = ByteTools.readInt( getBytesAt( 20, 4 ) );
 		grbit = ByteTools.readShort( data[24], data[25] );
 		fAutoColor = (grbit & 0x1) == 0x1;    // usually T
 		fShowKey = (grbit & 0x2) == 0x2;
@@ -196,7 +215,7 @@ public class TextDisp extends GenericChartObject implements ChartObject
 	public String getOptionsXML()
 	{
 		StringBuffer sb = new StringBuffer();
-		sb.append( " Label=\"" + this.toString() + "\"" );
+		sb.append( " Label=\"" + toString() + "\"" );
 		sb.append( " TextRotation=\"" + trot + "\"" );
 		// KSC: TODO: Handle more options
 		if( fShowLblPct )
@@ -275,7 +294,7 @@ public class TextDisp extends GenericChartObject implements ChartObject
 		boolean bHandled = false;
 		if( op.equalsIgnoreCase( "Label" ) )
 		{
-			this.setText( val );
+			setText( val );
 			bHandled = true;
 		}
 		else if( op.equalsIgnoreCase( "ShowKey" ) )
@@ -557,31 +576,31 @@ public class TextDisp extends GenericChartObject implements ChartObject
 
 	private void updateRecord()
 	{
-		this.getData()[0] = (byte) at;
-		this.getData()[1] = (byte) vat;
+		getData()[0] = (byte) at;
+		getData()[1] = (byte) vat;
 		byte[] b = ByteTools.shortToLEBytes( wBkgMode );
-		this.getData()[2] = b[0];
-		this.getData()[3] = b[1];
+		getData()[2] = b[0];
+		getData()[3] = b[1];
 		b = new byte[4];
 		b[0] = (byte) rgbText.getRed();
 		b[1] = (byte) rgbText.getGreen();
 		b[2] = (byte) rgbText.getBlue();
 		b[3] = 0;    // reserved/0
-		System.arraycopy( b, 0, this.getData(), 0, 4 );
+		System.arraycopy( b, 0, getData(), 0, 4 );
 		// x
 		// y
 		// dx
 		// dy
 		b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[24] = b[0];
-		this.getData()[25] = b[1];
+		getData()[24] = b[0];
+		getData()[25] = b[1];
 		// icvText
 		b = ByteTools.shortToLEBytes( grbit2 );
-		this.getData()[28] = b[0];
-		this.getData()[29] = b[1];
+		getData()[28] = b[0];
+		getData()[29] = b[1];
 		b = ByteTools.shortToLEBytes( trot );
-		this.getData()[30] = b[0];
-		this.getData()[31] = b[1];
+		getData()[30] = b[0];
+		getData()[31] = b[1];
 	}
 
 	public static int convertType( int axis )
@@ -610,7 +629,7 @@ public class TextDisp extends GenericChartObject implements ChartObject
 	 */
 	public float[] getCoords()
 	{
-		Pos p = (Pos) Chart.findRec( this.chartArr, Pos.class );
+		Pos p = (Pos) Chart.findRec( chartArr, Pos.class );
 		if( p != null )
 		{
 			float[] coords = p.getCoords();
@@ -641,8 +660,8 @@ public class TextDisp extends GenericChartObject implements ChartObject
 	{
 		trot = (short) rot;
 		byte[] b = ByteTools.shortToLEBytes( trot );
-		this.getData()[30] = b[0];
-		this.getData()[31] = b[1];
+		getData()[30] = b[0];
+		getData()[31] = b[1];
 	}
 
 	/**
@@ -669,10 +688,10 @@ public class TextDisp extends GenericChartObject implements ChartObject
 	{
 		StringBuffer svg = new StringBuffer();
 
-		float[] coords = this.getCoords();
+		float[] coords = getCoords();
 		coords[0] = (int) Math.ceil( Pos.convertFromSPRC( coords[0], chartMetrics.get( "canvasw" ).floatValue(), 0 ) ) - 3;
 		coords[1] = (int) Math.ceil( Pos.convertFromSPRC( coords[1], 0, chartMetrics.get( "canvash" ).floatValue() ) );
-		Font fx = this.getFont( wkbook );
+		Font fx = getFont( wkbook );
 
 		svg.append( "<g>\r\n" );
 		float fh = 10;
@@ -682,7 +701,7 @@ public class TextDisp extends GenericChartObject implements ChartObject
 		}
 		float x = (float) (chartMetrics.get( "x" ) + (chartMetrics.get( "w" ) / 2));
 		float y = (chartMetrics.get( "TITLEOFFSET" ).floatValue() + fh) / 2;
-		Frame f = (Frame) Chart.findRec( this.chartArr, Frame.class );
+		Frame f = (Frame) Chart.findRec( chartArr, Frame.class );
 		if( f != null )
 		{
 			coords[0] = coords[0] + x;
@@ -705,7 +724,7 @@ public class TextDisp extends GenericChartObject implements ChartObject
 		{
 			svg.append( " font-family='Arial' font-size='14pt' font-weight='bold'>" );
 		}
-		svg.append( this.toString() + "</text>\r\n" );
+		svg.append( toString() + "</text>\r\n" );
 		svg.append( "</g>\r\n" );
 		return svg;
 	}
@@ -720,13 +739,13 @@ public class TextDisp extends GenericChartObject implements ChartObject
 	 */
 	public void setFrame( int lw, int lclr, int bgcolor, float[] coords )
 	{
-		Frame f = (Frame) Chart.findRec( this.chartArr, Frame.class );
+		Frame f = (Frame) Chart.findRec( chartArr, Frame.class );
 		if( f == null )
 		{
 			f = (Frame) Frame.getPrototype();
 			f.addBox( lw, lclr, bgcolor );
-			f.setParentChart( this.getParentChart() );
-			this.chartArr.add( f );
+			f.setParentChart( getParentChart() );
+			chartArr.add( f );
 		}
 	}
 }

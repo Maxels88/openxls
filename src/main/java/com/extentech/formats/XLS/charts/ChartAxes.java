@@ -82,7 +82,7 @@ public class ChartAxes implements ChartConstants, Serializable
 	public void add( Axis a )
 	{
 		axes.add( a );
-		a.setAP( this.ap );    // ensure axis is linked to it's parent AxisParent
+		a.setAP( ap );    // ensure axis is linked to it's parent AxisParent
 	}
 
 	public void setTd( int axisType, TextDisp td )
@@ -868,41 +868,41 @@ public class ChartAxes implements ChartConstants, Serializable
 	                                           float[] plotcoords,
 	                                           Object[] categories )
 	{
-		double[] minmax = this.getMinMax( chartMetrics.get( "min" ),
+		double[] minmax = getMinMax( chartMetrics.get( "min" ),
 		                                  chartMetrics.get( "max" ) );    // sets min/max on Value axis, based upon axis settings and actual minimun and maximum values
 		chartMetrics.put( "min", minmax[0] );    // set new values, if any
 		chartMetrics.put( "max", minmax[1] );    // ""
 		axisMetrics.put( "minor", minmax[2] );
 		axisMetrics.put( "major", minmax[3] );
-		axisMetrics.put( "xAxisReversed", this.isReversed( XAXIS ) ); // default is Value axis crosses at bottom. reverse= crosses at top
-		axisMetrics.put( "xPattern", this.getNumberFormat( XAXIS ) );
-		axisMetrics.put( "yAxisReversed", this.isReversed( YAXIS ) ); // if value (Y), default is on LHS; reverse= RHS
-		axisMetrics.put( "yPattern", this.getNumberFormat( YAXIS ) );
+		axisMetrics.put( "xAxisReversed", isReversed( XAXIS ) ); // default is Value axis crosses at bottom. reverse= crosses at top
+		axisMetrics.put( "xPattern", getNumberFormat( XAXIS ) );
+		axisMetrics.put( "yAxisReversed", isReversed( YAXIS ) ); // if value (Y), default is on LHS; reverse= RHS
+		axisMetrics.put( "yPattern", getNumberFormat( YAXIS ) );
 		axisMetrics.put( "XAXISLABELOFFSET", 0.0 );
 		axisMetrics.put( "XAXISTITLEOFFSET", 0.0 );
 		axisMetrics.put( "YAXISLABELOFFSET", 0.0 );
 		axisMetrics.put( "YAXISTITLEOFFSET", 0.0 );
 
 		// X axis title Offset
-		if( !this.getTitle( XAXIS ).equals( "" ) )
+		if( !getTitle( XAXIS ).equals( "" ) )
 		{
-			com.extentech.formats.XLS.Font ef = this.getTitleFont( XAXIS );
+			com.extentech.formats.XLS.Font ef = getTitleFont( XAXIS );
 			java.awt.Font f = new java.awt.Font( ef.getFontName(), ef.getFontWeight(), (int) ef.getFontHeightInPoints() );
 			AtomicInteger h = new AtomicInteger( 0 );
-			double w = getRotatedWidth( f, h, this.getTitle( XAXIS ), this.getTitleRotation( XAXIS ) );
+			double w = getRotatedWidth( f, h, getTitle( XAXIS ), getTitleRotation( XAXIS ) );
 			axisMetrics.put( "XAXISTITLEOFFSET", (double) (h.intValue() + 10) );	/* add a little padding */
 		}
 
 		// Y Axis Title Offsets 
-		if( this.hasAxis( YAXIS ) )
+		if( hasAxis( YAXIS ) )
 		{
-			String title = this.getTitle( YAXIS );
+			String title = getTitle( YAXIS );
 			if( !title.equals( "" ) )
 			{
-				com.extentech.formats.XLS.Font ef = this.getTitleFont( YAXIS );
+				com.extentech.formats.XLS.Font ef = getTitleFont( YAXIS );
 				java.awt.Font f = new java.awt.Font( ef.getFontName(), ef.getFontWeight(), (int) ef.getFontHeightInPoints() );
 				AtomicInteger h = new AtomicInteger( 0 );
-				double w = getRotatedWidthVert( f, h, this.getTitle( YAXIS ), this.getTitleRotation( YAXIS ) );
+				double w = getRotatedWidthVert( f, h, getTitle( YAXIS ), getTitleRotation( YAXIS ) );
 				axisMetrics.put( "YAXISTITLEOFFSET", w ); // add padding
 /*    			    			
     			int rot= this.getTitleRotation(YAXIS); //0-180 or 255 (=vertical with letters upright)
@@ -979,7 +979,7 @@ public class ChartAxes implements ChartConstants, Serializable
 		}
 
 		// Label Offsets ...
-		if( this.hasAxis( XAXIS ) && (charttype != RADARCHART) && (charttype != RADARAREACHART) )
+		if( hasAxis( XAXIS ) && (charttype != RADARCHART) && (charttype != RADARAREACHART) )
 		{ //(Pie, donut, etc. don't have axes labels so disregard
 			Object[] s;            // Determine X Axis Label offsets
 			double width;
@@ -997,13 +997,13 @@ public class ChartAxes implements ChartConstants, Serializable
 				pattern = (String) getMetric( "yPattern" );
 			}
 			width = (chartMetrics.get( "w" ) / s.length) - 6; // ensure a bit of padding on either side
-			lf = this.getLabelFont( XAXIS );
-			rot = new AtomicInteger( this.getLabelRotation( XAXIS ) );        // if rot==0 and xaxis labels do not fit in width, a forced rotation will happen. ...
+			lf = getLabelFont( XAXIS );
+			rot = new AtomicInteger( getLabelRotation( XAXIS ) );        // if rot==0 and xaxis labels do not fit in width, a forced rotation will happen. ...
 			double off = getLabelOffsets( lf, width, s, rot, pattern, true );
 			axisMetrics.put( "xAxisRotate", rot.intValue() ); // possibly changed when calculating label offsets
 			axisMetrics.put( "XAXISLABELOFFSET", off );
 		}
-		if( this.hasAxis( YAXIS ) && (charttype != RADARCHART) && (charttype != RADARAREACHART) )
+		if( hasAxis( YAXIS ) && (charttype != RADARCHART) && (charttype != RADARAREACHART) )
 		{    //(Pie, Donut, etc. don't have axes labels so disregard
 			// for Y axis, determine width of labels and use as offset (except for bar charts, use height as offset) 			
 			Object[] s;
@@ -1021,8 +1021,8 @@ public class ChartAxes implements ChartConstants, Serializable
 				s = categories;
 				pattern = (String) getMetric( "xPattern" );
 			}
-			rot = new AtomicInteger( this.getLabelRotation( YAXIS ) );        // if rot==0 and xaxis labels do not fit in width, a forced rotation will happen. ...
-			lf = this.getLabelFont( YAXIS );
+			rot = new AtomicInteger( getLabelRotation( YAXIS ) );        // if rot==0 and xaxis labels do not fit in width, a forced rotation will happen. ...
+			lf = getLabelFont( YAXIS );
 			width = (chartMetrics.get( "w" ) / 2) - 10; // a good guess?
 			double off = getLabelOffsets( lf, width, s, rot, pattern, false );
 			axisMetrics.put( "yAxisRotate", rot.intValue() );    // possibly changed when calculating label offsets

@@ -149,7 +149,7 @@ public class WorkBookAssembler implements XLSConstants
 				BiffRec or = (BiffRec) it.next();
 				if( skipMull != null )
 				{
-					if( or == skipMull )
+					if( or.equals( skipMull ) )
 					{
 						continue;
 					}

@@ -60,22 +60,22 @@ public class Dxf implements OOXMLElement
 
 	public Dxf( Font fnt, NumFmt nf, Fill f, Alignment a, Border b, WorkBookHandle wbh )
 	{
-		this.font = fnt;
-		this.numFmt = nf;
-		this.fill = f;
-		this.alignment = a;
-		this.border = b;
+		font = fnt;
+		numFmt = nf;
+		fill = f;
+		alignment = a;
+		border = b;
 		this.wbh = wbh;
 	}
 
 	public Dxf( Dxf d )
 	{
-		this.font = d.font;
-		this.numFmt = d.numFmt;
-		this.fill = d.fill;
-		this.alignment = d.alignment;
-		this.border = d.border;
-		this.wbh = d.wbh;
+		font = d.font;
+		numFmt = d.numFmt;
+		fill = d.fill;
+		alignment = d.alignment;
+		border = d.border;
+		wbh = d.wbh;
 	}
 
 	public Dxf()
@@ -471,7 +471,7 @@ public class Dxf implements OOXMLElement
 	 */
 	public void setFill( Fill f )
 	{
-		this.fill = (Fill) f.cloneElement();
+		fill = (Fill) f.cloneElement();
 	}
 
 	/**
@@ -481,7 +481,7 @@ public class Dxf implements OOXMLElement
 	 */
 	public void setFont( Font f )
 	{
-		this.font = f;
+		font = f;
 	}
 
 	/**
@@ -491,11 +491,11 @@ public class Dxf implements OOXMLElement
 	{
 		if( (fs < 0) || (fs > OOXMLConstants.patternFill.length) )
 		{
-			this.fill = new Fill( null, fg, bg, bk.getWorkBook().getTheme() );    // meaning it's the default (solid bg) pattern
+			fill = new Fill( null, fg, bg, bk.getWorkBook().getTheme() );    // meaning it's the default (solid bg) pattern
 		}
 		else
 		{
-			this.fill = new Fill( OOXMLConstants.patternFill[fs], fg, bg, bk.getWorkBook().getTheme() );
+			fill = new Fill( OOXMLConstants.patternFill[fs], fg, bg, bk.getWorkBook().getTheme() );
 		}
 	}
 

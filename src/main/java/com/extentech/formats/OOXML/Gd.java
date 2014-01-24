@@ -53,7 +53,7 @@ public class Gd implements OOXMLElement
 
 	public Gd( Gd g )
 	{
-		this.attrs = g.attrs;
+		attrs = g.attrs;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag )

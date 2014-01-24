@@ -34,7 +34,15 @@ public class MsofbtClientAnchor extends EscherRecord
 	 */
 	private static final long serialVersionUID = 7946989934447191433L;
 	// 20070914 KSC: this record doesn't store sheet index; 1st two bytes are a flag (seems always to be 2)
-	short flag = 2, leftColumnIndex, xOffsetL, topRowIndex, yOffsetT, rightColIndex, xOffsetR, bottomRowIndex, yOffsetB;
+	short flag = 2;
+	short leftColumnIndex;
+	short xOffsetL;
+	short topRowIndex;
+	short yOffsetT;
+	short rightColIndex;
+	short xOffsetR;
+	short bottomRowIndex;
+	short yOffsetB;
 
 	public MsofbtClientAnchor( int fbt, int inst, int version )
 	{
@@ -61,7 +69,7 @@ public class MsofbtClientAnchor extends EscherRecord
 		{
 
 		}
-		this.setLength( bos.toByteArray().length );
+		setLength( bos.toByteArray().length );
 		return bos.toByteArray();
 
 	}

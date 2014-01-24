@@ -983,7 +983,9 @@ class DB
 	public static DB parseList( Ptg[] dbrange )
 	{
 		int prevCol = -1;
-		int nCols = 0, nRows = 0, maxRows = 0;
+		int nCols = 0;
+		int nRows = 0;
+		int maxRows = 0;
 
 		// allocate the empty table for the dbrange
 		for( Ptg aDbrange1 : dbrange )
@@ -1313,7 +1315,7 @@ class Criteria extends DB
 			// for each value check all the criteria
 			for( Ptg[] row : rows )
 			{
-				List r = this.getCriteria( db.colHeaders[t] );
+				List r = getCriteria( db.colHeaders[t] );
 				Iterator tx = r.iterator();
 				while( tx.hasNext() )
 				{
@@ -1360,9 +1362,9 @@ class Criteria extends DB
 		{
 			critRowMatch = true; // reset
 			// for each row of criteria, iterate criteria cols
-			for( String critField : this.colHeaders )
+			for( String critField : colHeaders )
 			{
-				List r = this.getCriteria( x, critField );
+				List r = getCriteria( x, critField );
 				Iterator tx = r.iterator();
 				int dv = db.getCol( critField );
 				String valcheck = curRow[dv].getValue().toString();

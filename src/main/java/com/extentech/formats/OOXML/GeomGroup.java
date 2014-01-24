@@ -54,8 +54,8 @@ public class GeomGroup implements OOXMLElement
 
 	public GeomGroup( GeomGroup g )
 	{
-		this.p = g.p;
-		this.c = g.c;
+		p = g.p;
+		c = g.c;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -105,11 +105,11 @@ public class GeomGroup implements OOXMLElement
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
-		if( this.p != null )
+		if( p != null )
 		{
 			ooxml.append( p.getOOXML() );
 		}
-		else if( this.c != null )
+		else if( c != null )
 		{
 			ooxml.append( c.getOOXML() );
 		}
@@ -140,13 +140,13 @@ class PrstGeom implements OOXMLElement
 	public PrstGeom( String prst, AvLst a )
 	{
 		this.prst = prst;
-		this.avLst = a;
+		avLst = a;
 	}
 
 	public PrstGeom( PrstGeom p )
 	{
-		this.prst = p.prst;
-		this.avLst = p.avLst;
+		prst = p.prst;
+		avLst = p.avLst;
 	}
 
 	public static PrstGeom parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -234,20 +234,20 @@ class CustGeom implements OOXMLElement
 
 	public CustGeom( PathLst p, GdLst g, AvLst a, CxnLst cx, Rect r )
 	{
-		this.pathLst = p;
-		this.gdLst = g;
-		this.avLst = a;
-		this.cxnLst = cx;
-		this.rect = r;
+		pathLst = p;
+		gdLst = g;
+		avLst = a;
+		cxnLst = cx;
+		rect = r;
 	}
 
 	public CustGeom( CustGeom c )
 	{
-		this.pathLst = c.pathLst;
-		this.gdLst = c.gdLst;
-		this.avLst = c.avLst;
-		this.cxnLst = c.cxnLst;
-		this.rect = c.rect;
+		pathLst = c.pathLst;
+		gdLst = c.gdLst;
+		avLst = c.avLst;
+		cxnLst = c.cxnLst;
+		rect = c.rect;
 	}
 
 	public static CustGeom parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -367,13 +367,13 @@ class PathLst implements OOXMLElement
 	public PathLst( HashMap<String, String> attrs, ArrayList<Path> p )
 	{
 		this.attrs = attrs;
-		this.path = p;
+		path = p;
 	}
 
 	public PathLst( PathLst pl )
 	{
-		this.attrs = pl.attrs;
-		this.path = pl.path;
+		attrs = pl.attrs;
+		path = pl.path;
 	}
 
 	public static PathLst parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -471,7 +471,7 @@ class Path implements OOXMLElement
 
 	public Path( Path p )
 	{
-		this.attrs = p.attrs;
+		attrs = p.attrs;
 	}
 
 	public static Path parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -564,7 +564,7 @@ class GdLst implements OOXMLElement
 
 	public GdLst( GdLst g )
 	{
-		this.gds = g.gds;
+		gds = g.gds;
 	}
 
 	public static GdLst parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -667,7 +667,7 @@ class Rect implements OOXMLElement
 
 	public Rect( Rect r )
 	{
-		this.attrs = r.attrs;
+		attrs = r.attrs;
 	}
 
 	public static Rect parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -761,7 +761,7 @@ class CxnLst implements OOXMLElement
 
 	public CxnLst( CxnLst c )
 	{
-		this.cxns = c.cxns;
+		cxns = c.cxns;
 	}
 
 	public static CxnLst parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -850,13 +850,13 @@ class Cxn implements OOXMLElement
 	public Cxn( HashMap<String, String> attrs, Pos p )
 	{
 		this.attrs = attrs;
-		this.pos = p;
+		pos = p;
 	}
 
 	public Cxn( Cxn c )
 	{
-		this.attrs = c.attrs;
-		this.pos = c.pos;
+		attrs = c.attrs;
+		pos = c.pos;
 	}
 
 	public static Cxn parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -957,7 +957,7 @@ class Pos implements OOXMLElement
 
 	public Pos( Pos p )
 	{
-		this.attrs = p.attrs;
+		attrs = p.attrs;
 	}
 
 	public static Pos parseOOXML( XmlPullParser xpp, Stack<String> lastTag )

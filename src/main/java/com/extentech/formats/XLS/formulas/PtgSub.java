@@ -115,11 +115,11 @@ public class PtgSub extends GenericPtg implements Ptg
 				// the following should only return #VALUE! if ???
 				if( !((o[0] instanceof Double) && (o[1] instanceof Double)) )
 				{
-					if( this.parent_rec == null )
+					if( parent_rec == null )
 					{
 						return new PtgErr( PtgErr.ERROR_VALUE );
 					}
-					if( this.parent_rec.getSheet().getWindow2().getShowZeroValues() )
+					if( parent_rec.getSheet().getWindow2().getShowZeroValues() )
 					{
 						return new PtgInt( 0 );
 					}
@@ -153,11 +153,11 @@ public class PtgSub extends GenericPtg implements Ptg
 					}
 					if( !((firstOp instanceof Double) && (secondOp instanceof Double)) )
 					{
-						if( this.parent_rec == null )
+						if( parent_rec == null )
 						{
 							return new PtgErr( PtgErr.ERROR_VALUE );
 						}
-						if( this.parent_rec.getSheet().getWindow2().getShowZeroValues() )
+						if( parent_rec.getSheet().getWindow2().getShowZeroValues() )
 						{
 							return new PtgInt( 0 );
 						}

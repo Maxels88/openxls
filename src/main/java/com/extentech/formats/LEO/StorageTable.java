@@ -94,8 +94,8 @@ public class StorageTable implements Serializable
 	 */
 	public void init( ByteBuffer dta, LEOHeader h, List blockvect, int[] FAT )
 	{
-		this.myheader = h;
-		byte[] data = LEOFile.getBytes( this.initDirectoryStream( blockvect, FAT ) );
+		myheader = h;
+		byte[] data = LEOFile.getBytes( initDirectoryStream( blockvect, FAT ) );
 		int psbsize = data.length;
 		int numRecs = psbsize / DIRECTORY_SIZE;
 			log.debug( "Number of Directories: " + numRecs );
@@ -125,7 +125,7 @@ public class StorageTable implements Serializable
 					rec.setName( "Root Entry" );    // can happen upon a mac-sourced file
 				}
 			}
-			this.addStorage( rec, -1 );
+			addStorage( rec, -1 );
 		}
 	}
 
@@ -195,7 +195,7 @@ public class StorageTable implements Serializable
 			if( name.equals( "Root Entry" ) )
 			{
 				// also sets miniFAT ... ugly, I know ...
-				miniStream = this.initMiniStream( blockvect,
+				miniStream = initMiniStream( blockvect,
 				                                  FAT );    // grab the mini stream (short sector container) (if any), indexed by miniFAT
 				if( (miniFAT != null) )
 				{
@@ -206,12 +206,12 @@ public class StorageTable implements Serializable
 			else if( (recsize > 0) && (recsize < BIGSTORAGE_SIZE) )
 			{
 				rec.setBlockType( Block.SMALL );
-				this.initStorage( rec, miniStream, miniFAT, Block.SMALL );    // the miniStream is indexed by the miniFAT
+				initStorage( rec, miniStream, miniFAT, Block.SMALL );    // the miniStream is indexed by the miniFAT
 				// Regular Sector file storage
 			}
 			else if( (recsize >= BIGSTORAGE_SIZE) )
 			{
-				this.initStorage( rec, blockvect, FAT, Block.BIG );
+				initStorage( rec, blockvect, FAT, Block.BIG );
 
 				// a storage-less directory
 			}
@@ -265,7 +265,7 @@ public class StorageTable implements Serializable
 				RootStorage rootStore;
 				try
 				{
-					rootStore = (RootStorage) this.getDirectoryByName( "Root Entry" );
+					rootStore = (RootStorage) getDirectoryByName( "Root Entry" );
 				}
 				catch( StorageNotFoundException e )
 				{
@@ -280,7 +280,7 @@ public class StorageTable implements Serializable
 				miniStream.setActualFileSize( miniStreamSize );
 				miniStream.setName( "miniStream" );
 				// obtain the miniStream from the regular bigblock store
-				this.initStorage( miniStream, blockvect, FAT, Block.BIG );
+				initStorage( miniStream, blockvect, FAT, Block.BIG );
 				// now that we have the entire miniStream , break it up into mini Sector-sized blocks
 				// NOTE: only miniStreamSize bytes are usable - ignore rest
 				byte[] b = new byte[miniStreamSize];
@@ -375,8 +375,8 @@ public class StorageTable implements Serializable
 	*/
 	void removeStorage( Storage st )
 	{
-		this.directoryHashtable.remove( st );
-		this.directoryVector.remove( st );
+		directoryHashtable.remove( st );
+		directoryVector.remove( st );
 	}
 
 	/**
@@ -416,7 +416,7 @@ public class StorageTable implements Serializable
 		//getDirectoryBlocks()
 		Storage directories = null;
 		directories = new Storage();
-		int pstart = (this.myheader.getRootStartPos() / BIGBLOCK.SIZE) - 1;
+		int pstart = (myheader.getRootStartPos() / BIGBLOCK.SIZE) - 1;
 		directories.setStartBlock( pstart );
 		directories.setBlockType( Block.BIG );
 		directories.setStorageType( 5 ); // set to root directory
@@ -442,7 +442,7 @@ public class StorageTable implements Serializable
 		 */
 		while( (directoryVector.size() % 4) != 0 )
 		{ // add "null" storages to ensure multiples of 4 (128*4=512==minimum size)
-			this.createStorage( "", 0, -1 );
+			createStorage( "", 0, -1 );
 		}
 		Enumeration e = directoryVector.elements();
 		byte[] bytebuff = new byte[directoryVector.size() * DIRECTORY_SIZE];
@@ -450,7 +450,7 @@ public class StorageTable implements Serializable
 		while( e.hasMoreElements() )
 		{
 			Storage s = (Storage) e.nextElement();
-			ByteBuffer buff = this.getDirectoryHeaderBytes( s );
+			ByteBuffer buff = getDirectoryHeaderBytes( s );
 			System.arraycopy( buff.array(), 0, bytebuff, pos, DIRECTORY_SIZE );
 			pos += DIRECTORY_SIZE;
 		}
@@ -478,7 +478,7 @@ public class StorageTable implements Serializable
 	 */
 	RootStorage getRootStorage() throws StorageNotFoundException
 	{
-		return (RootStorage) this.getDirectoryByName( "Root Entry" );
+		return (RootStorage) getDirectoryByName( "Root Entry" );
 	}
 
 	/**

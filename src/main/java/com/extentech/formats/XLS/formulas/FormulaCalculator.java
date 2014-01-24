@@ -45,6 +45,7 @@ import java.util.Stack;
 public class FormulaCalculator
 {
 	private static final Logger log = LoggerFactory.getLogger( FormulaCalculator.class );
+
 	/**
 	 * Calculates the value of calcStac  This is handled by
 	 * running through the stack, adding operands to tempstack until
@@ -108,7 +109,8 @@ public class FormulaCalculator
 	static void handlePtg( Stack newstck, Stack vals ) throws FunctionNotSupportedException
 	{
 		Ptg p = (Ptg) newstck.pop();
-		int x = 0, t = 0;
+		int x = 0;
+		int t = 0;
 		if( p.getIsOperator() || p.getIsControl() || p.getIsFunction() )
 		{
 			// Get rid of the parens ptgs
@@ -120,7 +122,7 @@ public class FormulaCalculator
 					return;
 				}
 				// we didn't use it, back it goes.
-					log.debug( "opr: " + p.toString() );
+				log.debug( "opr: " + p.toString() );
 			}
 			// make sure we have the correct amount popped back in..
 			if( p.getIsBinaryOperator() )
@@ -165,18 +167,18 @@ public class FormulaCalculator
 			}
 
         	/* useful for debugging*/
-				String adr = "";
-				if( p.getParentRec() != null )
-				{
-					adr = "addr: " + p.getParentRec().getCellAddress();
-				}
-				log.debug( adr + " val: " + p.toString() );
+			String adr = "";
+			if( p.getParentRec() != null )
+			{
+				adr = "addr: " + p.getParentRec().getCellAddress();
+			}
+			log.debug( adr + " val: " + p.toString() );
 			vals.push( p );// push it back on the stack
 
 		}
 		else if( p.getIsOperand() )
 		{
-				log.debug( "opr: " + p.toString() );
+			log.debug( "opr: " + p.toString() );
 
 			vals.push( p );
 

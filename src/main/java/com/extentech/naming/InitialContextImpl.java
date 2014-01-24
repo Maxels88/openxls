@@ -46,7 +46,7 @@ public class InitialContextImpl implements javax.naming.Context
 	{
 		if( System.getProperties().get( CONTEXT_ID ) != null )
 		{
-			this.env = (Hashtable) System.getProperties().get( CONTEXT_ID );
+			env = (Hashtable) System.getProperties().get( CONTEXT_ID );
 		}
 		else
 		{
@@ -81,7 +81,7 @@ public class InitialContextImpl implements javax.naming.Context
 	public void bind( Name name, Object obj ) throws NamingException
 	{
 		String str = name.toString();
-		this.bind( str, obj );
+		bind( str, obj );
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class InitialContextImpl implements javax.naming.Context
 	{
 		try
 		{
-			this.addToEnvironment( name, obj );
+			addToEnvironment( name, obj );
 		}
 		catch( NamingException e )
 		{
@@ -134,14 +134,14 @@ public class InitialContextImpl implements javax.naming.Context
 	@Override
 	public NameParser getNameParser( String name ) throws NamingException
 	{
-		this.nameParser.parse( name );
-		return this.nameParser;
+		nameParser.parse( name );
+		return nameParser;
 	}
 
 	@Override
 	public NameParser getNameParser( Name name ) throws NamingException
 	{
-		return this.nameParser;
+		return nameParser;
 	}
 
 	@Override
@@ -171,13 +171,13 @@ public class InitialContextImpl implements javax.naming.Context
 	@Override
 	public void rebind( Name name, Object obj ) throws NamingException
 	{
-		this.bind( name, obj );
+		bind( name, obj );
 	}
 
 	@Override
 	public void rebind( String name, Object obj ) throws NamingException
 	{
-		this.bind( name, obj );
+		bind( name, obj );
 	}
 
 	@Override

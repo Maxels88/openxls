@@ -60,7 +60,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 	// lookup Name object  in Workbook and return handle
 	public Name getName()
 	{
-		WorkBook b = this.getParentRec().getWorkBook();
+		WorkBook b = getParentRec().getWorkBook();
 		Name n = null;
 		try
 		{
@@ -77,7 +77,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 	{
 		ptgId = b[0];
 		record = b;
-		this.populateVals();
+		populateVals();
 		addToRefTracker();
 	}
 
@@ -149,9 +149,9 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 	{
 		record = new byte[5];
 		record[0] = ptgId;
-		WorkBook b = this.getParentRec().getWorkBook();
+		WorkBook b = getParentRec().getWorkBook();
 		ilbl = (short) b.getNameNumber( name );
-		this.addListener();
+		addListener();
 		record[1] = (byte) ilbl;
 	}
 
@@ -183,7 +183,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 		if( ilbl != i )
 		{
 			ilbl = i;
-			this.updateRecord();
+			updateRecord();
 		}
 	}
 
@@ -203,7 +203,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 			{
 				return new String( "#NAME?" );
 			}
-			if( (p.length == 1) || !(this.parent_rec instanceof com.extentech.formats.XLS.Array) )
+			if( (p.length == 1) || !(parent_rec instanceof com.extentech.formats.XLS.Array) )
 			{    // usual case
 				return p[0].getValue();
 			} // multiple values; create an array
@@ -246,7 +246,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 	public void setVal( int i )
 	{
 		ilbl = (short) i;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	@Override
@@ -280,9 +280,9 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 
 	public String toString()
 	{
-		if( this.getName() != null )
+		if( getName() != null )
 		{
-			return this.getName().getName();
+			return getName().getName();
 		}
 		return "[Null]";
 	}
@@ -291,7 +291,7 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 	public Ptg[] getComponents()
 	{
 		FastAddVector v = new FastAddVector();
-		Ptg p = this.getName().getPtga();
+		Ptg p = getName().getPtga();
 		Ptg[] pcomps = p.getComponents();
 		if( pcomps != null )
 		{
@@ -332,11 +332,11 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 	@Override
 	public String getLocation() throws FormulaNotFoundException
 	{
-		if( this.getName() != null )
+		if( getName() != null )
 		{
 			try
 			{
-				return this.getName().getLocation();
+				return getName().getLocation();
 			}
 			catch( Exception e )
 			{
@@ -349,11 +349,11 @@ public class PtgName extends GenericPtg implements Ptg, IlblListener
 	@Override
 	public void addListener()
 	{
-		Name n = this.getName();
+		Name n = getName();
 		if( n != null )
 		{
 			n.addIlblListener( this );
-			this.storeName( n.getName() );
+			storeName( n.getName() );
 		}
 
 	}

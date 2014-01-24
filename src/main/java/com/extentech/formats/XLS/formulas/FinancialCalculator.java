@@ -340,7 +340,8 @@ public class FinancialCalculator
 
 			double result = ((par * rate) / frequency);//* Sum #Accrued days for
 			double sum = 0;
-			long E, PCD;
+			long E;
+			long PCD;
 
 			// ACCRINT in EXCEL handles this case, so we should, too!
 			if( firstInterestDate < settlementDate )
@@ -429,8 +430,10 @@ public class FinancialCalculator
 			debugOperands( operands, "ACCRINTM" );
 		try
 		{
-			long issueDate, maturityDate; // dates are truncated to integers
-			double rate, par = 1000;
+			long issueDate; // dates are truncated to integers
+			long maturityDate;
+			double rate;
+			double par = 1000;
 			int basis = 0;
 
 			// Issue Date
@@ -1159,7 +1162,8 @@ public class FinancialCalculator
 
 		// CumIPMT= pmt*period - FV for start-1 - pmt - FV for end period and
 		// pmt
-		double A, B;
+		double A;
+		double B;
 		//	PMT used in fv calc
 		double Rn = Math.pow( 1 + rate, nper );
 		A = -pv * Rn * rate;
@@ -1221,7 +1225,8 @@ public class FinancialCalculator
 
 			debugOperands( operands, "CUMPRINC" );
 		// Cumprinc= FV for start-1 and pmt - FV for end period and pmt
-		double A, B;
+		double A;
+		double B;
 		//	PMT used in fv calc
 		double Rn = Math.pow( 1 + rate, nper );
 		A = -pv * Rn * rate;
@@ -1280,8 +1285,11 @@ public class FinancialCalculator
 			PtgErr perr = new PtgErr( PtgErr.ERROR_NULL );
 			return perr;
 		}
-		double cost, salvage;
-		int life, period, month;
+		double cost;
+		double salvage;
+		int life;
+		int period;
+		int month;
 		cost = new Double( String.valueOf( operands[0].getValue() ) );
 		salvage = new Double( String.valueOf( operands[1].getValue() ) );
 		life = Integer.valueOf( String.valueOf( operands[2].getValue() ) );
@@ -1360,8 +1368,11 @@ public class FinancialCalculator
 			PtgErr perr = new PtgErr( PtgErr.ERROR_NULL );
 			return perr;
 		}
-		double cost, salvage;
-		int life, period, factor;
+		double cost;
+		double salvage;
+		int life;
+		int period;
+		int factor;
 		cost = new Double( String.valueOf( operands[0].getValue() ) );
 		salvage = new Double( String.valueOf( operands[1].getValue() ) );
 		life = Integer.valueOf( String.valueOf( operands[2].getValue() ) );
@@ -1613,7 +1624,8 @@ public class FinancialCalculator
 			{
 				SumB += R / (Math.pow( Y, (i - 1) + F ) * frequency);
 			}
-			double C = 0.0, D = 0.0;
+			double C = 0.0;
+			double D = 0.0;
 			if( n > 1 )
 			{
 				C = (((n - 1) + F) * 100) / Yx;
@@ -1926,7 +1938,8 @@ public class FinancialCalculator
 
 		// examine values array, sum all outflows (= negative values) + inflows
 		// (= positive values)
-		double outflow = 0.0, inflow = 0.0;
+		double outflow = 0.0;
+		double inflow = 0.0;
 		// get outflow (- values)
 		for( Ptg param : params )
 		{
@@ -1950,7 +1963,12 @@ public class FinancialCalculator
 		// outflow-pv <= tolerance, defined as .00001%
 		final double TOLERANCE = 0.0000001;
 		boolean bIsCorrect = false;
-		double xl, xh, fl, fh, f, trial = guess;
+		double xl;
+		double xh;
+		double fl;
+		double fh;
+		double f;
+		double trial = guess;
 		xl = 0;
 		xh = guess;
 		double delta = xh - xl;
@@ -2664,7 +2682,11 @@ public class FinancialCalculator
 			PtgErr perr = new PtgErr( PtgErr.ERROR_NULL );
 			return perr;
 		}
-		double rate, nper, pv, fv, type;
+		double rate;
+		double nper;
+		double pv;
+		double fv;
+		double type;
 		rate = new Double( String.valueOf( operands[0].getValue() ) );
 		nper = new Double( String.valueOf( operands[1].getValue() ) );
 		pv = new Double( String.valueOf( operands[2].getValue() ) );
@@ -3074,7 +3096,8 @@ public class FinancialCalculator
 			debugOperands( operands, "calcRate" );
 		double nper = operands[0].getDoubleVal();
 		double pmt = operands[1].getDoubleVal();
-		double pv = 0.0, fv = 0.0;
+		double pv = 0.0;
+		double fv = 0.0;
 		int type = 0;
 		double guess = 0.1;
 		if( !(operands[2] instanceof PtgMissArg) )
@@ -3579,7 +3602,8 @@ public class FinancialCalculator
 		}
 		// validate values: sum all outflows (= negative values) + inflows (=
 		// positive values)
-		double outflow = 0.0, inflow = 0.0;
+		double outflow = 0.0;
+		double inflow = 0.0;
 		// get outflow (- values)
 		for( Ptg value : values )
 		{
@@ -3605,7 +3629,9 @@ public class FinancialCalculator
 		boolean bIsCorrect = false;
 		final double TOLERANCE = 0.00000001;
 		double trial = guess;
-		double x0, f0, f;
+		double x0;
+		double f0;
+		double f;
 		x0 = 1; //1+0 rate, x_0, lower bounds of guess
 		f0 = inflow - outflow; // =sum of values when rate is 0
 		trial = 1 + guess; // x_1, upper bounds
@@ -3694,7 +3720,8 @@ public class FinancialCalculator
 		}
 		// validate values: sum all outflows (= negative values) + inflows (=
 		// positive values)
-		double outflow = 0.0, inflow = 0.0;
+		double outflow = 0.0;
+		double inflow = 0.0;
 		// get outflow (- values)
 		for( Ptg value : values )
 		{

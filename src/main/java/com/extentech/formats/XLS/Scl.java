@@ -60,9 +60,9 @@ public final class Scl extends com.extentech.formats.XLS.XLSRecord
 		bs[3] = 0;
 		setOpcode( SCL );
 		setLength( (short) 4 );
-			log.trace( "Scl.init()" + String.valueOf( this.offset ) );
-		this.setData( bs );
-		this.originalsize = 4;
+			log.trace( "Scl.init()" + String.valueOf( offset ) );
+		setData( bs );
+		originalsize = 4;
 	}
 
 	/**
@@ -72,7 +72,7 @@ public final class Scl extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setZoom( float b )
 	{
-		byte[] data = this.getData();
+		byte[] data = getData();
 
 /* 20081231 KSC:  appears that zooming is such that 1/1=100%         
         // set our scale to 1000
@@ -99,7 +99,7 @@ public final class Scl extends com.extentech.formats.XLS.XLSRecord
 		nmbd = ByteTools.shortToLEBytes( (short) denum );
 		System.arraycopy( nmbd, 0, data, 2, 2 );
 
-		this.setData( data );
+		setData( data );
 	}
 
 	/**
@@ -116,8 +116,8 @@ public final class Scl extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		num = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		denum = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
+		num = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		denum = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
 			log.debug( "Scl.init() sheet zoom:" + getZoom() );
 	}
 

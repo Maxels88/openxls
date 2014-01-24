@@ -179,7 +179,9 @@ public class ExcelTools implements java.io.Serializable
 		}
 
 		/** try to determine if the format is numeric (+currency) or date */
-		boolean isNumeric = false, isDate = false, isString = false;
+		boolean isNumeric = false;
+		boolean isDate = false;
+		boolean isString = false;
 
 		/** excel formats can have up to 4 parts:  <positive>;<negative>;<zero>;<text> */
 		String[] pats = pattern.split( ";" );    // assign the correct pattern according to double or string value
@@ -570,7 +572,8 @@ return WorkBookHandle.simpledateformat.format(d);*/
 	{
 		Runtime rt = Runtime.getRuntime();
 		long[] p = null;
-		long lasttime = 0l, lastmem = 0l;
+		long lasttime = 0l;
+		long lastmem = 0l;
 		if( System.getProperties().get( perfobj.toString() ) != null )
 		{
 			p = (long[]) System.getProperties().get( perfobj.toString() );
@@ -976,8 +979,10 @@ return WorkBookHandle.simpledateformat.format(d);*/
 		}
 
 		char[] adrchars = address.toCharArray();
-		int row = 0, col = 0;
-		int charpos = -1, numpos = -1;
+		int row = 0;
+		int col = 0;
+		int charpos = -1;
+		int numpos = -1;
 		boolean r1c1 = false;
 		for( int i = 0; i < adrchars.length; i++ )
 		{
@@ -1289,7 +1294,9 @@ return WorkBookHandle.simpledateformat.format(d);*/
 			negative = true;
 			num = num.substring( 1, num.length() );
 		}
-		String preString, postString, fullString = "";
+		String preString;
+		String postString;
+		String fullString = "";
 		switch( notationType )
 		{
 			case 0: // NOTATION_STANDARD
@@ -1509,7 +1516,8 @@ return WorkBookHandle.simpledateformat.format(d);*/
 	 */
 	public static String[] stripSheetNameFromRange( String address )
 	{
-		String sheetname = null, sheetname2 = null;
+		String sheetname = null;
+		String sheetname2 = null;
 		int m = address.indexOf( '!' );
 		if( m > -1 )
 		{
@@ -1535,7 +1543,8 @@ return WorkBookHandle.simpledateformat.format(d);*/
 		}
 		// 20090323 KSC: handle external references (OOXML-Specific format of
 		// [#]SheetName!Ref where # denotes ExternalLink workbook
-		String exLink1 = null, exLink2 = null;
+		String exLink1 = null;
+		String exLink2 = null;
 		if( (sheetname != null) && (sheetname.indexOf( '[' ) >= 0) )
 		{ // External
 			// OOXML
@@ -1585,7 +1594,8 @@ return WorkBookHandle.simpledateformat.format(d);*/
 		String temprange = range;
 		// figure out the sheet bounds using the range string
 		temprange = ExcelTools.stripSheetNameFromRange( temprange )[1];
-		String startcell = "", endcell = "";
+		String startcell = "";
+		String endcell = "";
 		int lastcolon = temprange.lastIndexOf( ":" );
 		endcell = temprange.substring( lastcolon + 1 );
 		if( lastcolon == -1 ) // no range

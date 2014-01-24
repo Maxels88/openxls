@@ -89,7 +89,7 @@ public class PtgConcat extends GenericPtg implements Ptg
 
 	public String toString()
 	{    // KSC added
-		return this.getString();
+		return getString();
 	}
 
 	/**

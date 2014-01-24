@@ -71,8 +71,13 @@ public class CatserRange extends GenericChartObject implements ChartObject
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 905038625844435651L;
-	private short grbit, catCross, catLabel, catMark;
-	private boolean fBetween, fMaxCross, fReverse;
+	private short grbit;
+	private short catCross;
+	private short catLabel;
+	private short catMark;
+	private boolean fBetween;
+	private boolean fMaxCross;
+	private boolean fReverse;
 
 	// 20070723 KSC: Need to create new records
 	public static XLSRecord getPrototype()
@@ -90,10 +95,10 @@ public class CatserRange extends GenericChartObject implements ChartObject
 	public void setOpt( int op )
 	{
 		byte[] b = ByteTools.shortToLEBytes( (short) op );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 		// 20070802 KSC: don't know what this means
-		this.getData()[6] = 0;
+		getData()[6] = 0;
 	}
 
 	// 20070802 KSC: parse data
@@ -101,10 +106,10 @@ public class CatserRange extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		catCross = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		catLabel = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		catMark = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		grbit = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
+		catCross = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		catLabel = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		catMark = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+		grbit = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
 		fBetween = (grbit & 0x1) == 0x1;
 		fMaxCross = (grbit & 0x2) == 0x2;
 		fReverse = (grbit & 0x4) == 0x4;
@@ -113,17 +118,17 @@ public class CatserRange extends GenericChartObject implements ChartObject
 	private void updateRecord()
 	{
 		byte[] b = ByteTools.shortToLEBytes( catCross );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 		b = ByteTools.shortToLEBytes( catLabel );
-		this.getData()[2] = b[0];
-		this.getData()[3] = b[1];
+		getData()[2] = b[0];
+		getData()[3] = b[1];
 		b = ByteTools.shortToLEBytes( catMark );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 		b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[6] = b[0];
-		this.getData()[7] = b[1];
+		getData()[6] = b[0];
+		getData()[7] = b[1];
 	}
 
 	// get/set methods
@@ -245,7 +250,7 @@ public class CatserRange extends GenericChartObject implements ChartObject
 		{
 			return false;    // not handled
 		}
-		this.updateRecord();
+		updateRecord();
 		return true;
 	}
 

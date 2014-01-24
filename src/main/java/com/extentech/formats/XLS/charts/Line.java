@@ -41,14 +41,16 @@ public class Line extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 6526476252082906554L;
 	private short grbit = 0;
-	private boolean fStacked = false, f100 = false, fHasShadow = false;
+	private boolean fStacked = false;
+	private boolean f100 = false;
+	private boolean fHasShadow = false;
 
 	@Override
 	public void init()
 	{
 		super.init();
 		chartType = ChartConstants.LINECHART;    // 20070703 KSC
-		grbit = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		grbit = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		fStacked = ((grbit & 0x1) == 0x1);
 		f100 = ((grbit & 0x2) == 0x2);
 		fHasShadow = ((grbit & 0x4) == 0x4);
@@ -62,8 +64,8 @@ public class Line extends GenericChartObject implements ChartObject
 		grbit = ByteTools.updateGrBit( grbit, f100, 1 );
 		grbit = ByteTools.updateGrBit( grbit, fHasShadow, 2 );
 		byte[] b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	public static XLSRecord getPrototype()

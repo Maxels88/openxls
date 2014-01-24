@@ -59,7 +59,7 @@ public class ValidationException extends Exception
 	@Override
 	public String getMessage()
 	{
-		return this.toString();
+		return toString();
 	}
 
 	public String toString()

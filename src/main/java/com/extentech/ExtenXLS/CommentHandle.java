@@ -47,7 +47,7 @@ public class CommentHandle implements Handle
 	 */
 	protected CommentHandle( Note n )
 	{
-		this.note = n;
+		note = n;
 	}
 
 	/**

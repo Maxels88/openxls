@@ -80,7 +80,9 @@ public class BlockFactory
 		}
 		// int len = (blen-3) / SIZE;
 		int len = (blen) / SIZE;
-		int pos = 0, sizeDiff = 0, size = 0;
+		int pos = 0;
+		int sizeDiff = 0;
+		int size = 0;
 
 		if( (len * SIZE) < blen )
 		{
@@ -137,7 +139,9 @@ public class BlockFactory
 //		int sz = LEOFile.getSizeInBlocks(bbuf.length,SIZE);		
 
 		int len = (bbuf.length) / SIZE;
-		int pos = 0, sizeDiff = 0, size = 0;
+		int pos = 0;
+		int sizeDiff = 0;
+		int size = 0;
 
 		if( (len * SIZE) < bbuf.length )
 		{

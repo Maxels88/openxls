@@ -52,13 +52,17 @@ public class DataLabExtContents extends GenericChartObject implements ChartObjec
 	 */
 	private static final long serialVersionUID = -1228364285066204304L;
 	private short grbit;
-	private boolean fSerName, fCatName, fValue, fPercent, fBubSizes;
+	private boolean fSerName;
+	private boolean fCatName;
+	private boolean fValue;
+	private boolean fPercent;
+	private boolean fBubSizes;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		byte[] data = this.getData();
+		byte[] data = getData();
 		grbit = ByteTools.readShort( data[12], data[13] );
 		fSerName = (grbit & 0x1) == 0x1;
 		fCatName = (grbit & 0x2) == 0x2;

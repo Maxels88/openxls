@@ -42,6 +42,6 @@ public class Ifmt extends GenericChartObject implements ChartObject
 
 	public int getFmt()
 	{
-		return ByteTools.readShort( this.getData()[0], this.getData()[1] );
+		return ByteTools.readShort( getData()[0], getData()[1] );
 	}
 }

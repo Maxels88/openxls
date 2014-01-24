@@ -71,7 +71,7 @@ public class PtgIsect extends GenericPtg implements Ptg
 
 	public String toString()
 	{
-		return this.getString();
+		return getString();
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class PtgIsect extends GenericPtg implements Ptg
 			String sourceSheet = null;
 			try
 			{
-				sourceSheet = this.getParentRec().getSheet().getSheetName();
+				sourceSheet = getParentRec().getSheet().getSheetName();
 			}
 			catch( NullPointerException ne )
 			{
@@ -166,21 +166,21 @@ public class PtgIsect extends GenericPtg implements Ptg
 							if( !comp.equals( "#REF!" ) && !comp.equals( "#NULL!" ) )
 							{
 								PtgRef3d pr = new PtgRef3d( false );
-								pr.setParentRec( this.getParentRec() );
+								pr.setParentRec( getParentRec() );
 								pr.setLocation( comp );
 								a.add( pr );
 							}
 							else
 							{
 								PtgRefErr3d pr = new PtgRefErr3d();
-								pr.setParentRec( this.getParentRec() );
+								pr.setParentRec( getParentRec() );
 								a.add( pr );
 							}
 						}
 						else
 						{
 							PtgArea3d pa = new PtgArea3d( false );
-							pa.setParentRec( this.getParentRec() );
+							pa.setParentRec( getParentRec() );
 							pa.setLocation( comp );
 							Ptg[] pcs = pa.getComponents();
 							if( pcs != null )
@@ -209,14 +209,14 @@ public class PtgIsect extends GenericPtg implements Ptg
 								{
 									PtgRef pr = new PtgRef();
 									pr.setUseReferenceTracker( false );
-									pr.setParentRec( this.getParentRec() );
+									pr.setParentRec( getParentRec() );
 									pr.setLocation( loc );
 									a.add( pr );
 								}
 								else
 								{
 									PtgRef3d pr = new PtgRef3d( false );
-									pr.setParentRec( this.getParentRec() );
+									pr.setParentRec( getParentRec() );
 									pr.setLocation( loc );
 									a.add( pr );
 								}
@@ -224,7 +224,7 @@ public class PtgIsect extends GenericPtg implements Ptg
 							else
 							{
 								PtgArea3d pa = new PtgArea3d( false );
-								pa.setParentRec( this.getParentRec() );
+								pa.setParentRec( getParentRec() );
 								pa.setLocation( loc );
 								Ptg[] pcs = pa.getComponents();
 								for( Ptg pc1 : pcs )

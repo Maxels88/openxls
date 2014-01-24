@@ -101,7 +101,7 @@ public class PtgRef extends GenericPtg
 
 	public boolean equals( Object ob )
 	{
-		return ob.hashCode() == this.hashCode();
+		return ob.hashCode() == hashCode();
 	}
 
 	public boolean getIsWholeRow()
@@ -129,7 +129,8 @@ public class PtgRef extends GenericPtg
 		return false;
 	}
 
-	public boolean wholeRow = false, wholeCol = false;    // denotes a range which spans the entire row or column, a shorthand for checking end col or row # as this will vary between excel versions
+	public boolean wholeRow = false;
+	public boolean wholeCol = false;    // denotes a range which spans the entire row or column, a shorthand for checking end col or row # as this will vary between excel versions
 
 	@Override
 	public boolean getIsOperand()
@@ -147,7 +148,7 @@ public class PtgRef extends GenericPtg
 	{
 		this();
 		setParentRec( x );
-		this.useReferenceTracker = useRefTracker;
+		useReferenceTracker = useRefTracker;
 		setLocation( rowcol );
 		updateRecord();
 	}
@@ -158,13 +159,13 @@ public class PtgRef extends GenericPtg
 	 */
 	public PtgRef( String location, XLSRecord x, boolean utilizeRefTracker )
 	{
-		this.setUseReferenceTracker( utilizeRefTracker );
+		setUseReferenceTracker( utilizeRefTracker );
 		ptgId = 0x44;  //0x24; defaulting to value operand
 		record = new byte[5];
 		record[0] = ptgId;
 		setParentRec( x );    // MUST set before setLocation also sets formulaRow ...
-		this.setLocation( location );
-		this.setIsWholeRowCol();
+		setLocation( location );
+		setIsWholeRowCol();
 		if( useReferenceTracker )
 		{
 			addToRefTracker();
@@ -208,7 +209,7 @@ public class PtgRef extends GenericPtg
 	public PtgRef( byte[] bin, XLSRecord x, boolean utilizeRefTracker )
 	{
 		this();
-		this.setUseReferenceTracker( utilizeRefTracker );
+		setUseReferenceTracker( utilizeRefTracker );
 		setParentRec( x );    //MUST DO BEFORE INIT ... also sets formulaRow ...
 		init( bin );
 		if( useReferenceTracker )
@@ -233,7 +234,7 @@ public class PtgRef extends GenericPtg
 	{
 		ptgId = b[0];
 		record = b;
-		this.populateVals();
+		populateVals();
 	}
 
 	/**
@@ -277,7 +278,7 @@ public class PtgRef extends GenericPtg
 		}
 		col = (short) (column & 0x3fff);
 		setRelativeRowCol();  // set formulaRow/Col for relative references if necessary
-		this.setIsWholeRowCol();
+		setIsWholeRowCol();
 		hashcode = getHashCode();
 	}
 
@@ -293,7 +294,7 @@ public class PtgRef extends GenericPtg
 	@Override
 	public String getString()
 	{
-		return this.getLocation();
+		return getLocation();
 	}
 
 	/**
@@ -338,11 +339,11 @@ public class PtgRef extends GenericPtg
 	 */
 	public int[] getRowCol()
 	{
-		int[] ret = { this.rw, this.col };
-		if( this.rw < 0 )
+		int[] ret = { rw, col };
+		if( rw < 0 )
 		{// if row truly references MAXROWS_BIFF8 comes out -
 			ret[0] = MAXROWS_BIFF8;
-			this.wholeCol = true;
+			wholeCol = true;
 		}
 		return ret;
 	}
@@ -370,13 +371,13 @@ public class PtgRef extends GenericPtg
 			return locax;
 		}
 
-		int[] adjusted = this.getIntLocation();
+		int[] adjusted = getIntLocation();
 		String s;
-		if( this.wholeCol )
+		if( wholeCol )
 		{
 			s = (fColRel ? "" : "$") + ExcelTools.getAlphaVal( adjusted[1] );
 		}
-		else if( this.wholeRow )
+		else if( wholeRow )
 		{
 			s = (fRwRel ? "" : "$") + String.valueOf( adjusted[0] + 1 );
 		}
@@ -401,12 +402,12 @@ public class PtgRef extends GenericPtg
 	public int[] getIntLocation()
 	{
 
-		this.setIsWholeRowCol();
+		setIsWholeRowCol();
 		int rowNew = rw;
 		int colNew = col;
 		try
 		{
-			boolean isExcel2007 = this.parent_rec.getWorkBook().getIsExcel2007();
+			boolean isExcel2007 = parent_rec.getWorkBook().getIsExcel2007();
 			if( fRwRel )
 			{  // the row is a relative location
 				rowNew += formulaRow;
@@ -472,7 +473,7 @@ public class PtgRef extends GenericPtg
 				{
 					wholeCol = true;
 				}
-				rowNew = this.getParentRec().getSheet().getMaxRow();
+				rowNew = getParentRec().getSheet().getMaxRow();
 			}
 			catch( Exception e )
 			{
@@ -484,7 +485,7 @@ public class PtgRef extends GenericPtg
 		{
 			try
 			{
-				colNew = this.getParentRec().getSheet().getMaxCol();
+				colNew = getParentRec().getSheet().getMaxCol();
 			}
 			catch( Exception e )
 			{
@@ -548,7 +549,7 @@ public class PtgRef extends GenericPtg
 		refCell = null;
 		if( record != null )
 		{
-			String s[] = ExcelTools.stripSheetNameFromRange( address );
+			String[] s = ExcelTools.stripSheetNameFromRange( address );
 			setLocation( s );
 			locax = s[1];
 		}
@@ -573,7 +574,7 @@ public class PtgRef extends GenericPtg
 	 */
 	private boolean referencesEntireRow()
 	{
-		boolean isExcel2007 = this.parent_rec.getWorkBook().getIsExcel2007();
+		boolean isExcel2007 = parent_rec.getWorkBook().getIsExcel2007();
 		int colNew = col;
 		if( fColRel )
 		{  // the row is a relative location
@@ -587,9 +588,9 @@ public class PtgRef extends GenericPtg
 		{
 			return true;
 		}
-		if( (this.cachedLocation != null) && isExcel2007 )
+		if( (cachedLocation != null) && isExcel2007 )
 		{
-			return this.locationStringReferencesEntireRow();
+			return locationStringReferencesEntireRow();
 		}
 		// This is unfortunately a bit of a hack due to biff 8 incompatibilies
 		if( (colNew == (MAXCOLS_BIFF8 - 1)) && isExcel2007 )
@@ -607,7 +608,7 @@ public class PtgRef extends GenericPtg
 	 */
 	private boolean locationStringReferencesEntireRow()
 	{
-		if( this.cachedLocation != null )
+		if( cachedLocation != null )
 		{
 			int[] res = ExcelTools.getRowColFromString( cachedLocation );
 			if( res[1] < 0 )
@@ -626,7 +627,7 @@ public class PtgRef extends GenericPtg
 	private boolean referencesEntireCol()
 	{
 		int rowNew = rw;
-		boolean isExcel2007 = this.parent_rec.getWorkBook().getIsExcel2007();
+		boolean isExcel2007 = parent_rec.getWorkBook().getIsExcel2007();
 		if( fRwRel )
 		{  // the row is a relative location
 			rowNew += formulaRow;
@@ -651,8 +652,8 @@ public class PtgRef extends GenericPtg
 	 */
 	protected void setIsWholeRowCol()
 	{
-		this.wholeCol = referencesEntireCol();
-		this.wholeRow = referencesEntireRow();
+		wholeCol = referencesEntireCol();
+		wholeRow = referencesEntireRow();
 	}
 
 	/**
@@ -738,8 +739,8 @@ public class PtgRef extends GenericPtg
 		{
 			wholeCol = true;
 		}
-		this.setIsWholeRowCol();
-		this.updateRecord();
+		setIsWholeRowCol();
+		updateRecord();
 		hashcode = getHashCode();
 		// trap OOXML external reference link, if any
 		if( loc[3] != null )
@@ -752,7 +753,7 @@ public class PtgRef extends GenericPtg
 		}
 		if( useReferenceTracker )
 		{
-			if( !getIsRefErr() && !this.getIsWholeCol() && !this.getIsWholeRow() )
+			if( !getIsRefErr() && !getIsWholeCol() && !getIsWholeRow() )
 			{
 				addToRefTracker();
 			}
@@ -777,7 +778,7 @@ public class PtgRef extends GenericPtg
 			col = rowcol[1];
 			fRwRel = true;    // default
 			fColRel = true;
-			this.updateRecord();
+			updateRecord();
 			hashcode = getHashCode();
 			if( useReferenceTracker )
 			{
@@ -938,7 +939,7 @@ public class PtgRef extends GenericPtg
 			col = rowcol[1];
 			fRwRel = bRowRel;
 			fColRel = bColRel;
-			this.updateRecord();
+			updateRecord();
 			if( useReferenceTracker )
 			{
 				addToRefTracker();
@@ -978,13 +979,13 @@ public class PtgRef extends GenericPtg
 		record = tmp;
 		if( parent_rec != null )
 		{
-			if( this.parent_rec instanceof Formula )
+			if( parent_rec instanceof Formula )
 			{
-				((Formula) this.parent_rec).updateRecord();
+				((Formula) parent_rec).updateRecord();
 			}
-			else if( this.parent_rec instanceof Name )
+			else if( parent_rec instanceof Name )
 			{
-				((Name) this.parent_rec).updatePtgs();
+				((Name) parent_rec).updatePtgs();
 			}
 		}
 
@@ -1035,7 +1036,7 @@ public class PtgRef extends GenericPtg
 		}
 		try
 		{
-			if( !this.parent_rec.getSheet().getWindow2().getShowZeroValues() )
+			if( !parent_rec.getSheet().getWindow2().getShowZeroValues() )
 			{
 				return null;
 			}
@@ -1080,7 +1081,7 @@ public class PtgRef extends GenericPtg
 		}
 		try
 		{
-			if( !this.parent_rec.getSheet().getWindow2().getShowZeroValues() )
+			if( !parent_rec.getSheet().getWindow2().getShowZeroValues() )
 			{
 				return "";
 			}
@@ -1103,7 +1104,7 @@ public class PtgRef extends GenericPtg
 			Boundsheet bs = null;
 			if( (sheetname != null) && (parent_rec != null) )
 			{
-				bs = this.parent_rec.getWorkBook().getWorkSheetByName( sheetname );
+				bs = parent_rec.getWorkBook().getWorkSheetByName( sheetname );
 			}
 			else if( parent_rec != null )
 			{
@@ -1284,8 +1285,8 @@ public class PtgRef extends GenericPtg
 			// protocol for shared formulas, conditional formatting, data validity and defined names only (type B cell addresses!)
 			if( (opc == SHRFMLA) || (opc == DVAL) )
 			{
-				this.formulaRow = parent_rec.getRowNumber();
-				this.formulaCol = parent_rec.getColNumber();
+				formulaRow = parent_rec.getRowNumber();
+				formulaCol = parent_rec.getColNumber();
 			}
 		}
 	}

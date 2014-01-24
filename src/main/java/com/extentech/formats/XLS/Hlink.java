@@ -50,7 +50,10 @@ import java.io.UnsupportedEncodingException;
  */
 public final class Hlink extends XLSRecord
 {
-	int colFirst = -1, colLast = -1, rowFirst = -1, rowLast = -1;
+	int colFirst = -1;
+	int colLast = -1;
+	int rowFirst = -1;
+	int rowLast = -1;
 	private static final Logger log = LoggerFactory.getLogger( Hlink.class );
 	private static final long serialVersionUID = -4259979643231173799L;
 	private HLinkStruct linkStruct = null;
@@ -139,9 +142,9 @@ public final class Hlink extends XLSRecord
 	public void setRowFirst( int c )
 	{
 		byte[] b = ByteTools.shortToLEBytes( (short) c );
-		byte[] dt = this.getData();
+		byte[] dt = getData();
 		System.arraycopy( b, 0, dt, 0, 2 );
-		this.rowFirst = c;
+		rowFirst = c;
 	}
 
 	public int getRowLast()
@@ -155,9 +158,9 @@ public final class Hlink extends XLSRecord
 	public void setRowLast( int c )
 	{
 		byte[] b = ByteTools.shortToLEBytes( (short) c );
-		byte[] dt = this.getData();
+		byte[] dt = getData();
 		System.arraycopy( b, 0, dt, 2, 2 );
-		this.rowLast = c;
+		rowLast = c;
 	}
 
 	public int getColFirst()
@@ -171,9 +174,9 @@ public final class Hlink extends XLSRecord
 	public void setColFirst( int c )
 	{
 		byte[] b = ByteTools.shortToLEBytes( (short) c );
-		byte[] dt = this.getData();
+		byte[] dt = getData();
 		System.arraycopy( b, 0, dt, 4, 2 );
-		this.colFirst = c;
+		colFirst = c;
 	}
 
 	public int getColLast()
@@ -187,9 +190,9 @@ public final class Hlink extends XLSRecord
 	public void setColLast( int c )
 	{
 		byte[] b = ByteTools.shortToLEBytes( (short) c );
-		byte[] dt = this.getData();
+		byte[] dt = getData();
 		System.arraycopy( b, 0, dt, 6, 2 );
-		this.colLast = c;
+		colLast = c;
 	}
 
 	/**
@@ -242,7 +245,7 @@ public final class Hlink extends XLSRecord
 			log.warn( "setting URL " + url + " failed: " + e );
 		}
 		byte[] bt = linkStruct.getBytes();
-		this.setData( bt );
+		setData( bt );
 	}
 
 	public void setFileURL( String url, String desc, String textMark )
@@ -256,7 +259,7 @@ public final class Hlink extends XLSRecord
 			log.warn( "setting URL " + url + " failed: " + e );
 		}
 		byte[] bt = linkStruct.getBytes();
-		this.setData( bt );
+		setData( bt );
 	}
 
 	/**
@@ -277,18 +280,18 @@ public final class Hlink extends XLSRecord
 	{
 		super.init();
 		int pos = 0;
-		rowFirst = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );
-		rowLast = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );
-		colFirst = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );
-		colLast = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );
+		rowFirst = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) );
+		rowLast = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) );
+		colFirst = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) );
+		colLast = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) );
 		Unicodestring ustr = new Unicodestring();
 
 		String nm = "";
-		if( this.getSheet() != null )
+		if( getSheet() != null )
 		{
-			if( !this.getSheet().getSheetName().isEmpty() )
+			if( !getSheet().getSheetName().isEmpty() )
 			{
-				nm = this.getSheet().getSheetName() + "!";
+				nm = getSheet().getSheetName() + "!";
 			}
 		}
 		nm += com.extentech.ExtenXLS.ExcelTools.getAlphaVal( colFirst );
@@ -307,7 +310,7 @@ public final class Hlink extends XLSRecord
 
 		try
 		{
-			linkStruct = new HLinkStruct( this.getBytesAt( 0, this.getLength() ) );
+			linkStruct = new HLinkStruct( getBytesAt( 0, getLength() ) );
 		}
 		catch( Exception e )
 		{
@@ -335,14 +338,14 @@ public final class Hlink extends XLSRecord
 	public void initCells( WorkBookHandle wbook )
 	{
 		int[] cellcoords = new int[4];
-		cellcoords[0] = this.getRowFirst();
-		cellcoords[2] = this.getRowLast();
-		cellcoords[1] = this.getColFirst();
-		cellcoords[3] = this.getColLast();
+		cellcoords[0] = getRowFirst();
+		cellcoords[2] = getRowLast();
+		cellcoords[1] = getColFirst();
+		cellcoords[3] = getColLast();
 
 		try
 		{
-			CellRange cr = new CellRange( wbook.getWorkSheet( this.getSheet().getSheetName() ), cellcoords );
+			CellRange cr = new CellRange( wbook.getWorkSheet( getSheet().getSheetName() ), cellcoords );
 			cr.setWorkBook( wbook );
 			BiffRec[] ch = cr.getCellRecs();
 			for( BiffRec aCh : ch )
@@ -395,9 +398,14 @@ class HLinkStruct implements XLSConstants, Serializable
 	boolean hasTextMark = false;
 	boolean hasTargetFrame = false;
 	boolean isUNCPath = false;
-	byte grbit[] = new byte[4];
-	String url = "", linktext = "", textMark = "", targetFrame = "";
-	int int1 = -1, urlcch = -1, int4 = -1;
+	byte[] grbit = new byte[4];
+	String url = "";
+	String linktext = "";
+	String textMark = "";
+	String targetFrame = "";
+	int int1 = -1;
+	int urlcch = -1;
+	int int4 = -1;
 	private static final Logger log = LoggerFactory.getLogger( HLinkStruct.class );
 	private static final long serialVersionUID = -1915454683496117350L;
 	private byte[] mybytes = null;
@@ -777,11 +785,11 @@ class HLinkStruct implements XLSConstants, Serializable
 				// copy trailing dumb str bytes in
 				newbytes = ByteTools.append( blankbytes, newbytes );
 			}
-			this.mybytes = newbytes;
+			mybytes = newbytes;
 
-			this.linktext = desc;
-			this.textMark = tm;
-			this.url = ur;
+			linktext = desc;
+			textMark = tm;
+			url = ur;
 		}
 		catch( UnsupportedEncodingException e )
 		{

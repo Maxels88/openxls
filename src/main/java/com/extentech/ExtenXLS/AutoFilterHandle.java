@@ -50,7 +50,7 @@ public class AutoFilterHandle implements Handle
 	 */
 	public String toString()
 	{
-		if( this.af != null )
+		if( af != null )
 		{
 			return af.toString();
 		}
@@ -65,7 +65,7 @@ public class AutoFilterHandle implements Handle
 	 */
 	public int getCol()
 	{
-		if( this.af != null )
+		if( af != null )
 		{
 			return af.getCol();
 		}

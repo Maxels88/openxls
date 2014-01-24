@@ -87,7 +87,7 @@ public class PtgMemFunc extends GenericPtg
 		record = b;
 		try
 		{
-			this.populateVals();
+			populateVals();
 		}
 		catch( Exception e )
 		{
@@ -104,7 +104,7 @@ public class PtgMemFunc extends GenericPtg
 		System.arraycopy( record, 3, subexp, 0, cce );
 		// subexpression stack in form of:  REFERENCE, REFERENCE, OP [,REFERENCE, OP] ...
 		// op can be one of:  PtgUnion [,] PtgIsect [ ] or PtgRange [:]
-		subexpression = ExpressionParser.parseExpression( subexp, this.parent_rec );
+		subexpression = ExpressionParser.parseExpression( subexp, parent_rec );
 		// try parsing/calculating on-demand rather than upon init
 		//parseSubexpression();
 	}
@@ -192,7 +192,7 @@ public class PtgMemFunc extends GenericPtg
 			return colrefs;
 		}
 		FastAddVector v = new FastAddVector();
-		Ptg[] allComponents = this.getComponents();
+		Ptg[] allComponents = getComponents();
 		for( Ptg allComponent : allComponents )
 		{
 			PtgRef p = (PtgRef) allComponent;
@@ -216,7 +216,7 @@ public class PtgMemFunc extends GenericPtg
 	private void parseSubexpression()
 	{
 		// calculate subexpression to obtain ptgs
-		Object o = FormulaCalculator.calculateFormula( this.subexpression );
+		Object o = FormulaCalculator.calculateFormula( subexpression );
 		ArrayList<Ptg> components = new ArrayList<>();
 		if( (o != null) && (o instanceof Ptg[]) )
 		{
@@ -394,12 +394,12 @@ public class PtgMemFunc extends GenericPtg
 		ArrayList<String> sheets = new ArrayList<>();
 		try
 		{
-			bk = this.getParentRec().getWorkBook();
+			bk = getParentRec().getWorkBook();
 			for( int i = 0; i < bk.getSheetVect().size(); i++ )
 			{
 				sheets.add( bk.getWorkSheetByNumber( i ).getSheetName() );
 			}
-			sheetName = this.getParentRec().getSheet().getSheetName() + "!";
+			sheetName = getParentRec().getSheet().getSheetName() + "!";
 		}
 		catch( Exception e )
 		{
@@ -467,12 +467,12 @@ public class PtgMemFunc extends GenericPtg
 						else
 						{
 							ref = (String) o;
-							boolean isName = (this.getParentRec().getWorkBook().getName( ref ) != null);
+							boolean isName = (getParentRec().getWorkBook().getName( ref ) != null);
 							Ptg p = null;
 							if( isName )
 							{
 								p = new PtgName();
-								p.setParentRec( this.parent_rec );
+								p.setParentRec( parent_rec );
 								((PtgName) p).setName( ref );
 								cce += p.getRecord().length;
 								newData = ByteTools.append( p.getRecord(), newData );
@@ -484,7 +484,7 @@ public class PtgMemFunc extends GenericPtg
 									ref = sheetName + ref;
 								}
 								p = new PtgArea3d();
-								p.setParentRec( this.parent_rec );
+								p.setParentRec( parent_rec );
 								p.setLocation( ref );
 								cce += p.getRecord().length;
 								newData = ByteTools.append( p.getRecord(), newData );
@@ -496,7 +496,7 @@ public class PtgMemFunc extends GenericPtg
 									ref = sheetName + ref;
 								}
 								p = new PtgRef3d();
-								p.setParentRec( this.parent_rec );
+								p.setParentRec( parent_rec );
 								p.setLocation( ref );
 								((PtgRef3d) p).setPtgType( PtgRef.REFERENCE );//important for charting/ptgmemfuncs in series/categories - will error on open otherwise
 								cce += p.getRecord().length;
@@ -612,7 +612,7 @@ public class PtgMemFunc extends GenericPtg
 				}
 				else if( c == ':' )
 				{
-					if( this.getParentRec().getWorkBook().getName( ref ) == null )
+					if( getParentRec().getWorkBook().getName( ref ) == null )
 					{ // it's a regular range
 						// check if the ref is a sheet name in a 3d ref
 						if( !ref.equals( "" ) )
@@ -646,7 +646,7 @@ public class PtgMemFunc extends GenericPtg
 						// rare case of a PtgMemFunc containing a formula:
 						String f = ref + "(" + complexrange.substring( i + 1, endparen + 1 );
 						ref = "";
-						refs = mergeStacks( refs, FormulaParser.getPtgsFromFormulaString( this.getParentRec(), f, true ) );
+						refs = mergeStacks( refs, FormulaParser.getPtgsFromFormulaString( getParentRec(), f, true ) );
 						i = endparen;
 						if( !ops.isEmpty() )
 						{
@@ -817,11 +817,11 @@ public class PtgMemFunc extends GenericPtg
 		{
 			parseSubexpression();
 		}
-		if( (this.refsheets != null) || (this.refsheets.size() != 0) )
+		if( (refsheets != null) || (refsheets.size() != 0) )
 		{
 			try
 			{
-				Boundsheet[] sheets = new Boundsheet[this.refsheets.size()];
+				Boundsheet[] sheets = new Boundsheet[refsheets.size()];
 				for( int i = 0; i < sheets.length; i++ )
 				{
 					sheets[i] = b.getWorkSheetByName( refsheets.get( i ) );

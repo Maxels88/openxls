@@ -192,7 +192,7 @@ public class PtgAreaN extends PtgArea
 	{
 		if( (firstPtgN == null) || (lastPtgN == null) )
 		{
-			this.populateVals();
+			populateVals();
 			if( (firstPtgN == null) || (lastPtgN == null) ) // we tried
 			{
 				throw new AssertionError( "PtgAreaN.getLocation null ptgs" );
@@ -247,7 +247,7 @@ public class PtgAreaN extends PtgArea
 	 */
 	public PtgArea getArea()
 	{
-		Shrfmla sh = (Shrfmla) this.getParentRec();
+		Shrfmla sh = (Shrfmla) getParentRec();
 		int[] i = new int[4];
 		if( fRwRel )
 		{
@@ -282,11 +282,11 @@ public class PtgAreaN extends PtgArea
 			i[3] = lastPtgN.col;
 		}
 
-		if( (i[1] >= MAXCOLS_BIFF8) && !this.parent_rec.getWorkBook().getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
+		if( (i[1] >= MAXCOLS_BIFF8) && !parent_rec.getWorkBook().getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
 		{
 			i[1] -= MAXCOLS_BIFF8;
 		}
-		if( (i[3] >= MAXCOLS_BIFF8) && !this.parent_rec.getWorkBook().getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
+		if( (i[3] >= MAXCOLS_BIFF8) && !parent_rec.getWorkBook().getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
 		{
 			i[3] -= MAXCOLS_BIFF8;
 		}
@@ -301,13 +301,13 @@ public class PtgAreaN extends PtgArea
 	@Override
 	public void addToRefTracker()
 	{
-		int iParent = this.getParentRec().getOpcode();
+		int iParent = getParentRec().getOpcode();
 		if( iParent == XLSConstants.SHRFMLA )
 		{
 			// KSC: TESTING - local ptgarea gets finalized and messes up ref. tracker on multiple usages without close
 			//getArea();
 			//parea.addToRefTracker();
-			PtgArea parea = this.getArea();    // is finalized if local var --- but take out ptgarea finalize for now
+			PtgArea parea = getArea();    // is finalized if local var --- but take out ptgarea finalize for now
 			parea.addToRefTracker();
 		}
 	}
@@ -318,10 +318,10 @@ public class PtgAreaN extends PtgArea
 	@Override
 	public void removeFromRefTracker()
 	{
-		int iParent = this.getParentRec().getOpcode();
+		int iParent = getParentRec().getOpcode();
 		if( iParent == XLSConstants.SHRFMLA )
 		{
-			PtgArea parea = this.getArea();
+			PtgArea parea = getArea();
 			parea.removeFromRefTracker();
 		}
 		//if (parea!=null) {

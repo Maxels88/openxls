@@ -68,7 +68,7 @@ public class ConditionalFormatHandle implements Handle
 	 */
 	public ConditionalFormatRule evaluate( CellHandle refcell )
 	{
-		ConditionalFormatRule[] rules = this.getRules();
+		ConditionalFormatRule[] rules = getRules();
 		for( ConditionalFormatRule rule : rules )
 		{
 			if( rule.evaluate( refcell ) )
@@ -86,7 +86,7 @@ public class ConditionalFormatHandle implements Handle
 	 */
 	public ConditionalFormatRule[] getRules()
 	{
-		ArrayList cfs = this.cndfmt.getRules();
+		ArrayList cfs = cndfmt.getRules();
 		ConditionalFormatRule[] rules = new ConditionalFormatRule[cfs.size()];
 		for( int i = 0; i < cfs.size(); i++ )
 		{
@@ -104,7 +104,7 @@ public class ConditionalFormatHandle implements Handle
 	 */
 	protected ConditionalFormatHandle( Condfmt c, WorkSheetHandle workSheetHandle )
 	{
-		this.cndfmt = c;
+		cndfmt = c;
 		worksheet = workSheetHandle;
 	}
 
@@ -152,7 +152,7 @@ public class ConditionalFormatHandle implements Handle
 	 */
 	public boolean contains( CellHandle cellHandle )
 	{
-		return this.cndfmt.contains( cellHandle.getIntLocation() );
+		return cndfmt.contains( cellHandle.getIntLocation() );
 	}
 
 	/**
@@ -167,7 +167,7 @@ public class ConditionalFormatHandle implements Handle
 	 */
 	public void setRange( String range )
 	{
-		this.cndfmt.resetRange( range );
+		cndfmt.resetRange( range );
 	}
 
 	/**
@@ -178,7 +178,7 @@ public class ConditionalFormatHandle implements Handle
 	 */
 	public boolean contains( String celladdy )
 	{
-		return this.cndfmt.contains( ExcelTools.getRowColFromString( celladdy ) );
+		return cndfmt.contains( ExcelTools.getRowColFromString( celladdy ) );
 	}
 
 	/**
@@ -189,14 +189,14 @@ public class ConditionalFormatHandle implements Handle
 	// TODO: more than one cf rule???
 	public String getXML()
 	{
-		ConditionalFormatRule[] rules = this.getRules();
+		ConditionalFormatRule[] rules = getRules();
 		StringBuffer xml = new StringBuffer();
 		xml.append( "<dataConditionalFormat" );
 		xml.append( " type=\"" + ConditionalFormatRule.VALUE_TYPE[rules[0].getConditionalFormatType()] + "\"" );
 		xml.append( " operator=\"" + ConditionalFormatRule.OPERATORS[rules[0].getTypeOperator()] + "\"" );
 		try
 		{
-			xml.append( " sqref=\"" + this.getEncompassingRange() + "\"" );
+			xml.append( " sqref=\"" + getEncompassingRange() + "\"" );
 		}
 		catch( Exception e )
 		{
@@ -227,8 +227,8 @@ public class ConditionalFormatHandle implements Handle
 	// TODO: more than one cf rule???
 	public String toString()
 	{
-		ConditionalFormatRule[] rules = this.getRules();
-		String ret = this.getEncompassingRange() + ": " + rules[0].getType() + " " + rules[0].getOperator();    // range, type + operator
+		ConditionalFormatRule[] rules = getRules();
+		String ret = getEncompassingRange() + ": " + rules[0].getType() + " " + rules[0].getOperator();    // range, type + operator
 		if( rules[0].getFormula1() != null )    // formulas
 		{
 			ret += " " + rules[0].getFormula1().getFormulaString().substring( 1 );
@@ -264,7 +264,7 @@ public class ConditionalFormatHandle implements Handle
 	 */
 	public void addCell( CellHandle cellHandle )
 	{
-		if( this.contains( cellHandle ) )
+		if( contains( cellHandle ) )
 		{
 			return;
 		}
@@ -278,7 +278,7 @@ public class ConditionalFormatHandle implements Handle
 	 */
 	public FormatHandle[] getFormats()
 	{
-		FormatHandle[] fmx = new FormatHandle[this.getCndfmt().getRules().size()];
+		FormatHandle[] fmx = new FormatHandle[getCndfmt().getRules().size()];
 		if( cndfmt.getFormatHandle() == null )
 		{
 			//cfm.initCells(this);	// added!
@@ -287,7 +287,7 @@ public class ConditionalFormatHandle implements Handle
 		}
 		for( int t = 0; t < fmx.length; t++ )
 		{
-			cndfmt.getFormatHandle().updateFromCF( (Cf) this.getCndfmt().getRules().get( t ), worksheet.wbh );
+			cndfmt.getFormatHandle().updateFromCF( (Cf) getCndfmt().getRules().get( t ), worksheet.wbh );
 			fmx[t] = cndfmt.getFormatHandle();
 		}
 		return fmx;

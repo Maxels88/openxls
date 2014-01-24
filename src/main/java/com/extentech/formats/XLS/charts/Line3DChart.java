@@ -47,11 +47,11 @@ public class Line3DChart extends LineChart
 		cooxml.append( "\r\n" );
 		cooxml.append( "<c:grouping val=\"" );
 
-		if( this.is100PercentStacked() )
+		if( is100PercentStacked() )
 		{
 			cooxml.append( "percentStacked" );
 		}
-		else if( this.isStacked() )
+		else if( isStacked() )
 		{
 			cooxml.append( "stacked" );
 		}
@@ -66,19 +66,19 @@ public class Line3DChart extends LineChart
 		// vary colors???
 
 		// *** Series Data:	ser, cat, val for most chart types
-		cooxml.append( this.getParentChart().getChartSeries().getOOXML( this.getChartType(), false, 0 ) );
+		cooxml.append( getParentChart().getChartSeries().getOOXML( getChartType(), false, 0 ) );
 
 		// chart data labels, if any
 		//TODO: FINISH		    	
 		//cooxml.append(getDataLabelsOOXML(cf));
 		//dropLines
-		ChartLine cl = this.cf.getChartLinesRec( ChartLine.TYPE_DROPLINE );
+		ChartLine cl = cf.getChartLinesRec( ChartLine.TYPE_DROPLINE );
 		if( cl != null )
 		{
 			cooxml.append( cl.getOOXML() );
 		}
 		// gapDepth
-		int gapdepth = this.getGapDepth();
+		int gapdepth = getGapDepth();
 		if( gapdepth != 0 )
 		{
 			cooxml.append( "<c:gapDepth val=\"" + gapdepth + "\"/>" );

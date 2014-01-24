@@ -47,13 +47,13 @@ public class Ext implements OOXMLElement
 	public Ext( HashMap<String, String> attrs, String ns )
 	{
 		this.attrs = attrs;
-		this.nameSpace = ns;
+		nameSpace = ns;
 	}
 
 	public Ext( Ext e )
 	{
-		this.attrs = e.attrs;
-		this.nameSpace = e.nameSpace;
+		attrs = e.attrs;
+		nameSpace = e.nameSpace;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -104,14 +104,14 @@ public class Ext implements OOXMLElement
 	 */
 	public void setNamespace( String ns )
 	{
-		this.nameSpace = ns;
+		nameSpace = ns;
 	}
 
 	@Override
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
-		ooxml.append( "<" + this.nameSpace + ":ext" );
+		ooxml.append( "<" + nameSpace + ":ext" );
 		// attributes
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )

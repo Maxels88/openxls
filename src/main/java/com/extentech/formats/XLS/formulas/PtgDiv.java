@@ -76,7 +76,7 @@ public final class PtgDiv extends GenericPtg implements Ptg
 
 	public String toString()
 	{
-		return this.getString();
+		return getString();
 	}
 
 	@Override
@@ -107,11 +107,12 @@ public final class PtgDiv extends GenericPtg implements Ptg
 					//Logger.logInfo("calculating formula, wrong number of values in PtgDiv");
 					return new PtgErr( PtgErr.ERROR_VALUE );    // 20081203 KSC: handle error's ala Excel return null
 				}
-				double o0 = 0, o1 = 0;
+				double o0 = 0;
+				double o1 = 0;
 				try
 				{
-					o0 = getDoubleValue( o[0], this.parent_rec );
-					o1 = getDoubleValue( o[1], this.parent_rec );
+					o0 = getDoubleValue( o[0], parent_rec );
+					o1 = getDoubleValue( o[1], parent_rec );
 				}
 				catch( NumberFormatException e )
 				{
@@ -148,11 +149,12 @@ public final class PtgDiv extends GenericPtg implements Ptg
 					{
 						secondOp = Array.get( o[i + 1], j );    // second array index j
 					}
-					double o0 = 0, o1 = 0;
+					double o0 = 0;
+					double o1 = 0;
 					try
 					{
-						o0 = getDoubleValue( firstOp, this.parent_rec );
-						o1 = getDoubleValue( secondOp, this.parent_rec );
+						o0 = getDoubleValue( firstOp, parent_rec );
+						o1 = getDoubleValue( secondOp, parent_rec );
 					}
 					catch( NumberFormatException e )
 					{

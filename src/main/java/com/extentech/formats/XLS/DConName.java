@@ -66,7 +66,7 @@ public class DConName extends XLSRecord implements XLSConstants
 	public void init()
 	{
 		super.init();
-		int cch = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		int cch = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		int pos = 1;
 		if( cch > 0 )
 		{
@@ -75,8 +75,8 @@ public class DConName extends XLSRecord implements XLSConstants
 			// 0x1  All the characters in the string are saved as double-byte characters in rgb.
 			// reserved (7 bits): MUST be zero, and MUST be ignored.
 
-			byte encoding = this.getByteAt( ++pos );
-			byte[] tmp = this.getBytesAt( ++pos, (cch) * (encoding + 1) );
+			byte encoding = getByteAt( ++pos );
+			byte[] tmp = getBytesAt( ++pos, (cch) * (encoding + 1) );
 			try
 			{
 				if( encoding == 0 )
@@ -93,7 +93,7 @@ public class DConName extends XLSRecord implements XLSConstants
 				log.warn( "encoding PivotTable name in DCONNAME: " + e, e );
 			}
 		}
-		cchFile = ByteTools.readShort( this.getByteAt( pos + cch ), this.getByteAt( pos + cch + 1 ) );
+		cchFile = ByteTools.readShort( getByteAt( pos + cch ), getByteAt( pos + cch + 1 ) );
 		// either 0 or >=2
 		if( cchFile > 0 )
 		{
@@ -109,7 +109,7 @@ public class DConName extends XLSRecord implements XLSConstants
 	 */
 	public String getNamedRange()
 	{
-		return this.namedRange;
+		return namedRange;
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class DConName extends XLSRecord implements XLSConstants
 		{
 		}
 		data = ByteTools.append( new byte[]{ 0, 0 }, data );    // data in same workbook
-		this.setData( data );
+		setData( data );
 	}
 
 	/**

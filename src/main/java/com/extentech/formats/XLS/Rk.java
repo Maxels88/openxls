@@ -102,7 +102,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		setData( b );
 		setOpcode( RK );
 		setLength( (short) 10 );
-		this.init( b );
+		init( b );
 	}
 
 	/**
@@ -125,7 +125,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		System.arraycopy( b, 0, newData, 4, b.length );
 		setData( newData );
 		setOpcode( RK );
-		this.init( b );
+		init( b );
 	}
 
 	/**
@@ -155,7 +155,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 			ixfe = s;
 			System.arraycopy( rkdata, 2, rknum, 0, 4 );
 		}
-		this.translateRK( rknum );
+		translateRK( rknum );
 	}
 
 	/**
@@ -167,19 +167,19 @@ public final class Rk extends XLSCellRecord implements Mulled
 	public void init()
 	{
 		super.init();
-		this.getData();
+		getData();
 		short s;
 		byte[] rknum = new byte[4];
 		// if this is a 'standalone' RK number, then the byte array
 		// contains row, col and ixfe data as well as the number value.
-		if( this.getLength() > 6 )
+		if( getLength() > 6 )
 		{
 			// get the row information
 
 			super.initRowCol();
 			s = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
 			ixfe = s;
-			byte[] numdat = this.getBytesAt( 6, 4 );
+			byte[] numdat = getBytesAt( 6, 4 );
 			System.arraycopy( numdat, 0, rknum, 0, 4 );
 		}
 		else
@@ -187,10 +187,10 @@ public final class Rk extends XLSCellRecord implements Mulled
 			// get the ixfe information
 			s = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 			ixfe = s;
-			byte[] numdat = this.getBytesAt( 2, 4 );
+			byte[] numdat = getBytesAt( 2, 4 );
 			System.arraycopy( numdat, 0, rknum, 0, 4 );
 		}
-		this.translateRK( rknum );
+		translateRK( rknum );
 	}
 
 	/**
@@ -217,8 +217,8 @@ public final class Rk extends XLSCellRecord implements Mulled
 		double d = 1.0;
 
 		Rkdouble = Rk.getRealVal( rkType, num );
-		this.setIsValueForCell( true );
-		this.isDoubleNumber = false;
+		setIsValueForCell( true );
+		isDoubleNumber = false;
 		switch( rkType )
 		{
 			case Rk.RK_FP:
@@ -228,7 +228,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 				String newnum = String.valueOf( Rkdouble );
 				if( newnum.length() > 12 )
 				{
-					this.isDoubleNumber = true;
+					isDoubleNumber = true;
 				}
 				int mantindex = newnum.indexOf( "." );
 				newnum = newnum.substring( mantindex + 1 );
@@ -236,36 +236,36 @@ public final class Rk extends XLSCellRecord implements Mulled
 				{
 					if( Integer.parseInt( newnum ) > 0 )
 					{ // there's FP digits
-						this.isFPNumber = true;
-						this.isIntNumber = false;
+						isFPNumber = true;
+						isIntNumber = false;
 					}
 					else
 					{
-						this.isFPNumber = false;
-						this.isIntNumber = true;
+						isFPNumber = false;
+						isIntNumber = true;
 						RKint = (int) Rkdouble;
 					}
 				}
 				catch( NumberFormatException e )
 				{
-					this.isFPNumber = true;
-					this.isIntNumber = false;
+					isFPNumber = true;
+					isIntNumber = false;
 
 					//RKint = (int)Rkdouble;
 				}
 				if( Rkdouble > Float.MAX_VALUE )
 				{
-					this.isDoubleNumber = true;
+					isDoubleNumber = true;
 				}
 				break;
 
 			case Rk.RK_FP_100:
-				this.isFPNumber = true;
-				this.isIntNumber = false;
+				isFPNumber = true;
+				isIntNumber = false;
 				break;
 			case Rk.RK_INT:
-				this.isFPNumber = false;
-				this.isIntNumber = true;
+				isFPNumber = false;
+				isIntNumber = true;
 				RKint = (int) Rkdouble;
 				break;
 			case Rk.RK_INT_100:
@@ -294,13 +294,13 @@ public final class Rk extends XLSCellRecord implements Mulled
 				{
 					if( Long.parseLong( newnum ) > 0 )
 					{ // there's FP digits
-						this.isFPNumber = true;
-						this.isIntNumber = false;
+						isFPNumber = true;
+						isIntNumber = false;
 					}
 					else
 					{
-						this.isFPNumber = false;
-						this.isIntNumber = true;
+						isFPNumber = false;
+						isIntNumber = true;
 						RKint = (int) Rkdouble;
 					}
 //					happens with big numbers with exponents 
@@ -308,8 +308,8 @@ public final class Rk extends XLSCellRecord implements Mulled
 				}
 				catch( NumberFormatException e )
 				{
-					this.isFPNumber = false;
-					this.isIntNumber = true;
+					isFPNumber = false;
+					isIntNumber = true;
 					RKint = (int) Rkdouble;
 				}
 				break;
@@ -469,12 +469,12 @@ public final class Rk extends XLSCellRecord implements Mulled
 			if( s.indexOf( "." ) > -1 )
 			{
 				double f = new Double( s );    // 20080211 KSC: Double.valueOf(s).doubleValue();
-				this.setDoubleVal( f );
+				setDoubleVal( f );
 			}
 			else
 			{
 				int i = Integer.parseInt( s );
-				this.setIntVal( i );
+				setIntVal( i );
 			}
 		}
 		catch( java.lang.NumberFormatException f )
@@ -491,7 +491,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 	{
 		try
 		{
-			this.setRKVal( f );
+			setRKVal( f );
 		}
 		catch( Exception x )
 		{
@@ -508,7 +508,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 	{
 		try
 		{
-			this.setRKVal( f );
+			setRKVal( f );
 		}
 		catch( Exception x )
 		{
@@ -525,7 +525,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 	{
 		try
 		{
-			this.setRKVal( f );
+			setRKVal( f );
 		}
 		catch( Exception x )
 		{
@@ -655,21 +655,21 @@ public final class Rk extends XLSCellRecord implements Mulled
 	protected void setRKVal( double d )
 	{
 		byte[] b = Rk.getRkBytes( d );    // returns a 5-byte structure
-		this.rkType = b[4];    // the last byte is the Rk type
+		rkType = b[4];    // the last byte is the Rk type
 
-		switch( this.rkType )
+		switch( rkType )
 		{
 			case Rk.RK_FP:
-				this.isFPNumber = true;
+				isFPNumber = true;
 				break;
 			case Rk.RK_INT:
-				this.isIntNumber = true;
+				isIntNumber = true;
 				break;
 			case Rk.RK_FP_100:
-				this.isFPNumber = true;
+				isFPNumber = true;
 				break;
 			case Rk.RK_INT_100:
-				this.isIntNumber = true;
+				isIntNumber = true;
 				break;
 			default:
 				// we need to convert this into a number rec -- not an rk.
@@ -677,11 +677,11 @@ public final class Rk extends XLSCellRecord implements Mulled
 				return;        // it's not an Rk anymore so split
 		}
 
-		System.arraycopy( b, 0, this.getData(), 6, 4 );
-		this.init( this.getData() );
+		System.arraycopy( b, 0, getData(), 6, 4 );
+		init( getData() );
 
 		// failsafe... if for any reason it did not work
-		if( this.Rkdouble != d )
+		if( Rkdouble != d )
 		{
 			log.warn( "Rk.setRKVal() problem.  Fallback to floating point Number." );
 			Rk.convertRkToNumber( this, d );
@@ -745,8 +745,8 @@ public final class Rk extends XLSCellRecord implements Mulled
 	{
 		if( mymul != null )
 		{
-			byte[] b = this.getData();
-			this.ixfe = i;
+			byte[] b = getData();
+			ixfe = i;
 			byte[] newxfe = ByteTools.cLongToLEBytes( i );
 			System.arraycopy( newxfe, 0, b, 4, 2 );
 			mymul.updateRks();

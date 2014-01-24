@@ -108,16 +108,16 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		rw = ByteTools.readShort( this.getData()[0], this.getData()[1] );
-		col = ByteTools.readShort( this.getData()[2], this.getData()[3] );
-		hidden = (this.getData()[4] != (byte) 2);    // not entirely sure of this
+		rw = ByteTools.readShort( getData()[0], getData()[1] );
+		col = ByteTools.readShort( getData()[2], getData()[3] );
+		hidden = (getData()[4] != (byte) 2);    // not entirely sure of this
 		// bytes 5 unknnown
-		id = ByteTools.readShort( this.getData()[6], this.getData()[7] );
+		id = ByteTools.readShort( getData()[6], getData()[7] );
 		// rest are fairy known :)
-		short authorlen = this.getData()[8];
-		auth_encoding = this.getData()[9];
+		short authorlen = getData()[8];
+		auth_encoding = getData()[9];
 		byte[] authorbytes = new byte[authorlen];
-		System.arraycopy( this.getData(), 11, authorbytes, 0, authorlen );
+		System.arraycopy( getData(), 11, authorbytes, 0, authorlen );
 		if( auth_encoding == 0 )
 		{
 			author = new String( authorbytes );
@@ -158,7 +158,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 		{
 			s += " author:" + author;
 		}
-		return "NOTE at [" + this.getCellAddressWithSheet() + "]: " + s;
+		return "NOTE at [" + getCellAddressWithSheet() + "]: " + s;
 	}
 
 	public static XLSRecord getPrototype( String author )
@@ -200,14 +200,14 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setRowCol( int row, int col )
 	{
-		this.rw = (short) row;
+		rw = (short) row;
 		this.col = (short) col;
-		byte[] b = ByteTools.shortToLEBytes( (short) this.rw );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		byte[] b = ByteTools.shortToLEBytes( (short) rw );
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 		b = ByteTools.shortToLEBytes( this.col );
-		this.getData()[2] = b[0];
-		this.getData()[3] = b[1];
+		getData()[2] = b[0];
+		getData()[3] = b[1];
 	}
 
 	/**
@@ -219,8 +219,8 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 	{
 		this.id = (short) id;
 		byte[] b = ByteTools.shortToLEBytes( this.id );
-		this.getData()[6] = b[0];
-		this.getData()[7] = b[1];
+		getData()[6] = b[0];
+		getData()[7] = b[1];
 	}
 
 	/**
@@ -230,7 +230,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public int getId()
 	{
-		return this.id;
+		return id;
 	}
 
 	/**
@@ -240,7 +240,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public boolean getHidden()
 	{
-		return this.hidden;
+		return hidden;
 	}
 
 	/**
@@ -254,17 +254,17 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 		this.hidden = hidden;
 		if( mso == null )
 		{
-			mso = this.getAssociatedMso();
+			mso = getAssociatedMso();
 		}
 		if( this.hidden )
 		{    // hide
-			this.getData()[4] = 0;
+			getData()[4] = 0;
 			// ALSO MUST SET the associated Mso opt subrec to actually hide the note textbox ...
 			mso.setOPTSubRecord( MSODrawingConstants.msooptGroupShapeProperties, false, false, 131074, null );
 		}
 		else
 		{            //show
-			this.getData()[4] = 2;
+			getData()[4] = 2;
 			// ALSO MUST SET the associated Mso opt subrec to actually show the note textbox ...
 			mso.setOPTSubRecord( MSODrawingConstants.msooptGroupShapeProperties, false, false, 131072, null );
 		}
@@ -345,14 +345,14 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 	{
 		this.author = author;
 		byte[] authbytes = this.author.getBytes();
-		byte[] oldData = this.getData();
+		byte[] oldData = getData();
 		byte[] newData = new byte[authbytes.length + 11];
 		System.arraycopy( oldData, 0, newData, 0, 8 );
 		newData[8] = (byte) author.length();
 		// encoding= 0
 		System.arraycopy( authbytes, 0, newData, 11, authbytes.length );
-		this.setData( newData );
-		this.init();
+		setData( newData );
+		init();
 	}
 
 	/**
@@ -362,7 +362,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 	 */
 	private Txo getAssociatedTxo()
 	{
-		Boundsheet bs = this.getSheet();
+		Boundsheet bs = getSheet();
 		int idx = -1;
 		if( bs != null )
 		{// shouldn't!
@@ -377,7 +377,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 				{
 					Obj o = ((Obj) bs.getSheetRecs().get( idx ));
 					// if it's of type Note + has the same id, this is it
-					if( (o.getObjType() == 0x19) && (o.getObjId() == this.id) )
+					if( (o.getObjType() == 0x19) && (o.getObjId() == id) )
 					{ // got it!
 						// now find the next TXO
 						idx++;
@@ -417,7 +417,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( mso == null )
 		{
-			mso = this.getAssociatedMso();
+			mso = getAssociatedMso();
 		}
 		return mso.getBounds();
 	}
@@ -441,7 +441,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( mso == null )
 		{
-			mso = this.getAssociatedMso();
+			mso = getAssociatedMso();
 		}
 		mso.setBounds( bounds );
 	}
@@ -456,7 +456,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( mso == null )
 		{
-			mso = this.getAssociatedMso();
+			mso = getAssociatedMso();
 		}
 		mso.setWidth( (short) Math.round( width / 6.4 ) );    // convert pixels to points
 	}
@@ -471,7 +471,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( mso == null )
 		{
-			mso = this.getAssociatedMso();
+			mso = getAssociatedMso();
 		}
 		mso.setHeight( (short) Math.round( height ) );
 	}
@@ -515,14 +515,14 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( mso == null )
 		{
-			mso = this.getAssociatedMso();
+			mso = getAssociatedMso();
 		}
 		return mso.getSPID();
 	}
 
 	private MSODrawing getAssociatedMso()
 	{
-		Boundsheet bs = this.getSheet();
+		Boundsheet bs = getSheet();
 		int idx = -1;
 		if( bs != null )
 		{// shouldn't!
@@ -537,7 +537,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 				{
 					Obj o = ((Obj) bs.getSheetRecs().get( idx ));
 					// if it's of type Note + has the same id, this is it
-					if( (o.getObjType() == 0x19) && (o.getObjId() == this.id) )
+					if( (o.getObjType() == 0x19) && (o.getObjId() == id) )
 					{ // got it!
 						// first check if this is one of the odd configurations
 						int opcodeprev = ((BiffRec) bs.getSheetRecs().get( idx - 1 )).getOpcode();
@@ -573,7 +573,7 @@ public final class Note extends com.extentech.formats.XLS.XLSRecord
 		{
 			return "";
 		}
-		Text t = new Text( Sst.createUnicodeString( this.getText(), txo.getFormattingRuns(), Sst.STRING_ENCODING_UNICODE ) );
-		return t.getOOXML( this.getWorkBook() );
+		Text t = new Text( Sst.createUnicodeString( getText(), txo.getFormattingRuns(), Sst.STRING_ENCODING_UNICODE ) );
+		return t.getOOXML( getWorkBook() );
 	}
 }

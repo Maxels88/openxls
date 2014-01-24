@@ -118,8 +118,8 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 	{
 		super.init();
 		// 1st 4 are reseverd-0
-		rwMic = ByteTools.readInt( this.getBytesAt( 4, 4 ) );
-		rwMac = ByteTools.readInt( this.getBytesAt( 8, 4 ) );
+		rwMic = ByteTools.readInt( getBytesAt( 4, 4 ) );
+		rwMac = ByteTools.readInt( getBytesAt( 8, 4 ) );
 		// next 4 are position of defColWidth record - skip
 /* no need to read in dbcell offsets as we don't do anything with it
  * 		int pos= 16;
@@ -149,13 +149,13 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 	public void preStream()
 	{
 		// rebuild the record with the correct length body data to fit the new dbcells
-		this.getData();
+		getData();
 		int arrsize = 16 + (dbcells.size() * 4);
 		byte[] newBytes = new byte[arrsize];
 		Dbcell dbc = null;
 		// KSC: Changed from copying 12 bytes to copying 16 bytes to keep DIMENSIONS reference
-		System.arraycopy( this.getData(), 0, newBytes, 0, 16 );
-		this.setData( newBytes );
+		System.arraycopy( getData(), 0, newBytes, 0, 16 );
+		setData( newBytes );
 	}
 
 	/**
@@ -166,9 +166,9 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 	public void updateRowDimensions( int lowRow, int hiRow )
 	{
 		byte[] rw = ByteTools.cLongToLEBytes( lowRow );
-		System.arraycopy( rw, 0, this.getData(), 4, 4 );
+		System.arraycopy( rw, 0, getData(), 4, 4 );
 		rw = ByteTools.cLongToLEBytes( hiRow + 1 );
-		System.arraycopy( rw, 0, this.getData(), 8, 4 );
+		System.arraycopy( rw, 0, getData(), 8, 4 );
 	}
 
 	/**
@@ -184,16 +184,16 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 
 	void setDimensions( Dimensions d )
 	{
-		this.dims = d;
+		dims = d;
 	}
 
 	// Not used??
 	void setDimensionsOffset( int offset )
 	{
-		byte[] recData = this.getData();
+		byte[] recData = getData();
 		byte[] newoff = ByteTools.cLongToLEBytes( offset );
 		System.arraycopy( newoff, 0, recData, 12, 4 );
-		this.setData( recData );
+		setData( recData );
 	}
 
 	/**
@@ -247,11 +247,11 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 	{
 		streamer = getSheet().streamer;
 		// first, get the collection of Rows from sheet
-		Boundsheet bs = this.getSheet();
+		Boundsheet bs = getSheet();
 		Row[] rowz = bs.getRows();
 		if( rowz.length != 0 )
 		{
-			this.updateRowDimensions( rowz[0].getRowNumber(), rowz[(rowz.length) - 1].getRowNumber() );
+			updateRowDimensions( rowz[0].getRowNumber(), rowz[(rowz.length) - 1].getRowNumber() );
 		}
 		// create the new Dbcells if any rows exist within the sheet
 
@@ -259,7 +259,7 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 		int arrsize = 16 + (dbcells.size() * 4);
 		byte[] newBytes = new byte[arrsize];
 		Dbcell dbc = null;
-		System.arraycopy( this.getData(), 0, newBytes, 0, 16 );
+		System.arraycopy( getData(), 0, newBytes, 0, 16 );
 		int offset = 16;
 		for( int i = 0; i < dbcells.size(); i++ )
 		{
@@ -271,7 +271,7 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 			newBytes[offset++] = b[2];
 			newBytes[offset++] = b[3];
 		}
-		this.setData( newBytes );
+		setData( newBytes );
 	}
 
 	/**
@@ -279,7 +279,7 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 	 */
 	void updateDimensions()
 	{
-		byte[] rkdata = this.getData();
+		byte[] rkdata = getData();
 		byte[] newb = ByteTools.cLongToLEBytes( dims.offset );
 		rkdata[12] = newb[0];
 		rkdata[13] = newb[1];
@@ -316,7 +316,7 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 	{
 		if( offsetStart == 0 )
 		{
-			offsetStart = this.getSheet().getMyBof().getOffset();
+			offsetStart = getSheet().getMyBof().getOffset();
 		}
 		int insertOffset = DbOffset - offsetStart;
 		log.trace( "Setting DBBiffRec Position, offsetStart:" + offsetStart + " & InsertOffset = " + insertOffset );
@@ -335,7 +335,8 @@ public final class Index extends com.extentech.formats.XLS.XLSRecord implements 
 
 		int cellloc = 0;
 		int datasiz = 0;
-		short s2, s3;
+		short s2;
+		short s3;
 		byte[] cdb = new byte[4];
 		/**
 		 * serialVersionUID

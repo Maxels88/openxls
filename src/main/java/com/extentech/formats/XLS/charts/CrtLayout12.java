@@ -77,24 +77,29 @@ import com.extentech.toolkit.ByteTools;
 public class CrtLayout12 extends GenericChartObject implements ChartObject
 {
 	byte autolayouttype;
-	short wXMode, wYMode;
-	short wWidthMode, wHeightMode;
-	float x, y, dx, dy;
+	short wXMode;
+	short wYMode;
+	short wWidthMode;
+	short wHeightMode;
+	float x;
+	float y;
+	float dx;
+	float dy;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		byte[] data = this.getData();
+		byte[] data = getData();
 		autolayouttype = (byte) (data[16] >> 1);
 		wXMode = ByteTools.readShort( data[18], data[19] );
 		wYMode = ByteTools.readShort( data[20], data[21] );
 		wWidthMode = ByteTools.readShort( data[22], data[23] );
 		wHeightMode = ByteTools.readShort( data[24], data[25] );
-		x = (float) ByteTools.eightBytetoLEDouble( this.getBytesAt( 26, 8 ) );
-		y = (float) ByteTools.eightBytetoLEDouble( this.getBytesAt( 34, 8 ) );
-		dx = (float) ByteTools.eightBytetoLEDouble( this.getBytesAt( 42, 8 ) );
-		dy = (float) ByteTools.eightBytetoLEDouble( this.getBytesAt( 50, 8 ) );
+		x = (float) ByteTools.eightBytetoLEDouble( getBytesAt( 26, 8 ) );
+		y = (float) ByteTools.eightBytetoLEDouble( getBytesAt( 34, 8 ) );
+		dx = (float) ByteTools.eightBytetoLEDouble( getBytesAt( 42, 8 ) );
+		dy = (float) ByteTools.eightBytetoLEDouble( getBytesAt( 50, 8 ) );
 	}
 
 	/**
@@ -127,7 +132,7 @@ public class CrtLayout12 extends GenericChartObject implements ChartObject
 	public void setLayout( int pos )
 	{
 		autolayouttype = (byte) pos;
-		this.getData()[16] = (byte) (autolayouttype << 1);
+		getData()[16] = (byte) (autolayouttype << 1);
 	}
 
 	public float[] getCoords()

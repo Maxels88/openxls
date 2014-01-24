@@ -162,12 +162,12 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		// TODO: look into whether null is ever a valid value.  for now we assume "no".
 		if( value == null )
 		{
-			throw new ValidationException( this.getErrorBoxTitle(), this.getErrorBoxText() );
+			throw new ValidationException( getErrorBoxTitle(), getErrorBoxText() );
 		}
 
-		if( !this.isCorrectDataType( value ) )
+		if( !isCorrectDataType( value ) )
 		{
-			throw new ValidationException( this.getErrorBoxTitle(), this.getErrorBoxText() );
+			throw new ValidationException( getErrorBoxTitle(), getErrorBoxText() );
 		}
 		if( value instanceof Date )
 		{
@@ -181,51 +181,51 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 				{
 					return true;
 				}
-				throw new ValidationException( this.getErrorBoxTitle(), this.getErrorBoxText() );
+				throw new ValidationException( getErrorBoxTitle(), getErrorBoxText() );
 			case ValidationHandle.CONDITION_NOT_BETWEEN:
 				if( isNotBetween( value ) )
 				{
 					return true;
 				}
-				throw new ValidationException( this.getErrorBoxTitle(), this.getErrorBoxText() );
+				throw new ValidationException( getErrorBoxTitle(), getErrorBoxText() );
 			case ValidationHandle.CONDITION_EQUAL:
 				if( isEqual( value ) )
 				{
 					return true;
 				}
-				throw new ValidationException( this.getErrorBoxTitle(), this.getErrorBoxText() );
+				throw new ValidationException( getErrorBoxTitle(), getErrorBoxText() );
 			case ValidationHandle.CONDITION_GREATER_THAN:
 				if( isGreaterThan( value ) )
 				{
 					return true;
 				}
-				throw new ValidationException( this.getErrorBoxTitle(), this.getErrorBoxText() );
+				throw new ValidationException( getErrorBoxTitle(), getErrorBoxText() );
 			case ValidationHandle.CONDITION_GREATER_OR_EQUAL:
 				if( isGreaterOrEqual( value ) )
 				{
 					return true;
 				}
-				throw new ValidationException( this.getErrorBoxTitle(), this.getErrorBoxText() );
+				throw new ValidationException( getErrorBoxTitle(), getErrorBoxText() );
 			case ValidationHandle.CONDITION_LESS_OR_EQUAL:
 				if( isLessOrEqual( value ) )
 				{
 					return true;
 				}
-				throw new ValidationException( this.getErrorBoxTitle(), this.getErrorBoxText() );
+				throw new ValidationException( getErrorBoxTitle(), getErrorBoxText() );
 
 			case ValidationHandle.CONDITION_LESS_THAN:
 				if( isGreaterOrEqual( value ) )
 				{
 					return true;
 				}
-				throw new ValidationException( this.getErrorBoxTitle(), this.getErrorBoxText() );
+				throw new ValidationException( getErrorBoxTitle(), getErrorBoxText() );
 
 			case ValidationHandle.CONDITION_NOT_EQUAL:
 				if( isNotEqual( value ) )
 				{
 					return true;
 				}
-				throw new ValidationException( this.getErrorBoxTitle(), this.getErrorBoxText() );
+				throw new ValidationException( getErrorBoxTitle(), getErrorBoxText() );
 
 		}
 		return true;
@@ -244,7 +244,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		String formulaStr = "=and(" + value.toString() + ">" + s1 + "," + s2 + ">" + value.toString() + ")";
 		try
 		{
-			Formula f = FormulaParser.getFormulaFromString( formulaStr, this.getWorkBook().getWorkSheetByNumber( 0 ), new int[]{ 1, 1 } );
+			Formula f = FormulaParser.getFormulaFromString( formulaStr, getWorkBook().getWorkSheetByNumber( 0 ), new int[]{ 1, 1 } );
 			f.setCachedValue( null );
 			Object o = f.calculateFormula();
 			if( o instanceof Boolean )
@@ -282,7 +282,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		String formulaStr = "=(" + value.toString() + "=" + s1 + ")";
 		try
 		{
-			Formula f = FormulaParser.getFormulaFromString( formulaStr, this.getWorkBook().getWorkSheetByNumber( 0 ), new int[]{ 1, 1 } );
+			Formula f = FormulaParser.getFormulaFromString( formulaStr, getWorkBook().getWorkSheetByNumber( 0 ), new int[]{ 1, 1 } );
 			Object o = f.calculateFormula();
 			if( o instanceof Boolean )
 			{
@@ -319,7 +319,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		String formulaStr = "=(" + value.toString() + ">" + s1 + ")";
 		try
 		{
-			Formula f = FormulaParser.getFormulaFromString( formulaStr, this.getWorkBook().getWorkSheetByNumber( 0 ), new int[]{ 1, 1 } );
+			Formula f = FormulaParser.getFormulaFromString( formulaStr, getWorkBook().getWorkSheetByNumber( 0 ), new int[]{ 1, 1 } );
 			Object o = f.calculateFormula();
 			if( o instanceof Boolean )
 			{
@@ -345,7 +345,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		String formulaStr = "=(" + value.toString() + ">=" + s1 + ")";
 		try
 		{
-			Formula f = FormulaParser.getFormulaFromString( formulaStr, this.getWorkBook().getWorkSheetByNumber( 0 ), new int[]{ 1, 1 } );
+			Formula f = FormulaParser.getFormulaFromString( formulaStr, getWorkBook().getWorkSheetByNumber( 0 ), new int[]{ 1, 1 } );
 			Object o = f.calculateFormula();
 			if( o instanceof Boolean )
 			{
@@ -371,7 +371,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		String formulaStr = "=(" + value.toString() + "<" + s1 + ")";
 		try
 		{
-			Formula f = FormulaParser.getFormulaFromString( formulaStr, this.getWorkBook().getWorkSheetByNumber( 0 ), new int[]{ 1, 1 } );
+			Formula f = FormulaParser.getFormulaFromString( formulaStr, getWorkBook().getWorkSheetByNumber( 0 ), new int[]{ 1, 1 } );
 			Object o = f.calculateFormula();
 			if( o instanceof Boolean )
 			{
@@ -397,7 +397,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		String formulaStr = "=(" + value.toString() + "<=" + s1 + ")";
 		try
 		{
-			Formula f = FormulaParser.getFormulaFromString( formulaStr, this.getWorkBook().getWorkSheetByNumber( 0 ), new int[]{ 1, 1 } );
+			Formula f = FormulaParser.getFormulaFromString( formulaStr, getWorkBook().getWorkSheetByNumber( 0 ), new int[]{ 1, 1 } );
 			Object o = f.calculateFormula();
 			if( o instanceof Boolean )
 			{
@@ -502,80 +502,80 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		super.init();
 
 		int offset = 0;
-		grbit = ByteTools.readInt( this.getByteAt( offset++ ), this.getByteAt( offset++ ), this.getByteAt( offset++ ), this.getByteAt(
+		grbit = ByteTools.readInt( getByteAt( offset++ ), getByteAt( offset++ ), getByteAt( offset++ ), getByteAt(
 				offset++ ) );
-		short strLen = ByteTools.readShort( this.getByteAt( offset ), this.getByteAt( offset + 1 ) );
-		byte strGrbit = this.getByteAt( offset + 2 );
+		short strLen = ByteTools.readShort( getByteAt( offset ), getByteAt( offset + 1 ) );
+		byte strGrbit = getByteAt( offset + 2 );
 		if( (strGrbit & 0x1) == 0x1 )
 		{
 			strLen *= 2;
 		}
 		strLen += 3;
-		byte[] namebytes = this.getBytesAt( offset, strLen );
+		byte[] namebytes = getBytesAt( offset, strLen );
 		offset += strLen;
 		dTitlePrompt = new Unicodestring();
 		dTitlePrompt.init( namebytes, false );
 
-		strLen = ByteTools.readShort( this.getByteAt( offset ), this.getByteAt( offset + 1 ) );
-		strGrbit = this.getByteAt( offset + 2 );
+		strLen = ByteTools.readShort( getByteAt( offset ), getByteAt( offset + 1 ) );
+		strGrbit = getByteAt( offset + 2 );
 		if( (strGrbit & 0x1) == 0x1 )
 		{
 			strLen *= 2;
 		}
 		strLen += 3;
 
-		namebytes = this.getBytesAt( offset, strLen );
+		namebytes = getBytesAt( offset, strLen );
 		offset += strLen;
 		dTitleError = new Unicodestring();
 		dTitleError.init( namebytes, false );
 
-		strLen = ByteTools.readShort( this.getByteAt( offset ), this.getByteAt( offset + 1 ) );
-		strGrbit = this.getByteAt( offset + 2 );
+		strLen = ByteTools.readShort( getByteAt( offset ), getByteAt( offset + 1 ) );
+		strGrbit = getByteAt( offset + 2 );
 		if( (strGrbit & 0x1) == 0x1 )
 		{
 			strLen *= 2;
 		}
 		strLen += 3;
-		namebytes = this.getBytesAt( offset, strLen );
+		namebytes = getBytesAt( offset, strLen );
 		offset += strLen;
 		dTextPrompt = new Unicodestring();
 		dTextPrompt.init( namebytes, false );
 
-		strLen = ByteTools.readShort( this.getByteAt( offset ), this.getByteAt( offset + 1 ) );
-		strGrbit = this.getByteAt( offset + 2 );
+		strLen = ByteTools.readShort( getByteAt( offset ), getByteAt( offset + 1 ) );
+		strGrbit = getByteAt( offset + 2 );
 		if( (strGrbit & 0x1) == 0x1 )
 		{
 			strLen *= 2;
 		}
 		strLen += 3;
-		namebytes = this.getBytesAt( offset, strLen );
+		namebytes = getBytesAt( offset, strLen );
 		offset += strLen;
 		dTextError = new Unicodestring();
 		dTextError.init( namebytes, false );
 
-		int sz1 = ByteTools.readShort( this.getByteAt( offset++ ), this.getByteAt( offset++ ) );
+		int sz1 = ByteTools.readShort( getByteAt( offset++ ), getByteAt( offset++ ) );
 		// unknown bytes
-		garbageByteOne[0] = this.getByteAt( offset++ );
-		garbageByteOne[1] = this.getByteAt( offset++ );
-		byte[] formulaBytes = this.getBytesAt( offset, sz1 );
+		garbageByteOne[0] = getByteAt( offset++ );
+		garbageByteOne[1] = getByteAt( offset++ );
+		byte[] formulaBytes = getBytesAt( offset, sz1 );
 		firstCond = ExpressionParser.parseExpression( formulaBytes, this );
 		offset += sz1;
 
-		int sz2 = ByteTools.readShort( this.getByteAt( offset++ ), this.getByteAt( offset++ ) );
+		int sz2 = ByteTools.readShort( getByteAt( offset++ ), getByteAt( offset++ ) );
 		// unknown bytes
-		garbageByteTwo[0] = this.getByteAt( offset++ );
-		garbageByteTwo[1] = this.getByteAt( offset++ );
-		formulaBytes = this.getBytesAt( offset, sz2 );
+		garbageByteTwo[0] = getByteAt( offset++ );
+		garbageByteTwo[1] = getByteAt( offset++ );
+		formulaBytes = getBytesAt( offset, sz2 );
 		secondCond = ExpressionParser.parseExpression( formulaBytes, this );
 		offset += sz2;
 
-		numLocs = this.getByteAt( offset++ );
+		numLocs = getByteAt( offset++ );
 		cRangeList = new ArrayList();
 		for( int i = 0; i < numLocs; i++ )
 		{
 			byte[] b = new byte[1];
 			b[0] = 0x0;
-			b = ByteTools.append( b, this.getBytesAt( offset, 8 ) );
+			b = ByteTools.append( b, getBytesAt( offset, 8 ) );
 			PtgArea p = new PtgArea( false );
 			p.setParentRec( this );
 			p.init( b );
@@ -603,7 +603,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 	 */
 	private void updateRecord()
 	{
-		this.updateGrbit();
+		updateGrbit();
 		byte[] recbytes = new byte[0];
 
 		byte[] tmp = ByteTools.cLongToLEBytes( grbit );
@@ -671,7 +671,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 			recbytes = ByteTools.append( tmp, recbytes );
 			for( String ooxmlrange : ooxmlranges )
 			{
-				Ptg/*Ref*/ p = PtgRef.createPtgRefFromString( this.getSheet().getSheetName() + "!" + ooxmlrange, this );
+				Ptg/*Ref*/ p = PtgRef.createPtgRefFromString( getSheet().getSheetName() + "!" + ooxmlrange, this );
 				tmp = p.getRecord();
 			        /* replace with above PtgArea pa= new PtgArea();
                     try {
@@ -696,7 +696,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 			}
 		}
 
-		this.setData( recbytes );
+		setData( recbytes );
 	}
 
 	/**
@@ -709,7 +709,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( dirtyflag )
 		{
-			this.updateRecord();
+			updateRecord();
 		}
 	}
 
@@ -1545,22 +1545,22 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 				ooxml.append( " errorStyle=\"information\"" );
 				break;
 		}
-		if( !this.getErrorBoxText().equals( "" ) )
+		if( !getErrorBoxText().equals( "" ) )
 		{
-			ooxml.append( " error=\"" + OOXMLAdapter.stripNonAscii( this.getErrorBoxText() ) + "\"" );
+			ooxml.append( " error=\"" + OOXMLAdapter.stripNonAscii( getErrorBoxText() ) + "\"" );
 		}
-		if( !this.getErrorBoxTitle().equals( "" ) )
+		if( !getErrorBoxTitle().equals( "" ) )
 		{
-			ooxml.append( " errorTitle=\"" + OOXMLAdapter.stripNonAscii( this.getErrorBoxTitle() ) + "\"" );
+			ooxml.append( " errorTitle=\"" + OOXMLAdapter.stripNonAscii( getErrorBoxTitle() ) + "\"" );
 		}
 		//TODO "imeMode"
-		if( !this.getPromptBoxText().equals( "" ) )
+		if( !getPromptBoxText().equals( "" ) )
 		{
-			ooxml.append( " prompt=\"" + OOXMLAdapter.stripNonAscii( this.getPromptBoxText() ) + "\"" );
+			ooxml.append( " prompt=\"" + OOXMLAdapter.stripNonAscii( getPromptBoxText() ) + "\"" );
 		}
-		if( !this.getPromptBoxTitle().equals( "" ) )
+		if( !getPromptBoxTitle().equals( "" ) )
 		{
-			ooxml.append( " promptTitle=\"" + OOXMLAdapter.stripNonAscii( this.getPromptBoxTitle() ) + "\"" );
+			ooxml.append( " promptTitle=\"" + OOXMLAdapter.stripNonAscii( getPromptBoxTitle() ) + "\"" );
 		}
 		// This needs to be better thought out, currently it breaks/strips all changes made to the model, as ranges
 		// are not automatically added to ooxml ranges.
@@ -1573,7 +1573,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		 ooxml.append("\"");
 		 } else {	// 2003-style ranges
 		 **/
-		String[] ranges = this.getRanges();
+		String[] ranges = getRanges();
 		if( ranges.length > 0 )
 		{
 			ooxml.append( " sqref=\"" );
@@ -1589,15 +1589,15 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		}
 		//}
 
-		if( this.isAllowBlank() )
+		if( isAllowBlank() )
 		{
 			ooxml.append( " allowBlank=\"1\"" );
 		}
-		if( this.isShowErrorMsg() )
+		if( isShowErrorMsg() )
 		{
 			ooxml.append( " showErrorMessage=\"1\"" );
 		}
-		if( this.getShowInputMsg() )
+		if( getShowInputMsg() )
 		{
 			ooxml.append( " showInputMessage=\"1\"" );
 		}
@@ -1608,7 +1608,7 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 		 * imwMode
 		 * TODO: map options correctly!!  where is the info??
 		 */
-		switch( this.getIMEMode() )
+		switch( getIMEMode() )
 		{
 			case 0:    // nocontrol
 				break;
@@ -1644,13 +1644,13 @@ public class Dv extends com.extentech.formats.XLS.XLSRecord
 				break;
 		}
 		ooxml.append( ">" );
-		String formula1 = this.getFirstCond();
+		String formula1 = getFirstCond();
 		if( (formula1 != null) && (formula1.length() > 0) )
 		{
 			formula1 = formula1.replace( (char) 0, ',' );    // DV Lists are delimited by 0 must replace with commas for OOXML use
 			ooxml.append( "<formula1>" + formula1 + "</formula1>" );
 		}
-		String formula2 = this.getSecondCond();
+		String formula2 = getSecondCond();
 		if( (formula2 != null) && (formula2.length() > 0) )
 		{
 			formula2 = formula2.replace( (char) 0, ',' );    // DV Lists are delimited by 0 must replace with commas for OOXML use

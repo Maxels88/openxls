@@ -59,9 +59,9 @@ public class GrpSp implements OOXMLElement
 
 	public GrpSp( GrpSp g )
 	{
-		this.nvpr = g.nvpr;
-		this.sppr = g.sppr;
-		this.choice = g.choice;
+		nvpr = g.nvpr;
+		sppr = g.sppr;
+		choice = g.choice;
 	}
 
 	/**
@@ -622,8 +622,8 @@ class NvGrpSpPr implements OOXMLElement
 
 	public NvGrpSpPr( NvGrpSpPr g )
 	{
-		this.cp = g.cp;
-		this.cgrpsppr = g.cgrpsppr;
+		cp = g.cp;
+		cgrpsppr = g.cgrpsppr;
 	}
 
 	public static NvGrpSpPr parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -798,10 +798,10 @@ class GrpSpPr implements OOXMLElement
 
 	public GrpSpPr( GrpSpPr g )
 	{
-		this.xf = g.xf;
-		this.bwmode = g.bwmode;
-		this.fill = g.fill;
-		this.effect = g.effect;
+		xf = g.xf;
+		bwmode = g.bwmode;
+		fill = g.fill;
+		effect = g.effect;
 	}
 
 	public static GrpSpPr parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -920,7 +920,7 @@ class CNvGrpSpPr implements OOXMLElement
 
 	public CNvGrpSpPr( CNvGrpSpPr g )
 	{
-		this.gsl = g.gsl;
+		gsl = g.gsl;
 	}
 
 	public static CNvGrpSpPr parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -1002,7 +1002,7 @@ class GrpSpLocks implements OOXMLElement
 
 	public GrpSpLocks( GrpSpLocks g )
 	{
-		this.attrs = g.attrs;
+		attrs = g.attrs;
 	}
 
 	public static GrpSpLocks parseOOXML( XmlPullParser xpp, Stack<String> lastTag )

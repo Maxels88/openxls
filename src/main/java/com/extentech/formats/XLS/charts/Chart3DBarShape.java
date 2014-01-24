@@ -42,14 +42,15 @@ public class Chart3DBarShape extends GenericChartObject implements ChartObject
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 3029030180040933082L;
-	byte riser, taper;
+	byte riser;
+	byte taper;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		riser = this.getByteAt( 0 );
-		taper = this.getByteAt( 1 );
+		riser = getByteAt( 0 );
+		taper = getByteAt( 1 );
 	}
 
 	public Chart3DBarShape()
@@ -84,10 +85,10 @@ public class Chart3DBarShape extends GenericChartObject implements ChartObject
 	public void setShape( short shape )
 	{
 		byte[] b = ByteTools.shortToLEBytes( shape );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
-		riser = this.getByteAt( 0 );
-		taper = this.getByteAt( 1 );
+		getData()[0] = b[0];
+		getData()[1] = b[1];
+		riser = getByteAt( 0 );
+		taper = getByteAt( 1 );
 	}
 
 }

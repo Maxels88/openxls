@@ -88,13 +88,13 @@ public class SpPr implements OOXMLElement
 
 	public SpPr( SpPr clone )
 	{
-		this.x = clone.x;
-		this.geom = clone.geom;
-		this.fill = clone.fill;
-		this.l = clone.l;
-		this.effect = clone.effect;
-		this.bwMode = clone.bwMode;
-		this.ns = clone.ns;
+		x = clone.x;
+		geom = clone.geom;
+		fill = clone.fill;
+		l = clone.l;
+		effect = clone.effect;
+		bwMode = clone.bwMode;
+		ns = clone.ns;
 	}
 
 	/**
@@ -109,9 +109,9 @@ public class SpPr implements OOXMLElement
 		this.ns = ns;
 		if( solidfill != null )
 		{
-			this.fill = new FillGroup( null, null, null, null, new SolidFill( solidfill ) );
+			fill = new FillGroup( null, null, null, null, new SolidFill( solidfill ) );
 		}
-		this.l = new Ln( w, lnClr );
+		l = new Ln( w, lnClr );
 	}
 
 	/**
@@ -224,7 +224,7 @@ public class SpPr implements OOXMLElement
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
-		ooxml.append( "<" + this.ns + ":spPr" );
+		ooxml.append( "<" + ns + ":spPr" );
 		if( bwMode != null )
 		{
 			ooxml.append( " bwMode=\"" + bwMode + "\">" );

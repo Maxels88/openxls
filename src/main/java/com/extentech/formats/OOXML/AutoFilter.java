@@ -51,13 +51,13 @@ public class AutoFilter implements OOXMLElement
 	public AutoFilter( String ref, ArrayList<FilterColumn> f )
 	{
 		this.ref = ref;
-		this.filterColumns = f;
+		filterColumns = f;
 	}
 
 	public AutoFilter( AutoFilter a )
 	{
-		this.ref = a.ref;
-		this.filterColumns = a.filterColumns;
+		ref = a.ref;
+		filterColumns = a.filterColumns;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp )
@@ -163,8 +163,8 @@ class FilterColumn implements OOXMLElement
 
 	public FilterColumn( FilterColumn f )
 	{
-		this.attrs = f.attrs;
-		this.filter = f.filter;
+		attrs = f.attrs;
+		filter = f.filter;
 	}
 
 	public static FilterColumn parseOOXML( XmlPullParser xpp )
@@ -296,7 +296,7 @@ class ColorFilter implements OOXMLElement
 
 	public ColorFilter( ColorFilter c )
 	{
-		this.attrs = c.attrs;
+		attrs = c.attrs;
 	}
 
 	public static ColorFilter parseOOXML( XmlPullParser xpp )
@@ -384,7 +384,7 @@ class DynamicFilter implements OOXMLElement
 
 	public DynamicFilter( DynamicFilter d )
 	{
-		this.attrs = d.attrs;
+		attrs = d.attrs;
 	}
 
 	public static DynamicFilter parseOOXML( XmlPullParser xpp )
@@ -471,7 +471,7 @@ class IconFilter implements OOXMLElement
 
 	public IconFilter( IconFilter i )
 	{
-		this.attrs = i.attrs;
+		attrs = i.attrs;
 	}
 
 	public static IconFilter parseOOXML( XmlPullParser xpp )
@@ -556,8 +556,8 @@ class CustomFilters implements OOXMLElement
 
 	public CustomFilters( CustomFilters c )
 	{
-		this.and = c.and;
-		this.custfilter = c.custfilter;
+		and = c.and;
+		custfilter = c.custfilter;
 	}
 
 	public static CustomFilters parseOOXML( XmlPullParser xpp )
@@ -609,7 +609,7 @@ class CustomFilters implements OOXMLElement
 	{
 		StringBuffer ooxml = new StringBuffer();
 		ooxml.append( "<customFilters" );
-		if( this.and )
+		if( and )
 		{
 			ooxml.append( " and=\"1\"" );
 		}
@@ -659,7 +659,7 @@ class CustomFilter implements OOXMLElement
 
 	public CustomFilter( CustomFilter c )
 	{
-		this.attrs = c.attrs;
+		attrs = c.attrs;
 	}
 
 	public static CustomFilter parseOOXML( XmlPullParser xpp )
@@ -744,7 +744,7 @@ class Top10 implements OOXMLElement
 
 	public Top10( Top10 t )
 	{
-		this.attrs = t.attrs;
+		attrs = t.attrs;
 	}
 
 	public static Top10 parseOOXML( XmlPullParser xpp )
@@ -831,7 +831,7 @@ class Filters implements OOXMLElement
 
 	public Filters( Filters f )
 	{
-		this.attrs = f.attrs;
+		attrs = f.attrs;
 	}
 
 	public static Filters parseOOXML( XmlPullParser xpp )

@@ -134,7 +134,7 @@ public class PivotTableHandle
 		int[] rc = ExcelTools.getRangeCoords( range );
 		if( range.indexOf( "!" ) == -1 )
 		{
-			range = this.getWorkSheetHandle() + "!" + range;
+			range = getWorkSheetHandle() + "!" + range;
 		}
 		SxStreamID sxid = book.getWorkBook().getPivotStream( pt.getICache() );
 		sxid.setCellRange( range );
@@ -214,7 +214,7 @@ public class PivotTableHandle
 	 */
 	public String toString()
 	{
-		return this.getTableName();
+		return getTableName();
 	}
 
 	/**
@@ -632,7 +632,7 @@ public class PivotTableHandle
 
 		try
 		{
-			thePivot.put( "title", this.getTableName() );
+			thePivot.put( "title", getTableName() );
 //			thePivot.put("cellrange", this.getCellRange().getRange());
 
 		}

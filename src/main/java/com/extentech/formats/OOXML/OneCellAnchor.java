@@ -51,16 +51,16 @@ public class OneCellAnchor implements OOXMLElement
 
 	public OneCellAnchor( From f, Ext e, ObjectChoice o )
 	{
-		this.from = f;
-		this.ext = e;
-		this.objectChoice = o;
+		from = f;
+		ext = e;
+		objectChoice = o;
 	}
 
 	public OneCellAnchor( OneCellAnchor oca )
 	{
-		this.from = oca.from;
-		this.ext = oca.ext;
-		this.objectChoice = oca.objectChoice;
+		from = oca.from;
+		ext = oca.ext;
+		objectChoice = oca.objectChoice;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -407,7 +407,7 @@ public class OneCellAnchor implements OOXMLElement
 		objectChoice.setName( name );
 		objectChoice.setEmbed( "rId" + Integer.valueOf( rid ).toString() );
 		objectChoice.setId( rid );
-		this.setBounds( bounds );
+		setBounds( bounds );
 		// id???
 	}
 

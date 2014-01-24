@@ -89,18 +89,20 @@ public class AreaFormat extends GenericChartObject implements ChartObject
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = -437132913972684937L;
-	private java.awt.Color rgbFore, rgbBack;
+	private java.awt.Color rgbFore;
+	private java.awt.Color rgbBack;
 	private short fls = 0;
 	private short grbit = 0;
 	private short icvFore = 0;
 	private short icvBack = 0;
-	boolean fAuto, fInvertNeg;
+	boolean fAuto;
+	boolean fInvertNeg;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		byte[] data = this.getData();
+		byte[] data = getData();
 		grbit = ByteTools.readShort( data[10], data[11] );
 		fAuto = (grbit & 0x1) == 0x1;
 		fInvertNeg = (grbit & 0x2) == 0x2;
@@ -156,15 +158,15 @@ public class AreaFormat extends GenericChartObject implements ChartObject
 		b[1] = (byte) rgbFore.getGreen();
 		b[2] = (byte) rgbFore.getBlue();
 		b[3] = 0;    // reserved/0
-		System.arraycopy( b, 0, this.getData(), 0, 4 );
+		System.arraycopy( b, 0, getData(), 0, 4 );
 		b[0] = (byte) rgbBack.getRed();
 		b[1] = (byte) rgbBack.getGreen();
 		b[2] = (byte) rgbBack.getBlue();
 		b[3] = 0;    // reserved/0
-		System.arraycopy( b, 0, this.getData(), 4, 4 );
+		System.arraycopy( b, 0, getData(), 4, 4 );
 		b = ByteTools.shortToLEBytes( fls );
-		this.getData()[8] = b[0];
-		this.getData()[9] = b[1];
+		getData()[8] = b[0];
+		getData()[9] = b[1];
 		grbit = 0;
 		if( fAuto )
 		{
@@ -175,14 +177,14 @@ public class AreaFormat extends GenericChartObject implements ChartObject
 			grbit |= 0x2;
 		}
 		b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[10] = b[0];
-		this.getData()[11] = b[1];
+		getData()[10] = b[0];
+		getData()[11] = b[1];
 		b = ByteTools.shortToLEBytes( icvFore );
-		this.getData()[12] = b[0];
-		this.getData()[13] = b[1];
+		getData()[12] = b[0];
+		getData()[13] = b[1];
 		b = ByteTools.shortToLEBytes( icvBack );
-		this.getData()[14] = b[0];
-		this.getData()[15] = b[1];
+		getData()[14] = b[0];
+		getData()[15] = b[1];
 	}
 
 	public String toString()
@@ -197,7 +199,7 @@ public class AreaFormat extends GenericChartObject implements ChartObject
 	 */
 	public int geticvBack()
 	{
-		if( icvBack > this.getColorTable().length )
+		if( icvBack > getColorTable().length )
 		{    // then it's one of the special codes:
 			return FormatHandle.interpretSpecialColorIndex( icvBack );
 		}
@@ -277,7 +279,7 @@ public class AreaFormat extends GenericChartObject implements ChartObject
 	 */
 	public int geticvFore()
 	{
-		if( icvFore > this.getColorTable().length )
+		if( icvFore > getColorTable().length )
 		{    // then it's one of the special codes:
 			return FormatHandle.interpretSpecialColorIndex( icvFore );
 		}
@@ -286,16 +288,16 @@ public class AreaFormat extends GenericChartObject implements ChartObject
 
 	public void seticvBack( int clr )
 	{
-		if( (clr > -1) && (clr < this.getColorTable().length) )
+		if( (clr > -1) && (clr < getColorTable().length) )
 		{
 			icvBack = (short) clr;
-			rgbBack = this.getColorTable()[clr];
+			rgbBack = getColorTable()[clr];
 			updateRecord();
 		}
 		else if( clr == 0x4D )
 		{ // special flag, default bg
 			icvBack = (short) clr;
-			rgbBack = this.getColorTable()[0];
+			rgbBack = getColorTable()[0];
 			updateRecord();
 		}
 	}
@@ -310,12 +312,12 @@ public class AreaFormat extends GenericChartObject implements ChartObject
 
 		// fls= 1 The fill pattern is solid. When solid is specified,
 		// rgbFore is the only color rendered, even if rgbBack is specified
-		if( (clr > -1) && (clr < this.getColorTable().length) )
+		if( (clr > -1) && (clr < getColorTable().length) )
 		{
 			fAuto = false;
 			fls = 1;
 			icvFore = (short) clr;
-			rgbFore = this.getColorTable()[clr];
+			rgbFore = getColorTable()[clr];
 			// must also set bg to 9
 			seticvBack( 9 );
 			//updateRecord();
@@ -323,7 +325,7 @@ public class AreaFormat extends GenericChartObject implements ChartObject
 		else if( clr == 0x4E )
 		{ // default fg
 			icvFore = (short) clr;
-			rgbFore = this.getColorTable()[1];
+			rgbFore = getColorTable()[1];
 			updateRecord();
 		}
 	}
@@ -352,7 +354,7 @@ public class AreaFormat extends GenericChartObject implements ChartObject
 		FillGroup f = sp.getFill();
 		if( f != null )
 		{
-			this.seticvFore( f.getColor() );
+			seticvFore( f.getColor() );
 			//this.seticvBack()
 			// fls= fill pattern
 

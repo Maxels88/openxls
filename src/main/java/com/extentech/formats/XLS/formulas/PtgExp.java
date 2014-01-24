@@ -98,7 +98,7 @@ public class PtgExp extends GenericPtg implements Ptg
 		byte[] c = ByteTools.shortToLEBytes( (short) col );
 		record = new byte[]{ 0x1, r[0], r[1], c[0], c[1] };
 		ptgId = record[0];
-		this.populateVals();
+		populateVals();
 		//this.addToReferenceTracker();
 	}
 
@@ -107,7 +107,7 @@ public class PtgExp extends GenericPtg implements Ptg
 	{
 		ptgId = b[0];
 		record = b;
-		this.populateVals();
+		populateVals();
 		//this.addToReferenceTracker();
 	}
 
@@ -133,7 +133,7 @@ public class PtgExp extends GenericPtg implements Ptg
 	 */
 	public Ptg[] getConvertedExpression()
 	{
-		Formula f = (Formula) this.getParentRec();
+		Formula f = (Formula) getParentRec();
 		if( f.isSharedFormula() )
 		{
 			Stack expression = f.shared.instantiate( f );
@@ -163,7 +163,7 @@ public class PtgExp extends GenericPtg implements Ptg
 	{
 		Object o = null;
 		;
-		Formula f = (Formula) this.getParentRec();
+		Formula f = (Formula) getParentRec();
 		if( f.isSharedFormula() )
 		{
 			o = FormulaCalculator.calculateFormula( f.shared.instantiate( f ) );
@@ -179,7 +179,7 @@ public class PtgExp extends GenericPtg implements Ptg
 			}
 			else
 			{    // it's part of an array formula but not the parent
-				r = this.getParentRec().getSheet().getArrayFormula( getReferent() );
+				r = getParentRec().getSheet().getArrayFormula( getReferent() );
 			}
 			if( r instanceof Array )
 			{
@@ -199,7 +199,7 @@ public class PtgExp extends GenericPtg implements Ptg
 	{
 		Object o = null;
 		;
-		Formula f = ((Formula) this.getParentRec());
+		Formula f = ((Formula) getParentRec());
 		if( f.isSharedFormula() )
 		{
 			o = FormulaCalculator.calculateFormula( f.shared.instantiate( f ) );
@@ -213,7 +213,7 @@ public class PtgExp extends GenericPtg implements Ptg
 			}
 			else
 			{    // it's part of an array formula but not the parent
-				r = this.getParentRec().getSheet().getArrayFormula( getReferent() );
+				r = getParentRec().getSheet().getArrayFormula( getReferent() );
 			}
 			if( r instanceof Array )
 			{
@@ -265,8 +265,8 @@ public class PtgExp extends GenericPtg implements Ptg
 		String s = "";
 		try
 		{
-			s = this.getParentRec().getCellAddress();
-			s = this.getParentRec().getSheet().getSheetName() + "!" + s;
+			s = getParentRec().getCellAddress();
+			s = getParentRec().getSheet().getSheetName() + "!" + s;
 		}
 		catch( Exception e )
 		{
@@ -286,9 +286,9 @@ public class PtgExp extends GenericPtg implements Ptg
 			try
 			{
 				// Object o= ((Formula) this.getParentRec()).getInternalRecords().get(0);	PARENT REC of ARRAY or SHRFMLA is determined by referent (record) NOT necessarily same as actual Parent Rec
-				Boundsheet sht = this.getParentRec().getSheet();
+				Boundsheet sht = getParentRec().getSheet();
 //	    		Formula pr= (Formula) sht.getCell(this.getReferent());
-				Formula f = ((Formula) this.getParentRec());
+				Formula f = ((Formula) getParentRec());
 				Object o;
 				if( f.isSharedFormula() )
 				{
@@ -299,7 +299,7 @@ public class PtgExp extends GenericPtg implements Ptg
 					}
 					return o.toString();
 				}
-				Formula pr = (Formula) sht.getCell( this.getReferent() );
+				Formula pr = (Formula) sht.getCell( getReferent() );
 				o = pr.getInternalRecords().get( 0 );
 				if( o instanceof Array )
 				{
@@ -309,7 +309,7 @@ public class PtgExp extends GenericPtg implements Ptg
 				if( o instanceof StringRec )
 				{
 					//if this is a shared formula the attached string is the RESULT, not the formula string itself
-					if( ((Formula) this.getParentRec()).isSharedFormula() )
+					if( ((Formula) getParentRec()).isSharedFormula() )
 					{
 						throw new IndexOutOfBoundsException( "parse it" );
 					}
@@ -357,12 +357,12 @@ public class PtgExp extends GenericPtg implements Ptg
 
 	public void setColFirst( int c )
 	{
-		this.colFirst = c;
+		colFirst = c;
 	}
 
 	public void setRowFirst( int r )
 	{
-		this.rwFirst = r;
+		rwFirst = r;
 	}
 
 	public String toString()

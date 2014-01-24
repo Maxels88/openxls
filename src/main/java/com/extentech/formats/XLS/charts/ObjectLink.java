@@ -56,7 +56,7 @@ public class ObjectLink extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		byte[] rkdata = this.getData();
+		byte[] rkdata = getData();
 		wLinkObj = ByteTools.readShort( rkdata[0], rkdata[1] );
 	}
 
@@ -110,7 +110,7 @@ public class ObjectLink extends GenericChartObject implements ChartObject
 	public void setType( int type )
 	{
 		wLinkObj = (short) type;
-		this.getData()[0] = (byte) wLinkObj;
+		getData()[0] = (byte) wLinkObj;
 	}
 
 	public static XLSRecord getPrototype( int type )

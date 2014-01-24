@@ -127,7 +127,7 @@ public class Storage extends BlockByteReader
 		myblocks = new ArrayList();
 		for( Block blk : blks )
 		{
-			this.addBlock( blk );
+			addBlock( blk );
 		}
 	}
 
@@ -138,7 +138,7 @@ public class Storage extends BlockByteReader
 	 */
 	public BlockByteReader getBlockReader()
 	{
-		BlockByteReader ret = new BlockByteReader( myblocks, this.getActualFileSize() );
+		BlockByteReader ret = new BlockByteReader( myblocks, getActualFileSize() );
 		return ret;
 	}
 
@@ -149,22 +149,22 @@ public class Storage extends BlockByteReader
 
 	public void setIsSpecial( boolean b )
 	{
-		this.isSpecial = b;
+		isSpecial = b;
 	}
 
 	public boolean getIsSpecial()
 	{
-		return this.isSpecial;
+		return isSpecial;
 	}
 
 	public boolean getInitialized()
 	{
-		return this.initialized;
+		return initialized;
 	}
 
 	public void setInitialized( boolean b )
 	{
-		this.initialized = b;
+		initialized = b;
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class Storage extends BlockByteReader
 	 */
 	public void setBlockType( int type )
 	{
-		this.blockType = type;
+		blockType = type;
 		switch( type )
 		{
 			case Block.BIG:
@@ -199,7 +199,7 @@ public class Storage extends BlockByteReader
 	 */
 	public int getBlockType()
 	{
-		return this.blockType;
+		return blockType;
 	}
 
 	public int getStorageType()
@@ -220,7 +220,7 @@ public class Storage extends BlockByteReader
 		int pos = 0x43;
 		headerData.position( pos );
 		headerData.put( (byte) o );
-		this.directoryColor = (byte) o;
+		directoryColor = (byte) o;
 	}
 
 	public String getName()
@@ -312,7 +312,7 @@ public class Storage extends BlockByteReader
 		nextStorageID = headerData.getInt();
 		childStorageID = headerData.getInt();
 
-		sz = this.getActualFileSize();
+		sz = getActualFileSize();
 		if( (sz > 0) && (sz < BIGBLOCK.SIZE) )
 		{
 			miniStreamStorage = true;
@@ -326,7 +326,7 @@ public class Storage extends BlockByteReader
 	 */
 	public int getPrevStorageID()
 	{
-		return this.prevStorageID;
+		return prevStorageID;
 	}
 
 	/**
@@ -337,7 +337,7 @@ public class Storage extends BlockByteReader
 		int pos = 0x44;
 		headerData.position( pos );
 		headerData.putInt( o );
-		this.prevStorageID = o;
+		prevStorageID = o;
 	}
 
 	/**
@@ -345,7 +345,7 @@ public class Storage extends BlockByteReader
 	 */
 	public int getNextStorageID()
 	{
-		return this.nextStorageID;
+		return nextStorageID;
 	}
 
 	/**
@@ -356,7 +356,7 @@ public class Storage extends BlockByteReader
 		int pos = 0x48;
 		headerData.position( pos );
 		headerData.putInt( o );
-		this.nextStorageID = o;
+		nextStorageID = o;
 	}
 
 	/**
@@ -364,7 +364,7 @@ public class Storage extends BlockByteReader
 	 */
 	public int getChildStorageID()
 	{
-		return this.childStorageID;
+		return childStorageID;
 	}
 
 	/**
@@ -375,7 +375,7 @@ public class Storage extends BlockByteReader
 		int pos = 0x4C;
 		headerData.position( pos );
 		headerData.putInt( o );
-		this.childStorageID = o;
+		childStorageID = o;
 	}
 
 	/**
@@ -383,7 +383,7 @@ public class Storage extends BlockByteReader
 	 */
 	public int getFilePos()
 	{
-		int ret = (this.getStartBlock() + 1) * SIZE;
+		int ret = (getStartBlock() + 1) * SIZE;
 		return ret;
 	}
 
@@ -444,7 +444,7 @@ public class Storage extends BlockByteReader
 		}
 		for( Block b : bs )
 		{
-			this.addBlock( b );
+			addBlock( b );
 		}
 	}
 
@@ -466,7 +466,7 @@ public class Storage extends BlockByteReader
 		}
 		for( Block b1 : bs )
 		{
-			this.addBlock( b1 );
+			addBlock( b1 );
 		}
 	}
 
@@ -476,9 +476,9 @@ public class Storage extends BlockByteReader
 	 */
 	public void setBytes( byte[] b )
 	{
-		if( this.miniStreamStorage )
+		if( miniStreamStorage )
 		{
-			this.setMiniFATSectorBytes( b );
+			setMiniFATSectorBytes( b );
 			return;
 		}
 		Block[] bs = BlockFactory.getBlocksFromByteArray( b, Block.BIG );
@@ -493,7 +493,7 @@ public class Storage extends BlockByteReader
 		}
 		for( Block b1 : bs )
 		{
-			this.addBlock( b1 );
+			addBlock( b1 );
 		}
 	}
 
@@ -516,7 +516,7 @@ public class Storage extends BlockByteReader
 		}
 		for( Block b1 : bs )
 		{
-			this.addBlock( b1 );
+			addBlock( b1 );
 		}
 	}
 
@@ -542,9 +542,9 @@ public class Storage extends BlockByteReader
 			Block[] smallblocks = BlockFactory.getBlocksFromByteArray( newbytes, Block.SMALL );
 			for( Block smallblock : smallblocks )
 			{
-				this.addBlock( smallblock );
+				addBlock( smallblock );
 			}
-			this.setBlockType( Block.SMALL );
+			setBlockType( Block.SMALL );
 		}
 		else
 		{
@@ -557,11 +557,11 @@ public class Storage extends BlockByteReader
 			Block[] blocks = BlockFactory.getBlocksFromByteArray( newbytes, Block.BIG );
 			for( Block block : blocks )
 			{
-				this.addBlock( block );
+				addBlock( block );
 			}
-			this.setBlockType( Block.BIG );
+			setBlockType( Block.BIG );
 		}
-		this.setActualFileSize( actuallen );
+		setActualFileSize( actuallen );
 	}
 
 	/**
@@ -570,7 +570,7 @@ public class Storage extends BlockByteReader
 	 */
 	public void initFromMiniStream( List miniStream, int[] miniFAT ) throws LEOIndexingException
 	{
-		if( this.getStartBlock() < 0 )
+		if( getStartBlock() < 0 )
 		{
 			return;
 		}
@@ -584,7 +584,7 @@ public class Storage extends BlockByteReader
 		boolean endloop = false;
 		Block thisBlock = null;
 
-		int idx = this.getStartBlock();
+		int idx = getStartBlock();
 		while( idx >= 0 )
 		{
 			switch( idx )
@@ -597,12 +597,12 @@ public class Storage extends BlockByteReader
 				default:
 					if( idx >= miniStream.size() )
 					{
-						log.warn( "MiniStream Error initting Storage: " + this.getName() );
+						log.warn( "MiniStream Error initting Storage: " + getName() );
 					}
 					else
 					{
 						thisBlock = (Block) miniStream.get( idx );    // miniFAT is 0-based (no header sector at position 0 as in regular FAT)
-						this.addBlock( thisBlock );
+						addBlock( thisBlock );
 					}
 			}
 			if( endloop )
@@ -612,13 +612,13 @@ public class Storage extends BlockByteReader
 			idx = miniFAT[idx];    // otherwise, walk the sector id chain
 		}
 
-			if( (int) Math.ceil( this.getActualFileSize() / 64.0 ) != myblocks.size() )
+			if( (int) Math.ceil( getActualFileSize() / 64.0 ) != myblocks.size() )
 			{
-				log.warn( "Number of miniStream Sectors does not equal storage size.  Expected: " + (int) Math.ceil( this.getActualFileSize() / 64.0 ) + ". Is: " + myblocks
+				log.warn( "Number of miniStream Sectors does not equal storage size.  Expected: " + (int) Math.ceil( getActualFileSize() / 64.0 ) + ". Is: " + myblocks
 						.size() );
 			}
 
-		this.setInitialized( true );
+		setInitialized( true );
 	}
 
 	/**
@@ -643,7 +643,7 @@ public class Storage extends BlockByteReader
 		{
 			// for root storages, add rootstart block
 			thisbb = (Block) dta.get( startBlock + 1 );
-			this.addBlock( thisbb ); //;
+			addBlock( thisbb ); //;
 		}
 		for( int i = startBlock; i < FAT.length; )
 		{
@@ -657,15 +657,15 @@ public class Storage extends BlockByteReader
 					break;
 
 				case -3: // special block	= DIFAT - defines the FAT
-					if( this.getActualFileSize() > 0 )
+					if( getActualFileSize() > 0 )
 					{
 						log.debug( "WARNING: Storage.init() Special block containing headerData." );
-						this.setIsSpecial( true );
+						setIsSpecial( true );
 
 						thisbb = (Block) dta.get( i++ );
 						if( !thisbb.getIsSpecialBlock() )
 						{
-							this.addBlock( thisbb ); //;
+							addBlock( thisbb ); //;
 						}
 						nextIdx = i;
 					}
@@ -688,7 +688,7 @@ public class Storage extends BlockByteReader
 						{
 							break;
 						}
-						this.addBlock( thisbb ); //
+						addBlock( thisbb ); //
 						//}
 					}
 					endloop = true;
@@ -709,11 +709,11 @@ public class Storage extends BlockByteReader
 							log.debug( "INFO: Storage init: jumper skipping: " + String.valueOf( i ) );
 						Block skipbb = (Block) dta.get( i + 1 );
 
-						this.addBlock( skipbb ); //
+						addBlock( skipbb ); //
 					}
 					else if( !thisbb.getIsSpecialBlock() )
 					{ // just skip as probably a bbdix in the midst of the secid chain
-						this.addBlock( thisbb ); //
+						addBlock( thisbb ); //
 
 					}
 			}
@@ -726,7 +726,7 @@ public class Storage extends BlockByteReader
 
 		if( log.isDebugEnabled() )
 		{
-			int sz = this.getActualFileSize();
+			int sz = getActualFileSize();
 			if( sz != 0 )
 			{
 				if( Math.ceil( sz / 512.0 ) != myblocks.size() )
@@ -735,7 +735,7 @@ public class Storage extends BlockByteReader
 				}
 			}
 		}
-		this.setInitialized( true );
+		setInitialized( true );
 	}
 
 	/**
@@ -752,7 +752,7 @@ public class Storage extends BlockByteReader
 
 		if( b.getInitialized() )
 		{
-			log.debug( "ERROR: " + this.toString() + " - Block is already initialized." );
+			log.debug( "ERROR: " + toString() + " - Block is already initialized." );
 			return;
 		}
 		b.setStorage( this );
@@ -782,7 +782,7 @@ public class Storage extends BlockByteReader
 	public void setActualFileSize( int i )
 	{
 		int pos = 0x78;
-		this.sz = i;
+		sz = i;
 		headerData.position( pos );
 		headerData.putInt( i );
 	}
@@ -794,8 +794,8 @@ public class Storage extends BlockByteReader
 	{
 		int pos = 0x78;
 		headerData.position( pos );
-		this.sz = headerData.getInt();
-		return this.sz;
+		sz = headerData.getInt();
+		return sz;
 	}
 
 	/**
@@ -804,10 +804,10 @@ public class Storage extends BlockByteReader
 	 */
 	public void setStartBlock( int i )
 	{
-		this.startBlock = i;
+		startBlock = i;
 		int pos = 0x74;
-		this.headerData.position( pos );
-		this.headerData.putInt( i );
+		headerData.position( pos );
+		headerData.putInt( i );
 	}
 
 	/**
@@ -828,9 +828,9 @@ public class Storage extends BlockByteReader
 	{
 		if( myblocks.size() < 1 )
 		{
-			return this.initBigBlocks();
+			return initBigBlocks();
 		}
-		Block[] blox = new Block[this.myblocks.size()];
+		Block[] blox = new Block[myblocks.size()];
 		blox = (Block[]) myblocks.toArray( blox );
 		return blox;
 	}
@@ -841,9 +841,9 @@ public class Storage extends BlockByteReader
 	private Block[] initBigBlocks()
 	{
 		// byte[] bb = this.getBytes();
-		if( this.getLength() > 0 )
+		if( getLength() > 0 )
 		{
-			Block[] blks = BlockFactory.getBlocksFromByteArray( this.getBytes(), Block.BIG );
+			Block[] blks = BlockFactory.getBlocksFromByteArray( getBytes(), Block.BIG );
 			int t = 0;
 			myblocks.clear();
 			for(; t < blks.length; t++ )
@@ -852,7 +852,7 @@ public class Storage extends BlockByteReader
 				{
 					blks[t].setNextBlock( blks[t + 1] );
 				}
-				this.addBlock( blks[t] );
+				addBlock( blks[t] );
 			}
 			return blks;
 		}
@@ -879,7 +879,7 @@ public class Storage extends BlockByteReader
 
 	public boolean equals( Object other )
 	{
-		if( other.toString().equals( this.toString() ) )
+		if( other.toString().equals( toString() ) )
 		{
 			return true;
 		}

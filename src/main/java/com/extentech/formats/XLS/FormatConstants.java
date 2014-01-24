@@ -51,7 +51,8 @@ import java.awt.Color;
 public interface FormatConstants
 {
 
-	public static final int DEFAULT_FONT_WEIGHT = 200, DEFAULT_FONT_SIZE = 20;
+	public static final int DEFAULT_FONT_WEIGHT = 200;
+	public static final int DEFAULT_FONT_SIZE = 20;
 	public static final String DEFAULT_FONT_FACE = "Arial";
 
 	// Font Weights
@@ -481,7 +482,9 @@ public interface FormatConstants
 			"slant_dash-dot-dot"    // 0xD Slanted dash-dot-dot line
 	};
 
-	public static int FORMAT_SUBSCRIPT = 2, FORMAT_SUPERSCRIPT = 1, FORMAT_NOSCRIPT = 0;
+	public static int FORMAT_SUBSCRIPT = 2;
+	public static int FORMAT_SUPERSCRIPT = 1;
+	public static int FORMAT_NOSCRIPT = 0;
 
 	// Decoded Built-in Format Patterns + HEX Format IDs
 	// includes number, currency and date formats

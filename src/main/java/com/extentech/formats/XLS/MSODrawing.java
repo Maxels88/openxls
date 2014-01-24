@@ -190,12 +190,15 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 
 	int imageIndex = -1;
 	boolean bActive = false;        // true if this image is Active (not deleted) - NOTE: setting Active algorithm is not definitively proven
-	String imageName = "", shapeName = "";
+	String imageName = "";
+	String shapeName = "";
 	short clientAnchorFlag;            // MSOFBTCLIENTANCHOR 1st two bytes - * 0 = Move and size with Cells, 2 = Move but don't size with cells, 3 = Don't move or size with cells. */
 	short[] bounds = new short[8];    // MSOFBTCLIENTANCHOR-
-	short origHeight, origWidth;    // save original height and width so that if underlying row height(s) or column width(s) change, can still set dimensions correctly ...
+	short origHeight;
+	short origWidth;    // save original height and width so that if underlying row height(s) or column width(s) change, can still set dimensions correctly ...
 	private MsofbtOPT optrec = null;    // 20091209 KSC: save MsofbtOPT records for later updating ...
-	private MsofbtOPT secondaryoptrec = null, tertiaryoptrec = null;    // apparently can have secondary and tertiary obt recs depending upon version in which it was saved ...
+	private MsofbtOPT secondaryoptrec = null;
+	private MsofbtOPT tertiaryoptrec = null;    // apparently can have secondary and tertiary obt recs depending upon version in which it was saved ...
 	short shapeType = 0;                // shape type for this drawing record
 
 	private int SPIDSEED = 1024;
@@ -244,7 +247,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		// key sub-records to update:
 		// MSOFBTSP, MSOFBTOPT (image index, shape name, image name), CLIENTANCHOR if present - bounds
 		// plus container which must be calculated from it's sub-records or atoms
-		this.SPID = spid;
+		SPID = spid;
 		//this.SPID = SPIDSEED + imageIndex;// algorithm is incorrect for instances when images are deleted or out of order ...
 		//    	Following are present in all msodrawing: MSOFBTSPCONTAINER MSOFBTSP MSOFBTOPT MSOFBTCLIENTANCHOR MSOFBTCLIENTDATA  -- not true! can have CHILDANCHOR, ANCHOR ...
 		//Shape Atom; shape type must be msosptPictureFrame = 75
@@ -364,8 +367,8 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 
 		}
 
-		this.setData( retData );
-		this.setLength( data.length );
+		setData( retData );
+		setLength( data.length );
 		return retData;
 	}
 
@@ -404,7 +407,10 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		super.init();
 
 		ByteArrayInputStream bis = new ByteArrayInputStream( super.getData() );
-		int version, inst, fbt, len;
+		int version;
+		int inst;
+		int fbt;
+		int len;
 		SPCONTAINERLENGTH = 0;        // this shape container length		
 		otherSPCONTAINERLENGTH = 0;    // if header, all other SPCONTAINERLENGTHS -- calc from DGCONTAINERLENGTH + SPCONTAINERLENGTHS
 
@@ -481,8 +487,18 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 			switch( fbt )
 			{
 				case MSODrawingConstants.MSOFBTSP:            // A shape atom rec (inst= shape type) rec= shape ID + group of flags
-					boolean fGroup, fChild, fPatriarch, fDeleted, fOleShape, fHaveMaster;
-					boolean fFlipH, fFlipV, fConnector, fHaveAnchor, fBackground, fHaveSpt;
+					boolean fGroup;
+					boolean fChild;
+					boolean fPatriarch;
+					boolean fDeleted;
+					boolean fOleShape;
+					boolean fHaveMaster;
+					boolean fFlipH;
+					boolean fFlipV;
+					boolean fConnector;
+					boolean fHaveAnchor;
+					boolean fBackground;
+					boolean fHaveSpt;
 					int flag;
 					SPID = ByteTools.readInt( dat[0], dat[1], dat[2], dat[3] );
 					flag = ByteTools.readInt( dat[4], dat[5], dat[6], dat[7] );
@@ -657,7 +673,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void updateRecord( int spid, String imageName, String shapeName, int imageIndex, short[] bounds )
 	{
-		this.SPID = spid;
+		SPID = spid;
 		this.imageName = imageName;
 		this.shapeName = shapeName;
 		this.imageIndex = imageIndex;
@@ -690,7 +706,8 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		SPCONTAINERLENGTH = 0;        // this shape container length		
 
 		// first pass, update significant atoms and sum up container lengths
-		int fbt, len;
+		int fbt;
+		int len;
 		super.getData();
 		ByteArrayInputStream bis = new ByteArrayInputStream( data );
 		for(; bis.available() > 0; )
@@ -739,8 +756,8 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 				switch( fbt )
 				{
 					case MSODrawingConstants.MSOFBTDG:    // update drawing record atom
-						System.arraycopy( ByteTools.cLongToLEBytes( this.numShapes ), 0, data, 0, 4 );
-						System.arraycopy( ByteTools.cLongToLEBytes( this.lastSPID ), 0, data, 4, 4 );
+						System.arraycopy( ByteTools.cLongToLEBytes( numShapes ), 0, data, 0, 4 );
+						System.arraycopy( ByteTools.cLongToLEBytes( lastSPID ), 0, data, 4, 4 );
 						len = data.length;
 						data = ByteTools.append( data, header );
 						dgcontaineratoms = ByteTools.append( data, dgcontaineratoms );
@@ -945,8 +962,8 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 			System.arraycopy( retData, 0, header, pos, retData.length );
 			retData = header;
 		}
-		this.setData( retData );
-		this.setLength( data.length );
+		setData( retData );
+		setLength( data.length );
 
 		// testing
     	/*
@@ -1005,7 +1022,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		msofbtDgContainer.setLength( HEADERRECLENGTH + SPCONTAINERLENGTH + otherSPCONTAINERLENGTH );
 		byte[] msofbtDgContainerBytes = msofbtDgContainer.toByteArray();
 
-		byte[] headerRec = new byte[this.getData().length + 80];  // below records take 80 bytes 
+		byte[] headerRec = new byte[getData().length + 80];  // below records take 80 bytes
 
 		int pos = 0;
 		System.arraycopy( msofbtDgContainerBytes, 0, headerRec, pos, msofbtDgContainerBytes.length );
@@ -1021,7 +1038,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		System.arraycopy( msofbtSpBytes, 0, headerRec, pos, msofbtSpBytes.length );
 		pos += msofbtSpBytes.length;
 
-		System.arraycopy( this.getData(), 0, headerRec, pos, this.getData().length );
+		System.arraycopy( getData(), 0, headerRec, pos, getData().length );
 		setData( headerRec );
 
     	/*// testing
@@ -1045,7 +1062,8 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		SPCONTAINERLENGTH = 0;        // this shape container length		
 
 		// first pass, update significant atoms and sum up container lengths
-		int fbt, len;
+		int fbt;
+		int len;
 		super.getData();
 		ByteArrayInputStream bis = new ByteArrayInputStream( data );
 		for(; bis.available() > 0; )
@@ -1206,7 +1224,8 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		this.numShapes = numShapes;
 		// this.lastSPID= SPIDSEED + nImages; algorithm is wrong when book contains deleted images, etc.
 		this.lastSPID = lastSPID;
-		int fbt, len;
+		int fbt;
+		int len;
 		// the two container lengths we are concerned about:  
 		//SPGRCONTAINERLENGTH 
 		otherSPCONTAINERLENGTH = otherSPContainers;
@@ -1328,7 +1347,10 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void updateImageIndex( int idx )
 	{
-		int version, inst, fbt, len;
+		int version;
+		int inst;
+		int fbt;
+		int len;
 		super.getData();
 		ByteArrayInputStream bis = new ByteArrayInputStream( data );
 		for(; bis.available() > 0; )
@@ -1379,7 +1401,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 			return;    // nothing to do!
 		}
 		bIsHeader = false;
-		this.removeHeader();
+		removeHeader();
 	}
 
 	/**
@@ -1391,7 +1413,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 	{
 		if( !bIsHeader )
 		{
-			this.addHeader();
+			addHeader();
 		}
 	}
 
@@ -1457,7 +1479,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 	public void setImageIndex( int value )
 	{
 		imageIndex = value;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	public void setImageName( String name )
@@ -1962,7 +1984,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		double w = Colinfo.DEFAULT_COLWIDTH;
 		try
 		{
-			Colinfo co = this.getSheet().getColInfo( col );
+			Colinfo co = getSheet().getColInfo( col );
 			if( co != null )
 			{
 				w = co.getColWidth();
@@ -1990,19 +2012,19 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		int h = 255;
 		try
 		{
-			Row r = this.getSheet().getRowByNumber( row );
+			Row r = getSheet().getRowByNumber( row );
 			if( r != null )
 			{
 				h = r.getRowHeight();
 			}
 			else    // no row defined - use default row height 20100504 KSC
 			{
-				return this.getSheet().getDefaultRowHeight(); // default
+				return getSheet().getDefaultRowHeight(); // default
 			}
 		}
 		catch( Exception e )
 		{    // exception if no row defined // no row defined - use default row height 20100504 KSC		
-			return this.getSheet().getDefaultRowHeight(); // default
+			return getSheet().getDefaultRowHeight(); // default
 		}
 		return (h / 20.0);        // 20090506 KSC: it's in twips 1/20 of a point	
 	}
@@ -2053,7 +2075,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public int getlastSPID()
 	{
-		return this.lastSPID;
+		return lastSPID;
 	}
 
 	/**
@@ -2120,7 +2142,8 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 	 */
 	private void updateDGRecord()
 	{
-		int fbt, len;
+		int fbt;
+		int len;
 
 		super.getData();
 		ByteArrayInputStream bis = new ByteArrayInputStream( data );
@@ -2141,7 +2164,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 				data[8] = (byte) (drawingId * 16);    //= the 1st byte of the header portion of the DG record 20080902 KSC				
 				byte[] newrec = new byte[8];
 				System.arraycopy( ByteTools.cLongToLEBytes( numShapes ), 0, newrec, 0, 4 );
-				System.arraycopy( ByteTools.cLongToLEBytes( this.lastSPID ), 0, newrec, 4, 4 );
+				System.arraycopy( ByteTools.cLongToLEBytes( lastSPID ), 0, newrec, 4, 4 );
 				if( len == newrec.length )
 				{// should!!!
 					// update Msodrawing data ...
@@ -2170,7 +2193,8 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 	 */
 	private void updateClientAnchorRecord( short[] bounds )
 	{
-		int fbt, len;
+		int fbt;
+		int len;
 
 		super.getData();
 		ByteArrayInputStream bis = new ByteArrayInputStream( data );
@@ -2231,14 +2255,14 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setOPTSubRecord( int propertyId, boolean isBid, boolean isComplex, int dtx, byte[] complexBytes )
 	{
-		MsofbtOPT optrec = this.getOPTRec();
+		MsofbtOPT optrec = getOPTRec();
 		// TODO: store optrec length instead of calculating each time
 		int origlen = optrec.toByteArray().length;
 		optrec.setProperty( MSODrawingConstants.msooptGroupShapeProperties, isBid, isComplex, dtx, complexBytes );
 		updateRecord();
 		if( origlen != optrec.toByteArray().length )
 		{    // must update header
-			this.getWorkBook().updateMsodrawingHeaderRec( this.getSheet() );
+			getWorkBook().updateMsodrawingHeaderRec( getSheet() );
 		}
 	}
 
@@ -2290,7 +2314,9 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 	 */
 	private void updateSPID()
 	{
-		int fbt, len, inst;
+		int fbt;
+		int len;
+		int inst;
 		super.getData();
 		ByteArrayInputStream bis = new ByteArrayInputStream( data );
 		for(; bis.available() > 0; )
@@ -2328,8 +2354,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer();
-		sb.append( "Msodrawing: image=" + this.imageName + ".\t" + this.shapeName + "\timageIndex=" + imageIndex + " sheet=" + ((this.getSheet() != null) ? this
-				.getSheet()
+		sb.append( "Msodrawing: image=" + imageName + ".\t" + shapeName + "\timageIndex=" + imageIndex + " sheet=" + ((getSheet() != null) ? getSheet()
 				.getSheetName() : "none") );
 		sb.append( " ID= " + drawingId + " SPID=" + SPID );
 		sb.append( "\tShapeType= " + shapeType );
@@ -2380,15 +2405,15 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 	public void createDropDownListStyle( int col )
 	{
 		// mso record which - we hope - has the specific options necessary to define the dropdown box
-		MsofbtOPT optrec = this.getOPTRec();
+		MsofbtOPT optrec = getOPTRec();
 		optrec.setInst( 0 ); // clear out
 		optrec.setData( new byte[]{ } );
 		optrec.setProperty( MSODrawingConstants.msooptfLockAgainstGrouping, false, false, 17039620, null );
 		optrec.setProperty( MSODrawingConstants.msooptfFitTextToShape, false, false, 524296, null );
 		optrec.setProperty( MSODrawingConstants.msooptfNoLineDrawDash, false, false, 524288, null );
 		optrec.setProperty( MSODrawingConstants.msooptGroupShapeProperties, false, false, 131072, null );
-		this.setShapeType( MSODrawingConstants.msosptHostControl );    // shape type for these drop-downs
-		this.updateRecord( ++this.wkbook.lastSPID, null, null, -1, new short[]{
+		setShapeType( MSODrawingConstants.msosptHostControl );    // shape type for these drop-downs
+		updateRecord( ++wkbook.lastSPID, null, null, -1, new short[]{
 				(short) col, 0, 0, 0, (short) (col + 1), 0, 1, 0
 		} );  // generate msoDrawing using correct values moved from above
 		// KSC: keep for testing
@@ -2401,7 +2426,7 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void createCommentBox( int row, int col )
 	{
-		MsofbtOPT optrec = this.getOPTRec();
+		MsofbtOPT optrec = getOPTRec();
 		optrec.setInst( 0 ); // clear out	
 		optrec.setData( new byte[]{ } );
 		//47752196
@@ -2418,11 +2443,11 @@ public final class MSODrawing extends com.extentech.formats.XLS.XLSRecord
 		optrec.setProperty( MSODrawingConstants.msooptfShadowObscured, false, false, 196611, null );
 		// this, strangely, controls note hidden or show- when it's 131074, it's hidden, when it's 131072, it's shown
 		optrec.setProperty( MSODrawingConstants.msooptGroupShapeProperties, false, false, 131074, null );
-		this.setShapeType( MSODrawingConstants.msosptTextBox );    // shape type for text boxes 
+		setShapeType( MSODrawingConstants.msosptTextBox );    // shape type for text boxes
 		// position of text box - garnered from Excel examples
 		// [1, 240, 0, 30, 3, 496, 4, 196]	A1
 		// [4, 240, 2, 105, 6, 496, 7, 15]  D4
-		this.updateRecord( ++this.wkbook.lastSPID, null, null, -1, new short[]{
+		updateRecord( ++wkbook.lastSPID, null, null, -1, new short[]{
 				(short) (col + 1), 240, (short) row, 30, (short) (col + 3), 496, (short) (row + 4), 196
 		} );  // generate msoDrawing using correct values moved from above
 	}
@@ -2455,7 +2480,10 @@ _store_mso_opt_comment {
 	public String debugOutput()
 	{
 		ByteArrayInputStream bis = new ByteArrayInputStream( super.getData() );
-		int version, inst, fbt, len;
+		int version;
+		int inst;
+		int fbt;
+		int len;
 		StringBuffer log = new StringBuffer();
 		try
 		{
@@ -2619,7 +2647,7 @@ _store_mso_opt_comment {
 	public void close()
 	{
 		super.close();
-		this.bounds = null;
+		bounds = null;
 		optrec = null;    // 20091209 KSC: save MsofbtOPT records for later updating ...
 		secondaryoptrec = null;
 		tertiaryoptrec = null;    // apparently can have secondary and tertiary obt recs depending upon version in which it was saved ...

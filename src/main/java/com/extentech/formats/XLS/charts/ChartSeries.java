@@ -102,7 +102,7 @@ public class ChartSeries implements ChartConstants, Serializable
 		seriesvalues = new ArrayList();
 		seriesranges = new ArrayList();
 		com.extentech.formats.XLS.Boundsheet sht = parentChart.getSheet();
-		java.util.Vector s = this.getAllSeries( -1 );
+		java.util.Vector s = getAllSeries( -1 );
 		// Category values *******************************************************************************
 		if( s.size() > 0 )
 		{
@@ -142,7 +142,8 @@ public class ChartSeries implements ChartConstants, Serializable
 			}
 		}
 		// Series colors, labels and values ***************************************************************
-		double yMax = 0.0, yMin = Double.MAX_VALUE;
+		double yMax = 0.0;
+		double yMin = Double.MAX_VALUE;
 		int nseries = 0;
 		seriescolors = null;
 		legends = null;
@@ -381,7 +382,7 @@ public class ChartSeries implements ChartConstants, Serializable
 	 */
 	public String[] getSeries( int nChart )
 	{
-		Vector seriesperchart = this.getAllSeries( nChart );
+		Vector seriesperchart = getAllSeries( nChart );
 		String[] retStr = new String[seriesperchart.size()];
 		for( int i = 0; i < seriesperchart.size(); i++ )
 		{
@@ -400,7 +401,7 @@ public class ChartSeries implements ChartConstants, Serializable
 	 */
 	public String[] getCategories( int nChart )
 	{
-		Vector seriesperchart = this.getAllSeries( nChart );
+		Vector seriesperchart = getAllSeries( nChart );
 		String[] retStr = new String[seriesperchart.size()];
 		for( int i = 0; i < seriesperchart.size(); i++ )
 		{
@@ -501,8 +502,8 @@ public class ChartSeries implements ChartConstants, Serializable
 	 */
 	public void removeSeries( int index )
 	{
-		Vector v = this.getAllSeries();
-		this.removeSeries( (Series) v.get( index ) );
+		Vector v = getAllSeries();
+		removeSeries( (Series) v.get( index ) );
 	}
 
 	/**
@@ -532,7 +533,7 @@ public class ChartSeries implements ChartConstants, Serializable
 	 */
 	public Series getSeries( String seriesName, int nChart )
 	{
-		Vector seriesperchart = this.getAllSeries( nChart );
+		Vector seriesperchart = getAllSeries( nChart );
 		for( Object aSeriesperchart : seriesperchart )
 		{
 			Series s = (Series) aSeriesperchart;
@@ -597,7 +598,7 @@ public class ChartSeries implements ChartConstants, Serializable
 	public org.json.JSONObject getDataRangeJSON()
 	{
 		JSONObject seriesJSON = new JSONObject();
-		java.util.Vector allseries = this.getAllSeries( -1 );
+		java.util.Vector allseries = getAllSeries( -1 );
 		try
 		{
 			JSONArray series = new JSONArray();
@@ -757,7 +758,7 @@ public class ChartSeries implements ChartConstants, Serializable
 	 */
 	public String[] getLegends( int nChart )
 	{
-		Vector seriesperchart = this.getAllSeries( nChart );
+		Vector seriesperchart = getAllSeries( nChart );
 		String[] ret = new String[seriesperchart.size()];
 		for( int i = 0; i < seriesperchart.size(); i++ )
 		{
@@ -1113,7 +1114,7 @@ public class ChartSeries implements ChartConstants, Serializable
 		Vector v = parentChart.getAllSeries( nChart );
 		int defaultDL = parentChart.getDataLabel();
 		boolean from2003 = (!parentChart.getWorkBook().getIsExcel2007());
-		String[] cats = this.getCategories( nChart );    // do 1x
+		String[] cats = getCategories( nChart );    // do 1x
 
 		for( int i = 0; i < v.size(); i++ )
 		{
@@ -1259,7 +1260,7 @@ public class ChartSeries implements ChartConstants, Serializable
 	{
 		if( legends == null )
 		{
-			this.getMetrics( true );
+			getMetrics( true );
 		}
 		return legends;
 	}
@@ -1268,7 +1269,7 @@ public class ChartSeries implements ChartConstants, Serializable
 	{
 		if( categories == null )
 		{
-			this.getMetrics( true );
+			getMetrics( true );
 		}
 		return categories;
 	}
@@ -1277,7 +1278,7 @@ public class ChartSeries implements ChartConstants, Serializable
 	{
 		if( seriesranges == null )
 		{
-			this.getMetrics( true );
+			getMetrics( true );
 		}
 		return seriesranges;
 	}
@@ -1286,7 +1287,7 @@ public class ChartSeries implements ChartConstants, Serializable
 	{
 		if( seriesvalues == null )
 		{
-			this.getMetrics( true );
+			getMetrics( true );
 		}
 		return seriesvalues;
 	}
@@ -1295,7 +1296,7 @@ public class ChartSeries implements ChartConstants, Serializable
 	{
 		if( seriescolors == null )
 		{
-			this.getMetrics( true );
+			getMetrics( true );
 		}
 		return seriescolors;
 	}

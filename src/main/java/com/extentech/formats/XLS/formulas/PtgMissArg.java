@@ -64,7 +64,7 @@ public class PtgMissArg extends GenericPtg implements Ptg
 
 	public PtgMissArg()
 	{
-		this.init( new byte[]{ 22 } );
+		init( new byte[]{ 22 } );
 	}
 
 	/**

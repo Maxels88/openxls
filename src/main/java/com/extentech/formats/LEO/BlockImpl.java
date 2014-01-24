@@ -48,7 +48,8 @@ public abstract class BlockImpl implements com.extentech.formats.LEO.Block, Comp
 	/**
 	 * methods from CompatibleVectorHints
 	 */
-	transient int recordIdx = -1, lastidx = -1;
+	transient int recordIdx = -1;
+	transient int lastidx = -1;
 	transient ByteBuffer data = null; // new byte[SIZE];
 	private List blockvec = null;
 
@@ -57,7 +58,8 @@ public abstract class BlockImpl implements com.extentech.formats.LEO.Block, Comp
 	public Block nextblock = null;
 	private boolean isXBAT = false;
 
-	int originalidx, originalpos;
+	int originalidx;
+	int originalpos;
 	boolean isBBDepotBlock = false;
 	boolean isSBDepotBlock = false;
 	boolean isSpecialBlock = false;
@@ -72,7 +74,7 @@ public abstract class BlockImpl implements com.extentech.formats.LEO.Block, Comp
 			blockvec.clear();
 			blockvec = null;
 		}
-		if( (nextblock != null) && (nextblock != this) )
+		if( (nextblock != null) && (!nextblock.equals( this )) )
 		{
 			nextblock = null;
 		}
@@ -121,7 +123,7 @@ public abstract class BlockImpl implements com.extentech.formats.LEO.Block, Comp
 	{
 		//if (delbytes == null) delbytes = getBytes();
 		int SIZE = end - start;
-		if( (end) > this.getBlockSize() )
+		if( (end) > getBlockSize() )
 		{
 			throw new RuntimeException( "WARNING: BlockImpl.getBytes(): read position > block size:" + SIZE + start );
 		}
@@ -154,11 +156,11 @@ public abstract class BlockImpl implements com.extentech.formats.LEO.Block, Comp
 	@Override
 	public int getBlockSize()
 	{
-		if( this.getBlockType() == BIG )
+		if( getBlockType() == BIG )
 		{
 			return BIGBLOCK.SIZE;
 		}
-		if( this.getBlockType() == SMALL )
+		if( getBlockType() == SMALL )
 		{
 			return SMALLBLOCK.SIZE;
 		}
@@ -172,11 +174,11 @@ public abstract class BlockImpl implements com.extentech.formats.LEO.Block, Comp
 	public byte[] getBytes()
 	{
 		int SIZE = 0;
-		if( this.getBlockType() == BIG )
+		if( getBlockType() == BIG )
 		{
 			SIZE = BIGBLOCK.SIZE;
 		}
-		else if( this.getBlockType() == SMALL )
+		else if( getBlockType() == SMALL )
 		{
 			SIZE = SMALLBLOCK.SIZE;
 		}
@@ -254,7 +256,7 @@ public abstract class BlockImpl implements com.extentech.formats.LEO.Block, Comp
 	{
 		if( blockvec == null )
 		{
-			return this.recordIdx;
+			return recordIdx;
 		}
 		return blockvec.indexOf( this );
 	}
@@ -296,7 +298,7 @@ public abstract class BlockImpl implements com.extentech.formats.LEO.Block, Comp
 	@Override
 	public void remove()
 	{
-		this.mystore.removeBlock( this );
+		mystore.removeBlock( this );
 		nextblock = null;
 	}
 
@@ -407,7 +409,7 @@ public abstract class BlockImpl implements com.extentech.formats.LEO.Block, Comp
 	{
 		originalidx = origidx;
 		originalpos = origp;
-		this.setBytes( d );
+		setBytes( d );
 	}
 
 	/**

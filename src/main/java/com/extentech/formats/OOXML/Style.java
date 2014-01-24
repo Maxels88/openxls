@@ -49,18 +49,18 @@ public class Style implements OOXMLElement
 
 	public Style( lnRef lr, FillRef flr, EffectRef er, FontRef fr )
 	{
-		this.lRef = lr;
-		this.fillRef = flr;
-		this.effectRef = er;
-		this.fontRef = fr;
+		lRef = lr;
+		fillRef = flr;
+		effectRef = er;
+		fontRef = fr;
 	}
 
 	public Style( Style s )
 	{
-		this.lRef = s.lRef;
-		this.fillRef = s.fillRef;
-		this.effectRef = s.effectRef;
-		this.fontRef = s.fontRef;
+		lRef = s.lRef;
+		fillRef = s.fillRef;
+		effectRef = s.effectRef;
+		fontRef = s.fontRef;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -162,13 +162,13 @@ class EffectRef implements OOXMLElement
 	protected EffectRef( int idx, ColorChoice c )
 	{
 		this.idx = idx;
-		this.colorChoice = c;
+		colorChoice = c;
 	}
 
 	protected EffectRef( EffectRef er )
 	{
-		this.colorChoice = er.colorChoice;
-		this.idx = er.idx;
+		colorChoice = er.colorChoice;
+		idx = er.idx;
 	}
 
 	protected static EffectRef parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -268,13 +268,13 @@ class FillRef implements OOXMLElement
 	protected FillRef( int idx, ColorChoice c )
 	{
 		this.idx = idx;
-		this.colorChoice = c;
+		colorChoice = c;
 	}
 
 	protected FillRef( FillRef fr )
 	{
-		this.colorChoice = fr.colorChoice;
-		this.idx = fr.idx;
+		colorChoice = fr.colorChoice;
+		idx = fr.idx;
 	}
 
 	protected static FillRef parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -369,13 +369,13 @@ class FontRef implements OOXMLElement
 	protected FontRef( String idx, ColorChoice c )
 	{
 		this.idx = idx;
-		this.colorChoice = c;
+		colorChoice = c;
 	}
 
 	protected FontRef( FontRef fr )
 	{
-		this.colorChoice = fr.colorChoice;
-		this.idx = fr.idx;
+		colorChoice = fr.colorChoice;
+		idx = fr.idx;
 	}
 
 	protected static FontRef parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -470,13 +470,13 @@ class lnRef implements OOXMLElement
 	protected lnRef( int idx, ColorChoice c )
 	{
 		this.idx = idx;
-		this.colorChoice = c;
+		colorChoice = c;
 	}
 
 	protected lnRef( lnRef lr )
 	{
-		this.colorChoice = lr.colorChoice;
-		this.idx = lr.idx;
+		colorChoice = lr.colorChoice;
+		idx = lr.idx;
 	}
 
 	protected static lnRef parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )

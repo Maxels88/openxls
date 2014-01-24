@@ -73,7 +73,7 @@ public final class Headerrec extends com.extentech.formats.XLS.XLSRecord
 				newbytes[1] = cchx[1];
 				newbytes[2] = 0x1;
 				System.arraycopy( bts, 0, newbytes, 3, bts.length );
-				this.setData( newbytes );
+				setData( newbytes );
 			}
 			else
 			{
@@ -85,14 +85,14 @@ public final class Headerrec extends com.extentech.formats.XLS.XLSRecord
 				newbytes[1] = cchx[1];
 				newbytes[2] = 0x0;
 				System.arraycopy( bts, 0, newbytes, 3, bts.length );
-				this.setData( newbytes );
+				setData( newbytes );
 			}
 		}
 		catch( Exception e )
 		{
 			log.warn( "setting Footer text failed: " + e );
 		}
-		this.rgch = t;
+		rgch = t;
 	}
 
 	/**
@@ -107,15 +107,15 @@ public final class Headerrec extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		byte[] b = this.getData();
-		if( this.getLength() > 4 )
+		byte[] b = getData();
+		if( getLength() > 4 )
 		{
-			int cch = this.getByteAt( 0 );
-			byte[] namebytes = this.getBytesAt( 0, this.getLength() - 4 );
+			int cch = getByteAt( 0 );
+			byte[] namebytes = getBytesAt( 0, getLength() - 4 );
 			Unicodestring fstr = new Unicodestring();
 			fstr.init( namebytes, false );
 			rgch = fstr.toString();
-				log.debug( "Header text: " + this.getHeaderText() );
+				log.debug( "Header text: " + getHeaderText() );
 		}
 	}
 

@@ -200,20 +200,31 @@ public class Sxvd extends XLSRecord
 	private String caption = null;
 
 	// flags:
-	boolean fDefault, fSum, fCounta, fAverage, fMax, fMin, fProduct, fCount, fStdev, fStdevp, fVariance, fVariancep;
+	boolean fDefault;
+	boolean fSum;
+	boolean fCounta;
+	boolean fAverage;
+	boolean fMax;
+	boolean fMin;
+	boolean fProduct;
+	boolean fCount;
+	boolean fStdev;
+	boolean fStdevp;
+	boolean fVariance;
+	boolean fVariancep;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		axis = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		cSub = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		cItm = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
-		cchName = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
+		axis = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		cSub = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		cItm = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
+		cchName = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );
 		if( cchName != -1 )
 		{
-			byte encoding = this.getByteAt( 10 );
-			byte[] tmp = this.getBytesAt( 11, (cchName) * (encoding + 1) );
+			byte encoding = getByteAt( 10 );
+			byte[] tmp = getBytesAt( 11, (cchName) * (encoding + 1) );
 			try
 			{
 				if( encoding == 0 )
@@ -231,8 +242,8 @@ public class Sxvd extends XLSRecord
 			}
 		}
 		// type of subtotal funtion
-		byte b0 = this.getByteAt( 4 );
-		byte b1 = this.getByteAt( 5 );
+		byte b0 = getByteAt( 4 );
+		byte b1 = getByteAt( 5 );
 		fDefault = ((b0 & 0x1) == 0x1);    // default subtotal -- if 1, the rest of these flags are ignored
 		fSum = ((b0 & 0x2) == 0x2);    //  sum subtotal function -if so: if sxaxis.sxaxisRw field equals 1 or if the sxaxis.sxaxisCol field equals 1 or if the sxaxis.sxaxisPage field equals 1, there MUST be one SXVI record with the itmType field of the SXVI record equal to 2.
 		fCounta = ((b0 & 0x4) == 0x4);    // count subtotal function - if so: if sxaxis.sxaxisRw field equals 1 or if the sxaxis.sxaxisCol field equals 1 or if the sxaxis.sxaxisPage field equals 1, there MUST be one SXVI record with the itmType field of the SXVI record equal to 3.
@@ -349,8 +360,8 @@ public class Sxvd extends XLSRecord
 		}
 		// update record
 		byte[] b = ByteTools.shortToLEBytes( cSub );
-		this.getData()[2] = b[0];
-		this.getData()[3] = b[1];
+		getData()[2] = b[0];
+		getData()[3] = b[1];
 
 		b[0] = 0;
 		b[1] = 0;
@@ -403,8 +414,8 @@ public class Sxvd extends XLSRecord
 			b[1] |= 0x8;
 		}
 
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 	}
 
 	/**
@@ -465,8 +476,8 @@ public class Sxvd extends XLSRecord
 		}
 		this.axis = (short) axis;
 		byte[] b = ByteTools.shortToLEBytes( this.axis );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 		// TODO if axis is data MUST have a SxDI otherwise if axis WAS a data axis must remove SxDI
 	}
 
@@ -484,8 +495,8 @@ public class Sxvd extends XLSRecord
 	{
 		cItm = (short) n;
 		byte[] b = ByteTools.shortToLEBytes( cItm );
-		this.getData()[6] = b[0];
-		this.getData()[7] = b[1];
+		getData()[6] = b[0];
+		getData()[7] = b[1];
 	}
 
 	/**

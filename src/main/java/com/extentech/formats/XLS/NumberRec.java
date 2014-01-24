@@ -94,7 +94,8 @@ public final class NumberRec extends XLSCellRecord
 	public void init()
 	{
 		super.init();
-		int l = 0, m = 0;
+		int l = 0;
+		int m = 0;
 		// get the row information
 		super.initRowCol();
 		short s = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );

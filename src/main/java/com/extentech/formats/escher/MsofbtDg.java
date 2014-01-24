@@ -31,7 +31,8 @@ public class MsofbtDg extends EscherRecord
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 5218802290529676567L;
-	int csp, lastSPID;
+	int csp;
+	int lastSPID;
 
 	public MsofbtDg( int fbt, int inst, int version )
 	{
@@ -41,7 +42,8 @@ public class MsofbtDg extends EscherRecord
 	@Override
 	protected byte[] getData()
 	{
-		byte[] cspBytes, spIdBytes;
+		byte[] cspBytes;
+		byte[] spIdBytes;
 
 		cspBytes = ByteTools.cLongToLEBytes( csp );        // Number of shapes
 		spIdBytes = ByteTools.cLongToLEBytes( lastSPID );    // last SPID
@@ -50,7 +52,7 @@ public class MsofbtDg extends EscherRecord
 		System.arraycopy( cspBytes, 0, retBytes, 0, 4 );
 		System.arraycopy( spIdBytes, 0, retBytes, 4, 4 );
 
-		this.setLength( retBytes.length );
+		setLength( retBytes.length );
 		return retBytes;
 	}
 

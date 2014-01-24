@@ -47,13 +47,15 @@ public class Serfmt extends GenericChartObject implements ChartObject
 	private static final long serialVersionUID = -8307035373276421283L;
 	// 20070810 KSC: parse options ...
 	private short grbit = 0;
-	private boolean fSmoothedLine = false, f3dBubbles = false, fArShadow = false;
+	private boolean fSmoothedLine = false;
+	private boolean f3dBubbles = false;
+	private boolean fArShadow = false;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		grbit = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		grbit = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		fSmoothedLine = (grbit & 0x1) == 0x1;
 		f3dBubbles = (grbit & 0x2) == 0x2;
 		fArShadow = (grbit & 0x4) == 0x4;
@@ -65,8 +67,8 @@ public class Serfmt extends GenericChartObject implements ChartObject
 		grbit = ByteTools.updateGrBit( grbit, f3dBubbles, 1 );
 		grbit = ByteTools.updateGrBit( grbit, fArShadow, 2 );
 		byte[] b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	private byte[] PROTOTYPE_BYTES = new byte[]{ 0, 0 };

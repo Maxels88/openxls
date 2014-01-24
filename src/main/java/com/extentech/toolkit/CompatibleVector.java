@@ -50,11 +50,11 @@ public class CompatibleVector extends Vector
 		// ExcelTools.benchmark("Re-indexing CompatibleVector" + reindex_change_size++);
 		if( !ignore_records )
 		{
-			for( int t = 0; t < this.size(); t++ )
+			for( int t = 0; t < size(); t++ )
 			{
 				try
 				{
-					((CompatibleVectorHints) this.get( t )).setRecordIndexHint( t );
+					((CompatibleVectorHints) get( t )).setRecordIndexHint( t );
 				}
 				catch( Exception e )
 				{
@@ -81,7 +81,8 @@ public class CompatibleVector extends Vector
 		return new Itr();
 	}
 
-	int hits = 0, misses = 0;
+	int hits = 0;
+	int misses = 0;
 
 	/**
 	 * if the object being checked implements index
@@ -121,7 +122,7 @@ public class CompatibleVector extends Vector
 		int t = -1;
 		if( change_offset > reindex_change_size )
 		{
-			this.resetHints( false );
+			resetHints( false );
 		}
 		// if(x>0)t = super.indexOf(r,x);
 		if( x > 0 )
@@ -262,7 +263,7 @@ public class CompatibleVector extends Vector
 
 	public boolean add( CompatibleVectorHints obj )
 	{
-		this.change_offset++; //
+		change_offset++; //
 		int idx = super.size();
 		if( obj != null )
 		{
@@ -281,7 +282,7 @@ public class CompatibleVector extends Vector
 
 	public void add( int idx, CompatibleVectorHints obj )
 	{
-		this.change_offset++;//
+		change_offset++;//
 		obj.setRecordIndexHint( idx );
 		super.insertElementAt( obj, idx );
 	}
@@ -292,11 +293,11 @@ public class CompatibleVector extends Vector
 		{
 			if( b instanceof CompatibleVectorHints )
 			{
-				this.add( (CompatibleVectorHints) b );
+				add( (CompatibleVectorHints) b );
 			}
 			else
 			{
-				this.add( b );
+				add( b );
 			}
 		}
 	}
@@ -306,7 +307,7 @@ public class CompatibleVector extends Vector
 	{
 		if( super.remove( obj ) )
 		{
-			this.change_offset--;
+			change_offset--;
 			return true;
 		}
 		return false;
@@ -315,7 +316,7 @@ public class CompatibleVector extends Vector
 	@Override
 	public void clear()
 	{
-		this.change_offset = 0;
+		change_offset = 0;
 		super.removeAllElements();
 	}
 

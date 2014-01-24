@@ -114,9 +114,9 @@ public class BodyPr implements OOXMLElement
 
 	public BodyPr( BodyPr tpr )
 	{
-		this.attrs = tpr.attrs;
-		this.txwarp = tpr.txwarp;
-		this.spAutoFit = tpr.spAutoFit;
+		attrs = tpr.attrs;
+		txwarp = tpr.txwarp;
+		spAutoFit = tpr.spAutoFit;
 	}
 
 	/**
@@ -205,8 +205,8 @@ class PrstTxWarp implements OOXMLElement
 
 	public PrstTxWarp( PrstTxWarp p )
 	{
-		this.prst = p.prst;
-		this.av = p.av;
+		prst = p.prst;
+		av = p.av;
 	}
 
 	public static PrstTxWarp parseOOXML( XmlPullParser xpp, Stack<String> lastTag )

@@ -118,15 +118,15 @@ public class DLbls implements OOXMLElement
 
 	public DLbls( DLbls d )
 	{
-		this.showVal = d.showVal;
-		this.showLeaderLines = d.showLeaderLines;
-		this.showLegendKey = d.showLegendKey;
-		this.showCatName = d.showCatName;
-		this.showSerName = d.showSerName;
-		this.showPercent = d.showPercent;
-		this.showBubbleSize = d.showBubbleSize;
-		this.sp = d.sp;
-		this.tx = d.tx;
+		showVal = d.showVal;
+		showLeaderLines = d.showLeaderLines;
+		showLegendKey = d.showLegendKey;
+		showCatName = d.showCatName;
+		showSerName = d.showSerName;
+		showPercent = d.showPercent;
+		showBubbleSize = d.showBubbleSize;
+		sp = d.sp;
+		tx = d.tx;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )

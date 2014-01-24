@@ -81,14 +81,14 @@ public class LineFormat extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		byte[] data = this.getData();
+		byte[] data = getData();
 		rgb = new java.awt.Color( ((data[0] < 0) ? (255 + data[0]) : data[0]),
 		                          ((data[1] < 0) ? (255 + data[1]) : data[1]),
 		                          ((data[2] < 0) ? (255 + data[2]) : data[2]) );
-		lnx = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		we = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
-		grbit = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
-		icv = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );
+		lnx = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+		we = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
+		grbit = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );
+		icv = ByteTools.readShort( getByteAt( 10 ), getByteAt( 11 ) );
 	}
 
 	public static XLSRecord getPrototype()
@@ -166,16 +166,16 @@ public class LineFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setLineColor( int clr )
 	{
-		if( (clr > -1) && (clr < this.getColorTable().length) )
+		if( (clr > -1) && (clr < getColorTable().length) )
 		{
 			icv = (short) clr;
-			rgb = this.getColorTable()[clr];
+			rgb = getColorTable()[clr];
 			updateRecord();
 		}
 		else if( clr == 0x4D )
 		{ // special flag, default fg
 			icv = (short) clr;
-			rgb = this.getColorTable()[0];
+			rgb = getColorTable()[0];
 			updateRecord();
 		}
 		// TOOD: finish
@@ -205,19 +205,19 @@ public class LineFormat extends GenericChartObject implements ChartObject
 		b[1] = (byte) rgb.getGreen();
 		b[2] = (byte) rgb.getBlue();
 		b[3] = 0;    // reserved/0
-		System.arraycopy( b, 0, this.getData(), 0, 4 );
+		System.arraycopy( b, 0, getData(), 0, 4 );
 		b = ByteTools.shortToLEBytes( lnx );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 		b = ByteTools.shortToLEBytes( we );
-		this.getData()[6] = b[0];
-		this.getData()[7] = b[1];
+		getData()[6] = b[0];
+		getData()[7] = b[1];
 		b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[8] = b[0];
-		this.getData()[9] = b[1];
+		getData()[8] = b[0];
+		getData()[9] = b[1];
 		b = ByteTools.shortToLEBytes( icv );
-		this.getData()[10] = b[0];
-		this.getData()[11] = b[1];
+		getData()[10] = b[0];
+		getData()[11] = b[1];
 	}
 
 	public String toString()
@@ -317,10 +317,10 @@ public class LineFormat extends GenericChartObject implements ChartObject
 	 */
 	public void setFromOOXML( SpPr sp )
 	{
-		this.sppr = sp;
+		sppr = sp;
 		int lw = sp.getLineWidth();
-		this.setLineWeight( lw );        // sp lw in emus.  1 pt= 12700 emus.
-		this.setLineColor( sp.getLineColor() );
-		this.setLineStyle( sp.getLineStyle() );
+		setLineWeight( lw );        // sp lw in emus.  1 pt= 12700 emus.
+		setLineColor( sp.getLineColor() );
+		setLineStyle( sp.getLineStyle() );
 	}
 }

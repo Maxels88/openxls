@@ -73,12 +73,20 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 {
 	private static final Logger log = LoggerFactory.getLogger( Font.class );
 	private static final long serialVersionUID = -398444997553403671L;
-	private short grbit = -1, cch = -1, dyHeight = -1, icv = -1, bls = -1, sss = -1, uls = -1, bFamily = -1;
+	private short grbit = -1;
+	private short cch = -1;
+	private short dyHeight = -1;
+	private short icv = -1;
+	private short bls = -1;
+	private short sss = -1;
+	private short uls = -1;
+	private short bFamily = -1;
 	private short bCharSet;
 	private String fontName = "";
 	// OOXML specifics:
 	private Color customColor = null; // holds custom color (OOXML or other use) 
-	private boolean condensed, extended;
+	private boolean condensed;
+	private boolean extended;
 
 	// grbit flags
 	static final int BITMASK_BOLD = 0x0001;
@@ -115,16 +123,16 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	public void init()
 	{
 		super.init();
-		dyHeight = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );// Height
+		dyHeight = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );// Height
 		// in
 		// 1/20
 		// point
-		grbit = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );// attributes
-		icv = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );// index
+		grbit = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );// attributes
+		icv = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );// index
 		// to
 		// color
 		// palette
-		bls = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );// bold
+		bls = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );// bold
 		// style
 		// (weight)
 		// 100-1000
@@ -134,17 +142,17 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		// norm
 		// 2bch
 		// bold
-		sss = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );// super/sub
+		sss = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );// super/sub
 		// (0 =
 		// none,
 		// 1 =
 		// super,
 		// 2 =
 		// sub)
-		uls = this.getByteAt( 10 );// Underline Style (0 = none, 1 = single, 2 =
+		uls = getByteAt( 10 );// Underline Style (0 = none, 1 = single, 2 =
 		// double, 21h = single acctg, 22h = dble
 		// acctg)
-		bFamily = this.getByteAt( 11 );// Font Family (WinAPI LOGFONT struct)
+		bFamily = getByteAt( 11 );// Font Family (WinAPI LOGFONT struct)
 		/**
 		 * lfCharSet
 		 *
@@ -182,19 +190,19 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		 * lfCharSet value matches the character set of the typeface specified
 		 * in lfFaceName.
 		 */
-		bCharSet = (short) ByteTools.readUnsignedShort( this.getByteAt( 12 ), (byte) 0 );// Characterset (WinAPI LOGFONT struct)
+		bCharSet = (short) ByteTools.readUnsignedShort( getByteAt( 12 ), (byte) 0 );// Characterset (WinAPI LOGFONT struct)
 
 		// this.getData()[13]= 0;// set byte to 0 for comparisons
 		// get the Name
 		int pos = 14;
-		cch = this.getByteAt( pos++ );
+		cch = getByteAt( pos++ );
 		int buflen = cch * 2;
 		pos++;
 		boolean compressed = false;
 
-		if( (buflen + pos) >= this.getLength() )
+		if( (buflen + pos) >= getLength() )
 		{
-			buflen = this.getLength() - pos;
+			buflen = getLength() - pos;
 			compressed = true;
 		}
 
@@ -204,7 +212,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 			return;
 		}
 
-		byte[] namebytes = this.getBytesAt( pos, buflen );
+		byte[] namebytes = getBytesAt( pos, buflen );
 		if( !compressed )
 		{
 			pos = 0;
@@ -244,7 +252,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 			int grbittemp = grbit ^ BITMASK_STRIKEOUT;
 			grbit = (short) (grbittemp & grbit);
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	/**
@@ -275,7 +283,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 			int grbittemp = grbit ^ BITMASK_ITALIC;
 			grbit = (short) (grbittemp & grbit);
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	/**
@@ -299,7 +307,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 			int grbittemp = grbit ^ BITMASK_UNDERLINED;
 			grbit = (short) (grbittemp & grbit);
 		}
-		this.setGrbit();
+		setGrbit();
 		setUnderlineStyle( (byte) 1 ); // 20070821 KSC: should also set underline
 		// style ...
 	}
@@ -323,7 +331,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	{
 		if( data == null )
 		{
-			this.setData( this.getData() );
+			setData( getData() );
 		}
 		if( b )
 		{
@@ -340,7 +348,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 			int grbittemp = grbit ^ BITMASK_BOLD;
 			grbit = (short) (grbittemp & grbit);
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	/**
@@ -348,10 +356,10 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	 */
 	public void setGrbit()
 	{
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.shortToLEBytes( grbit );
 		System.arraycopy( b, 0, data, 2, 2 );
-		this.setData( data );
+		setData( data );
 
 	}
 
@@ -379,14 +387,13 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		super.setWorkBook( b );
 		if( tableidx == -1 )
 		{
-			tableidx = this.getWorkBook().addFont( this );
+			tableidx = getWorkBook().addFont( this );
 		}
 	}
 
 	public String toString()
 	{
-		return this.fontName + "," + this.bls + "," + this.dyHeight + " " + this.getColorAsColor() + " font style:[" + this.getBold() + this
-				.getItalic() + this.getStricken() + this.getUnderlined() + this.getColor() + this.getUnderlineStyle() + "]";
+		return fontName + "," + bls + "," + dyHeight + " " + getColorAsColor() + " font style:[" + getBold() + getItalic() + getStricken() + getUnderlined() + getColor() + getUnderlineStyle() + "]";
 	}
 
 	public String getFontName()
@@ -403,7 +410,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	 */
 	public int getUnderlineStyle()
 	{
-		return this.getData()[10];
+		return getData()[10];
 	}
 
 	/**
@@ -413,8 +420,8 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	 */
 	public void setUnderlineStyle( byte styl )
 	{
-		this.uls = styl;
-		this.getData()[10] = styl;
+		uls = styl;
+		getData()[10] = styl;
 	}
 
 	public Font()
@@ -437,11 +444,11 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		};
 		setOpcode( FONT );
 		setLength( (short) (bl.length) );
-		this.setData( bl );
-		this.init();
-		this.setFontName( nm );
-		this.setFontWeight( stl );
-		this.setFontHeight( sz );
+		setData( bl );
+		init();
+		setFontName( nm );
+		setFontWeight( stl );
+		setFontHeight( sz );
 	}
 
 	/**
@@ -464,17 +471,17 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		cch = (short) (namebytes.length / 2);
 		fontName = fn;
 		byte[] newdata = new byte[namebytes.length + 16];
-		System.arraycopy( this.getBytesAt( 0, 13 ),
+		System.arraycopy( getBytesAt( 0, 13 ),
 		                  0,
 		                  newdata,
 		                  0,
 		                  13 );// 20061027 KSC: keep 13th byte for sake of comparisons - 20070816 - revert to original
-		System.arraycopy( this.getBytesAt( 0, 14 ), 0, newdata, 0, 14 );
+		System.arraycopy( getBytesAt( 0, 14 ), 0, newdata, 0, 14 );
 		newdata[14] = (byte) cch;
 		newdata[15] = 1;
 		System.arraycopy( namebytes, 0, newdata, 16, namebytes.length );
-		this.setData( newdata );
-		this.init();
+		setData( newdata );
+		init();
 	}
 
 	/**
@@ -489,7 +496,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	{
 		if( data == null )
 		{
-			this.setData( this.getData() );
+			setData( getData() );
 		}
 		byte[] newss = ByteTools.shortToLEBytes( (short) ss );
 		System.arraycopy( newss, 0, data, 8, 2 );
@@ -513,7 +520,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	{
 		if( data == null )
 		{
-			setData( this.getData() );
+			setData( getData() );
 		}
 		if( cl != icv )
 		{ // don't do it if the font is already this color
@@ -538,7 +545,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		}
 		else
 		{
-			customColor = new Color( color, "color", this.getWorkBook().getTheme() );
+			customColor = new Color( color, "color", getWorkBook().getTheme() );
 		}
 		icv = (short) customColor.getColorInt();
 		byte[] newcl = ByteTools.shortToLEBytes( icv );
@@ -556,7 +563,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		}
 		else
 		{
-			customColor = new Color( clr, "color", this.getWorkBook().getTheme() );
+			customColor = new Color( clr, "color", getWorkBook().getTheme() );
 		}
 		icv = (short) customColor.getColorInt();
 		byte[] newcl = ByteTools.shortToLEBytes( icv );
@@ -570,7 +577,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	{
 		if( data == null )
 		{
-			this.setData( this.getData() );
+			setData( getData() );
 		}
 		byte[] newht = ByteTools.shortToLEBytes( (short) ht );
 		System.arraycopy( newht, 0, data, 0, 2 );
@@ -595,17 +602,17 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 
 	public int getFontWeight()
 	{
-		return this.bls;
+		return bls;
 	}
 
 	public int getFontHeight()
 	{
-		return this.dyHeight;
+		return dyHeight;
 	}
 
 	public double getFontHeightInPoints()
 	{
-		return this.dyHeight / 20.0;
+		return dyHeight / 20.0;
 	}
 
 	/**
@@ -620,17 +627,17 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 			return customColor.getColorAsColor();
 		}
 		// If icv is System window text color=7FFF, default fg color or default tooltip text color, return black
-		if( (this.icv == 0x7FFF) || (this.icv == 0x40) || (this.icv == 0x51) )
+		if( (icv == 0x7FFF) || (icv == 0x40) || (icv == 0x51) )
 		{
 			return java.awt.Color.BLACK;
 		}
-		if( this.icv > FormatHandle.COLORTABLE.length )
+		if( icv > FormatHandle.COLORTABLE.length )
 		{
 			return java.awt.Color.BLACK;
 		}
-		if( this.getWorkBook() == null )
+		if( getWorkBook() == null )
 		{
-			return FormatHandle.COLORTABLE[this.icv];
+			return FormatHandle.COLORTABLE[icv];
 		}
 		/* notes: special icv values:
 		0x0040	Default foreground color. This is the window text color in the sheet display.
@@ -641,7 +648,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		0x0051	ToolTip text color. This is the automatic font color for comments.
 		0x7FFF	Font automatic color. This is the window text color.
 		*/
-		return this.getColorTable()[this.icv];
+		return getColorTable()[icv];
 	}
 
 	/**
@@ -689,12 +696,12 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		{
 			return customColor.getColorInt();
 		}
-		if( this.icv == 32767 ) // this is a value for system font color, default
+		if( icv == 32767 ) // this is a value for system font color, default
 		// to black
 		{
 			return 0;
 		}
-		return this.icv;
+		return icv;
 	}
 
 	/**
@@ -704,7 +711,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	{
 		if( data == null )
 		{
-			this.setData( this.getData() );
+			setData( getData() );
 		}
 		byte[] newwt = ByteTools.shortToLEBytes( (short) wt );
 		System.arraycopy( newwt, 0, data, 6, 2 );
@@ -744,20 +751,20 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		StringBuffer sb = new StringBuffer( "" );
 		if( !convertToUnicodeFont || !isUnicodeCharSet() )
 		{
-			sb.append( "name=\"" + StringTool.convertXMLChars( this.getFontName() ) + "\"" );
+			sb.append( "name=\"" + StringTool.convertXMLChars( getFontName() ) + "\"" );
 		}
 		else
 		{
 			sb.append( "name=\"ArialUnicodeMS\"" );
 		}
-		sb.append( " size=\"" + this.getFontHeightInPoints() + "\"" );
-		sb.append( " color=\"" + FormatHandle.colorToHexString( this.getColorAsColor() ) + "\"" );
-		sb.append( " weight=\"" + this.getFontWeight() + "\"" );
-		if( this.getIsBold() )
+		sb.append( " size=\"" + getFontHeightInPoints() + "\"" );
+		sb.append( " color=\"" + FormatHandle.colorToHexString( getColorAsColor() ) + "\"" );
+		sb.append( " weight=\"" + getFontWeight() + "\"" );
+		if( getIsBold() )
 		{
 			sb.append( " bold=\"1\"" );
 		}
-		if( this.getUnderlineStyle() != Font.STYLE_UNDERLINE_NONE )
+		if( getUnderlineStyle() != Font.STYLE_UNDERLINE_NONE )
 		{
 			sb.append( " underline=\"" + getUnderlineStyle() + "\"" );
 		}
@@ -772,7 +779,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	 */
 	public boolean matches( Font f )
 	{
-		return (this.fontName.equals( f.fontName ) && (this.dyHeight == f.dyHeight) && (this.bls == f.bls) && (this.getColor() == f.getColor()) && (this.sss == f.sss) && (this.uls == f.uls) && (this.grbit == f.grbit));
+		return (fontName.equals( f.fontName ) && (dyHeight == f.dyHeight) && (bls == f.bls) && (getColor() == f.getColor()) && (sss == f.sss) && (uls == f.uls) && (grbit == f.grbit));
 	}
 
 	/**
@@ -784,7 +791,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	{
 		if( c != null )
 		{
-			this.setColor( c.getColorInt() );
+			setColor( c.getColorInt() );
 		}
 		customColor = c;
 	}
@@ -818,7 +825,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	 */
 	public boolean isCondensed()
 	{
-		return this.condensed;
+		return condensed;
 	}
 
 	/**
@@ -840,7 +847,7 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	 */
 	public boolean isExtended()
 	{
-		return this.extended;
+		return extended;
 	}
 
 	/**
@@ -853,17 +860,17 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	{
 		StringBuffer ooxml = new StringBuffer();
 		ooxml.append( "<font>" );
-		if( this.getIsBold() )
+		if( getIsBold() )
 		{
 			ooxml.append( "<b/>" );
 		}
-		if( this.getItalic() )
+		if( getItalic() )
 		{
 			ooxml.append( "<i/>" );
 		}
-		if( this.getUnderlined() )
+		if( getUnderlined() )
 		{
-			int u = this.getUnderlineStyle();
+			int u = getUnderlineStyle();
 			if( u == 1 )// the default
 			{
 				ooxml.append( "<u/>" );
@@ -881,19 +888,19 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 				ooxml.append( "<u val=\"doubleAccounting\"/>" );
 			}
 		}
-		if( this.getStricken() )
+		if( getStricken() )
 		{
 			ooxml.append( "<strike/>" );
 		}
-		if( !this.isCondensed() )
+		if( !isCondensed() )
 		{
 			ooxml.append( "<condense val=\"0\"/>" );
 		}
-		if( !this.isExtended() )
+		if( !isExtended() )
 		{
 			ooxml.append( "<extend val=\"0\"/>" );
 		}
-		Color c = this.getOOXMLColor();
+		Color c = getOOXMLColor();
 		if( c != null )
 		{
 			ooxml.append( c.getOOXML() );
@@ -901,21 +908,21 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 		else
 		{
 			// KSC: modify due to certain XLS->XLSX issues with automatic color
-			if( (this.icv != 9) && (this.icv != 64) )
+			if( (icv != 9) && (icv != 64) )
 			{ // leave automatic "blank"
-				int cl = this.getColor();
+				int cl = getColor();
 				if( cl > 0 )
 				{
-					ooxml.append( "<color rgb=\"FF" + FormatHandle.colorToHexString( this.getColorTable()[cl] ).substring( 1 ) + "\"/>" );
+					ooxml.append( "<color rgb=\"FF" + FormatHandle.colorToHexString( getColorTable()[cl] ).substring( 1 ) + "\"/>" );
 				}
 			}
 		}
-		double sz = this.getFontHeightInPoints();
+		double sz = getFontHeightInPoints();
 		if( sz > 0 ) // for incremental styles, font size may not be set
 		{
 			ooxml.append( "<sz val=\"" + sz + "\"/>" );
 		}
-		String n = this.getFontName();
+		String n = getFontName();
 		if( (n != null) && !n.equals( "" ) ) // for incremental styles, font name may
 		// not be set
 		{
@@ -938,10 +945,14 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	public static Font parseOOXML( XmlPullParser xpp, WorkBookHandle bk )
 	{
 		Color c = null;
-		String sz = null, name = "";
+		String sz = null;
+		String name = "";
 		Object u = null;
-		boolean b = false, strike = false, ital = false;
-		boolean condense = false, expand = false;
+		boolean b = false;
+		boolean strike = false;
+		boolean ital = false;
+		boolean condense = false;
+		boolean expand = false;
 		try
 		{
 			int eventType = xpp.next();
@@ -1075,13 +1086,13 @@ public final class Font extends com.extentech.formats.XLS.XLSRecord implements F
 	 */
 	public String getSVG()
 	{
-		StringBuffer sbf = new StringBuffer( "font-family='" + this.getFontName() + "'" );
-		sbf.append( " font-size='" + this.getFontHeightInPoints() + "pt'" );
-		sbf.append( " font-weight='" + this.getFontWeight() + "'" );
+		StringBuffer sbf = new StringBuffer( "font-family='" + getFontName() + "'" );
+		sbf.append( " font-size='" + getFontHeightInPoints() + "pt'" );
+		sbf.append( " font-weight='" + getFontWeight() + "'" );
 		// sbf.append(" fill='#222222'"); // TODO: get proper text color
-		if( this.icv != 9 )
+		if( icv != 9 )
 		{
-			sbf.append( " fill='" + FormatHandle.colorToHexString( FormatHandle.getColor( this.getColor() ) ) + "'" );
+			sbf.append( " fill='" + FormatHandle.colorToHexString( FormatHandle.getColor( getColor() ) ) + "'" );
 		}
 		else
 		{

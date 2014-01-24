@@ -56,7 +56,8 @@ public class SxAddl extends XLSRecord implements XLSConstants
 {
 	private static final Logger log = LoggerFactory.getLogger( SxAddl.class );
 	private static final long serialVersionUID = 2639291289806138985L;
-	private short sxc, sxd;
+	private short sxc;
+	private short sxd;
 
 	enum ADDL_CLASSES
 	{
@@ -203,9 +204,9 @@ public class SxAddl extends XLSRecord implements XLSConstants
 	public void init()
 	{
 		super.init();
-		sxc = this.getData()[4]; // class: see addlclass
-		sxd = this.getData()[5];
-		int len = this.getData().length;
+		sxc = getData()[4]; // class: see addlclass
+		sxd = getData()[5];
+		int len = getData().length;
 		/*
 		 * notes: If the value of the hdr.sxc field of SXAddl is 0x09 and the
 		 * value of the hdr.sxd field of SXAddl is 0xFF, then the current class
@@ -233,12 +234,12 @@ public class SxAddl extends XLSRecord implements XLSConstants
 						// String-- cch-2 bytes, encoding-1 byte
 						if( len > 6 )
 						{
-							short cch = ByteTools.readShort( this.getData()[6], this.getData()[7] );
+							short cch = ByteTools.readShort( getData()[6], getData()[7] );
 							if( cch > 0 )
 							{ // otherwise it's a multiple segment
-								cch = ByteTools.readShort( this.getData()[12], this.getData()[13] );
-								short encoding = this.getData()[14];
-								byte[] tmp = this.getBytesAt( 15, (cch) * (encoding + 1) );
+								cch = ByteTools.readShort( getData()[12], getData()[13] );
+								short encoding = getData()[14];
+								byte[] tmp = getBytesAt( 15, (cch) * (encoding + 1) );
 								String name = null;
 								try
 								{
@@ -264,7 +265,7 @@ public class SxAddl extends XLSRecord implements XLSConstants
 					case sxdVer10Info:
 					case sxdTableStyleClient:
 					case sxdVerUpdInv:
-							log.debug( "SXADDL_sxcView: record=" + record + " data:" + Arrays.toString( this.getBytesAt( 6,
+							log.debug( "SXADDL_sxcView: record=" + record + " data:" + Arrays.toString( getBytesAt( 6,
 							                                                                                                  len - 6 ) ) );
 						break;
 				}
@@ -274,9 +275,9 @@ public class SxAddl extends XLSRecord implements XLSConstants
 				switch( crec )
 				{
 					case SxdVer10Info:
-						byte verLastRefresh = this.getByteAt( 16 );
-						byte verRefreshMin = this.getByteAt( 17 );
-						double lastdate = ByteTools.eightBytetoLEDouble( this.getBytesAt( 18, 8 ) );
+						byte verLastRefresh = getByteAt( 16 );
+						byte verRefreshMin = getByteAt( 17 );
+						double lastdate = ByteTools.eightBytetoLEDouble( getBytesAt( 18, 8 ) );
 						java.util.Date ld = DateConverter.getDateFromNumber( lastdate );
 							java.text.DateFormat dateFormatter = java.text.DateFormat.getDateInstance( java.text.DateFormat.DEFAULT,
 							                                                                           Locale.getDefault() );
@@ -284,7 +285,7 @@ public class SxAddl extends XLSRecord implements XLSConstants
 									                " lastDate:" + dateFormatter.format( ld ) + " verLast:" + verLastRefresh + " verMin:" + verRefreshMin );
 						break;
 					default:
-							log.debug( "SXADDL_sxcCache: record=" + crec + " data:" + Arrays.toString( this.getBytesAt( 6,
+							log.debug( "SXADDL_sxcCache: record=" + crec + " data:" + Arrays.toString( getBytesAt( 6,
 							                                                                                                 len - 6 ) ) );
 						break;
 				}
@@ -292,7 +293,7 @@ public class SxAddl extends XLSRecord implements XLSConstants
 				break;
 			case sxcField12:
 				SxcField12 srec = SxcField12.lookup( sxd );
-					log.debug( "SXADDL_sxcField12: record=" + srec + " data:" + Arrays.toString( this.getBytesAt( 6, len - 6 ) ) );
+					log.debug( "SXADDL_sxcField12: record=" + srec + " data:" + Arrays.toString( getBytesAt( 6, len - 6 ) ) );
 				break;
 			case sxcField:
 			case sxcHierarchy:
@@ -312,7 +313,7 @@ public class SxAddl extends XLSRecord implements XLSConstants
 			case sxcSxcondfmt:
 			case sxcSxfilters12:
 			case sxcSxfilter12:
-					log.debug( "SXADDL: hdr: " + " sxc:" + sxc + " sxd:" + sxd + " data:" + Arrays.toString( this.getBytesAt( 6,
+					log.debug( "SXADDL: hdr: " + " sxc:" + sxc + " sxd:" + sxd + " data:" + Arrays.toString( getBytesAt( 6,
 					                                                                                                               len - 6 ) ) );
 				break;
 		}
@@ -408,7 +409,7 @@ public class SxAddl extends XLSRecord implements XLSConstants
 		}
 
 		byte[] data = new byte[14];
-		System.arraycopy( this.getData(), 0, data, 0, 5 );
+		System.arraycopy( getData(), 0, data, 0, 5 );
 		byte[] strbytes = null;
 		try
 		{
@@ -432,7 +433,7 @@ public class SxAddl extends XLSRecord implements XLSConstants
 		System.arraycopy( strbytes, 0, newrgch, 1, cch );
 
 		data = ByteTools.append( newrgch, data );
-		this.setData( data );
+		setData( data );
 	}
 
 	/**

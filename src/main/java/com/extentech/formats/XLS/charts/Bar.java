@@ -56,7 +56,9 @@ public class Bar extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 8917510368688674273L;
 	private short grbit = 0;
-	protected boolean fStacked = false, f100 = false, fHasShadow = false;
+	protected boolean fStacked = false;
+	protected boolean f100 = false;
+	protected boolean fHasShadow = false;
 	protected short pcOverlap = 0;
 	protected short pcGap = 50;
 
@@ -64,11 +66,11 @@ public class Bar extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		pcOverlap = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		pcOverlap = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		// should be 50 default, but seems to be 150 ??????
-		pcGap = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
+		pcGap = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
 		// pcGap: 0x0096 specifies that the width of the gap between adjacent categories is 150% of the data point width. It also specifies that the width of the gap between the categories (3) and the left and right edges of the plot area is 75% of the data point width. 
-		grbit = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
+		grbit = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
 		if( (grbit & 0x1) == 0x1 )
 		{
 			chartType = BARCHART;
@@ -186,27 +188,27 @@ public class Bar extends GenericChartObject implements ChartObject
 	{
 		grbit = ByteTools.updateGrBit( grbit, true, 0 );    // set 0'th bit
 		chartType = ChartConstants.BARCHART;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	public void setAsColumnChart()
 	{
 		grbit = ByteTools.updateGrBit( grbit, false, 0 );    // clear 0'th bit
 		chartType = ChartConstants.COLCHART;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	private void updateRecord()
 	{
 		byte[] b = ByteTools.shortToLEBytes( pcOverlap );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 		b = ByteTools.shortToLEBytes( pcGap );
-		this.getData()[2] = b[0];
-		this.getData()[3] = b[1];
+		getData()[2] = b[0];
+		getData()[3] = b[1];
 		b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 	}
 
 	public static XLSRecord getPrototype()
@@ -264,12 +266,12 @@ public class Bar extends GenericChartObject implements ChartObject
 	{
 		if( op.equals( "Gap" ) )
 		{ // Bar
-			return String.valueOf( this.getGap() );
+			return String.valueOf( getGap() );
 		}
 		if( op.equals( "Overlap" ) )
 		{ // Bar
 //    		return String.valueOf(Math.abs(this.getOverlap()));		// KSC: TESTING:  OOXML apparently needs +100 pcOverlap NOT -100 ... WHY and TRUE FOR ALL CASES?????
-			return String.valueOf( this.getOverlap() );        // KSC: TESTING:  OOXML apparently needs +100 pcOverlap NOT -100 ... WHY and TRUE FOR ALL CASES?????
+			return String.valueOf( getOverlap() );        // KSC: TESTING:  OOXML apparently needs +100 pcOverlap NOT -100 ... WHY and TRUE FOR ALL CASES?????
 		}
 		return super.getChartOption( op );
 	}

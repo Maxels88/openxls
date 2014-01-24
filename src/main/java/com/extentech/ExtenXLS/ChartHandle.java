@@ -164,7 +164,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	public void setTitle( String title )
 	{
-		this.mychart.setTitle( title );
+		mychart.setTitle( title );
 	}
 
 	/**
@@ -174,12 +174,12 @@ public class ChartHandle implements ChartConstants
 	 */
 	public String getDataRangeJSON()
 	{
-		return this.mychart.getChartSeries().getDataRangeJSON().toString();
+		return mychart.getChartSeries().getDataRangeJSON().toString();
 	}
 
 	public int[] getEncompassingDataRange()
 	{
-		return getEncompassingDataRange( this.mychart.getChartSeries().getDataRangeJSON() );
+		return getEncompassingDataRange( mychart.getChartSeries().getDataRangeJSON() );
 	}
 
 	/**
@@ -301,7 +301,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	public int getId()
 	{
-		return this.mychart.getId();
+		return mychart.getId();
 	}
 
 	/**
@@ -383,7 +383,7 @@ public class ChartHandle implements ChartConstants
 		for( int i = 0; i < v.size(); i++ )
 		{
 			Series s = (Series) v.get( i );
-			csh[i] = new ChartSeriesHandle( s, this.wbh );
+			csh[i] = new ChartSeriesHandle( s, wbh );
 		}
 		return csh;
 	}
@@ -397,7 +397,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	public ChartSeriesHandle getChartSeriesHandle( String seriesRange )
 	{
-		ChartSeriesHandle[] series = this.getAllChartSeriesHandles();
+		ChartSeriesHandle[] series = getAllChartSeriesHandles();
 		for( ChartSeriesHandle sery : series )
 		{
 			String sr = sery.getSeriesRange();
@@ -418,7 +418,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	public ChartSeriesHandle getChartSeriesHandle( int idx )
 	{
-		ChartSeriesHandle[] series = this.getAllChartSeriesHandles();
+		ChartSeriesHandle[] series = getAllChartSeriesHandles();
 		if( series.length >= idx )
 		{
 			return series[idx];
@@ -436,7 +436,7 @@ public class ChartHandle implements ChartConstants
 	public ChartSeriesHandle getChartSeriesHandleByName( String legend )
 	{
 		Series s = mychart.getSeries( legend, -1 ); // -1 is flag for all rather than for a specific chart
-		return new ChartSeriesHandle( s, this.wbh );
+		return new ChartSeriesHandle( s, wbh );
 	}
 
 	/**
@@ -538,7 +538,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	public double getAxisMinScale( int axisType )
 	{
-		double[] minmax = mychart.getMinMax( this.wbh );
+		double[] minmax = mychart.getMinMax( wbh );
 		return mychart.getAxes().getMinMax( minmax[0], minmax[1], axisType )[0];
 	}
 
@@ -553,7 +553,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	public double getAxisMaxScale( int axisType )
 	{
-		double[] minmax = mychart.getMinMax( this.wbh ); // -1 is flag for all rather than for a specific chart
+		double[] minmax = mychart.getMinMax( wbh ); // -1 is flag for all rather than for a specific chart
 		return mychart.getAxes().getMinMax( minmax[0], minmax[1], axisType )[1];
 	}
 
@@ -674,7 +674,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	public double getAxisMinScale()
 	{
-		double[] minmax = mychart.getMinMax( this.wbh ); // -1 is flag for all rather than for a specific chart
+		double[] minmax = mychart.getMinMax( wbh ); // -1 is flag for all rather than for a specific chart
 		return mychart.getAxes().getMinMax( minmax[0], minmax[1] )[0];
 	}
 
@@ -686,7 +686,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	public double getAxisMaxScale()
 	{
-		double[] minmax = mychart.getMinMax( this.wbh );
+		double[] minmax = mychart.getMinMax( wbh );
 		return mychart.getAxes().getMinMax( minmax[0], minmax[1] )[1];
 	}
 
@@ -698,7 +698,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	public int getAxisMajorUnit()
 	{
-		double[] minmax = mychart.getMinMax( this.wbh );
+		double[] minmax = mychart.getMinMax( wbh );
 		return (int) mychart.getAxes().getMinMax( minmax[0], minmax[1] )[2];
 	}
 
@@ -710,7 +710,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	public int getAxisMinorUnit()
 	{
-		double[] minmax = mychart.getMinMax( this.wbh );
+		double[] minmax = mychart.getMinMax( wbh );
 		return (int) mychart.getAxes().getMinMax( minmax[0], minmax[1] )[1];
 	}
 
@@ -1384,7 +1384,7 @@ public class ChartHandle implements ChartConstants
 		try
 		{
 			Series s = (Series) mychart.getAllSeries( nChart ).get( index );
-			ChartSeriesHandle csh = new ChartSeriesHandle( s, this.wbh );
+			ChartSeriesHandle csh = new ChartSeriesHandle( s, wbh );
 			csh.setSeries( legendCell, categoryRange, seriesRange, bubbleRange );
 			setDimensionsRecord();
 			return csh;
@@ -1471,7 +1471,7 @@ public class ChartHandle implements ChartConstants
 	public ChartSeriesHandle addSeriesRange( String legendCell, String categoryRange, String seriesRange, String bubbleRange ) throws
 	                                                                                                                           CellNotFoundException
 	{
-		return this.addSeriesRange( legendCell, categoryRange, seriesRange, bubbleRange, 0 );    // target default chart
+		return addSeriesRange( legendCell, categoryRange, seriesRange, bubbleRange, 0 );    // target default chart
 	}
 
 	/**
@@ -1568,7 +1568,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	public ChartSeriesHandle addSeriesRange( CellHandle legendCell, CellRange categoryRange, CellRange seriesRange, CellRange bubbleRange )
 	{
-		return this.addSeriesRange( legendCell, categoryRange, seriesRange, bubbleRange, 0 );    // 0=default chart
+		return addSeriesRange( legendCell, categoryRange, seriesRange, bubbleRange, 0 );    // 0=default chart
 	}
 
 	/**
@@ -1684,7 +1684,7 @@ public class ChartHandle implements ChartConstants
 		try
 		{
 			HashMap<String, Double> chartMetrics = mychart.getMetrics( wbh );    // build or retrieve  Chart Metrics --> dimensions + series data ... 
-			this.mychart.getLegend().resetPos( chartMetrics.get( "y" ),
+			mychart.getLegend().resetPos( chartMetrics.get( "y" ),
 			                                   chartMetrics.get( "h" ),
 			                                   chartMetrics.get( "canvash" ),
 			                                   legendCells.length );
@@ -1701,11 +1701,11 @@ public class ChartHandle implements ChartConstants
 			{
 				if( !hasBubbles )    // usual case
 				{
-					this.addSeriesRange( legendCells[i], categoryRange, valueRanges[i], null, nChart );
+					addSeriesRange( legendCells[i], categoryRange, valueRanges[i], null, nChart );
 				}
 				else
 				{
-					this.addSeriesRange( legendCells[i], categoryRange, valueRanges[i], bubbleSizeRanges[i], nChart );
+					addSeriesRange( legendCells[i], categoryRange, valueRanges[i], bubbleSizeRanges[i], nChart );
 				}
 			}
 			catch( Exception e )
@@ -1749,7 +1749,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	public ChartSeriesHandle appendRowSeriesToChart( int nChart )
 	{
-		ChartSeriesHandle[] handles = this.getAllChartSeriesHandles( nChart );
+		ChartSeriesHandle[] handles = getAllChartSeriesHandles( nChart );
 		ChartSeriesHandle theHandle = handles[handles.length - 1];
 		String legendRef = theHandle.getSeriesLegendReference();
 		if( (legendRef != null) && !legendRef.equals( "" ) )
@@ -1782,7 +1782,7 @@ public class ChartHandle implements ChartConstants
 		seriesRange = sheetnm + "!" + ExcelTools.formatRange( newRc );
 		try
 		{
-			return this.addSeriesRange( legendRef, "", categoryRange, seriesRange, "", nChart );
+			return addSeriesRange( legendRef, "", categoryRange, seriesRange, "", nChart );
 		}
 		catch( CellNotFoundException e )
 		{
@@ -1813,7 +1813,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	public void appendRowCategoryToChart( int nChart )
 	{
-		ChartSeriesHandle[] handles = this.getAllChartSeriesHandles( nChart );
+		ChartSeriesHandle[] handles = getAllChartSeriesHandles( nChart );
 
 		for( ChartSeriesHandle theHandle : handles )
 		{
@@ -2025,13 +2025,17 @@ public class ChartHandle implements ChartConstants
 					{
 						for( int x = 0; x < xpp.getAttributeCount(); x++ )
 						{
-							this.setChartFont( xpp.getAttributeName( x ), xpp.getAttributeValue( x ) );
+							setChartFont( xpp.getAttributeName( x ), xpp.getAttributeValue( x ) );
 						}
 					}
 					else if( tnm.equals( "ChartFontRec" ) )
 					{
 						String fName = "";
-						int fontId = 0, fSize = 0, fWeight = 0, fColor = 0, fUnderline = 0;
+						int fontId = 0;
+						int fSize = 0;
+						int fWeight = 0;
+						int fColor = 0;
+						int fUnderline = 0;
 						boolean bIsBold = false;
 						for( int x = 0; x < xpp.getAttributeCount(); x++ )
 						{
@@ -2070,21 +2074,21 @@ public class ChartHandle implements ChartConstants
 								fUnderline = Integer.parseInt( val );
 							}
 						}
-						while( this.getWorkBook().getNumFonts() < (fontId - 1) )
+						while( getWorkBook().getNumFonts() < (fontId - 1) )
 						{
-							this.getWorkBook().insertFont( new Font( "Arial", Font.PLAIN, 10 ) );
+							getWorkBook().insertFont( new Font( "Arial", Font.PLAIN, 10 ) );
 						}
-						if( this.getWorkBook().getNumFonts() < fontId )
+						if( getWorkBook().getNumFonts() < fontId )
 						{
 							Font f = new Font( fName, fWeight, fSize );
 							f.setColor( fColor );
 							f.setBold( bIsBold );
 							f.setUnderlineStyle( (byte) fUnderline );
-							this.getWorkBook().insertFont( f );
+							getWorkBook().insertFont( f );
 						}
 						else
 						{    // TODO: this will screw up linked fonts, perhaps, so what to do?
-							Font f = this.getWorkBook().getFont( fontId );
+							Font f = getWorkBook().getFont( fontId );
 							f.setFontWeight( fWeight );
 							f.setFontName( fName );
 							f.setFontHeight( fSize );
@@ -2101,8 +2105,12 @@ public class ChartHandle implements ChartConstants
 					else if( tnm.equals( "Series" ) )
 					{        // series -->
 						// Legend Range Category shape typex typey
-						String legend = "", series = "", category = "", bubble = "";
-						String dataTypeX = "", dataTypeY = "";
+						String legend = "";
+						String series = "";
+						String category = "";
+						String bubble = "";
+						String dataTypeX = "";
+						String dataTypeY = "";
 						String shape = "";
 						for( int x = 0; x < xpp.getAttributeCount(); x++ )
 						{
@@ -2146,16 +2154,16 @@ public class ChartHandle implements ChartConstants
 						// 20070716 KSC: handle chart-type-specific options in a very generic way ...
 						for( int x = 0; x < xpp.getAttributeCount(); x++ )
 						{
-							this.setChartOption( xpp.getAttributeName( x ), xpp.getAttributeValue( x ) );
+							setChartOption( xpp.getAttributeName( x ), xpp.getAttributeValue( x ) );
 						}
 					}
 					else if( tnm.equals( "ThreeD" ) )
 					{        // handle three-d options
 						// handle threeD record options in a very generic way ...
-						this.make3D(); // default chart - TODO; if mutliple charts, handle	
+						make3D(); // default chart - TODO; if mutliple charts, handle
 						for( int x = 0; x < xpp.getAttributeCount(); x++ )
 						{    // now add threed rec options
-							this.setChartOption( xpp.getAttributeName( x ), xpp.getAttributeValue( x ) );
+							setChartOption( xpp.getAttributeName( x ), xpp.getAttributeValue( x ) );
 						}
 					}
 					else if( tnm.endsWith( "Axis" ) )
@@ -2179,19 +2187,23 @@ public class ChartHandle implements ChartConstants
 						{ // then has axis options
 							for( int x = 0; x < xpp.getAttributeCount(); x++ )
 							{
-								this.setAxisOption( type, xpp.getAttributeName( x ), xpp.getAttributeValue( x ) );
+								setAxisOption( type, xpp.getAttributeName( x ), xpp.getAttributeValue( x ) );
 							}
 						}
 						else
 						{ // no axis options means no axis present; remove 
-							this.removeAxis( type );
+							removeAxis( type );
 						}
 					}
 					else if( tnm.equals( "Series" ) )
 					{        // handle series data
 						// Legend Range Category
-						String legend = "", series = "", category = "", bubble = "";
-						String dataTypeX = "", dataTypeY = "";
+						String legend = "";
+						String series = "";
+						String category = "";
+						String bubble = "";
+						String dataTypeX = "";
+						String dataTypeY = "";
 						String shape = "";
 						for( int x = 0; x < xpp.getAttributeCount(); x++ )
 						{
@@ -2257,20 +2269,20 @@ public class ChartHandle implements ChartConstants
 	{
 		StringBuffer sb = new StringBuffer( t( 1 ) + "<Chart" );
 		// Chart Name (=Title)
-		sb.append( " Name=\"" + this.getTitle() + "\"" );
+		sb.append( " Name=\"" + getTitle() + "\"" );
 		// Type
-		sb.append( " type=\"" + this.getChartType() + "\"" );
+		sb.append( " type=\"" + getChartType() + "\"" );
 		// Plot Area Background color 20080429 KSC
-		sb.append( " Fill=\"" + this.getPlotAreaBgColor() + "\"" );
+		sb.append( " Fill=\"" + getPlotAreaBgColor() + "\"" );
 		// Position
 		short[] coords = mychart.getCoords();
 		sb.append( " Left=\"" + coords[0] + "\" Top=\"" + coords[1] + "\" Width=\"" + coords[2] + "\" Height=\"" + coords[3] + "\"" );
 		sb.append( ">\n" );
 
 		// Chart Fonts
-		sb.append( t( 2 ) + "<ChartFontRecs>" + this.getChartFontRecsXML() );
+		sb.append( t( 2 ) + "<ChartFontRecs>" + getChartFontRecsXML() );
 		sb.append( "\n" + t( 2 ) + "</ChartFontRecs>\n" );
-		sb.append( t( 2 ) + "<ChartFonts" + this.getChartFontsXML() + "/>\n" );
+		sb.append( t( 2 ) + "<ChartFonts" + getChartFontsXML() + "/>\n" );
 		// Format Chart Area
 		sb.append( t( 2 ) + "<FormatChartArea>\n" );
 		sb.append( t( 3 ) + "<ChartBorder></ChartBorder>\n" ); // KSC: TODO: BORDER
@@ -2278,7 +2290,7 @@ public class ChartHandle implements ChartConstants
 		sb.append( t( 2 ) + "</FormatChartArea>\n" );
 		// Source Data
 		sb.append( t( 2 ) + "<SourceData>\n" );
-		ChartSeriesHandle[] series = this.getAllChartSeriesHandles();
+		ChartSeriesHandle[] series = getAllChartSeriesHandles();
 		for( ChartSeriesHandle sery : series )
 		{
 			sb.append( t( 3 ) + "<Series Legend=\"" + sery.getSeriesLegendReference() + "\"" );
@@ -2297,18 +2309,18 @@ public class ChartHandle implements ChartConstants
 		sb.append( t( 2 ) + "</SourceData>\n" );
 		// Chart Options
 		sb.append( t( 2 ) + "<ChartOptions" );
-		sb.append( this.getChartOptionsXML() );
+		sb.append( getChartOptionsXML() );
 		sb.append( "/>\n" );
 		// Axis Options
 		sb.append( t( 2 ) + "<Axes>\n" );
-		sb.append( t( 3 ) + "<XAxis" + this.getAxisOptionsXML( XAXIS ) + "/>\n" );
-		sb.append( t( 3 ) + "<YAxis" + this.getAxisOptionsXML( YAXIS ) + "/>\n" );
-		sb.append( t( 3 ) + "<ZAxis" + this.getAxisOptionsXML( ZAXIS ) + "/>\n" );
+		sb.append( t( 3 ) + "<XAxis" + getAxisOptionsXML( XAXIS ) + "/>\n" );
+		sb.append( t( 3 ) + "<YAxis" + getAxisOptionsXML( YAXIS ) + "/>\n" );
+		sb.append( t( 3 ) + "<ZAxis" + getAxisOptionsXML( ZAXIS ) + "/>\n" );
 		sb.append( t( 2 ) + "</Axes>\n" );
 		// ThreeD rec opts
-		if( this.isThreeD() )
+		if( isThreeD() )
 		{
-			sb.append( t( 2 ) + "<ThreeD" + this.getThreeDXML() + "/>\n" );
+			sb.append( t( 2 ) + "<ThreeD" + getThreeDXML() + "/>\n" );
 		}
 
 		sb.append( t( 1 ) + "</Chart>\n" );
@@ -2351,7 +2363,7 @@ public class ChartHandle implements ChartConstants
 				mychart = thischart;
 				thischart.getChartSeries().setParentChart( thischart );
 			}
-			thischart.wbh = this.wbh;
+			thischart.wbh = wbh;
 
 			cooxml.append( thischart.getOOXML( catAxisId, valAxisId, serAxisId ) );
 
@@ -2390,8 +2402,8 @@ public class ChartHandle implements ChartConstants
 	{
 		TwoCellAnchor t = new TwoCellAnchor( ((OOXMLChart) mychart).getEditMovement() );
 		t.setAsChart( id,
-		              OOXMLAdapter.stripNonAscii( this.getOOXMLName() ).toString(),
-		              TwoCellAnchor.convertBoundsFromBIFF8( this.getSheet(),
+		              OOXMLAdapter.stripNonAscii( getOOXMLName() ).toString(),
+		              TwoCellAnchor.convertBoundsFromBIFF8( getSheet(),
 		                                                    mychart.getBounds() ) );    // adjust BIFF8 bounds to OOXML units
 		return t.getOOXML();
 	}
@@ -2435,7 +2447,7 @@ public class ChartHandle implements ChartConstants
 			boolean hasPivotTableSource = false;
 
 			// remove any undesired formatting from default chart:
-			this.setTitle( "" );    // clear any previously set 
+			setTitle( "" );    // clear any previously set
 			mychart.getAxes().setPlotAreaBgColor( FormatConstants.COLOR_WHITE );
 			mychart.getAxes().setPlotAreaBorder( -1, -1 );    // remove plot area border 
 
@@ -2499,7 +2511,7 @@ public class ChartHandle implements ChartConstants
 						thischart.showLegend( true, false );
 						thischart.ooxmlLegend = (com.extentech.formats.OOXML.Legend) com.extentech.formats.OOXML.Legend.parseOOXML( xpp,
 						                                                                                                            lastTag,
-						                                                                                                            this.wbh )
+						                                                                                                            wbh )
 						                                                                                               .cloneElement();
 						thischart.ooxmlLegend.fill2003Legend( thischart.getLegend() );
 						// Parse actual CHART TYPE element (barChart, pieChart, etc.)
@@ -2522,52 +2534,52 @@ public class ChartHandle implements ChartConstants
 							tnm.equals( OOXMLConstants.threeDchartTypes[ChartHandle.SCATTERCHART] ) ||
 							tnm.equals( OOXMLConstants.threeDchartTypes[ChartHandle.SURFACECHART] ) )
 					{  // specific chart type-
-						ChartType.parseOOXML( xpp, this.wbh, mychart, drawingOrder++ );
+						ChartType.parseOOXML( xpp, wbh, mychart, drawingOrder++ );
 						lastTag.pop();
 					}
 					else if( tnm.equals( "title" ) )
 					{
-						thischart.setOOXMLTitle( (Title) Title.parseOOXML( xpp, lastTag, this.wbh ).cloneElement(), this.wbh );
-						this.setTitle( thischart.getOOXMLTitle().getTitle() );
+						thischart.setOOXMLTitle( (Title) Title.parseOOXML( xpp, lastTag, wbh ).cloneElement(), wbh );
+						setTitle( thischart.getOOXMLTitle().getTitle() );
 					}
 					else if( tnm.equals( "spPr" ) )
 					{ // shape properties -- can be for plot area or chart space 
 						String parent = lastTag.get( lastTag.size() - 2 );
 						if( parent.equals( "plotArea" ) )
 						{
-							thischart.setSpPr( 0, (SpPr) SpPr.parseOOXML( xpp, lastTag, this.wbh ).cloneElement() );
+							thischart.setSpPr( 0, (SpPr) SpPr.parseOOXML( xpp, lastTag, wbh ).cloneElement() );
 						}
 						else if( parent.equals( "chartSpace" ) )
 						{
-							thischart.setSpPr( 1, (SpPr) SpPr.parseOOXML( xpp, lastTag, this.wbh ).cloneElement() );
+							thischart.setSpPr( 1, (SpPr) SpPr.parseOOXML( xpp, lastTag, wbh ).cloneElement() );
 						}
 					}
 					else if( tnm.equals( "txPr" ) )
 					{        // text formatting
-						thischart.setTxPr( (TxPr) TxPr.parseOOXML( xpp, lastTag, this.wbh ).cloneElement() );
+						thischart.setTxPr( (TxPr) TxPr.parseOOXML( xpp, lastTag, wbh ).cloneElement() );
 					}
 					else if( tnm.equals( "catAx" ) )
 					{        // child of plotArea
-						mychart.getAxes().parseOOXML( XAXIS, xpp, tnm, lastTag, this.wbh );
+						mychart.getAxes().parseOOXML( XAXIS, xpp, tnm, lastTag, wbh );
 					}
 					else if( tnm.equals( "valAx" ) )
 					{        // child of plotArea
 						if( mychart.getAxes().hasAxis( Axis.XAXIS ) )    // usual, have a catAx then a valAx
 						{
-							mychart.getAxes().parseOOXML( Axis.YAXIS, xpp, tnm, lastTag, this.wbh );
+							mychart.getAxes().parseOOXML( Axis.YAXIS, xpp, tnm, lastTag, wbh );
 						}
 						else if( mychart.getAxes().hasAxis( Axis.YAXIS ) )    // for bubble charts, has two valAxes and no catAx
 						{
-							mychart.getAxes().parseOOXML( Axis.XVALAXIS, xpp, tnm, lastTag, this.wbh );
+							mychart.getAxes().parseOOXML( Axis.XVALAXIS, xpp, tnm, lastTag, wbh );
 						}
 						else        // 2nd val axis is Y axis
 						{
-							mychart.getAxes().parseOOXML( Axis.YAXIS, xpp, tnm, lastTag, this.wbh );
+							mychart.getAxes().parseOOXML( Axis.YAXIS, xpp, tnm, lastTag, wbh );
 						}
 					}
 					else if( tnm.equals( "serAx" ) )
 					{        // series axis - 3d charts 
-						mychart.getAxes().parseOOXML( ZAXIS, xpp, tnm, lastTag, this.wbh );
+						mychart.getAxes().parseOOXML( ZAXIS, xpp, tnm, lastTag, wbh );
 					}
 					else if( tnm.equals( "dateAx" ) )
 					{        // TODO: not finished: figure out!
@@ -2666,7 +2678,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	protected void setDimensionsRecord()
 	{
-		ChartSeriesHandle[] series = this.getAllChartSeriesHandles();
+		ChartSeriesHandle[] series = getAllChartSeriesHandles();
 		int nSeries = series.length;
 		int nPoints = 0;
 		for( ChartSeriesHandle sery : series )
@@ -2795,7 +2807,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	private ThreeD initThreeD( int nChart )
 	{
-		return mychart.initThreeD( nChart, this.getChartType( nChart ) );
+		return mychart.initThreeD( nChart, getChartType( nChart ) );
 	}
 
 	/**
@@ -2902,14 +2914,14 @@ public class ChartHandle implements ChartConstants
 
 	public WorkBookHandle getWorkBookHandle()
 	{
-		return this.wbh;
+		return wbh;
 	}
 
 	public WorkSheetHandle getWorkSheetHandle()
 	{
 		try
 		{
-			return this.wbh.getWorkSheet( mychart.getSheet().getSheetNum() );
+			return wbh.getWorkSheet( mychart.getSheet().getSheetNum() );
 		}
 		catch( WorkSheetNotFoundException e )
 		{
@@ -2961,7 +2973,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	public short[] getCoords()
 	{
-		mychart.getMetrics( this.wbh );
+		mychart.getMetrics( wbh );
 		return mychart.getCoords();
 	}
 
@@ -3086,13 +3098,13 @@ public class ChartHandle implements ChartConstants
 	 */
 	public void makeStacked( int nChart )
 	{    // bar, col, line, area, pyramid col + bar, cone col + bar, cylinder col + bar
-		int chartType = this.getChartType( nChart );
-		this.setChartOption( "Stacked", "true", nChart );
+		int chartType = getChartType( nChart );
+		setChartOption( "Stacked", "true", nChart );
 		switch( chartType )
 		{
 			case ChartConstants.BARCHART:
 			case ChartConstants.COLCHART:
-				this.setChartOption( "Overlap", "-100", nChart );
+				setChartOption( "Overlap", "-100", nChart );
 				break;
 			case ChartConstants.CYLINDERCHART:
 			case ChartConstants.CYLINDERBARCHART:
@@ -3100,17 +3112,17 @@ public class ChartHandle implements ChartConstants
 			case ChartConstants.CONEBARCHART:
 			case ChartConstants.PYRAMIDCHART:
 			case ChartConstants.PYRAMIDBARCHART:
-				this.setChartOption( "Overlap", "-100", nChart );
-				ThreeD td = this.initThreeD( nChart );
+				setChartOption( "Overlap", "-100", nChart );
+				ThreeD td = initThreeD( nChart );
 				td.setChartOption( "Cluster", "false" );
 				break;
 			case ChartConstants.LINECHART:
-				this.setChartOption( "Percentage", "0", nChart );
+				setChartOption( "Percentage", "0", nChart );
 				break;
 			case ChartConstants.AREACHART:
-				this.setChartOption( "Overlap", "-100", nChart );
-				this.setChartOption( "Percentage", "25", nChart );
-				this.setChartOption( "SmoothedLine", "true", nChart );
+				setChartOption( "Overlap", "-100", nChart );
+				setChartOption( "Percentage", "25", nChart );
+				setChartOption( "SmoothedLine", "true", nChart );
 				break;
 		}
 	}
@@ -3126,14 +3138,14 @@ public class ChartHandle implements ChartConstants
 	 */
 	public void make100PercentStacked( int nChart )
 	{    // bar, col, line, pyramid col + bar, cone col + bar, cylinder col + bar
-		int chartType = this.getChartType( nChart );
-		this.setChartOption( "Stacked", "true", nChart );
-		this.setChartOption( "PercentageDisplay", "true", nChart );
+		int chartType = getChartType( nChart );
+		setChartOption( "Stacked", "true", nChart );
+		setChartOption( "PercentageDisplay", "true", nChart );
 		switch( chartType )
 		{
 			case ChartConstants.COLCHART:    // + pyramid
 			case ChartConstants.BARCHART:
-				this.setChartOption( "Overlap", "-100", nChart );
+				setChartOption( "Overlap", "-100", nChart );
 				break;
 			case ChartConstants.CYLINDERCHART:
 			case ChartConstants.CYLINDERBARCHART:
@@ -3141,8 +3153,8 @@ public class ChartHandle implements ChartConstants
 			case ChartConstants.CONEBARCHART:
 			case ChartConstants.PYRAMIDCHART:
 			case ChartConstants.PYRAMIDBARCHART:
-				this.setChartOption( "Overlap", "-100", nChart );
-				ThreeD td = this.initThreeD( nChart );
+				setChartOption( "Overlap", "-100", nChart );
+				ThreeD td = initThreeD( nChart );
 				td.setChartOption( "Cluster", "false" );
 				break;
 			case ChartConstants.LINECHART:
@@ -3160,9 +3172,9 @@ public class ChartHandle implements ChartConstants
 	 */
 	public void makeStacked3D( int nChart )
 	{    // bar, col, area
-		int chartType = this.getChartType( nChart );
-		this.setChartOption( "Stacked", "true", nChart );
-		ThreeD td = this.initThreeD( nChart );
+		int chartType = getChartType( nChart );
+		setChartOption( "Stacked", "true", nChart );
+		ThreeD td = initThreeD( nChart );
 		td.setChartOption( "AnRot", "20" );
 		td.setChartOption( "ThreeDScaling", "true" );
 		td.setChartOption( "TwoDWalls", "true" );
@@ -3170,11 +3182,11 @@ public class ChartHandle implements ChartConstants
 		{
 			case ChartConstants.COLCHART:
 			case ChartConstants.BARCHART:
-				this.setChartOption( "Overlap", "-100", nChart );
+				setChartOption( "Overlap", "-100", nChart );
 				break;
 			case ChartConstants.AREACHART:
-				this.setChartOption( "Percentage", "25", nChart );
-				this.setChartOption( "SmoothedLine", "true", nChart );
+				setChartOption( "Percentage", "25", nChart );
+				setChartOption( "SmoothedLine", "true", nChart );
 				break;
 		}
 	}
@@ -3190,22 +3202,22 @@ public class ChartHandle implements ChartConstants
 	 */
 	public void make100PercentStacked3D( int nChart )
 	{    // bar, col, area
-		int chartType = this.getChartType( nChart );
-		this.setChartOption( "Stacked", "true", nChart );
-		this.setChartOption( "PercentageDisplay", "true", nChart );
+		int chartType = getChartType( nChart );
+		setChartOption( "Stacked", "true", nChart );
+		setChartOption( "PercentageDisplay", "true", nChart );
 		switch( chartType )
 		{
 			case ChartConstants.COLCHART:    // + pyramid
 			case ChartConstants.BARCHART:
-				this.setChartOption( "Overlap", "-100", nChart );
-				ThreeD td = this.initThreeD( nChart );
+				setChartOption( "Overlap", "-100", nChart );
+				ThreeD td = initThreeD( nChart );
 				td.setChartOption( "AnRot", "20" );
 				td.setChartOption( "ThreeDScaling", "true" );
 				td.setChartOption( "TwoDWalls", "true" );
 				break;
 			case ChartConstants.AREACHART:
-				this.setChartOption( "Percentage", "25", nChart );
-				this.setChartOption( "SmoothedLine", "true", nChart );
+				setChartOption( "Percentage", "25", nChart );
+				setChartOption( "SmoothedLine", "true", nChart );
 				break;
 		}
 	}
@@ -3235,13 +3247,13 @@ public class ChartHandle implements ChartConstants
 	 */
 	public void make3D( int nChart )
 	{    // bar, col, line, pie, area, bubble, pyramid, cone, cylinder
-		int chartType = this.getChartType( nChart );
+		int chartType = getChartType( nChart );
 		ThreeD td = null;
 		switch( chartType )
 		{
 			case ChartConstants.COLCHART:
 			case ChartConstants.BARCHART:
-				td = this.initThreeD( nChart );
+				td = initThreeD( nChart );
 				td.setChartOption( "AnRot", "20" );
 				td.setChartOption( "ThreeDScaling", "true" );
 				td.setChartOption( "TwoDWalls", "true" );
@@ -3249,13 +3261,13 @@ public class ChartHandle implements ChartConstants
 			case ChartConstants.CYLINDERCHART:
 			case ChartConstants.CONECHART:
 			case ChartConstants.PYRAMIDCHART:
-				td = this.initThreeD( nChart );
+				td = initThreeD( nChart );
 				td.setChartOption( "Cluster", "false" );
 				break;
 			case ChartConstants.AREACHART:
-				this.setChartOption( "Percentage", "25", nChart );
-				this.setChartOption( "SmoothedLine", "true", nChart );
-				td = this.initThreeD( nChart );
+				setChartOption( "Percentage", "25", nChart );
+				setChartOption( "SmoothedLine", "true", nChart );
+				td = initThreeD( nChart );
 				td.setChartOption( "AnRot", "20" );
 				td.setChartOption( "ThreeDScaling", "true" );
 				td.setChartOption( "TwoDWalls", "true" );
@@ -3263,13 +3275,13 @@ public class ChartHandle implements ChartConstants
 				break;
 			case ChartConstants.PIECHART:
 			case ChartConstants.LINECHART:
-				this.initThreeD( nChart );    // just create a threeD rec w/ no extra options
+				initThreeD( nChart );    // just create a threeD rec w/ no extra options
 				break;
 			case ChartConstants.BUBBLECHART:
-				this.setChartOption( "Percentage", "25", nChart );
-				this.setChartOption( "SmoothedLine", "true", nChart );
-				this.setChartOption( "ThreeDBubbles", "true", nChart );
-				td = this.initThreeD( nChart );    // 20081228 KSC
+				setChartOption( "Percentage", "25", nChart );
+				setChartOption( "SmoothedLine", "true", nChart );
+				setChartOption( "ThreeDBubbles", "true", nChart );
+				td = initThreeD( nChart );    // 20081228 KSC
 				break;
 		}
 	}
@@ -3287,12 +3299,12 @@ public class ChartHandle implements ChartConstants
 	 */
 	public void makeClustered3D( int nChart )
 	{    // only for Column and Bar (?)
-		int chartType = this.getChartType( nChart );
+		int chartType = getChartType( nChart );
 		switch( chartType )
 		{
 			case ChartConstants.BARCHART:
 			case ChartConstants.COLCHART:
-				ThreeD td = this.initThreeD( nChart );
+				ThreeD td = initThreeD( nChart );
 				td.setChartOption( "AnRot", "20" );
 				td.setChartOption( "Cluster", "true" );
 				td.setChartOption( "ThreeDScaling", "true" );
@@ -3310,14 +3322,14 @@ public class ChartHandle implements ChartConstants
 	 */
 	public void makeExploded()
 	{    // pie, donut
-		int chartType = this.getChartType();
+		int chartType = getChartType();
 		switch( chartType )
 		{
 			case ChartConstants.DOUGHNUTCHART:
-				this.setChartOption( "SmoothedLine", "true" );
+				setChartOption( "SmoothedLine", "true" );
 			case ChartConstants.PIECHART:
-				this.setChartOption( "ShowLdrLines", "true" );
-				this.setChartOption( "Percentage", "25" );
+				setChartOption( "ShowLdrLines", "true" );
+				setChartOption( "Percentage", "25" );
 				break;
 			//ShowLdrLines="true" Percentage="25"/>
 			// exploded donut:  ShowLdrLines="true" Donut="50" Percentage="25" SmoothedLine="true"/>
@@ -3336,14 +3348,14 @@ public class ChartHandle implements ChartConstants
 	{ // pie
 		// ShowLdrLines="true" Percentage="25"
 		//AnRot="236"
-		int chartType = this.getChartType( nChart );
+		int chartType = getChartType( nChart );
 		switch( chartType )
 		{
 			case ChartConstants.DOUGHNUTCHART:
 			case ChartConstants.PIECHART:
-				this.setChartOption( "ShowLdrLines", "true", nChart );
-				this.setChartOption( "Percentage", "25", nChart );
-				ThreeD td = this.initThreeD( nChart );
+				setChartOption( "ShowLdrLines", "true", nChart );
+				setChartOption( "Percentage", "25", nChart );
+				ThreeD td = initThreeD( nChart );
 				td.setChartOption( "AnRot", "236" );
 				break;
 		}
@@ -3389,7 +3401,7 @@ public class ChartHandle implements ChartConstants
 	 */
 	public void setMarkerFormat( int imf )
 	{ // line, scatter ...
-		this.setChartOption( "MarkerFormat", String.valueOf( imf ) );
+		setChartOption( "MarkerFormat", String.valueOf( imf ) );
 	}
 
 	/**
@@ -3404,16 +3416,16 @@ public class ChartHandle implements ChartConstants
 		try
 		{
 			JSONObject titles = new JSONObject();
-			int type = this.getChartType();    // necessary for parsing AXIS options: horizontal charts "switch" axes ...
+			int type = getChartType();    // necessary for parsing AXIS options: horizontal charts "switch" axes ...
 
 			// titles/labels
-			titles.put( "title", this.getTitle() );
+			titles.put( "title", getTitle() );
 			titles.put( "XAxis",
-			            (type != ChartConstants.BARCHART) ? (this.getXAxisLabel()) : this.getYAxisLabel() );    // bar axes are reversed ...
-			titles.put( "YAxis", (type != ChartConstants.BARCHART) ? (this.getYAxisLabel()) : this.getXAxisLabel() );
+			            (type != ChartConstants.BARCHART) ? (getXAxisLabel()) : getYAxisLabel() );    // bar axes are reversed ...
+			titles.put( "YAxis", (type != ChartConstants.BARCHART) ? (getYAxisLabel()) : getXAxisLabel() );
 			try
 			{
-				titles.put( "ZAxis", this.getZAxisLabel() );
+				titles.put( "ZAxis", getZAxisLabel() );
 			}
 			catch( Exception e )
 			{
@@ -3428,7 +3440,7 @@ public class ChartHandle implements ChartConstants
 			theChart.put( "row", mychart.getRow0() );        // TODO: may not be necessary, see usage ...
 			theChart.put( "col", mychart.getCol0() );
 			// Plot Area Background color
-			int plotAreabg = this.getPlotAreaBgColor();
+			int plotAreabg = getPlotAreaBgColor();
 			if( (plotAreabg == 0x4D) || (plotAreabg == 0x4E) )
 			{
 				plotAreabg = FormatConstants.COLOR_WHITE;
@@ -3436,8 +3448,9 @@ public class ChartHandle implements ChartConstants
 			theChart.put( "fill", FormatConstants.SVGCOLORSTRINGS[plotAreabg] );
 
 			Double[] jMinMax = new Double[3];
-			JSONObject chartObjectJSON = this.mychart.getChartObject().getJSON( this.mychart.getChartSeries(), this.wbh, jMinMax );
-			double yMax = 1.0, yMin = 0.0;
+			JSONObject chartObjectJSON = mychart.getChartObject().getJSON( mychart.getChartSeries(), wbh, jMinMax );
+			double yMax = 1.0;
+			double yMin = 0.0;
 			int nSeries = 0;
 			try
 			{    //it's possible to not have any series defined ...
@@ -3459,8 +3472,8 @@ public class ChartHandle implements ChartConstants
 			try
 			{
 				//inputJSONObject(theChart, this.getAxis(YAXIS, false).getJSON(this.wbh, type, yMax, yMin, nSeries));
-				theChart.put( "y", mychart.getAxes().getJSON( YAXIS, this.wbh, type, yMax, yMin, nSeries ).getJSONObject( "y" ) );
-				theChart.put( "back_grid", mychart.getAxes().getJSON( YAXIS, this.wbh, type, yMax, yMin, nSeries ).getJSONObject(
+				theChart.put( "y", mychart.getAxes().getJSON( YAXIS, wbh, type, yMax, yMin, nSeries ).getJSONObject( "y" ) );
+				theChart.put( "back_grid", mychart.getAxes().getJSON( YAXIS, wbh, type, yMax, yMin, nSeries ).getJSONObject(
 						"back_grid" ) );
 			}
 			catch( Exception e )
@@ -3469,8 +3482,8 @@ public class ChartHandle implements ChartConstants
 			try
 			{
 //				inputJSONObject(theChart, this.getAxis(XAXIS, false).getJSON(this.wbh, type, yMax, yMin, nSeries));
-				theChart.put( "x", mychart.getAxes().getJSON( XAXIS, this.wbh, type, yMax, yMin, nSeries ).getJSONObject( "x" ) );
-				theChart.put( "back_grid", mychart.getAxes().getJSON( Axis.YAXIS, this.wbh, type, yMax, yMin, nSeries ).getJSONObject(
+				theChart.put( "x", mychart.getAxes().getJSON( XAXIS, wbh, type, yMax, yMin, nSeries ).getJSONObject( "x" ) );
+				theChart.put( "back_grid", mychart.getAxes().getJSON( Axis.YAXIS, wbh, type, yMax, yMin, nSeries ).getJSONObject(
 						"back_grid" ) );
 			}
 			catch( Exception e )
@@ -3489,10 +3502,10 @@ public class ChartHandle implements ChartConstants
 			/* TODO: read in legend settings */
 
 			// Chart Legend
-			if( this.hasDataLegend() )
+			if( hasDataLegend() )
 			{
-				short s = this.mychart.getLegend().getLegendPosition();
-				String[] legends = this.mychart.getLegends( -1 ); // -1 is flag for all rather than for a specific chart
+				short s = mychart.getLegend().getLegendPosition();
+				String[] legends = mychart.getLegends( -1 ); // -1 is flag for all rather than for a specific chart
 				String l = "";
 				for( String legend : legends )
 				{
@@ -3578,7 +3591,7 @@ public class ChartHandle implements ChartConstants
 			// Series Data
 //20080516 KSC: See above			JSONObject chartObjectJSON= ((GenericChartObject)this.mychart.getChartObject()).getJSON(
 //					this.getAllChartSeriesHandles(), this.getCategories()[0], this.wbh, minMax);
-			JSONObject chartObjectJSON = this.mychart.getChartObject().getJSON( this.mychart.getChartSeries(), this.wbh, jMinMax );
+			JSONObject chartObjectJSON = mychart.getChartObject().getJSON( mychart.getChartSeries(), wbh, jMinMax );
 
 			try
 			{
@@ -3590,13 +3603,14 @@ public class ChartHandle implements ChartConstants
 			}
 
 			// Retrieve Axis Scale info
-			double yMax = 0.0, yMin = 0.0;
+			double yMax = 0.0;
+			double yMin = 0.0;
 			int nSeries = 0;
 			yMin = jMinMax[0];
 			yMax = jMinMax[1];
 			nSeries = jMinMax[2].intValue();
 
-			int type = this.getChartType();    // necessary for parsing AXIS options: horizontal charts "switch" axes ...
+			int type = getChartType();    // necessary for parsing AXIS options: horizontal charts "switch" axes ...
 			// Axes + Category Labels + Grid Lines  			
 /*KSC: TAKE OUT JSON STUFF FOR NOW; WILL REFACTOR LATER			try {
 				inputJSONObject(retJSON, mychart.getAxes().getMinMaxJSON(YAXIS, this.wbh, type, yMax, yMin, nSeries));
@@ -3622,7 +3636,7 @@ public class ChartHandle implements ChartConstants
 	public String getAllSeriesDataJSON()
 	{
 		JSONArray s = new JSONArray();
-		ChartSeriesHandle[] series = this.getAllChartSeriesHandles();
+		ChartSeriesHandle[] series = getAllChartSeriesHandles();
 		try
 		{
 			for( int i = 0; i < series.length; i++ )
@@ -3698,7 +3712,7 @@ public class ChartHandle implements ChartConstants
 		// Data Legend Box -- do before drawing plot area as legends box may change plot area coordinates
 		String legendSVG = getLegendSVG( chartMetrics );    // but have to append it after because should overlap the plotarea
 
-		String bgclr = this.mychart.getPlotAreaBgColor();
+		String bgclr = mychart.getPlotAreaBgColor();
 		// setup gradients
 		svg.append( "<defs>" );
 		svg.append( "<linearGradient id='bg_gradient' x1='0' y1='0' x2='0' y2='100%'>" );
@@ -3733,7 +3747,7 @@ public class ChartHandle implements ChartConstants
 
 		// After Axes and gridlines (if present), 
 		// ACTUAL bar/series/area/etc. svg generated from series and scale data
-		svg.append( this.mychart.getChartObject().getSVG( chartMetrics, mychart.getAxes().getMetrics(), mychart.getChartSeries() ) );
+		svg.append( mychart.getChartObject().getSVG( chartMetrics, mychart.getAxes().getMetrics(), mychart.getChartSeries() ) );
 
 		svg.append( legendSVG );    // append legend SVG obtained above
 

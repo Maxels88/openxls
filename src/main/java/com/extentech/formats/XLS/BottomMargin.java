@@ -35,7 +35,7 @@ public class BottomMargin extends XLSRecord
 
 	public BottomMargin()
 	{
-		this.setOpcode( BOTTOMMARGIN );
+		setOpcode( BOTTOMMARGIN );
 		margin = 1.0;    // default
 		setData( ByteTools.doubleToLEByteArray( margin ) );
 	}

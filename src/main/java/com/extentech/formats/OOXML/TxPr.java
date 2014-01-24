@@ -93,14 +93,14 @@ public class TxPr implements OOXMLElement
 
 	public TxPr( BodyPr b, P para )
 	{
-		this.bPr = b;
+		bPr = b;
 		this.para = para;
 	}
 
 	public TxPr( TxPr tpr )
 	{
-		this.bPr = tpr.bPr;
-		this.para = tpr.para;
+		bPr = tpr.bPr;
+		para = tpr.para;
 	}
 
 	@Override
@@ -141,7 +141,7 @@ public class TxPr implements OOXMLElement
 	 */
 	public TxPr( String fontFace, int sz, boolean b, boolean i, String u, String strike, String clr )
 	{
-		this.para = new P( fontFace, sz, b, i, u, strike, clr );
+		para = new P( fontFace, sz, b, i, u, strike, clr );
 	}
 
 	public TxPr( Font fx, int hrot, String vrot )
@@ -176,7 +176,7 @@ represents an angle in 60,000ths of a degree
 		}
 		String strike = (fx.getStricken() ? "sngStrike" : "noStrike");
 		bPr = new BodyPr( hrot, "horz" );
-		this.para = new P( fx.getFontName(),
+		para = new P( fx.getFontName(),
 		                   (int) fx.getFontHeightInPoints() * 100,
 		                   fx.getBold(),
 		                   fx.getItalic(),

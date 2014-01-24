@@ -279,7 +279,7 @@ System.out.println(rec.getClass().getName().substring(rec.getClass().getName().l
 			// create pivot cache records which are source of actual pivot cache data 
 			byte[] newbytes = createPivotCacheRecords( ref, wbh, sId );
 			pcache1.setBytesWithOverage( newbytes );
-			this.init( directories, wbh );
+			init( directories, wbh );
 		}
 		catch( StorageNotFoundException e )
 		{ // shouldn't!

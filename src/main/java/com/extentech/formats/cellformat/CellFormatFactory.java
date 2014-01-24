@@ -57,7 +57,10 @@ public class CellFormatFactory
 			return new DateCellFormat( StringTool.convertDatePatternFromExcelToStringFormatter( tester ), string );
 		}
 
-		String positive, negative, zero, string;
+		String positive;
+		String negative;
+		String zero;
+		String string;
 		positive = StringTool.convertPatternFromExcelToStringFormatter( pats[0], false );
 
 		negative = StringTool.convertPatternFromExcelToStringFormatter( pats[((pats.length > 1) ? 1 : 0)], true );

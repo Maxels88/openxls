@@ -78,20 +78,20 @@ public class Color implements OOXMLElement
 		this.colortype = colortype;
 		this.colorval = colorval;
 		this.tint = tint;
-		this.theme = t;
-		this.parseColor( type );
+		theme = t;
+		parseColor( type );
 	}
 
 	public Color( Color c )
 	{
-		this.element = c.element;
-		this.auto = c.auto;
-		this.colortype = c.colortype;
-		this.colorval = c.colorval;
-		this.tint = c.tint;
-		this.colorint = c.colorint;
-		this.colorstr = c.colorstr;
-		this.theme = c.theme;
+		element = c.element;
+		auto = c.auto;
+		colortype = c.colortype;
+		colorval = c.colorval;
+		tint = c.tint;
+		colorint = c.colorint;
+		colorstr = c.colorstr;
+		theme = c.theme;
 	}
 
 	/**
@@ -102,11 +102,11 @@ public class Color implements OOXMLElement
 	 */
 	public Color( java.awt.Color c, String element, Theme t )
 	{
-		this.colortype = COLORTYPERGB;
-		this.colorval = "FF" + FormatHandle.colorToHexString( c ).substring( 1 );
+		colortype = COLORTYPERGB;
+		colorval = "FF" + FormatHandle.colorToHexString( c ).substring( 1 );
 		this.element = element;
-		this.theme = t;    // ok if it's null
-		this.parseColor( (short) 0 );
+		theme = t;    // ok if it's null
+		parseColor( (short) 0 );
 	}
 
 	/**
@@ -117,22 +117,22 @@ public class Color implements OOXMLElement
 	 */
 	public Color( String clr, String element, Theme t )
 	{
-		this.colortype = COLORTYPERGB;
+		colortype = COLORTYPERGB;
 		if( clr.startsWith( "#" ) )
 		{
-			this.colorval = "FF" + clr.substring( 1 );
+			colorval = "FF" + clr.substring( 1 );
 		}
 		else if( clr.length() == 6 )
 		{
-			this.colorval = "FF" + clr;
+			colorval = "FF" + clr;
 		}
 		else
 		{
-			this.colorval = clr;
+			colorval = clr;
 		}
 		this.element = element;
-		this.theme = t;    // ok if it's null
-		this.parseColor( (short) 0 );
+		theme = t;    // ok if it's null
+		parseColor( (short) 0 );
 	}
 
 	/**
@@ -215,20 +215,20 @@ public class Color implements OOXMLElement
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
-		ooxml.append( "<" + this.element );
-		if( this.auto )
+		ooxml.append( "<" + element );
+		if( auto )
 		{
 			ooxml.append( " auto=\"1\"" );
 		}
-		else if( this.colortype == COLORTYPERGB )// rgb
+		else if( colortype == COLORTYPERGB )// rgb
 		{
 			ooxml.append( " rgb=\"" + colorstr + "\"" );
 		}
-		else if( this.colortype == COLORTYPEINDEXED )
+		else if( colortype == COLORTYPEINDEXED )
 		{
 			ooxml.append( " indexed=\"" + colorval + "\"" );
 		}
-		else if( this.colortype == COLORTYPETHEME ) // theme
+		else if( colortype == COLORTYPETHEME ) // theme
 		{
 			ooxml.append( " theme=\"" + colorval + "\"" );
 		}
@@ -299,7 +299,7 @@ public class Color implements OOXMLElement
 	 */
 	public int getColorInt()
 	{
-		return this.colorint;
+		return colorint;
 	}
 
 	/**
@@ -310,7 +310,7 @@ public class Color implements OOXMLElement
 	 */
 	public int getColorType()
 	{
-		return this.colortype;
+		return colortype;
 	}
 
 	/**
@@ -320,12 +320,12 @@ public class Color implements OOXMLElement
 	 */
 	public String getColorAsOOXMLRBG()
 	{
-		return this.colorstr;
+		return colorstr;
 	}
 
 	public java.awt.Color getColorAsColor()
 	{
-		return FormatHandle.HexStringToColor( this.getColorAsOOXMLRBG() );
+		return FormatHandle.HexStringToColor( getColorAsOOXMLRBG() );
 	}
 
 	/**
@@ -336,19 +336,19 @@ public class Color implements OOXMLElement
 	 */
 	public void setColorInt( int clr )
 	{
-		this.colorint = clr;
-		this.colortype = 0;    // indexed
+		colorint = clr;
+		colortype = 0;    // indexed
 		// reset other vars as well
 		if( clr > -1 )
 		{
-			this.colorstr = FormatHandle.colorToHexString( FormatHandle.COLORTABLE[clr] ).substring( 1 );
+			colorstr = FormatHandle.colorToHexString( FormatHandle.COLORTABLE[clr] ).substring( 1 );
 		}
 		else
 		{
-			this.colorstr = null;
+			colorstr = null;
 		}
-		this.tint = 0.0;
-		this.auto = false;
+		tint = 0.0;
+		auto = false;
 	}
 
 	/**
@@ -358,11 +358,11 @@ public class Color implements OOXMLElement
 	 */
 	public void setColor( java.awt.Color c )
 	{
-		this.colortype = COLORTYPERGB;
-		this.colorval = "FF" + FormatHandle.colorToHexString( c ).substring( 1 );
-		this.parseColor( (short) 0 );
-		this.tint = 0.0;
-		this.auto = false;
+		colortype = COLORTYPERGB;
+		colorval = "FF" + FormatHandle.colorToHexString( c ).substring( 1 );
+		parseColor( (short) 0 );
+		tint = 0.0;
+		auto = false;
 	}
 
 	/**
@@ -372,20 +372,20 @@ public class Color implements OOXMLElement
 	 */
 	public void setColor( String clr )
 	{
-		this.colortype = COLORTYPERGB;
+		colortype = COLORTYPERGB;
 		if( clr.startsWith( "#" ) )
 		{
-			this.colorval = "FF" + clr.substring( 1 );
+			colorval = "FF" + clr.substring( 1 );
 		}
 		else if( clr.length() == 6 )
 		{
-			this.colorval = "FF" + clr;
+			colorval = "FF" + clr;
 		}
 		else
 		{
-			this.colorval = clr;
+			colorval = clr;
 		}
-		this.parseColor( (short) 0 );
+		parseColor( (short) 0 );
 	}
 
 	/**
@@ -430,29 +430,29 @@ public class Color implements OOXMLElement
 	{
 		try
 		{
-			if( this.colortype == COLORTYPERGB )
+			if( colortype == COLORTYPERGB )
 			{        // rgb - color string
-				this.colorint = FormatHandle.HexStringToColorInt( this.colorval, type ); // find best match
-				this.colorstr = this.colorval;
+				colorint = FormatHandle.HexStringToColorInt( colorval, type ); // find best match
+				colorstr = colorval;
 			}
-			else if( this.colortype == COLORTYPEINDEXED )
+			else if( colortype == COLORTYPEINDEXED )
 			{    // indexed (corresponds to either our color int or a custom set of indexed colors
-				this.colorint = Integer.valueOf( this.colorval );
-				if( (this.colorint == 64) && (type == FormatHandle.colorFONT) ) // means system foreground: Default foreground color. This is the window text color in the sheet display.
+				colorint = Integer.valueOf( colorval );
+				if( (colorint == 64) && (type == FormatHandle.colorFONT) ) // means system foreground: Default foreground color. This is the window text color in the sheet display.
 				{
-					this.colorstr = FormatHandle.colorToHexString( FormatHandle.getColor( 0 ) );
+					colorstr = FormatHandle.colorToHexString( FormatHandle.getColor( 0 ) );
 				}
 //					this.colorint= 0; // black
 				else
 				{
-					this.colorstr = FormatHandle.colorToHexString( FormatHandle.getColor( this.colorint ) );
+					colorstr = FormatHandle.colorToHexString( FormatHandle.getColor( colorint ) );
 				}
 			}
-			else if( this.colortype == COLORTYPETHEME )
+			else if( colortype == COLORTYPETHEME )
 			{    // theme
-				Object[] o = Color.parseThemeColor( this.colorval, this.tint, type, this.theme );
-				this.colorint = (Integer) o[0];
-				this.colorstr = (String) o[1];
+				Object[] o = Color.parseThemeColor( colorval, tint, type, theme );
+				colorint = (Integer) o[0];
+				colorstr = (String) o[1];
 			}
 		}
 		catch( Exception e )

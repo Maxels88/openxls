@@ -51,8 +51,8 @@ public class Isstinf implements Serializable
 
 	public Isstinf( byte[] dta )
 	{
-		this.ib = ByteTools.readInt( dta[0], dta[1], dta[2], dta[3] );
-		this.cb = ByteTools.readShort( dta[4], dta[5] );
-		this.myst = ByteTools.readShort( dta[6], dta[7] );
+		ib = ByteTools.readInt( dta[0], dta[1], dta[2], dta[3] );
+		cb = ByteTools.readShort( dta[4], dta[5] );
+		myst = ByteTools.readShort( dta[6], dta[7] );
 	}
 }

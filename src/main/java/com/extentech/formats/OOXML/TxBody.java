@@ -49,14 +49,14 @@ public class TxBody implements OOXMLElement
 
 	public TxBody( BodyPr b, P para )
 	{
-		this.bPr = b;
+		bPr = b;
 		this.para = para;
 	}
 
 	public TxBody( TxBody tbd )
 	{
-		this.bPr = tbd.bPr;
-		this.para = tbd.para;
+		bPr = tbd.bPr;
+		para = tbd.para;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )

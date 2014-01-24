@@ -37,7 +37,7 @@ public class LEOIndexingException extends RuntimeException
 
 	public LEOIndexingException( String er )
 	{
-		this.err = er;
+		err = er;
 	}
 
 	public String toString()

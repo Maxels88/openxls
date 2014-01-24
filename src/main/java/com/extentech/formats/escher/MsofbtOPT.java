@@ -43,11 +43,15 @@ public class MsofbtOPT extends EscherRecord
 	private static final Logger log = LoggerFactory.getLogger( MsofbtOPT.class );
 	private static final long serialVersionUID = 465530579513265882L;
 	byte[] recordData = new byte[0];
-	boolean bBackground, bActive, bPrint;
+	boolean bBackground;
+	boolean bActive;
+	boolean bPrint;
 	int imageIndex = -1;
 	java.awt.Color fillColor = null;
 	int fillType = 0;
-	String imageName = "", shapeName = "", alternateText = "";
+	String imageName = "";
+	String shapeName = "";
+	String alternateText = "";
 	int[] lineprops = null;            // Line properties -- weight, color, style ...
 	static final int LINEPROPTS_STYLE = 0;
 	static final int LINEPROPTS_WEIGHT = 1;
@@ -199,7 +203,7 @@ public class MsofbtOPT extends EscherRecord
 			System.arraycopy( complexData, 0, recordData, tmp.length, complexData.length );
 			isDirty = false;
 		}
-		this.setLength( recordData.length );
+		setLength( recordData.length );
 		return recordData;
 	}
 
@@ -227,7 +231,9 @@ public class MsofbtOPT extends EscherRecord
 		 * if fBid is set and fComplex is not set, the data = a BLIP id (= an index into the BLIP store)
 		 * The number of FOPTES is the inst field read above
 		 */
-		int propertyId, fBid, fComplex;
+		int propertyId;
+		int fBid;
+		int fComplex;
 		//int n= inst;				// number of properties to parse
 		int pos = 0;                    // pointer to current property in data/property table
 		if( (inst == 0) && (recordData.length > 0) )
@@ -409,7 +415,7 @@ public class MsofbtOPT extends EscherRecord
 			} );
 		}
 
-		this.inst = props.size();
+		inst = props.size();
 		isDirty = true;    // flag to regenerate recordData
 	}
 
@@ -477,7 +483,8 @@ public class MsofbtOPT extends EscherRecord
 */
 		int n = inst;                // number of properties to parse
 		// pointer to current property in data/property table
-		int fBid = 0, fComplex = 0;
+		int fBid = 0;
+		int fComplex = 0;
 		int end = recordData.length;
 		for( int pos = 0; pos < end; pos += 6 )
 		{
@@ -601,7 +608,9 @@ public class MsofbtOPT extends EscherRecord
 	private java.awt.Color setFillColor( int clrStructure )
 	{
 		byte[] b = ByteTools.longToByteArray( clrStructure );
-		boolean bPaletteIndex, bSchemeIndex, bSysIndex;
+		boolean bPaletteIndex;
+		boolean bSchemeIndex;
+		boolean bSysIndex;
 		short fillclr;
 
 		bPaletteIndex = (b[4] & 0x1) == 0x1;    // 	specifies whether the current palette will be used to determine the color

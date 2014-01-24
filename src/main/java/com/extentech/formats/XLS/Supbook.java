@@ -107,22 +107,21 @@ public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		this.getData();
+		getData();
 		// KSC: Interpret SUPBOOK code
 		if( isGlobalRecord() )
 		{
-			nSheets = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+			nSheets = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		}
 		else if( !isAddInRecord() )
 		{    // then it's an External Reference
 			// 20080122 KSC: Ressurrect + get code to work
 			try
 			{
-				cstab = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );    // number of tabs/sheetnames referenced
-				int ln = ByteTools.readShort( this.getByteAt( 2 ),
-				                              this.getByteAt( 3 ) );    // len of bytes of filename "encoded URL without sheetname"
-				int compression = this.getByteAt( 4 );    // TODO: ??? 0= compressed 8 bit 1= uncompressed 16 bit ... asian, rtf ...
-				int encoding = this.getByteAt( 5 );    // MUST = 0x1, if not it's an internal ref
+				cstab = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );    // number of tabs/sheetnames referenced
+				int ln = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );    // len of bytes of filename "encoded URL without sheetname"
+				int compression = getByteAt( 4 );    // TODO: ??? 0= compressed 8 bit 1= uncompressed 16 bit ... asian, rtf ...
+				int encoding = getByteAt( 5 );    // MUST = 0x1, if not it's an internal ref
 				int pos = 6;
 
 				if( compression == 0 )
@@ -136,13 +135,13 @@ public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 		        		pos++;
 		        		ln--;
 		        	}**/
-					byte[] f = this.getBytesAt( pos, ln - 1 );
+					byte[] f = getBytesAt( pos, ln - 1 );
 					filename = new String( f );
 					pos += ln - 1;
 				}
 				else
 				{    // unicode
-					byte[] f = this.getBytesAt( pos, (ln * 2) - 1 );
+					byte[] f = getBytesAt( pos, (ln * 2) - 1 );
 					filename = new String( f, "UTF-16LE" );
 					pos += ln * 2 - 1;
 				}
@@ -150,19 +149,19 @@ public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 				// now get sheetnames
 				for( int i = 0; i < cstab; i++ )
 				{
-					ln = ByteTools.readShort( this.getByteAt( pos ), this.getByteAt( pos + 1 ) );
-					compression = this.getByteAt( pos + 2 );    // TODO: ??? 0= compressed 8 bit 1= uncompressed 16 bit ... asian, rtf ...
+					ln = ByteTools.readShort( getByteAt( pos ), getByteAt( pos + 1 ) );
+					compression = getByteAt( pos + 2 );    // TODO: ??? 0= compressed 8 bit 1= uncompressed 16 bit ... asian, rtf ...
 					pos += 3;
 					String sheetname = "";
 					if( compression == 0 )
 					{
-						byte[] f = this.getBytesAt( pos, ln );
+						byte[] f = getBytesAt( pos, ln );
 						sheetname = new String( f );
 						pos += ln;
 					}
 					else
 					{
-						byte[] f = this.getBytesAt( pos, ln * 2 );
+						byte[] f = getBytesAt( pos, ln * 2 );
 						sheetname = new String( f, "UTF-16LE" );
 						pos += ln * 2;
 					}
@@ -267,18 +266,18 @@ public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 			}
 		}
 		cstab++;    // increment # sheets
-		System.arraycopy( ByteTools.shortToLEBytes( (short) cstab ), 0, this.getData(), 0, 2 );
+		System.arraycopy( ByteTools.shortToLEBytes( (short) cstab ), 0, getData(), 0, 2 );
 		// Add new sheet reference to this SUPBOOK
 		byte[] f = externalSheet.getBytes();    // get bytes of new sheet to add
 		int ln = f.length/*+1*/;                    // and the length
 		int encoding = 0;                        // default = no unicode // TODO: is this correct?
-		int pos = this.getData().length;        // start at the end of the sheet refs
+		int pos = getData().length;        // start at the end of the sheet refs
 		byte[] newData = new byte[pos + ln + 3];
-		System.arraycopy( this.getData(), 0, newData, 0, pos );
+		System.arraycopy( getData(), 0, newData, 0, pos );
 		System.arraycopy( ByteTools.shortToLEBytes( (short) ln ), 0, newData, pos, 2 );
 		newData[pos + 2] = (byte) encoding;
 		System.arraycopy( f, 0, newData, pos + 3, ln/*-1*/ );
-		this.setData( newData );
+		setData( newData );
 		// add newest
 		tabs.add( externalSheet );
 			log.debug( "Supbook Sheet Reference: " + externalSheet );
@@ -306,7 +305,7 @@ public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 	public boolean isAddInRecord()
 	{
 		byte[] supBookCode = new byte[4];
-		System.arraycopy( this.getData(), 0, supBookCode, 0, 4 );
+		System.arraycopy( getData(), 0, supBookCode, 0, 4 );
 		return (Arrays.equals( supBookCode, AddInProto ));
 
 	}
@@ -320,7 +319,7 @@ public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 	public boolean isGlobalRecord()
 	{
 		byte[] supBookCode = new byte[4];
-		System.arraycopy( this.getData(), 2, supBookCode, 2, 2 );
+		System.arraycopy( getData(), 2, supBookCode, 2, 2 );
 		return (Arrays.equals( supBookCode, protocXTI ));
 	}
 
@@ -333,7 +332,7 @@ public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 	public boolean isExternalRecord()
 	{
 		byte[] supBookCode = new byte[4];
-		System.arraycopy( this.getData(), 2, supBookCode, 2, 2 );
+		System.arraycopy( getData(), 2, supBookCode, 2, 2 );
 		if( !Arrays.equals( supBookCode, protocXTI ) && !Arrays.equals( supBookCode, AddInProto ) )
 		{
 			return true;
@@ -364,17 +363,17 @@ public final class Supbook extends com.extentech.formats.XLS.XLSRecord
 	@Override
 	public void preStream()
 	{
-		if( this.isGlobalRecord() )
+		if( isGlobalRecord() )
 		{
-			WorkBook b = this.getWorkBook();
+			WorkBook b = getWorkBook();
 			if( b != null )
 			{
 				nSheets = b.getNumWorkSheets();
 				byte[] bite = ByteTools.shortToLEBytes( (short) nSheets );
-				byte[] rkdata = this.getData();
+				byte[] rkdata = getData();
 				rkdata[0] = bite[0];
 				rkdata[1] = bite[1];
-				this.setData( rkdata );
+				setData( rkdata );
 			}
 
 		}

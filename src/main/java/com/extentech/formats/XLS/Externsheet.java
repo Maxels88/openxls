@@ -64,7 +64,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 	@Override
 	public void preStream()
 	{
-		this.update();
+		update();
 	}
 
 	@Override
@@ -82,20 +82,20 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 	{
 		short ix = p.getIxti();
 		// if(ix>0)ix--;
-		if( this.rgs.size() > ix )
+		if( rgs.size() > ix )
 		{
-			rgxti rg = (rgxti) this.rgs.get( ix );
+			rgxti rg = (rgxti) rgs.get( ix );
 			rg.addListener( p );
 		}
 		else
 		{
 			rgxti rg = new rgxti();
-			rg.setWorkBook( this.wkbook );    // 20080306 KSC
+			rg.setWorkBook( wkbook );    // 20080306 KSC
 			rg.setSheet1( ix );   // 20080306 KSC: use actual sheet# this.wkbook.getWorkSheetByNumber(ix));
 			rg.setSheet2( ix );   // ""  this.wkbook.getWorkSheetByNumber(ix));
-			this.rgs.add( rg );
+			rgs.add( rg );
 			rg.addListener( p );
-			this.update();
+			update();
 		}
 	}
 
@@ -136,7 +136,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		{
 			try
 			{
-				bs[p++] = this.wkbook.getWorkSheetByNumber( t );
+				bs[p++] = wkbook.getWorkSheetByNumber( t );
 			}
 			catch( WorkSheetNotFoundException e )
 			{
@@ -242,13 +242,13 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		cXTI = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		cXTI = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		int pos = 2;
 		for( int t = 0; t < cXTI; t++ )
 		{
 			try
 			{
-				byte[] bts = this.getBytesAt( pos, 6 ); // System.arraycopy(rkdata,pos,bts,0,6);
+				byte[] bts = getBytesAt( pos, 6 ); // System.arraycopy(rkdata,pos,bts,0,6);
 				rgxti rg = new rgxti( bts );
 				rgs.add( rg );
 				if( wkbook != null )
@@ -274,7 +274,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		int blen = rgs.size() * 6;
 		blen += 2;
 		byte[] newbytes = new byte[blen];
-		this.cXTI = (short) (rgs.size() - 1);
+		cXTI = (short) (rgs.size() - 1);
 		// get the number of structs
 		byte[] cx = ByteTools.shortToLEBytes( (short) rgs.size() );
 		System.arraycopy( cx, 0, newbytes, 0, 2 );
@@ -290,7 +290,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		}
 
 		// set the data
-		this.setData( newbytes );
+		setData( newbytes );
 	}
 
 	/**
@@ -314,7 +314,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 				// reference should not be removed, rather set to -1;
 				rg.setSheet1( 0xFFFF );
 				rg.setSheet2( 0xFFFF );
-				this.cXTI--;
+				cXTI--;
 			}
 			else if( (sheetnum >= first) && (sheetnum <= last) )
 			{ // it's contained in the ref
@@ -326,7 +326,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 				rg.setSheet2( rg.getSheet2() - 1 );
 			}
 		}
-		this.update();
+		update();
 	}
 
     /* 20100506 KSC: this is not necessary any longer since
@@ -349,7 +349,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 	 */
 	void addSheet( int sheetnum ) throws WorkSheetNotFoundException
 	{
-		this.addSheet( sheetnum, sheetnum );
+		addSheet( sheetnum, sheetnum );
 	}
 
 	private byte getAddInIndex( Supbook[] sb )
@@ -389,9 +389,9 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 
 		// KSC: Added logic to set correct supbook index for added XTI
 		byte[] bts = new byte[6];
-		if( this.wkbook != null )
+		if( wkbook != null )
 		{   // should never happen!
-			Supbook[] sb = this.wkbook.getSupBooks();    // must have SUPBOOK records when have an EXTERNSHEET!
+			Supbook[] sb = wkbook.getSupBooks();    // must have SUPBOOK records when have an EXTERNSHEET!
 			if( firstSheet == 0xFFFE )  // then link to ADD-IN SUPBOOK
 			{
 				bts[0] = getAddInIndex( sb );
@@ -402,7 +402,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 			}
 		}
 		rgxti newcXTI = new rgxti( bts );
-		newcXTI.setWorkBook( this.wkbook );      // 20080306 KSC
+		newcXTI.setWorkBook( wkbook );      // 20080306 KSC
 		if( firstSheet == 0xFFFE )  // it's a virtual sheet range for Add-ins
 		{
 			newcXTI.setIsAddIn( true );
@@ -415,16 +415,16 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		}
 		rgs.add( newcXTI );
 
-		this.cXTI++;
-		this.update();
+		cXTI++;
+		update();
 	}
 
 	public short addExternalSheetRef( String externalWorkbook, String externalSheetName )
 	{
 		// get the external supbook record for this external workbook, creates if not present
-		Supbook sb = this.wkbook.getExternalSupbook( externalWorkbook, true );
+		Supbook sb = wkbook.getExternalSupbook( externalWorkbook, true );
 		short sheetRef = sb.addExternalSheetReference( externalSheetName );
-		short sbRef = (short) this.wkbook.getSupbookIndex( sb );
+		short sbRef = (short) wkbook.getSupbookIndex( sb );
 
          /* see if external ref  exists already */
 		Iterator it = rgs.iterator();
@@ -445,12 +445,12 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		System.arraycopy( ByteTools.shortToLEBytes( sheetRef ), 0, bts, 4, 2 );    // input Sheet ref #
 		rgxti newcXTI = new rgxti( bts );
 		newcXTI.setIsExternalRef( true );        // flag don't look up worksheets in this workbook
-		newcXTI.setWorkBook( this.wkbook );      // 20080306 KSC
+		newcXTI.setWorkBook( wkbook );      // 20080306 KSC
 		rgs.add( newcXTI );
 
-		this.cXTI++;
-		this.update();
-		return this.cXTI;
+		cXTI++;
+		update();
+		return cXTI;
 	}
 
 	/**
@@ -479,7 +479,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 			}
 			i++;
 		}
-		this.addSheet( firstBound, lastBound );
+		addSheet( firstBound, lastBound );
 		return rgs.size() - 1;
 	}
 
@@ -570,18 +570,18 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 			}
 		}
 		byte[] bts = new byte[6];
-		if( this.wkbook != null )
+		if( wkbook != null )
 		{
-			Supbook[] sb = this.wkbook.getSupBooks();
+			Supbook[] sb = wkbook.getSupBooks();
 			bts[0] = getAddInIndex( sb );
 		}
 		rgxti newcXTI = new rgxti( bts );
-		newcXTI.setWorkBook( this.wkbook );
+		newcXTI.setWorkBook( wkbook );
 		newcXTI.setSheet1( 0xFFFE/*null*/ );
 		newcXTI.setSheet2( 0xFFFE/*null*/ );
 		rgs.add( newcXTI );
-		this.cXTI++;
-		this.update();
+		cXTI++;
+		update();
 		return rgs.size() - 1;
 	}
 
@@ -604,18 +604,18 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 			}
 		}
 		byte[] bts = new byte[6];
-		if( this.wkbook != null )
+		if( wkbook != null )
 		{
-			Supbook[] sb = this.wkbook.getSupBooks();
+			Supbook[] sb = wkbook.getSupBooks();
 			bts[0] = getGlobalSupBookIndex( sb );
 		}
 		rgxti newcXTI = new rgxti( bts );
-		newcXTI.setWorkBook( this.wkbook );
+		newcXTI.setWorkBook( wkbook );
 		newcXTI.setSheet1( 0xFFFF );
 		newcXTI.setSheet2( 0xFFFF );
 		rgs.add( newcXTI );
-		this.cXTI++;
-		this.update();
+		cXTI++;
+		update();
 		return rgs.size() - 1;
 	}
 
@@ -638,7 +638,8 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		 */
 		private static final long serialVersionUID = -1591367957030959727L;
 		short sbs = 0;              // supbook #        
-		short sheet1num, sheet2num; // store numbers as sometimes sheets are not in workbook ...
+		short sheet1num;
+		short sheet2num; // store numbers as sometimes sheets are not in workbook ...
 		Supbook sb = null;
 		WorkBook wkbook = null;
 		byte[] bts = null;
@@ -681,7 +682,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 
 		void setWorkBook( WorkBook bk )
 		{
-			this.wkbook = bk;
+			wkbook = bk;
 			sbs = ByteTools.readShort( bts[0], bts[1] );           // supbook #
 			sb = wkbook.getSupBooks()[sbs];                      // get supbook referenced by sbs
 
@@ -707,7 +708,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		 */
 		rgxti( byte[] initbytes )
 		{
-			this.bts = initbytes;
+			bts = initbytes;
 		}
 
 		/**
@@ -755,7 +756,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 
 		public void setIsAddIn( boolean bIsAddin )
 		{
-			this.bIsAddIn = bIsAddin;
+			bIsAddIn = bIsAddin;
 		}
 
 		public boolean getIsAddIn()
@@ -782,7 +783,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		 */
 		public boolean getIsExternal()
 		{
-			return this.bIsExternal;
+			return bIsExternal;
 		}
 
 		/**
@@ -792,12 +793,12 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		 */
 		public void setSheet1( int sh1 )
 		{
-			this.sheet1num = (short) sh1;
+			sheet1num = (short) sh1;
 		}
 
 		public int getSheet1()
 		{
-			return this.sheet1num;
+			return sheet1num;
 		}
 
 		/**
@@ -807,12 +808,12 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		 */
 		public void setSheet2( int sh2 )
 		{
-			this.sheet2num = (short) sh2;
+			sheet2num = (short) sh2;
 		}
 
 		public int getSheet2()
 		{
-			return this.sheet2num;
+			return sheet2num;
 		}
 
 		public String toString()
@@ -820,7 +821,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 
 			try
 			{
-				return "rgxti range: " + this.getSheetName( sheet1num ) + "-" + this.getSheetName( sheet2num );
+				return "rgxti range: " + getSheetName( sheet1num ) + "-" + getSheetName( sheet2num );
 			}
 			catch( WorkSheetNotFoundException we )
 			{

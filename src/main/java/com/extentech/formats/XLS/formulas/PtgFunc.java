@@ -121,7 +121,7 @@ public class PtgFunc extends GenericPtg implements Ptg
 	public PtgFunc( int funcType, XLSRecord parentRec )
 	{
 		this( funcType );
-		this.setParentRec( parentRec );
+		setParentRec( parentRec );
 	}
 
 	public PtgFunc( int funcType )
@@ -132,7 +132,7 @@ public class PtgFunc extends GenericPtg implements Ptg
 		byte[] b = ByteTools.shortToLEBytes( (short) funcType );
 		recbyte[1] = b[0];
 		recbyte[2] = b[1];
-		this.init( recbyte );
+		init( recbyte );
 	}
 
 	public PtgFunc()
@@ -241,7 +241,7 @@ public class PtgFunc extends GenericPtg implements Ptg
 	{
 		ptgId = b[0];
 		record = b;
-		this.populateVals();
+		populateVals();
 	}
 
 	private void populateVals()
@@ -257,7 +257,7 @@ public class PtgFunc extends GenericPtg implements Ptg
 	public void setVal( int i )
 	{
 		iftab = i;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	@Override

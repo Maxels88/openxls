@@ -52,7 +52,7 @@ public class AxisLineFormat extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		id = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		id = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 	}
 
 	//  id MUST be greater than the id field values in preceding AxisLine records in the current axis
@@ -80,8 +80,8 @@ public class AxisLineFormat extends GenericChartObject implements ChartObject
 	{
 		this.id = (short) id;
 		byte[] b = ByteTools.shortToLEBytes( this.id );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	public String toString()

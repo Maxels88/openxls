@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -61,38 +60,55 @@ import java.util.List;
 
 public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSConstants
 {
-	private static final Logger log = LoggerFactory.getLogger( XLSRecord.class );
-	private static final long serialVersionUID = -106915096753184441L;
-
-	private short opcode;
+	public boolean isString;
+	public boolean isBoolean;
+	public boolean isBlank;
+	public int offset = 0; // byte stream offset of rec
+	public transient Xf myxf;
+	public Hlink hyperlink = null;
+	protected boolean isContinueMerged = false;
+	protected int rw = -1;
+	protected short col;
+	protected transient Index idx;
+	protected Sheet worksheet;
+	protected transient WorkBook wkbook;
+	protected transient ByteStreamer streamer;
+	protected List<Continue> continues;
 	int reclen;
 	byte[] data;
-	private transient BlockByteReader databuf;
-	private transient BlockByteReader encryptedDatabuf;
-	protected boolean isContinueMerged = false;
 	boolean isValueForCell;
 	boolean isFPNumber;
 	boolean isDoubleNumber = false;
 	boolean isIntNumber;
-	public boolean isString;
-	public boolean isBoolean;
 	boolean isFormula;
-	public boolean isBlank;
 	boolean isReadOnly = false;
-	protected int rw = -1;
-	protected short col;
-	public int offset = 0; // byte stream offset of rec
-	protected transient Index idx;
-	protected Sheet worksheet;
-	public transient Xf myxf;
-	protected transient WorkBook wkbook;
-	protected transient ByteStreamer streamer;
-	protected AbstractList continues;
-	int originalsize = -1, originalIndex = 0, originalOffset = 0, ixfe = -1;
-	public Hlink hyperlink = null;
+	int originalsize = -1;
+	int originalOffset = 0;
+	int ixfe = -1;
 	Row myrow = null;
 	CellRange mergeRange;
-	private int firstblock, lastblock;
+	private static final Logger log = LoggerFactory.getLogger( XLSRecord.class );
+	private static final long serialVersionUID = -106915096753184441L;
+	private short opcode;
+	private transient BlockByteReader databuf;
+	private transient BlockByteReader encryptedDatabuf;
+	private int firstblock;
+	private int lastblock;
+
+	public XLSRecord()
+	{
+	}
+
+	/**
+	 * FOR UNIT TESTING ONLY
+	 * @param row
+	 * @param col
+	 */
+	XLSRecord( int row, int col )
+	{
+		rw = row;
+		this.col = (short) col;
+	}
 
 	@Override
 	public short getOpcode()
@@ -100,16 +116,66 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		return opcode;
 	}
 
+	/**
+	 * get a new, generic instance of a Record.
+	 */
+	protected static XLSRecord getPrototype()
+	{
+		log.warn( "Attempt to get prototype XLSRecord failed.  There is no prototype record defined for this record type." );
+		return null;
+	}
+
 	@Override
 	public void setOpcode( short op )
 	{
-		this.opcode = op;
+		opcode = op;
+	}
+
+	public boolean shouldEncrypt()
+	{
+		return true;
 	}
 
 	@Override
 	public void setHyperlink( Hlink hl )
 	{
-		this.hyperlink = hl;
+		hyperlink = hl;
+	}
+
+	/**
+	 * get the int val of the type for the valrec
+	 */
+	public int getCellType()
+	{
+		if( isBlank )
+		{
+			return TYPE_BLANK;
+		}
+		if( isString )
+		{
+			return TYPE_STRING;
+		}
+		if( isDoubleNumber )
+		{
+			return TYPE_DOUBLE;
+		}
+		if( isFPNumber )
+		{
+			return TYPE_FP;
+		}
+		if( isIntNumber )
+		{
+			return TYPE_INT;
+		}
+		if( isFormula )
+		{
+			return TYPE_FORMULA;
+		}
+		if( isBoolean )
+		{
+			return TYPE_BOOLEAN;
+		}
+		return -1;
 	}
 
 	@Override
@@ -123,15 +189,66 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		return null;
 	}
 
-	public boolean shouldEncrypt()
+	public String getRecDesc()
 	{
-		return true;
+		String ret = "";
+		String name = getClass().getSimpleName();
+
+		// record name
+		ret += (name.equals( "XLSRecord" ) ? "unknown" : name.toUpperCase());
+		// hex record number
+		ret += " (" + Integer.toHexString( opcode ).toUpperCase() + "h)";
+		// stream offset
+		ret += " at " + Integer.toHexString( offset ).toUpperCase() + "h";
+		// size
+		ret += " length " + Integer.toHexString( reclen ).toUpperCase() + "h";
+		// file offset
+		ret += " file " + ((databuf == null) ? "no file" : databuf.getFileOffsetString( offset, reclen ));
+		// cell address, if applicable
+		if( isValueForCell() )
+		{
+			ret += " cell " + getCellAddress();
+		}
+
+		return ret;
+	}
+
+	/**
+	 * clone a record
+	 */
+	@Override
+	public Object clone()
+	{
+		try
+		{
+			String cn = getClass().getName();
+			XLSRecord rec = (XLSRecord) Class.forName( cn ).newInstance();
+			byte[] inb = getBytes();
+			rec.setData( inb );
+			rec.streamer = streamer;
+			rec.setWorkBook( getWorkBook() );
+			rec.setOpcode( getOpcode() );
+			rec.setLength( getLength() );
+			rec.setSheet( getSheet() );    //20081120 KSC: otherwise may set sheet incorrectly in init
+			rec.init();
+			return rec;
+		}
+		catch( Exception e )
+		{
+			log.info( "cloning XLSRecord " + getCellAddress() + " failed: " + e );
+		}
+		return null;
 	}
 
 	@Override
 	public void setRow( Row r )
 	{
 		myrow = r;
+	}
+
+	public String toString()
+	{
+		return getRecDesc();
 	}
 
 	/**
@@ -142,9 +259,25 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	{
 		if( myrow == null )
 		{
-			myrow = this.worksheet.getRowByNumber( rw );
+			myrow = worksheet.getRowByNumber( rw );
 		}
 		return myrow;
+	}
+
+	/**
+	 * return whether this is a numeric type
+	 */
+	public boolean isNumber()
+	{
+		if( opcode == RK )
+		{
+			return true;
+		}
+		if( opcode == NUMBER )
+		{
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -154,10 +287,18 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		{
 			if( (ixfe > -1) && (ixfe < wkbook.getNumXfs()) )
 			{
-				this.myxf = wkbook.getXf( this.ixfe );
+				myxf = wkbook.getXf( ixfe );
 			}
 		}
 		return myxf;
+	}
+
+	/**
+	 * return whether this is a formula record
+	 */
+	public boolean isFormula()
+	{
+		return isFormula;
 	}
 
 	/**
@@ -167,17 +308,25 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public Font getFont()
 	{
-		WorkBook b = this.getWorkBook();
+		WorkBook b = getWorkBook();
 		if( b == null )
 		{
 			return null;
 		}
-		this.getXfRec();
+		getXfRec();
 		if( myxf == null )
 		{
 			return null;
 		}
 		return myxf.getFont();
+	}
+
+	/**
+	 * return the real (not just boundsheet) record index of this object
+	 */
+	public int getRealRecordIndex()
+	{
+		return streamer.getRealRecordIndex( this );
 	}
 
 	/**
@@ -190,12 +339,35 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	}
 
 	/**
+	 * returns the cell address in int[] {row, col} format
+	 */
+	public int[] getIntLocation()
+	{
+		return new int[]{ rw, col };
+	}
+
+	/**
 	 * @param range
 	 */
 	@Override
 	public void setMergeRange( CellRange range )
 	{
 		mergeRange = range;
+	}
+
+	/**
+	 * return the cell address with sheet reference
+	 * eg Sheet!A12
+	 *
+	 * @return String
+	 */
+	public String getCellAddressWithSheet()
+	{
+		if( getSheet() != null )
+		{
+			return getSheet().getSheetName() + "!" + getCellAddress();
+		}
+		return getCellAddress();
 	}
 
 	/**
@@ -206,7 +378,6 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public boolean remove( boolean nullme )
 	{
-		boolean success = false;
 		if( (worksheet != null) && isValueForCell )
 		{
 			getSheet().removeCell( this );
@@ -217,19 +388,53 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 			streamer.removeRecord( this );
 		}
 
-		if( nullme )
+		worksheet = null;
+		return true;
+	}
+
+	/**
+	 * get the int val of the type for the valrec
+	 */
+	@Override
+	public Object getInternalVal()
+	{
+		try
 		{
-			try
+			switch( getCellType() )
 			{
-				this.finalize();
-			}
-			catch( Throwable t )
-			{
-				;
+				case TYPE_BLANK:
+					return getStringVal(); //essentially return "";
+
+				case TYPE_STRING:
+					return getStringVal();
+
+				case TYPE_FP: // always use Doubles to avoid loss of precision... see:
+					// details http://stackoverflow.com/questions/916081/convert-float-to-double-without-losing-precision
+					return getDblVal();
+
+				case TYPE_DOUBLE:
+					return getDblVal();
+
+				case TYPE_INT:
+					return getIntVal();
+
+				case TYPE_FORMULA:
+					// OK this is broken, obviously we need to return a calced Object
+					Object obx = ((Formula) this).calculateFormula();
+					return obx;
+//					return getStringVal();
+
+				case TYPE_BOOLEAN:
+					return getBooleanVal();
+
+				default:
+					return null;
 			}
 		}
-		this.worksheet = null;
-		return true;
+		catch( Exception e )
+		{
+			return null;
+		} // should never happen here...
 	}
 
 	/**
@@ -249,42 +454,51 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	}
 
 	/**
-	 * get the int val of the type for the valrec
+	 * resets the cache bytes so they do not take up space
 	 */
-	public int getCellType()
+	public void resetCacheBytes()
 	{
-		if( this.isBlank )
-		{
-			return TYPE_BLANK;
-		}
-		if( this.isString )
-		{
-			return TYPE_STRING;
-		}
-		if( this.isDoubleNumber )
-		{
-			return TYPE_DOUBLE;
-		}
-		if( this.isFPNumber )
-		{
-			return TYPE_FP;
-		}
-		if( this.isIntNumber )
-		{
-			return TYPE_INT;
-		}
-		if( this.isFormula )
-		{
-			return TYPE_FORMULA;
-		}
-		if( this.isBoolean )
-		{
-			return TYPE_BOOLEAN;
-		}
-		return -1;
+		//  data = null;
 	}
 
 	// Methods from BlockByteConsumer //
+
+	/**
+	 * clear out object references in prep for closing workbook
+	 */
+	public void close()
+	{
+		if( databuf != null )
+		{
+			databuf.clear();
+			databuf = null;
+		}
+		idx = null;
+		worksheet = null;
+		myxf = null;
+		wkbook = null;
+		streamer = null;
+		if( continues != null )
+		{
+			for( Continue aContinue : continues )
+			{
+				aContinue.close();
+			}
+			continues.clear();
+		}
+		if( hyperlink != null )
+		{
+			hyperlink.close();
+			hyperlink = null;
+		}
+		mergeRange = null;
+		if( myrow != null )
+		{
+			myrow = null;
+		}
+		mergeRange = null;
+
+	}
 
 	/**
 	 * Set the relative position within the data
@@ -323,6 +537,22 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	}
 
 	/**
+	 * Get the color table for the associated workbook.  If the workbook is null
+	 * then the default colortable will be returned.
+	 */
+	public java.awt.Color[] getColorTable()
+	{
+		try
+		{
+			return getWorkBook().getColorTable();
+		}
+		catch( Exception e )
+		{
+			return FormatHandle.COLORTABLE;
+		}
+	}
+
+	/**
 	 * Get the relative position within the data
 	 * underlying the block vector represented by
 	 * the BlockByteReader.
@@ -332,9 +562,9 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public int getOffset()
 	{
-		if( this.data == null )
+		if( data == null )
 		{
-			return this.originalOffset;
+			return originalOffset;
 		}
 		return offset;
 	}
@@ -347,13 +577,23 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		return myblocks;
 	}*/
 
-	/** Set the blocks containing this Consumer's data
+	/**
+	 * Set the blocks containing this Consumer's data
 	 *
 	 * @param myblocks
 	 */
 /* unused: 	public void setBlocks(Block[] myb) {
 		myblocks = myb;
 	}*/
+	protected void initRowCol()
+	{
+		int pos = 0;
+		byte[] bt = getBytesAt( pos, 2 );
+		rw = ByteTools.readUnsignedShort( bt[0], bt[1] );
+
+		pos += 2;
+		col = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) );
+	}
 
 	/**
 	 * Sets the index of the first block
@@ -367,6 +607,49 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	}
 
 	/**
+	 * Merge continue data in to the record data array
+	 */
+	protected void mergeContinues()
+	{
+		List cx = getContinueVect();
+		if( cx != null )
+		{
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			// get the main bytes first!!!
+			try
+			{
+				out.write( data );
+			}
+			catch( IOException e )
+			{
+				log.warn( "ERROR: parsing record continues failed: " + toString() + ": " + e );
+			}
+			Iterator it = cx.iterator();
+			while( it.hasNext() )
+			{
+				Continue c = (Continue) it.next();
+				byte[] nb = c.getData();
+				if( c.getHasGrbit() )
+				{    // remove it - happens in continued StringRec ... a rare case
+					byte[] newnb = new byte[nb.length - 1];
+					System.arraycopy( nb, 1, newnb, 0, newnb.length );
+					nb = newnb;
+				}
+				try
+				{
+					out.write( nb );
+				}
+				catch( IOException a )
+				{
+					log.warn( "ERROR: parsing record continues failed: " + toString() + ": " + a );
+				}
+			}
+			data = out.toByteArray();
+		}
+		isContinueMerged = true;
+	}
+
+	/**
 	 * Sets the index of the last block
 	 *
 	 * @return
@@ -375,6 +658,18 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	public void setLastBlock( int i )
 	{
 		lastblock = i;
+	}
+
+	/**
+	 * Get the value of the record as an Object.
+	 * To use the Object, cast it to the native
+	 * type for the record.  Ie: a String value
+	 * would need to be cast to a String, an Integer
+	 * to an Integer, etc.
+	 */
+	Object getVal()
+	{
+		return null;
 	}
 
 	/**
@@ -399,52 +694,13 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		return lastblock;
 	}
 
-	protected void initRowCol()
-	{
-		int pos = 0;
-
-		byte[] bt = this.getBytesAt( pos, 2 );
-		rw = ByteTools.readUnsignedShort( bt[0], bt[1] );
-		pos += 2;
-		col = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );
-	}
-
-	public String toString()
-	{
-		return getRecDesc();
-	}
-
-	public String getRecDesc()
-	{
-		String ret = "";
-		String name = this.getClass().getSimpleName();
-
-		// record name
-		ret += (name.equals( "XLSRecord" ) ? "unknown" : name.toUpperCase());
-		// hex record number
-		ret += " (" + Integer.toHexString( opcode ).toUpperCase() + "h)";
-		// stream offset
-		ret += " at " + Integer.toHexString( offset ).toUpperCase() + "h";
-		// size
-		ret += " length " + Integer.toHexString( reclen ).toUpperCase() + "h";
-		// file offset
-		ret += " file " + ((databuf == null) ? "no file" : databuf.getFileOffsetString( offset, reclen ));
-		// cell address, if applicable
-		if( this.isValueForCell() )
-		{
-			ret += " cell " + this.getCellAddress();
-		}
-
-		return ret;
-	}
-
 	/**
 	 * Dumps this record as a human-readable string.
 	 */
 	@Override
 	public String toHexDump()
 	{
-		return getRecDesc() + "\n" + ByteTools.getByteDump( this.getData(), 0 );
+		return getRecDesc() + "\n" + ByteTools.getByteDump( getData(), 0 );
 	}
 
 	/**
@@ -462,72 +718,21 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		int fid = -1;
 		int xid = -1;
 		// see if we have an equivalent Xf/Font combo
-		if( this.getWorkBook().getFontRecs().contains( fontClone ) )
+		if( getWorkBook().getFontRecs().contains( fontClone ) )
 		{
-			fid = this.getWorkBook().getFontRecs().indexOf( fontClone );
+			fid = getWorkBook().getFontRecs().indexOf( fontClone );
 		}
-		if( this.getWorkBook().getXfrecs().contains( clone ) )
+		if( getWorkBook().getXfrecs().contains( clone ) )
 		{
-			xid = this.getWorkBook().getXfrecs().indexOf( clone );
+			xid = getWorkBook().getXfrecs().indexOf( clone );
 		}
 
 		// add the xf/font and set the ixfe
-		this.getWorkBook().addRecord( clone, false );
-		this.getWorkBook().addRecord( fontClone, false );
+		getWorkBook().addRecord( clone, false );
+		getWorkBook().addRecord( fontClone, false );
 		clone.setFont( fontClone.getIdx() );
-		this.setXFRecord( clone.getIdx() );
+		setXFRecord( clone.getIdx() );
 
-	}
-
-	/**
-	 * clone a record
-	 */
-	@Override
-	public Object clone()
-	{
-		try
-		{
-			String cn = getClass().getName();
-			XLSRecord rec = (XLSRecord) Class.forName( cn ).newInstance();
-			byte[] inb = getBytes();
-			rec.setData( inb );
-			rec.streamer = this.streamer;
-			rec.setWorkBook( getWorkBook() );
-			rec.setOpcode( getOpcode() );
-			rec.setLength( getLength() );
-			rec.setSheet( getSheet() );    //20081120 KSC: otherwise may set sheet incorrectly in init
-			rec.init();
-			return rec;
-		}
-		catch( Exception e )
-		{
-			log.info( "cloning XLSRecord " + this.getCellAddress() + " failed: " + e );
-		}
-		return null;
-	}
-
-	/**
-	 * return whether this is a numeric type
-	 */
-	public boolean isNumber()
-	{
-		if( this.opcode == RK )
-		{
-			return true;
-		}
-		if( this.opcode == NUMBER )
-		{
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * return whether this is a formula record
-	 */
-	public boolean isFormula()
-	{
-		return this.isFormula;
 	}
 
 	/** methods from CompatibleVectorHints
@@ -540,24 +745,6 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 public int getRecordIndexHint(){return recordIdx;}
 	 */
 
-	/** set index information about this
-	 objects likely position.
-
-	 public void setRecordIndexHint(int i){
-	 lastidx = i;
-	 recordIdx = i;
-	 }
-	 */
-	public int lastidx = -1;
-
-	/**
-	 * return the real (not just boundsheet) record index of this object
-	 */
-	public int getRealRecordIndex()
-	{
-		return streamer.getRealRecordIndex( this );
-	}
-
 	/**
 	 * return the record index of this object
 	 */
@@ -566,9 +753,9 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	{
 		if( streamer == null )
 		{
-			if( this.getSheet() != null )    // KSC: Added
+			if( getSheet() != null )    // KSC: Added
 			{
-				return this.getSheet().getSheetRecs().indexOf( this );
+				return getSheet().getSheetRecs().indexOf( this );
 			}
 			return -1;
 		}
@@ -585,7 +772,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	{
 		if( continues == null )
 		{
-			continues = new ArrayList();
+			continues = new ArrayList<>();
 		}
 		continues.add( c );
 	}
@@ -607,7 +794,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	{
 		if( continues != null )
 		{
-			return this.continues;
+			return continues;
 		}
 		continues = new CompatibleVector();
 		return continues;
@@ -627,7 +814,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		{
 			return false;
 		}
-		if( this.continues.size() > 0 )
+		if( continues.size() > 0 )
 		{
 			return true;
 		}
@@ -661,7 +848,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public void setSheet( Sheet b )
 	{
-		this.worksheet = b;
+		worksheet = b;
 	}
 
 	/**
@@ -704,8 +891,8 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public void setRowCol( int[] x )
 	{
-		this.setRowNumber( x[0] );
-		this.setCol( (short) x[1] );
+		setRowNumber( x[0] );
+		setCol( (short) x[1] );
 	}
 
 	/**
@@ -740,6 +927,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 				rw = MAXCOLS_BIFF8 - rowi;
 			}
 		}
+
 		return rw;
 	}
 
@@ -761,34 +949,10 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		}
 		if( (rownum > MAXROWS) || (col < 0) )
 		{
-				log.warn( "XLSRecord.getCellAddress() Row/Col info incorrect for Cell:" + ExcelTools.getAlphaVal( col ) + String.valueOf(
-						rownum ) );
+			log.warn( "XLSRecord.getCellAddress() Row/Col info incorrect for Cell:" + ExcelTools.getAlphaVal( col ) + String.valueOf( rownum ) );
 			return "";
 		}
 		return ExcelTools.getAlphaVal( col ) + rownum;
-	}
-
-	/**
-	 * returns the cell address in int[] {row, col} format
-	 */
-	public int[] getIntLocation()
-	{
-		return new int[]{ rw, col };
-	}
-
-	/**
-	 * return the cell address with sheet reference
-	 * eg Sheet!A12
-	 *
-	 * @return String
-	 */
-	public String getCellAddressWithSheet()
-	{
-		if( this.getSheet() != null )
-		{
-			return this.getSheet().getSheetName() + "!" + this.getCellAddress();
-		}
-		return this.getCellAddress();
 	}
 
 	/**
@@ -809,31 +973,31 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public Object getDefaultVal()
 	{
-		if( this.isDoubleNumber )
+		if( isDoubleNumber )
 		{
 			return 0.0;
 		}
-		if( this.isFPNumber )
+		if( isFPNumber )
 		{
 			return 0.0f;
 		}
-		if( this.isBoolean )
+		if( isBoolean )
 		{
 			return false;
 		}
-		if( this.isIntNumber )
+		if( isIntNumber )
 		{
 			return 0;
 		}
-		if( this.isString )
+		if( isString )
 		{
 			return "";
 		}
-		if( this.isFormula )
+		if( isFormula )
 		{
-			return this.getFormulaRec().getFormulaString();
+			return getFormulaRec().getFormulaString();
 		}
-		if( this.isBlank )
+		if( isBlank )
 		{
 			return "";
 		}
@@ -846,94 +1010,37 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public String getDataType()
 	{
-		if( this.isValueForCell )
+		if( isValueForCell )
 		{
-			if( this.isBlank )
+			if( isBlank )
 			{
 				return "Blank";
 			}
-			if( this.isDoubleNumber )
+			if( isDoubleNumber )
 			{
 				return "Double";
 			}
-			if( this.isFPNumber )
+			if( isFPNumber )
 			{
 				return "Float";
 			}
-			if( this.isBoolean )
+			if( isBoolean )
 			{
 				return "Boolean";
 			}
-			if( this.isIntNumber )
+			if( isIntNumber )
 			{
 				return "Integer";
 			}
-			if( this.isString )
+			if( isString )
 			{
 				return "String";
 			}
-			if( this.isFormula )
+			if( isFormula )
 			{
 				return "Formula";
 			}
 		}
-		return null;
-	}
-
-	/**
-	 * get the int val of the type for the valrec
-	 */
-	@Override
-	public Object getInternalVal()
-	{
-		try
-		{
-			switch( this.getCellType() )
-			{
-				case TYPE_BLANK:
-					return getStringVal(); //essentially return "";
-
-				case TYPE_STRING:
-					return getStringVal();
-
-				case TYPE_FP: // always use Doubles to avoid loss of precision... see: 
-					// details http://stackoverflow.com/questions/916081/convert-float-to-double-without-losing-precision
-					return getDblVal();
-
-				case TYPE_DOUBLE:
-					return getDblVal();
-
-				case TYPE_INT:
-					return getIntVal();
-
-				case TYPE_FORMULA:
-					// OK this is broken, obviously we need to return a calced Object
-					Object obx = ((Formula) this).calculateFormula();
-					return obx;
-//					return getStringVal();
-
-				case TYPE_BOOLEAN:
-					return getBooleanVal();
-
-				default:
-					return null;
-			}
-		}
-		catch( Exception e )
-		{
-			return null;
-		} // should never happen here...
-	}
-
-	/**
-	 * Get the value of the record as an Object.
-	 * To use the Object, cast it to the native
-	 * type for the record.  Ie: a String value
-	 * would need to be cast to a String, an Integer
-	 * to an Integer, etc.
-	 */
-	Object getVal()
-	{
 		return null;
 	}
 
@@ -1051,8 +1158,8 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		{
 			if( (myxf == null) || (myxf.tableidx != ixfe) )
 			{
-				this.myxf = wkbook.getXf( this.ixfe );
-				this.myxf.incUseCount();
+				myxf = wkbook.getXf( ixfe );
+				myxf.incUseCount();
 			}
 		}
 	}
@@ -1065,8 +1172,8 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	{
 		if( (i != ixfe) || (myxf == null) )
 		{
-			this.setIxfe( i );
-			this.setXFRecord();
+			setIxfe( i );
+			setXFRecord();
 		}
 	}
 
@@ -1076,14 +1183,14 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public void setIxfe( int i )
 	{
-		this.ixfe = i;
+		ixfe = i;
 		byte[] newxfe = ByteTools.cLongToLEBytes( i );
-		byte[] b = this.getData();
+		byte[] b = getData();
 		if( b != null )
 		{
 			System.arraycopy( newxfe, 0, b, 4, 2 );
 		}
-		this.setData( b );
+		setData( b );
 	}
 
 	/**
@@ -1092,16 +1199,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public int getIxfe()
 	{
-		return this.ixfe;
-	}
-
-	/**
-	 * get a new, generic instance of a Record.
-	 */
-	protected static XLSRecord getPrototype()
-	{
-		log.warn( "Attempt to get prototype XLSRecord failed.  There is no prototype record defined for this record type." );
-		return null;
+		return ixfe;
 	}
 
 	@Override
@@ -1137,7 +1235,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	public void setData( byte[] b )
 	{
 		data = b;
-		this.databuf = null;
+		databuf = null;
 	}
 
 	/**
@@ -1147,26 +1245,27 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public byte[] getData()
 	{
-		int len = 0;
-		if( (len = this.getLength()) == 0 )
+		int len = getLength();
+		if( len == 0 )
 		{
-			return new byte[]{
-			};
+			return new byte[]{ };
 		}
+
 		if( data != null )
 		{
 			return data;
 		}
+
 		if( len > MAXRECLEN )
 		{
-			setData( this.getBytesAt( 0, MAXRECLEN ) );
+			setData( getBytesAt( 0, MAXRECLEN ) );
 		}
 		else
 		{
-			setData( this.getBytesAt( 0, len - 4 ) );
+			setData( getBytesAt( 0, len - 4 ) );
 		}
 
-		if( (this.opcode == SST) || (this.opcode == SXLI) )
+		if( (opcode == SST) || (opcode == SXLI) )
 		{
 			return data;
 		}
@@ -1179,49 +1278,6 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	}
 
 	/**
-	 * Merge continue data in to the record data array
-	 */
-	protected void mergeContinues()
-	{
-		List cx = this.getContinueVect();
-		if( cx != null )
-		{
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			// get the main bytes first!!!
-			try
-			{
-				out.write( data );
-			}
-			catch( IOException e )
-			{
-				log.warn( "ERROR: parsing record continues failed: " + this.toString() + ": " + e );
-			}
-			Iterator it = cx.iterator();
-			while( it.hasNext() )
-			{
-				Continue c = (Continue) it.next();
-				byte[] nb = c.getData();
-				if( c.getHasGrbit() )
-				{    // remove it - happens in continued StringRec ... a rare case
-					byte[] newnb = new byte[nb.length - 1];
-					System.arraycopy( nb, 1, newnb, 0, newnb.length );
-					nb = newnb;
-				}
-				try
-				{
-					out.write( nb );
-				}
-				catch( IOException a )
-				{
-					log.warn( "ERROR: parsing record continues failed: " + this.toString() + ": " + a );
-				}
-			}
-			this.data = out.toByteArray();
-		}
-		isContinueMerged = true;
-	}
-
-	/**
 	 * Gets the byte from the specified position in the
 	 * record byte array.
 	 *
@@ -1231,7 +1287,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public byte[] getBytes()
 	{
-		return this.getBytesAt( 0, this.getLength() );
+		return getBytesAt( 0, getLength() );
 	}
 
 	/**
@@ -1244,7 +1300,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public byte[] getBytesAt( int off, int len )
 	{
-		if( this.data != null )
+		if( data != null )
 		{
 			if( (len + off) > data.length )
 			{
@@ -1258,7 +1314,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		{
 			return null;
 		}
-		return this.databuf.get( this, off, len );
+		return databuf.get( this, off, len );
 	}
 
 	/** Sets a subset of temporary bytes for fast access during init methods...
@@ -1267,14 +1323,6 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 public void initCacheBytes(int start, int len) {
 	 data = this.getBytesAt(start, len);
 	 } */
-
-	/**
-	 * resets the cache bytes so they do not take up space
-	 */
-	public void resetCacheBytes()
-	{
-		//  data = null;
-	}
 
 	/**
 	 * Gets the byte from the specified position in the
@@ -1286,25 +1334,25 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	@Override
 	public byte getByteAt( int off )
 	{
-		if( this.data != null )
+		if( data != null )
 		{
 			return data[off];
 		}
-		if( this.databuf == null )
+		if( databuf == null )
 		{
-			throw new InvalidRecordException( "XLSRecord has no data buffer." + this.getCellAddress() );
+			throw new InvalidRecordException( "XLSRecord has no data buffer." + getCellAddress() );
 		}
-		return this.databuf.get( this, off );
+		return databuf.get( this, off );
 	}
 
 	@Override
 	public void setLength( int len )
 	{
-		if( this.originalsize <= 0 )
+		if( originalsize <= 0 )
 		{
-			this.originalsize = len;  // returns the original len always
+			originalsize = len;  // returns the original len always
 		}
-		this.reclen = len; // returns updated lengths
+		reclen = len; // returns updated lengths
 	}
 
 	/**
@@ -1318,27 +1366,27 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		{
 			return data.length + 4;
 		}
-		if( this.databuf == null ) // a new rec
+		if( databuf == null ) // a new rec
 		{
 			return -1;
 		}
 		if( (hasContinues()) &&
 				(!isContinueMerged) &&
-				!(this.opcode == SST) &&
-				!(this.opcode == SXLI) )
+				!(opcode == SST) &&
+				!(opcode == SXLI) )
 		{
-			if( this.reclen > MAXRECLEN )
+			if( reclen > MAXRECLEN )
 			{
-				setData( this.getBytesAt( 0, MAXRECLEN ) );
+				setData( getBytesAt( 0, MAXRECLEN ) );
 			}
 			else
 			{
-				setData( this.getBytesAt( 0, this.reclen ) );
+				setData( getBytesAt( 0, reclen ) );
 			}
 			mergeContinues();
 			return data.length + 4;
 		}
-		return this.reclen + 4;
+		return reclen + 4;
 	}
 
 	/**
@@ -1355,7 +1403,7 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	 */
 	public void setValueForCell( boolean isVal )
 	{
-		this.isValueForCell = isVal;
+		isValueForCell = isVal;
 	}
 
 	/**
@@ -1398,59 +1446,6 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	public void postStream()
 	{
 		// nothing here -- use to blow out data
-	}
-
-	/**
-	 * clear out object references in prep for closing workbook
-	 */
-	public void close()
-	{
-		if( databuf != null )
-		{
-			databuf.clear();
-			databuf = null;
-		}
-		idx = null;
-		worksheet = null;
-		myxf = null;
-		wkbook = null;
-		streamer = null;
-		if( continues != null )
-		{
-			for( int i = 0; i < continues.size(); i++ )
-			{
-				((XLSRecord) continues.get( i )).close();
-			}
-			continues.clear();
-		}
-		if( hyperlink != null )
-		{
-			hyperlink.close();
-			hyperlink = null;
-		}
-		mergeRange = null;
-		if( myrow != null )
-		{
-			myrow = null;
-		}
-		mergeRange = null;
-
-	}
-
-	/**
-	 * Get the color table for the associated workbook.  If the workbook is null
-	 * then the default colortable will be returned.
-	 */
-	public java.awt.Color[] getColorTable()
-	{
-		try
-		{
-			return this.getWorkBook().getColorTable();
-		}
-		catch( Exception e )
-		{
-			return FormatHandle.COLORTABLE;
-		}
 	}
 
 }

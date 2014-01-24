@@ -256,7 +256,7 @@ public class MsofbtBSE extends EscherRecord
 	 */
 	public int getRefCount()
 	{
-		return this.cRef;
+		return cRef;
 	}
 
 	public int getImageType()

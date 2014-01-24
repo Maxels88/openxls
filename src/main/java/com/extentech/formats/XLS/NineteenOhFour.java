@@ -49,7 +49,7 @@ public final class NineteenOhFour extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		is1904 = (ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) ) == 1);
+		is1904 = (ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) ) == 1);
 	}
 
 }

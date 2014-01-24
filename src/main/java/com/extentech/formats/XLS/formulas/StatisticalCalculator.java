@@ -144,7 +144,7 @@ public class StatisticalCalculator
 		{
 			//The actual cells that are averaged are determined by using the top, left cell in average_range as the beginning cell, 
 			// and then including cells that correspond in size and shape to range.
-			int rc[] = null;
+			int[] rc = null;
 			average_range = new Ptg[range.length];
 			average_range[0] = operands[2].getComponents()[0];    // start with top left of average range
 			String sheet = "";
@@ -1936,7 +1936,8 @@ NEGBINOMDIST
 	private static double expm1( double x )
 	{
 		final double DBL_EPSILON = 0.0000001;
-		double y, a = Math.abs( x );
+		double y;
+		double a = Math.abs( x );
 
 		if( a < DBL_EPSILON )
 		{
@@ -1980,7 +1981,10 @@ NEGBINOMDIST
 		double R_DT_0 = 0;    //((lower_tail) ? R_D__0 : R_D__1);      /* 0 */
 		double R_DT_1 = 1;    // ((lower_tail) ? R_D__1 : R_D__0)      /* 1 */
 
-		double p_, q, r, val;
+		double p_;
+		double q;
+		double r;
+		double val;
 		if( p == R_DT_0 )
 		{
 			return Double.NEGATIVE_INFINITY;

@@ -184,22 +184,22 @@ public final class Shrfmla extends XLSRecord
 	public void init()
 	{
 		super.init();
-		rwFirst = ByteTools.readUnsignedShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		rwLast = ByteTools.readUnsignedShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		colFirst = this.getByteAt( 4 );
-		colLast = this.getByteAt( 5 );
-		short cce = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
-		byte[] rgce = this.getBytesAt( 10, cce );
-		if( this.getSheet() == null )
+		rwFirst = ByteTools.readUnsignedShort( getByteAt( 0 ), getByteAt( 1 ) );
+		rwLast = ByteTools.readUnsignedShort( getByteAt( 2 ), getByteAt( 3 ) );
+		colFirst = getByteAt( 4 );
+		colLast = getByteAt( 5 );
+		short cce = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );
+		byte[] rgce = getBytesAt( 10, cce );
+		if( getSheet() == null )
 		{
-			this.setSheet( this.wkbook.getLastbound() );
+			setSheet( wkbook.getLastbound() );
 		}
 		rw = rwFirst;
 
 		try
 		{
 			wkbook.lastFormula.initSharedFormula( this );
-			this.setHostCell( wkbook.lastFormula );
+			setHostCell( wkbook.lastFormula );
 		}
 		catch( Exception e )
 		{
@@ -411,7 +411,7 @@ public final class Shrfmla extends XLSRecord
 		}
 
 		// If we're removing the host cell, choose another one
-		if( member == host )
+		if( member.equals( host ) )
 		{
 			setHostCell( (Formula) members.first() );
 			rwFirst = host.getRowNumber();
@@ -475,7 +475,7 @@ public final class Shrfmla extends XLSRecord
 		rc[0] = br.getRowNumber();
 		rc[1] = br.getColNumber();
 		Iterator<Formula> ii = members.iterator();
-		boolean isExcel2007 = this.getWorkBook().getIsExcel2007();
+		boolean isExcel2007 = getWorkBook().getIsExcel2007();
 		while( ii.hasNext() )
 		{
 			Formula f = ii.next();
@@ -560,6 +560,6 @@ public final class Shrfmla extends XLSRecord
 	@Override
 	protected void finalize()
 	{
-		this.close();
+		close();
 	}
 }

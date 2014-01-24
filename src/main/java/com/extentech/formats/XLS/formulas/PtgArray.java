@@ -136,7 +136,7 @@ public class PtgArray extends GenericPtg implements Ptg
 	{
 		ptgId = b[0];
 		record = b;
-		this.populateVals();
+		populateVals();
 	}
 
 	private void populateVals()
@@ -161,7 +161,7 @@ public class PtgArray extends GenericPtg implements Ptg
 			byte[] b = new byte[8];
 			b[0] = record[0];
 			record = b;
-			this.parseArrayComponents();
+			parseArrayComponents();
 		} // otherwise, it's just the initial input of the 1st 8 bytes record - see Formula 
 	}
 
@@ -309,7 +309,7 @@ public class PtgArray extends GenericPtg implements Ptg
 	public String getString()
 	{
 		Object retVal = null;
-		Ptg[] p = this.getComponents();
+		Ptg[] p = getComponents();
 		String retstr = "";
 		if( (nc == 0) && (nr == 0) )
 		{    // if it's a single value, just return val
@@ -394,13 +394,13 @@ public class PtgArray extends GenericPtg implements Ptg
 		{
 			for( int i = 0; i < cols[0].length; i++ )
 			{
-				byte[] valbytes = this.valuesIntoByteArray( cols[j][i] );
+				byte[] valbytes = valuesIntoByteArray( cols[j][i] );
 				databytes = ByteTools.append( valbytes, databytes );
 			}
 		}
 		// populate primary values for rec
 		record = databytes;
-		this.init( databytes );
+		init( databytes );
 	}
 
 	/**
@@ -544,7 +544,7 @@ public class PtgArray extends GenericPtg implements Ptg
 
 	public String toString()
 	{
-		return this.getString();
+		return getString();
 	}
 
 	@Override
@@ -570,7 +570,7 @@ public class PtgArray extends GenericPtg implements Ptg
 				if( FormulaParser.isRef( (String) o ) || FormulaParser.isRange( (String) o ) )
 				{    // it's a range
 					PtgArea3d pa = new PtgArea3d();
-					pa.setParentRec( this.getParentRec() );
+					pa.setParentRec( getParentRec() );
 					pa.setUseReferenceTracker( true );
 					pa.setLocation( (String) o );
 					Ptg[] pacomps = pa.getComponents();
@@ -628,7 +628,7 @@ public class PtgArray extends GenericPtg implements Ptg
 			byte[] b = new byte[8];
 			b[0] = record[0];
 			record = b;
-			this.parseArrayComponents();
+			parseArrayComponents();
 		}
 		return rgval.length;
 
@@ -648,13 +648,13 @@ public class PtgArray extends GenericPtg implements Ptg
 	 */
 	public Ptg elementAt( int loc )
 	{
-		Ptg[] p = this.getComponents();
+		Ptg[] p = getComponents();
 		return p[loc];
 	}
 
 	public Ptg elementAt( int col, int row )
 	{
-		Ptg[] p = this.getComponents();
+		Ptg[] p = getComponents();
 		try
 		{
 			int loc = 0;

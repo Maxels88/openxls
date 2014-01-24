@@ -37,7 +37,7 @@ public class SXBool extends XLSRecord implements XLSConstants, PivotCacheRecord
 	{
 		super.init();
 			log.trace( "SXBool -" );
-		bool = (this.getByteAt( 0 ) == 0x1);
+		bool = (getByteAt( 0 ) == 0x1);
 	}
 
 	public String toString()
@@ -63,11 +63,11 @@ public class SXBool extends XLSRecord implements XLSConstants, PivotCacheRecord
 		bool = b;
 		if( bool )
 		{
-			this.getData()[0] = 0x1;
+			getData()[0] = 0x1;
 		}
 		else
 		{
-			this.getData()[0] = 0;
+			getData()[0] = 0;
 		}
 	}
 
@@ -85,9 +85,9 @@ public class SXBool extends XLSRecord implements XLSConstants, PivotCacheRecord
 	public byte[] getRecord()
 	{
 		byte[] b = new byte[4];
-		System.arraycopy( ByteTools.shortToLEBytes( this.getOpcode() ), 0, b, 0, 2 );
-		System.arraycopy( ByteTools.shortToLEBytes( (short) this.getData().length ), 0, b, 2, 2 );
-		return ByteTools.append( this.getData(), b );
+		System.arraycopy( ByteTools.shortToLEBytes( getOpcode() ), 0, b, 0, 2 );
+		System.arraycopy( ByteTools.shortToLEBytes( (short) getData().length ), 0, b, 2, 2 );
+		return ByteTools.append( getData(), b );
 
 	}
 }

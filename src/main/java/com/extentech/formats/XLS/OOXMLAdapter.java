@@ -208,7 +208,7 @@ public class OOXMLAdapter implements OOXMLConstants
 
 	public int getFormat()
 	{
-		return this.format;
+		return format;
 	}
 
 	/**
@@ -797,7 +797,9 @@ The preceding code points ranges contain the following controls which are only v
 						String tnm = xpp.getName();
 						if( (tnm != null) && tnm.equals( "Relationship" ) )
 						{
-							String type = "", target = "", rId = "";
+							String type = "";
+							String target = "";
+							String rId = "";
 							for( int i = 0; i < xpp.getAttributeCount(); i++ )
 							{
 								String nm = xpp.getAttributeName( i ); // id, Type,
@@ -1144,13 +1146,13 @@ class intArray
 	public boolean equals( Object o )
 	{
 		int[] testa = ((intArray) o).get();
-		if( (testa == null) || (a == null) || (testa.length != this.a.length) )
+		if( (testa == null) || (a == null) || (testa.length != a.length) )
 		{
 			return false;
 		}
-		for( int i = 0; i < this.a.length; i++ )
+		for( int i = 0; i < a.length; i++ )
 		{
-			if( this.a[i] != testa[i] )
+			if( a[i] != testa[i] )
 			{
 				return false;
 			}
@@ -1182,7 +1184,7 @@ class objArray
 	public boolean equals( Object o )
 	{
 		Object[] testa = ((objArray) o).get();
-		return java.util.Arrays.equals( this.a, testa );
+		return java.util.Arrays.equals( a, testa );
 	}
 
 }

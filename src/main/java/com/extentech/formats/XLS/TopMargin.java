@@ -43,7 +43,7 @@ public class TopMargin extends XLSRecord
 
 	public TopMargin()
 	{
-		this.setOpcode( TOPMARGIN );
+		setOpcode( TOPMARGIN );
 		margin = 1.0;    // default
 		setData( ByteTools.doubleToLEByteArray( margin ) );
 	}

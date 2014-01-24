@@ -1152,12 +1152,12 @@ public class Base64
 		public InputStream( java.io.InputStream in, int options )
 		{
 			super( in );
-			this.breakLines = (options & DONT_BREAK_LINES) != DONT_BREAK_LINES;
-			this.encode = (options & ENCODE) == ENCODE;
-			this.bufferLength = encode ? 4 : 3;
-			this.buffer = new byte[bufferLength];
-			this.position = -1;
-			this.lineLength = 0;
+			breakLines = (options & DONT_BREAK_LINES) != DONT_BREAK_LINES;
+			encode = (options & ENCODE) == ENCODE;
+			bufferLength = encode ? 4 : 3;
+			buffer = new byte[bufferLength];
+			position = -1;
+			lineLength = 0;
 		}   // end constructor
 
 		/**
@@ -1387,14 +1387,14 @@ public class Base64
 		public OutputStream( java.io.OutputStream out, int options )
 		{
 			super( out );
-			this.breakLines = (options & DONT_BREAK_LINES) != DONT_BREAK_LINES;
-			this.encode = (options & ENCODE) == ENCODE;
-			this.bufferLength = encode ? 3 : 4;
-			this.buffer = new byte[bufferLength];
-			this.position = 0;
-			this.lineLength = 0;
-			this.suspendEncoding = false;
-			this.b4 = new byte[4];
+			breakLines = (options & DONT_BREAK_LINES) != DONT_BREAK_LINES;
+			encode = (options & ENCODE) == ENCODE;
+			bufferLength = encode ? 3 : 4;
+			buffer = new byte[bufferLength];
+			position = 0;
+			lineLength = 0;
+			suspendEncoding = false;
+			b4 = new byte[4];
 		}   // end constructor
 
 		/**
@@ -1530,7 +1530,7 @@ public class Base64
 		public void suspendEncoding() throws java.io.IOException
 		{
 			flushBase64();
-			this.suspendEncoding = true;
+			suspendEncoding = true;
 		}   // end suspendEncoding
 
 		/**
@@ -1540,7 +1540,7 @@ public class Base64
 		 */
 		public void resumeEncoding()
 		{
-			this.suspendEncoding = false;
+			suspendEncoding = false;
 		}   // end resumeEncoding
 
 	}   // end inner class OutputStream

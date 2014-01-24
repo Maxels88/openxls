@@ -61,8 +61,8 @@ public class Border implements OOXMLElement
 
 	public Border( Border b )
 	{
-		this.attrs = b.attrs;
-		this.borderElements = b.borderElements;
+		attrs = b.attrs;
+		borderElements = b.borderElements;
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class Border implements OOXMLElement
 	 */
 	public Border( WorkBookHandle bk, int[] styles, int[] colors )
 	{
-		this.borderElements = new HashMap<>();
+		borderElements = new HashMap<>();
 		String[] borderElements = { "top", "left", "bottom", "right" };
 		for( int i = 0; i < 4; i++ )
 		{
@@ -569,15 +569,15 @@ class BorderElement implements OOXMLElement
 	public BorderElement( String style, Color c, String borderElement )
 	{
 		this.style = style;
-		this.color = c;
+		color = c;
 		this.borderElement = borderElement;
 	}
 
 	public BorderElement( BorderElement b )
 	{
-		this.style = b.style;
-		this.color = b.color;
-		this.borderElement = b.borderElement;
+		style = b.style;
+		color = b.color;
+		borderElement = b.borderElement;
 	}
 
 	/**
@@ -677,7 +677,7 @@ class BorderElement implements OOXMLElement
 	{
 		if( color != null )
 		{
-			return this.color.getColorAsOOXMLRBG();
+			return color.getColorAsOOXMLRBG();
 		}
 		return null;
 	}
@@ -686,7 +686,7 @@ class BorderElement implements OOXMLElement
 	{
 		if( color != null )
 		{
-			return this.color.getColorInt();
+			return color.getColorInt();
 		}
 		return 0;
 	}
@@ -703,7 +703,7 @@ class BorderElement implements OOXMLElement
 		this.style = style;
 		if( (style != null) && (val != null) )
 		{
-			this.color = new Color( "color", false, Color.COLORTYPERGB, val, 0.0, (short) 0, bk.getWorkBook().getTheme() );
+			color = new Color( "color", false, Color.COLORTYPERGB, val, 0.0, (short) 0, bk.getWorkBook().getTheme() );
 		}
 		this.borderElement = borderElement;
 	}
@@ -720,7 +720,7 @@ class BorderElement implements OOXMLElement
 		this.style = style;
 		if( (style != null) && (val != -1) )
 		{
-			this.color = new Color( "color",
+			color = new Color( "color",
 			                        false,
 			                        Color.COLORTYPEINDEXED,
 			                        String.valueOf( val ),

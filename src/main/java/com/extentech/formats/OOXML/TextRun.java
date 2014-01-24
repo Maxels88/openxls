@@ -54,9 +54,9 @@ public class TextRun implements OOXMLElement
 
 	public TextRun( TextRun r )
 	{
-		this.run = r.run;
-		this.brk = r.brk;
-		this.f = r.f;
+		run = r.run;
+		brk = r.brk;
+		f = r.f;
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class TextRun implements OOXMLElement
 	 */
 	public TextRun( String s )
 	{
-		this.run = new r( s, null );
+		run = new r( s, null );
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -188,13 +188,13 @@ class r implements OOXMLElement
 	public r( String title, RPr rp )
 	{
 		this.rp = rp;
-		this.t = title;
+		t = title;
 	}
 
 	public r( r run )
 	{
-		this.rp = run.rp;
-		this.t = run.t;
+		rp = run.rp;
+		t = run.t;
 	}
 
 	@Override
@@ -298,7 +298,7 @@ class Br implements OOXMLElement
 
 	public Br( Br b )
 	{
-		this.rp = b.rp;
+		rp = b.rp;
 	}
 
 	@Override
@@ -378,17 +378,17 @@ class Fld implements OOXMLElement
 		this.id = id;
 		this.type = type;
 		this.rp = rp;
-		this.t = title;
+		t = title;
 		this.p = p;
 	}
 
 	public Fld( Fld f )
 	{
-		this.id = f.id;
-		this.type = f.type;
-		this.rp = f.rp;
-		this.t = f.t;
-		this.p = f.p;
+		id = f.id;
+		type = f.type;
+		rp = f.rp;
+		t = f.t;
+		p = f.p;
 	}
 
 	@Override
@@ -507,7 +507,9 @@ class RPr implements OOXMLElement
 	private Ln l;
 	private FillGroup fill;
 	private EffectPropsGroup effect;
-	private String latin, ea, cs;
+	private String latin;
+	private String ea;
+	private String cs;
 
 	public RPr( HashMap<String, String> attrs, Ln l, FillGroup fill, EffectPropsGroup effect, String latin, String ea, String cs )
 	{
@@ -522,13 +524,13 @@ class RPr implements OOXMLElement
 
 	public RPr( RPr rp )
 	{
-		this.attrs = rp.attrs;
-		this.l = rp.l;
-		this.fill = rp.fill;
-		this.effect = rp.effect;
-		this.latin = rp.latin;
-		this.ea = rp.ea;
-		this.cs = rp.cs;
+		attrs = rp.attrs;
+		l = rp.l;
+		fill = rp.fill;
+		effect = rp.effect;
+		latin = rp.latin;
+		ea = rp.ea;
+		cs = rp.cs;
 	}
 
 	public static RPr parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -537,7 +539,9 @@ class RPr implements OOXMLElement
 		Ln l = null;
 		FillGroup fill = null;
 		EffectPropsGroup effect = null;
-		String latin = null, ea = null, cs = null;
+		String latin = null;
+		String ea = null;
+		String cs = null;
 		try
 		{
 			int eventType = xpp.getEventType();

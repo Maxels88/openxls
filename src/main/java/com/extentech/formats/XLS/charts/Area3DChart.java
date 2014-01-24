@@ -47,11 +47,11 @@ public class Area3DChart extends AreaChart
 		cooxml.append( "\r\n" );
 		cooxml.append( "<c:grouping val=\"" );
 
-		if( this.is100PercentStacked() )
+		if( is100PercentStacked() )
 		{
 			cooxml.append( "percentStacked" );
 		}
-		else if( this.isStacked() )
+		else if( isStacked() )
 		{
 			cooxml.append( "stacked" );
 		}
@@ -64,13 +64,13 @@ public class Area3DChart extends AreaChart
 		// vary colors???
 
 		// *** Series Data:	ser, cat, val for most chart types
-		cooxml.append( this.getParentChart().getChartSeries().getOOXML( this.getChartType(), false, 0 ) );
+		cooxml.append( getParentChart().getChartSeries().getOOXML( getChartType(), false, 0 ) );
 
 		// chart data labels, if any
 		//TODO: FINISH		    	
 		//cooxml.append(getDataLabelsOOXML(cf));
 		// TODO: get real value
-		int gapdepth = this.getGapDepth(); // 150 is default
+		int gapdepth = getGapDepth(); // 150 is default
 		if( (gapdepth != 0) && (gapdepth != 150) )
 		{
 			cooxml.append( "<c:gapDepth val=\"" + gapdepth + "\"/>" );

@@ -57,7 +57,9 @@ public class Tick extends GenericChartObject implements ChartObject
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 3363212452589555220L;
-	byte tktMajor, tktMinor, tit;
+	byte tktMajor;
+	byte tktMinor;
+	byte tit;
 	short grbit;
 	short rot;
 
@@ -65,10 +67,10 @@ public class Tick extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		tktMajor = this.getByteAt( 0 );
-		tktMinor = this.getByteAt( 1 );
-		tit = this.getByteAt( 2 );
-		grbit = ByteTools.readShort( this.getByteAt( 24 ), this.getByteAt( 25 ) );
+		tktMajor = getByteAt( 0 );
+		tktMinor = getByteAt( 1 );
+		tit = getByteAt( 2 );
+		grbit = ByteTools.readShort( getByteAt( 24 ), getByteAt( 25 ) );
 		// TODO: Finish ops
 		rot = (short) ((grbit & 0x1C) >> 2);
 	}
@@ -89,12 +91,12 @@ public class Tick extends GenericChartObject implements ChartObject
 
 	private void updateRecord()
 	{
-		this.getData()[0] = tktMajor;
-		this.getData()[1] = tktMinor;
-		this.getData()[2] = tit;
+		getData()[0] = tktMajor;
+		getData()[1] = tktMinor;
+		getData()[2] = tit;
 		byte[] b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[24] = b[0];
-		this.getData()[25] = b[1];
+		getData()[24] = b[0];
+		getData()[25] = b[1];
 	}
 
 	/**

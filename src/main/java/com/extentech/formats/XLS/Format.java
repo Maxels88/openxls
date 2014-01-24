@@ -68,12 +68,12 @@ public final class Format extends XLSRecord
 		setWorkBook( book );
 
 		this.pattern = pattern;
-		this.ustring = Sst.createUnicodeString( pattern, null, WorkBook.STRING_ENCODING_AUTO );
+		ustring = Sst.createUnicodeString( pattern, null, WorkBook.STRING_ENCODING_AUTO );
 
 		byte[] idbytes;
 		if( id > 0 )
 		{
-			this.ifmt = id;
+			ifmt = id;
 			idbytes = ByteTools.shortToLEBytes( id );
 		}
 		else
@@ -104,10 +104,10 @@ public final class Format extends XLSRecord
 
 		super.init();
 
-		ifmt = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		ifmt = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 
 		ustring = new Unicodestring();
-		ustring.init( this.getBytesAt( 2, this.getLength() - 2 ), false );
+		ustring.init( getBytesAt( 2, getLength() - 2 ), false );
 
 		pattern = ustring.toString();
 		
@@ -121,7 +121,7 @@ public final class Format extends XLSRecord
 		pattern = StringTool.replaceText( pattern, "\"", "", 0 );
 		pattern = StringTool.replaceText( pattern, "\\", "", 0 );
 
-		this.getWorkBook().addFormat( this );
+		getWorkBook().addFormat( this );
 	}
 
 	@Override
@@ -147,7 +147,7 @@ public final class Format extends XLSRecord
 		ifmt = id;
 
 		// Update the record bytes
-		System.arraycopy( ByteTools.shortToLEBytes( ifmt ), 0, this.getData(), 0, 2 );
+		System.arraycopy( ByteTools.shortToLEBytes( ifmt ), 0, getData(), 0, 2 );
 	}
 
 	/**

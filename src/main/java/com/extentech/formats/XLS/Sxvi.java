@@ -99,7 +99,10 @@ public class Sxvi extends XLSRecord
 	short cchName = -1;
 	String name = null;
 	short iCache = -1;
-	boolean fHidden, fHideDetail, fFormula, fMissing;
+	boolean fHidden;
+	boolean fHideDetail;
+	boolean fFormula;
+	boolean fMissing;
 
 	public static final short itmtypeData = 0x0000;        //A data value
 	public static final short itmtypeDEFAULT = 0x0001;    //Default subtotal for the pivot field
@@ -119,19 +122,19 @@ public class Sxvi extends XLSRecord
 	public void init()
 	{
 		super.init();
-		itemtype = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		byte b = this.getByteAt( 2 );
+		itemtype = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		byte b = getByteAt( 2 );
 		fHidden = (b & 0x1) == 0x1;
 		fHideDetail = (b & 0x2) == 0x2;
 		// bit 3- reserved
 		fFormula = (b & 0x8) == 0x8;
 		fMissing = (b & 0x10) == 0x10;
-		iCache = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		cchName = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
+		iCache = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+		cchName = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
 		if( cchName != -1 )
 		{
-			byte encoding = this.getByteAt( 10 );
-			byte[] tmp = this.getBytesAt( 11, (cchName) * (encoding + 1) );
+			byte encoding = getByteAt( 10 );
+			byte[] tmp = getBytesAt( 11, (cchName) * (encoding + 1) );
 			try
 			{
 				if( encoding == 0 )
@@ -203,8 +206,8 @@ public class Sxvi extends XLSRecord
 	{
 		itemtype = (short) type;
 		byte[] b = ByteTools.shortToLEBytes( itemtype );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	/**
@@ -216,10 +219,10 @@ public class Sxvi extends XLSRecord
 	 */
 	public void setCacheItem( int icache )
 	{
-		this.iCache = (short) icache;
-		byte[] b = ByteTools.shortToLEBytes( this.iCache );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		iCache = (short) icache;
+		byte[] b = ByteTools.shortToLEBytes( iCache );
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 	}
 
 	/**
@@ -241,7 +244,7 @@ public class Sxvi extends XLSRecord
 	{
 		this.name = name;
 		byte[] data = new byte[8];
-		System.arraycopy( this.getData(), 0, data, 0, 7 );
+		System.arraycopy( getData(), 0, data, 0, 7 );
 		if( name != null )
 		{
 			byte[] strbytes = null;
@@ -271,7 +274,7 @@ public class Sxvi extends XLSRecord
 			data[6] = -1;
 			data[7] = -1;
 		}
-		this.setData( data );
+		setData( data );
 	}
 
 	/**
@@ -292,14 +295,14 @@ public class Sxvi extends XLSRecord
 	public void setIsHidden( boolean b )
 	{
 		fHidden = b;
-		byte by = this.getByteAt( 2 );
+		byte by = getByteAt( 2 );
 		if( fHidden )
 		{
-			this.getData()[2] = (byte) (by & 0x1);
+			getData()[2] = (byte) (by & 0x1);
 		}
 		else
 		{
-			this.getData()[2] = (byte) (by ^ 0x1);
+			getData()[2] = (byte) (by ^ 0x1);
 		}
 	}
 
@@ -321,14 +324,14 @@ public class Sxvi extends XLSRecord
 	public void setIsCollapsed( boolean b )
 	{
 		fHideDetail = b;
-		byte by = this.getByteAt( 2 );
+		byte by = getByteAt( 2 );
 		if( fHideDetail )
 		{
-			this.getData()[2] = (byte) (by & 0x2);
+			getData()[2] = (byte) (by & 0x2);
 		}
 		else
 		{
-			this.getData()[2] = (byte) (by ^ 0x2);
+			getData()[2] = (byte) (by ^ 0x2);
 		}
 	}
 	// TODO: fFormula, fMissing

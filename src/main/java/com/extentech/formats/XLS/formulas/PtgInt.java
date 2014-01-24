@@ -71,7 +71,7 @@ public class PtgInt extends GenericPtg implements Ptg
 	public PtgInt( int i )
 	{
 		val = i;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class PtgInt extends GenericPtg implements Ptg
 	{
 		ptgId = b[0];
 		record = b;
-		this.populateVals();
+		populateVals();
 	}
 
 	// 0 to 65535 - outside of these bounds must be a PtgNumber
@@ -111,7 +111,7 @@ public class PtgInt extends GenericPtg implements Ptg
 	public void setVal( int i )
 	{
 		val = i;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	public boolean getBooleanVal()
@@ -141,7 +141,7 @@ public class PtgInt extends GenericPtg implements Ptg
 
 	public String toString()
 	{
-		return String.valueOf( this.getVal() );
+		return String.valueOf( getVal() );
 	}
 
 }

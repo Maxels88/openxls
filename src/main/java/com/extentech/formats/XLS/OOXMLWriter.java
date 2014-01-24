@@ -544,7 +544,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		// but ensure that workbook.xml.rels knows about the file styles.xml ***
 		wbContentList.add( new String[]{ "/xl/styles.xml", "styles" } );
 		writeWorkBookOOXML( bk );
-		WorkSheetHandle wsh[] = bk.getWorkSheets();
+		WorkSheetHandle[] wsh = bk.getWorkSheets();
 		bk.getWorkBook().setDxfs( null ); // rebuild
 		for( int i = 0; i < wsh.length; i++ )
 		{
@@ -980,7 +980,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		// IDENTIFY SHEETS
 		writer.write( "<sheets>" );
 		writer.write( "\r\n" );
-		WorkSheetHandle wsh[] = bk.getWorkSheets();
+		WorkSheetHandle[] wsh = bk.getWorkSheets();
 		for( int i = 0; i < wsh.length; i++ )
 		{
 			String s = "sheet" + (i + 1);        //Write SheetXML to SheetX.xml, 1-based
@@ -1323,13 +1323,13 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		// Sst sst= bk.getWorkBook().getSharedStringTable();
 		ArrayList hyperlinks = new ArrayList();
 		// SHEETxx.XML
-		this.writeSheetPrefix( sheet, bk, id );
+		writeSheetPrefix( sheet, bk, id );
 		RowHandle[] rows = sheet.getRows();
 		for( RowHandle row : rows )
 		{
 			try
 			{ // note: row #, col #'s are 1-based, sst and style index are 0-based
-				this.writeRow( row, hyperlinks );
+				writeRow( row, hyperlinks );
 				//} catch (RowNotFoundException re) {
 				; // do nothing
 			}
@@ -1372,7 +1372,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		// dataConsolidation
 		// customSheetViews
 		// mergeCells
-		this.writeMergedCellRecords( sheet );
+		writeMergedCellRecords( sheet );
 
 		// phoneticPr
 		// conditionalFormatting
@@ -1554,7 +1554,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		writer.write( ">" );
 		writer.write( "\r\n" );
 		// Cell element <c
-		CellHandle ch[] = row.getCells();
+		CellHandle[] ch = row.getCells();
 		// iterate cells and output xml
 		for( CellHandle aCh : ch )
 		{

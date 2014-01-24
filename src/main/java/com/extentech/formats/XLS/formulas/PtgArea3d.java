@@ -109,14 +109,14 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 	{
 		try
 		{
-			if( this.getIsWholeCol() || this.getIsWholeRow() )
+			if( getIsWholeCol() || getIsWholeRow() )
 			{    // handle non-standard ranges i.e. $B:$C or $1:$3
 				String s = firstPtg.getLocation();
 				String y = lastPtg.getLocation();
 
-				String loc1[] = ExcelTools.stripSheetNameFromRange( s );    // sheet, addr
-				String loc2[] = ExcelTools.stripSheetNameFromRange( y );    // sheet, addr
-				if( this.getIsWholeCol() )
+				String[] loc1 = ExcelTools.stripSheetNameFromRange( s );    // sheet, addr
+				String[] loc2 = ExcelTools.stripSheetNameFromRange( y );    // sheet, addr
+				if( getIsWholeCol() )
 				{
 					int i = loc1[1].length();
 					if( Character.isDigit( loc1[1].charAt( i - 1 ) ) )
@@ -137,7 +137,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 					}
 					loc2[1] = loc2[1].substring( 0, i );
 				}
-				else if( this.getIsWholeRow() )
+				else if( getIsWholeRow() )
 				{
 					int i = 0;
 					while( !Character.isDigit( loc1[1].charAt( i++ ) ) )
@@ -196,7 +196,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 		ptgId = 0x3b;
 		record = new byte[11];
 		record[0] = ptgId; // ""
-		this.is3dRef = true;
+		is3dRef = true;
 	}
 
 	public PtgArea3d( boolean useReferenceTracker )
@@ -292,7 +292,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 			}
 			if( (wb != null) && (wb.getExternSheet() != null) )
 			{
-				Boundsheet[] bsa = wb.getExternSheet().getBoundSheets( this.ixti );
+				Boundsheet[] bsa = wb.getExternSheet().getBoundSheets( ixti );
 				if( bsa != null )
 				{
 					return bsa[0];
@@ -314,7 +314,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 			WorkBook wb = parent_rec.getWorkBook();
 			if( (wb != null) && (wb.getExternSheet() != null) )
 			{
-				Boundsheet[] bsa = wb.getExternSheet().getBoundSheets( this.ixti );
+				Boundsheet[] bsa = wb.getExternSheet().getBoundSheets( ixti );
 				if( bsa != null )
 				{
 					if( bsa.length > 1 )
@@ -366,7 +366,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 				WorkBook wb = parent_rec.getWorkBook();
 				if( (wb != null) && (wb.getExternSheet() != null) )
 				{
-					String[] sheets = wb.getExternSheet().getBoundSheetNames( this.ixti );
+					String[] sheets = wb.getExternSheet().getBoundSheetNames( ixti );
 					if( (sheets != null) && (sheets.length > 0) )
 					{
 						sheetname = sheets[0];
@@ -397,7 +397,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 			WorkBook wb = parent_rec.getWorkBook();
 			if( (wb != null) && (wb.getExternSheet() != null) )
 			{
-				String[] sheets = wb.getExternSheet().getBoundSheetNames( this.ixti );
+				String[] sheets = wb.getExternSheet().getBoundSheetNames( ixti );
 				if( (sheets != null) && (sheets.length > 0) )
 				{
 					sheetname = sheets[sheets.length - 1];
@@ -412,7 +412,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 	 */
 	public Boundsheet[] getSheets( WorkBook b )
 	{
-		Boundsheet[] bsa = b.getExternSheet().getBoundSheets( this.ixti );
+		Boundsheet[] bsa = b.getExternSheet().getBoundSheets( ixti );
 		if( bsa[0] == null ) // 20080303 KSC: Catch Unresolved External refs
 		{
 			log.error( "PtgArea3d.getSheet: Unresolved External Worksheet" );
@@ -432,7 +432,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 	{
 		ixti = ByteTools.readShort( b[1], b[2] );
 		record = b;
-		this.setParentRec( parent );
+		setParentRec( parent );
 		populateVals();
 	}
 
@@ -480,12 +480,12 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 
 		// the following method registers the Ptg with the ReferenceTracker
 		firstPtg.setParentRec( parent_rec );
-		firstPtg.setSheetName( this.getSheetName() );
+		firstPtg.setSheetName( getSheetName() );
 		firstPtg.init( temp1 );
 
 		lastPtg = new PtgRef3d( false );
 		lastPtg.setParentRec( parent_rec );
-		lastPtg.setSheetName( this.getLastSheetName() );
+		lastPtg.setSheetName( getLastSheetName() );
 		lastPtg.init( temp2 );
 		// flag if it's an external reference
 
@@ -494,15 +494,15 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 		setWholeRowCol();
 
 		// take 1st Ptg as sample for relative state
-		this.fColRel = firstPtg.isColRel();
-		this.fRwRel = firstPtg.isRowRel();
+		fColRel = firstPtg.isColRel();
+		fRwRel = firstPtg.isRowRel();
 		//init sets formula row to 1st row for a shared formula; adjust here
 		if( (parent_rec != null) && (parent_rec instanceof Shrfmla) )
 		{
 			lastPtg.formulaRow = ((Shrfmla) parent_rec).getLastRow();
 			lastPtg.formulaCol = ((Shrfmla) parent_rec).getLastCol();
 		}
-		this.hashcode = super.getHashCode();
+		hashcode = super.getHashCode();
 	}
 
 	/**
@@ -530,7 +530,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 		{
 			if( useReferenceTracker && (locax != null) )    // if in tracker already, remove
 			{
-				this.removeFromRefTracker();
+				removeFromRefTracker();
 			}
 		}
 		catch( Exception e )
@@ -568,7 +568,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 				{
 					boundnum2 = b.getWorkSheetByName( sheetname2 ).getSheetNum();
 				}
-				this.setIxti( (short) xsht.insertLocation( boundnum, boundnum2 ) );
+				setIxti( (short) xsht.insertLocation( boundnum, boundnum2 ) );
 			}
 			catch( WorkSheetNotFoundException e )
 			{
@@ -578,12 +578,12 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 					int boundnum = xsht.getXtiReference( s[0], s[0] );
 					if( boundnum == -1 )
 					{    // can't resolve
-						this.setIxti( (short) xsht.insertLocation( boundnum, boundnum ) );
+						setIxti( (short) xsht.insertLocation( boundnum, boundnum ) );
 					}
 					else
 					{
-						this.setIxti( (short) boundnum );
-						this.isExternalRef = true;
+						setIxti( (short) boundnum );
+						isExternalRef = true;
 					}
 				}
 				catch( Exception ex )
@@ -624,32 +624,32 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 		if( firstPtg == null )
 		{
 			firstPtg = new PtgRef3d( false );
-			firstPtg.setParentRec( this.getParentRec() );
+			firstPtg.setParentRec( getParentRec() );
 		}
 		firstPtg.sheetname = sheetname;
 		firstPtg.setLocation( firstcell );
-		((PtgRef3d) firstPtg).setIxti( this.ixti );
+		((PtgRef3d) firstPtg).setIxti( ixti );
 
 		if( lastPtg == null )
 		{
 			lastPtg = new PtgRef3d( false );
-			lastPtg.setParentRec( this.getParentRec() );
+			lastPtg.setParentRec( getParentRec() );
 		}
 		lastPtg.sheetname = sheetname2;
 		lastPtg.setLocation( lastcell );
-		((PtgRef3d) lastPtg).setIxti( this.ixti );
+		((PtgRef3d) lastPtg).setIxti( ixti );
 
-		this.setWholeRowCol();
-		this.updateRecord();
+		setWholeRowCol();
+		updateRecord();
 		// TODO: must deal with non-symmetrical absolute i.e. if first and last ptgs don't match
-		this.fRwRel = firstPtg.fRwRel;
-		this.fColRel = firstPtg.fColRel;
+		fRwRel = firstPtg.fRwRel;
+		fColRel = firstPtg.fColRel;
 		hashcode = getHashCode();
 		if( useReferenceTracker )
 		{
-			if( !this.getIsWholeCol() && !this.getIsWholeRow() )
+			if( !getIsWholeCol() && !getIsWholeRow() )
 			{
-				this.addToRefTracker();
+				addToRefTracker();
 			}
 			else
 			{
@@ -710,7 +710,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 		//TODO: add handling for multi-sheet reference.  Already handled in externsheet
 		try
 		{
-			this.sheetname = null;    // 20100218 KSC: RESET
+			sheetname = null;    // 20100218 KSC: RESET
 			int xloc = xsht.insertLocation( boundnum, boundnum );
 			setIxti( (short) xloc );
 		}
@@ -764,13 +764,13 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 		record = newrecord;
 		if( parent_rec != null )
 		{
-			if( this.parent_rec instanceof Formula )
+			if( parent_rec instanceof Formula )
 			{
-				((Formula) this.parent_rec).updateRecord();
+				((Formula) parent_rec).updateRecord();
 			}
-			else if( this.parent_rec instanceof Name )
+			else if( parent_rec instanceof Name )
 			{
-				((Name) this.parent_rec).updatePtgs();
+				((Name) parent_rec).updatePtgs();
 			}
 		}
 	}
@@ -802,13 +802,16 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 		{
 			// loop through the cols
 			String sht = "";
-			if( this.toString().indexOf( "!" ) > -1 )
+			if( toString().indexOf( "!" ) > -1 )
 			{
-				sht = this.toString();
+				sht = toString();
 				sht = sht.substring( 0, sht.indexOf( "!" ) ) + "!";
 			}
-			int startrow = 0, startcol = 0, endrow = 0, endcol = 0;
-			if( !this.wholeCol && !this.wholeRow )
+			int startrow = 0;
+			int startcol = 0;
+			int endrow = 0;
+			int endcol = 0;
+			if( !wholeCol && !wholeRow )
 			{ // normal case
 //				 TODO: check rc sanity here
 				int[] startloc = firstPtg.getRealIntLocation();    // Get Actual Coordinates
@@ -818,12 +821,12 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 				endcol = endloc[1];
 				endrow = endloc[0];
 			}
-			else if( this.wholeRow )
+			else if( wholeRow )
 			{        // like $1:$1
 				startcol = 0;
 				try
 				{
-					endcol = this.getSheet().getMaxCol();
+					endcol = getSheet().getMaxCol();
 				}
 				catch( NullPointerException ne )
 				{ // can happens when Name record is being init'd and sheet records are not set yet
@@ -831,13 +834,13 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 				}
 				startrow = endrow = firstPtg.rw;
 			}
-			else if( this.wholeCol )
+			else if( wholeCol )
 			{        // like $J:$J
 				startrow = 0;    // Get Actual Coordinates
 				startcol = endcol = firstPtg.col;
 				try
 				{
-					endrow = this.getSheet().getMaxRow();
+					endrow = getSheet().getMaxRow();
 				}
 				catch( NullPointerException ne )
 				{ // can happens when Name record is being init'd and sheet records are not set yet
@@ -882,7 +885,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 	@Override
 	public void setColRel( boolean relative )
 	{
-		this.fColRel = relative;
+		fColRel = relative;
 		firstPtg.setColRel( relative );
 		lastPtg.setColRel( relative );
 		updateRecord();
@@ -898,9 +901,9 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 	@Override
 	public void setRowRel( boolean relative )
 	{
-		if( this.fRwRel != relative )
+		if( fRwRel != relative )
 		{
-			this.fRwRel = relative;
+			fRwRel = relative;
 			firstPtg.setRowRel( relative );
 			lastPtg.setRowRel( relative );
 			updateRecord();

@@ -54,7 +54,7 @@ public class Dropbar extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		pcGap = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		pcGap = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 	}
 
 	public static XLSRecord getPrototype()
@@ -77,8 +77,8 @@ public class Dropbar extends GenericChartObject implements ChartObject
 	{
 		pcGap = (short) gap;
 		byte[] b = ByteTools.shortToLEBytes( pcGap );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	/**

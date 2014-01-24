@@ -45,6 +45,6 @@ public class Dsf extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		fDSF = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		fDSF = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 	}
 }

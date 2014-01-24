@@ -62,13 +62,13 @@ public final class Protect extends com.extentech.formats.XLS.XLSRecord
 		setLength( (short) 2 );
 		//   setLabel("PROTECT" + String.valueOf(this.offset));
 		setData( bs );
-		this.originalsize = 2;
+		originalsize = 2;
 	}
 
 	void setLocked( boolean b )
 	{
 		fLock = b ? 1 : 0;
-		byte[] data = this.getData();
+		byte[] data = getData();
 		data[0] = (byte) fLock;
 	}
 
@@ -76,8 +76,8 @@ public final class Protect extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		fLock = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		if( this.getIsLocked()  )
+		fLock = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		if( getIsLocked()  )
 		{
 			log.debug( "Workbook/Sheet Protection Enabled." );
 		}

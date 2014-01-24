@@ -155,7 +155,7 @@ public final class Continue extends com.extentech.formats.XLS.XLSRecord
 		if( getHasGrbit() && !streaming )
 		{
 			super.getData();
-			return this.getBytesAt( 0, this.getLength() - 4 );
+			return getBytesAt( 0, getLength() - 4 );
 		}
 		streaming = false;
 		return super.getData();
@@ -165,7 +165,7 @@ public final class Continue extends com.extentech.formats.XLS.XLSRecord
 	public byte getByteAt( int off )
 	{
 		int s = off;
-		int rpos = s + this.grbitoff;
+		int rpos = s + grbitoff;
 		if( rpos < 0 )
 		{
 				log.trace( "Continue pointer is: " + rpos );
@@ -202,16 +202,16 @@ public final class Continue extends com.extentech.formats.XLS.XLSRecord
 
 	void setPredecessor( BiffRec pr )
 	{
-		this.predecessor = pr;
+		predecessor = pr;
 	}
 
 	boolean isBigRecContinue()
 	{
-		if( this.predecessor == null )
+		if( predecessor == null )
 		{
 			return true;
 		}
-		if( this.predecessor.getLength() >= MAXRECLEN )
+		if( predecessor.getLength() >= MAXRECLEN )
 		{
 			return true;
 		}
@@ -220,7 +220,7 @@ public final class Continue extends com.extentech.formats.XLS.XLSRecord
 
 	boolean getHasGrbit()
 	{
-		if( this.hasgrbit != null )
+		if( hasgrbit != null )
 		{
 			return hasgrbit;
 		}
@@ -247,18 +247,18 @@ public final class Continue extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setHasGrbit( boolean b )
 	{
-		if( b && (this.getEncryptedByteReader() == this.getByteReader()) )
+		if( b && (getEncryptedByteReader().equals( getByteReader() )) )
 		{
-			grbit = this.getByteAt( 0 );
+			grbit = getByteAt( 0 );
 		}
 		hasgrbit = b;
 	}
 
 	byte getGrbit()
 	{
-		if( this.data != null )
+		if( data != null )
 		{
-			return this.data[0];
+			return data[0];
 		}
 		return super.getByteAt( 0 );
 	}

@@ -70,13 +70,13 @@ public final class ObjProtect extends com.extentech.formats.XLS.XLSRecord
 		setOpcode( OBJPROTECT );
 		setLength( (short) 2 );
 		//   setLabel("OBJPROTECT" + String.valueOf(this.offset));
-		this.setData( bs );
-		this.originalsize = 2;
+		setData( bs );
+		originalsize = 2;
 	}
 
 	void setLocked( boolean b )
 	{
-		byte[] data = this.getData();
+		byte[] data = getData();
 		if( b )
 		{
 			data[0] = 1;
@@ -91,8 +91,8 @@ public final class ObjProtect extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		fLock = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		if( this.getIsLocked()  )
+		fLock = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		if( getIsLocked()  )
 		{
 			log.info( "Object Protection Enabled." );
 		}

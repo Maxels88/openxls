@@ -50,7 +50,7 @@ public class EndBlock extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		iObjectKind = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
+		iObjectKind = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
 	}    // iObjectKind= 5 or 0 or 13
 
 	private byte[] PROTOTYPE_BYTES = new byte[]{ 83, 8, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0 };
@@ -73,8 +73,8 @@ public class EndBlock extends GenericChartObject implements ChartObject
 	private void updateRecord()
 	{
 		byte[] b = ByteTools.shortToLEBytes( iObjectKind );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 	}
 
 }

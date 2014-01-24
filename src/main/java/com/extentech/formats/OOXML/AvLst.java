@@ -57,7 +57,7 @@ public class AvLst implements OOXMLElement
 
 	public AvLst( AvLst av )
 	{
-		this.gds = av.gds;
+		gds = av.gds;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag )

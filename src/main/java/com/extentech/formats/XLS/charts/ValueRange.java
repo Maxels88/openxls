@@ -75,21 +75,32 @@ public class ValueRange extends GenericChartObject implements ChartObject
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 2989883115978826628L;
-	double numMin, numMax, numMajor, numMinor, numCross;
+	double numMin;
+	double numMax;
+	double numMajor;
+	double numMinor;
+	double numCross;
 	//	double yMin= 0.0, yMax= 0.0;
 	short grbit = 0;
-	boolean fAutoMin, fAutoMax, fAutoMajor, fAutoMinor, fAutoCross, fLogScale, fReverse, fMaxCross;
+	boolean fAutoMin;
+	boolean fAutoMax;
+	boolean fAutoMajor;
+	boolean fAutoMinor;
+	boolean fAutoCross;
+	boolean fLogScale;
+	boolean fReverse;
+	boolean fMaxCross;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		numMin = ByteTools.eightBytetoLEDouble( this.getBytesAt( 0, 8 ) );
-		numMax = ByteTools.eightBytetoLEDouble( this.getBytesAt( 8, 16 ) );
-		numMajor = ByteTools.eightBytetoLEDouble( this.getBytesAt( 16, 24 ) );
-		numMinor = ByteTools.eightBytetoLEDouble( this.getBytesAt( 24, 32 ) );
-		numCross = ByteTools.eightBytetoLEDouble( this.getBytesAt( 32, 40 ) );
-		grbit = ByteTools.readShort( this.getByteAt( 40 ), this.getByteAt( 41 ) );
+		numMin = ByteTools.eightBytetoLEDouble( getBytesAt( 0, 8 ) );
+		numMax = ByteTools.eightBytetoLEDouble( getBytesAt( 8, 16 ) );
+		numMajor = ByteTools.eightBytetoLEDouble( getBytesAt( 16, 24 ) );
+		numMinor = ByteTools.eightBytetoLEDouble( getBytesAt( 24, 32 ) );
+		numCross = ByteTools.eightBytetoLEDouble( getBytesAt( 32, 40 ) );
+		grbit = ByteTools.readShort( getByteAt( 40 ), getByteAt( 41 ) );
 		fMaxCross = (grbit & 0x80) == 0x80;
 		fAutoMin = (grbit & 0x1) == 0x1;
 		fAutoMax = (grbit & 0x2) == 0x2;
@@ -236,7 +247,7 @@ public class ValueRange extends GenericChartObject implements ChartObject
 		 */
 		if( fAutoMajor && fAutoMinor )
 		{
-			int charttype = this.getParentChart().getChartType();
+			int charttype = getParentChart().getChartType();
 			if( (yMax >= 0) && (yMin >= 0) && (yMax != yMin) )
 			{
 				// Major Unit Calculation -- best guest TODO: would be great to find out Excel's algorithm!
@@ -543,7 +554,7 @@ public class ValueRange extends GenericChartObject implements ChartObject
 		{
 			return false;
 		}
-		this.updateRecord();
+		updateRecord();
 		return true;
 	}
 
@@ -683,18 +694,18 @@ public class ValueRange extends GenericChartObject implements ChartObject
 	private void updateRecord()
 	{
 		byte[] b = ByteTools.doubleToLEByteArray( numMin );
-		System.arraycopy( b, 0, this.getData(), 0, 8 );
+		System.arraycopy( b, 0, getData(), 0, 8 );
 		b = ByteTools.doubleToLEByteArray( numMax );
-		System.arraycopy( b, 0, this.getData(), 8, 8 );
+		System.arraycopy( b, 0, getData(), 8, 8 );
 		b = ByteTools.doubleToLEByteArray( numMajor );
-		System.arraycopy( b, 0, this.getData(), 16, 8 );
+		System.arraycopy( b, 0, getData(), 16, 8 );
 		b = ByteTools.doubleToLEByteArray( numMinor );
-		System.arraycopy( b, 0, this.getData(), 24, 8 );
+		System.arraycopy( b, 0, getData(), 24, 8 );
 		b = ByteTools.doubleToLEByteArray( numCross );
-		System.arraycopy( b, 0, this.getData(), 32, 8 );
+		System.arraycopy( b, 0, getData(), 32, 8 );
 		b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[40] = b[0];
-		this.getData()[41] = b[1];
+		getData()[40] = b[0];
+		getData()[41] = b[1];
 	}
 
 	/**

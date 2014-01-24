@@ -213,7 +213,8 @@ public class PtgCalculator
 	 */
 	protected static double[][] getArray( Ptg operand ) throws Exception
 	{
-		int nrows, ncols;
+		int nrows;
+		int ncols;
 		double[][] arr = null;
 
 		if( operand instanceof PtgRef )

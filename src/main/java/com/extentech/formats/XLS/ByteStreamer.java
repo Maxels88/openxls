@@ -95,7 +95,7 @@ public class ByteStreamer implements Serializable, XLSConstants
 
 	public ByteStreamer( WorkBook bk )
 	{
-		this.workbook = bk;
+		workbook = bk;
 	}
 
 	/**
@@ -125,12 +125,12 @@ public class ByteStreamer implements Serializable, XLSConstants
 
 	public void setBytes( byte[] b )
 	{
-		this.bytes = b;
+		bytes = b;
 	}
 
 	public byte[] getBytes()
 	{
-		return this.bytes;
+		return bytes;
 	}
 
 	public int getRecVecSize()
@@ -160,7 +160,7 @@ public class ByteStreamer implements Serializable, XLSConstants
 	{
 		if( (rec instanceof Boundsheet) || (rec instanceof Dbcell) )
 		{
-			return this.getRecordAt( t );
+			return getRecordAt( t );
 		}
 		if( rec.getSheet() != null )
 		{
@@ -346,9 +346,11 @@ public class ByteStreamer implements Serializable, XLSConstants
 		}
 
 		// update tracker cells, packs formats ...
-		this.workbook.prestream();
+		workbook.prestream();
 		byte[] dt;
-		int recpos = 0, recctr = 0, dlen = 0;
+		int recpos = 0;
+		int recctr = 0;
+		int dlen = 0;
 
 		// get a private list of the records
 		AbstractList rex = new FastAddVector( records.size() );
@@ -458,7 +460,7 @@ public class ByteStreamer implements Serializable, XLSConstants
 		 *  the workbook recs.
 		 *
 		 */
-		LEOFile leo = this.workbook.factory.myLEO;
+		LEOFile leo = workbook.factory.myLEO;
 		List storages = null;
 		storages = leo.writeBytes( out, (dlen) );
 		BIGBLOCK hdrBlock = new BIGBLOCK();
@@ -483,7 +485,7 @@ public class ByteStreamer implements Serializable, XLSConstants
 				}
 				else
 				{// Not a continued rec!
-					this.writeRecord( out, rec );
+					writeRecord( out, rec );
 
 					if( lockit )
 					{
@@ -582,10 +584,10 @@ public class ByteStreamer implements Serializable, XLSConstants
 		{
 			java.io.File f = new java.io.File( fName );
 			BufferedWriter writer = new BufferedWriter( new FileWriter( f ) );
-			ArrayList recs = new ArrayList( java.util.Arrays.asList( this.getBiffRecords() ) );
+			ArrayList recs = new ArrayList( java.util.Arrays.asList( getBiffRecords() ) );
 			int ctr = 0;
 			ctr = ByteStreamer.writeRecs( recs, writer, ctr, 0 );
-			List sheets = this.workbook.getSheetVect();
+			List sheets = workbook.getSheetVect();
 			for( Object sheet : sheets )
 			{
 				if( bWriteSheetRecs )

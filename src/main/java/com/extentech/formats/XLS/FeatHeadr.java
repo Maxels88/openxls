@@ -108,7 +108,21 @@ public class FeatHeadr extends com.extentech.formats.XLS.XLSRecord
 	private static final long serialVersionUID = -5775187385375827918L;
 	short isf = 0;
 	int grbit = 0;
-	boolean iprotObject, iprotScenario, iprotFormatCells, iprotFormatColumns, iprotFormatRows, iprotInsertColumns, iprotInsertRows, iprotInsertHyperlinks, iprotDeleteColumns, iprotDeleteRows, iprotSelLockedCells, iprotSort, iprotAutoFilter, iprotPivotTable, iprotSelUnlockedCells;
+	boolean iprotObject;
+	boolean iprotScenario;
+	boolean iprotFormatCells;
+	boolean iprotFormatColumns;
+	boolean iprotFormatRows;
+	boolean iprotInsertColumns;
+	boolean iprotInsertRows;
+	boolean iprotInsertHyperlinks;
+	boolean iprotDeleteColumns;
+	boolean iprotDeleteRows;
+	boolean iprotSelLockedCells;
+	boolean iprotSort;
+	boolean iprotAutoFilter;
+	boolean iprotPivotTable;
+	boolean iprotSelUnlockedCells;
 	public final static short ALLOWOBJECTS = 0x1;
 	public final static short ALLOWSCENARIOS = 0x2;
 	public final static short ALLOWFORMATCELLS = 0x4;
@@ -161,10 +175,10 @@ public class FeatHeadr extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		isf = ByteTools.readShort( this.getData()[12], this.getData()[13] );
+		isf = ByteTools.readShort( getData()[12], getData()[13] );
 		if( isf == 2 )
 		{// Enhanced Protection - only option supported for now - read last 4 bytes for enhanced protection settings
-			grbit = ByteTools.readInt( this.getData()[19], this.getData()[20], this.getData()[21], this.getData()[22] );
+			grbit = ByteTools.readInt( getData()[19], getData()[20], getData()[21], getData()[22] );
 			parseProtectionGrbit();
 		}
 	}
@@ -199,7 +213,7 @@ public class FeatHeadr extends com.extentech.formats.XLS.XLSRecord
 	private void updateProtectionGrbit()
 	{
 		byte[] b = ByteTools.cLongToLEBytes( grbit );
-		this.getData();
+		getData();
 		data[19] = b[0];
 		data[20] = b[1];
 		data[21] = b[2];

@@ -51,16 +51,16 @@ public class SheetPr implements OOXMLElement
 	{
 		this.attrs = attrs;
 		this.tab = tab;
-		this.outlinePr = op;
-		this.pageSetupPr = pr;
+		outlinePr = op;
+		pageSetupPr = pr;
 	}
 
 	public SheetPr( SheetPr sp )
 	{
-		this.attrs = sp.attrs;
-		this.tab = sp.tab;
-		this.outlinePr = sp.outlinePr;
-		this.pageSetupPr = sp.pageSetupPr;
+		attrs = sp.attrs;
+		tab = sp.tab;
+		outlinePr = sp.outlinePr;
+		pageSetupPr = sp.pageSetupPr;
 	}
 
 	/**
@@ -221,7 +221,7 @@ class TabColor implements OOXMLElement
 
 	public TabColor( TabColor t )
 	{
-		this.attrs = t.attrs;
+		attrs = t.attrs;
 	}
 
 	public static TabColor parseOOXML( XmlPullParser xpp )
@@ -305,7 +305,7 @@ class OutlinePr implements OOXMLElement
 
 	public OutlinePr( OutlinePr op )
 	{
-		this.attrs = op.attrs;
+		attrs = op.attrs;
 	}
 
 	public static OutlinePr parseOOXML( XmlPullParser xpp )
@@ -379,7 +379,8 @@ class PageSetupPr implements OOXMLElement
 {
 	private static final Logger log = LoggerFactory.getLogger( PageSetupPr.class );
 	private static final long serialVersionUID = 3030511803286369045L;
-	private boolean autoPageBreaks = true, fitToPage = false;
+	private boolean autoPageBreaks = true;
+	private boolean fitToPage = false;
 
 	public PageSetupPr( boolean autoPageBreaks, boolean fitToPage )
 	{
@@ -389,13 +390,14 @@ class PageSetupPr implements OOXMLElement
 
 	public PageSetupPr( PageSetupPr pr )
 	{
-		this.autoPageBreaks = pr.autoPageBreaks;
-		this.fitToPage = pr.fitToPage;
+		autoPageBreaks = pr.autoPageBreaks;
+		fitToPage = pr.fitToPage;
 	}
 
 	public static PageSetupPr parseOOXML( XmlPullParser xpp )
 	{
-		boolean autoPageBreaks = true, fitToPage = false;
+		boolean autoPageBreaks = true;
+		boolean fitToPage = false;
 		try
 		{
 			int eventType = xpp.getEventType();

@@ -81,7 +81,7 @@ public class PtgGE extends GenericPtg implements Ptg
 
 	public String toString()
 	{
-		return this.getString();
+		return getString();
 	}
 
 	@Override

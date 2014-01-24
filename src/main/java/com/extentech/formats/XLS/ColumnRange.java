@@ -48,7 +48,8 @@ public interface ColumnRange
 	public static final class Reference implements ColumnRange, Serializable
 	{
 		private static final long serialVersionUID = -2240322394559418980L;
-		private final int first, last;
+		private final int first;
+		private final int last;
 
 		public Reference( int first, int last )
 		{
@@ -87,25 +88,24 @@ public interface ColumnRange
 		 * separate this out.
 		 */
 		@Override
-		public int compare( ColumnRange r1, ColumnRange r2 )
+		public int compare( ColumnRange cr1, ColumnRange cr2 )
 		{
-			boolean single1 = r1.isSingleCol();
-			boolean single2 = r2.isSingleCol();
+			boolean single1 = cr1.isSingleCol();
+			boolean single2 = cr2.isSingleCol();
 
 			// if we're comparing a single column to a range
 			if( (single1 || single2) && (single1 != single2) )
 			{ // XOR
-				ColumnRange range = (single1 ? r2 : r1);
-				ColumnRange single = (single1 ? r1 : r2);
+				ColumnRange range = (single1 ? cr2 : cr1);
+				ColumnRange single = (single1 ? cr1 : cr2);
 
 				// and the single column falls within the range
 				if( (range.getColFirst() <= single.getColFirst()) && (range.getColLast() >= single.getColLast()) )
 				{
-
 					// if it's a range boundary, it chooses what it is
 					if( single instanceof CellAddressible.RangeBoundary )
 					{
-						int value = ((CellAddressible.RangeBoundary) single).comareToRange();
+						int value = ((CellAddressible.RangeBoundary) single).compareToRange();
 
 						// it needs to be reversed if the range was first
 						return (single2 ? -value : value);
@@ -116,12 +116,14 @@ public interface ColumnRange
 				}
 			}
 
-			int first = r1.getColFirst() - r2.getColFirst();
+			int first = Integer.compare( cr1.getColFirst(), cr2.getColFirst() );
 			if( 0 != first )
 			{
 				return first;
 			}
-			return r2.getColLast() - r1.getColLast();
+
+			// FIXME: Is this the correct order?
+			return Integer.compare( cr2.getColLast(), cr1.getColLast() );
 		}
 	}
 }

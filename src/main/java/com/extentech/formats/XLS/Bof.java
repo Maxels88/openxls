@@ -51,7 +51,7 @@ public final class Bof extends UnencryptedXLSRecord
 
 	public String toString()
 	{
-		return super.toString() + " lbplypos: " + this.getLbPlyPos();
+		return super.toString() + " lbplypos: " + getLbPlyPos();
 	}
 
 	/**
@@ -63,9 +63,9 @@ public final class Bof extends UnencryptedXLSRecord
 		super.setOffset( s );
 		if( worksheet != null )
 		{
-			if( isSheetBof() || isVBModuleBof() || (worksheet.getMyBof() == this) )
+			if( isSheetBof() || isVBModuleBof() || (worksheet.getMyBof().equals( this )) )
 			{
-				worksheet.setLbPlyPos( this.getLbPlyPos() );
+				worksheet.setLbPlyPos( getLbPlyPos() );
 			}
 		}
 	}
@@ -87,20 +87,20 @@ public final class Bof extends UnencryptedXLSRecord
 	public void init()
 	{
 		super.init();
-		this.getData();
-		short version = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		getData();
+		short version = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		// dt
-		grbit = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		short rupBuild = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		short rupYear = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
+		grbit = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		short rupBuild = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+		short rupYear = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
 
-		byte b12 = this.getByteAt( 12 );
-		byte b13 = this.getByteAt( 13 );
-		byte b14 = this.getByteAt( 14 );
-		byte b15 = this.getByteAt( 15 );
+		byte b12 = getByteAt( 12 );
+		byte b13 = getByteAt( 13 );
+		byte b14 = getByteAt( 14 );
+		byte b15 = getByteAt( 15 );
 		int compat = ByteTools.readInt( b12, b13, b14, b15 ); // 1996
 		xlsver = compat + "";
-		oldlen = this.getLength();
+		oldlen = getLength();
 		if( oldlen < 16 )
 		{
 			log.error( "Not Excel '97 (BIFF8) or later version.  Unsupported file format." );

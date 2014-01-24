@@ -58,10 +58,11 @@ public class DoughnutChart extends ChartType
 	{
 		JSONObject chartObjectJSON = new JSONObject();
 		// Type JSON
-		chartObjectJSON.put( "type", this.getTypeJSON() );
+		chartObjectJSON.put( "type", getTypeJSON() );
 
 		// TODO: check out labels options chosen: default label is Category name + percentage ...
-		double yMax = 0.0, yMin = 0.0;
+		double yMax = 0.0;
+		double yMin = 0.0;
 		double len = 0.0;
 		JSONArray pieSeries = new JSONArray();
 		try
@@ -145,11 +146,13 @@ public class DoughnutChart extends ChartType
 			return "";
 		}
 		int[] dls = getDataLabelInts(); // get array of data labels (can be specific per series ...)
-		boolean threeD = this.isThreeD();
+		boolean threeD = isThreeD();
 		final int LABELOFFSET = 15;
 
 		int n = series.size();
-		double centerx = 0.0, centery = 0.0, radius = 0.0;
+		double centerx = 0.0;
+		double centery = 0.0;
+		double radius = 0.0;
 		double radiusy = 0.0;
 		centerx = w / 2 + chartMetrics.get( "x" );
 		centery = h / 2 + chartMetrics.get( "y" );
@@ -185,7 +188,7 @@ public class DoughnutChart extends ChartType
 				}
 			}
 			svg.append( "<circle " + getScript( "" ) + " cx='" + centerx + "' cy='" + centery + "' r='" + r + "' " + getStrokeSVG( 2,
-			                                                                                                                       this.getDarkColor() ) + " fill='none'/>\r\n" );
+			                                                                                                                       getDarkColor() ) + " fill='none'/>\r\n" );
 			double x = centerx + r;
 			double y = centery;
 			String path = "";
@@ -219,7 +222,7 @@ public class DoughnutChart extends ChartType
 					double halfa = ((percentage / 2) * 360) + lasta;    // center in area
 					double x2 = centerx + ((r - (r0 / 2)) * (Math.cos( Math.toRadians( halfa ) )));
 					double y2 = centery - ((r - (r0 / 2)) * (Math.sin( Math.toRadians( halfa ) )));
-					svg.append( "<text x='" + (x2) + "' y='" + (y2) + "' vertical-align='bottom' " + this.getDataLabelFontSVG() + " style='text-anchor: middle;'>" + l + "</text>\r\n" );
+					svg.append( "<text x='" + (x2) + "' y='" + (y2) + "' vertical-align='bottom' " + getDataLabelFontSVG() + " style='text-anchor: middle;'>" + l + "</text>\r\n" );
 				}
 				lasta = angle;
 				x = x1;
@@ -229,7 +232,7 @@ public class DoughnutChart extends ChartType
 		}    // each series
 		// complete inner circle & create "hole"
 		svg.append( "<circle " + getScript( "" ) + " cx='" + centerx + "' cy='" + centery + "' r='" + r + "' " + getStrokeSVG( 2,
-		                                                                                                                       this.getDarkColor() ) + " fill='white'/>\r\n" );
+		                                                                                                                       getDarkColor() ) + " fill='white'/>\r\n" );
 		svg.append( "</g>\r\n" );
 
 		return svg.toString();
@@ -261,14 +264,14 @@ public class DoughnutChart extends ChartType
 		cooxml.append( "<c:varyColors val=\"1\"/>" );
 
 		// *** Series Data:	ser, cat, val for most chart types
-		cooxml.append( this.getParentChart().getChartSeries().getOOXML( this.getChartType(), false, 0 ) );
+		cooxml.append( getParentChart().getChartSeries().getOOXML( getChartType(), false, 0 ) );
 
 		// chart data labels, if any
 		//TODO: FINISH		    	
 		//cooxml.append(getDataLabelsOOXML(cf));
 		// TODO: firstSLiceAng
 		cooxml.append( "<c:firstSliceAng val=\"0\"/>" );
-		cooxml.append( "<c:holeSize val=\"" + this.getChartOption( "donutSize" ) + "\"/>" );
+		cooxml.append( "<c:holeSize val=\"" + getChartOption( "donutSize" ) + "\"/>" );
 
 		cooxml.append( "</c:doughnutChart>" );
 		cooxml.append( "\r\n" );

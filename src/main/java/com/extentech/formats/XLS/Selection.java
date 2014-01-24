@@ -62,10 +62,10 @@ public class Selection extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		rwAct = ByteTools.readShort( this.getByteAt( 1 ), this.getByteAt( 2 ) );
-		colAct = ByteTools.readShort( this.getByteAt( 3 ), this.getByteAt( 4 ) );
-		irefAct = ByteTools.readShort( this.getByteAt( 5 ), this.getByteAt( 6 ) );
-		cref = ByteTools.readShort( this.getByteAt( 7 ), this.getByteAt( 8 ) );
+		rwAct = ByteTools.readShort( getByteAt( 1 ), getByteAt( 2 ) );
+		colAct = ByteTools.readShort( getByteAt( 3 ), getByteAt( 4 ) );
+		irefAct = ByteTools.readShort( getByteAt( 5 ), getByteAt( 6 ) );
+		cref = ByteTools.readShort( getByteAt( 7 ), getByteAt( 8 ) );
 
 		// cref is count of ref structs -- each one is 6 bytes
 		refs = new rgref[cref];
@@ -75,7 +75,7 @@ public class Selection extends com.extentech.formats.XLS.XLSRecord
 			byte[] b1 = new byte[6];
 			for( int x = 0; x < 6; x++ )
 			{
-				b1[x] = this.getByteAt( ctr++ );
+				b1[x] = getByteAt( ctr++ );
 			}
 			refs[i] = new rgref( b1 );
 		}

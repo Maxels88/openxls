@@ -52,7 +52,8 @@ public class FastAddVector extends SpecialArrayList implements java.io.Serializa
 		super();
 	}
 
-	int hits = 0, misses = 0;
+	int hits = 0;
+	int misses = 0;
 
 	/*
 	 * If passed in a Double, it stores it as a Double in the vector

@@ -117,7 +117,7 @@ public class WriterOutputStream extends OutputStream
 		// if the input buffer is too full decode it first
 		if( inputBuffer.remaining() < bytesPerChar )
 		{
-			this.decodeInputBuffer();
+			decodeInputBuffer();
 		}
 
 		// Append the input to the buffer if it'll fit. If not and there are
@@ -135,7 +135,7 @@ public class WriterOutputStream extends OutputStream
 
 			// otherwise, decode the input buffer
 			inputBuffer.flip();
-			this.decode( inputBuffer );
+			decode( inputBuffer );
 
 			fill -= inputBuffer.remaining();
 			offset += fill;
@@ -147,7 +147,7 @@ public class WriterOutputStream extends OutputStream
 		if( length > inputBuffer.remaining() )
 		{
 			ByteBuffer tempBuffer = ByteBuffer.wrap( buffer, offset, length );
-			this.decode( tempBuffer );
+			decode( tempBuffer );
 
 			// if any bytes are left over, put them in the input buffer
 			if( tempBuffer.hasRemaining() )
@@ -174,7 +174,7 @@ public class WriterOutputStream extends OutputStream
 		// if the buffer is full, decode it first
 		if( !inputBuffer.hasRemaining() )
 		{
-			this.decodeInputBuffer();
+			decodeInputBuffer();
 		}
 
 		// append the input to the buffer
@@ -198,7 +198,7 @@ public class WriterOutputStream extends OutputStream
 				throw new IOException( "this stream has been closed" );
 			}
 
-			this.decodeInputBuffer();
+			decodeInputBuffer();
 		}
 
 		// flush the underlying Writer, if any
@@ -211,7 +211,7 @@ public class WriterOutputStream extends OutputStream
 	private void decodeInputBuffer() throws IOException
 	{
 		inputBuffer.flip();
-		this.decode( inputBuffer );
+		decode( inputBuffer );
 		inputBuffer.compact();
 	}
 
@@ -226,7 +226,7 @@ public class WriterOutputStream extends OutputStream
 
 			outputBuffer.flip();
 			target.append( outputBuffer );
-		} while( result == CoderResult.OVERFLOW );
+		} while( result.equals( CoderResult.OVERFLOW ) );
 	}
 
 	/**
@@ -259,7 +259,7 @@ public class WriterOutputStream extends OutputStream
 
 				outputBuffer.flip();
 				target.append( outputBuffer );
-			} while( result == CoderResult.OVERFLOW );
+			} while( result.equals( CoderResult.OVERFLOW ) );
 
 			// flush the decoder
 			do
@@ -269,7 +269,7 @@ public class WriterOutputStream extends OutputStream
 
 				outputBuffer.flip();
 				target.append( outputBuffer );
-			} while( result == CoderResult.OVERFLOW );
+			} while( result.equals( CoderResult.OVERFLOW ) );
 
 			// release the buffers and decoder
 			inputBuffer = null;

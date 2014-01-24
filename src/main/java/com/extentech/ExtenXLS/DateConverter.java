@@ -115,7 +115,8 @@ public class DateConverter
 		LEGACY_1904( 24107, 0, 2957003.9999884 );
 
 		private final int epoch_delta;
-		private final double limit_lower, limit_upper;
+		private final double limit_lower;
+		private final double limit_upper;
 
 		private DateFormat( int delta, double min, double max )
 		{
@@ -585,14 +586,18 @@ public class DateConverter
 		{
 			return null;
 		}
-		int m, d, y;
+		int m;
+		int d;
+		int y;
 		StringTokenizer st = new StringTokenizer( dateStr, "/" );
 		try
 		{
 			m = Integer.valueOf( st.nextToken() ) - 1;
 			d = Integer.valueOf( st.nextToken() );
 			String s = st.nextToken();
-			int h, mn, sc;
+			int h;
+			int mn;
+			int sc;
 			h = mn = sc = 0;
 			if( s.indexOf( " " ) > -1 )
 			{

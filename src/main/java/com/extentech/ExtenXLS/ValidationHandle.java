@@ -664,34 +664,34 @@ public class ValidationHandle implements Handle
 	{
 		StringBuffer xml = new StringBuffer();
 		xml.append( "<datavalidation" );
-		xml.append( " type=\"" + VALUE_TYPE[this.getValidationType()] + "\"" );
-		xml.append( " operator=\"" + CONDITIONS[this.getTypeOperator()] + "\"" );
-		xml.append( " allowBlank=\"" + ((this.isAllowBlank()) ? "1" : "0") + "\"" );
-		xml.append( " showInputMessage=\"" + ((this.getShowInputMsg()) ? "1" : "0") + "\"" );
-		xml.append( " showErrorMessage=\"" + ((this.isShowErrorMsg()) ? "1" : "0") + "\"" );
-		xml.append( " errorTitle=\"" + this.getErrorBoxTitle() + "\"" );
-		xml.append( " error=\"" + this.getErrorBoxText() + "\"" );
-		xml.append( " promptTitle=\"" + this.getPromptBoxTitle() + "\"" );
-		xml.append( " prompt=\"" + this.getPromptBoxText() + "\"" );
+		xml.append( " type=\"" + VALUE_TYPE[getValidationType()] + "\"" );
+		xml.append( " operator=\"" + CONDITIONS[getTypeOperator()] + "\"" );
+		xml.append( " allowBlank=\"" + ((isAllowBlank()) ? "1" : "0") + "\"" );
+		xml.append( " showInputMessage=\"" + ((getShowInputMsg()) ? "1" : "0") + "\"" );
+		xml.append( " showErrorMessage=\"" + ((isShowErrorMsg()) ? "1" : "0") + "\"" );
+		xml.append( " errorTitle=\"" + getErrorBoxTitle() + "\"" );
+		xml.append( " error=\"" + getErrorBoxText() + "\"" );
+		xml.append( " promptTitle=\"" + getPromptBoxTitle() + "\"" );
+		xml.append( " prompt=\"" + getPromptBoxText() + "\"" );
 		try
 		{
-			xml.append( " sqref=\"" + this.getRange() + "\"" );
+			xml.append( " sqref=\"" + getRange() + "\"" );
 		}
 		catch( Exception e )
 		{
 			log.error( "Problem getting range for ValidationHandle.getXML().", e );
 		}
 		xml.append( ">" );
-		if( this.getFirstCondition() != null )
+		if( getFirstCondition() != null )
 		{
 			xml.append( "<formula1>" );
-			xml.append( StringTool.convertXMLChars( this.getFirstCondition() ) );
+			xml.append( StringTool.convertXMLChars( getFirstCondition() ) );
 			xml.append( "</formula1>" );
 		}
-		if( this.getSecondCondition() != null )
+		if( getSecondCondition() != null )
 		{
 			xml.append( "<formula2>" );
-			xml.append( StringTool.convertXMLChars( this.getSecondCondition() ) );
+			xml.append( StringTool.convertXMLChars( getSecondCondition() ) );
 			xml.append( "</formula2>" );
 		}
 		xml.append( "</datavalidation>" );

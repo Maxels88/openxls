@@ -289,7 +289,7 @@ public class XSLConverterTool
 
 		public void setFormatPattern( String pattern )
 		{
-			this.formatPattern = pattern;
+			formatPattern = pattern;
 		}
 
 		protected Style( String id )

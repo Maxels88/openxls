@@ -642,7 +642,9 @@ public class MathFunctionCalculator
 					return new PtgErr( PtgErr.ERROR_NUM );
 				}
 
-				long bigger, smaller, r;
+				long bigger;
+				long smaller;
+				long r;
 				bigger = Math.max( n2, n1 );
 				smaller = Math.min( n2, n1 );
 				r = bigger % smaller;
@@ -923,7 +925,8 @@ Returns the matrix inverse of an array
 		{
 			return new PtgErr( PtgErr.ERROR_NA );
 		}
-		double m = 0.0, n = 0.0;
+		double m = 0.0;
+		double n = 0.0;
 		try
 		{
 			n = operands[0].getDoubleVal();
@@ -1090,7 +1093,8 @@ Returns the matrix inverse of an array
 		{
 			return new PtgErr( PtgErr.ERROR_NA );
 		}
-		double numerator = 0.0, denominator = 0.0;
+		double numerator = 0.0;
+		double denominator = 0.0;
 		try
 		{
 			numerator = operands[0].getDoubleVal();
@@ -1155,7 +1159,8 @@ Returns the matrix inverse of an array
 		{
 			return new PtgErr( PtgErr.ERROR_NA );
 		}
-		int lower = 0, upper = 0;
+		int lower = 0;
+		int upper = 0;
 		try
 		{
 			lower = operands[0].getIntVal();

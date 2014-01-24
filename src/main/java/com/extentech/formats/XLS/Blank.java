@@ -79,7 +79,7 @@ public final class Blank extends XLSCellRecord
 		setData( b );
 		setOpcode( BLANK );
 		setLength( (short) 6 );
-		this.init();
+		init();
 	}
 
 	@Override
@@ -88,22 +88,22 @@ public final class Blank extends XLSCellRecord
 		super.init();
 		int pos = 4;
 		super.initRowCol();
-		ixfe = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );
-		this.setIsValueForCell( true );
-		this.isBlank = true;
+		ixfe = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) );
+		setIsValueForCell( true );
+		isBlank = true;
 	}
 
 	public void setCol( int i )
 	{
-		if( this.isValueForCell )
+		if( isValueForCell )
 		{
-			this.getData();
+			getData();
 			if( data == null )
 			{
 				setData( new byte[]{ 0, 0, 0, 0, 0, 0 } );
 			}
 			byte[] c = ByteTools.shortToLEBytes( (short) i );
-			System.arraycopy( c, 0, this.getData(), 2, 2 );
+			System.arraycopy( c, 0, getData(), 2, 2 );
 		}
 		col = (short) i;
 	}
@@ -113,15 +113,15 @@ public final class Blank extends XLSCellRecord
 	 */
 	public void setRow( int i )
 	{
-		if( this.isValueForCell )
+		if( isValueForCell )
 		{
-			this.getData();
+			getData();
 			if( data == null )
 			{
 				setData( new byte[]{ 0, 0, 0, 0, 0, 0 } );
 			}
 			byte[] r = ByteTools.shortToLEBytes( (short) i );
-			System.arraycopy( r, 0, this.getData(), 0, 2 );
+			System.arraycopy( r, 0, getData(), 0, 2 );
 		}
 		rw = i;
 	}

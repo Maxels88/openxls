@@ -244,7 +244,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 			short grbittemp = (short) (grbit ^ BITMASK_DRAFT);
 			grbit = (short) (grbittemp & grbit);
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	/**
@@ -271,7 +271,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = (short) (grbit & ~BITMASK_LANDSCAPE);
 		}
-		this.setGrbit();
+		setGrbit();
 		setInitialized( true );
 	}
 
@@ -296,7 +296,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = (short) (grbit ^ BITMASK_LEFTTORIGHT);
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	/**
@@ -320,7 +320,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = (short) (grbit ^ BITMASK_NOCOLOR);
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	/**
@@ -344,7 +344,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = (short) (grbit & ~BITMASK_NOORIENT);
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	/**
@@ -372,7 +372,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = (short) (grbit ^ BITMASK_NOPRINTDATA);
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	/**
@@ -396,7 +396,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = (short) (grbit ^ BITMASK_PRINTNOTES);
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	/**
@@ -420,7 +420,7 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = (short) (grbit ^ BITMASK_USEPAGE);
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	@Override
@@ -428,39 +428,27 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	{
 		super.init();
 		int pos = 0;
-		paperSize = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) ); //Paper size
-		scale = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) ); //Scaling factor
-		pageStart = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) ); //Starting page num
-		fitWidth = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) ); //Fit to width; num pages
-		fitHeight = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) ); //Fit to height; num pages
-		grbit = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) ); //Option flags
-		resolution = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) );    //Print Resolution
-		verticalResolution = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) ); //Vertical Print Resolution
+		paperSize = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) ); //Paper size
+		scale = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) ); //Scaling factor
+		pageStart = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) ); //Starting page num
+		fitWidth = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) ); //Fit to width; num pages
+		fitHeight = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) ); //Fit to height; num pages
+		grbit = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) ); //Option flags
+		resolution = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) );    //Print Resolution
+		verticalResolution = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) ); //Vertical Print Resolution
 
 		// IEEE fp numbers
 		byte[] bx1 = {
-				this.getByteAt( pos++ ),
-				this.getByteAt( pos++ ),
-				this.getByteAt( pos++ ),
-				this.getByteAt( pos++ ),
-				this.getByteAt( pos++ ),
-				this.getByteAt( pos++ ),
-				this.getByteAt( pos++ ),
-				this.getByteAt( pos++ )
+				getByteAt( pos++ ), getByteAt( pos++ ),
+				getByteAt( pos++ ), getByteAt( pos++ ), getByteAt( pos++ ), getByteAt( pos++ ), getByteAt( pos++ ), getByteAt( pos++ )
 		};
 		headerMargin = ByteTools.eightBytetoLEDouble( bx1 ); //Header margin (IEEE number)
 		byte[] bx2 = {
-				this.getByteAt( pos++ ),
-				this.getByteAt( pos++ ),
-				this.getByteAt( pos++ ),
-				this.getByteAt( pos++ ),
-				this.getByteAt( pos++ ),
-				this.getByteAt( pos++ ),
-				this.getByteAt( pos++ ),
-				this.getByteAt( pos++ )
+				getByteAt( pos++ ), getByteAt( pos++ ),
+				getByteAt( pos++ ), getByteAt( pos++ ), getByteAt( pos++ ), getByteAt( pos++ ), getByteAt( pos++ ), getByteAt( pos++ )
 		};
 		footerMargin = ByteTools.eightBytetoLEDouble( bx2 ); //Footer margin (IEEE number)
-		copies = ByteTools.readShort( this.getByteAt( pos++ ), this.getByteAt( pos++ ) ); //Number of copies
+		copies = ByteTools.readShort( getByteAt( pos++ ), getByteAt( pos++ ) ); //Number of copies
 
 		if( (grbit & 0x4) == 0x4 )
 		{//	 Paper size, scaling factor, paper orientation (portrait/landscape), print resolution and number of copies are not initialised
@@ -495,10 +483,10 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	public void setCopies( short c )
 	{
 		copies = c;
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.shortToLEBytes( copies );
 		System.arraycopy( b, 0, data, 32, 2 );
-		this.setData( data );
+		setData( data );
 		setInitialized( true );
 	}
 
@@ -516,10 +504,10 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	public void setFitHeight( short f )
 	{
 		fitHeight = f;
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.shortToLEBytes( fitHeight );
 		System.arraycopy( b, 0, data, 8, 2 );
-		this.setData( data );
+		setData( data );
 	}
 
 	/**
@@ -536,10 +524,10 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	public void setFitWidth( short f )
 	{
 		fitWidth = f;
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.shortToLEBytes( fitWidth );
 		System.arraycopy( b, 0, data, 6, 2 );
-		this.setData( data );
+		setData( data );
 
 	}
 
@@ -557,10 +545,10 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	public void setFooterMargin( double f )
 	{
 		footerMargin = f;
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.doubleToLEByteArray( footerMargin );
 		System.arraycopy( b, 0, data, 24, 8 );
-		this.setData( data );
+		setData( data );
 	}
 
 	/**
@@ -577,10 +565,10 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	public void setHeaderMargin( double h )
 	{
 		headerMargin = h;
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.doubleToLEByteArray( headerMargin );
 		System.arraycopy( b, 0, data, 16, 8 );
-		this.setData( data );
+		setData( data );
 	}
 
 	/**
@@ -597,10 +585,10 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	public void setPageStart( short p )
 	{
 		pageStart = p;
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.shortToLEBytes( pageStart );
 		System.arraycopy( b, 0, data, 4, 2 );
-		this.setData( data );
+		setData( data );
 	}
 
 	/**
@@ -617,10 +605,10 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	public void setPaperSize( short p )
 	{
 		paperSize = p;
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.shortToLEBytes( paperSize );
 		System.arraycopy( b, 0, data, 0, 2 );
-		this.setData( data );
+		setData( data );
 		setInitialized( true );
 	}
 
@@ -638,10 +626,10 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	public void setResolution( short r )
 	{
 		resolution = r;
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.shortToLEBytes( resolution );
 		System.arraycopy( b, 0, data, 12, 2 );
-		this.setData( data );
+		setData( data );
 		setInitialized( true );
 	}
 
@@ -659,10 +647,10 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	public void setScale( short s )
 	{
 		scale = s;
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.shortToLEBytes( scale );
 		System.arraycopy( b, 0, data, 2, 2 );
-		this.setData( data );
+		setData( data );
 		setInitialized( true );
 	}
 
@@ -680,10 +668,10 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
 	public void setVerticalResolution( short v )
 	{
 		verticalResolution = v;
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.shortToLEBytes( verticalResolution );
 		System.arraycopy( b, 0, data, 14, 2 );
-		this.setData( data );
+		setData( data );
 		setInitialized( true );
 	}
 	
@@ -724,17 +712,17 @@ public class Setup extends com.extentech.formats.XLS.XLSRecord
         grbit = (short)(grbit | tempNO);
         grbit = (short)(grbit | tempUP);
         */
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.shortToLEBytes( grbit );
 		System.arraycopy( b, 0, data, 10, 2 );
-		this.setData( data );
+		setData( data );
 	}
 
 	public void setGrbitOLD()
 	{
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.shortToLEBytes( grbit );
 		System.arraycopy( b, 0, data, 10, 2 );
-		this.setData( data );
+		setData( data );
 	}
 }

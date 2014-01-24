@@ -81,21 +81,25 @@ import java.util.List;
  * @see XLSRecord
  */
 
-public final class Row extends com.extentech.formats.XLS.XLSRecord
+public final class Row extends XLSRecord
 {
+	static final int defaultsize = 16;
 	private static final Logger log = LoggerFactory.getLogger( Row.class );
 	private static final long serialVersionUID = 6848429681761792740L;
-
-	private short colMic, colMac;
+	private short colMic;
+	private short colMac;
 	private int miyRw;
-
 	private Dbcell dbc;
-	private BiffRec firstcell, lastcell;
-
-	private boolean fCollapsed, fHidden, fUnsynced, fGhostDirty, fBorderTop, fBorderBottom, fPhonetic;
+	private BiffRec firstcell;
+	private BiffRec lastcell;
+	private boolean fCollapsed;
+	private boolean fHidden;
+	private boolean fUnsynced;
+	private boolean fGhostDirty;
+	private boolean fBorderTop;
+	private boolean fBorderBottom;
+	private boolean fPhonetic;
 	private int outlineLevel = 0;
-
-	static final int defaultsize = 16;
 
 	public Row()
 	{
@@ -104,44 +108,17 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 
 	public Row( int rowNum, WorkBook book )
 	{
-		this.setWorkBook( book );
-		this.setLength( (short) defaultsize );
-		this.setOpcode( ROW );
+		setWorkBook( book );
+		setLength( (short) defaultsize );
+		setOpcode( ROW );
 		byte[] dta = new byte[defaultsize];
 		dta[6] = (byte) 0xff;
 		dta[13] = 0x1;
 		dta[14] = 0xf;
-		this.setData( dta );
-		this.originalsize = defaultsize;
-		this.init();
-		this.setRowNumber( rowNum );
-	}
-
-	/**
-	 * clear out object references in prep for closing workbook
-	 */
-	@Override
-	public void close()
-	{
-		dbc = null;
-		firstcell = null;
-		lastcell = null;
-		this.setWorkBook( null );
-		this.setSheet( null );
-	}
-
-	/**
-	 * Set the height of a row in twips (1/20th of a point)
-	 */
-	public void setRowHeight( int x )
-	{
-			log.debug( "Updating Row Height: " + this.getRowNumber() + " to: " + x );
-		fUnsynced = true;  // set bit 6 = row height and default font DO NOT MATCH
-		updateGrbit();
-		// 10      miyRw       2       Row Height
-		byte[] rw = ByteTools.shortToLEBytes( (short) x );
-		System.arraycopy( rw, 0, this.getData(), 6, 2 );
-		miyRw = x;
+		setData( dta );
+		originalsize = defaultsize;
+		init();
+		setRowNumber( rowNum );
 	}
 
 	/**
@@ -150,11 +127,51 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	public int getRowHeight()
 	{
 		//	15th bit set= row size is not default
-		if( this.miyRw < 0 )    // not 100% sure of this ...
+		if( miyRw < 0 )    // not 100% sure of this ...
 		{
-			this.miyRw = (this.miyRw + 1) * -1;
+			miyRw = (miyRw + 1) * -1;
 		}
-		return this.miyRw;
+		return miyRw;
+	}
+
+	/**
+	 * Set the height of a row in twips (1/20th of a point)
+	 */
+	public void setRowHeight( int x )
+	{
+		log.debug( "Updating Row Height: " + getRowNumber() + " to: " + x );
+		fUnsynced = true;  // set bit 6 = row height and default font DO NOT MATCH
+		updateGrbit();
+		// 10      miyRw       2       Row Height
+		byte[] rw = ByteTools.shortToLEBytes( (short) x );
+		System.arraycopy( rw, 0, getData(), 6, 2 );
+		miyRw = x;
+	}
+
+	/**
+	 * Get a cell from the row
+	 *
+	 * @throws CellNotFoundException
+	 */
+	public BiffRec getCell( short d ) throws CellNotFoundException
+	{
+		return getSheet().getCell( getRowNumber(), d );
+	}
+
+	/**
+	 * get a collection of cells in column-based order	*
+	 */
+	public Collection<BiffRec> getCells()
+	{
+		try
+		{
+			return getSheet().getCellsByRow( getRowNumber() );
+		}
+		catch( CellNotFoundException e )
+		{
+			// no cells in this row
+		}
+		return new ArrayList<>();
 	}
 
 	/**
@@ -163,10 +180,25 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	@Override
 	public void setRowNumber( int n )
 	{
-			log.debug( "Updating Row Number: " + this.getRowNumber() + " to: " + n );
+		log.debug( "Updating Row Number: " + getRowNumber() + " to: " + n );
 		rw = n;
 		byte[] rwb = ByteTools.shortToLEBytes( (short) rw );
-		System.arraycopy( rwb, 0, this.getData(), 0, 2 );
+		System.arraycopy( rwb, 0, getData(), 0, 2 );
+	}
+
+	/**
+	 * get the cells as an array.  Needed when
+	 * operations will be used on the cell array causing concurrentModificationException
+	 * problems on the TreeMap collection
+	 *
+	 * @return
+	 */
+	public Object[] getCellArray()
+	{
+		Collection<BiffRec> cells = getCells();
+		Object[] br = new Object[cells.size()];
+		br = cells.toArray();
+		return br;
 	}
 
 	/**
@@ -183,162 +215,9 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 		return rw;
 	}
 
-	/**
-	 * set the Dbcell record which contains the
-	 * cell offsets for this row.
-	 * <p/>
-	 * needed in computing new INDEX offset values
-	 */
-	public void setDBCell( Dbcell d )
-	{
-		dbc = d;
-	}
-
-	/**
-	 * get the Dbcell record which contains the
-	 * cell offsets for this row.
-	 * <p/>
-	 * needed in computing new INDEX offset values
-	 */
-	Dbcell getDBCell()
-	{
-		return dbc;
-	}
-
-	/**
-	 * add a cell to the Row.  Instead of using the full
-	 * cell address as the treemap identifier, just use the column.
-	 * this allows the natural ordering of the treemap to work to our
-	 * advantage on output, ordering cells from lowest to highest col.
-	 */
-	void addCell( BiffRec c )
-	{
-		c.setRow( this );
-		
-		/*
-		 * I'm not clear on this operation, it seems as if we add blank records, this just
-		 * applies a format to the cell rather than actually replacing the valrec?
-		
-		if (c.getOpcode()!=MULBLANK) {	// KSC: Added
-			BiffRec existing = (BiffRec)cells.get(Short.valueOf(cellCol));		
-			if( existing != null){
-	            if (this.getWorkBook().getFactory().iscompleted()) {
-	    		    if((c instanceof Blank)) {
-	    		    	existing.setIxfe(c.getIxfe());
-	    		        return;
-	    		    }else {
-	    		        cells.remove(Short.valueOf(cellCol));
-	                    c.setRow(this);
-	                    cells.put(Short.valueOf(cellCol), c);
-	                    this.lastcell = c;
-	    		    }
-	            }
-			}else {
-	    		c.setRow(this);
-	    		cells.put(Short.valueOf(cellCol), c);
-	    		this.lastcell = c;
-	        }
-		} else { // expand mulblanks to each referenced cell
-		 */
-		
-		/* We should be able to handle this with cellAddressible, hopefully. 
-			short colFirst= ((Mulblank)c).colFirst;
-			short colLast= ((Mulblank) c).colLast;
-			for (short i= colFirst; i <= colLast; i++) {
-                cells.put(Short.valueOf(i), c);
-                this.lastcell = c;
-			}
-		}
-		 */
-	}
-
-	void removeCell( BiffRec c )
-	{
-		this.getSheet().removeCell( c );
-	}
-
-	/**
-	 * remove cell via column number
-	 */
-	void removeCell( short c )
-	{
-		this.getSheet().removeCell( this.getRowNumber(), c );
-	}
-
-	/**
-	 * Get the real max col
-	 */
-	int getRealMaxCol()
-	{
-		int collast = 0;
-		Iterator cs = this.getCells().iterator();
-		while( cs.hasNext() )
-		{
-			BiffRec c = (BiffRec) cs.next();
-			if( c.getColNumber() > collast )
-			{
-				collast = c.getColNumber();
-			}
-		}
-		return collast;
-	}
-
-	int getMaxCol()
-	{
-		this.preStream();
-		return colMac;
-	}
-
-	int getMinCol()
-	{
-		this.preStream();
-		return colMic;
-	}
-
-	/**
-	 * Get a cell from the row
-	 *
-	 * @throws CellNotFoundException
-	 */
-	public BiffRec getCell( short d ) throws CellNotFoundException
-	{
-		return this.getSheet().getCell( this.getRowNumber(), d );
-	}
-
-	/**
-	 * get a collection of cells in column-based order	*
-	 */
-	public Collection<BiffRec> getCells()
-	{
-		try
-		{
-			return this.getSheet().getCellsByRow( this.getRowNumber() );
-		}
-		catch( CellNotFoundException e )
-		{
-			// no cells in this row
-		}
-		return new ArrayList<>();
-	}
-
-	/**
-	 * get the cells as an array.  Needed when
-	 * operations will be used on the cell array causing concurrentModificationException
-	 * problems on the TreeMap collection
-	 *
-	 * @return
-	 */
-	public Object[] getCellArray()
-	{
-		Collection<BiffRec> cells = this.getCells();
-		Object[] br = new Object[cells.size()];
-		br = cells.toArray();
-		return br;
-	}
-
 	public int getNumberOfCells()
 	{
-		return this.getCells().size();
+		return getCells().size();
 	}
 
 	/**
@@ -353,7 +232,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	public List getValRecs( int outputId )
 	{
 		ArrayList v = new ArrayList();
-		Collection cx = this.getCells();
+		Collection cx = getCells();
 		Iterator it = cx.iterator();
 		while( it.hasNext() )
 		{
@@ -390,23 +269,206 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 		{
 			return lastcell.getRecordIndex();
 		}
-		return this.getRecordIndex(); // empty row
+		return getRecordIndex(); // empty row
+	}
+
+	/**
+	 * sets or clears the Unsynced flag
+	 * <br>The Unsynched flag is true if the row height is manually set
+	 * <br>If false, the row height should auto adjust when necessary
+	 *
+	 * @param bUnsynced
+	 */
+	public void setUnsynched( boolean bUnsynced )
+	{
+		fUnsynced = bUnsynced;
+		updateGrbit();
+	}
+
+	/**
+	 * This flag determines if the row has been formatted.
+	 * If this flag is not set, the XF reference will not affect the row.
+	 * However, if it's true then the row will be formatted according to
+	 * the XF ref.
+	 *
+	 * @return
+	 */
+	public boolean getExplicitFormatSet()
+	{
+		return fGhostDirty;
+	}
+
+	/**
+	 * return the min/max column for this row
+	 *
+	 * @return
+	 */
+	public int[] getColDimensions()
+	{
+		return new int[]{ colMic, colMac };
+	}
+
+	/**
+	 * update the col indexes
+	 */
+	public void updateColDimensions( short col )
+	{
+		if( col > Row.MAXCOLS )
+		{
+			return;
+		}
+		byte[] cl = null;
+		if( col < colMic )
+		{
+			colMic = col;
+			cl = ByteTools.shortToLEBytes( colMic );
+			System.arraycopy( cl, 0, getData(), 2, 2 );
+		}
+		if( col > colMac )
+		{
+			colMac = col;
+			colMac = ++col;
+			cl = ByteTools.shortToLEBytes( colMac );
+			System.arraycopy( cl, 0, getData(), 4, 2 );
+		}
+	}
+
+	public String toString()
+	{
+		StringBuffer celladdrs = new StringBuffer();
+		Collection cx = getCells();
+		Iterator it = cx.iterator();
+		while( it.hasNext() )
+		{
+			celladdrs.append( "{" );
+			celladdrs.append( it.next().toString() );
+			celladdrs.append( "}" );
+		}
+		return String.valueOf( getRowNumber() + celladdrs.toString() );
+	}
+
+	/**
+	 * clear out object references in prep for closing workbook
+	 */
+	@Override
+	public void close()
+	{
+		dbc = null;
+		firstcell = null;
+		lastcell = null;
+		setWorkBook( null );
+		setSheet( null );
+	}
+
+	public void setHeight( int twips )
+	{
+		if( (twips < 2) || (twips > 8192) )
+		{
+			throw new IllegalArgumentException( "twips value " + String.valueOf( twips ) + " is out of range, must be between 2 and 8192 inclusive" );
+		}
+
+		miyRw = twips;
+		fUnsynced = true;
+	}
+
+	public void clearHeight()
+	{
+		fUnsynced = false;
+	}
+
+	/**
+	 * Returns the Outline level (depth) of the row
+	 *
+	 * @return
+	 */
+	public int getOutlineLevel()
+	{
+		return outlineLevel;
+
+	}
+
+	/**
+	 * Set the Outline level (depth) of the row
+	 *
+	 * @param x
+	 */
+	public void setOutlineLevel( int x )
+	{
+		outlineLevel = x;
+		getSheet().getGuts().setRowGutterSize( 10 + (10 * x) );
+		getSheet().getGuts().setMaxRowLevel( x + 1 );
+		updateGrbit();
+//		implement bit masking set on grbit
+	}
+
+	/**
+	 * Returns whether the row is collapsed
+	 *
+	 * @return
+	 */
+	public boolean isCollapsed()
+	{
+		return fCollapsed;
+	}
+
+	/**
+	 * Set whether the row is fCollapsed
+	 * hides all contiguous rows with the same outline level
+	 *
+	 * @param b
+	 */
+	public void setCollapsed( boolean b )
+	{
+		fCollapsed = b;
+		fHidden = b;
+		boolean keepgoing = true;
+		int counter = 1;
+		while( keepgoing )
+		{
+			Row r = getSheet().getRowByNumber( getRowNumber() + counter );
+			if( (r != null) && (r.getOutlineLevel() == getOutlineLevel()) )
+			{
+				r.setHidden( b );
+			}
+			else
+			{
+				keepgoing = false;
+			}
+			counter++;
+		}
+		counter = 1;
+		keepgoing = true;
+		while( keepgoing )
+		{
+			Row r = getSheet().getRowByNumber( getRowNumber() - counter );
+			if( (r != null) && (r.getOutlineLevel() == getOutlineLevel()) )
+			{
+				r.setHidden( b );
+			}
+			else
+			{
+				keepgoing = false;
+			}
+			counter++;
+		}
+		updateGrbit();
+		// implement bit masking set on grbit
 	}
 
 	@Override
 	public void init()
 	{
 		super.init();
-		this.getData();
+		getData();
 
 		// get the number of the row
-		rw = ByteTools.readUnsignedShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		colMic = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		colMac = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		miyRw = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
+		rw = ByteTools.readUnsignedShort( getByteAt( 0 ), getByteAt( 1 ) );
+		colMic = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		colMac = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+		miyRw = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
 
 		// bytes 8 - 11 are reserved		
-		byte byte12 = this.getByteAt( 12 );
+		byte byte12 = getByteAt( 12 );
 
 		/**
 		 *     A - iOutLevel (3 bits): An unsigned integer that specifies the outline level (1) of the row.
@@ -423,14 +485,14 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 		fGhostDirty = (byte12 & 0x80) != 0;
 		/**/
 		// byte 13 is reserved
-		byte byte15 = this.getByteAt( 15 );
-		byte byte14 = this.getByteAt( 14 );
+		byte byte15 = getByteAt( 15 );
+		byte byte14 = getByteAt( 14 );
 		if( fGhostDirty )
 		{ // then explicit ixfe set
 			// The low-order byte is sbyte 14. The low-order nybble of the
 			// high-order byte is stored in the high-order nybble of byte 15.
 			ixfe = ((byte14 & 0xFF) | (((byte15 & 0xFF) << 8) & 0xFFF)); // 12 bits
-			if( (ixfe < 0) || (ixfe > this.getWorkBook().getNumXfs()) )
+			if( (ixfe < 0) || (ixfe > getWorkBook().getNumXfs()) )
 			{    // KSC: TODO: ixfe calc is wrong ...?
 				ixfe = 15;//this.getWorkBook().getDefaultIxfe();
 				fGhostDirty = false;
@@ -455,17 +517,28 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 		fPhonetic = (byte15 & 0x40) != 0;
 	}
 
+	/**
+	 * Returns whether the row is hidden
+	 * TODO:  same issue as setHidden above!
+	 *
+	 * @return
+	 */
+	public boolean isHidden()
+	{
+		return fHidden;
+	}
+
 	@Override
 	public void preStream()
 	{
-		if( this.getSheet() != null )
+		if( getSheet() != null )
 		{
-			this.updateColDimensions( colMac );
-			this.updateColDimensions( colMic );
+			updateColDimensions( colMac );
+			updateColDimensions( colMic );
 		}
 		else
 		{
-				log.warn( "Missing Boundsheet in Row.prestream for Row: " + this.getRowNumber() + this.getCellAddress() );
+			log.warn( "Missing Boundsheet in Row.prestream for Row: " + getRowNumber() + getCellAddress() );
 		}
 
 		byte[] data = new byte[16];
@@ -529,142 +602,7 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 		}
 		// byte 15 bit 0x01 is reserved
 
-		this.setData( data );
-	}
-
-	/**
-	 * sets or clears the Unsynced flag
-	 * <br>The Unsynched flag is true if the row height is manually set
-	 * <br>If false, the row height should auto adjust when necessary
-	 *
-	 * @param bUnsynced
-	 */
-	public void setUnsynched( boolean bUnsynced )
-	{
-		fUnsynced = bUnsynced;
-		updateGrbit();
-	}
-
-	/**
-	 * This flag determines if the row has been formatted.
-	 * If this flag is not set, the XF reference will not affect the row.
-	 * However, if it's true then the row will be formatted according to
-	 * the XF ref.
-	 *
-	 * @return
-	 */
-	public boolean getExplicitFormatSet()
-	{
-		return fGhostDirty;
-	}
-
-	/**
-	 * return the min/max column for this row
-	 *
-	 * @return
-	 */
-	public int[] getColDimensions()
-	{
-		return new int[]{ colMic, colMac };
-	}
-
-	/**
-	 * update the col indexes
-	 */
-	public void updateColDimensions( short col )
-	{
-		if( col > Row.MAXCOLS )
-		{
-			return;
-		}
-		byte[] cl = null;
-		if( col < colMic )
-		{
-			colMic = col;
-			cl = ByteTools.shortToLEBytes( colMic );
-			System.arraycopy( cl, 0, this.getData(), 2, 2 );
-		}
-		if( col > colMac )
-		{
-			colMac = col;
-			colMac = ++col;
-			cl = ByteTools.shortToLEBytes( colMac );
-			System.arraycopy( cl, 0, this.getData(), 4, 2 );
-		}
-	}
-
-	public String toString()
-	{
-		StringBuffer celladdrs = new StringBuffer();
-		Collection cx = this.getCells();
-		Iterator it = cx.iterator();
-		while( it.hasNext() )
-		{
-			celladdrs.append( "{" );
-			celladdrs.append( it.next().toString() );
-			celladdrs.append( "}" );
-		}
-		return String.valueOf( this.getRowNumber() + celladdrs.toString() );
-	}
-
-	public void setHeight( int twips )
-	{
-		if( (twips < 2) || (twips > 8192) )
-		{
-			throw new IllegalArgumentException( "twips value " + String.valueOf( twips ) + " is out of range, must be between 2 and 8192 inclusive" );
-		}
-
-		miyRw = twips;
-		fUnsynced = true;
-	}
-
-	public void clearHeight()
-	{
-		fUnsynced = false;
-	}
-
-	/**
-	 * Set whether the row is fCollapsed
-	 * hides all contiguous rows with the same outline level
-	 *
-	 * @param b
-	 */
-	public void setCollapsed( boolean b )
-	{
-		fCollapsed = b;
-		fHidden = b;
-		boolean keepgoing = true;
-		int counter = 1;
-		while( keepgoing )
-		{
-			Row r = this.getSheet().getRowByNumber( this.getRowNumber() + counter );
-			if( (r != null) && (r.getOutlineLevel() == this.getOutlineLevel()) )
-			{
-				r.setHidden( b );
-			}
-			else
-			{
-				keepgoing = false;
-			}
-			counter++;
-		}
-		counter = 1;
-		keepgoing = true;
-		while( keepgoing )
-		{
-			Row r = this.getSheet().getRowByNumber( this.getRowNumber() - counter );
-			if( (r != null) && (r.getOutlineLevel() == this.getOutlineLevel()) )
-			{
-				r.setHidden( b );
-			}
-			else
-			{
-				keepgoing = false;
-			}
-			counter++;
-		}
-		updateGrbit();
-		// implement bit masking set on grbit
+		setData( data );
 	}
 
 	/**
@@ -680,61 +618,6 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	}
 
 	/**
-	 * Set the Outline level (depth) of the row
-	 *
-	 * @param x
-	 */
-	public void setOutlineLevel( int x )
-	{
-		this.outlineLevel = x;
-		this.getSheet().getGuts().setRowGutterSize( 10 + (10 * x) );
-		this.getSheet().getGuts().setMaxRowLevel( x + 1 );
-		updateGrbit();
-//		implement bit masking set on grbit
-	}
-
-	/**
-	 * Update the internal Grbit based
-	 * on values existant in the row
-	 */
-	private void updateGrbit()
-	{
-		preStream();
-	}
-
-	/**
-	 * Returns the Outline level (depth) of the row
-	 *
-	 * @return
-	 */
-	public int getOutlineLevel()
-	{
-		return outlineLevel;
-
-	}
-
-	/**
-	 * Returns whether the row is collapsed
-	 *
-	 * @return
-	 */
-	public boolean isCollapsed()
-	{
-		return fCollapsed;
-	}
-
-	/**
-	 * Returns whether the row is hidden
-	 * TODO:  same issue as setHidden above!
-	 *
-	 * @return
-	 */
-	public boolean isHidden()
-	{
-		return fHidden;
-	}
-
-	/**
 	 * true if row height has been altered from default
 	 * i.e. set manually
 	 *
@@ -746,45 +629,12 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	}
 
 	/**
-	 * Applies the format with the given ID to this row.
-	 *
-	 * @param ixfe the format ID. Must be between 0x0 and 0xFFF.
-	 * @throws IllegalArgumentException if the given format ID cannot be
-	 *                                  encoded in the 1.5 byte wide field provided for it
-	 */
-	@Override
-	public void setIxfe( int ixfe )
-	{
-		if( (ixfe & ~0xFFF) != 0 )
-		{
-			throw new IllegalArgumentException( "ixfe value 0x" + Integer.toHexString( ixfe ) + " out of range, must be between 0x0 and 0xfff" );
-		}
-		this.ixfe = ixfe;
-		if( ixfe != this.getWorkBook().getDefaultIxfe() )
-		{
-			fGhostDirty = true;
-		}
-	}
-
-	/**
 	 * Removes the format currently applied to this row, if any.
 	 */
 	public void clearIxfe()
 	{
 		ixfe = 0;
 		fGhostDirty = false;
-	}
-
-	/**
-	 * Gets the ID of the format currently applied to this row.
-	 *
-	 * @return the ID of the current format,
-	 * or the default format ID if no format has been applied
-	 */
-	@Override
-	public int getIxfe()
-	{
-		return fGhostDirty ? ixfe : this.getWorkBook().getDefaultIxfe();
 	}
 
 	/**
@@ -804,11 +654,11 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 		{
 			return false;
 		}
-		if( this.fBorderTop )
+		if( fBorderTop )
 		{
 			try
 			{
-				int bs = this.getXfRec().getTopBorderLineStyle();
+				int bs = getXfRec().getTopBorderLineStyle();
 				return ((bs == FormatHandle.BORDER_DOUBLE) || (bs == FormatHandle.BORDER_THICK));
 			}
 			catch( Exception e )
@@ -820,62 +670,14 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	}
 
 	/**
-	 * Additional space above the row. This flag is set, if the
-	 * upper border of at least one cell in this row or if the lower
-	 * border of at least one cell in the row above is formatted with
-	 * a thick line style. Thin and medium line styles are not taken
-	 * into account.
-	 */
-	public boolean getHasAnyThickTopBorder()
-	{
-		return this.fBorderTop;
-	}
-
-	/**
-	 * returns true if there is a thick bottom border set on the row
-	 */
-	public boolean getHasThickBottomBorder()
-	{
-		if( !fGhostDirty )
-		{
-			return false;
-		}
-		if( this.fBorderBottom )
-		{
-			try
-			{
-				int bs = this.getXfRec().getBottomBorderLineStyle();
-				return ((bs == FormatHandle.BORDER_DOUBLE) || (bs == FormatHandle.BORDER_THICK));
-			}
-			catch( Exception e )
-			{
-				;
-			}
-		}
-		return this.fBorderBottom;
-	}
-
-	/**
-	 * Additional space below the row. This flag is set, if the
-	 * lower border of at least one cell in this row or if the upper
-	 * border of at least one cell in the row below is formatted with
-	 * a medium or thick line style. Thin line styles are not taken
-	 * into account.
-	 */
-	public boolean getHasAnyBottomBorder()
-	{
-		return this.fBorderBottom;
-	}
-
-	/**
 	 * sets this row to have a thick top border
 	 */
 	public void setHasThickTopBorder( boolean hasBorder )
 	{
-		this.fBorderTop = hasBorder;
+		fBorderTop = hasBorder;
 		if( hasBorder )
 		{
-			FormatHandle fh = new FormatHandle( null, this.getXfRec() );
+			FormatHandle fh = new FormatHandle( null, getXfRec() );
 			fh.setTopBorderLineStyle( FormatHandle.BORDER_THICK );
 			ixfe = fh.getFormatId();
 			myxf = null;    // reset
@@ -884,19 +686,15 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	}
 
 	/**
-	 * sets this row to have a thick bottom border
+	 * Additional space above the row. This flag is set, if the
+	 * upper border of at least one cell in this row or if the lower
+	 * border of at least one cell in the row above is formatted with
+	 * a thick line style. Thin and medium line styles are not taken
+	 * into account.
 	 */
-	public void setHasThickBottomBorder( boolean hasBorder )
+	public boolean getHasAnyThickTopBorder()
 	{
-		this.fBorderBottom = hasBorder;
-		if( hasBorder )
-		{
-			FormatHandle fh = new FormatHandle( null, this.getXfRec() );
-			fh.setBottomBorderLineStyle( FormatHandle.BORDER_THICK );
-			ixfe = fh.getFormatId();
-			myxf = null; // reset
-		}
-		fGhostDirty = true;
+		return fBorderTop;
 	}
 
 	/**
@@ -908,7 +706,59 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setHasAnyThickTopBorder( boolean hasBorder )
 	{
-		this.fBorderTop = hasBorder;
+		fBorderTop = hasBorder;
+	}
+
+	/**
+	 * returns true if there is a thick bottom border set on the row
+	 */
+	public boolean getHasThickBottomBorder()
+	{
+		if( !fGhostDirty )
+		{
+			return false;
+		}
+		if( fBorderBottom )
+		{
+			try
+			{
+				int bs = getXfRec().getBottomBorderLineStyle();
+				return ((bs == FormatHandle.BORDER_DOUBLE) || (bs == FormatHandle.BORDER_THICK));
+			}
+			catch( Exception e )
+			{
+				;
+			}
+		}
+		return fBorderBottom;
+	}
+
+	/**
+	 * sets this row to have a thick bottom border
+	 */
+	public void setHasThickBottomBorder( boolean hasBorder )
+	{
+		fBorderBottom = hasBorder;
+		if( hasBorder )
+		{
+			FormatHandle fh = new FormatHandle( null, getXfRec() );
+			fh.setBottomBorderLineStyle( FormatHandle.BORDER_THICK );
+			ixfe = fh.getFormatId();
+			myxf = null; // reset
+		}
+		fGhostDirty = true;
+	}
+
+	/**
+	 * Additional space below the row. This flag is set, if the
+	 * lower border of at least one cell in this row or if the upper
+	 * border of at least one cell in the row below is formatted with
+	 * a medium or thick line style. Thin line styles are not taken
+	 * into account.
+	 */
+	public boolean getHasAnyBottomBorder()
+	{
+		return fBorderBottom;
 	}
 
 	/**
@@ -920,6 +770,161 @@ public final class Row extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setHasAnyThickBottomBorder( boolean hasBorder )
 	{
-		this.fBorderBottom = hasBorder;
+		fBorderBottom = hasBorder;
 	}
+
+	/**
+	 * get the Dbcell record which contains the
+	 * cell offsets for this row.
+	 * <p/>
+	 * needed in computing new INDEX offset values
+	 */
+	Dbcell getDBCell()
+	{
+		return dbc;
+	}
+
+	/**
+	 * set the Dbcell record which contains the
+	 * cell offsets for this row.
+	 * <p/>
+	 * needed in computing new INDEX offset values
+	 */
+	public void setDBCell( Dbcell d )
+	{
+		dbc = d;
+	}
+
+	/**
+	 * add a cell to the Row.  Instead of using the full
+	 * cell address as the treemap identifier, just use the column.
+	 * this allows the natural ordering of the treemap to work to our
+	 * advantage on output, ordering cells from lowest to highest col.
+	 */
+	void addCell( BiffRec c )
+	{
+		c.setRow( this );
+
+		/*
+		 * I'm not clear on this operation, it seems as if we add blank records, this just
+		 * applies a format to the cell rather than actually replacing the valrec?
+
+		if (c.getOpcode()!=MULBLANK) {	// KSC: Added
+			BiffRec existing = (BiffRec)cells.get(Short.valueOf(cellCol));
+			if( existing != null){
+	            if (this.getWorkBook().getFactory().iscompleted()) {
+	    		    if((c instanceof Blank)) {
+	    		    	existing.setIxfe(c.getIxfe());
+	    		        return;
+	    		    }else {
+	    		        cells.remove(Short.valueOf(cellCol));
+	                    c.setRow(this);
+	                    cells.put(Short.valueOf(cellCol), c);
+	                    this.lastcell = c;
+	    		    }
+	            }
+			}else {
+	    		c.setRow(this);
+	    		cells.put(Short.valueOf(cellCol), c);
+	    		this.lastcell = c;
+	        }
+		} else { // expand mulblanks to each referenced cell
+		 */
+
+		/* We should be able to handle this with cellAddressible, hopefully.
+			short colFirst= ((Mulblank)c).colFirst;
+			short colLast= ((Mulblank) c).colLast;
+			for (short i= colFirst; i <= colLast; i++) {
+                cells.put(Short.valueOf(i), c);
+                this.lastcell = c;
+			}
+		}
+		 */
+	}
+
+	void removeCell( BiffRec c )
+	{
+		getSheet().removeCell( c );
+	}
+
+	/**
+	 * Applies the format with the given ID to this row.
+	 *
+	 * @param ixfe the format ID. Must be between 0x0 and 0xFFF.
+	 * @throws IllegalArgumentException if the given format ID cannot be
+	 *                                  encoded in the 1.5 byte wide field provided for it
+	 */
+	@Override
+	public void setIxfe( int ixfe )
+	{
+		if( (ixfe & ~0xFFF) != 0 )
+		{
+			throw new IllegalArgumentException( "ixfe value 0x" + Integer.toHexString( ixfe ) + " out of range, must be between 0x0 and 0xfff" );
+		}
+		this.ixfe = ixfe;
+		if( ixfe != getWorkBook().getDefaultIxfe() )
+		{
+			fGhostDirty = true;
+		}
+	}
+
+	/**
+	 * remove cell via column number
+	 */
+	void removeCell( short c )
+	{
+		getSheet().removeCell( getRowNumber(), c );
+	}
+
+	/**
+	 * Get the real max col
+	 */
+	int getRealMaxCol()
+	{
+		int collast = 0;
+		Iterator cs = getCells().iterator();
+		while( cs.hasNext() )
+		{
+			BiffRec c = (BiffRec) cs.next();
+			if( c.getColNumber() > collast )
+			{
+				collast = c.getColNumber();
+			}
+		}
+		return collast;
+	}
+
+	/**
+	 * Gets the ID of the format currently applied to this row.
+	 *
+	 * @return the ID of the current format,
+	 * or the default format ID if no format has been applied
+	 */
+	@Override
+	public int getIxfe()
+	{
+		return fGhostDirty ? ixfe : getWorkBook().getDefaultIxfe();
+	}
+
+	int getMaxCol()
+	{
+		preStream();
+		return colMac;
+	}
+
+	int getMinCol()
+	{
+		preStream();
+		return colMic;
+	}
+
+	/**
+	 * Update the internal Grbit based
+	 * on values existant in the row
+	 */
+	private void updateGrbit()
+	{
+		preStream();
+	}
+
 }

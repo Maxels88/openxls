@@ -44,14 +44,14 @@ public class EffectPropsGroup implements OOXMLElement
 
 	public EffectPropsGroup( EffectDag ed, EffectLst el )
 	{
-		this.effectDag = ed;
-		this.effectLst = el;
+		effectDag = ed;
+		effectLst = el;
 	}
 
 	public EffectPropsGroup( EffectPropsGroup e )
 	{
-		this.effectDag = e.effectDag;
-		this.effectLst = e.effectLst;
+		effectDag = e.effectDag;
+		effectLst = e.effectLst;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -141,7 +141,7 @@ class EffectDag implements OOXMLElement
 
 	public EffectDag( EffectDag e )
 	{
-		this.attrs = e.attrs;
+		attrs = e.attrs;
 	}
 
 	public static EffectDag parseOOXML( XmlPullParser xpp, Stack<String> lastTag )

@@ -58,7 +58,7 @@ public class SxDBB extends XLSRecord implements XLSConstants, PivotCacheRecord
 	public void init()
 	{
 		super.init();
-		byte[] data = this.getData();
+		byte[] data = getData();
 		cacheitems = new short[data.length];
 		for( int i = 0; i < data.length; i++ )
 		{
@@ -70,7 +70,7 @@ public class SxDBB extends XLSRecord implements XLSConstants, PivotCacheRecord
 	public String toString()
 	{
 		return "SXDBB: " + Arrays.toString( cacheitems ) +
-				Arrays.toString( this.getRecord() );
+				Arrays.toString( getRecord() );
 	}
 
 	/**
@@ -98,8 +98,8 @@ public class SxDBB extends XLSRecord implements XLSConstants, PivotCacheRecord
 	   * value for this cache field is stored in this field in two bytes; otherwise,
 	   * the index value is stored in this field in a single byte.*/
 		// fShortItems means that  > 255 cache items -- assume
-		this.setData( cacheitems );
-		this.init();
+		setData( cacheitems );
+		init();
 	}
 
 	/**
@@ -121,9 +121,9 @@ public class SxDBB extends XLSRecord implements XLSConstants, PivotCacheRecord
 	public byte[] getRecord()
 	{
 		byte[] b = new byte[4];
-		System.arraycopy( ByteTools.shortToLEBytes( this.getOpcode() ), 0, b, 0, 2 );
-		System.arraycopy( ByteTools.shortToLEBytes( (short) this.getData().length ), 0, b, 2, 2 );
-		return ByteTools.append( this.getData(), b );
+		System.arraycopy( ByteTools.shortToLEBytes( getOpcode() ), 0, b, 0, 2 );
+		System.arraycopy( ByteTools.shortToLEBytes( (short) getData().length ), 0, b, 2, 2 );
+		return ByteTools.append( getData(), b );
 
 	}
 }

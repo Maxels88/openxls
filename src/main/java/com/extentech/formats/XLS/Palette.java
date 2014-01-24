@@ -51,12 +51,12 @@ public final class Palette extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		ccv = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		this.getData();
+		ccv = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		getData();
 		int pos = 2;
 		for( int d = 0; d < ccv; d++ )
 		{
-			this.getColorTable()[d + 8] = new java.awt.Color( ((data[pos] < 0) ? (255 + data[pos]) : data[pos]),
+			getColorTable()[d + 8] = new java.awt.Color( ((data[pos] < 0) ? (255 + data[pos]) : data[pos]),
 			                                                  ((data[pos + 1] < 0) ? (255 + data[pos + 1]) : data[pos + 1]),
 			                                                  ((data[pos + 2] < 0) ? (255 + data[pos + 2]) : data[pos + 2]) );
 			pos += 4;

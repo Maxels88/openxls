@@ -68,12 +68,12 @@ public class Dimensions extends com.extentech.formats.XLS.XLSRecord
 	{
 		c++; // inc here instead of updateRowDimensions
 		byte[] b = ByteTools.cLongToLEBytes( c );
-		byte[] dt = this.getData();
+		byte[] dt = getData();
 		if( dt.length > 4 )
 		{
 			System.arraycopy( b, 0, dt, 0, 4 );
 		}
-		this.rowFirst = c;
+		rowFirst = c;
 	}
 
 	public int getRowFirst()
@@ -88,12 +88,12 @@ public class Dimensions extends com.extentech.formats.XLS.XLSRecord
 	{
 		c++; // inc here instead of updateRowDimensions
 		byte[] b = ByteTools.cLongToLEBytes( c );
-		byte[] dt = this.getData();
+		byte[] dt = getData();
 		if( dt.length > 4 )
 		{
 			System.arraycopy( b, 0, dt, 4, 4 );
 		}
-		this.rowLast = c;
+		rowLast = c;
 	}
 
 	public int getRowLast()
@@ -107,12 +107,12 @@ public class Dimensions extends com.extentech.formats.XLS.XLSRecord
 	public void setColFirst( int c )
 	{
 		byte[] b = ByteTools.shortToLEBytes( (short) c );
-		byte[] dt = this.getData();
+		byte[] dt = getData();
 		if( dt.length > 4 )
 		{
 			System.arraycopy( b, 0, dt, 8, 2 );
 		}
-		this.colFirst = (short) c;
+		colFirst = (short) c;
 	}
 
 	public int getColFirst()
@@ -126,7 +126,7 @@ public class Dimensions extends com.extentech.formats.XLS.XLSRecord
 	public void setColLast( int c )
 	{
 		c++;
-		if( (c >= MAXCOLS_BIFF8) && !this.wkbook.getIsExcel2007() )
+		if( (c >= MAXCOLS_BIFF8) && !wkbook.getIsExcel2007() )
 		{
 			log.warn( "Dimensions.setColLast column: " + c + " is incompatible with pre Excel2007 versions." );
 		}
@@ -136,12 +136,12 @@ public class Dimensions extends com.extentech.formats.XLS.XLSRecord
 			c = MAXCOLS;// odd case, its supposed to be last defined col +1, but this breaks last col
 		}
 		byte[] b = ByteTools.shortToLEBytes( (short) c );
-		byte[] dt = this.getData();
+		byte[] dt = getData();
 		if( dt.length > 4 )
 		{
 			System.arraycopy( b, 0, dt, 10, 2 );
 		}
-		this.colLast = (short) c;
+		colLast = (short) c;
 	}
 
 	public int getColLast()
@@ -160,12 +160,12 @@ public class Dimensions extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		rowFirst = ByteTools.readInt( this.getByteAt( 0 ), this.getByteAt( 1 ), this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		rowLast = ByteTools.readInt( this.getByteAt( 4 ), this.getByteAt( 5 ), this.getByteAt( 6 ), this.getByteAt( 7 ) );
+		rowFirst = ByteTools.readInt( getByteAt( 0 ), getByteAt( 1 ), getByteAt( 2 ), getByteAt( 3 ) );
+		rowLast = ByteTools.readInt( getByteAt( 4 ), getByteAt( 5 ), getByteAt( 6 ), getByteAt( 7 ) );
 
-		colFirst = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
-		colLast = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );
-		this.getData();
+		colFirst = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );
+		colLast = ByteTools.readShort( getByteAt( 10 ), getByteAt( 11 ) );
+		getData();
 	}
 
 	/**
@@ -173,8 +173,8 @@ public class Dimensions extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void updateDimensions( int row, short col )
 	{
-		this.updateRowDimensions( row );
-		this.updateColDimension( col );
+		updateRowDimensions( row );
+		updateColDimension( col );
 	}
 
 	/**
@@ -186,11 +186,11 @@ public class Dimensions extends com.extentech.formats.XLS.XLSRecord
 		//row++; // TODO: check why we are incrementing here... nowincremented in setRowLast
 		if( row >= rowLast )
 		{
-			this.setRowLast( row ); // now incremented only in setRowXX
+			setRowLast( row ); // now incremented only in setRowXX
 		}
 		if( row < rowFirst )
 		{
-			this.setRowFirst( row ); // now incremented only in setRowXX
+			setRowFirst( row ); // now incremented only in setRowXX
 		}
 	}
 
@@ -202,11 +202,11 @@ public class Dimensions extends com.extentech.formats.XLS.XLSRecord
 		// check cell dimension
 		if( col > colLast )
 		{
-			this.setColLast( col );
+			setColLast( col );
 		}
 		else if( (col - 1) < colFirst )
 		{
-			this.setColFirst( col );
+			setColFirst( col );
 		}
 	}
 }

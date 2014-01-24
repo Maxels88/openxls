@@ -49,11 +49,11 @@ public class Bar3DChart extends BarChart
 		cooxml.append( "<c:barDir val=\"bar\"/>" );
 		cooxml.append( "<c:grouping val=\"" );
 
-		if( this.is100PercentStacked() )
+		if( is100PercentStacked() )
 		{
 			cooxml.append( "percentStacked" );
 		}
-		else if( this.isStacked() )
+		else if( isStacked() )
 		{
 			cooxml.append( "stacked" );
 		}
@@ -70,29 +70,29 @@ public class Bar3DChart extends BarChart
 		// vary colors???
 
 		// *** Series Data:	ser, cat, val for most chart types
-		cooxml.append( this.getParentChart().getChartSeries().getOOXML( this.getChartType(), false, 0 ) );
+		cooxml.append( getParentChart().getChartSeries().getOOXML( getChartType(), false, 0 ) );
 
 		// chart data labels, if any
 		//TODO: FINISH		    	
 		//cooxml.append(getDataLabelsOOXML(cf));
 
-		if( !this.getChartOption( "Gap" ).equals( "150" ) )
+		if( !getChartOption( "Gap" ).equals( "150" ) )
 		{
-			cooxml.append( "<c:gapWidth val=\"" + this.getChartOption( "Gap" ) + "\"/>" );    // default= 0
+			cooxml.append( "<c:gapWidth val=\"" + getChartOption( "Gap" ) + "\"/>" );    // default= 0
 		}
-		int gapdepth = this.getGapDepth();
+		int gapdepth = getGapDepth();
 		if( gapdepth != 0 )
 		{
 			cooxml.append( "<c:gapDepth val=\"" + gapdepth + "\"/>" );
 		}
-		cooxml.append( "<c:shape val=\"" + this.getShape() + "\"/>" );
+		cooxml.append( "<c:shape val=\"" + getShape() + "\"/>" );
 
 		// axis ids	 - unsigned int strings
 		cooxml.append( "<c:axId val=\"" + catAxisId + "\"/>" );
 		cooxml.append( "\r\n" );
 		cooxml.append( "<c:axId val=\"" + valAxisId + "\"/>" );
 		cooxml.append( "\r\n" );
-		if( this.getParentChart().getAxes().hasAxis( ZAXIS ) )
+		if( getParentChart().getAxes().hasAxis( ZAXIS ) )
 		{
 			cooxml.append( "<c:axId val=\"" + serAxisId + "\"/>" );
 			cooxml.append( "\r\n" );

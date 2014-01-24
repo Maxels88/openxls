@@ -32,7 +32,10 @@ public class NumberCellFormat extends NumberFormat implements CellFormat
 {
 	private static final long serialVersionUID = -7191923168789058338L;
 
-	private final String positive, negative, zero, string;
+	private final String positive;
+	private final String negative;
+	private final String zero;
+	private final String string;
 
 	NumberCellFormat( String positive, String negative, String zero, String string )
 	{
@@ -48,7 +51,7 @@ public class NumberCellFormat extends NumberFormat implements CellFormat
 		if( input instanceof String )
 		{
 			// hack to make useless @ pattern work
-			if( "%s".equals( this.positive ) )
+			if( "%s".equals( positive ) )
 			{
 				return buffer.append( String.valueOf( input ) );
 			}
@@ -59,7 +62,7 @@ public class NumberCellFormat extends NumberFormat implements CellFormat
 			}
 			catch( NumberFormatException e )
 			{
-				return buffer.append( String.format( this.string, (String) input ) );
+				return buffer.append( String.format( string, (String) input ) );
 			}
 		}
 		if( input instanceof Number )
@@ -69,16 +72,16 @@ public class NumberCellFormat extends NumberFormat implements CellFormat
 
 			if( value > 0 )
 			{
-				format = this.positive;
+				format = positive;
 			}
 			else if( value < 0 )
 			{
-				format = this.negative;
+				format = negative;
 				value = Math.abs( value );
 			}
 			else
 			{
-				format = this.zero;
+				format = zero;
 			}
 
 			// hack to make percentage formats work
@@ -101,13 +104,13 @@ public class NumberCellFormat extends NumberFormat implements CellFormat
 	@Override
 	public StringBuffer format( double number, StringBuffer buffer, FieldPosition pos )
 	{
-		return buffer.append( this.format( number ) );
+		return buffer.append( format( number ) );
 	}
 
 	@Override
 	public StringBuffer format( long number, StringBuffer buffer, FieldPosition pos )
 	{
-		return buffer.append( this.format( number ) );
+		return buffer.append( format( number ) );
 	}
 
 	@Override
@@ -119,7 +122,7 @@ public class NumberCellFormat extends NumberFormat implements CellFormat
 	@Override
 	public String format( Cell cell )
 	{
-		return this.format( cell.getVal() );
+		return format( cell.getVal() );
 	}
 
 }

@@ -139,7 +139,7 @@ public class RowHandle
 	 */
 	public void setHeightInChars( int newHeight )
 	{
-		this.setHeight( newHeight * 20 );    // 20090506 KSC: apparently it's in twips ?? 1/20 of a point
+		setHeight( newHeight * 20 );    // 20090506 KSC: apparently it's in twips ?? 1/20 of a point
 	}
 
 	/**
@@ -188,7 +188,7 @@ public class RowHandle
 					{                // wrap to column width
 						// convert column width to pixels
 						// factorZero is usually 7		// double factorZero= java.awt.Toolkit.getDefaultToolkit().getFontMetrics(f).charWidth('0') + 1;
-						double cw = ColHandle.getWidth( this.wsh.getBoundsheet(), cellrec.getColNumber() ) / 256.0;
+						double cw = ColHandle.getWidth( wsh.getBoundsheet(), cellrec.getColNumber() ) / 256.0;
 						newH = StringTool.getApproximateHeight( f, s, cw * factorZero );
 					}
 // this doesn't work correctly		    newH/=factorTwip;	// pixels * twips/pixels == twips)		    
@@ -207,7 +207,7 @@ public class RowHandle
 		}
 		if( h > 0 )
 		{
-			this.myRow.setRowHeight( (int) Math.ceil( h ) );
+			myRow.setRowHeight( (int) Math.ceil( h ) );
 		}
 	}
 
@@ -256,7 +256,7 @@ public class RowHandle
 	 */
 	public boolean containsVerticalMergeRange()
 	{
-		CellHandle[] c = this.getCells();
+		CellHandle[] c = getCells();
 		for( CellHandle aC : c )
 		{
 			if( aC.getMergedCellRange() != null )
@@ -295,11 +295,11 @@ public class RowHandle
 	 */
 	public FormatHandle getFormatHandle()
 	{
-		if( this.formatter == null )
+		if( formatter == null )
 		{
-			this.setFormatHandle();
+			setFormatHandle();
 		}
-		return this.formatter;
+		return formatter;
 	}
 
 	/**
@@ -311,7 +311,7 @@ public class RowHandle
 		{
 			return;
 		}
-		formatter = new FormatHandle( wbh, this.getFormatId() );
+		formatter = new FormatHandle( wbh, getFormatId() );
 		formatter.setRowHandle( this );
 	}
 
@@ -326,7 +326,7 @@ public class RowHandle
 		{
 			return myRow.getIxfe();
 		}
-		return this.getWorkBook().getWorkBook().getDefaultIxfe();
+		return getWorkBook().getWorkBook().getDefaultIxfe();
 	}
 
 	/**
@@ -350,13 +350,13 @@ public class RowHandle
 			{  // use cache of Cellhandles!
 				if( rc.getOpcode() != XLSConstants.MULBLANK )
 				{
-					ch[t] = this.wsh.getCell( rc.getRowNumber(), rc.getColNumber(), cached );
+					ch[t] = wsh.getCell( rc.getRowNumber(), rc.getColNumber(), cached );
 				}
 				else
 				{
 					// handle Mulblanks: ref a range of cells; to get correct cell address,
 					// traverse thru range and set cellhandle ref to correct column
-					if( rc == aMul )
+					if( rc.equals( aMul ) )
 					{
 						c++;
 					}
@@ -365,7 +365,7 @@ public class RowHandle
 						aMul = (Mulblank) rc;
 						c = (short) aMul.getColFirst();
 					}
-					ch[t] = this.wsh.getCell( rc.getRowNumber(), c, cached );
+					ch[t] = wsh.getCell( rc.getRowNumber(), c, cached );
 				}
 			}
 			catch( CellNotFoundException cnfe )
@@ -377,7 +377,7 @@ public class RowHandle
 				{
 					// handle Mulblanks: ref a range of cells; to get correct cell address,
 					// traverse thru range and set cellhandle ref to correct column
-					if( rc == aMul )
+					if( rc.equals( aMul ) )
 					{
 						c++;
 					}
@@ -457,7 +457,7 @@ public class RowHandle
 					else if( thisCell.getCell().getOpcode() == XLSRecord.MULBLANK )
 					{
 						Mulblank mb = (Mulblank) thisCell.getCell();
-						ArrayList<Integer> columns = mb.getColReferences();
+						java.util.List<Integer> columns = mb.getColReferences();
 						for( Integer column : columns )
 						{
 							thisCell.setBlankRef( column );
@@ -674,11 +674,11 @@ public class RowHandle
 
 	public WorkBook getWorkBook()
 	{
-		return this.wbh;
+		return wbh;
 	}
 
 	public WorkSheetHandle getWorkSheetHandle()
 	{
-		return this.wsh;
+		return wsh;
 	}
 }

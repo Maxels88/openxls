@@ -100,7 +100,8 @@ public class PivotTableDefinition implements OOXMLElement
 					String tnm = xpp.getName();
 					if( tnm.equals( "pivotTableDefinition" ) )
 					{ // get attributes
-						String cacheId = "", tablename = "";
+						String cacheId = "";
+						String tablename = "";
 						for( int z = 0; z < xpp.getAttributeCount(); z++ )
 						{
 							String nm = xpp.getAttributeName( z );
@@ -643,10 +644,12 @@ public class PivotTableDefinition implements OOXMLElement
 			boolean isRowItems = (elname.equals( "rowItems" ));
 
 			final Class<ITEMTYPES> enumType = ITEMTYPES.class;
-			int type = 0, repeat = 0;
+			int type = 0;
+			int repeat = 0;
 			short[] indexes = null;
 			int nIndexes = (isRowItems) ? ptview.getCDimRw() : ptview.getCDimCol();
-			int index = 0, nLines = 0;
+			int index = 0;
+			int nLines = 0;
 			while( eventType != XmlPullParser.END_DOCUMENT )
 			{
 				if( eventType == XmlPullParser.START_TAG )
@@ -875,7 +878,8 @@ public class PivotTableDefinition implements OOXMLElement
 	 */
 	private static void parsePageFieldOOXML( XmlPullParser xpp, Sxview ptview )
 	{
-		int fieldIndex = 0, itemIndex = 0x7FFD;
+		int fieldIndex = 0;
+		int itemIndex = 0x7FFD;
 		for( int i = 0; i < xpp.getAttributeCount(); i++ )
 		{
 			String nm = xpp.getAttributeName( i );

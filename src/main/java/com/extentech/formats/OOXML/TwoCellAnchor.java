@@ -64,17 +64,17 @@ public class TwoCellAnchor implements OOXMLElement
 	public TwoCellAnchor( String editAs, From f, To t, ObjectChoice o )
 	{
 		this.editAs = editAs;
-		this.from = f;
-		this.to = t;
+		from = f;
+		to = t;
 		this.o = o;
 	}
 
 	public TwoCellAnchor( TwoCellAnchor tce )
 	{
-		this.editAs = tce.editAs;
-		this.from = tce.from;
-		this.to = tce.to;
-		this.o = tce.o;
+		editAs = tce.editAs;
+		from = tce.from;
+		to = tce.to;
+		o = tce.o;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -230,7 +230,7 @@ public class TwoCellAnchor implements OOXMLElement
 
 	public String toString()
 	{
-		return this.getName();
+		return getName();
 	}
 
 	/**
@@ -431,7 +431,7 @@ public class TwoCellAnchor implements OOXMLElement
 	 */
 	public void setEmbedFilename( String embedFile )
 	{
-		this.embedName = embedFile;
+		embedName = embedFile;
 	}
 
 	/**
@@ -511,7 +511,7 @@ public class TwoCellAnchor implements OOXMLElement
 		o.setName( name );
 		o.setChartRId( "rId" + Integer.valueOf( rid ).toString() );
 		o.setId( rid );
-		this.setBounds( bounds );
+		setBounds( bounds );
 		// id???
 	}
 
@@ -623,7 +623,7 @@ class From implements OOXMLElement
 
 	public From( From f )
 	{
-		this.bounds = f.bounds;
+		bounds = f.bounds;
 	}
 
 	public static From parseOOXML( XmlPullParser xpp, Stack lastTag )
@@ -736,7 +736,7 @@ class To implements OOXMLElement
 
 	public To( To f )
 	{
-		this.bounds = f.bounds;
+		bounds = f.bounds;
 	}
 
 	public static To parseOOXML( XmlPullParser xpp, Stack lastTag )
@@ -810,9 +810,9 @@ class To implements OOXMLElement
 	// Access Methods
 	public int[] getBounds()
 	{
-		if( this.bounds == null )
+		if( bounds == null )
 		{
-			this.bounds = new int[4];
+			bounds = new int[4];
 		}
 		return bounds;
 	}

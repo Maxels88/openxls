@@ -58,10 +58,11 @@ public class PieChart extends ChartType
 	{
 		JSONObject chartObjectJSON = new JSONObject();
 		// Type JSON
-		chartObjectJSON.put( "type", this.getTypeJSON() );
+		chartObjectJSON.put( "type", getTypeJSON() );
 
 		// TODO: check out labels options chosen: default label is Category name + percentage ...
-		double yMax = 0.0, yMin = 0.0;
+		double yMax = 0.0;
+		double yMin = 0.0;
 		double len = 0.0;
 		JSONArray pieSeries = new JSONArray();
 		try
@@ -157,7 +158,9 @@ public class PieChart extends ChartType
 		final int LABELOFFSET = 15;
 
 		int n = series.size();
-		double centerx = 0.0, centery = 0.0, radius = 0.0;
+		double centerx = 0.0;
+		double centery = 0.0;
+		double radius = 0.0;
 		double radiusy = 0.0;
 		centerx = w / 2 + chartMetrics.get( "x" );
 		centery = h / 2 + chartMetrics.get( "y" );
@@ -221,7 +224,8 @@ public class PieChart extends ChartType
 					// apparently labels are outside of wedge unless angle is >= 30 ...
 					// category labels
 					double halfa = ((percentage / 2) * 360) + lasta;    // center in area
-					double x2, y2;
+					double x2;
+					double y2;
 					if( percentage < .3 )
 					{    // display label on outside with leader lines
 						x2 = centerx + (radius + LABELOFFSET) * (Math.cos( Math.toRadians( halfa ) ));
@@ -242,7 +246,7 @@ public class PieChart extends ChartType
 						style = " style='text-anchor: end;'";
 						// TODO: dec x2 
 					}
-					svg.append( "<text x='" + (x2) + "' y='" + (y2) + "' vertical-align='bottom' " + this.getDataLabelFontSVG() + " " + style + ">" + l + "</text>\r\n" );
+					svg.append( "<text x='" + (x2) + "' y='" + (y2) + "' vertical-align='bottom' " + getDataLabelFontSVG() + " " + style + ">" + l + "</text>\r\n" );
 					// leaderline - not exactly like Excel's but ... :) do when NOT putting text within wedge
 					if( percentage < .3 )
 					{
@@ -286,7 +290,7 @@ public class PieChart extends ChartType
 		cooxml.append( "<c:varyColors val=\"1\"/>" );
 
 		// *** Series Data:	ser, cat, val for most chart types
-		cooxml.append( this.getParentChart().getChartSeries().getOOXML( this.getChartType(), false, 0 ) );
+		cooxml.append( getParentChart().getChartSeries().getOOXML( getChartType(), false, 0 ) );
 
 		// chart data labels, if any
 		//TODO: FINISH		    	

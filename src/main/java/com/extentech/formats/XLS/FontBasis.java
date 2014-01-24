@@ -57,14 +57,14 @@ public class FontBasis extends XLSRecord
 
 	public int getFontIndex()
 	{
-		return ByteTools.readShort( this.getData()[8], this.getData()[9] );
+		return ByteTools.readShort( getData()[8], getData()[9] );
 	}
 
 	public void setFontIndex( int id )
 	{
 		byte[] b = ByteTools.shortToLEBytes( (short) id );
-		this.getData()[8] = b[0];
-		this.getData()[9] = b[1];
+		getData()[8] = b[0];
+		getData()[9] = b[1];
 	}
 
 }

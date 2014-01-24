@@ -64,22 +64,30 @@ public class Axcent extends GenericChartObject implements ChartObject
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = -660100252646337769L;
-	short catMin, catMax, catMajor, duMajor, catMinor, duMinor, duBase, catCrossDate, grbit;
+	short catMin;
+	short catMax;
+	short catMajor;
+	short duMajor;
+	short catMinor;
+	short duMinor;
+	short duBase;
+	short catCrossDate;
+	short grbit;
 
 	@Override
 	public void init()
 	{
 		super.init();
 		// 20071223 KSC: Start parsing of options 
-		catMin = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		catMax = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		catMajor = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		duMajor = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
-		catMinor = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
-		duMinor = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );
-		duBase = ByteTools.readShort( this.getByteAt( 12 ), this.getByteAt( 13 ) );
-		catCrossDate = ByteTools.readShort( this.getByteAt( 14 ), this.getByteAt( 15 ) );
-		grbit = ByteTools.readShort( this.getByteAt( 16 ), this.getByteAt( 17 ) );
+		catMin = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		catMax = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		catMajor = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+		duMajor = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
+		catMinor = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );
+		duMinor = ByteTools.readShort( getByteAt( 10 ), getByteAt( 11 ) );
+		duBase = ByteTools.readShort( getByteAt( 12 ), getByteAt( 13 ) );
+		catCrossDate = ByteTools.readShort( getByteAt( 14 ), getByteAt( 15 ) );
+		grbit = ByteTools.readShort( getByteAt( 16 ), getByteAt( 17 ) );
 	}
 
 	// 20070723 KSC: Need to create new records

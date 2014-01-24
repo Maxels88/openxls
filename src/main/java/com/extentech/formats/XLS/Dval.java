@@ -86,16 +86,13 @@ public class Dval extends com.extentech.formats.XLS.XLSRecord
 		super.init();
 		int offset = 0;
 		dvRecs = new ArrayList();
-		grbit = ByteTools.readShort( this.getByteAt( offset++ ), this.getByteAt( offset++ ) );
-		xLeft = ByteTools.readInt( this.getByteAt( offset++ ), this.getByteAt( offset++ ), this.getByteAt( offset++ ), this.getByteAt(
+		grbit = ByteTools.readShort( getByteAt( offset++ ), getByteAt( offset++ ) );
+		xLeft = ByteTools.readInt( getByteAt( offset++ ), getByteAt( offset++ ), getByteAt( offset++ ), getByteAt(
 				offset++ ) );
-		yTop = ByteTools.readInt( this.getByteAt( offset++ ),
-		                          this.getByteAt( offset++ ),
-		                          this.getByteAt( offset++ ),
-		                          this.getByteAt( offset++ ) );
-		inObj = ByteTools.readInt( this.getByteAt( offset++ ), this.getByteAt( offset++ ), this.getByteAt( offset++ ), this.getByteAt(
+		yTop = ByteTools.readInt( getByteAt( offset++ ), getByteAt( offset++ ), getByteAt( offset++ ), getByteAt( offset++ ) );
+		inObj = ByteTools.readInt( getByteAt( offset++ ), getByteAt( offset++ ), getByteAt( offset++ ), getByteAt(
 				offset++ ) );
-		idvMac = ByteTools.readInt( this.getByteAt( offset++ ), this.getByteAt( offset++ ), this.getByteAt( offset++ ), this.getByteAt(
+		idvMac = ByteTools.readInt( getByteAt( offset++ ), getByteAt( offset++ ), getByteAt( offset++ ), getByteAt(
 				offset++ ) );
 	}
 
@@ -118,10 +115,10 @@ public class Dval extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setGrbit()
 	{
-		byte[] data = this.getData();
+		byte[] data = getData();
 		byte[] b = ByteTools.shortToLEBytes( grbit );
 		System.arraycopy( b, 0, data, 0, 2 );
-		this.setData( data );
+		setData( data );
 	}
 
 	/**
@@ -147,7 +144,7 @@ public class Dval extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = (short) (grbit ^ BITMASK_F_CACHED);
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	/**
@@ -177,7 +174,7 @@ public class Dval extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = (short) (grbit ^ BITMASK_F_WN_PINNED);
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	/**
@@ -207,7 +204,7 @@ public class Dval extends com.extentech.formats.XLS.XLSRecord
 		{
 			grbit = (short) (grbit ^ BITMASK_F_WN_CLOSED);
 		}
-		this.setGrbit();
+		setGrbit();
 	}
 
 	/**
@@ -227,11 +224,11 @@ public class Dval extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setFollowingDvCount( int cnt )
 	{
-		this.idvMac = cnt;
-		byte[] data = this.getData();
+		idvMac = cnt;
+		byte[] data = getData();
 		byte[] b = ByteTools.cLongToLEBytes( idvMac );
 		System.arraycopy( b, 0, data, 14, 4 );
-		this.setData( data );
+		setData( data );
 	}
 
 	/**
@@ -253,11 +250,11 @@ public class Dval extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setObjectIdentifier( int cnt )
 	{
-		this.inObj = cnt;
-		byte[] data = this.getData();
+		inObj = cnt;
+		byte[] data = getData();
 		byte[] b = ByteTools.cLongToLEBytes( inObj );
 		System.arraycopy( b, 0, data, 10, 4 );
-		this.setData( data );
+		setData( data );
 	}
 
 	/**
@@ -277,11 +274,11 @@ public class Dval extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setHorizontalPosition( int cnt )
 	{
-		this.xLeft = cnt;
-		byte[] data = this.getData();
+		xLeft = cnt;
+		byte[] data = getData();
 		byte[] b = ByteTools.cLongToLEBytes( xLeft );
 		System.arraycopy( b, 0, data, 2, 4 );
-		this.setData( data );
+		setData( data );
 	}
 
 	/**
@@ -301,11 +298,11 @@ public class Dval extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setVerticalPosition( int cnt )
 	{
-		this.yTop = cnt;
-		byte[] data = this.getData();
+		yTop = cnt;
+		byte[] data = getData();
 		byte[] b = ByteTools.cLongToLEBytes( yTop );
 		System.arraycopy( b, 0, data, 2, 4 );
-		this.setData( data );
+		setData( data );
 	}
 
 	/**
@@ -327,11 +324,11 @@ public class Dval extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public Dv createDvRec( String location )
 	{
-		Dv d = (Dv) Dv.getPrototype( this.getWorkBook() );
-		d.setSheet( this.getSheet() );
+		Dv d = (Dv) Dv.getPrototype( getWorkBook() );
+		d.setSheet( getSheet() );
 		d.setRange( location );
-		this.addDvRec( d );
-		this.setFollowingDvCount( dvRecs.size() );
+		addDvRec( d );
+		setFollowingDvCount( dvRecs.size() );
 		return d;
 	}
 
@@ -466,23 +463,23 @@ public class Dval extends com.extentech.formats.XLS.XLSRecord
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
-		if( this.dvRecs.size() > 0 )
+		if( dvRecs.size() > 0 )
 		{
-			ooxml.append( "<dataValidations count=\"" + this.dvRecs.size() + "\"" );
-			if( !this.isPromptBoxVisible() )
+			ooxml.append( "<dataValidations count=\"" + dvRecs.size() + "\"" );
+			if( !isPromptBoxVisible() )
 			{
 				ooxml.append( " disablePrompts=\"1\"" );
 			}
-			if( this.getHorizontalPosition() != 0 )
+			if( getHorizontalPosition() != 0 )
 			{
-				ooxml.append( " xWindow=\"" + this.getHorizontalPosition() + "\"" );
+				ooxml.append( " xWindow=\"" + getHorizontalPosition() + "\"" );
 			}
-			if( this.getVerticalPosition() != 0 )
+			if( getVerticalPosition() != 0 )
 			{
-				ooxml.append( " yWindow=\"" + this.getVerticalPosition() + "\"" );
+				ooxml.append( " yWindow=\"" + getVerticalPosition() + "\"" );
 			}
 			ooxml.append( ">" );
-			for( Object dvRec : this.dvRecs )
+			for( Object dvRec : dvRecs )
 			{
 				ooxml.append( ((Dv) dvRec).getOOXML() );
 			}

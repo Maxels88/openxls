@@ -71,7 +71,7 @@ public class PtgMemAreaA extends PtgMemArea
 	{
 		ptgId = b[0];
 		record = b;
-		this.populateVals();
+		populateVals();
 	}
 
 	@Override

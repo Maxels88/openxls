@@ -102,8 +102,8 @@ public final class Condfmt extends com.extentech.formats.XLS.XLSRecord
 	{
 		super.init();
 		rw = 0;
-		ccf = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );     // SHOULD BE # cf's but appears to be 1+ ??
-		grbit = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );   // SHOULD BE 1 to recalc but has been 3, 5, ...??
+		ccf = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );     // SHOULD BE # cf's but appears to be 1+ ??
+		grbit = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );   // SHOULD BE 1 to recalc but has been 3, 5, ...??
 	}
 
 	/**
@@ -112,8 +112,8 @@ public final class Condfmt extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void initializeReferences()
 	{
-		data = this.getData();
-		int sqrefCount = ByteTools.readShort( this.getByteAt( 12 ), this.getByteAt( 13 ) );
+		data = getData();
+		int sqrefCount = ByteTools.readShort( getByteAt( 12 ), getByteAt( 13 ) );
 		byte[] sqrefdata = new byte[sqrefCount * 8];
 		System.arraycopy( data, 14, sqrefdata, 0, sqrefdata.length );
 		refs = new DiscontiguousRefStruct( sqrefdata, this );
@@ -154,7 +154,7 @@ public final class Condfmt extends com.extentech.formats.XLS.XLSRecord
 	public int getCfxe()
 	{
 		int[] rc = refs.getRowColBounds();
-		cfxe = 50000 + (this.getSheet().getSheetNum() * 10000) + ByteTools.readShort( rc[0], rc[1] );    // base cxfe on cell address
+		cfxe = 50000 + (getSheet().getSheetNum() * 10000) + ByteTools.readShort( rc[0], rc[1] );    // base cxfe on cell address
 		return cfxe;
 	}
 
@@ -163,7 +163,7 @@ public final class Condfmt extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setCfxe( int c )
 	{
-		this.cfxe = c;
+		cfxe = c;
 	}
 
 	/**
@@ -221,7 +221,7 @@ public final class Condfmt extends com.extentech.formats.XLS.XLSRecord
 		}
 		// get the size of our output
 		byte[] outdata = new byte[(refs.getNumRefs() * 8) + 14];
-		byte[] tmp = ByteTools.shortToLEBytes( (short) (this.getRules().size()) );
+		byte[] tmp = ByteTools.shortToLEBytes( (short) (getRules().size()) );
 		int offset = 0;
 		outdata[offset++] = tmp[0];
 		outdata[offset++] = tmp[1];
@@ -250,7 +250,7 @@ public final class Condfmt extends com.extentech.formats.XLS.XLSRecord
 
 		byte[] sqrefbytes = refs.getRecordData();
 		System.arraycopy( sqrefbytes, 0, outdata, offset, sqrefbytes.length );
-		this.setData( outdata );
+		setData( outdata );
 	}
 
 	/**
@@ -313,7 +313,7 @@ public final class Condfmt extends com.extentech.formats.XLS.XLSRecord
 	@Override
 	public void preStream()
 	{
-		this.updateRecord();
+		updateRecord();
 	}
 
 	/**
@@ -510,7 +510,7 @@ public final class Condfmt extends com.extentech.formats.XLS.XLSRecord
 
 		StringBuffer xml = new StringBuffer( "<ConditionalFormatting" + ns + ">" );
 		// cf's
-		Iterator its = this.getRules().iterator();
+		Iterator its = getRules().iterator();
 		while( its.hasNext() )
 		{
 			Cf c = (Cf) its.next();
@@ -527,10 +527,10 @@ public final class Condfmt extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public String getOOXML( WorkBookHandle bk, int[] priority )
 	{
-		this.updateRecord();
+		updateRecord();
 		StringBuffer ooxml = new StringBuffer();
 		ooxml.append( "<conditionalFormatting" );
-		if( this.refs != null )
+		if( refs != null )
 		{
 			ooxml.append( " sqref=\"" );
 			String[] refStrs = refs.getRefs();
@@ -549,11 +549,11 @@ public final class Condfmt extends com.extentech.formats.XLS.XLSRecord
 		// NOTE:  cf.getDxfId/setDxfId links this conditional formatting rule with the proper incremental style
 		// NOTE:  cfRules must have a valid dxfId or the output file will open with errors
 		// NOTE:  for now, dxfs can only be saved from the original styles.xml;
-		ArrayList dxfs = this.getWorkBook().getDxfs();
+		ArrayList dxfs = getWorkBook().getDxfs();
 		if( dxfs == null )
 		{
 			dxfs = new ArrayList();
-			this.getWorkBook().setDxfs( dxfs );
+			getWorkBook().setDxfs( dxfs );
 		}
 		if( cfRules != null )
 		{

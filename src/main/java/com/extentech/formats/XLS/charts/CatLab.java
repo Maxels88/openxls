@@ -63,15 +63,16 @@ public class CatLab extends GenericChartObject implements ChartObject
 	/**
 	 * serialVersionUID
 	 */
-	short wOffset, at;
+	short wOffset;
+	short at;
 	private static final long serialVersionUID = 3042712098138741496L;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		wOffset = ByteTools.readShort( this.getData()[4], this.getData()[5] );
-		at = ByteTools.readShort( this.getData()[6], this.getData()[7] );
+		wOffset = ByteTools.readShort( getData()[4], getData()[5] );
+		at = ByteTools.readShort( getData()[6], getData()[7] );
 		// cAutoCatLabelReal= (record[8] & 0x1==0x1
 	}
 
@@ -136,11 +137,11 @@ public class CatLab extends GenericChartObject implements ChartObject
 	{
 		byte[] b = new byte[2];
 		b = ByteTools.shortToLEBytes( wOffset );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 		b = ByteTools.shortToLEBytes( at );
-		this.getData()[6] = b[0];
-		this.getData()[7] = b[1];
+		getData()[6] = b[0];
+		getData()[7] = b[1];
 	}
 
 }

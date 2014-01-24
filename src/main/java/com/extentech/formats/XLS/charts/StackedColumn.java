@@ -79,7 +79,8 @@ public class StackedColumn extends ColChart
 		StringBuffer svg = new StringBuffer();
 		int[] dls = getDataLabelInts(); // get array of data labels (can be specific per series ...)
 
-		double barw = 0, yfactor = 0;
+		double barw = 0;
+		double yfactor = 0;
 		if( categories.length > 0 )
 		{
 			barw = w / (categories.length * 2);    // w/#categories (only 1 column per series)
@@ -114,7 +115,8 @@ public class StackedColumn extends ColChart
 			svg.append( "<g>\r\n" );
 			double[] curseries = (double[]) series.get( i );    // for each data point - stacked on series column
 			String[] curranges = (String[]) s.getSeriesRanges().get( i );
-			double xx, yy = y + h;    // origin
+			double xx;    // origin
+			double yy = y + h;
 			if( i == 0 )
 			{
 				previousY = new double[curseries.length];

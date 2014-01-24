@@ -56,17 +56,17 @@ public class GraphicFrame implements OOXMLElement
 	public GraphicFrame( HashMap<String, String> attrs, Graphic g, NvGraphicFramePr gfp, Xfrm x )
 	{
 		this.attrs = attrs;
-		this.graphic = g;
-		this.graphicFramePr = gfp;
-		this.xfrm = x;
+		graphic = g;
+		graphicFramePr = gfp;
+		xfrm = x;
 	}
 
 	public GraphicFrame( GraphicFrame gf )
 	{
-		this.attrs = gf.attrs;
-		this.graphic = gf.graphic;
-		this.graphicFramePr = gf.graphicFramePr;
-		this.xfrm = gf.xfrm;
+		attrs = gf.attrs;
+		graphic = gf.graphic;
+		graphicFramePr = gf.graphicFramePr;
+		xfrm = gf.xfrm;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -339,8 +339,8 @@ class NvGraphicFramePr implements OOXMLElement
 
 	public NvGraphicFramePr( NvGraphicFramePr nvg )
 	{
-		this.cp = nvg.cp;
-		this.nvpr = nvg.nvpr;
+		cp = nvg.cp;
+		nvpr = nvg.nvpr;
 	}
 
 	public static NvGraphicFramePr parseOOXML( XmlPullParser xpp, Stack<String> lastTag )

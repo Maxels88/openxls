@@ -72,7 +72,8 @@ public class MarkerFormat extends GenericChartObject implements ChartObject
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 7526015026522467305L;
-	private java.awt.Color rgbFore, rgbBack;
+	private java.awt.Color rgbFore;
+	private java.awt.Color rgbBack;
 	private int miSize = 0;
 	private short imk = 0;
 	private short icvFore = 0;
@@ -83,18 +84,18 @@ public class MarkerFormat extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		byte[] data = this.getData();
+		byte[] data = getData();
 		rgbFore = new java.awt.Color( ((data[0] < 0) ? (255 + data[0]) : data[0]),
 		                              ((data[1] < 0) ? (255 + data[1]) : data[1]),
 		                              ((data[2] < 0) ? (255 + data[2]) : data[2]) );
 		rgbBack = new java.awt.Color( ((data[4] < 0) ? (255 + data[4]) : data[4]),
 		                              ((data[5] < 0) ? (255 + data[5]) : data[5]),
 		                              ((data[6] < 0) ? (255 + data[6]) : data[6]) );
-		imk = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
-		grbit = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );
-		icvFore = ByteTools.readShort( this.getByteAt( 12 ), this.getByteAt( 13 ) );
-		icvBack = ByteTools.readShort( this.getByteAt( 12 ), this.getByteAt( 13 ) );
-		miSize = ByteTools.readInt( this.getBytesAt( 14, 4 ) );
+		imk = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );
+		grbit = ByteTools.readShort( getByteAt( 10 ), getByteAt( 11 ) );
+		icvFore = ByteTools.readShort( getByteAt( 12 ), getByteAt( 13 ) );
+		icvBack = ByteTools.readShort( getByteAt( 12 ), getByteAt( 13 ) );
+		miSize = ByteTools.readInt( getBytesAt( 14, 4 ) );
 	}
 
 	// 20070716 KSC: Need to create new records
@@ -142,10 +143,10 @@ public class MarkerFormat extends GenericChartObject implements ChartObject
 
 	private void updateRecord()
 	{
-		imk = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
+		imk = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );
 		byte[] b = ByteTools.shortToLEBytes( imk );
-		this.getData()[8] = b[0];
-		this.getData()[9] = b[1];
+		getData()[8] = b[0];
+		getData()[9] = b[1];
 	}
 
 	/**

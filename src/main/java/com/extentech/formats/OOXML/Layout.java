@@ -48,7 +48,7 @@ public final class Layout implements OOXMLElement
 
 	private Layout( Layout l )
 	{
-		this.ml = l.ml;
+		ml = l.ml;
 	}
 
 	/**
@@ -69,7 +69,7 @@ public final class Layout implements OOXMLElement
 				soffs[i] = String.valueOf( offs[i] );
 			}
 		}
-		this.ml = new ManualLayout( target, modes, soffs );
+		ml = new ManualLayout( target, modes, soffs );
 	}
 
 	/**
@@ -211,9 +211,9 @@ class ManualLayout implements OOXMLElement
 
 	public ManualLayout( ManualLayout ml )
 	{
-		this.modes = ml.modes;
-		this.target = ml.target;
-		this.offs = ml.offs;
+		modes = ml.modes;
+		target = ml.target;
+		offs = ml.offs;
 	}
 
 	public static ManualLayout parseOOXML( XmlPullParser xpp, Stack lastTag )
@@ -305,39 +305,39 @@ class ManualLayout implements OOXMLElement
 		ooxml.append( "<c:manualLayout>" );
 		if( target != null )
 		{
-			ooxml.append( "<c:layoutTarget val=\"" + this.target + "\"/>" );
+			ooxml.append( "<c:layoutTarget val=\"" + target + "\"/>" );
 		}
 		if( modes[0] != null )
 		{
-			ooxml.append( "<c:xMode val=\"" + this.modes[0] + "\"/>" );
+			ooxml.append( "<c:xMode val=\"" + modes[0] + "\"/>" );
 		}
-		if( this.modes[1] != null )
+		if( modes[1] != null )
 		{
-			ooxml.append( "<c:yMode val=\"" + this.modes[1] + "\"/>" );
+			ooxml.append( "<c:yMode val=\"" + modes[1] + "\"/>" );
 		}
-		if( this.modes[2] != null )
+		if( modes[2] != null )
 		{
-			ooxml.append( "<c:wMode val=\"" + this.modes[2] + "\"/>" );
+			ooxml.append( "<c:wMode val=\"" + modes[2] + "\"/>" );
 		}
-		if( this.modes[3] != null )
+		if( modes[3] != null )
 		{
-			ooxml.append( "<c:hMode val=\"" + this.modes[3] + "\"/>" );
+			ooxml.append( "<c:hMode val=\"" + modes[3] + "\"/>" );
 		}
-		if( this.offs[0] != null )
+		if( offs[0] != null )
 		{
-			ooxml.append( "<c:x val=\"" + this.offs[0] + "\"/>" );
+			ooxml.append( "<c:x val=\"" + offs[0] + "\"/>" );
 		}
-		if( this.offs[1] != null )
+		if( offs[1] != null )
 		{
-			ooxml.append( "<c:y val=\"" + this.offs[1] + "\"/>" );
+			ooxml.append( "<c:y val=\"" + offs[1] + "\"/>" );
 		}
-		if( this.offs[2] != null )
+		if( offs[2] != null )
 		{
-			ooxml.append( "<c:w val=\"" + this.offs[2] + "\"/>" );
+			ooxml.append( "<c:w val=\"" + offs[2] + "\"/>" );
 		}
-		if( this.offs[3] != null )
+		if( offs[3] != null )
 		{
-			ooxml.append( "<c:h val=\"" + this.offs[3] + "\"/>" );
+			ooxml.append( "<c:h val=\"" + offs[3] + "\"/>" );
 		}
 		ooxml.append( "</c:manualLayout>" );
 		return ooxml.toString();

@@ -65,9 +65,12 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 	private static final Logger log = LoggerFactory.getLogger( Colinfo.class );
 	private static final long serialVersionUID = 3048724897018541459L;
 	public static final int DEFAULT_COLWIDTH = 2340;    // why 2000???? excel reports 2340 ...?
-	private int colFirst, colLast, colWidth;
+	private int colFirst;
+	private int colLast;
+	private int colWidth;
 	private short grbit;
-	private boolean collapsed, hidden;
+	private boolean collapsed;
+	private boolean hidden;
 	private int outlineLevel = 0;
 
 	/**
@@ -76,9 +79,9 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 	public void setColFirst( int c )
 	{
 		byte[] b = ByteTools.shortToLEBytes( (short) c );
-		byte[] dt = this.getData();
+		byte[] dt = getData();
 		System.arraycopy( b, 0, dt, 0, 2 );
-		this.colFirst = c;
+		colFirst = c;
 	}
 
 	@Override
@@ -93,9 +96,9 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 	public void setColLast( int c )
 	{
 		byte[] b = ByteTools.shortToLEBytes( (short) c );
-		byte[] dt = this.getData();
+		byte[] dt = getData();
 		System.arraycopy( b, 0, dt, 2, 2 );
-		this.colLast = c;
+		colLast = c;
 	}
 
 	@Override
@@ -109,19 +112,19 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 	 */
 	public void moveColInfo( int offset )
 	{
-		this.setColFirst( this.getColFirst() + offset );
-		this.setColLast( this.getColLast() + offset );
+		setColFirst( getColFirst() + offset );
+		setColLast( getColLast() + offset );
 	}
 
 	@Override
 	public void init()
 	{
 		super.init();
-		colFirst = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		colLast = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		colWidth = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		ixfe = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
-		grbit = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
+		colFirst = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		colLast = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		colWidth = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+		ixfe = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
+		grbit = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );
 		decodeGrbit();
 			log.trace( "Col: " + ExcelTools.getAlphaVal( colFirst ) + "-" + ExcelTools.getAlphaVal( colLast ) + "  ixfe: " + String.valueOf(
 					ixfe ) + " width: " + colWidth );
@@ -198,8 +201,8 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 		// it's a value that needs to be converted to the appropriate units
 		x = (int) (x + fudgefactor) * 256.0;
 		byte[] cl = ByteTools.shortToLEBytes( (short) x );
-		System.arraycopy( cl, 0, this.getData(), 4, 2 );
-		colWidth = ByteTools.readShort( this.getData()[4], this.getData()[5] );
+		System.arraycopy( cl, 0, getData(), 4, 2 );
+		colWidth = ByteTools.readShort( getData()[4], getData()[5] );
 		// 20060609 KSC: APPEARS THAT grbit=0 means default column width so must set to either 2 or 6 ---
 		// there is NO documentation on this!
 		if( grbit == 0 )
@@ -220,8 +223,8 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 	public void setColWidth( int x )
 	{
 		byte[] cl = ByteTools.shortToLEBytes( (short) x );
-		System.arraycopy( cl, 0, this.getData(), 4, 2 );
-		colWidth = ByteTools.readUnsignedShort( this.getData()[4], this.getData()[5] );
+		System.arraycopy( cl, 0, getData(), 4, 2 );
+		colWidth = ByteTools.readUnsignedShort( getData()[4], getData()[5] );
 		// 20060609 KSC: APPEARS THAT grbit=0 means default column width so must set to either 2 or 6 ---
 		// there is NO documentation on this!
 		if( grbit == 0 )
@@ -250,7 +253,7 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 	 */
 	public int getColWidthInChars()
 	{
-		int colwidth = this.getColWidth();
+		int colwidth = getColWidth();
 		colwidth = (int) Math.round( ((colwidth - fudgefactor) / 256) );
 		return colwidth;
 	}
@@ -262,12 +265,12 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 	 */
 	public void setCollapsed( boolean b )
 	{
-		this.collapseIt( b );
+		collapseIt( b );
 		// all previous columns are hidden
-		for( int i = 0; i < this.colFirst; i++ )
+		for( int i = 0; i < colFirst; i++ )
 		{
-			Colinfo r = this.getSheet().getColInfo( i );
-			if( (r != null) && (r.getOutlineLevel() == this.getOutlineLevel()) )
+			Colinfo r = getSheet().getColInfo( i );
+			if( (r != null) && (r.getOutlineLevel() == getOutlineLevel()) )
 			{
 				r.setHidden( b );
 			}
@@ -282,7 +285,7 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 	 */
 	private void collapseIt( boolean b )
 	{
-		this.collapsed = b;
+		collapsed = b;
 		updateGrbit();
 	}
 
@@ -293,9 +296,9 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 	 */
 	public void setHidden( boolean b )
 	{
-		this.hidden = b;
+		hidden = b;
 		updateGrbit();
-		this.getWorkBook().getUsersviewbegin().setDisplayOutlines( true );
+		getWorkBook().getUsersviewbegin().setDisplayOutlines( true );
 	}
 
 	/**
@@ -305,10 +308,10 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 	 */
 	public void setOutlineLevel( int x )
 	{
-		this.outlineLevel = x;
+		outlineLevel = x;
 		updateGrbit();
-		this.getSheet().getGuts().setColGutterSize( 10 + (10 * x) );
-		this.getSheet().getGuts().setMaxColLevel( x + 1 );
+		getSheet().getGuts().setColGutterSize( 10 + (10 * x) );
+		getSheet().getGuts().setMaxColLevel( x + 1 );
 	}
 
 	/**
@@ -379,10 +382,10 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 		grbytes[1] = (byte) (outlineLevel | grbytes[1]);
 		// reset the grbit and the body rec
 		grbit = ByteTools.readShort( grbytes[0], grbytes[1] );
-		byte[] recdata = this.getData();
+		byte[] recdata = getData();
 		recdata[8] = grbytes[0];
 		recdata[9] = grbytes[1];
-		this.setData( recdata );
+		setData( recdata );
 	}
 
 	/**
@@ -428,12 +431,12 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 	@Override
 	public void setIxfe( int i )
 	{
-		this.ixfe = i;
+		ixfe = i;
 		byte[] newxfe = ByteTools.cLongToLEBytes( i );
-		byte[] b = this.getData();
+		byte[] b = getData();
 
 		System.arraycopy( newxfe, 0, b, 6, 2 );
-		this.setData( b );
+		setData( b );
 	}
 
 	public String toString()
@@ -445,7 +448,7 @@ public final class Colinfo extends XLSRecord implements ColumnRange
 	@Override
 	public boolean isSingleCol()
 	{
-		return (this.getColFirst() == this.getColLast());
+		return (getColFirst() == getColLast());
 
 	}
 }

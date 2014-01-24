@@ -102,7 +102,7 @@ public class FormulaHandle
 	 */
 	protected FormulaHandle( Formula f, WorkBook book )
 	{
-		this.bk = book;
+		bk = book;
 		form = f;
 	}
 
@@ -298,7 +298,7 @@ public class FormulaHandle
 	 */
 	public CellRange[] getCellRanges() throws FormulaNotFoundException
 	{
-		String[] crstrs = this.getRanges();
+		String[] crstrs = getRanges();
 		CellRange[] crs = new CellRange[crstrs.length];
 		for( int x = 0; x < crs.length; x++ )
 		{
@@ -396,7 +396,7 @@ public class FormulaHandle
 				formulaaddr[1] = celladdr[1];
 			}
 			String newaddr = ExcelTools.formatRange( formulaaddr );
-			b = this.changeFormulaLocation( formulaLoc, newaddr );
+			b = changeFormulaLocation( formulaLoc, newaddr );
 
 		}
 		return b;
@@ -478,7 +478,7 @@ public class FormulaHandle
 
 	public String toString()
 	{
-		return this.form.getCellAddress() + ":" + this.form.getFormulaString();
+		return form.getCellAddress() + ":" + form.getFormulaString();
 	}
 
 	/**
@@ -488,7 +488,7 @@ public class FormulaHandle
 	 */
 	public boolean isSharedFormula()
 	{
-		return this.form.isSharedFormula();
+		return form.isSharedFormula();
 	}
 
 	public boolean isArrayFormula()
@@ -559,13 +559,13 @@ public class FormulaHandle
 		Object val;
 		try
 		{
-			val = this.getVal();
+			val = getVal();
 			if( val == null )
 			{// means cache was cleared (in all cases???) MUST recalc
-				if( this.form.getWorkBook().getCalcMode() != WorkBookHandle.CALCULATE_EXPLICIT )
+				if( form.getWorkBook().getCalcMode() != WorkBookHandle.CALCULATE_EXPLICIT )
 				{
-					this.calculate();
-					val = this.getVal();
+					calculate();
+					val = getVal();
 				}
 				else
 				{
@@ -583,7 +583,7 @@ public class FormulaHandle
 		}
 		if( val == null )
 		{
-			log.error( "FormulaHandle.getOOXML:  unexpected null encountered when calculating formula: " + this.getCellAddress() );
+			log.error( "FormulaHandle.getOOXML:  unexpected null encountered when calculating formula: " + getCellAddress() );
 		}
 		// Handle attributes for special cached values
 		if( val instanceof String )
@@ -615,24 +615,24 @@ public class FormulaHandle
 		String fs = "=";
 		try
 		{
-			fs = this.getFormulaString();
+			fs = getFormulaString();
 		}
 		catch( Exception e )
 		{
 			log.error( "FormulaHandle.getOOXML: error obtaining formula string: " + e.toString(), e );
 		}
 		fs = OOXMLAdapter.stripNonAscii( fs ).toString();    // handle non-standard xml chars -- ummm what about Japanese? -- it's all ok
-		if( !this.isArrayFormula() )
+		if( !isArrayFormula() )
 		{
 			ooxml.append( "><f" );
 			fs = fs.substring( 1 );    // ignore =
 		}
 		else
 		{    // array formulas
-			if( form.getSheet().isArrayFormulaParent( this.getCellAddress() ) )
+			if( form.getSheet().isArrayFormulaParent( getCellAddress() ) )
 			{    // it's the parent
 				ooxml.append( "><f" );
-				String refs = form.getSheet().getArrayRef( this.getCellAddress() );
+				String refs = form.getSheet().getArrayRef( getCellAddress() );
 				if( fs.startsWith( "{=" ) )
 				{
 					fs = fs.substring( 2, fs.length() - 1 );    // remove "{= }"
@@ -646,7 +646,7 @@ public class FormulaHandle
 				ooxml.append( ">" );    // only output value info
 			}
 		}
-		if( this.isSharedFormula() )
+		if( isSharedFormula() )
 		{
 			// TODO: FINISH 00XML SHARED FORMULAS
 			// TODO: need si= shared formula index; when referencing (after shared formula is defined) don't need to include "fs" just the si= ****
@@ -659,7 +659,7 @@ public class FormulaHandle
 			{
 			}
 		}
-		if( this.getCalcAlways() )
+		if( getCalcAlways() )
 		{
 			ooxml.append( " ca=\"1\"" );
 		}

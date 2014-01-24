@@ -72,22 +72,22 @@ public class Style extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		short unstripped = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		short unstripped = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		ixfe = (short) (unstripped & 0x7FF);
-		if( (this.getByteAt( 1 ) & 0x128) == 0x128 )
+		if( (getByteAt( 1 ) & 0x128) == 0x128 )
 		{
 			builtIn = true;
-			istyBuiltIn = this.getByteAt( 2 );
-			iLevel = this.getByteAt( 3 );
+			istyBuiltIn = getByteAt( 2 );
+			iLevel = getByteAt( 3 );
 		}
 		else
 		{
-			cch = this.getByteAt( 2 );
+			cch = getByteAt( 2 );
 			if( cch < 0 )
 			{
 				cch *= -1;
 			}
-			byte[] tmp = this.getBytesAt( 3, cch );
+			byte[] tmp = getBytesAt( 3, cch );
 			rgch = new String( tmp );
 		}
 

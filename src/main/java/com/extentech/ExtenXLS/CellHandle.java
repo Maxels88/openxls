@@ -124,8 +124,6 @@ import static com.extentech.ExtenXLS.JSONConstants.JSON_WORD_WRAP;
  */
 public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHandle>
 {
-	private static final Logger log = LoggerFactory.getLogger( CellHandle.class );
-	private static final long serialVersionUID = 4737120893891570607L;
 	/**
 	 * Cell types
 	 */
@@ -136,8 +134,16 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	public static final int TYPE_FORMULA = Cell.TYPE_FORMULA;
 	public static final int TYPE_BOOLEAN = Cell.TYPE_BOOLEAN;
 	public static final int TYPE_DOUBLE = Cell.TYPE_DOUBLE;
-	public static final int NOTATION_STANDARD = 0, NOTATION_SCIENTIFIC = 1, NOTATION_SCIENTIFIC_EXCEL = 2;
-
+	public static final int NOTATION_STANDARD = 0;
+	public static final int NOTATION_SCIENTIFIC = 1;
+	public static final int NOTATION_SCIENTIFIC_EXCEL = 2;
+	static final String begin_hidden_emptycell_xml = "<Cell Address=\"";
+	static final String end_hidden_emptycell_xml = "\" StyleID=\"s15\" Hidden=\"true\"><Data Type=\"String\"></Data></Cell>";
+	static final String begin_cell_xml = "<Cell Address=\"";
+	static final String end_emptycell_xml = "\" StyleID=\"s15\"><Data Type=\"String\"></Data></Cell>";
+	static final String end_cell_xml = "</Cell>";
+	private static final Logger log = LoggerFactory.getLogger( CellHandle.class );
+	private static final long serialVersionUID = 4737120893891570607L;
 	private transient WorkBook wbh = null;
 	private transient WorkSheetHandle wsh = null;
 	private ColHandle mycol;
@@ -147,6 +153,179 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	// updateXf
 	// boolean useExistingXF = !false;
 	private XLSRecord mycell;
+	private short mulblankcolnum = -1;
+
+	/**
+	 * Public Constructor added for use in Bean-context ONLY.
+	 * <p/>
+	 * Do NOT create CellHandles manually.
+	 */
+	public CellHandle( BiffRec c )
+	{
+		mycell = (XLSRecord) c;
+	}
+
+	/**
+	 * Public Constructor added for use in Bean-context ONLY.
+	 * <p/>
+	 * Do NOT create CellHandles manually.
+	 */
+	public CellHandle( BiffRec c, WorkBook myb )
+	{
+		mycell = (XLSRecord) c;
+		setMulblank();
+		wbh = myb;
+	}
+
+	/**
+	 * Returns an xml representation of an empty cell
+	 *
+	 * @param loc       - the cell address
+	 * @param isVisible - if the cell is visible (not hidden)
+	 * @return
+	 */
+	protected static String getEmptyCellXML( String loc, boolean isVisible )
+	{
+		if( !isVisible )
+		{
+			return begin_hidden_emptycell_xml + loc + end_hidden_emptycell_xml;
+		}
+		return begin_cell_xml + loc + end_emptycell_xml;
+	}
+
+	/**
+	 * Creates a copy of this cell on the given worksheet at the given address.
+	 *
+	 * @param sourcecell the cell to copy
+	 * @param newsheet   the sheet to which the cell should be copied
+	 * @param row        the row in which the copied cell should be placed
+	 * @param col        the row in which the copied cell should be placed
+	 * @return CellHandle representing the new Cell
+	 */
+	public static final CellHandle copyCellToWorkSheet( CellHandle sourcecell, WorkSheetHandle newsheet, int row, int col ) throws
+	                                                                                                                        CellPositionConflictException,
+	                                                                                                                        CellNotFoundException
+	{
+		return copyCellToWorkSheet( sourcecell, newsheet, row, col, false );
+	}
+
+	/**
+	 * Creates a copy of this cell on the given worksheet at the given address.
+	 *
+	 * @param sourcecell  the cell to copy
+	 * @param newsheet    the sheet to which the cell should be copied
+	 * @param row         the row in which the copied cell should be placed
+	 * @param col         the row in which the copied cell should be placed
+	 * @param copyByValue whether to copy formulas' values instead of the formulas
+	 *                    themselves
+	 * @return CellHandle representing the new cell
+	 */
+	public static CellHandle copyCellToWorkSheet( CellHandle sourcecell, WorkSheetHandle newsheet, int row, int col, boolean copyByValue )
+	{
+		// copy cell values
+		CellHandle newcell = null;
+
+		int[] offsets = {
+				row - sourcecell.getRowNum(), col - sourcecell.getColNum()
+		};
+
+		if( sourcecell.isFormula() && !copyByValue )
+		{
+			try
+			{
+				FormulaHandle fmh = sourcecell.getFormulaHandle();
+				newcell = newsheet.add( fmh.getFormulaString(), row, col );
+				FormulaHandle fm2 = newcell.getFormulaHandle();
+				FormulaHandle.moveCellRefs( fm2, offsets );
+			}
+			catch( FormulaNotFoundException ex )
+			{
+				newcell = null;
+			}
+		}
+
+		if( newcell == null )
+		{
+			newcell = newsheet.add( sourcecell.getVal(), row, col );
+		}
+
+		return copyCellHelper( sourcecell, newcell );
+	}
+
+	/**
+	 * Create a copy of this Cell in another WorkBook
+	 *
+	 * @param sourcecell the cell to copy
+	 * @param target     worksheet to copy this cell into
+	 * @return
+	 */
+	public static final CellHandle copyCellToWorkSheet( CellHandle sourcecell, WorkSheetHandle newsheet )
+	{
+		// copy cell values
+		CellHandle newcell;
+		try
+		{
+			FormulaHandle fmh = sourcecell.getFormulaHandle();
+			// Logger.logInfo("testFormats Formula encountered:  "+
+			// fmh.getFormulaString());
+
+			newcell = newsheet.add( fmh.getFormulaString(), sourcecell.getCellAddress() );
+		}
+		catch( FormulaNotFoundException ex )
+		{
+			newcell = newsheet.add( sourcecell.getVal(), sourcecell.getCellAddress() );
+		}
+		return copyCellHelper( sourcecell, newcell );
+	}
+
+	/**
+	 * Copies all formatting - xf and non-xf (such as column width, hidden
+	 * state) plus merged cell range from a sourcecell to a new cell (usually in
+	 * a new workbook)
+	 *
+	 * @param sourcecell the cell to copy
+	 * @param newcell    the cell to copy to
+	 * @return
+	 */
+	protected static final CellHandle copyCellHelper( CellHandle sourcecell, CellHandle newcell )
+	{
+		// copy row height & attributes
+		int rz = sourcecell.getRow().getHeight();
+		newcell.getRow().setHeight( rz );
+		if( sourcecell.getRow().isHidden() )
+		{
+			newcell.getRow().setHidden( true );
+		}
+		// copy col width & attributes
+		int rzx = sourcecell.getCol().getWidth();
+		newcell.getCol().setWidth( rzx );
+		if( sourcecell.getCol().isHidden() )
+		{
+			newcell.getCol().setHidden( true );
+			// Logger.logInfo("column " + rzx + " is hidden");
+		}
+
+		try
+		{
+			// copy merged ranges
+			CellRange rng = sourcecell.getMergedCellRange();
+			if( rng != null )
+			{
+				rng = new CellRange( rng.getRange(), newcell.getWorkBook() );
+				rng.addCellToRange( newcell );
+				rng.mergeCells( false );
+			}
+			// Handle formats:
+			Xf origxf = sourcecell.getWorkBook().getWorkBook().getXf( sourcecell.getFormatId() );
+			newcell.getFormatHandle().addXf( origxf );
+			return newcell;
+		}
+		catch( Exception ex )
+		{
+			log.error( "CellHandle.copyCellHelper failed.", ex );
+		}
+		return newcell;
+	}
 
 	/**
 	 * returns the underlying BIFF8 record for the Cell <br>
@@ -169,91 +348,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public void setRecord( XLSRecord rec )
 	{
-		this.mycell = rec;
-	}
-
-	/**
-	 * Public Constructor added for use in Bean-context ONLY.
-	 * <p/>
-	 * Do NOT create CellHandles manually.
-	 */
-	public CellHandle( BiffRec c )
-	{
-		mycell = (XLSRecord) c;
-	}
-
-	/**
-	 * if this cellhandle refers to a mulblank, ensure internal mulblank
-	 * properties are set to appropriate cell in the mulblank range
-	 */
-	private void setMulblank()
-	{
-		if( mycell.getOpcode() == XLSConstants.MULBLANK )
-		{
-			if( mulblankcolnum == -1 )
-			{ // init
-				mulblankcolnum = mycell.getColNumber();
-				((Mulblank) mycell).setCurrentCell( mulblankcolnum );
-				mycell.getIxfe(); // ensure myxf is set to correct
-				// xf for the given cell in the
-				// set of mulblanks
-			}
-			else if( mulblankcolnum != mycell.getColNumber() )
-			{
-				((Mulblank) mycell).setCurrentCell( mulblankcolnum );
-				mycell.getIxfe(); // ensure myxf is set to correct
-				// xf for the given cell in the
-				// set of mulblanks
-			}
-			this.formatter = null;
-		}
-	}
-
-	/**
-	 * Public Constructor added for use in Bean-context ONLY.
-	 * <p/>
-	 * Do NOT create CellHandles manually.
-	 */
-	public CellHandle( BiffRec c, WorkBook myb )
-	{
-		mycell = (XLSRecord) c;
-		setMulblank();
-		this.wbh = myb;
-	}
-
-	/**
-	 * Get a FormatHandle (a Format Object describing the formats for this Cell)
-	 * referenced by this CellHandle.
-	 *
-	 * @return FormatHandle
-	 * @see FormatHandle
-	 */
-	void setFormatHandle()
-	{
-		setMulblank();
-		if( (formatter != null) && (formatter.getFormatId() == this.mycell.getIxfe()) )
-		{
-			return;
-		}
-		// reusing or creating new xfs is handled in FormatHandle/cloneXf and
-		// updateXf
-		if( this.mycell.getXfRec() != null )
-		{
-			formatter = new FormatHandle( this.wbh, this.mycell.myxf );
-		}
-		else
-		{// should ever happen now?
-			// useExistingXF = false;
-			if( (wbh == null) && (this.mycell.getWorkBook() != null) )
-			{
-				formatter = new FormatHandle( this.mycell.getWorkBook(), -1 );
-			}
-			else
-			{
-				formatter = new FormatHandle( this.wbh, -1 );
-			}
-		}
-		formatter.addCell( mycell );
+		mycell = rec;
 	}
 
 	/**
@@ -264,7 +359,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public void setToDefault()
 	{
-		setVal( this.getDefaultVal() );
+		setVal( getDefaultVal() );
 	}
 
 	/**
@@ -276,6 +371,23 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	public Object getDefaultVal()
 	{
 		return mycell.getDefaultVal();
+	}
+
+	/**
+	 * Gets the number format pattern for this cell, if set. For more
+	 * information on number format patterns see <a
+	 * href="http://support.microsoft.com/kb/264372">Microsoft KB264372</a>.
+	 *
+	 * @return the Excel number format pattern for this cell or
+	 * <code>null</code> if none is applied
+	 */
+	public String getFormatPattern()
+	{
+		if( getFont() == null )
+		{
+			return "";
+		}
+		return mycell.getFormatPattern();
 	}
 
 	/**
@@ -293,23 +405,6 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	{
 		setFormatHandle();
 		formatter.setFormatPattern( pat );
-	}
-
-	/**
-	 * Gets the number format pattern for this cell, if set. For more
-	 * information on number format patterns see <a
-	 * href="http://support.microsoft.com/kb/264372">Microsoft KB264372</a>.
-	 *
-	 * @return the Excel number format pattern for this cell or
-	 * <code>null</code> if none is applied
-	 */
-	public String getFormatPattern()
-	{
-		if( this.getFont() == null )
-		{
-			return "";
-		}
-		return mycell.getFormatPattern();
 	}
 
 	/**
@@ -341,11 +436,191 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	}
 
 	/**
+	 * Returns the type of the Cell as an int <br>
+	 * <li>TYPE_STRING = 0, <li>TYPE_FP = 1, <li>TYPE_INT = 2, <li>TYPE_FORMULA
+	 * = 3, <li>TYPE_BOOLEAN = 4, <li>TYPE_DOUBLE = 5;
+	 *
+	 * @return int type for this Cell
+	 */
+	@Override
+	public int getCellType()
+	{
+		return mycell.getCellType();
+	}
+
+	/**
+	 * Returns the Formatting record ID (FormatId) for this Cell <br>
+	 * This can be used with 'setFormatId(int i)' to copy the formatting from
+	 * one Cell to another (e.g. a template cell to a new cell)
+	 *
+	 * @return int the FormatId for this Cell
+	 */
+	@Override
+	public int getFormatId()
+	{
+		setMulblank();
+		return mycell.getIxfe();
+	}
+
+	/**
+	 * Sets the Formatting record ID (FormatId) for this Cell
+	 * <p/>
+	 * This can be used with 'getFormatId()' to copy the formatting from one
+	 * Cell to another (ie: a template cell to a new cell)
+	 *
+	 * @param int i - the new index to the Format for this Cell
+	 */
+	public void setFormatId( int i )
+	{
+		mycell.setXFRecord( i );
+	}
+
+	/**
+	 * Returns the value of this Cell in the native underlying data type.
+	 * <p/>
+	 * Formula cells will return the calculated value of the formula in the
+	 * calculated data type.
+	 * <p/>
+	 * Use 'getStringVal()' to return a String regardless of underlying value
+	 * type.
+	 *
+	 * @return Object value for this Cell
+	 */
+	@Override
+	public Object getVal()
+	{
+		return FormulaHandle.sanitizeValue( mycell.getInternalVal() );
+	}
+
+	/**
+	 * Set the value of this Cell to an int value <br>
+	 * NOTE: setting a Boolean Cell type to a zero or a negative number will set
+	 * the Cell to 'false'; setting it to an int value 1 or greater will set it
+	 * to true.
+	 *
+	 * @param int i - int value to set this Cell to
+	 * @throws CellTypeMismatchException
+	 */
+	public void setVal( int i ) throws CellTypeMismatchException
+	{
+		if( mycell.getCellType() == XLSConstants.TYPE_BOOLEAN )
+		{
+			if( i > 0 )
+			{
+				setVal( Boolean.valueOf( true ) );
+			}
+			else
+			{
+				setVal( Boolean.valueOf( false ) );
+			}
+		}
+		else
+		{
+			setVal( Integer.valueOf( i ) );
+		}
+	}
+
+	/**
+	 * Gets the value of the cell as a String with the number format applied.
+	 * Boolean cell types will return "true" or "false". Custom number formats
+	 * are not currently supported, although they will be written correctly to
+	 * the output file. Patterns that display negative numbers in red are not
+	 * currently supported; the number will be prefixed with a minus sign
+	 * instead. For more information on number format patterns see <a
+	 * href="http://support.microsoft.com/kb/264372">Microsoft KB264372</a>.
+	 *
+	 * @return the value of the cell as a string formatted according to the cell
+	 * type and, if present, the number format pattern
+	 */
+	@Override
+	public String getFormattedStringVal()
+	{
+		FormatHandle myfmt = getFormatHandle();
+		return CellFormatFactory.fromPatternString( myfmt.getFormatPattern() ).format( this );
+	}
+
+	/**
+	 * Returns the column number of this Cell.
+	 *
+	 * @return int the Column Number of the Cell
+	 */
+	@Override
+	public int getColNum()
+	{
+		setMulblank();
+		return mycell.getColNumber();
+	}
+
+	/**
+	 * Returns the row number of this Cell.
+	 * <p/>
+	 * NOTE: This is the 1-based row number such as you will see in a spreadsheet UI.
+	 * <p/>
+	 * ie: A1 = row 1
+	 *
+	 * @return 1-based int the Row Number of the Cell
+	 */
+	@Override
+	public int getRowNum()
+	{
+		return mycell.getRowNumber();
+	}
+
+	/**
+	 * Returns the Address of this Cell as a String.
+	 *
+	 * @return String the address of this Cell in the WorkSheet
+	 */
+	@Override
+	public String getCellAddress()
+	{
+		setMulblank();
+		String cellAddress = mycell.getCellAddress();
+		return cellAddress;
+	}
+
+	/**
+	 * Returns the name of this Cell's WorkSheet as a String.
+	 *
+	 * @return String the name this Cell's WorkSheet
+	 */
+	@Override
+	public String getWorkSheetName()
+	{
+		if( wsh == null )
+		{
+			try
+			{
+				return mycell.getSheet().getSheetName();
+			}
+			catch( Exception e )
+			{
+				return "";
+			}
+		}
+		return wsh.getSheetName();
+	}
+
+	/**
 	 * Returns whether this cell is a formula.
 	 */
 	public boolean isFormula()
 	{
 		return mycell.isFormula();
+	}
+
+	/**
+	 * Set a cell to Excel-compatible formula passed in as String. <br>
+	 *
+	 * @param String formStr - the Formula String
+	 * @throws FunctionNotSupportedException if unable to parse string correctly
+	 */
+	public void setFormula( String formStr ) throws FunctionNotSupportedException
+	{
+		int ixfe = mycell.getIxfe();
+		remove( true );
+		mycell = wsh.add( formStr, getCellAddress() ).mycell;
+		mycell.setXFRecord( ixfe );
 	}
 
 	/**
@@ -355,7 +630,20 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public boolean isFormulaHidden()
 	{
-		return this.getFormatHandle().isFormulaHidden();
+		return getFormatHandle().isFormulaHidden();
+	}
+
+	/**
+	 * Hides or shows the formula for this Cell, if present
+	 *
+	 * @param boolean hidden - setting whether to hide or show formulas for this
+	 *                Cell
+	 */
+	public void setFormulaHidden( boolean hidden )
+	{
+		// create a new xf for this
+		// this causes formats to be lost this.useExistingXF = false;
+		getFormatHandle().setFormulaHidden( hidden );
 	}
 
 	/**
@@ -365,7 +653,19 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public boolean isLocked()
 	{
-		return this.getFormatHandle().isLocked();
+		return getFormatHandle().isLocked();
+	}
+
+	/**
+	 * locks or unlocks this Cell for editing
+	 *
+	 * @param boolean locked - true if Cell should be locked, false otherwise
+	 */
+	public void setLocked( boolean locked )
+	{
+		// create a new xf for this
+		// this causes formats to be lost this.useExistingXF = false;
+		getFormatHandle().setLocked( locked );
 	}
 
 	/**
@@ -375,7 +675,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public boolean isBlank()
 	{
-		return this.mycell.isBlank;
+		return mycell.isBlank;
 	}
 
 	/**
@@ -399,36 +699,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public boolean isNumber()
 	{
-		return this.mycell.isNumber();
-	}
-
-	/**
-	 * change the size (in points) of the Font used by this Cell and all other
-	 * Cells sharing this FormatId. <br>
-	 * NOTE: To add an entirely new Font use the setFont(String fn, int typ, int
-	 * sz) method instead.
-	 *
-	 * @param int sz - Font size in Points.
-	 */
-	public void setFontSize( int sz )
-	{
-		setFormatHandle();
-		sz *= 20; // excel size is 1/20 pt.
-		formatter.setFontHeight( sz );
-	}
-
-	/**
-	 * change the weight (boldness) of the Font used by this Cell. <br>
-	 * Some examples: <br>
-	 * a weight of 200 is normal <br>
-	 * a weight of 700 is bold <br>
-	 *
-	 * @param int wt - Font weight range between 100-1000
-	 */
-	public void setFontWeight( int wt )
-	{
-		setFormatHandle();
-		formatter.setFontWeight( wt );
+		return mycell.isNumber();
 	}
 
 	/**
@@ -450,11 +721,25 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public int getFontWeight()
 	{
-		if( this.getFont() == null )
+		if( getFont() == null )
 		{
 			return FormatHandle.DEFAULT_FONT_WEIGHT;
 		}
 		return mycell.getFont().getFontWeight();
+	}
+
+	/**
+	 * change the weight (boldness) of the Font used by this Cell. <br>
+	 * Some examples: <br>
+	 * a weight of 200 is normal <br>
+	 * a weight of 700 is bold <br>
+	 *
+	 * @param int wt - Font weight range between 100-1000
+	 */
+	public void setFontWeight( int wt )
+	{
+		setFormatHandle();
+		formatter.setFontWeight( wt );
 	}
 
 	/**
@@ -464,11 +749,26 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public int getFontSize()
 	{
-		if( this.getFont() == null )
+		if( getFont() == null )
 		{
 			return FormatHandle.DEFAULT_FONT_SIZE;
 		}
 		return mycell.getFont().getFontHeight() / 20;
+	}
+
+	/**
+	 * change the size (in points) of the Font used by this Cell and all other
+	 * Cells sharing this FormatId. <br>
+	 * NOTE: To add an entirely new Font use the setFont(String fn, int typ, int
+	 * sz) method instead.
+	 *
+	 * @param int sz - Font size in Points.
+	 */
+	public void setFontSize( int sz )
+	{
+		setFormatHandle();
+		sz *= 20; // excel size is 1/20 pt.
+		formatter.setFontHeight( sz );
 	}
 
 	/**
@@ -479,11 +779,11 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public Color getFontColor()
 	{
-		if( this.getFont() == null )
+		if( getFont() == null )
 		{
 			return FormatHandle.Black;
 		}
-		int clidx = this.getFont().getColor();
+		int clidx = getFont().getColor();
 
 		// handle white on white text issue
 		Xf x = mycell.getXfRec();
@@ -493,12 +793,25 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 			return FormatHandle.Black;
 		}
 		// black on black
-		if( clidx < this.getWorkBook().getColorTable().length )
+		if( clidx < getWorkBook().getColorTable().length )
 		{
-			Color mycolr = this.getWorkBook().getColorTable()[clidx];
+			Color mycolr = getWorkBook().getColorTable()[clidx];
 			return mycolr;
 		}
 		return Color.black;
+	}
+
+	/**
+	 * set the Font Color for this Cell <br>
+	 * <br>
+	 * see FormatHandle.COLOR constants for valid values
+	 *
+	 * @param int t - Excel color constant
+	 */
+	public void setFontColor( int t )
+	{
+		setFormatHandle();
+		formatter.setFontColor( t );
 	}
 
 	/**
@@ -542,7 +855,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	{
 		if( mycell.myxf == null )
 		{
-			this.getNewXf();
+			getNewXf();
 		}
 		mycell.myxf.setForeColor( i, null );
 	}
@@ -579,12 +892,12 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public Color getForegroundColor()
 	{
-		if( this.mycell.getXfRec() != null )
+		if( mycell.getXfRec() != null )
 		{
 			int clidx = mycell.getXfRec().getForegroundColor();
-			if( clidx < this.getWorkBook().getColorTable().length )
+			if( clidx < getWorkBook().getColorTable().length )
 			{
-				Color mycolr = this.getWorkBook().getColorTable()[clidx];
+				Color mycolr = getWorkBook().getColorTable()[clidx];
 				return mycolr;
 			}
 		}
@@ -624,33 +937,15 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public Color getBackgroundColor()
 	{
-		if( this.mycell.getXfRec() != null )
+		if( mycell.getXfRec() != null )
 		{
 			Xf x = mycell.getXfRec();
 			int clidx = x.getBackgroundColor();
-			if( clidx < this.getWorkBook().getColorTable().length )
+			if( clidx < getWorkBook().getColorTable().length )
 			{
-				Color mycolr = this.getWorkBook().getColorTable()[clidx];
+				Color mycolr = getWorkBook().getColorTable()[clidx];
 				return mycolr;
 			}
-		}
-		return Color.white;
-	}
-
-	/**
-	 * Return the cell background color i.e. the color if a pattern is set, or
-	 * white if none
-	 *
-	 * @return java.awt.Color cell background color
-	 */
-	public Color getCellBackgroundColor()
-	{
-		setFormatHandle();
-		int clidx = formatter.getCellBackgroundColor();
-		if( clidx < this.wbh.getWorkBook().getColorTable().length )
-		{
-			Color mycolr = this.getWorkBook().getColorTable()[clidx];
-			return mycolr;
 		}
 		return Color.white;
 	}
@@ -673,22 +968,21 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	}
 
 	/**
-	 * set the Color of the Cell Background for this Cell. <br>
-	 * <br>
-	 * see FormatHandle.COLOR constants for valid values <br>
-	 * <br>
-	 * NOTE: Foreground color is the CELL BACKGROUND color for all patterns and
-	 * Background color is the PATTERN color for all patterns not equal to
-	 * PATTERN_SOLID <br>
-	 * For PATTERN_SOLID, the Foreground color is the CELL BACKGROUND color and
-	 * Background Color is 64 (white).
+	 * Return the cell background color i.e. the color if a pattern is set, or
+	 * white if none
 	 *
-	 * @param int t - Excel color constant for Cell Background color
+	 * @return java.awt.Color cell background color
 	 */
-	public void setCellBackgroundColor( int t )
+	public Color getCellBackgroundColor()
 	{
 		setFormatHandle();
-		formatter.setCellBackgroundColor( t );
+		int clidx = formatter.getCellBackgroundColor();
+		if( clidx < wbh.getWorkBook().getColorTable().length )
+		{
+			Color mycolr = getWorkBook().getColorTable()[clidx];
+			return mycolr;
+		}
+		return Color.white;
 	}
 
 	/**
@@ -709,6 +1003,25 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	}
 
 	/**
+	 * set the Color of the Cell Background for this Cell. <br>
+	 * <br>
+	 * see FormatHandle.COLOR constants for valid values <br>
+	 * <br>
+	 * NOTE: Foreground color is the CELL BACKGROUND color for all patterns and
+	 * Background color is the PATTERN color for all patterns not equal to
+	 * PATTERN_SOLID <br>
+	 * For PATTERN_SOLID, the Foreground color is the CELL BACKGROUND color and
+	 * Background Color is 64 (white).
+	 *
+	 * @param int t - Excel color constant for Cell Background color
+	 */
+	public void setCellBackgroundColor( int t )
+	{
+		setFormatHandle();
+		formatter.setCellBackgroundColor( t );
+	}
+
+	/**
 	 * set the Color of the Cell Background Pattern for this Cell.
 	 *
 	 * @param java .awt.Color col - color of the pattern background
@@ -717,6 +1030,17 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	{
 		setFormatHandle();
 		formatter.setBackgroundColor( col );
+	}
+
+	/**
+	 * get the Background Pattern for this cell <br>
+	 *
+	 * @return int Excel pattern constant
+	 * @see FormatHandle.PATTERN constants
+	 */
+	public int getBackgroundPattern()
+	{
+		return mycell.getXfRec().getFillPattern();
 	}
 
 	/**
@@ -729,17 +1053,6 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	{
 		setFormatHandle();
 		formatter.setPattern( t );
-	}
-
-	/**
-	 * get the Background Pattern for this cell <br>
-	 *
-	 * @return int Excel pattern constant
-	 * @see FormatHandle.PATTERN constants
-	 */
-	public int getBackgroundPattern()
-	{
-		return this.mycell.getXfRec().getFillPattern();
 	}
 
 	/**
@@ -810,6 +1123,8 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		formatter.setBorderBottomColor( col );
 	}
 
+	/**/
+
 	/**
 	 * get the Font face used by this Cell.
 	 *
@@ -817,7 +1132,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public String getFontFace()
 	{
-		if( this.getFont() == null )
+		if( getFont() == null )
 		{
 			return FormatHandle.DEFAULT_FONT_FACE;
 		}
@@ -927,16 +1242,16 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		String fface = "Arial";
 		try
 		{
-			fface = this.getFontFace();
+			fface = getFontFace();
 		}
 		catch( Exception e )
 		{
 			;
 		}
-		int sz = 12;
+		int sz;
 		try
 		{
-			sz = this.getFontSize();
+			sz = getFontSize();
 		}
 		catch( Exception e )
 		{
@@ -948,7 +1263,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		// implement underlines
 		try
 		{
-			if( this.getIsUnderlined() )
+			if( getIsUnderlined() )
 			{
 				ftmap.put( java.awt.font.TextAttribute.UNDERLINE, java.awt.font.TextAttribute.UNDERLINE );
 			}
@@ -959,7 +1274,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		}
 		// Ahhh, much cooler fonts here!
 		ftmap.put( java.awt.font.TextAttribute.FAMILY, fface );
-		float fx = this.getFontWeight();
+		float fx = getFontWeight();
 		ftmap.put( java.awt.font.TextAttribute.SIZE, (float) sz );
 		// TODO: Interpret other weights- LIGHT, DEMI_LIGHT, DEMI_BOLD, etc.
 		if( fx == FormatHandle.BOLD )
@@ -998,12 +1313,12 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		for( Object note : notes )
 		{
 			Note n = (Note) note;
-			if( n.getCellAddressWithSheet().equals( this.getCellAddressWithSheet() ) )
+			if( n.getCellAddressWithSheet().equals( getCellAddressWithSheet() ) )
 			{
 				return new CommentHandle( n );
 			}
 		}
-		throw new DocumentObjectNotFoundException( "Note record not found at " + this.getCellAddressWithSheet() );
+		throw new DocumentObjectNotFoundException( "Note record not found at " + getCellAddressWithSheet() );
 	}
 
 	/**
@@ -1013,7 +1328,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	{
 		try
 		{
-			CommentHandle note = this.getComment();
+			CommentHandle note = getComment();
 			note.remove();
 		}
 		catch( DocumentObjectNotFoundException e )
@@ -1031,7 +1346,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public CommentHandle createComment( String comment, String author )
 	{
-		Note n = mycell.getSheet().createNote( this.getCellAddress(), comment, author );
+		Note n = mycell.getSheet().createNote( getCellAddress(), comment, author );
 		return new CommentHandle( n );
 	}
 
@@ -1042,15 +1357,12 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public boolean getIsUnderlined()
 	{
-		if( this.getFont() == null )
+		if( getFont() == null )
 		{
 			return false;
 		}
-		if( this.getFont().getUnderlineStyle() != 0x0 )
-		{
-			return true;
-		}
-		return false;
+
+		return getFont().getUnderlineStyle() != 0x0;
 	}
 
 	/**
@@ -1064,25 +1376,12 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		setFormatHandle();
 		if( isUnderlined )
 		{
-			this.getFont().setUnderlineStyle( Font.STYLE_UNDERLINE_SINGLE );
+			getFont().setUnderlineStyle( Font.STYLE_UNDERLINE_SINGLE );
 		}
 		else
 		{
-			this.getFont().setUnderlineStyle( Font.STYLE_UNDERLINE_NONE );
+			getFont().setUnderlineStyle( Font.STYLE_UNDERLINE_NONE );
 		}
-	}
-
-	/**
-	 * set the Font Color for this Cell <br>
-	 * <br>
-	 * see FormatHandle.COLOR constants for valid values
-	 *
-	 * @param int t - Excel color constant
-	 */
-	public void setFontColor( int t )
-	{
-		setFormatHandle();
-		formatter.setFontColor( t );
 	}
 
 	/**
@@ -1115,7 +1414,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 				return false;
 			}
 			int[] i = cr.getRangeCoords();
-			if( ((this.getRowNum() + 1) == i[0]) && (this.getColNum() == i[1]) )
+			if( ((getRowNum() + 1) == i[0]) && (getColNum() == i[1]) )
 			{
 				return true;
 			}
@@ -1139,7 +1438,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		{
 			if( mycol == null )
 			{
-				mycol = wsh.getCol( this.getColNum() );
+				mycol = wsh.getCol( getColNum() );
 			}
 		}
 		catch( ColumnNotFoundException ex )
@@ -1147,7 +1446,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 			// can't happen, the column has to exist because we're in it
 			throw new RuntimeException( ex );
 		}
-		return this.mycol;
+		return mycol;
 	}
 
 	/**
@@ -1159,29 +1458,10 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	{
 		if( myrow == null )
 		{
-			myrow = new RowHandle( mycell.getRow(), this.wsh );
+			myrow = new RowHandle( mycell.getRow(), wsh );
 		}
-		return this.myrow;
+		return myrow;
 	}
-
-	/**
-	 * Returns the value of this Cell in the native underlying data type.
-	 * <p/>
-	 * Formula cells will return the calculated value of the formula in the
-	 * calculated data type.
-	 * <p/>
-	 * Use 'getStringVal()' to return a String regardless of underlying value
-	 * type.
-	 *
-	 * @return Object value for this Cell
-	 */
-	@Override
-	public Object getVal()
-	{
-		return FormulaHandle.sanitizeValue( mycell.getInternalVal() );
-	}
-
-	/**/
 
 	/**
 	 * returns the java Type string of the Cell <br>
@@ -1192,6 +1472,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	public String getCellTypeName()
 	{
 		String typename = "Object";
+		// TODO: Why dont we just ask the cell contained herein?
 		int tp = getCellType();
 		switch( tp )
 		{
@@ -1218,19 +1499,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	}
 
 	/**
-	 * Returns the type of the Cell as an int <br>
-	 * <li>TYPE_STRING = 0, <li>TYPE_FP = 1, <li>TYPE_INT = 2, <li>TYPE_FORMULA
-	 * = 3, <li>TYPE_BOOLEAN = 4, <li>TYPE_DOUBLE = 5;
-	 *
-	 * @return int type for this Cell
-	 */
-	@Override
-	public int getCellType()
-	{
-		return mycell.getCellType();
-	}
-
-	/**
+	 * FIXME: Why is this public?
 	 * return the underlying cell record <br>
 	 * for internal API use only
 	 *
@@ -1250,7 +1519,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	public Color[] getBorderColors()
 	{
 		getFormatHandle();
-		return this.formatter.getBorderColors();
+		return formatter.getBorderColors();
 	}
 
 	/**
@@ -1262,47 +1531,6 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	public byte[] getBytes()
 	{
 		return mycell.getData();
-	}
-
-	/**
-	 * Returns the column number of this Cell.
-	 *
-	 * @return int the Column Number of the Cell
-	 */
-	@Override
-	public int getColNum()
-	{
-		setMulblank();
-		return mycell.getColNumber();
-	}
-
-	/**
-	 * Returns the row number of this Cell.
-	 * <p/>
-	 * NOTE: This is the 1-based row number such as you will see in a
-	 * spreadsheet UI.
-	 * <p/>
-	 * ie: A1 = row 1
-	 *
-	 * @return 1-based int the Row Number of the Cell
-	 */
-	@Override
-	public int getRowNum()
-	{
-		return mycell.getRowNumber();
-	}
-
-	/**
-	 * Returns the Address of this Cell as a String.
-	 *
-	 * @return String the address of this Cell in the WorkSheet
-	 */
-	@Override
-	public String getCellAddress()
-	{
-		setMulblank();
-		return mycell.getCellAddress();
-
 	}
 
 	public int[] getIntLocation()
@@ -1329,33 +1557,10 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 * for multiple blank cells only <br>
 	 * for Internal Use. Not intended for the End User.
 	 */
-	short mulblankcolnum = -1;
-
+	// FIXME: UNCLEAR WHY THIS IS BEING INVOKED - SURELY THE MULBLANK SHOULD BE AWARE OF THIS AND BE RESPONSIBLE FOR IT?
 	public void setBlankRef( int c )
 	{
 		mulblankcolnum = (short) c;
-	}
-
-	/**
-	 * Returns the name of this Cell's WorkSheet as a String.
-	 *
-	 * @return String the name this Cell's WorkSheet
-	 */
-	@Override
-	public String getWorkSheetName()
-	{
-		if( wsh == null )
-		{
-			try
-			{
-				return mycell.getSheet().getSheetName();
-			}
-			catch( Exception e )
-			{
-				return "";
-			}
-		}
-		return wsh.getSheetName();
 	}
 
 	/**
@@ -1370,22 +1575,37 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	}
 
 	/**
-	 * Gets the value of the cell as a String with the number format applied.
-	 * Boolean cell types will return "true" or "false". Custom number formats
-	 * are not currently supported, although they will be written correctly to
-	 * the output file. Patterns that display negative numbers in red are not
-	 * currently supported; the number will be prefixed with a minus sign
-	 * instead. For more information on number format patterns see <a
-	 * href="http://support.microsoft.com/kb/264372">Microsoft KB264372</a>.
+	 * set the value of this cell to Unicodestring us <br>
+	 * NOTE: This method will not check for formula references or do any data
+	 * conversions <br>
+	 * Useful when strings may start with = but you do not want to convert to a
+	 * formula value
 	 *
-	 * @return the value of the cell as a string formatted according to the cell
-	 * type and, if present, the number format pattern
+	 * @param Unicodestring us - Unicode String
+	 * @throws CellTypeMismatchException
 	 */
-	@Override
-	public String getFormattedStringVal()
+	public void setStringVal( Unicodestring us )
 	{
-		FormatHandle myfmt = this.getFormatHandle();
-		return CellFormatFactory.fromPatternString( myfmt.getFormatPattern() ).format( this );
+		try
+		{
+			if( ((us == null) || us.equals( "" )) && !(mycell instanceof Blank) )
+			{
+				changeCellType( null ); // set to blank
+			}
+			else if( (us != null) && !us.equals( "" ) )
+			{
+				if( !(mycell instanceof Labelsst) )
+				{
+					changeCellType( " " ); // avoid potential issues with string
+				}
+				// values beginning with "="
+				((Labelsst) mycell).setStringVal( us );
+			}
+		}
+		catch( Exception e )
+		{
+			throw new CellTypeMismatchException( e.toString() );
+		}
 	}
 
 	/**
@@ -1403,8 +1623,8 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public String getFormattedStringVal( boolean formatForXML )
 	{
-		FormatHandle myfmt = this.getFormatHandle();
-		String val = this.getVal().toString();
+		FormatHandle myfmt = getFormatHandle();
+		String val = getVal().toString();
 		if( formatForXML )
 		{
 			val = com.extentech.formats.XLS.OOXMLAdapter.stripNonAscii( val ).toString();
@@ -1432,7 +1652,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	public String getStringVal( int notation )
 	{
 		String numval = mycell.getStringVal();
-		int i = this.getCellType();
+		int i = getCellType();
 		if( (i == TYPE_FP) || (i == TYPE_INT) || (i == TYPE_FORMULA) || (i == TYPE_DOUBLE) )
 		{
 			return ExcelTools.formatNumericNotation( numval, notation );
@@ -1453,20 +1673,6 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	}
 
 	/**
-	 * Returns the Formatting record ID (FormatId) for this Cell <br>
-	 * This can be used with 'setFormatId(int i)' to copy the formatting from
-	 * one Cell to another (e.g. a template cell to a new cell)
-	 *
-	 * @return int the FormatId for this Cell
-	 */
-	@Override
-	public int getFormatId()
-	{
-		setMulblank();
-		return mycell.getIxfe();
-	}
-
-	/**
 	 * get the conditional formatting record ID (FormatId) <br>
 	 * returns the normal FormatId if the condition(s) in the conditional format
 	 * have not been met
@@ -1475,10 +1681,10 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public int getConditionalFormatId()
 	{
-		ConditionalFormatHandle[] cfhandles = this.getConditionalFormatHandles();
+		ConditionalFormatHandle[] cfhandles = getConditionalFormatHandles();
 		if( (cfhandles == null) || (cfhandles.length == 0) )
 		{
-			return this.getFormatId();
+			return getFormatId();
 		}
 		// TODO: only supporting first cfmat handle again
 		Condfmt cfmt = cfhandles[0].getCndfmt();
@@ -1488,7 +1694,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		{
 			Cf cx1 = ((Cf) x.next());
 			// create a ptgref for this Cell
-			Ptg pref = new PtgRef( this.getCellAddress(), this.mycell, false );
+			Ptg pref = new PtgRef( getCellAddress(), mycell, false );
 
 			if( cx1.evaluate( pref ) )
 			{
@@ -1498,7 +1704,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 				return ret;
 			}
 		}
-		return this.getFormatId();
+		return getFormatId();
 	}
 
 	/**
@@ -1513,7 +1719,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	{
 		String newaddr = ExcelTools.getAlphaVal( mycell.getColNumber() );
 		newaddr += String.valueOf( newrow );
-		this.moveTo( newaddr );
+		moveTo( newaddr );
 	}
 
 	/**
@@ -1526,7 +1732,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	{
 		String newaddr = ExcelTools.getAlphaVal( mycell.getColNumber() );
 		newaddr += String.valueOf( newrow );
-		this.moveAndOverwriteTo( newaddr );
+		moveAndOverwriteTo( newaddr );
 	}
 
 	/**
@@ -1541,7 +1747,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	{
 		String newaddr = newcol;
 		newaddr += String.valueOf( mycell.getRowNumber() + 1 );
-		this.moveTo( newaddr );
+		moveTo( newaddr );
 	}
 
 	/**
@@ -1551,7 +1757,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public void copyFormat( CellHandle source )
 	{
-		this.getCell().copyFormat( source.getCell() );
+		getCell().copyFormat( source.getCell() );
 	}
 
 	/**
@@ -1566,23 +1772,23 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	{
 
 		// check for existing
-		Boundsheet bs = this.mycell.getSheet();
+		Boundsheet bs = mycell.getSheet();
 
-		BiffRec rec = this.mycell;
+		BiffRec rec = mycell;
 		XLSRecord nucell = (XLSRecord) ((XLSRecord) rec).clone();
 		int[] rc = ExcelTools.getRowColFromString( newaddr );
 		nucell.setRowNumber( rc[0] );
 		nucell.setCol( (short) rc[1] );
-		nucell.setXFRecord( this.mycell.getIxfe() );
+		nucell.setXFRecord( mycell.getIxfe() );
 		bs.addRecord( nucell, rc );
 
 		CellHandle ret = new CellHandle( nucell, wbh );
 		if( mycell.hyperlink != null )
 		{
 			// set the bounds of the mycell.hyperlink
-			ret.setURL( this.getURL() );
+			ret.setURL( getURL() );
 		}
-		ret.setWorkSheetHandle( this.getWorkSheetHandle() );
+		ret.setWorkSheetHandle( getWorkSheetHandle() );
 		// this.getWorkSheetHandle().cellhandles.put(this.getCellAddress(),
 		// this);
 		return ret;
@@ -1601,7 +1807,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		{
 			try
 			{
-				this.finalize();
+				finalize();
 			}
 			catch( Throwable t )
 			{
@@ -1627,7 +1833,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		{
 			throw new CellPositionConflictException( newaddr );
 		}
-		bs.moveCell( this.getCellAddress(), newaddr );
+		bs.moveCell( getCellAddress(), newaddr );
 
 		if( mycell.hyperlink != null )
 		{
@@ -1635,7 +1841,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 			// int[] bnds =
 			// ExcelTools.getRowColFromString(this.getCellAddress());
 
-			int[] bnds = ExcelTools.getRowColFromString( this.getCellAddress() );
+			int[] bnds = ExcelTools.getRowColFromString( getCellAddress() );
 
 			Hlink hl = mycell.hyperlink;
 			hl.setRowFirst( bnds[0] );
@@ -1658,11 +1864,11 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		// check for existing
 		Boundsheet bs = mycell.getSheet();
 		BiffRec oldhand = bs.getCell( newaddr );
-		bs.moveCell( this.getCellAddress(), newaddr );
+		bs.moveCell( getCellAddress(), newaddr );
 
 		if( mycell.hyperlink != null )
 		{
-			int[] bnds = ExcelTools.getRowColFromString( this.getCellAddress() );
+			int[] bnds = ExcelTools.getRowColFromString( getCellAddress() );
 
 			Hlink hl = mycell.hyperlink;
 			hl.setRowFirst( bnds[0] );
@@ -1698,7 +1904,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	{
 		// TODO, should these be read-only?
 		// TODO, this is bad, only handles first cf record for the cell
-		ConditionalFormatHandle[] cfhandles = this.getConditionalFormatHandles();
+		ConditionalFormatHandle[] cfhandles = getConditionalFormatHandles();
 		if( cfhandles != null )
 		{
 			FormatHandle[] fmx = new FormatHandle[cfhandles[0].getCndfmt().getRules().size()];
@@ -1718,7 +1924,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public ConditionalFormatHandle[] getConditionalFormatHandles()
 	{
-		WorkSheetHandle sh = this.getWorkSheetHandle();
+		WorkSheetHandle sh = getWorkSheetHandle();
 		if( sh == null )
 		{
 			return null;
@@ -1744,37 +1950,12 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public FormatHandle getFormatHandle()
 	{
-		if( this.formatter == null )
+		if( formatter == null )
 		{
-			this.setFormatHandle();
+			setFormatHandle();
 		}
 
-		return this.formatter;
-	}
-
-	/**
-	 * locks or unlocks this Cell for editing
-	 *
-	 * @param boolean locked - true if Cell should be locked, false otherwise
-	 */
-	public void setLocked( boolean locked )
-	{
-		// create a new xf for this
-		// this causes formats to be lost this.useExistingXF = false;
-		getFormatHandle().setLocked( locked );
-	}
-
-	/**
-	 * Hides or shows the formula for this Cell, if present
-	 *
-	 * @param boolean hidden - setting whether to hide or show formulas for this
-	 *                Cell
-	 */
-	public void setFormulaHidden( boolean hidden )
-	{
-		// create a new xf for this
-		// this causes formats to be lost this.useExistingXF = false;
-		getFormatHandle().setFormulaHidden( hidden );
+		return formatter;
 	}
 
 	/**
@@ -1786,21 +1967,8 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public void setFormatHandle( FormatHandle f )
 	{
-		f.addCell( this.mycell );
-		this.formatter = f;
-	}
-
-	/**
-	 * Sets the Formatting record ID (FormatId) for this Cell
-	 * <p/>
-	 * This can be used with 'getFormatId()' to copy the formatting from one
-	 * Cell to another (ie: a template cell to a new cell)
-	 *
-	 * @param int i - the new index to the Format for this Cell
-	 */
-	public void setFormatId( int i )
-	{
-		mycell.setXFRecord( i );
+		f.addCell( mycell );
+		formatter = f;
 	}
 
 	/**
@@ -1808,7 +1976,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public void clearFormats()
 	{
-		this.setFormatId( this.getWorkBook().getWorkBook().getDefaultIxfe() );
+		setFormatId( getWorkBook().getWorkBook().getDefaultIxfe() );
 	}
 
 	/**
@@ -1816,7 +1984,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public void clearContents()
 	{
-		this.setVal( null );
+		setVal( null );
 	}
 
 	/**
@@ -1824,8 +1992,8 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public void clear()
 	{
-		this.clearFormats();
-		this.clearContents();
+		clearFormats();
+		clearContents();
 	}
 
 	/**
@@ -1843,7 +2011,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		{
 			throw new FormulaNotFoundException( "No Formula for: " + getCellAddress() );
 		}
-		FormulaHandle fh = new FormulaHandle( f, this.wbh );
+		FormulaHandle fh = new FormulaHandle( f, wbh );
 		return fh;
 	}
 
@@ -1859,6 +2027,26 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 			return mycell.hyperlink.getURL();
 		}
 		return null;
+	}
+
+	/**
+	 * Creates a new Hyperlink for this Cell from a URL String. Can be any valid
+	 * URL. This URL String must include the protocol. <br>
+	 * For Example, "http://www.extentech.com/" <br>
+	 * To remove a hyperlink, pass in null for the URL String
+	 *
+	 * @param String urlstr - the URL String for this Cell
+	 */
+	public void setURL( String urlstr )
+	{
+		if( urlstr == null )
+		{
+			mycell.hyperlink = null;
+			// TODO: remove existing Hlink from stream
+			// mycell.hyperlink.remove(true);
+			return;
+		}
+		setURL( urlstr, "", "" );
 	}
 
 	/**
@@ -1883,26 +2071,6 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	public boolean hasHyperlink()
 	{
 		return (mycell.hyperlink != null);
-	}
-
-	/**
-	 * Creates a new Hyperlink for this Cell from a URL String. Can be any valid
-	 * URL. This URL String must include the protocol. <br>
-	 * For Example, "http://www.extentech.com/" <br>
-	 * To remove a hyperlink, pass in null for the URL String
-	 *
-	 * @param String urlstr - the URL String for this Cell
-	 */
-	public void setURL( String urlstr )
-	{
-		if( urlstr == null )
-		{
-			mycell.hyperlink = null;
-			// TODO: remove existing Hlink from stream
-			// mycell.hyperlink.remove(true);
-			return;
-		}
-		setURL( urlstr, "", "" );
 	}
 
 	/**
@@ -1935,7 +2103,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 			// if (!desc.equals("")) setVal(desc);
 
 			// set the bounds of the mycell.hyperlink
-			int[] bnds = ExcelTools.getRowColFromString( this.getCellAddress() );
+			int[] bnds = ExcelTools.getRowColFromString( getCellAddress() );
 			mycell.hyperlink.setRowFirst( bnds[0] );
 			mycell.hyperlink.setColFirst( bnds[1] );
 			mycell.hyperlink.setRowLast( bnds[0] );
@@ -1986,7 +2154,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 			}
 
 			// set the bounds of the mycell.hyperlink
-			int[] bnds = ExcelTools.getRowColFromString( this.getCellAddress() );
+			int[] bnds = ExcelTools.getRowColFromString( getCellAddress() );
 			mycell.hyperlink.setRowFirst( bnds[0] );
 			mycell.hyperlink.setColFirst( bnds[1] );
 			mycell.hyperlink.setRowLast( bnds[0] );
@@ -2014,14 +2182,14 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 
 	public void setVal( Object obj ) throws CellTypeMismatchException
 	{
-		if( this.wbh.getFormulaCalculationMode() != WorkBook.CALCULATE_EXPLICIT )
+		if( wbh.getFormulaCalculationMode() != WorkBook.CALCULATE_EXPLICIT )
 		{
-			this.clearAffectedCells(); // blow out cache
+			clearAffectedCells(); // blow out cache
 		}
 
 		if( obj instanceof java.sql.Date )
 		{
-			this.setVal( (java.sql.Date) obj, null );
+			setVal( (java.sql.Date) obj, null );
 			return;
 		}
 		if( obj instanceof String )
@@ -2031,7 +2199,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 			{ // Formula or array string
 				try
 				{
-					this.setFormula( formstr );
+					setFormula( formstr );
 					return;
 				}
 				catch(/* 20070212 KSC: FunctionNotSupported */Exception a )
@@ -2051,7 +2219,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		catch( Exception e )
 		{
 			// NOT a CTMME always
-
+			log.error( "Error setting value '{}' on {}", obj, mycell, e );
 			throw new CellTypeMismatchException( e.toString() );
 		}
 	}
@@ -2096,40 +2264,6 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	}
 
 	/**
-	 * set the value of this cell to Unicodestring us <br>
-	 * NOTE: This method will not check for formula references or do any data
-	 * conversions <br>
-	 * Useful when strings may start with = but you do not want to convert to a
-	 * formula value
-	 *
-	 * @param Unicodestring us - Unicode String
-	 * @throws CellTypeMismatchException
-	 */
-	public void setStringVal( Unicodestring us )
-	{
-		try
-		{
-			if( ((us == null) || us.equals( "" )) && !(mycell instanceof Blank) )
-			{
-				changeCellType( null ); // set to blank
-			}
-			else if( (us != null) && !us.equals( "" ) )
-			{
-				if( !(mycell instanceof Labelsst) )
-				{
-					changeCellType( " " ); // avoid potential issues with string
-				}
-				// values beginning with "="
-				((Labelsst) mycell).setStringVal( us );
-			}
-		}
-		catch( Exception e )
-		{
-			throw new CellTypeMismatchException( e.toString() );
-		}
-	}
-
-	/**
 	 * this method will be fired as each record is parsed from an input
 	 * Spreadsheet
 	 * <p/>
@@ -2141,21 +2275,6 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	}
 
 	/**
-	 * Returns a String representation of this CellHandle
-	 *
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString()
-	{
-		String ret = this.getCellAddress() + ":" + this.getStringVal();
-		if( this.getURL() != null )
-		{
-			ret += this.getURL();
-		}
-		return ret;
-	}
-
-	/**
 	 * Set the Value of the Cell to a double
 	 *
 	 * @param double d- double value to set this Cell to
@@ -2163,7 +2282,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public void setVal( double d ) throws CellTypeMismatchException
 	{
-		this.setVal( new Double( d ) );
+		setVal( new Double( d ) );
 	}
 
 	/**
@@ -2174,7 +2293,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public void setVal( float f ) throws CellTypeMismatchException
 	{
-		this.setVal( new Float( f ) );
+		setVal( new Float( f ) );
 	}
 
 	/**
@@ -2202,16 +2321,16 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	public void setVal( java.sql.Date dt, String fmt )
 	{
 
-		if( this.wbh.getFormulaCalculationMode() != WorkBook.CALCULATE_EXPLICIT )
+		if( wbh.getFormulaCalculationMode() != WorkBook.CALCULATE_EXPLICIT )
 		{
-			this.clearAffectedCells(); // blow out cache
+			clearAffectedCells(); // blow out cache
 		}
 		if( fmt == null )
 		{
 			fmt = "m/d/yyyy";
 		}
-		this.setVal( new Double( DateConverter.getXLSDateVal( dt ) ) );
-		this.setFormatPattern( fmt );
+		setVal( new Double( DateConverter.getXLSDateVal( dt ) ) );
+		setFormatPattern( fmt );
 	}
 
 	/**
@@ -2223,34 +2342,6 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	public void setVal( boolean b ) throws CellTypeMismatchException
 	{
 		setVal( Boolean.valueOf( b ) );
-	}
-
-	/**
-	 * Set the value of this Cell to an int value <br>
-	 * NOTE: setting a Boolean Cell type to a zero or a negative number will set
-	 * the Cell to 'false'; setting it to an int value 1 or greater will set it
-	 * to true.
-	 *
-	 * @param int i - int value to set this Cell to
-	 * @throws CellTypeMismatchException
-	 */
-	public void setVal( int i ) throws CellTypeMismatchException
-	{
-		if( mycell.getCellType() == XLSConstants.TYPE_BOOLEAN )
-		{
-			if( i > 0 )
-			{
-				setVal( Boolean.valueOf( true ) );
-			}
-			else
-			{
-				setVal( Boolean.valueOf( false ) );
-			}
-		}
-		else
-		{
-			setVal( Integer.valueOf( i ) );
-		}
 	}
 
 	/**
@@ -2300,20 +2391,6 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	}
 
 	/**
-	 * Set a cell to Excel-compatible formula passed in as String. <br>
-	 *
-	 * @param String formStr - the Formula String
-	 * @throws FunctionNotSupportedException if unable to parse string correctly
-	 */
-	public void setFormula( String formStr ) throws FunctionNotSupportedException
-	{
-		int ixfe = this.mycell.getIxfe();
-		this.remove( true );
-		this.mycell = wsh.add( formStr, this.getCellAddress() ).mycell;
-		this.mycell.setXFRecord( ixfe );
-	}
-
-	/**
 	 * Set a cell to formula passed in as String. Sets the cachedValue as well,
 	 * so no calculating is necessary.
 	 * <p/>
@@ -2327,17 +2404,17 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public void setFormula( String formStr, Object value ) throws Exception
 	{
-		if( !(this.mycell instanceof Formula) )
+		if( !(mycell instanceof Formula) )
 		{
-			int ixfe = this.mycell.getIxfe();
-			CellRange cr = this.mycell.getMergeRange();
-			int r = this.getRowNum();
-			int c = this.getColNum();
-			this.remove( true );
-			this.mycell = wsh.add( formStr, r, c, ixfe ).mycell;
-			this.mycell.setMergeRange( cr );
+			int ixfe = mycell.getIxfe();
+			CellRange cr = mycell.getMergeRange();
+			int r = getRowNum();
+			int c = getColNum();
+			remove( true );
+			mycell = wsh.add( formStr, r, c, ixfe ).mycell;
+			mycell.setMergeRange( cr );
 		}
-		Formula f = (Formula) this.mycell;
+		Formula f = (Formula) mycell;
 		f.setCachedValue( value );
 	}
 
@@ -2351,22 +2428,22 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public void setFormula( Stack newExp, Object value )
 	{
-		if( !(this.mycell instanceof Formula) )
+		if( !(mycell instanceof Formula) )
 		{
-			int ixfe = this.mycell.getIxfe();
-			CellRange mccr = this.mycell.getMergeRange();
-			int r = this.getRowNum();
-			int c = this.getColNum();
-			this.remove( true );
-			this.mycell = wsh.add( "=0", r, c, ixfe ).mycell; // add the most
+			int ixfe = mycell.getIxfe();
+			CellRange mccr = mycell.getMergeRange();
+			int r = getRowNum();
+			int c = getColNum();
+			remove( true );
+			mycell = wsh.add( "=0", r, c, ixfe ).mycell; // add the most
 			// basic formula so
 			// can modify below
 			// ((:
-			this.mycell.setMergeRange( mccr );
+			mycell.setMergeRange( mccr );
 		}
 		try
 		{
-			Formula f = (Formula) this.mycell;
+			Formula f = (Formula) mycell;
 			f.setExpression( newExp );
 			f.setCachedValue( value );
 		}
@@ -2392,7 +2469,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		CellRange mergerange = getMergedCellRange();
 		if( mergerange != null )
 		{
-				log.debug( "CellHandle " + this.toString() + " getSpan() for range: " + mergerange.toString() );
+			log.debug( "CellHandle " + toString() + " getSpan() for range: " + mergerange.toString() );
 			int[] ret = { 0, 0 };
 			// if(check.toString().equals(this.toString())){ //it's the first in
 			// the range -- show it!
@@ -2428,7 +2505,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public int getSheetNum()
 	{
-		return this.mycell.getSheet().getSheetNum();
+		return mycell.getSheet().getSheetNum();
 	}
 
 	/**
@@ -2439,26 +2516,6 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	public WorkSheetHandle getWorkSheetHandle()
 	{
 		return wsh;
-	}
-
-	/**
-	 * Determines if the cellHandle represents a completely blank/null cell, and
-	 * can thus be ignored for many operations.
-	 * <p/>
-	 * Criteria for returning true is a cell type of BLANK, that has a default
-	 * format id (0), is not part of a merge range, does not contain a URL, and
-	 * is not a part of a validation
-	 *
-	 * @return true if cell is truly blank
-	 */
-	public boolean isDefaultCell()
-	{
-		if( (this.getCellType() == CellHandle.TYPE_BLANK) && (((this.getFormatId() == 15) && !this.wbh.getWorkBook()
-		                                                                                              .getIsExcel2007()) || (this.getFormatId() == 0)) && (this.getMergedCellRange() == null) && (this.getURL() == null) && (this.getValidationHandle() == null) )
-		{
-			return true;
-		}
-		return false;
 	}
 
 	/**
@@ -2475,6 +2532,26 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 
 		// if (wsh!=null) //20080616 KSC
 		// wsh.cellhandles.put(this.getCellAddress(), this);
+	}
+
+	/**
+	 * Determines if the cellHandle represents a completely blank/null cell, and
+	 * can thus be ignored for many operations.
+	 * <p/>
+	 * Criteria for returning true is a cell type of BLANK, that has a default
+	 * format id (0), is not part of a merge range, does not contain a URL, and
+	 * is not a part of a validation
+	 *
+	 * @return true if cell is truly blank
+	 */
+	public boolean isDefaultCell()
+	{
+		if( (getCellType() == CellHandle.TYPE_BLANK) && (((getFormatId() == 15) && !wbh.getWorkBook()
+		                                                                                              .getIsExcel2007()) || (getFormatId() == 0)) && (getMergedCellRange() == null) && (getURL() == null) && (getValidationHandle() == null) )
+		{
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -2496,10 +2573,15 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public String getXML( int[] mergedRange )
 	{
-		String vl = "", fvl = "", sv = "", hd = "", csp = "", hlink = "";
+		String vl = "";
+		String fvl = "";
+		String sv;
+		String hd = "";
+		String csp = "";
+		String hlink = "";
 		Object val = null;
 		StringBuffer retval = new StringBuffer();
-		String typename = this.getCellTypeName();
+		String typename = getCellTypeName();
 		// put the formula string in
 		if( typename.equals( "Formula" ) )
 		{
@@ -2519,7 +2601,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 				}
 				try
 				{
-					if( this.wbh.getWorkBook().getCalcMode() != WorkBook.CALCULATE_EXPLICIT )
+					if( wbh.getWorkBook().getCalcMode() != WorkBook.CALCULATE_EXPLICIT )
 					{
 						val = fmh.calculate();
 					}
@@ -2564,16 +2646,16 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 			}
 			catch( Exception e )
 			{
-				log.warn( "ExtenXLS.getXML() failed getting type of Formula for: " + this.toString(), e );
+				log.warn( "ExtenXLS.getXML() failed getting type of Formula for: " + toString(), e );
 			}
 		}
-		if( this.isDate() )
+		if( isDate() )
 		{
 			typename = "DateTime"; // 20060428 KSC: Moved after Formula parsing
 		}
 
 		// TODO: when RowHandle.getCells actually contains ALL cells, keep this
-		if( this.mycell.getOpcode() != XLSConstants.MULBLANK )
+		if( mycell.getOpcode() != XLSConstants.MULBLANK )
 		{
 			// Put the style ID in
 			sv = " StyleID=\"s" + getFormatId() + "\"";
@@ -2582,26 +2664,26 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 				csp += " MergeAcross=\"" + (mergedRange[3] - mergedRange[1]) + "\"";
 				csp += " MergeDown=\"" + (mergedRange[2] - mergedRange[0]) + "\"";
 			}
-			if( this.getCol().isHidden() )
+			if( getCol().isHidden() )
 			{
 				hd = " Hidden=\"true\"";
 			}
 			// TODO: HRefScreenTip ????
-			if( this.getURL() != null )
+			if( getURL() != null )
 			{
-				hlink = " HRef=\"" + StringTool.convertXMLChars( this.getURL() ) + "\"";
+				hlink = " HRef=\"" + StringTool.convertXMLChars( getURL() ) + "\"";
 			}
 
-			// put the date formattingin
+			// put the date formatting in
 			// Assemble the string
-			retval.append( "<Cell Address=\"" + this.getCellAddress() + "\"" + sv + csp + fvl + hd + hlink + "><Data Type=\"" + typename + "\">" );
+			retval.append( "<Cell Address=\"" + getCellAddress() + "\"" + sv + csp + fvl + hd + hlink + "><Data Type=\"" + typename + "\">" );
 			if( typename.equals( "DateTime" ) )
 			{
 				retval.append( DateConverter.getFormattedDateVal( this ) );
 			}
-			else if( this.getCellType() == CellHandle.TYPE_STRING )
+			else if( getCellType() == CellHandle.TYPE_STRING )
 			{
-				val = this.getStringVal(); // (String)getVal();
+				val = getStringVal(); // (String)getVal();
 				if( val.equals( "" ) )
 				{ // 20070216 KSC: John, had the same edits,
 					// seems to work well in cursory tests ...
@@ -2618,12 +2700,12 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 				try
 				{
 					// if(val == null)
-					val = this.getVal();
+					val = getVal();
 					retval.append( StringTool.convertXMLChars( val.toString() ) + vl );
 				}
 				catch( Exception e )
 				{
-					log.error( "CellHandle.getXML failed for: " + this.getCellAddress() + " in: " + this.getWorkBook().toString(), e );
+					log.error( "CellHandle.getXML failed for: " + getCellAddress() + " in: " + getWorkBook().toString(), e );
 					retval.append( "XML ERROR!" );
 				}
 			}
@@ -2632,30 +2714,48 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		}
 		else
 		{
-			int c = ((Mulblank) this.mycell).getColFirst();
-			int lastcol = ((Mulblank) this.mycell).getColLast();
+			Mulblank mulblank = (Mulblank) mycell;
+			int c = mulblank.getColFirst();
+			int lastcol = mulblank.getColLast();
 			for(; c <= lastcol; c++ )
 			{
 				mulblankcolnum = (short) c;
 				// Put the style ID in
 				sv = " StyleID=\"s" + getFormatId() + "\"";
-				if( this.getCol().isHidden() )
+				if( getCol().isHidden() )
 				{
 					hd = " Hidden=\"true\"";
 				}
 				// TODO: HRefScreenTip ????
-				if( this.getURL() != null )
+				if( getURL() != null )
 				{
-					hlink = " HRef=\"" + StringTool.convertXMLChars( this.getURL() ) + "\"";
+					hlink = " HRef=\"" + StringTool.convertXMLChars( getURL() ) + "\"";
 				}
 
 				// put the date formattingin
 				// Assemble the string
-				retval.append( "<Cell Address=\"" + this.getCellAddress() + "\"" + sv + csp + fvl + hd + hlink + "><Data Type=\"" + typename + "\"/>" );
+				retval.append( "<Cell Address=\"" + getCellAddress() + "\"" + sv + csp + fvl + hd + hlink + "><Data Type=\"" + typename + "\"/>" );
 				retval.append( end_cell_xml );
 			}
 		}
 		return retval.toString();
+	}
+
+	/**
+	 * Returns an int representing the current horizontal alignment in this
+	 * Cell.
+	 *
+	 * @return int representing horizontal alignment
+	 * @see FormatHandle.ALIGN* constants
+	 */
+	public int getHorizontalAlignment()
+	{
+		if( mycell.getXfRec() != null )
+		{
+			return mycell.getXfRec().getHorizontalAlignment();
+		}
+		// 0 is default alignment
+		return 0;
 	}
 
 	/**
@@ -2671,20 +2771,19 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	}
 
 	/**
-	 * Returns an int representing the current horizontal alignment in this
-	 * Cell.
+	 * Returns an int representing the current vertical alignment in this Cell.
 	 *
-	 * @return int representing horizontal alignment
+	 * @return int representing vertical alignment
 	 * @see FormatHandle.ALIGN* constants
 	 */
-	public int getHorizontalAlignment()
+	public int getVerticalAlignment()
 	{
-		if( this.mycell.getXfRec() != null )
+		if( mycell.getXfRec() != null )
 		{
-			return this.mycell.getXfRec().getHorizontalAlignment();
+			return mycell.getXfRec().getVerticalAlignment();
 		}
-		// 0 is default alignment
-		return 0;
+		// 1 is default alignment
+		return 1;
 	}
 
 	/**
@@ -2700,19 +2799,18 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	}
 
 	/**
-	 * Returns an int representing the current vertical alignment in this Cell.
+	 * Get the cell wrapping behavior for this cell.
 	 *
-	 * @return int representing vertical alignment
-	 * @see FormatHandle.ALIGN* constants
+	 * @return true if cell text is wrapped
 	 */
-	public int getVerticalAlignment()
+	public boolean getWrapText()
 	{
-		if( this.mycell.getXfRec() != null )
+		if( mycell.getXfRec() != null )
 		{
-			return this.mycell.getXfRec().getVerticalAlignment();
+			return mycell.getXfRec().getWrapText();
 		}
-		// 1 is default alignment
-		return 1;
+		// false is default alignment
+		return false;
 	}
 
 	/**
@@ -2730,9 +2828,9 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 			// NOT been set yet
 			try
 			{
-				if( !this.getRow().isAlteredHeight() ) // has row height been altered??
+				if( !getRow().isAlteredHeight() ) // has row height been altered??
 				{
-					this.getRow().setRowHeightAutoFit();
+					getRow().setRowHeightAutoFit();
 				}
 			}
 			catch( Exception e )
@@ -2742,18 +2840,21 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	}
 
 	/**
-	 * Get the cell wrapping behavior for this cell.
+	 * Get the rotation of this Cell in degrees. <br>
+	 * Values 0-90 represent rotation up, 0-90degrees. <br>
+	 * Values 91-180 represent rotation down, 0-90 degrees. <br>
+	 * Value 255 is vertical
 	 *
-	 * @return true if cell text is wrapped
+	 * @return int representing the degrees of cell rotation
 	 */
-	public boolean getWrapText()
+	public int getCellRotation()
 	{
-		if( this.mycell.getXfRec() != null )
+		if( mycell.getXfRec() != null )
 		{
-			return this.mycell.getXfRec().getWrapText();
+			return mycell.getXfRec().getRotation();
 		}
 		// false is default alignment
-		return false;
+		return 0;
 	}
 
 	/**
@@ -2770,33 +2871,20 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		formatter.setCellRotation( align );
 	}
 
-	/**
-	 * Get the rotation of this Cell in degrees. <br>
-	 * Values 0-90 represent rotation up, 0-90degrees. <br>
-	 * Values 91-180 represent rotation down, 0-90 degrees. <br>
-	 * Value 255 is vertical
-	 *
-	 * @return int representing the degrees of cell rotation
-	 */
-	public int getCellRotation()
-	{
-		if( this.mycell.getXfRec() != null )
-		{
-			return this.mycell.getXfRec().getRotation();
-		}
-		// false is default alignment
-		return 0;
-	}
-
 	@Override
 	public int compareTo( CellHandle that )
 	{
-		int comp = this.getRowNum() - that.getRowNum();
+		int comp = getRowNum() - that.getRowNum();
 		if( comp != 0 )
 		{
 			return comp;
 		}
-		return this.getColNum() - that.getColNum();
+		return getColNum() - that.getColNum();
+	}
+
+	public int hashCode()
+	{
+		return mycell.hashCode();
 	}
 
 	public boolean equals( Object that )
@@ -2805,12 +2893,24 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		{
 			return false;
 		}
-		return this.mycell.equals( ((CellHandle) that).mycell );
+		return mycell.equals( ((CellHandle) that).mycell );
 	}
 
-	public int hashCode()
+	/**
+	 * Returns a String representation of this CellHandle
+	 *
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
 	{
-		return this.mycell.hashCode();
+		String cellAddress = getCellAddress();
+		String stringVal = getStringVal();
+		String ret = cellAddress + ":" + stringVal;
+		if( getURL() != null )
+		{
+			ret += getURL();
+		}
+		return ret;
 	}
 
 	/**
@@ -2822,178 +2922,9 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	{
 		if( mycell.myxf == null )
 		{
-			this.getNewXf();
+			getNewXf();
 		}
 		mycell.myxf.getFont().setScript( ss );
-	}
-
-	/**
-	 * Set the val of the biffrec with an Object
-	 *
-	 * @param Object to set the value of the Cell to
-	 */
-	private void setBiffRecValue( Object obj ) throws CellTypeMismatchException
-	{
-		if( (mycell.getOpcode() == XLSConstants.BLANK) || (mycell.getOpcode() == XLSConstants.MULBLANK) )
-		{
-			// no reason for this Blank blank = (Blank)mycell;
-			// String addr = mycell.getCellAddress();
-
-			// trim the Mulblank
-			/*
-			 * KSC: mulblanks are NOT expanded now if (blank.getMyMul() !=
-			 * null){ Mulblank mblank = (Mulblank)blank.getMyMul();
-			 * mblank.trim(blank); }
-			 */
-			changeCellType( obj ); // 20080206 KSC: Basically replaces all above
-			// code
-		}
-		else
-		{
-			if( obj == null )
-			{
-				// should never be false ??? if (!(mycell instanceof Blank))
-				changeCellType( obj ); // will set to blank
-			}
-			else if( (obj instanceof Float) || (obj instanceof Double) || (obj instanceof Integer) || (obj instanceof Long) )
-			{
-				if( (mycell instanceof NumberRec) || (mycell instanceof Rk) )
-				{
-					if( obj instanceof Float )
-					{
-						Float f = (Float) obj;
-						mycell.setFloatVal( f );
-					}
-					else if( obj instanceof Integer )
-					{
-						Integer i = (Integer) obj;
-						mycell.setIntVal( i.intValue() );
-					}
-					else if( obj instanceof Double )
-					{
-						Double d = (Double) obj;
-						mycell.setDoubleVal( d.doubleValue() );
-					}
-					else if( obj instanceof Long )
-					{
-						Long d = (Long) obj;
-						mycell.setDoubleVal( d.longValue() );
-					}
-				}
-				else
-				{
-					changeCellType( obj );
-				}
-			}
-			else if( obj instanceof Boolean )
-			{
-				if( mycell instanceof Boolerr )
-				{
-					mycell.setBooleanVal( ((Boolean) obj).booleanValue() );
-				}
-				else
-				{
-					changeCellType( obj );
-				}
-			}
-			else if( obj instanceof String )
-			{
-				if( ((String) obj).startsWith( "=" ) )
-				{
-					changeCellType( obj ); // easier to just redo a formula...
-				}
-				else if( !obj.toString().equalsIgnoreCase( "" ) )
-				{
-					if( mycell instanceof Labelsst )
-					{
-						mycell.setStringVal( String.valueOf( obj ) );
-					}
-					else
-					{
-						changeCellType( obj );
-					}
-				}
-				else if( !(mycell instanceof Blank) )
-				{
-					changeCellType( obj );
-				}
-			}
-		}
-	}
-
-	/**
-	 * if object type doesn't match current mycell record, remove and add
-	 * appropriate record type
-	 *
-	 * @param obj
-	 */
-	private void changeCellType( Object obj )
-	{
-		int[] rc = { mycell.getRowNumber(), mycell.getColNumber() };
-		Boundsheet bs = mycell.getSheet();
-		int oldXf = mycell.getIxfe();
-		bs.removeCell( mycell );
-		BiffRec addedrec = bs.addValue( obj, rc, true );
-		mycell = (XLSRecord) addedrec;
-		mycell.setXFRecord( oldXf );
-	}
-
-	/**
-	 * retrieves or creates a new xf for this cell
-	 *
-	 * @return
-	 */
-	private Xf getNewXf()
-	{
-		if( mycell.myxf != null )
-		{
-			return mycell.myxf;
-		}
-		// reusing or creating new xfs is handled in FormatHandle/cloneXf and
-		// updateXf
-		// this.useExistingXF = true; // flag to re-use this XF
-		try
-		{
-			mycell.myxf = new Xf( this.getFont().getIdx() );
-			// get the recidx of the last Xf
-			int insertIdx = mycell.getWorkBook().getXf( mycell.getWorkBook().getNumXfs() - 1 ).getRecordIndex();
-			// perform default add rec actions
-
-			mycell.myxf.setSheet( null );
-			mycell.getWorkBook().getStreamer().addRecordAt( mycell.myxf, insertIdx + 1 );
-			mycell.getWorkBook().addRecord( mycell.myxf, false );
-			// update the pointer
-			int xfe = mycell.myxf.getIdx();
-			mycell.setIxfe( xfe );
-			return mycell.myxf;
-		}
-		catch( Exception e )
-		{
-			return null;
-		}
-	}
-
-	static final String begin_hidden_emptycell_xml = "<Cell Address=\"";
-	static final String end_hidden_emptycell_xml = "\" StyleID=\"s15\" Hidden=\"true\"><Data Type=\"String\"></Data></Cell>";
-
-	static final String begin_cell_xml = "<Cell Address=\"";
-	static final String end_emptycell_xml = "\" StyleID=\"s15\"><Data Type=\"String\"></Data></Cell>";
-	static final String end_cell_xml = "</Cell>";
-
-	/**
-	 * Returns an xml representation of an empty cell
-	 *
-	 * @param loc       - the cell address
-	 * @param isVisible - if the cell is visible (not hidden)
-	 * @return
-	 */
-	protected static String getEmptyCellXML( String loc, boolean isVisible )
-	{
-		if( !isVisible )
-		{
-			return begin_hidden_emptycell_xml + loc + end_hidden_emptycell_xml;
-		}
-		return begin_cell_xml + loc + end_emptycell_xml;
 	}
 
 	/**
@@ -3008,26 +2939,16 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public List calculateAffectedCells()
 	{
-		ReferenceTracker rt = this.wbh.getWorkBook().getRefTracker();
+		ReferenceTracker rt = wbh.getWorkBook().getRefTracker();
 		Iterator its = rt.clearAffectedFormulaCells( this ).values().iterator();
 
 		List ret = new ArrayList();
 		while( its.hasNext() )
 		{
-			CellHandle cx = new CellHandle( (BiffRec) its.next(), this.wbh );
+			CellHandle cx = new CellHandle( (BiffRec) its.next(), wbh );
 			ret.add( cx );
 		}
 		return ret;
-	}
-
-	/**
-	 * Internal method for clearing affected cells, does the same thing as
-	 * calculateAffectedCells, but does not create a list
-	 */
-	protected void clearAffectedCells()
-	{
-		ReferenceTracker rt = this.wbh.getWorkBook().getRefTracker();
-		rt.clearAffectedFormulaCells( this );
 	}
 
 	/**
@@ -3043,15 +2964,15 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	public List<CellHandle> calculateAffectedCellsOnSheet()
 	{
-		Iterator its = this.wbh.getWorkBook()
+		Iterator its = wbh.getWorkBook()
 		                       .getRefTracker()
-		                       .clearAffectedFormulaCellsOnSheet( this, this.getWorkSheetName() )
+		                       .clearAffectedFormulaCellsOnSheet( this, getWorkSheetName() )
 		                       .values()
 		                       .iterator();
 		List<CellHandle> ret = new ArrayList<>();
 		while( its.hasNext() )
 		{
-			CellHandle cx = new CellHandle( (BiffRec) its.next(), this.wbh );
+			CellHandle cx = new CellHandle( (BiffRec) its.next(), wbh );
 			ret.add( cx );
 		}
 		return ret;
@@ -3064,7 +2985,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	public void clearChartReferences()
 	{
 		ArrayList<ChartHandle> ret = new ArrayList();
-		Iterator ii = this.wbh.getWorkBook().getRefTracker().getChartReferences( this.getCell() ).iterator();
+		Iterator ii = wbh.getWorkBook().getRefTracker().getChartReferences( getCell() ).iterator();
 		while( ii.hasNext() )
 		{
 			Ai ai = (Ai) ii.next();
@@ -3073,91 +2994,6 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 				ai.getParentChart().setMetricsDirty();
 			}
 		}
-	}
-
-	/**
-	 * Creates a copy of this cell on the given worksheet at the given address.
-	 *
-	 * @param sourcecell the cell to copy
-	 * @param newsheet   the sheet to which the cell should be copied
-	 * @param row        the row in which the copied cell should be placed
-	 * @param col        the row in which the copied cell should be placed
-	 * @return CellHandle representing the new Cell
-	 */
-	public static final CellHandle copyCellToWorkSheet( CellHandle sourcecell, WorkSheetHandle newsheet, int row, int col ) throws
-	                                                                                                                        CellPositionConflictException,
-	                                                                                                                        CellNotFoundException
-	{
-		return copyCellToWorkSheet( sourcecell, newsheet, row, col, false );
-	}
-
-	/**
-	 * Creates a copy of this cell on the given worksheet at the given address.
-	 *
-	 * @param sourcecell  the cell to copy
-	 * @param newsheet    the sheet to which the cell should be copied
-	 * @param row         the row in which the copied cell should be placed
-	 * @param col         the row in which the copied cell should be placed
-	 * @param copyByValue whether to copy formulas' values instead of the formulas
-	 *                    themselves
-	 * @return CellHandle representing the new cell
-	 */
-	public static CellHandle copyCellToWorkSheet( CellHandle sourcecell, WorkSheetHandle newsheet, int row, int col, boolean copyByValue )
-	{
-		// copy cell values
-		CellHandle newcell = null;
-
-		int offsets[] = {
-				row - sourcecell.getRowNum(), col - sourcecell.getColNum()
-		};
-
-		if( sourcecell.isFormula() && !copyByValue )
-		{
-			try
-			{
-				FormulaHandle fmh = sourcecell.getFormulaHandle();
-				newcell = newsheet.add( fmh.getFormulaString(), row, col );
-				FormulaHandle fm2 = newcell.getFormulaHandle();
-				FormulaHandle.moveCellRefs( fm2, offsets );
-			}
-			catch( FormulaNotFoundException ex )
-			{
-				newcell = null;
-			}
-		}
-
-		if( newcell == null )
-		{
-			newcell = newsheet.add( sourcecell.getVal(), row, col );
-		}
-
-		return copyCellHelper( sourcecell, newcell );
-	}
-
-	/**
-	 * Create a copy of this Cell in another WorkBook
-	 *
-	 * @param sourcecell the cell to copy
-	 * @param target     worksheet to copy this cell into
-	 * @return
-	 */
-	public static final CellHandle copyCellToWorkSheet( CellHandle sourcecell, WorkSheetHandle newsheet )
-	{
-		// copy cell values
-		CellHandle newcell = null;
-		try
-		{
-			FormulaHandle fmh = sourcecell.getFormulaHandle();
-			// Logger.logInfo("testFormats Formula encountered:  "+
-			// fmh.getFormulaString());
-
-			newcell = newsheet.add( fmh.getFormulaString(), sourcecell.getCellAddress() );
-		}
-		catch( FormulaNotFoundException ex )
-		{
-			newcell = newsheet.add( sourcecell.getVal(), sourcecell.getCellAddress() );
-		}
-		return copyCellHelper( sourcecell, newcell );
 	}
 
 	/**
@@ -3457,7 +3293,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		ValidationHandle ret = null;
 		try
 		{
-			ret = this.getWorkSheetHandle().getValidationHandle( this.getCellAddress() );
+			ret = getWorkSheetHandle().getValidationHandle( getCellAddress() );
 		}
 		catch( Exception e )
 		{
@@ -3467,52 +3303,219 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	}
 
 	/**
-	 * Copies all formatting - xf and non-xf (such as column width, hidden
-	 * state) plus merged cell range from a sourcecell to a new cell (usually in
-	 * a new workbook)
-	 *
-	 * @param sourcecell the cell to copy
-	 * @param newcell    the cell to copy to
-	 * @return
+	 * Internal method for clearing affected cells, does the same thing as
+	 * calculateAffectedCells, but does not create a list
 	 */
-	protected static final CellHandle copyCellHelper( CellHandle sourcecell, CellHandle newcell )
+	protected void clearAffectedCells()
 	{
-		// copy row height & attributes
-		int rz = sourcecell.getRow().getHeight();
-		newcell.getRow().setHeight( rz );
-		if( sourcecell.getRow().isHidden() )
+		ReferenceTracker rt = wbh.getWorkBook().getRefTracker();
+		rt.clearAffectedFormulaCells( this );
+	}
+
+	/**
+	 * Get a FormatHandle (a Format Object describing the formats for this Cell)
+	 * referenced by this CellHandle.
+	 *
+	 * @return FormatHandle
+	 * @see FormatHandle
+	 */
+	void setFormatHandle()
+	{
+		setMulblank();
+		if( (formatter != null) && (formatter.getFormatId() == mycell.getIxfe()) )
 		{
-			newcell.getRow().setHidden( true );
+			return;
 		}
-		// copy col width & attributes
-		int rzx = sourcecell.getCol().getWidth();
-		newcell.getCol().setWidth( rzx );
-		if( sourcecell.getCol().isHidden() )
+		// reusing or creating new xfs is handled in FormatHandle/cloneXf and
+		// updateXf
+		if( mycell.getXfRec() != null )
 		{
-			newcell.getCol().setHidden( true );
-			// Logger.logInfo("column " + rzx + " is hidden");
+			formatter = new FormatHandle( wbh, mycell.myxf );
+		}
+		else
+		{// should ever happen now?
+			// useExistingXF = false;
+			if( (wbh == null) && (mycell.getWorkBook() != null) )
+			{
+				formatter = new FormatHandle( mycell.getWorkBook(), -1 );
+			}
+			else
+			{
+				formatter = new FormatHandle( wbh, -1 );
+			}
+		}
+		formatter.addCell( mycell );
+	}
+
+	/**
+	 * if this cellhandle refers to a mulblank, ensure internal mulblank
+	 * properties are set to appropriate cell in the mulblank range
+	 * TODO WHY ISNT THE MULBLANK CELL DOING THIS ITSELF? WHY DOES IT NEED TO BE TOLD BY THIS WRAPPER OBJECT
+	 */
+	private void setMulblank()
+	{
+		if( mycell.getOpcode() != XLSConstants.MULBLANK )
+		{
+			return;
 		}
 
+		Mulblank mulblank = (Mulblank) mycell;
+		short colNumber = mycell.getColNumber();
+
+		if( mulblankcolnum == -1 )
+		{
+			// init
+			mulblankcolnum = colNumber;
+			mulblank.setCurrentCell( mulblankcolnum );
+			mycell.getIxfe(); // ensure myxf is set to correct
+			// xf for the given cell in the
+			// set of mulblanks
+		}
+		else if( mulblankcolnum != colNumber )
+		{
+			mulblank.setCurrentCell( mulblankcolnum );
+			mycell.getIxfe(); // ensure myxf is set to correct
+			// xf for the given cell in the
+			// set of mulblanks
+		}
+
+		formatter = null;
+	}
+
+	/**
+	 * Set the val of the biffrec with an Object
+	 *
+	 * @param Object to set the value of the Cell to
+	 */
+	private void setBiffRecValue( Object obj ) throws CellTypeMismatchException
+	{
+		if( (mycell.getOpcode() == XLSConstants.BLANK) || (mycell.getOpcode() == XLSConstants.MULBLANK) )
+		{
+			changeCellType( obj );
+		}
+		else
+		{
+			if( obj == null )
+			{
+				// should never be false ??? if (!(mycell instanceof Blank))
+				changeCellType( obj ); // will set to blank
+			}
+			else if( (obj instanceof Float) || (obj instanceof Double) || (obj instanceof Integer) || (obj instanceof Long) )
+			{
+				if( (mycell instanceof NumberRec) || (mycell instanceof Rk) )
+				{
+					if( obj instanceof Float )
+					{
+						Float f = (Float) obj;
+						mycell.setFloatVal( f );
+					}
+					else if( obj instanceof Integer )
+					{
+						Integer i = (Integer) obj;
+						mycell.setIntVal( i.intValue() );
+					}
+					else if( obj instanceof Double )
+					{
+						Double d = (Double) obj;
+						mycell.setDoubleVal( d.doubleValue() );
+					}
+					else if( obj instanceof Long )
+					{
+						Long d = (Long) obj;
+						mycell.setDoubleVal( d.longValue() );
+					}
+				}
+				else
+				{
+					changeCellType( obj );
+				}
+			}
+			else if( obj instanceof Boolean )
+			{
+				if( mycell instanceof Boolerr )
+				{
+					mycell.setBooleanVal( ((Boolean) obj).booleanValue() );
+				}
+				else
+				{
+					changeCellType( obj );
+				}
+			}
+			else if( obj instanceof String )
+			{
+				if( ((String) obj).startsWith( "=" ) )
+				{
+					changeCellType( obj ); // easier to just redo a formula...
+				}
+				else if( !obj.toString().equalsIgnoreCase( "" ) )
+				{
+					if( mycell instanceof Labelsst )
+					{
+						mycell.setStringVal( String.valueOf( obj ) );
+					}
+					else
+					{
+						changeCellType( obj );
+					}
+				}
+				else if( !(mycell instanceof Blank) )
+				{
+					changeCellType( obj );
+				}
+			}
+		}
+	}
+
+	/**
+	 * if object type doesn't match current mycell record, remove and add
+	 * appropriate record type
+	 *
+	 * @param obj
+	 */
+	private void changeCellType( Object obj )
+	{
+		int[] rc = { mycell.getRowNumber(), mycell.getColNumber() };
+		Boundsheet bs = mycell.getSheet();
+		int oldXf = mycell.getIxfe();
+		bs.removeCell( mycell );
+		BiffRec addedrec = bs.addValue( obj, rc, true );
+		mycell = (XLSRecord) addedrec;
+		mycell.setXFRecord( oldXf );
+	}
+
+	/**
+	 * retrieves or creates a new xf for this cell
+	 *
+	 * @return
+	 */
+	private Xf getNewXf()
+	{
+		if( mycell.myxf != null )
+		{
+			return mycell.myxf;
+		}
+		// reusing or creating new xfs is handled in FormatHandle/cloneXf and
+		// updateXf
+		// this.useExistingXF = true; // flag to re-use this XF
 		try
 		{
-			// copy merged ranges
-			CellRange rng = sourcecell.getMergedCellRange();
-			if( rng != null )
-			{
-				rng = new CellRange( rng.getRange(), newcell.getWorkBook() );
-				rng.addCellToRange( newcell );
-				rng.mergeCells( false );
-			}
-			// Handle formats:
-			Xf origxf = sourcecell.getWorkBook().getWorkBook().getXf( sourcecell.getFormatId() );
-			newcell.getFormatHandle().addXf( origxf );
-			return newcell;
+			mycell.myxf = new Xf( getFont().getIdx() );
+			// get the recidx of the last Xf
+			int insertIdx = mycell.getWorkBook().getXf( mycell.getWorkBook().getNumXfs() - 1 ).getRecordIndex();
+			// perform default add rec actions
+
+			mycell.myxf.setSheet( null );
+			mycell.getWorkBook().getStreamer().addRecordAt( mycell.myxf, insertIdx + 1 );
+			mycell.getWorkBook().addRecord( mycell.myxf, false );
+			// update the pointer
+			int xfe = mycell.myxf.getIdx();
+			mycell.setIxfe( xfe );
+			return mycell.myxf;
 		}
-		catch( Exception ex )
+		catch( Exception e )
 		{
-			log.error( "CellHandle.copyCellHelper failed.", ex );
+			return null;
 		}
-		return newcell;
 	}
 
 }

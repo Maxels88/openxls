@@ -61,17 +61,17 @@ public class Ln implements OOXMLElement
 	 */
 	public Ln( int w, String clr )
 	{
-		this.fill = new FillGroup( null, null, null, null, new SolidFill( clr ) );
-		this.dash = new DashGroup( new PrstDash( "solid" ) );
-		this.setWidth( w );
+		fill = new FillGroup( null, null, null, null, new SolidFill( clr ) );
+		dash = new DashGroup( new PrstDash( "solid" ) );
+		setWidth( w );
 	}
 
 	public Ln()
 	{    // no-param constructor, set up common defaults
-		this.fill = new FillGroup( null, null, null, null, new SolidFill() );
-		this.join = new JoinGroup( "800000", true, false, false );
-		this.h = new HeadEnd();
-		this.t = new TailEnd();
+		fill = new FillGroup( null, null, null, null, new SolidFill() );
+		join = new JoinGroup( "800000", true, false, false );
+		h = new HeadEnd();
+		t = new TailEnd();
 	}
 
 	public Ln( HashMap<String, String> attrs, FillGroup fill, JoinGroup join, DashGroup dash, HeadEnd h, TailEnd t )
@@ -86,12 +86,12 @@ public class Ln implements OOXMLElement
 
 	public Ln( Ln l )
 	{
-		this.attrs = l.attrs;
-		this.fill = l.fill;
-		this.join = l.join;
-		this.dash = l.dash;
-		this.t = l.t;
-		this.h = l.h;
+		attrs = l.attrs;
+		fill = l.fill;
+		join = l.join;
+		dash = l.dash;
+		t = l.t;
+		h = l.h;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -256,7 +256,7 @@ public class Ln implements OOXMLElement
 	{
 		if( fill == null )
 		{
-			this.fill = new FillGroup( null, null, null, null, new SolidFill() );
+			fill = new FillGroup( null, null, null, null, new SolidFill() );
 		}
 		fill.setColor( clr );
 	}
@@ -315,12 +315,12 @@ class DashGroup implements OOXMLElement
 
 	public DashGroup( PrstDash p )
 	{
-		this.prstDash = p;
+		prstDash = p;
 	}
 
 	public DashGroup( DashGroup d )
 	{
-		this.prstDash = d.prstDash;
+		prstDash = d.prstDash;
 	}
 
 	public static DashGroup parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -414,18 +414,18 @@ class JoinGroup implements OOXMLElement
 
 	public JoinGroup( String a, boolean m, boolean r, boolean b )
 	{
-		this.miterVal = a;
-		this.miter = m;
-		this.round = r;
-		this.bevel = b;
+		miterVal = a;
+		miter = m;
+		round = r;
+		bevel = b;
 	}
 
 	public JoinGroup( JoinGroup j )
 	{
-		this.miterVal = j.miterVal;
-		this.miter = j.miter;
-		this.round = j.round;
-		this.bevel = j.bevel;
+		miterVal = j.miterVal;
+		miter = j.miter;
+		round = j.round;
+		bevel = j.bevel;
 	}
 
 	public static JoinGroup parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -531,9 +531,9 @@ class HeadEnd implements OOXMLElement
 
 	public HeadEnd( HeadEnd te )
 	{
-		this.len = te.len;
-		this.type = te.type;
-		this.w = te.w;
+		len = te.len;
+		type = te.type;
+		w = te.w;
 	}
 
 	public static HeadEnd parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -644,9 +644,9 @@ class TailEnd implements OOXMLElement
 
 	public TailEnd( TailEnd te )
 	{
-		this.len = te.len;
-		this.type = te.type;
-		this.w = te.w;
+		len = te.len;
+		type = te.type;
+		w = te.w;
 	}
 
 	public static TailEnd parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -748,7 +748,7 @@ class PrstDash implements OOXMLElement
 
 	public PrstDash( PrstDash p )
 	{
-		this.val = p.val;
+		val = p.val;
 	}
 
 	public static PrstDash parseOOXML( XmlPullParser xpp, Stack<String> lastTag )

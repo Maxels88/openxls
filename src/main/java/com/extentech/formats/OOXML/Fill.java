@@ -51,22 +51,22 @@ public class Fill implements OOXMLElement
 
 	public Fill( PatternFill p, GradientFill g, Theme t )
 	{
-		this.patternFill = p;
-		this.gradientFill = g;
-		this.theme = t;
+		patternFill = p;
+		gradientFill = g;
+		theme = t;
 	}
 
 	public Fill( Fill f )
 	{
 		if( f.patternFill != null )
 		{
-			this.patternFill = (PatternFill) f.patternFill.cloneElement();
+			patternFill = (PatternFill) f.patternFill.cloneElement();
 		}
 		if( f.gradientFill != null )
 		{
-			this.gradientFill = (GradientFill) f.gradientFill.cloneElement();
+			gradientFill = (GradientFill) f.gradientFill.cloneElement();
 		}
-		this.theme = f.theme;
+		theme = f.theme;
 	}
 
 	/**
@@ -78,8 +78,8 @@ public class Fill implements OOXMLElement
 	 */
 	public Fill( String fs, int fg, int bg, Theme t )
 	{
-		this.patternFill = new PatternFill( fs, fg, bg );
-		this.theme = t;
+		patternFill = new PatternFill( fs, fg, bg );
+		theme = t;
 	}
 
 	/**
@@ -93,8 +93,8 @@ public class Fill implements OOXMLElement
 	public Fill( int pattern, int fg, String fgColorCustom, int bg, String bgColorCustom, Theme t )
 	{
 
-		this.patternFill = new PatternFill( PatternFill.translateIndexedFillPattern( pattern ), fg, fgColorCustom, bg, bgColorCustom );
-		this.theme = t;
+		patternFill = new PatternFill( PatternFill.translateIndexedFillPattern( pattern ), fg, fgColorCustom, bg, bgColorCustom );
+		theme = t;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, boolean isDxf, WorkBookHandle bk )
@@ -296,7 +296,7 @@ public class Fill implements OOXMLElement
 	{
 		if( patternFill != null )
 		{
-			return this.patternFill.getFgColorAsRGB( t );
+			return patternFill.getFgColorAsRGB( t );
 		}
 		return null;
 	}
@@ -310,7 +310,7 @@ public class Fill implements OOXMLElement
 	{
 		if( patternFill != null )
 		{
-			return this.patternFill.getFgColorAsInt( t );
+			return patternFill.getFgColorAsInt( t );
 		}
 		return 0; // default= black
 	}
@@ -324,7 +324,7 @@ public class Fill implements OOXMLElement
 	{
 		if( patternFill != null )
 		{
-			return this.patternFill.getBgColorAsRGB( t );
+			return patternFill.getBgColorAsRGB( t );
 		}
 		return null;
 	}
@@ -338,7 +338,7 @@ public class Fill implements OOXMLElement
 	{
 		if( patternFill != null )
 		{
-			return this.patternFill.getBgColorAsInt( t );
+			return patternFill.getBgColorAsInt( t );
 		}
 		return -1;
 	}
@@ -372,7 +372,7 @@ public class Fill implements OOXMLElement
 		}
 		else
 		{
-			this.patternFill = new PatternFill( "none", t, colorString, -1, null );
+			patternFill = new PatternFill( "none", t, colorString, -1, null );
 		}
 	}
 
@@ -405,7 +405,7 @@ public class Fill implements OOXMLElement
 		}
 		else
 		{
-			this.patternFill = new PatternFill( "none", -1, null, t, colorString );
+			patternFill = new PatternFill( "none", -1, null, t, colorString );
 		}
 	}
 
@@ -413,7 +413,7 @@ public class Fill implements OOXMLElement
 	{
 		if( patternFill != null )
 		{
-			return this.patternFill.getFillPattern();
+			return patternFill.getFillPattern();
 		}
 		return null;
 	}
@@ -427,7 +427,7 @@ public class Fill implements OOXMLElement
 	{
 		if( patternFill != null )
 		{
-			return this.patternFill.getFillPatternInt();
+			return patternFill.getFillPatternInt();
 		}
 		return -1;
 	}
@@ -439,7 +439,7 @@ public class Fill implements OOXMLElement
 	{
 		if( patternFill != null )
 		{
-			this.patternFill.setFillPattern( t );
+			patternFill.setFillPattern( t );
 		}
 	}
 
@@ -452,7 +452,7 @@ public class Fill implements OOXMLElement
 	{
 		if( patternFill != null )
 		{
-			return (this.patternFill.getFillPattern().equalsIgnoreCase( "solid" ));
+			return (patternFill.getFillPattern().equalsIgnoreCase( "solid" ));
 		}
 		return false;
 	}
@@ -478,23 +478,23 @@ class PatternFill implements OOXMLElement
 	public PatternFill( String patternType, FgColor fg, BgColor bg, Theme t )
 	{
 		this.patternType = patternType;
-		this.fgColor = fg;
-		this.bgColor = bg;
-		this.theme = t;
+		fgColor = fg;
+		bgColor = bg;
+		theme = t;
 	}
 
 	public PatternFill( PatternFill p )
 	{
-		this.patternType = p.patternType;
+		patternType = p.patternType;
 		if( p.fgColor != null )
 		{
-			this.fgColor = (FgColor) p.fgColor.cloneElement();
+			fgColor = (FgColor) p.fgColor.cloneElement();
 		}
 		if( p.bgColor != null )
 		{
-			this.bgColor = (BgColor) p.bgColor.cloneElement();
+			bgColor = (BgColor) p.bgColor.cloneElement();
 		}
-		this.theme = p.theme;
+		theme = p.theme;
 	}
 
 	/**
@@ -511,13 +511,13 @@ class PatternFill implements OOXMLElement
 		{
 			HashMap<String, String> attrs = new HashMap<>();
 			attrs.put( "rgb", "FF" + FormatHandle.colorToHexString( FormatHandle.COLORTABLE[fg] ).substring( 1 ) );
-			this.fgColor = new FgColor( attrs );
+			fgColor = new FgColor( attrs );
 		}
 		if( (bg > -1) && (bg != 65) )
 		{
 			HashMap<String, String> attrs = new HashMap<>();
 			attrs.put( "rgb", "FF" + FormatHandle.colorToHexString( FormatHandle.COLORTABLE[bg] ).substring( 1 ) );
-			this.bgColor = new BgColor( attrs );
+			bgColor = new BgColor( attrs );
 		}
 	}
 
@@ -535,7 +535,7 @@ class PatternFill implements OOXMLElement
 			{
 				attrs.put( "rgb", Fill.transformToOOXMLRGBColor( fgCustom ) );
 			}
-			this.fgColor = new FgColor( attrs );
+			fgColor = new FgColor( attrs );
 		}
 		if( (bg > -1) || (bgCustom != null) )
 		{ // 65= default bg color
@@ -548,7 +548,7 @@ class PatternFill implements OOXMLElement
 			{
 				attrs.put( "rgb", Fill.transformToOOXMLRGBColor( bgCustom ) );
 			}
-			this.bgColor = new BgColor( attrs );
+			bgColor = new BgColor( attrs );
 		}
 	}
 
@@ -786,7 +786,7 @@ class PatternFill implements OOXMLElement
 	 */
 	public void setFillPattern( int t )
 	{
-		this.patternType = translateIndexedFillPattern( t );
+		patternType = translateIndexedFillPattern( t );
 	}
 
 	public static String translateIndexedFillPattern( int pattern )
@@ -869,7 +869,7 @@ class PatternFill implements OOXMLElement
 			{
 				attrs.put( "rgb", colorString );
 			}
-			this.fgColor = new FgColor( attrs );
+			fgColor = new FgColor( attrs );
 		}
 	}
 
@@ -934,7 +934,7 @@ class PatternFill implements OOXMLElement
 			{
 				attrs.put( "rgb", Fill.transformToOOXMLRGBColor( colorString ) );
 			}
-			this.bgColor = new BgColor( attrs );
+			bgColor = new BgColor( attrs );
 		}
 	}
 
@@ -962,8 +962,8 @@ class GradientFill implements OOXMLElement
 
 	public GradientFill( GradientFill g )
 	{
-		this.attrs = g.attrs;
-		this.stops = g.stops;
+		attrs = g.attrs;
+		stops = g.stops;
 	}
 
 	public static GradientFill parseOOXML( XmlPullParser xpp, WorkBookHandle bk )
@@ -1065,7 +1065,7 @@ class FgColor implements OOXMLElement
 
 	protected FgColor( FgColor f )
 	{
-		this.attrs = (HashMap<String, String>) f.attrs.clone();
+		attrs = (HashMap<String, String>) f.attrs.clone();
 	}
 
 	protected FgColor( int c )
@@ -1248,7 +1248,7 @@ class BgColor implements OOXMLElement
 
 	protected BgColor( BgColor f )
 	{
-		this.attrs = (HashMap<String, String>) f.attrs.clone();
+		attrs = (HashMap<String, String>) f.attrs.clone();
 	}
 
 	protected BgColor( int c )
@@ -1416,8 +1416,8 @@ class Stop implements OOXMLElement
 
 	public Stop( Stop s )
 	{
-		this.position = s.position;
-		this.c = s.c;
+		position = s.position;
+		c = s.c;
 	}
 
 	public static Stop parseOOXML( XmlPullParser xpp, WorkBookHandle bk )
@@ -1466,7 +1466,7 @@ class Stop implements OOXMLElement
 	{
 		StringBuffer ooxml = new StringBuffer();
 		ooxml.append( "<stop" );
-		ooxml.append( " position=\"" + this.position + "\"" );
+		ooxml.append( " position=\"" + position + "\"" );
 		ooxml.append( ">" );
 		if( c != null )
 		{

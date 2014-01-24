@@ -49,16 +49,16 @@ public class CxnSp implements OOXMLElement
 	{
 		this.attrs = attrs;
 		this.nvc = nvc;
-		this.spPr = sp;
-		this.style = s;
+		spPr = sp;
+		style = s;
 	}
 
 	public CxnSp( CxnSp c )
 	{
-		this.attrs = c.attrs;
-		this.nvc = c.nvc;
-		this.spPr = c.spPr;
-		this.style = c.style;
+		attrs = c.attrs;
+		nvc = c.nvc;
+		spPr = c.spPr;
+		style = c.style;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -341,7 +341,7 @@ class NvCxnSpPr implements OOXMLElement
 
 	public NvCxnSpPr( NvCxnSpPr n )
 	{
-		this.cpr = n.cpr;
+		cpr = n.cpr;
 		//this.sppr= n.sppr;
 	}
 

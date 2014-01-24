@@ -1908,7 +1908,8 @@ public final class FormulaParser
 		while( !newstck.isEmpty() )
 		{
 			Ptg p = (Ptg) newstck.pop();
-			int x = 0, t = 0;// cargs = p.getNumParams();
+			int x = 0;// cargs = p.getNumParams();
+			int t = 0;
 			if( p.getIsControl() )
 			{
 				// do the parens thing here...
@@ -2031,7 +2032,8 @@ public final class FormulaParser
 	static void handlePtg( Stack newstck, Stack vals )
 	{
 		Ptg p = (Ptg) newstck.pop();
-		int x = 0, t = 0;// cargs = p.getNumParams();
+		int x = 0;// cargs = p.getNumParams();
+		int t = 0;
 		if( p.getIsOperator() || p.getIsControl() || p.getIsFunction() )
 		{
 			t = vals.size();   //this is faulty logic.  We don't care what is there, the operator should tell us.

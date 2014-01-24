@@ -48,12 +48,12 @@ public class SXString extends XLSRecord implements XLSConstants, PivotCacheRecor
 	public void init()
 	{
 		super.init();
-		cch = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		cch = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		if( cch > 0 )
 		{
-			byte encoding = this.getByteAt( 2 );
+			byte encoding = getByteAt( 2 );
 
-			byte[] tmp = this.getBytesAt( 3, (cch) * (encoding + 1) );
+			byte[] tmp = getBytesAt( 3, (cch) * (encoding + 1) );
 			try
 			{
 				if( encoding == 0 )
@@ -70,13 +70,13 @@ public class SXString extends XLSRecord implements XLSConstants, PivotCacheRecor
 				log.warn( "SXString.init: " + e, e );
 			}
 		}
-			log.debug("{}", this.toString() );
+			log.debug("{}", toString() );
 	}
 
 	public String toString()
 	{
 		return "SXString: " + ((segment != null) ? segment : "null") +
-				Arrays.toString( this.getRecord() );
+				Arrays.toString( getRecord() );
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class SXString extends XLSRecord implements XLSConstants, PivotCacheRecor
 		byte[] data = new byte[cch + 3];    // account for encoding bytes + cch
 		System.arraycopy( nm, 0, data, 0, 2 );
 		System.arraycopy( strbytes, 0, data, 3, cch );
-		this.setData( data );
+		setData( data );
 // 	 (byte[]) [5, 0, 0, 115, 111, 117, 116, 104]	south		   
 	}
 
@@ -136,9 +136,9 @@ public class SXString extends XLSRecord implements XLSConstants, PivotCacheRecor
 	public byte[] getRecord()
 	{
 		byte[] b = new byte[4];
-		System.arraycopy( ByteTools.shortToLEBytes( this.getOpcode() ), 0, b, 0, 2 );
-		System.arraycopy( ByteTools.shortToLEBytes( (short) this.getData().length ), 0, b, 2, 2 );
-		return ByteTools.append( this.getData(), b );
+		System.arraycopy( ByteTools.shortToLEBytes( getOpcode() ), 0, b, 0, 2 );
+		System.arraycopy( ByteTools.shortToLEBytes( (short) getData().length ), 0, b, 2, 2 );
+		return ByteTools.append( getData(), b );
 
 	}
 }

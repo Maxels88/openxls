@@ -79,7 +79,7 @@ public class PtgGT extends GenericPtg implements Ptg
 
 	public String toString()
 	{
-		return this.getString();
+		return getString();
 	}
 
 	@Override

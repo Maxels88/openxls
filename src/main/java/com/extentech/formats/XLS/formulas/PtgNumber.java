@@ -77,7 +77,7 @@ public class PtgNumber extends GenericPtg implements Ptg
 	{
 		ptgId = 0x1F;
 		val = 0;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class PtgNumber extends GenericPtg implements Ptg
 	{
 		ptgId = b[0];
 		record = b;
-		this.populateVals();
+		populateVals();
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class PtgNumber extends GenericPtg implements Ptg
 	{
 		ptgId = 0x1F;
 		val = d;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	private void populateVals()
@@ -123,7 +123,7 @@ public class PtgNumber extends GenericPtg implements Ptg
 	public void setVal( double i )
 	{
 		val = i;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	// 20081208 KSC: handle percentage values

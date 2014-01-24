@@ -49,12 +49,12 @@ public class Graphic implements OOXMLElement
 
 	public Graphic( GraphicData g )
 	{
-		this.graphicData = g;
+		graphicData = g;
 	}
 
 	public Graphic( Graphic gr )
 	{
-		this.graphicData = gr.graphicData;
+		graphicData = gr.graphicData;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -186,8 +186,8 @@ class GraphicData implements OOXMLElement
 
 	public GraphicData( GraphicData gd )
 	{
-		this.uri = gd.uri;
-		this.rid = gd.rid;
+		uri = gd.uri;
+		rid = gd.rid;
 	}
 
 	public static GraphicData parseOOXML( XmlPullParser xpp, Stack lastTag )

@@ -95,7 +95,7 @@ public class PtgRefN extends PtgRef
 
 	public PtgRefN( boolean useReference )
 	{
-		this.setUseReferenceTracker( useReference );
+		setUseReferenceTracker( useReference );
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class PtgRefN extends PtgRef
 	{
 		if( useReferenceTracker )
 		{
-			this.removeFromRefTracker();
+			removeFromRefTracker();
 		}
 		if( record != null )
 		{    // 20090217 KSC: had some errors here, redid
@@ -158,7 +158,7 @@ public class PtgRefN extends PtgRef
 			{
 				col = rowcol[1];
 			}
-			this.updateRecord();
+			updateRecord();
 			init( record );
 		}
 		else
@@ -168,7 +168,7 @@ public class PtgRefN extends PtgRef
 		hashcode = getHashCode();
 		if( useReferenceTracker )
 		{
-			this.addToRefTracker();
+			addToRefTracker();
 		}
 
 	}
@@ -221,7 +221,7 @@ public class PtgRefN extends PtgRef
 		if( record != null )
 		{
 			// 20080215 KSC: replace address stripping
-			String s[] = ExcelTools.stripSheetNameFromRange( address );
+			String[] s = ExcelTools.stripSheetNameFromRange( address );
 			address = s[1];    //stripped of sheet name, if any ...
 
 			int[] res = ExcelTools.getRowColFromString( address );
@@ -368,7 +368,7 @@ public class PtgRefN extends PtgRef
 	 */
 	public PtgArea getArea()
 	{
-		Shrfmla sh = (Shrfmla) this.getParentRec();
+		Shrfmla sh = (Shrfmla) getParentRec();
 		int[] i = new int[4];
 		if( fRwRel )
 		{
@@ -403,11 +403,11 @@ public class PtgRefN extends PtgRef
 			i[3] = col;
 		}
 
-		if( (i[1] >= MAXCOLS_BIFF8) && !this.parent_rec.getWorkBook().getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
+		if( (i[1] >= MAXCOLS_BIFF8) && !parent_rec.getWorkBook().getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
 		{
 			i[1] -= MAXCOLS_BIFF8;
 		}
-		if( (i[3] >= MAXCOLS_BIFF8) && !this.parent_rec.getWorkBook().getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
+		if( (i[3] >= MAXCOLS_BIFF8) && !parent_rec.getWorkBook().getIsExcel2007() )    // TODO: determine if this is an OK maxcol (Excel 2007)
 		{
 			i[3] -= MAXCOLS_BIFF8;
 		}
@@ -422,7 +422,7 @@ public class PtgRefN extends PtgRef
 	@Override
 	public void addToRefTracker()
 	{
-		int iParent = this.getParentRec().getOpcode();
+		int iParent = getParentRec().getOpcode();
 		if( iParent == XLSConstants.SHRFMLA )
 		{
 			// KSC: TESTING - local ptgarea gets finalized and messes up ref. tracker on multiple usages without close
@@ -439,7 +439,7 @@ public class PtgRefN extends PtgRef
 	@Override
 	public void removeFromRefTracker()
 	{
-		int iParent = this.getParentRec().getOpcode();
+		int iParent = getParentRec().getOpcode();
 		if( iParent == XLSConstants.SHRFMLA )
 		{
 			PtgArea parea = getArea(); // otherwise is finalized if local var --- but take out ptgarea finalize for now

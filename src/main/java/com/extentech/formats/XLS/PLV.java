@@ -46,6 +46,6 @@ public class PLV extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		wScalePLV = ByteTools.readShort( this.getByteAt( 12 ), this.getByteAt( 13 ) );
+		wScalePLV = ByteTools.readShort( getByteAt( 12 ), getByteAt( 13 ) );
 	}
 }

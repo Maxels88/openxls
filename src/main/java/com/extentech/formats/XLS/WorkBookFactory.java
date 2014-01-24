@@ -152,7 +152,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 	public Book getWorkBook( BlockByteReader parsedata, LEOFile leo ) throws InvalidRecordException
 	{
 		Book book = new WorkBook();
-		return this.initWorkBook( book, parsedata, leo );
+		return initWorkBook( book, parsedata, leo );
 	}
 
 	/**
@@ -195,33 +195,37 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 		book.setFactory( this );
 		boolean infile = false;
 		boolean isWBBOF = true;
-		short opcode = 0x00, reclen = 0x00, lastOpcode = 0x00;
+		short opcode = 0x00;
+		short reclen = 0x00;
+		short lastOpcode = 0x00;
 		int BofCount = 0; // track the number of 'Bof' records
 
 		BiffRec rec = null;
 		int blen = parsedata.getLength();
 
 		// init the progress listener
-		this.progresstext = "Initializing Workbook...";
+		progresstext = "Initializing Workbook...";
 		progress = 0;
 		if( progresslistener != null )
 		{
 			progresslistener.setMaxProgress( blen );
 		}
-		this.fireProgressChanged();
+		fireProgressChanged();
 			log.info( "XLS File Size: " + String.valueOf( blen ) );
 
 		for( int i = 0; i <= (blen - 4); )
 		{
 
-			this.fireProgressChanged(); // ""
+			fireProgressChanged(); // ""
 			byte[] headerbytes = parsedata.getHeaderBytes( i );
 			opcode = ByteTools.readShort( headerbytes[0], headerbytes[1] );
 			reclen = ByteTools.readShort( headerbytes[2], headerbytes[3] );
 
 			if( ((lastOpcode == EOF) && (opcode == 0)) || (opcode == 0xffffffff) )
 			{
-				int startpos = i - 3, junkreclen = 0, offset = 0;
+				int startpos = i - 3;
+				int junkreclen = 0;
+				int offset = 0;
 
 				if( offset != 0 )
 				{
@@ -254,7 +258,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 					infile = true;
 
 					// Init Record'
-					rec = this.parse( book, opcode, i, reclen, blockByteReader );
+					rec = parse( book, opcode, i, reclen, blockByteReader );
 
 					if( progresslistener != null )
 					{
@@ -286,9 +290,9 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 					if( rec == null )
 					{ // Effectively an EOF
 							log.debug( "done parsing WorkBook storage." );
-						this.done = true;
-						this.progresstext = "Done Reading WorkBook.";
-						this.fireProgressChanged();
+						done = true;
+						progresstext = "Done Reading WorkBook.";
+						fireProgressChanged();
 						return book;
 					}
 					// not used anymore ((XLSRecord)rec).resetCacheBytes();
@@ -354,10 +358,10 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 		}
 			log.info( "done" );
 		progress = blen;
-		this.progresstext = "Done Reading WorkBook.";
-		this.fireProgressChanged();
+		progresstext = "Done Reading WorkBook.";
+		fireProgressChanged();
 
-		this.done = true;
+		done = true;
 		// flag the book so we know it's ready for shared access
 		// book.setReady(true); ENTERPRISE ONLY
 		// recordata.setApplyRelativePosition(false);
@@ -1370,7 +1374,8 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
  */
 class R
 {
-	public boolean isRequired, isPresent;
+	public boolean isRequired;
+	public boolean isPresent;
 	public int recordPos = -1;
 	public short[] altPrecedor = null;
 

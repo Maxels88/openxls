@@ -140,7 +140,7 @@ public class NameImpl implements Name
 	@Override
 	public Name addAll( int arg0, Name arg1 ) throws InvalidNameException
 	{
-		this.vals.addAll( arg0, ((NameImpl) arg1).getVals() );
+		vals.addAll( arg0, ((NameImpl) arg1).getVals() );
 		return this;
 	}
 
@@ -150,7 +150,7 @@ public class NameImpl implements Name
 	@Override
 	public Name addAll( Name arg0 ) throws InvalidNameException
 	{
-		this.vals.addAll( ((NameImpl) arg0).getVals() );
+		vals.addAll( ((NameImpl) arg0).getVals() );
 		return this;
 	}
 
@@ -178,7 +178,7 @@ public class NameImpl implements Name
 	@Override
 	public int compareTo( Object arg0 )
 	{
-		return this.compareTo( arg0 );
+		return compareTo( arg0 );
 	}
 
 	/* (non-Javadoc)
@@ -188,7 +188,7 @@ public class NameImpl implements Name
 	public boolean endsWith( Name arg0 )
 	{
 		Object ob1 = arg0.get( arg0.size() - 1 );
-		Object ob2 = this.get( this.size() - 1 );
+		Object ob2 = get( size() - 1 );
 		return ob1.equals( ob2 );
 	}
 
@@ -199,7 +199,7 @@ public class NameImpl implements Name
 	public boolean startsWith( Name arg0 )
 	{
 		Object ob1 = arg0.get( 0 );
-		Object ob2 = this.get( 0 );
+		Object ob2 = get( 0 );
 		return ob1.equals( ob2 );
 	}
 

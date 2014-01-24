@@ -105,13 +105,15 @@ public class StartBlock extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 1895593244077899106L;
 	short iObjectKind = 0;
-	public static final int CHART = 13, AXIS = 0, CHARTFORMAT = 5;
+	public static final int CHART = 13;
+	public static final int AXIS = 0;
+	public static final int CHARTFORMAT = 5;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		iObjectKind = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
+		iObjectKind = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
 	} // iObjectKind= 13 or 0 or 5
 
 	private byte[] PROTOTYPE_BYTES = new byte[]{ 82, 8, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0 };
@@ -134,8 +136,8 @@ public class StartBlock extends GenericChartObject implements ChartObject
 	private void updateRecord()
 	{
 		byte[] b = ByteTools.shortToLEBytes( iObjectKind );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 	}
 
 }

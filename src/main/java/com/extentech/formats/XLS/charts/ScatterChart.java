@@ -52,10 +52,11 @@ public class ScatterChart extends ChartType
 		JSONObject chartObjectJSON = new JSONObject();
 
 		// Type JSON
-		chartObjectJSON.put( "type", this.getTypeJSON() );
+		chartObjectJSON.put( "type", getTypeJSON() );
 
 		// Deal with Series
-		double yMax = 0.0, yMin = 0.0;
+		double yMax = 0.0;
+		double yMin = 0.0;
 		int nSeries = 0;
 		JSONArray seriesJSON = new JSONArray();
 		JSONArray seriesCOLORS = new JSONArray();
@@ -223,10 +224,12 @@ public class ScatterChart extends ChartType
 		 * or clusters.
 		 */
 		double[] seriesx = null;
-		double xfactor = 0, yfactor = 0;    //
+		double xfactor = 0;    //
+		double yfactor = 0;
 		boolean TEXTUALXAXIS = true;
 		// get x axis max/min for an x axis which is a value axis 
-		double xmin = Double.MAX_VALUE, xmax = Double.MIN_VALUE;
+		double xmin = Double.MAX_VALUE;
+		double xmax = Double.MIN_VALUE;
 		seriesx = new double[categories.length];
 		for( int j = 0; j < categories.length; j++ )
 		{
@@ -244,7 +247,7 @@ public class ScatterChart extends ChartType
 		}
 		if( !TEXTUALXAXIS )
 		{
-			double d[] = ValueRange.calcMaxMin( xmax, xmin, w );
+			double[] d = ValueRange.calcMaxMin( xmax, xmin, w );
 			xfactor = w / (d[2]);        // w/maximum scale
 		}
 		else
@@ -283,7 +286,7 @@ public class ScatterChart extends ChartType
 				if( l != null )
 				{
 					labels += "<text x='" + (12 + (x) + (xval * xfactor)) + "' y='" + (((y + h) - (seriesy[j] * yfactor))) +
-							"' " + this.getDataLabelFontSVG() + ">" + l + "</text>\r\n";
+							"' " + getDataLabelFontSVG() + ">" + l + "</text>\r\n";
 				}
 
 			}
@@ -322,7 +325,7 @@ public class ScatterChart extends ChartType
 		String s = "";
 		// each line is comprised of 1 black line and 1 series color line:			
 		// 1st line is black
-		s = "<polyline fill='none' fill-opacity='0' " + getStrokeSVG( 1, this.getDarkColor() ) +
+		s = "<polyline fill='none' fill-opacity='0' " + getStrokeSVG( 1, getDarkColor() ) +
 				" points='" + points + "'" +
 				"/>\r\n";
 		// 2nd line is the series color
@@ -351,11 +354,11 @@ public class ScatterChart extends ChartType
 		{
 			if( m != 0 )
 			{
-				if( this.getHasSmoothLines() )
+				if( getHasSmoothLines() )
 				{
 					style = "smoothMarker";
 				}
-				else if( this.getHasLines() )
+				else if( getHasLines() )
 				{
 					style = "lineMarker";
 				}
@@ -366,11 +369,11 @@ public class ScatterChart extends ChartType
 				break;
 			}
 		}
-		if( (style == null) && this.getHasLines() )
+		if( (style == null) && getHasLines() )
 		{
 			style = "line";
 		}
-		if( (style == null) && this.getHasSmoothLines() )
+		if( (style == null) && getHasSmoothLines() )
 		{
 			style = "smooth";
 		}
@@ -383,7 +386,7 @@ public class ScatterChart extends ChartType
 		// vary colors???
 
 		// *** Series Data: ser, cat, val for most chart types
-		cooxml.append( this.getParentChart().getChartSeries().getOOXML( this.getChartType(), false, 0 ) );
+		cooxml.append( getParentChart().getChartSeries().getOOXML( getChartType(), false, 0 ) );
 
 		// chart data labels, if any
 		// TODO: FINISH

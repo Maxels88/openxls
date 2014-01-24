@@ -105,7 +105,13 @@ import java.io.UnsupportedEncodingException;
 public class SxDI extends XLSRecord implements XLSConstants
 {
 	private static final Logger log = LoggerFactory.getLogger( SxDI.class );
-	short isxvdData, isxvd, iiftab, df, isxvi, cchName, ifmt;
+	short isxvdData;
+	short isxvd;
+	short iiftab;
+	short df;
+	short isxvi;
+	short cchName;
+	short ifmt;
 	String name = null;
 	private static final long serialVersionUID = 2639291289806138985L;
 
@@ -130,7 +136,7 @@ public class SxDI extends XLSRecord implements XLSConstants
 
 		AGGREGATIONFUNCTIONS( String s )
 		{
-			this.agf = s;
+			agf = s;
 		}
 
 		public static int get( String s )
@@ -172,19 +178,17 @@ public class SxDI extends XLSRecord implements XLSConstants
 	public void init()
 	{
 		super.init();
-		isxvdData = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );    // pivot field index
-		iiftab = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );    // aggregation function -- see  aggregationfunctions
-		df = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );        // display calculation
-		isxvd = ByteTools.readShort( this.getByteAt( 6 ),
-		                             this.getByteAt( 7 ) );    // specifies a pivot field index used in calculations as specified by the df field.
-		isxvi = ByteTools.readShort( this.getByteAt( 8 ),
-		                             this.getByteAt( 9 ) );    // A signed integer that specifies the pivot item used by df.
-		ifmt = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );    // number format index
-		cchName = ByteTools.readShort( this.getByteAt( 12 ), this.getByteAt( 13 ) );
+		isxvdData = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );    // pivot field index
+		iiftab = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );    // aggregation function -- see  aggregationfunctions
+		df = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );        // display calculation
+		isxvd = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );    // specifies a pivot field index used in calculations as specified by the df field.
+		isxvi = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );    // A signed integer that specifies the pivot item used by df.
+		ifmt = ByteTools.readShort( getByteAt( 10 ), getByteAt( 11 ) );    // number format index
+		cchName = ByteTools.readShort( getByteAt( 12 ), getByteAt( 13 ) );
 		if( cchName != -1 )
 		{
-			byte encoding = this.getByteAt( 14 );
-			byte[] tmp = this.getBytesAt( 15, (cchName) * (encoding + 1) );
+			byte encoding = getByteAt( 14 );
+			byte[] tmp = getBytesAt( 15, (cchName) * (encoding + 1) );
 			try
 			{
 				if( encoding == 0 )
@@ -225,8 +229,8 @@ public class SxDI extends XLSRecord implements XLSConstants
 	{
 		isxvdData = (short) fi;
 		byte[] b = ByteTools.shortToLEBytes( isxvdData );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	/**
@@ -249,8 +253,8 @@ public class SxDI extends XLSRecord implements XLSConstants
 	{
 		iiftab = (short) af;
 		byte[] b = ByteTools.shortToLEBytes( iiftab );
-		this.getData()[2] = b[0];
-		this.getData()[3] = b[1];
+		getData()[2] = b[0];
+		getData()[3] = b[1];
 	}
 
 	/**
@@ -287,8 +291,8 @@ public class SxDI extends XLSRecord implements XLSConstants
 	{
 		df = (short) dc;
 		byte[] b = ByteTools.shortToLEBytes( df );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 	}
 
 	/**
@@ -310,8 +314,8 @@ public class SxDI extends XLSRecord implements XLSConstants
 	{
 		isxvd = (short) ci;
 		byte[] b = ByteTools.shortToLEBytes( isxvd );
-		this.getData()[6] = b[0];
-		this.getData()[7] = b[1];
+		getData()[6] = b[0];
+		getData()[7] = b[1];
 	}
 
 	/**
@@ -333,8 +337,8 @@ public class SxDI extends XLSRecord implements XLSConstants
 	{
 		isxvi = (short) ci;
 		byte[] b = ByteTools.shortToLEBytes( isxvi );
-		this.getData()[8] = b[0];
-		this.getData()[9] = b[1];
+		getData()[8] = b[0];
+		getData()[9] = b[1];
 	}
 
 	/**
@@ -354,8 +358,8 @@ public class SxDI extends XLSRecord implements XLSConstants
 	{
 		ifmt = (short) i;
 		byte[] b = ByteTools.shortToLEBytes( ifmt );
-		this.getData()[10] = b[0];
-		this.getData()[11] = b[1];
+		getData()[10] = b[0];
+		getData()[11] = b[1];
 	}
 
 	/**
@@ -376,7 +380,7 @@ public class SxDI extends XLSRecord implements XLSConstants
 	{
 		this.name = name;
 		byte[] data = new byte[14];
-		System.arraycopy( this.getData(), 0, data, 0, 13 );
+		System.arraycopy( getData(), 0, data, 0, 13 );
 		if( name != null )
 		{
 			byte[] strbytes = null;
@@ -406,7 +410,7 @@ public class SxDI extends XLSRecord implements XLSConstants
 			data[12] = -1;
 			data[13] = -1;
 		}
-		this.setData( data );
+		setData( data );
 	}
 
 	private byte[] PROTOTYPE_BYTES = new byte[]{

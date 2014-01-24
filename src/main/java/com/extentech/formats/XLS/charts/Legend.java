@@ -67,23 +67,35 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = -4041111720696805018L;
-	protected int x_defunct = -1, y_defunct = -1, dx_defunct = -1, dy_defunct = -1;        // these vars are now defunct; see doc above + Pos/getSVG for coordinate info
+	protected int x_defunct = -1;
+	protected int y_defunct = -1;
+	protected int dx_defunct = -1;
+	protected int dy_defunct = -1;        // these vars are now defunct; see doc above + Pos/getSVG for coordinate info
 	protected byte /*wType= -1, */wSpacing = -1;
 	protected short grbit = -1;
-	protected boolean fAutoPosition, fAutoSeries, fAutoPosX, fAutoPosY;
-	protected boolean fVert, fWasDataTable;
-	public static final int BOTTOM = 0, CORNER = 1, TOP = 2, RIGHT = 3, LEFT = 4, NOT_DOCKED = 7;
+	protected boolean fAutoPosition;
+	protected boolean fAutoSeries;
+	protected boolean fAutoPosX;
+	protected boolean fAutoPosY;
+	protected boolean fVert;
+	protected boolean fWasDataTable;
+	public static final int BOTTOM = 0;
+	public static final int CORNER = 1;
+	public static final int TOP = 2;
+	public static final int RIGHT = 3;
+	public static final int LEFT = 4;
+	public static final int NOT_DOCKED = 7;
 	int[] legendCoords = null;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		byte[] rkdata = this.getData();
-		x_defunct = ByteTools.readInt( this.getBytesAt( 0, 4 ) );
-		y_defunct = ByteTools.readInt( this.getBytesAt( 4, 4 ) );
-		dx_defunct = ByteTools.readInt( this.getBytesAt( 8, 4 ) );
-		dy_defunct = ByteTools.readInt( this.getBytesAt( 12, 4 ) );
+		byte[] rkdata = getData();
+		x_defunct = ByteTools.readInt( getBytesAt( 0, 4 ) );
+		y_defunct = ByteTools.readInt( getBytesAt( 4, 4 ) );
+		dx_defunct = ByteTools.readInt( getBytesAt( 8, 4 ) );
+		dy_defunct = ByteTools.readInt( getBytesAt( 12, 4 ) );
 		// unused:  wType= rkdata[16]; layout position is controled by CrtLayout12 record
 		wSpacing = rkdata[17];
 		grbit = ByteTools.readShort( rkdata[18], rkdata[19] );
@@ -145,15 +157,15 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 
 	private void updateRecord()
 	{
-		System.arraycopy( ByteTools.cLongToLEBytes( x_defunct ), 0, this.getData(), 0, 4 );
-		System.arraycopy( ByteTools.cLongToLEBytes( y_defunct ), 0, this.getData(), 4, 4 );
-		System.arraycopy( ByteTools.cLongToLEBytes( dx_defunct ), 0, this.getData(), 8, 4 );
-		System.arraycopy( ByteTools.cLongToLEBytes( dy_defunct ), 0, this.getData(), 12, 4 );
+		System.arraycopy( ByteTools.cLongToLEBytes( x_defunct ), 0, getData(), 0, 4 );
+		System.arraycopy( ByteTools.cLongToLEBytes( y_defunct ), 0, getData(), 4, 4 );
+		System.arraycopy( ByteTools.cLongToLEBytes( dx_defunct ), 0, getData(), 8, 4 );
+		System.arraycopy( ByteTools.cLongToLEBytes( dy_defunct ), 0, getData(), 12, 4 );
 		// unused this.getData()[16]= wType;
-		this.getData()[17] = wSpacing;
+		getData()[17] = wSpacing;
 		byte[] b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[18] = b[0];
-		this.getData()[19] = b[1];
+		getData()[18] = b[0];
+		getData()[19] = b[1];
 	}
 
 	private byte[] PROTOTYPE_BYTES = new byte[]{ -11, 13, 0, 0, -72, 3, 0, 0, -111, 1, 0, 0, -31, 4, 0, 0, 3, 1, 31, 0 };
@@ -176,7 +188,7 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 	 */
 	public short getLegendPosition()
 	{
-		CrtLayout12 crt = (CrtLayout12) Chart.findRec( this.chartArr, CrtLayout12.class );
+		CrtLayout12 crt = (CrtLayout12) Chart.findRec( chartArr, CrtLayout12.class );
 		if( crt != null )
 		{
 			return (short) crt.getLayout();
@@ -212,7 +224,7 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 	 */
 	public void setLegendPosition( short pos )
 	{
-		CrtLayout12 crt = (CrtLayout12) Chart.findRec( this.chartArr, CrtLayout12.class );
+		CrtLayout12 crt = (CrtLayout12) Chart.findRec( chartArr, CrtLayout12.class );
 		if( crt != null )
 		{
 			crt.setLayout( pos );
@@ -257,7 +269,7 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 		{
 			f = (Frame) Frame.getPrototype();
 			f.addBox( 0, -1, -1 );
-			this.chartArr.add( f );
+			chartArr.add( f );
 		}
 	}
 
@@ -273,11 +285,11 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 		{
 			// if setting to autosize/position and it wasn't currently set as so,
 			// check Pos and Frame records (if present) as they also controls automatic positioning ((:
-			if( this.chartArr.size() > 0 )
+			if( chartArr.size() > 0 )
 			{
 				try
 				{
-					Pos p = (Pos) this.chartArr.get( 0 );
+					Pos p = (Pos) chartArr.get( 0 );
 					p.setAutosizeLegend();
 					Frame f = (Frame) Chart.findRec( chartArr, Frame.class );    // find the first one
 					if( f != null )
@@ -301,7 +313,7 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 		grbit = ByteTools.updateGrBit( grbit, fAutoPosX, 2 );
 		grbit = ByteTools.updateGrBit( grbit, fAutoPosY, 3 );
 		grbit = ByteTools.updateGrBit( grbit, fVert, 4 );
-		this.updateRecord();
+		updateRecord();
 	}
 
 	/**
@@ -310,9 +322,9 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 	 */
 	public void incrementHeight( float h )
 	{
-		Pos p = (Pos) Chart.findRec( this.chartArr, Pos.class );
+		Pos p = (Pos) Chart.findRec( chartArr, Pos.class );
 		int[] coords = p.getLegendCoords();    // x, y, w, h, fh, legendpos
-		Font f = this.getFnt();
+		Font f = getFnt();
 		int fh = 10;    // default
 		if( f != null )
 		{
@@ -334,14 +346,14 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 	 */
 	public void adjustWidth( HashMap<String, Double> chartMetrics, int chartType, String[] legends )
 	{
-		Pos p = (Pos) Chart.findRec( this.chartArr, Pos.class );
+		Pos p = (Pos) Chart.findRec( chartArr, Pos.class );
 		int[] coords = p.getLegendCoords();    // x, y, w, h, fh, legendpos
 		if( coords != null )
 		{
-			Font f = this.getFnt();
+			Font f = getFnt();
 			// legend position LEFT and RIGHT display each legend on a separate line (fVert==true)
 			// TOP and BOTTOM are displayed horizontally with symbols and spacing between entries (fVert==false)
-			int position = this.getLegendPosition();
+			int position = getLegendPosition();
 			float cw = chartMetrics.get( "canvasw" ).floatValue();
 			float x = (int) Math.ceil( Pos.convertFromSPRC( coords[0], cw, 0 ) ) - 3;
 			float w = chartMetrics.get( "w" ).floatValue();
@@ -428,7 +440,7 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 	 */
 	public void resetPos( double y, double h, double ch, int nLines )
 	{
-		Pos p = (Pos) Chart.findRec( this.chartArr, Pos.class );
+		Pos p = (Pos) Chart.findRec( chartArr, Pos.class );
 /*		apparently just setting to 1/2 h works well!!  
  * 		Font f= this.getFnt();
 		int fh= 10;	// default
@@ -452,12 +464,12 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 	{
 		// calcs are not 100% ****
 		// space between legend entries = 40 twips = 1 twip equals one-twentieth of a printer's point
-		Pos p = (Pos) Chart.findRec( this.chartArr, Pos.class );
+		Pos p = (Pos) Chart.findRec( chartArr, Pos.class );
 		int[] coords = p.getLegendCoords();
 		int[] retcoords = new int[6];
 		int fh = f.getSize();    //*1.2);	// a little padding
 		retcoords[4] = f.getSize();    // store font height
-		retcoords[5] = this.getLegendPosition();    // store legend position
+		retcoords[5] = getLegendPosition();    // store legend position
 
 		boolean canMoveCW = false;
 		if( coords != null )
@@ -532,19 +544,19 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 		try
 		{
 			Fontx fx = getLegendFont();
-			Font f = this.getParentChart().getWorkBook().getFont( fx.getIfnt() );
+			Font f = getParentChart().getWorkBook().getFont( fx.getIfnt() );
 			if( f != null )
 			{
 				return f;
 			}
 			// shouldn't get here ...
 
-			return this.getParentChart().getDefaultFont();
+			return getParentChart().getDefaultFont();
 		}
 		catch( NullPointerException e )
 		{
 			// this actually doesn't get the actual font for the legend but can't find correct Fontx record! 
-			return this.getParentChart().getDefaultFont();
+			return getParentChart().getDefaultFont();
 		}
 	}
 
@@ -559,13 +571,13 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 		Font f = getFnt();
 		if( f != null )
 		{
-			legendCoords = this.getCoords( chartType, chartMetrics, legends, new java.awt.Font( f.getFontName(),
+			legendCoords = getCoords( chartType, chartMetrics, legends, new java.awt.Font( f.getFontName(),
 			                                                                                    f.getFontWeight(),
 			                                                                                    (int) f.getFontHeightInPoints() ) );
 		}
 		else
 		{    // can't find any font ... shouldn't really happen ...?
-			legendCoords = this.getCoords( chartType, chartMetrics, legends, new java.awt.Font( "Arial", 400, 10 ) );
+			legendCoords = getCoords( chartType, chartMetrics, legends, new java.awt.Font( "Arial", 400, 10 ) );
 		}
 	}
 
@@ -611,7 +623,7 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 
 		if( legendCoords == null )
 		{
-			this.getMetrics( chartMetrics, chartobj.getChartType(), s );
+			getMetrics( chartMetrics, chartobj.getChartType(), s );
 		}
 		String font;    // font svg
 		int fh;    // font height
@@ -636,7 +648,7 @@ public class Legend extends GenericChartObject implements ChartObject, ChartCons
 		int boxh = legendCoords[3];
 
 		svg.append( "<g>\r\n" );
-		if( this.hasBox() )
+		if( hasBox() )
 		{
 			svg.append( "<rect x='" + x + "' y='" + y +
 					            "' width='" + boxw + "' height='" + boxh +

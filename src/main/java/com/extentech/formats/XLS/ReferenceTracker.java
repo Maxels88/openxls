@@ -576,7 +576,7 @@ public class ReferenceTracker
 	 */
 	public CellRange[] getCellRanges()
 	{
-		CellRange[] ret = new CellRange[this.crs.size()];
+		CellRange[] ret = new CellRange[crs.size()];
 		return (CellRange[]) crs.toArray( ret );
 	}
 
@@ -1047,13 +1047,13 @@ public class ReferenceTracker
 	 */
 	public void close()
 	{
-		this.sheetMap.clear();
-		this.nameRefs.clear();
-		this.criteriaDBs.clear();
-		this.CollectionDBs.clear();
-		this.vlookups.clear();
-		this.crs.clear();
-		this.lookupColsCache.clear();
+		sheetMap.clear();
+		nameRefs.clear();
+		criteriaDBs.clear();
+		CollectionDBs.clear();
+		vlookups.clear();
+		crs.clear();
+		lookupColsCache.clear();
 		sheetMap = new HashMap();
 		nameRefs = new HashMap();
 		// Database calc caches
@@ -1131,7 +1131,7 @@ class TrackedPtgs extends TreeMap
 	{
 		try
 		{
-			super.put( this.getKey( o ), o );
+			super.put( getKey( o ), o );
 		}
 		catch( IllegalArgumentException e )
 		{    // SHOULD NOT HAPPEN -- happens upon RefErrs but they shouldnt be added ...
@@ -1169,7 +1169,7 @@ class TrackedPtgs extends TreeMap
 		long loc = PtgRef.getHashCode( rc[0], rc[1] );    // get location in hashcode notation
 		// first see if have tracked ptgs at the test location -- match all regardless of parent rec ...
 		Object key;
-		Map m = Collections.synchronizedMap( this.subMap( getKey( loc, 0 ), getKey( loc + 1, 0 ) ) );        // +1 for max parent
+		Map m = Collections.synchronizedMap( subMap( getKey( loc, 0 ), getKey( loc + 1, 0 ) ) );        // +1 for max parent
 		if( (m != null) && (m.size() > 0) )
 		{
 			Iterator ii = m.keySet().iterator();
@@ -1182,7 +1182,7 @@ class TrackedPtgs extends TreeMap
 				long testkey= ((long[])keys[i])[0];*/
 				if( testkey == loc )
 				{    // longs to remove parent hashcode portion of double
-					parents.add( ((PtgRef) this.get( key )).getParentRec() );
+					parents.add( ((PtgRef) get( key )).getParentRec() );
 //					parents.add(((PtgRef)this.get(keys[i])).getParentRec());
 //System.out.print(": Found ptg" + this.get((Integer)locs.get(key)));					
 				}
@@ -1194,7 +1194,7 @@ class TrackedPtgs extends TreeMap
 		}
 		// now see if test cell falls into any areas
 
-		m = Collections.synchronizedMap( this.tailMap( getKey( SECONDPTGFACTOR, 0 ) ) ); // NOW GET ALL PTGAREAS ...
+		m = Collections.synchronizedMap( tailMap( getKey( SECONDPTGFACTOR, 0 ) ) ); // NOW GET ALL PTGAREAS ...
 		if( m != null )
 		{
 			synchronized(m.keySet())
@@ -1215,9 +1215,9 @@ class TrackedPtgs extends TreeMap
 						int col1 = (int) secondkey % XLSRecord.MAXCOLS;
 						int rw0 = ((int) (firstkey / XLSRecord.MAXCOLS)) - 1;
 						int rw1 = ((int) (secondkey / XLSRecord.MAXCOLS)) - 1;
-						if( this.isaffected( rc, new int[]{ rw0, col0, rw1, col1 } ) )
+						if( isaffected( rc, new int[]{ rw0, col0, rw1, col1 } ) )
 						{
-							parents.add( ((PtgRef) this.get( key )).getParentRec() );
+							parents.add( ((PtgRef) get( key )).getParentRec() );
 //							parents.add(((PtgRef)this.get(keys[i])).getParentRec());
 						}
 					}
@@ -1281,9 +1281,9 @@ class TrackedPtgs extends TreeMap
 	{
 		try
 		{
-			this.remove( o );
+			remove( o );
 			long newloc = parent.hashCode();
-			this.put( getKey( ((PtgRef) o).hashcode, newloc ), o );
+			put( getKey( ((PtgRef) o).hashcode, newloc ), o );
 		}
 		catch( IllegalArgumentException e )
 		{
@@ -1294,7 +1294,7 @@ class TrackedPtgs extends TreeMap
 
 	public Object[] toArray()
 	{
-		return this.values().toArray();
+		return values().toArray();
 	}
 
 	/**

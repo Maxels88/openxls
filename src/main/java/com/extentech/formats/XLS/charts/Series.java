@@ -102,7 +102,12 @@ public final class Series extends GenericChartObject implements ChartObject
 	public static int SERIES_TYPE_NUMERIC = 1;
 	public static int SERIES_TYPE_STRING = 3;
 
-	protected int sdtX = -1, sdtY = -1, cValx = -1, cValy = -1, sdtBSz = -1, sdtValBSz = -1;
+	protected int sdtX = -1;
+	protected int sdtY = -1;
+	protected int cValx = -1;
+	protected int cValy = -1;
+	protected int sdtBSz = -1;
+	protected int sdtValBSz = -1;
 
 	private SpPr shapeProps = null;    // OOXML-specific holds the shape properties (line and fill) for this series (all charts)
 	private Marker m = null;            // OOXML-specific object to hold marker properties for this series (radar, scatter and line charts only)
@@ -113,12 +118,12 @@ public final class Series extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		sdtX = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		sdtY = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		cValx = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		cValy = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
-		sdtBSz = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
-		sdtValBSz = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );
+		sdtX = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		sdtY = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		cValx = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+		cValy = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
+		sdtBSz = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );
+		sdtValBSz = ByteTools.readShort( getByteAt( 10 ), getByteAt( 11 ) );
 			log.trace("{}",toString() );
 	}
 
@@ -129,7 +134,7 @@ public final class Series extends GenericChartObject implements ChartObject
 
 	public void update()
 	{
-		byte[] rkdata = this.getData();
+		byte[] rkdata = getData();
 		byte[] b = ByteTools.shortToLEBytes( (short) sdtX );
 		rkdata[0] = b[0];
 		rkdata[1] = b[1];
@@ -148,7 +153,7 @@ public final class Series extends GenericChartObject implements ChartObject
 		b = ByteTools.shortToLEBytes( (short) sdtValBSz );
 		rkdata[10] = b[0];
 		rkdata[11] = b[1];
-		this.setData( rkdata );
+		setData( rkdata );
 	}
 
 	/**
@@ -180,7 +185,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	private int getSeriesNumberFormat()
 	{
-		Ai ai = this.getSeriesValueAi();
+		Ai ai = getSeriesValueAi();
 		int i = 0;
 		if( ai != null )
 		{
@@ -222,7 +227,7 @@ public final class Series extends GenericChartObject implements ChartObject
 		// custom??
 		try
 		{
-			Format fmt = this.getWorkBook().getFormat( ifmt );
+			Format fmt = getWorkBook().getFormat( ifmt );
 			return fmt.getFormat();
 		}
 		catch( Exception e )
@@ -238,7 +243,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	private int getCategoryNumberFormat()
 	{
-		Ai ai = this.getCategoryValueAi();
+		Ai ai = getCategoryValueAi();
 		if( ai != null )
 		{
 			return ai.getIfmt();
@@ -265,7 +270,7 @@ public final class Series extends GenericChartObject implements ChartObject
 		// custom??
 		try
 		{
-			Format fmt = this.getWorkBook().getFormat( ifmt );
+			Format fmt = getWorkBook().getFormat( ifmt );
 			return fmt.getFormat();
 		}
 		catch( Exception e )
@@ -282,8 +287,8 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	public void setLegend( String newLegend, WorkBookHandle wbh )
 	{
-		this.getLegendAi().setLegend( newLegend );
-		Chart parent = this.getParentChart();
+		getLegendAi().setLegend( newLegend );
+		Chart parent = getParentChart();
 		parent.getChartSeries().legends = null;    // ensure cache is cleared
 		parent.getLegend().adjustWidth( parent.getMetrics( wbh ), parent.getChartType(), parent.getChartSeries().getLegends() );
 	}
@@ -295,9 +300,9 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	public void setLegendRef( String newLegendCell )
 	{
-		Ai ai = this.getLegendAi();
+		Ai ai = getLegendAi();
 		ai.changeAiLocation( ai.toString(), newLegendCell );
-		SeriesText st = this.getLegendSeriesText();
+		SeriesText st = getLegendSeriesText();
 		ai.setRt( 2 );
 		String legendText = "";
 		try
@@ -365,7 +370,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	public String getLegendRef()
 	{
-		Ai ai = this.getLegendAi();
+		Ai ai = getLegendAi();
 		if( ai != null )
 		{
 			return ai.getDefinition();
@@ -618,7 +623,7 @@ public final class Series extends GenericChartObject implements ChartObject
 		{
 			if( seriesRange.indexOf( ":" ) != -1 )
 			{
-				int coords[] = com.extentech.ExtenXLS.ExcelTools.getRangeCoords( seriesRange );
+				int[] coords = com.extentech.ExtenXLS.ExcelTools.getRangeCoords( seriesRange );
 				vCount = coords[4];
 			}
 			else
@@ -693,7 +698,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	protected int getSeriesIndex()
 	{
-		DataFormat df = this.getDataFormatRec( false );
+		DataFormat df = getDataFormatRec( false );
 		if( df != null )
 		{
 			return df.getSeriesIndex();
@@ -708,7 +713,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	protected int getSeriesNumber()
 	{
-		DataFormat df = this.getDataFormatRec( false );
+		DataFormat df = getDataFormatRec( false );
 		if( df != null )
 		{
 			return df.getSeriesNumber();
@@ -729,7 +734,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	public void setCategoryCount( int i )
 	{ //20070711 KSC: changed from protected
 		cValx = i;
-		this.update();
+		update();
 	}
 
 	protected int getBubbleCount()
@@ -740,13 +745,13 @@ public final class Series extends GenericChartObject implements ChartObject
 	public void setBubbleCount( int i )
 	{ //20070711 KSC: changed from protected
 		sdtValBSz = i;
-		this.update();
+		update();
 	}
 
 	public void setValueCount( int i )
 	{    //20070711 KSC: changed from protected
 		cValy = i;
-		this.update();
+		update();
 	}
 
 	// 20070712 KSC: get/set for data types
@@ -763,13 +768,13 @@ public final class Series extends GenericChartObject implements ChartObject
 	public void setCategoryDataType( int i )
 	{
 		sdtX = i;
-		this.update();
+		update();
 	}
 
 	public void setValueDataType( int i )
 	{
 		sdtY = i;
-		this.update();
+		update();
 	}
 
 	public boolean hasBubbleSizes()
@@ -785,11 +790,11 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	private DataFormat getDataFormatRec( boolean bCreate )
 	{
-		DataFormat df = (DataFormat) Chart.findRec( this.chartArr, DataFormat.class );
+		DataFormat df = (DataFormat) Chart.findRec( chartArr, DataFormat.class );
 		if( (df == null) && bCreate )
 		{ // create dataformat
-			df = (DataFormat) DataFormat.getPrototypeWithFormatRecs( this.getParentChart() );
-			this.addChartRecord( df );
+			df = (DataFormat) DataFormat.getPrototypeWithFormatRecs( getParentChart() );
+			addChartRecord( df );
 		}
 		return df;
 	}
@@ -802,7 +807,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	private DataFormat getDataFormatRecSlice( int slice, boolean bCreate )
 	{
-		DataFormat df = this.getDataFormatRec( false );
+		DataFormat df = getDataFormatRec( false );
 		if( df == null )
 		{
 			log.warn( "Series.getDataFormatRecSlice: cannot find data format record" );
@@ -843,9 +848,9 @@ public final class Series extends GenericChartObject implements ChartObject
 			i--;
 			while( lastSlice <= slice )
 			{
-				df = (DataFormat) DataFormat.getPrototypeWithFormatRecs( this.getParentChart() );
+				df = (DataFormat) DataFormat.getPrototypeWithFormatRecs( getParentChart() );
 				df.setPointNumber( lastSlice++ );
-				df.setParentChart( this.getParentChart() );
+				df.setParentChart( getParentChart() );
 				s.chartArr.add( i++, df );
 			}
 			return df;
@@ -861,7 +866,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	public int getShape()
 	{
 		int ret = 0;
-		DataFormat df = this.getDataFormatRec( false );
+		DataFormat df = getDataFormatRec( false );
 		if( df != null )
 		{
 			ret = df.getShape();
@@ -871,7 +876,7 @@ public final class Series extends GenericChartObject implements ChartObject
 
 	public void setShape( int shape )
 	{
-		DataFormat df = this.getDataFormatRec( true );
+		DataFormat df = getDataFormatRec( true );
 		df.setShape( shape );
 	}
 
@@ -882,7 +887,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	public boolean getHasSmoothedLines()
 	{
-		DataFormat df = this.getDataFormatRec( false );
+		DataFormat df = getDataFormatRec( false );
 		if( df != null )
 		{
 			return df.getSmoothedLines();
@@ -897,7 +902,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	public void setHasSmoothLines( boolean smooth )
 	{
-		DataFormat df = this.getDataFormatRec( true );
+		DataFormat df = getDataFormatRec( true );
 		df.setSmoothLines( smooth );
 	}
 
@@ -907,7 +912,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	public void setHasLines( int lineStyle )
 	{
-		DataFormat df = this.getDataFormatRec( true );
+		DataFormat df = getDataFormatRec( true );
 		df.setHasLines( lineStyle );
 	}
 
@@ -920,13 +925,13 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	public void setColor( String clr )
 	{
-		int type = this.getParentChart().getChartType();
+		int type = getParentChart().getChartType();
 		if( type == ChartConstants.PIECHART )
 		{
-			setPieSliceColor( clr, this.getSeriesIndex() );
+			setPieSliceColor( clr, getSeriesIndex() );
 			return;
 		}
-		DataFormat df = this.getDataFormatRec( true );
+		DataFormat df = getDataFormatRec( true );
 		df.setSeriesColor( clr );
 	}
 
@@ -981,13 +986,13 @@ public final class Series extends GenericChartObject implements ChartObject
 	public void setColor( int clr )
 	{
 		clr = ensureCorrectColorInt( clr );
-		int type = this.getParentChart().getChartType();
+		int type = getParentChart().getChartType();
 		if( type == ChartConstants.PIECHART )
 		{
-			setPieSliceColor( clr, this.getSeriesIndex() );
+			setPieSliceColor( clr, getSeriesIndex() );
 			return;
 		}
-		DataFormat df = this.getDataFormatRec( true );
+		DataFormat df = getDataFormatRec( true );
 		df.setSeriesColor( clr );
 
 	}
@@ -1001,12 +1006,12 @@ public final class Series extends GenericChartObject implements ChartObject
 	public void setPieSliceColor( int clr, int slice )
 	{
 		clr = ensureCorrectColorInt( clr );
-		int type = this.getParentChart().getChartType();
+		int type = getParentChart().getChartType();
 		if( type != ChartConstants.PIECHART )
 		{
 			return;
 		}
-		DataFormat df = this.getDataFormatRecSlice( slice, true );
+		DataFormat df = getDataFormatRecSlice( slice, true );
 		if( df != null )
 		{
 			df.setPieSliceColor( clr, slice );
@@ -1025,12 +1030,12 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	public void setPieSliceColor( String clr, int slice )
 	{
-		int type = this.getParentChart().getChartType();
+		int type = getParentChart().getChartType();
 		if( type != ChartConstants.PIECHART )
 		{
 			return;
 		}
-		DataFormat df = this.getDataFormatRecSlice( slice, true );
+		DataFormat df = getDataFormatRecSlice( slice, true );
 		if( df != null )
 		{
 			df.setPieSliceColor( clr, slice );
@@ -1044,7 +1049,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	// Periwinkle 	Plum+ 	Ivory 	Light Turquoise 	Dark Purple 	Coral 	Ocean Blue 	Ice Blue  {17, 25, 19, 27, 28, 22, 23, 24};
 	// try these color int numbers instead:
 	// alternative explanation:  chart fills 16-23, chart lines 24-31
-	public static int automaticSeriesColors[] = {
+	public static int[] automaticSeriesColors = {
 			24,
 			25,
 			26,
@@ -1094,8 +1099,8 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	public String getSeriesColor()
 	{
-		DataFormat df = this.getDataFormatRec( false );
-		int type = this.getParentChart().getChartType();
+		DataFormat df = getDataFormatRec( false );
+		int type = getParentChart().getChartType();
 		int seriesNumber = df.getSeriesNumber();
 		if( type == ChartConstants.PIECHART )
 		{
@@ -1118,12 +1123,12 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	public String getPieSliceColor( int slice )
 	{
-		int type = this.getParentChart().getChartType();
+		int type = getParentChart().getChartType();
 		if( type != ChartConstants.PIECHART )
 		{
 			return null;
 		}
-		DataFormat df = this.getDataFormatRecSlice( slice, false );
+		DataFormat df = getDataFormatRecSlice( slice, false );
 		if( df != null )
 		{
 			String bg = df.getBgColor();
@@ -1151,7 +1156,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	 */
 	public int getMarkerFormat()
 	{
-		DataFormat df = this.getDataFormatRec( false );
+		DataFormat df = getDataFormatRec( false );
 		if( df != null )
 		{
 			return df.getMarkerFormat();
@@ -1176,12 +1181,12 @@ public final class Series extends GenericChartObject implements ChartObject
 	public int getDataLabel()
 	{
 		int datalabels = 0;
-		DataLabExtContents dl = (DataLabExtContents) Chart.findRec( this.chartArr, DataLabExtContents.class );
+		DataLabExtContents dl = (DataLabExtContents) Chart.findRec( chartArr, DataLabExtContents.class );
 		if( dl != null )
 		{ // Extended Label -- add to attachedlabel, if any
 			datalabels = dl.getTypeInt();
 		}
-		DataFormat df = this.getDataFormatRec( false );
+		DataFormat df = getDataFormatRec( false );
 		if( df != null )
 		{
 			datalabels |= df.getDataLabelTypeInt();
@@ -1209,7 +1214,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	public int[] getDataLabelsPIE( int defaultdl )
 	{
 		int datalabels = 0;
-		DataFormat df = this.getDataFormatRec( false );
+		DataFormat df = getDataFormatRec( false );
 		if( df != null )
 		{
 			datalabels |= df.getDataLabelTypeInt();
@@ -1341,7 +1346,7 @@ public final class Series extends GenericChartObject implements ChartObject
 		ooxml.append( "<c:numCache>" );
 		ooxml.append( "\r\n" );        // specifies the last data shown on the chart for a series
 		// formatCode	== format pattern
-		ooxml.append( "<c:formatCode>" + this.getSeriesFormatPattern() + "</c:formatCode>" );
+		ooxml.append( "<c:formatCode>" + getSeriesFormatPattern() + "</c:formatCode>" );
 		CellRange cr = new CellRange( seriesAi.toString(), parentChart.wbh, false );
 		CellHandle[] ch = cr.getCells();
 		// ptCount	== point count
@@ -1472,8 +1477,8 @@ public final class Series extends GenericChartObject implements ChartObject
 	public StringBuffer getLegendOOXML( boolean from2003 )
 	{
 		StringBuffer ooxml = new StringBuffer();
-		String txt = this.getLegendText();
-		Ai ai = this.getLegendAi();
+		String txt = getLegendText();
+		Ai ai = getLegendAi();
 /*       String txt= null;
        try {
        	com.extentech.formats.XLS.formulas.Ptg[] p= ai.getCellRangePtgs();
@@ -1513,20 +1518,20 @@ public final class Series extends GenericChartObject implements ChartObject
 			ooxml.append( "\r\n" );
 			ooxml.append( "</c:tx>" );
 			ooxml.append( "\r\n" );
-			if( this.getSpPr() != null )
+			if( getSpPr() != null )
 			{
-				ooxml.append( this.getSpPr().getOOXML() );
+				ooxml.append( getSpPr().getOOXML() );
 			}
 			else if( from2003 )
 			{
 				SpPr ss;
 				if( parentChart.getChartType() != RADARCHART )
 				{
-					ss = new SpPr( "c", this.getSeriesColor().substring( 1 ), 12700, "000000" );
+					ss = new SpPr( "c", getSeriesColor().substring( 1 ), 12700, "000000" );
 				}
 				else
 				{
-					ss = new SpPr( "c", null, 25400, this.getSeriesColor().substring( 1 ) );
+					ss = new SpPr( "c", null, 25400, getSeriesColor().substring( 1 ) );
 				}
 				ooxml.append( ss.getOOXML() );
 			}

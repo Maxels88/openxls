@@ -49,7 +49,8 @@ public class Crn extends XLSRecord
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 3162130963170092322L;
-	private byte lc, fc;
+	private byte lc;
+	private byte fc;
 	private int rowIndex;
 	private ArrayList cachedValues = new ArrayList();
 
@@ -57,45 +58,45 @@ public class Crn extends XLSRecord
 	public void init()
 	{
 		super.init();
-		lc = this.getByteAt( 0 );
-		fc = this.getByteAt( 1 );
-		rowIndex = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
+		lc = getByteAt( 0 );
+		fc = getByteAt( 1 );
+		rowIndex = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
 		int pos = 4;
 		for( int i = 0; i < ((lc - fc) + 1); i++ )
 		{
 			try
 			{
-				int type = this.getByteAt( pos++ );
+				int type = getByteAt( pos++ );
 				switch( type )
 				{
 					case 0:    // empty
 						pos += 8;
 						break;
 					case 1:    // numeric
-						cachedValues.add( new Float( ByteTools.eightBytetoLEDouble( this.getBytesAt( pos, 8 ) ) ) );
+						cachedValues.add( new Float( ByteTools.eightBytetoLEDouble( getBytesAt( pos, 8 ) ) ) );
 						pos += 8;
 						break;
 					case 2: // string
-						short ln = ByteTools.readShort( this.getByteAt( pos ), this.getByteAt( pos + 1 ) );
-						byte encoding = this.getByteAt( pos + 2 );
+						short ln = ByteTools.readShort( getByteAt( pos ), getByteAt( pos + 1 ) );
+						byte encoding = getByteAt( pos + 2 );
 						pos += 3;
 						if( encoding == 0 )
 						{
-							cachedValues.add( new String( this.getBytesAt( pos, ln ) ) );
+							cachedValues.add( new String( getBytesAt( pos, ln ) ) );
 							pos += ln;
 						}
 						else
 						{// unicode
-							cachedValues.add( new String( this.getBytesAt( pos, ln * 2 ), "UTF-16LE" ) );
+							cachedValues.add( new String( getBytesAt( pos, ln * 2 ), "UTF-16LE" ) );
 							pos += ln * 2;
 						}
 						break;
 					case 4: // boolean
-						cachedValues.add( this.getByteAt( pos + 1 ) == 1 );
+						cachedValues.add( getByteAt( pos + 1 ) == 1 );
 						pos += 8;
 						break;
 					case 16: // error
-						cachedValues.add( new String( "Error Code: " + this.getByteAt( pos + 1 ) ) );
+						cachedValues.add( new String( "Error Code: " + getByteAt( pos + 1 ) ) );
 						pos += 8;
 						break;
 				}

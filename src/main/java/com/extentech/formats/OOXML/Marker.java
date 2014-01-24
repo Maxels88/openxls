@@ -46,16 +46,16 @@ public final class Marker implements OOXMLElement
 
 	public Marker( String s, String sz, SpPr sp )
 	{
-		this.symbol = s;
-		this.size = sz;
+		symbol = s;
+		size = sz;
 		this.sp = sp;
 	}
 
 	public Marker( Marker m )
 	{
-		this.symbol = m.symbol;
-		this.size = m.size;
-		this.sp = m.sp;
+		symbol = m.symbol;
+		size = m.size;
+		sp = m.sp;
 	}
 
 	/**
@@ -118,15 +118,15 @@ public final class Marker implements OOXMLElement
 	{
 		StringBuffer ooxml = new StringBuffer();
 		ooxml.append( "<c:marker>" );
-		if( this.symbol != null )
+		if( symbol != null )
 		{
-			ooxml.append( "<c:symbol val=\"" + this.symbol + "\"/>" );
+			ooxml.append( "<c:symbol val=\"" + symbol + "\"/>" );
 		}
-		if( this.size != null )
+		if( size != null )
 		{
-			ooxml.append( "<c:size val=\"" + this.size + "\"/>" );
+			ooxml.append( "<c:size val=\"" + size + "\"/>" );
 		}
-		if( this.sp != null )
+		if( sp != null )
 		{
 			ooxml.append( sp.getOOXML() );
 		}

@@ -70,12 +70,12 @@ public final class Externname extends XLSRecord
 	public void init()
 	{
 		super.init();
-		short externnametype = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		short externnametype = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		if( externnametype == 0 )
 		{// add-in
 			// read in length of external name
-			short len = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
-			byte[] b = this.getBytesAt( 8, len );
+			short len = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
+			byte[] b = getBytesAt( 8, len );
 			String s = new String( b );
 			getWorkBook().addExternalName( s );    // store external names in workbook
 		}

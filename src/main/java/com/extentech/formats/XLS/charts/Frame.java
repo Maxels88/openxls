@@ -47,14 +47,15 @@ public class Frame extends GenericChartObject implements ChartObject
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 6302152932127918650L;
-	boolean fAutoSize, fAutoPosition;
+	boolean fAutoSize;
+	boolean fAutoPosition;
 	int frt;
 
 	@Override
 	public void init()
 	{
-		frt = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		byte flag = this.getByteAt( 2 );// 3= autosize, autoposition
+		frt = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		byte flag = getByteAt( 2 );// 3= autosize, autoposition
 		fAutoSize = (flag & 0x01) == 0x01;
 		fAutoPosition = (flag & 0x02) == 0x02;
 		super.init();
@@ -131,7 +132,7 @@ public class Frame extends GenericChartObject implements ChartObject
 	 */
 	public void setAutosize()
 	{
-		this.getData()[2] = 3; // sets both fAutoSize and fAutoPostion
+		getData()[2] = 3; // sets both fAutoSize and fAutoPostion
 	}
 
 	/**
@@ -147,7 +148,7 @@ public class Frame extends GenericChartObject implements ChartObject
 		if( lf == null )
 		{
 			lf = (LineFormat) LineFormat.getPrototype( 0, 0 );
-			this.addChartRecord( lf );
+			addChartRecord( lf );
 		}
 		if( lw != -1 )
 		{
@@ -166,7 +167,7 @@ public class Frame extends GenericChartObject implements ChartObject
 		if( af == null )
 		{
 			af = (AreaFormat) AreaFormat.getPrototype( 1 );
-			this.addChartRecord( af );
+			addChartRecord( af );
 		}
 		if( bgcolor != -1 )
 		{
@@ -181,7 +182,7 @@ public class Frame extends GenericChartObject implements ChartObject
 	 */
 	public boolean hasBox()
 	{
-		LineFormat l = (LineFormat) Chart.findRec( this.chartArr, LineFormat.class );
+		LineFormat l = (LineFormat) Chart.findRec( chartArr, LineFormat.class );
 		return (l.getLineStyle() != LineFormat.NONE);
 	}
 
@@ -192,7 +193,7 @@ public class Frame extends GenericChartObject implements ChartObject
 	 */
 	public String getLineColor()
 	{
-		LineFormat l = (LineFormat) Chart.findRec( this.chartArr, LineFormat.class );
+		LineFormat l = (LineFormat) Chart.findRec( chartArr, LineFormat.class );
 		if( l != null )
 		{
 			return l.getLineColor();

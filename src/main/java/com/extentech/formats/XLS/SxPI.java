@@ -72,7 +72,7 @@ public class SxPI extends XLSRecord implements XLSConstants
 	public void init()
 	{
 		super.init();
-		byte[] rgsxpi = this.getData();    // each item is 6 bytes
+		byte[] rgsxpi = getData();    // each item is 6 bytes
 		if( rgsxpi != null )
 		{
 			if( (rgsxpi.length % 6) != 0 )
@@ -130,11 +130,11 @@ public class SxPI extends XLSRecord implements XLSConstants
 			sxpis[i].isxvd = (short) fieldindex;
 			sxpis[i].isxvi = (short) itemindex;
 			byte[] b = ByteTools.shortToLEBytes( (short) fieldindex );
-			this.getData()[(i * 6)] = b[0];
-			this.getData()[(i * 6) + 1] = b[1];
+			getData()[(i * 6)] = b[0];
+			getData()[(i * 6) + 1] = b[1];
 			b = ByteTools.shortToLEBytes( (short) itemindex );
-			this.getData()[(i * 6) + 2] = b[0];
-			this.getData()[(i * 6) + 3] = b[1];
+			getData()[(i * 6) + 2] = b[0];
+			getData()[(i * 6) + 3] = b[1];
 		}
 	}
 

@@ -50,7 +50,7 @@ public final class NameNotFoundException extends java.lang.Exception
 	{
 		// This method is derived from class java.lang.Throwable
 		// to do: code goes here
-		return this.toString();
+		return toString();
 	}
 
 	public String toString()

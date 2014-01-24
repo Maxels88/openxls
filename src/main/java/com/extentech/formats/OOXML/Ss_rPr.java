@@ -57,13 +57,13 @@ public class Ss_rPr implements OOXMLElement
 	public Ss_rPr( HashMap<String, String> attrs, Color c )
 	{
 		this.attrs = attrs;
-		this.color = c;
+		color = c;
 	}
 
 	public Ss_rPr( Ss_rPr r )
 	{
-		this.attrs = r.attrs;
-		this.color = r.color;
+		attrs = r.attrs;
+		color = r.color;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, WorkBookHandle bk )
@@ -310,41 +310,41 @@ public class Ss_rPr implements OOXMLElement
 		Font f = new Font( "Arial", 400, 200 );
 		Object o;
 
-		o = this.getAttr( "rFont" );
+		o = getAttr( "rFont" );
 		f.setFontName( (String) o );
-		o = this.getAttr( "sz" );
+		o = getAttr( "sz" );
 		if( o != null )
 		{
 			f.setFontHeight( Font.PointsToFontHeight( Double.parseDouble( (String) o ) ) );
 		}
 
 		// boolean attributes
-		o = this.getAttr( "b" );
+		o = getAttr( "b" );
 		if( o != null )
 		{
 			f.setBold( true );
 		}
-		o = this.getAttr( "i" );
+		o = getAttr( "i" );
 		if( o != null )
 		{
 			f.setItalic( true );
 		}
-		o = this.getAttr( "u" );
+		o = getAttr( "u" );
 		if( o != null )
 		{
 			f.setUnderlined( true );
 		}
-		o = this.getAttr( "strike" );
+		o = getAttr( "strike" );
 		if( o != null )
 		{
 			f.setStricken( true );
 		}
-		o = this.getAttr( "outline" );
+		o = getAttr( "outline" );
 		if( o != null )
 		{
 			f.setBold( true );
 		}
-		o = this.getAttr( "vertAlign" );
+		o = getAttr( "vertAlign" );
 		if( o != null )
 		{
 			String s = (String) o;

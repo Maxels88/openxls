@@ -63,11 +63,11 @@ public class Sp implements OOXMLElement
 
 	public Sp( Sp shp )
 	{
-		this.nvsp = shp.nvsp;
-		this.sppr = shp.sppr;
-		this.sty = shp.sty;
-		this.txb = shp.txb;
-		this.attrs = shp.attrs;
+		nvsp = shp.nvsp;
+		sppr = shp.sppr;
+		sty = shp.sty;
+		txb = shp.txb;
+		attrs = shp.attrs;
 	}
 
 	/**
@@ -356,8 +356,8 @@ class NvSpPr implements OOXMLElement
 
 	public NvSpPr( NvSpPr nvsp )
 	{
-		this.cnv = nvsp.cnv;
-		this.cnvsp = nvsp.cnvsp;
+		cnv = nvsp.cnv;
+		cnvsp = nvsp.cnvsp;
 	}
 
 	public static NvSpPr parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -521,14 +521,14 @@ class CNvSpPr implements OOXMLElement
 
 	public CNvSpPr( String t, SpLocks sp )
 	{
-		this.txBox = t;
+		txBox = t;
 		this.sp = sp;
 	}
 
 	public CNvSpPr( CNvSpPr c )
 	{
-		this.txBox = c.txBox;
-		this.sp = c.sp;
+		txBox = c.txBox;
+		sp = c.sp;
 	}
 
 	public static CNvSpPr parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -585,7 +585,7 @@ class CNvSpPr implements OOXMLElement
 	{
 		StringBuffer ooxml = new StringBuffer();
 		ooxml.append( "<xdr:cNvSpPr" );
-		if( this.txBox != null )
+		if( txBox != null )
 		{
 			ooxml.append( " txBox=\"" + txBox + "\"" );
 		}
@@ -627,7 +627,7 @@ class SpLocks implements OOXMLElement
 
 	public SpLocks( SpLocks sp )
 	{
-		this.attrs = sp.attrs;
+		attrs = sp.attrs;
 	}
 
 	public static SpLocks parseOOXML( XmlPullParser xpp, Stack<String> lastTag )

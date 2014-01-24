@@ -54,8 +54,8 @@ public class Xct extends XLSRecord
 	public void init()
 	{
 		super.init();
-		nCRNs = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		supBookIndex = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
+		nCRNs = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		supBookIndex = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
 	}
 
 	public String toString()

@@ -75,13 +75,13 @@ public class PtgBool extends GenericPtg implements Ptg
 	public void setVal( boolean boo )
 	{
 		val = boo;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	@Override
 	public void init( byte[] rec )
 	{
-		this.record = rec;
+		record = rec;
 		ptgId = rec[0];
 		if( rec[1] == 0 )
 		{
@@ -104,7 +104,7 @@ public class PtgBool extends GenericPtg implements Ptg
 	{
 		ptgId = ExpressionParser.ptgBool;
 		val = b;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	public boolean getBooleanValue()

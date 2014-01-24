@@ -47,7 +47,8 @@ public final class Boolerr extends XLSCellRecord
 {
 
 	private static final long serialVersionUID = 39663492256953223L;
-	private boolean val, iserr = false;
+	private boolean val;
+	private boolean iserr = false;
 	private byte errorval;
 
 	/**
@@ -65,7 +66,7 @@ public final class Boolerr extends XLSCellRecord
 	@Override
 	public int getIntVal()
 	{
-		if( this.getBooleanVal() )
+		if( getBooleanVal() )
 		{
 			return 1;
 		}
@@ -78,7 +79,7 @@ public final class Boolerr extends XLSCellRecord
 	@Override
 	public float getFloatVal()
 	{
-		if( this.getBooleanVal() )
+		if( getBooleanVal() )
 		{
 			return 1;
 		}
@@ -91,7 +92,7 @@ public final class Boolerr extends XLSCellRecord
 	@Override
 	public double getDblVal()
 	{
-		if( this.getBooleanVal() )
+		if( getBooleanVal() )
 		{
 			return 1;
 		}
@@ -104,9 +105,9 @@ public final class Boolerr extends XLSCellRecord
 	@Override
 	public String getStringVal( String encoding )
 	{
-		if( this.getIsErr() )
+		if( getIsErr() )
 		{
-			return this.getErrorCode();
+			return getErrorCode();
 		}
 		return String.valueOf( val );
 	}
@@ -116,7 +117,7 @@ public final class Boolerr extends XLSCellRecord
 	 */
 	public String getErrorCode()
 	{
-		if( !this.getIsErr() )
+		if( !getIsErr() )
 		{
 			return String.valueOf( iserr );
 		}
@@ -158,7 +159,7 @@ public final class Boolerr extends XLSCellRecord
 	@Override
 	public String getStringVal()
 	{
-		return this.getStringVal( null ); // char encoding of true/false should be irrelevant -
+		return getStringVal( null ); // char encoding of true/false should be irrelevant -
 		//! NOPE, 'cause this also has error codes in it -NR 10/03
 	}
 
@@ -177,13 +178,13 @@ public final class Boolerr extends XLSCellRecord
 	{
 		if( newv )
 		{
-			this.getData()[6] = 1;
+			getData()[6] = 1;
 		}
 		else
 		{
-			this.getData()[6] = 0;
+			getData()[6] = 0;
 		}
-		this.val = newv;
+		val = newv;
 	}
 
 	@Override
@@ -191,13 +192,13 @@ public final class Boolerr extends XLSCellRecord
 	{
 		super.init();
 		// get the row information
-		rw = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		rw = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		;
-		col = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
+		col = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
 		;
-		ixfe = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
+		ixfe = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
 		// get the value
-		int num = this.getByteAt( 6 );
+		int num = getByteAt( 6 );
 		if( num == 0 )
 		{
 			val = false;
@@ -206,7 +207,7 @@ public final class Boolerr extends XLSCellRecord
 		{
 			val = true;
 		}
-		num = this.getByteAt( 7 );
+		num = getByteAt( 7 );
 		if( num == 0 )
 		{
 			iserr = false;
@@ -215,8 +216,8 @@ public final class Boolerr extends XLSCellRecord
 		{
 			iserr = true;
 		}
-		errorval = this.getByteAt( 6 );
-		this.setIsValueForCell( true );
+		errorval = getByteAt( 6 );
+		setIsValueForCell( true );
 		if( !iserr )
 		{
 			isBoolean = true;

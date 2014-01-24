@@ -50,7 +50,7 @@ public final class BookBool extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		grbit = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		grbit = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 			log.debug( "BOOKBOOL: " + ((grbit == 0) ? "Save External Links" : "Don't Save External Links") );
 	}
 

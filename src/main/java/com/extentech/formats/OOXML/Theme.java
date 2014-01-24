@@ -152,11 +152,11 @@ public class Theme implements OOXMLElement
 								}
 								else if( tnm.equals( "sysClr" ) )
 								{ // system color attributes val, lastClr
-									this.genericThemeClrs[idx] = xpp.getAttributeValue( "", "lastClr" );
+									genericThemeClrs[idx] = xpp.getAttributeValue( "", "lastClr" );
 								}
 								else if( tnm.equals( "srgbClr" ) )
 								{
-									this.genericThemeClrs[idx] = xpp.getAttributeValue( 0 );
+									genericThemeClrs[idx] = xpp.getAttributeValue( 0 );
 								}
 							}
 							else if( (eventType == XmlPullParser.END_TAG) && xpp.getName().equals( "clrScheme" ) )

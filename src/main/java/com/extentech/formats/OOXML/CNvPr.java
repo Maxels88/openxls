@@ -46,7 +46,8 @@ public class CNvPr implements OOXMLElement
 	private static final long serialVersionUID = -3382139449400844949L;
 	//private hlinkClick hc;
 	//private hlinkHover hh;
-	private String descr = null, name = null;
+	private String descr = null;
+	private String name = null;
 	private boolean hidden = false;
 	private int id = -1;
 
@@ -68,17 +69,18 @@ public class CNvPr implements OOXMLElement
 	{
 		//this.hc= cnv.hc;
 		//this.hh= cnv.hh;
-		this.id = cnv.id;
-		this.name = cnv.name;
-		this.descr = cnv.descr;
-		this.hidden = cnv.hidden;
+		id = cnv.id;
+		name = cnv.name;
+		descr = cnv.descr;
+		hidden = cnv.hidden;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
 	{
 		//hlinkClick hc= null;
 		//hlinkHover hh= null;
-		String descr = null, name = null;
+		String descr = null;
+		String name = null;
 		boolean hidden = false;
 		int id = -1;
 		try
@@ -227,7 +229,7 @@ public class CNvPr implements OOXMLElement
 	 */
 	public int getId()
 	{
-		return this.id;
+		return id;
 	}
 }
 

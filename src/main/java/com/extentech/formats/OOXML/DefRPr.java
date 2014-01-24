@@ -50,14 +50,18 @@ public class DefRPr implements OOXMLElement
 	private EffectPropsGroup effect = null;
 	private Ln line = null;
 	private HashMap<String, String> attrs = null;
-	private String latin = null, ea = null, cs = null;    // really children but only have 1 attribute and no children
+	private String latin = null;
+	private String ea = null;
+	private String cs = null;    // really children but only have 1 attribute and no children
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
 	{
 		FillGroup fill = null;
 		EffectPropsGroup effect = null;
 		Ln l = null;
-		String latin = null, ea = null, cs = null;
+		String latin = null;
+		String ea = null;
+		String cs = null;
 		HashMap<String, String> attrs = new HashMap<>();
 		try
 		{
@@ -151,17 +155,17 @@ public class DefRPr implements OOXMLElement
 	 */
 	public DefRPr()
 	{
-		this.attrs = new HashMap<>();
-		this.attrs.put( "sz", "900" );
-		this.attrs.put( "b", "1" );
-		this.attrs.put( "i", "0" );
-		this.attrs.put( "u", "none" );
-		this.attrs.put( "strike", "noStrike" );
-		this.attrs.put( "baseline", "0" );
-		this.fillGroup = new FillGroup( null, null, null, null, new SolidFill() );
-		this.latin = "Arial";
-		this.ea = "Arial";
-		this.cs = "Arial";
+		attrs = new HashMap<>();
+		attrs.put( "sz", "900" );
+		attrs.put( "b", "1" );
+		attrs.put( "i", "0" );
+		attrs.put( "u", "none" );
+		attrs.put( "strike", "noStrike" );
+		attrs.put( "baseline", "0" );
+		fillGroup = new FillGroup( null, null, null, null, new SolidFill() );
+		latin = "Arial";
+		ea = "Arial";
+		cs = "Arial";
 	}
 
 	/**
@@ -178,24 +182,24 @@ public class DefRPr implements OOXMLElement
 	 */
 	public DefRPr( String fontFace, int sz, boolean b, boolean i, String u, String strike, String clr )
 	{
-		this.attrs = new HashMap<>();
-		this.attrs.put( "sz", String.valueOf( sz ) );
-		this.attrs.put( "b", (b ? "1" : "0") );
-		this.attrs.put( "i", (i ? "1" : "0") );
-		this.attrs.put( "u", u );
-		this.attrs.put( "strike", strike );
-		this.attrs.put( "baseline", "0" );
-		this.fillGroup = new FillGroup( null, null, null, null, new SolidFill( clr ) );
-		this.latin = fontFace;
-		this.ea = fontFace;
-		this.cs = fontFace;
+		attrs = new HashMap<>();
+		attrs.put( "sz", String.valueOf( sz ) );
+		attrs.put( "b", (b ? "1" : "0") );
+		attrs.put( "i", (i ? "1" : "0") );
+		attrs.put( "u", u );
+		attrs.put( "strike", strike );
+		attrs.put( "baseline", "0" );
+		fillGroup = new FillGroup( null, null, null, null, new SolidFill( clr ) );
+		latin = fontFace;
+		ea = fontFace;
+		cs = fontFace;
 	}
 
 	public DefRPr( FillGroup fill, EffectPropsGroup effect, Ln l, HashMap<String, String> attrs, String latin, String ea, String cs )
 	{
-		this.fillGroup = fill;
+		fillGroup = fill;
 		this.effect = effect;
-		this.line = l;
+		line = l;
 		this.latin = latin;
 		this.ea = ea;
 		this.cs = cs;
@@ -204,13 +208,13 @@ public class DefRPr implements OOXMLElement
 
 	public DefRPr( DefRPr dp )
 	{
-		this.fillGroup = dp.fillGroup;
-		this.effect = dp.effect;
-		this.line = dp.line;
-		this.latin = dp.latin;
-		this.ea = dp.ea;
-		this.cs = dp.cs;
-		this.attrs = dp.attrs;
+		fillGroup = dp.fillGroup;
+		effect = dp.effect;
+		line = dp.line;
+		latin = dp.latin;
+		ea = dp.ea;
+		cs = dp.cs;
+		attrs = dp.attrs;
 	}
 
 	@Override

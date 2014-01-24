@@ -109,8 +109,8 @@ public class P implements OOXMLElement
 
 	public P( String s )
 	{
-		this.run = new TextRun( s );
-		this.ppr = new PPr( new DefRPr(), null );
+		run = new TextRun( s );
+		ppr = new PPr( new DefRPr(), null );
 	}
 
 	public P( PPr ppr, TextRun run, EndParaRPr ep )
@@ -122,9 +122,9 @@ public class P implements OOXMLElement
 
 	public P( P p )
 	{
-		this.ppr = p.ppr;
-		this.ep = p.ep;
-		this.run = p.run;
+		ppr = p.ppr;
+		ep = p.ep;
+		run = p.run;
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class P implements OOXMLElement
 	 */
 	public P( String fontFace, int sz, boolean b, boolean i, String u, String strike, String clr )
 	{
-		this.ppr = new PPr( fontFace, sz, b, i, u, strike, clr );
+		ppr = new PPr( fontFace, sz, b, i, u, strike, clr );
 	}
 
 	/**
@@ -170,8 +170,8 @@ public class P implements OOXMLElement
 		}
 		String strike = (f.getStricken() ? "sngStrike" : "noStrike");
 		String clr = FormatHandle.colorToHexString( FormatHandle.getColor( f.getColor() ) ).substring( 1 );
-		this.ppr = new PPr( f.getFontName(), (int) f.getFontHeightInPoints() * 100, f.getBold(), f.getItalic(), usty, strike, clr );
-		this.run = new TextRun( s );
+		ppr = new PPr( f.getFontName(), (int) f.getFontHeightInPoints() * 100, f.getBold(), f.getItalic(), usty, strike, clr );
+		run = new TextRun( s );
 	}
 
 	@Override
@@ -285,8 +285,8 @@ class PPr implements OOXMLElement
 
 	public PPr( PPr p )
 	{
-		this.dp = p.dp;
-		this.attrs = p.attrs;
+		dp = p.dp;
+		attrs = p.attrs;
 	}
 
 	/**
@@ -303,7 +303,7 @@ class PPr implements OOXMLElement
 	 */
 	public PPr( String fontFace, int sz, boolean b, boolean i, String u, String strike, String clr )
 	{
-		this.dp = new DefRPr( fontFace, sz, b, i, u, strike, clr );
+		dp = new DefRPr( fontFace, sz, b, i, u, strike, clr );
 	}
 
 	@Override
@@ -437,7 +437,9 @@ class EndParaRPr implements OOXMLElement
 	private Ln l;
 	private FillGroup fill;
 	private EffectPropsGroup effect;
-	private String latin, ea, cs;    // really children but only have 1 attribute and no children
+	private String latin;
+	private String ea;
+	private String cs;    // really children but only have 1 attribute and no children
 
 	public EndParaRPr( HashMap<String, String> attrs, Ln l, FillGroup fill, EffectPropsGroup effect, String latin, String ea, String cs )
 	{
@@ -452,13 +454,13 @@ class EndParaRPr implements OOXMLElement
 
 	public EndParaRPr( EndParaRPr ep )
 	{
-		this.attrs = ep.attrs;
-		this.l = ep.l;
-		this.fill = ep.fill;
-		this.effect = ep.effect;
-		this.latin = ep.latin;
-		this.ea = ep.ea;
-		this.cs = ep.cs;
+		attrs = ep.attrs;
+		l = ep.l;
+		fill = ep.fill;
+		effect = ep.effect;
+		latin = ep.latin;
+		ea = ep.ea;
+		cs = ep.cs;
 	}
 
 	public static EndParaRPr parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -467,7 +469,9 @@ class EndParaRPr implements OOXMLElement
 		FillGroup fill = null;
 		EffectPropsGroup effect = null;
 		Ln l = null;
-		String latin = null, ea = null, cs = null;
+		String latin = null;
+		String ea = null;
+		String cs = null;
 		try
 		{
 			int eventType = xpp.getEventType();

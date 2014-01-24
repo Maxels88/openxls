@@ -61,7 +61,7 @@ public class Text implements OOXMLElement
 
 	public Text( Text t )
 	{
-		this.str = t.str;
+		str = t.str;
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class Text implements OOXMLElement
 	 */
 	public Text( String s )
 	{
-		this.str = Sst.createUnicodeString( s, null, Sst.STRING_ENCODING_AUTO );
+		str = Sst.createUnicodeString( s, null, Sst.STRING_ENCODING_AUTO );
 	}
 
 	/**

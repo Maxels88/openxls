@@ -210,7 +210,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	@Override
 	public void setVars( Ptg[] parr )
 	{
-		this.vars = parr;
+		vars = parr;
 	}
 
 	/*
@@ -233,7 +233,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	public Object evaluate( Object[] obj )
 	{
 		// do something useful
-		return this.getString();
+		return getString();
 	}
 
 	/**
@@ -252,7 +252,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 		}
 		catch( Exception e )
 		{
-			log.error( "Function not supported: " + this.parent_rec.toString() );
+			log.error( "Function not supported: " + parent_rec.toString() );
 		}
 
 		if( strx == null )
@@ -264,7 +264,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 		if( vars != null )
 		{
 			int numvars = vars.length;
-			if( this.getIsPrimitiveOperator() && this.getIsUnaryOperator() )
+			if( getIsPrimitiveOperator() && getIsUnaryOperator() )
 			{
 				if( numvars > 0 )
 				{
@@ -272,7 +272,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 				}
 
 			}
-			else if( this.getIsPrimitiveOperator() )
+			else if( getIsPrimitiveOperator() )
 			{
 				out.setLength( 0 );
 				for( int x = 0; x < numvars; x++ )
@@ -280,11 +280,11 @@ public abstract class GenericPtg implements Ptg, Cloneable
 					out.append( vars[x].getTextString() );
 					if( (x + 1) < numvars )
 					{
-						out.append( this.getString() );
+						out.append( getString() );
 					}
 				}
 			}
-			else if( this.getIsControl() )
+			else if( getIsControl() )
 			{
 				for( Ptg var : vars )
 				{
@@ -333,11 +333,11 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	@Override
 	public String getString2()
 	{
-		if( this.getIsPrimitiveOperator() )
+		if( getIsPrimitiveOperator() )
 		{
 			return "";
 		}
-		if( this.getIsOperator() )
+		if( getIsOperator() )
 		{
 			return ")";
 		}
@@ -376,7 +376,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	@Override
 	public Ptg getPtgVal()
 	{
-		Object value = this.getValue();
+		Object value = getValue();
 		if( value instanceof Ptg )
 		{
 			return (Ptg) value;
@@ -425,14 +425,14 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	{
 		try
 		{
-			return new Double( this.getValue().toString() ).intValue();
+			return new Double( getValue().toString() ).intValue();
 		}
 		catch( NumberFormatException e )
 		{
 			// we should be throwing something better
 			if( !(this instanceof PtgErr) )    // don't report an error if it's already an error
 			{
-				log.error( "GetIntVal failed for formula: " + this.getParentRec().toString() + " " + e );
+				log.error( "GetIntVal failed for formula: " + getParentRec().toString() + " " + e );
 			}
 			return 0;
 			///  RIIIIGHT!  throw new FormulaCalculationException();
@@ -457,10 +457,10 @@ public abstract class GenericPtg implements Ptg, Cloneable
 		Double d = null;
 		try
 		{
-			pob = this.getValue();
+			pob = getValue();
 			if( pob == null )
 			{
-				log.error( "Unable to calculate Formula at " + this.getLocation() );
+				log.error( "Unable to calculate Formula at " + getLocation() );
 				return java.lang.Double.NaN;
 			}
 			d = (Double) pob;
@@ -813,7 +813,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	@Override
 	public void updateAddressFromTrackerCell()
 	{
-		this.initTrackerCell();
+		initTrackerCell();
 		BiffRec trk = getTrackercell();
 		if( trk != null )
 		{
@@ -833,7 +833,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 		{
 			try
 			{
-				BiffRec trk = this.getParentRec().getSheet().getCell( this.getLocation() );
+				BiffRec trk = getParentRec().getSheet().getCell( getLocation() );
 				setTrackercell( trk );
 			}
 			catch( Exception e )

@@ -459,7 +459,8 @@ public class StringTool implements Serializable
 		}
 		CompatibleVector output = new CompatibleVector();
 		new StringBuffer();
-		int lastpos = 0, offset = 0;
+		int lastpos = 0;
+		int offset = 0;
 		int toklen = token.length();
 		int pos = instr.indexOf( token );
 		// pos--;
@@ -604,7 +605,9 @@ public class StringTool implements Serializable
 		{
 			return originalText;
 		}
-		int nextidx = 0, lastidx = 0, pos = 0;
+		int nextidx = 0;
+		int lastidx = 0;
+		int pos = 0;
 		int textlen = replaceText.length();
 		int stringlen = originalText.length();
 
@@ -668,7 +671,8 @@ public class StringTool implements Serializable
 		{
 			return originalText; // avoid infinite loops
 		}
-		int nextidx = 0, lastidx = 0;
+		int nextidx = 0;
+		int lastidx = 0;
 		int textlen = replaceText.length();
 		int stringlen = originalText.length();
 		while( nextidx <= originalText.lastIndexOf( replaceText ) )

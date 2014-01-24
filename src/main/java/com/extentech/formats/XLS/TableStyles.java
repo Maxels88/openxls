@@ -50,8 +50,11 @@ import java.io.UnsupportedEncodingException;
 public class TableStyles extends XLSRecord implements XLSConstants
 {
 	private static final Logger log = LoggerFactory.getLogger( TableStyles.class );
-	short cts, cchDefTableStyle, cchDefPivotStyle;
-	String rgchDefTableStyle = null, rgchDefPivotStyle = null;
+	short cts;
+	short cchDefTableStyle;
+	short cchDefPivotStyle;
+	String rgchDefTableStyle = null;
+	String rgchDefPivotStyle = null;
 	private static final long serialVersionUID = 2639291289806138985L;
 
 	@Override
@@ -61,13 +64,13 @@ public class TableStyles extends XLSRecord implements XLSConstants
 		// -114, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  // old frtHeader
 		//-112, 0, 0, 0, 	== 144
 		// An unsigned integer that specifies the total number of table styles in this document. This is the sum of the standard built-in table styles and all of the custom table styles. This value MUST be greater than or equal to 144 (the number of built-in table styles).
-		cts = (short) ByteTools.readInt( this.getByteAt( 12 ), this.getByteAt( 13 ), this.getByteAt( 14 ), this.getByteAt( 14 ) );
-		cchDefTableStyle = ByteTools.readShort( this.getByteAt( 16 ), this.getByteAt( 17 ) );
-		cchDefPivotStyle = ByteTools.readShort( this.getByteAt( 18 ), this.getByteAt( 19 ) );
+		cts = (short) ByteTools.readInt( getByteAt( 12 ), getByteAt( 13 ), getByteAt( 14 ), getByteAt( 14 ) );
+		cchDefTableStyle = ByteTools.readShort( getByteAt( 16 ), getByteAt( 17 ) );
+		cchDefPivotStyle = ByteTools.readShort( getByteAt( 18 ), getByteAt( 19 ) );
 		int pos = 20;
 		if( cchDefTableStyle > 0 )
 		{
-			byte[] tmp = this.getBytesAt( pos, (cchDefTableStyle) * (2) );
+			byte[] tmp = getBytesAt( pos, (cchDefTableStyle) * (2) );
 			try
 			{
 				rgchDefTableStyle = new String( tmp, UNICODEENCODING );
@@ -80,7 +83,7 @@ public class TableStyles extends XLSRecord implements XLSConstants
 		}
 		if( cchDefPivotStyle > 0 )
 		{
-			byte[] tmp = this.getBytesAt( pos, (cchDefPivotStyle) * (2) );
+			byte[] tmp = getBytesAt( pos, (cchDefPivotStyle) * (2) );
 			try
 			{
 				rgchDefPivotStyle = new String( tmp, UNICODEENCODING );

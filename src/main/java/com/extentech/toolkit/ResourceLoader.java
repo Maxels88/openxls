@@ -167,7 +167,7 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 			}
 			if( !hidevals )
 			{
-				this.snagVals();
+				snagVals();
 			}
 		}
 		catch( MissingResourceException mre )
@@ -221,7 +221,7 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 		}
 		catch( Exception mre )
 		{
-			log.error( "Resource string: " + nm + " could not be set to " + v + " in:" + this.resloc, mre );
+			log.error( "Resource string: " + nm + " could not be set to " + v + " in:" + resloc, mre );
 		}
 	}
 
@@ -554,7 +554,8 @@ public class ResourceLoader extends InitialContextImpl implements Serializable, 
 			{
 				// Make JDK-specific call to method
 				//Logger.logInfo(mt[t].getName());
-				int numparms = 0, numargs = 0;
+				int numparms = 0;
+				int numargs = 0;
 				if( args != null )
 				{
 					numargs = args.length;

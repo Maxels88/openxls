@@ -44,8 +44,10 @@ public class Pie extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = -7851320124576950635L;
 	private short grbit = 0;
-	private boolean fHasShadow = false, fShowLdrLines = false;
-	protected short pcDonut = 0, anStart = 0;
+	private boolean fHasShadow = false;
+	private boolean fShowLdrLines = false;
+	protected short pcDonut = 0;
+	protected short anStart = 0;
 
 	@Override
 	public void init()
@@ -81,24 +83,24 @@ public class Pie extends GenericChartObject implements ChartObject
 	// 20070703 KSC and below ...
 	private void updateRecord()
 	{
-		this.getData()[2] = (byte) pcDonut;
+		getData()[2] = (byte) pcDonut;
 		byte[] b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[4] = b[0];
-		this.getData()[5] = b[1];
+		getData()[4] = b[0];
+		getData()[5] = b[1];
 	}
 
 	public void setAsPieChart()
 	{
 		pcDonut = 0;
 		chartType = ChartConstants.PIECHART;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	public void setAsDoughnutChart()
 	{
 		pcDonut = 50;    // default %
 		chartType = ChartConstants.DOUGHNUTCHART;
-		this.updateRecord();
+		updateRecord();
 	}
 
 	/**
@@ -120,8 +122,8 @@ public class Pie extends GenericChartObject implements ChartObject
 	{
 		pcDonut = (short) s;
 		byte[] b = ByteTools.shortToLEBytes( pcDonut );
-		this.getData()[2] = b[0];
-		this.getData()[3] = b[1];
+		getData()[2] = b[0];
+		getData()[3] = b[1];
 	}
 
 	/**
@@ -143,8 +145,8 @@ public class Pie extends GenericChartObject implements ChartObject
 	{
 		anStart = (short) a;
 		byte[] b = ByteTools.shortToLEBytes( anStart );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	/**
@@ -204,11 +206,11 @@ public class Pie extends GenericChartObject implements ChartObject
 	{
 		if( op.equals( "ShowLdrLines" ) )
 		{ // Pie
-			return String.valueOf( this.showLdrLines() );
+			return String.valueOf( showLdrLines() );
 		}
 		if( op.equals( "donutSize" ) )
 		{ // Pie
-			return String.valueOf( this.getDonutPercentage() );
+			return String.valueOf( getDonutPercentage() );
 		}
 		return super.getChartOption( op );
 	}

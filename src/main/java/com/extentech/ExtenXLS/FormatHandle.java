@@ -261,7 +261,7 @@ public class FormatHandle implements Handle, FormatConstants
 		while( itx.hasNext() )
 		{
 			Cf format = (Cf) itx.next();
-			this.updateFromCF( format, book );
+			updateFromCF( format, book );
 		}
 	}
 
@@ -284,7 +284,7 @@ public class FormatHandle implements Handle, FormatConstants
 		int[] xs = cf.getBorderStyles();
 		if( xs != null )
 		{
-			this.setBorderLineStyle( xs );
+			setBorderLineStyle( xs );
 		}
 
 		/*
@@ -299,24 +299,24 @@ public class FormatHandle implements Handle, FormatConstants
 		}
 		else
 		{
-			this.setFontHeight( 180 ); // why????????
+			setFontHeight( 180 ); // why????????
 		}
 
 		if( cf.getFontItalic() )
 		{
-			this.setItalic( true );
+			setItalic( true );
 		}
 
 		if( cf.getFontStriken() )
 		{
-			this.setStricken( true );
+			setStricken( true );
 		}
 
 		int fsup = cf.getFontEscapement();
 		// super/sub (0 = none, 1 = super, 2 = sub)
 		if( fsup > -1 )
 		{
-			this.setScript( fsup );
+			setScript( fsup );
 		}
 
 		// handle underlines
@@ -324,8 +324,8 @@ public class FormatHandle implements Handle, FormatConstants
 
 		if( us > -1 )
 		{
-			this.setUnderlineStyle( us );
-			this.setUnderlined( true );
+			setUnderlineStyle( us );
+			setUnderlined( true );
 		}
 
 		// number cf
@@ -336,7 +336,7 @@ public class FormatHandle implements Handle, FormatConstants
 
 		if( cf.getFill() != null )
 		{
-			this.setFill( cf.getFill() );
+			setFill( cf.getFill() );
 		}
 		else
 		{
@@ -349,7 +349,7 @@ public class FormatHandle implements Handle, FormatConstants
 				specified. */
 				int bg = cf.getPatternFillColorBack();
 				int fg = cf.getPatternFillColor();
-				this.setFill( fill, fg, bg );
+				setFill( fill, fg, bg );
 			}
 			else
 			{
@@ -722,11 +722,11 @@ public class FormatHandle implements Handle, FormatConstants
 			return null;
 		}
 		int x = myxf.getRightBorderColor();
-		if( x < this.getWorkBook().colorTable.length )
+		if( x < getWorkBook().colorTable.length )
 		{
-			return this.getWorkBook().getColorTable()[x];
+			return getWorkBook().getColorTable()[x];
 		}
-		return this.getWorkBook().getColorTable()[0]; // black i'm afraid
+		return getWorkBook().getColorTable()[0]; // black i'm afraid
 	}
 
 	/**
@@ -784,7 +784,7 @@ public class FormatHandle implements Handle, FormatConstants
 		{
 			return null;
 		}
-		return this.getWorkBook().getColorTable()[myxf.getLeftBorderColor()];
+		return getWorkBook().getColorTable()[myxf.getLeftBorderColor()];
 	}
 
 	/**
@@ -811,11 +811,11 @@ public class FormatHandle implements Handle, FormatConstants
 			return null;
 		}
 		int xt = myxf.getTopBorderColor();
-		if( xt > this.getWorkBook().getColorTable().length ) // guards
+		if( xt > getWorkBook().getColorTable().length ) // guards
 		{
 			xt = 0;
 		}
-		return this.getWorkBook().getColorTable()[xt];
+		return getWorkBook().getColorTable()[xt];
 	}
 
 	/**
@@ -882,11 +882,11 @@ public class FormatHandle implements Handle, FormatConstants
 			return null;
 		}
 		int x = myxf.getBottomBorderColor();
-		if( x < this.getWorkBook().getColorTable().length )
+		if( x < getWorkBook().getColorTable().length )
 		{
-			return this.getWorkBook().getColorTable()[x];
+			return getWorkBook().getColorTable()[x];
 		}
-		return this.getWorkBook().getColorTable()[0]; // black i'm afraid
+		return getWorkBook().getColorTable()[0]; // black i'm afraid
 
 	}
 
@@ -1697,7 +1697,7 @@ public class FormatHandle implements Handle, FormatConstants
 	 */
 	public java.awt.Color getBackgroundColorAsColor()
 	{
-		return HexStringToColor( this.getBackgroundColorAsHex() );
+		return HexStringToColor( getBackgroundColorAsHex() );
 	}
 
 	/**
@@ -1757,7 +1757,7 @@ public class FormatHandle implements Handle, FormatConstants
 	 */
 	public java.awt.Color getCellBackgroundColorAsColor()
 	{
-		return HexStringToColor( this.getCellBackgroundColorAsHex() );
+		return HexStringToColor( getCellBackgroundColorAsHex() );
 	}
 
 	/**
@@ -1809,7 +1809,7 @@ public class FormatHandle implements Handle, FormatConstants
 	 */
 	public Color getForegroundColorAsColor()
 	{
-		return HexStringToColor( this.getForegroundColorAsHex() );
+		return HexStringToColor( getForegroundColorAsHex() );
 	}
 
 	/**
@@ -2197,7 +2197,7 @@ public class FormatHandle implements Handle, FormatConstants
 		if( pat.equals( "General" ) && increase )
 		{
 			pat = "0.0";    // the most basic numeric pattern
-			this.setFormatPattern( pat );
+			setFormatPattern( pat );
 			return;
 		}
 
@@ -2278,7 +2278,7 @@ public class FormatHandle implements Handle, FormatConstants
 			}
 
 			//System.out.println("Old Style" + pat + ".  New Style: " + newPat + ". Increase?" +  (increase?"yes":"no"));	// KSC: TESETING: TAKE OUT WHEN DONE
-			this.setFormatPattern( newPat );
+			setFormatPattern( newPat );
 		}
 		catch( Exception e )
 		{
@@ -2461,7 +2461,7 @@ public class FormatHandle implements Handle, FormatConstants
 			{
 				theFont.put( "bold", "1" );
 			}
-			if( this.getUnderlined() )
+			if( getUnderlined() )
 			{
 				theFont.put( "underline", "1" );
 			}
@@ -2579,11 +2579,11 @@ public class FormatHandle implements Handle, FormatConstants
 			JSONObject protection = new JSONObject();
 			try
 			{
-				if( this.myxf.isLocked() )
+				if( myxf.isLocked() )
 				{
 					protection.put( "Protected", true );
 				}
-				if( this.myxf.isFormulaHidden() )
+				if( myxf.isFormulaHidden() )
 				{
 					protection.put( "HideFormula", true );
 				}
@@ -2704,11 +2704,11 @@ public class FormatHandle implements Handle, FormatConstants
 			// PDf processing shouldn't output white background due to z-order and overwriting image/chart objects
 			// ... possibly other uses need the white bg set ...???
 			// ****************************************
-			if( !((myxf.getFillPattern() == PATTERN_FILLED) && this.getWorkBook().getColorTable()[fg].equals( Color.WHITE )) )
+			if( !((myxf.getFillPattern() == PATTERN_FILLED) && getWorkBook().getColorTable()[fg].equals( Color.WHITE )) )
 			{
-				sb.append( " Color=\"" + colorToHexString( this.getWorkBook().getColorTable()[fg] ) + "\"" + " Fg=\"" + fg + "\"" );
+				sb.append( " Color=\"" + colorToHexString( getWorkBook().getColorTable()[fg] ) + "\"" + " Fg=\"" + fg + "\"" );
 			}
-			sb.append( " PatternColor=\"" + colorToHexString( this.getWorkBook()
+			sb.append( " PatternColor=\"" + colorToHexString( getWorkBook()
 			                                                      .getColorTable()[myxf.getBackgroundColor()] ) + "\"" + " Bg=\"" + myxf.getBackgroundColor() + "\"" );
 			sb.append( " Pattern=\"" + myxf.getFillPattern() + "\"" );
 		}
@@ -2745,14 +2745,14 @@ public class FormatHandle implements Handle, FormatConstants
 		}
 		// <Protection>
 		// only input user defined formats ...
-		boolean locked = this.myxf.isLocked();
+		boolean locked = myxf.isLocked();
 		int lck = 0;
 		if( locked )
 		{
 			lck = 1;
 		}
 
-		boolean formulahidden = this.myxf.isFormulaHidden();
+		boolean formulahidden = myxf.isFormulaHidden();
 		int fmlz = 0;
 		if( formulahidden )
 		{
@@ -3058,7 +3058,7 @@ public class FormatHandle implements Handle, FormatConstants
 		f.setOpcode( com.extentech.formats.XLS.XLSConstants.FONT );
 		f.setData( src.getBytes() ); // use default font as basis of new font
 		f.setIdx( -2 );    // avoid adding to fonts array when call setW.b. below
-		f.setWorkBook( this.getWorkBook() );
+		f.setWorkBook( getWorkBook() );
 		f.init();
 		return f;
 	}
@@ -3281,7 +3281,7 @@ public class FormatHandle implements Handle, FormatConstants
 	 */
 	public void setFormatId( int x )
 	{
-		this.xfe = x;
+		xfe = x;
 	}
 
 	/**

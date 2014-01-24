@@ -41,7 +41,7 @@ class Xfrm implements OOXMLElement
 
 	public Xfrm()
 	{
-		this.ns = "xdr";    // set default
+		ns = "xdr";    // set default
 	}
 
 	public Xfrm( HashMap<String, String> attrs, Off o, Ext e, String ns )
@@ -54,10 +54,10 @@ class Xfrm implements OOXMLElement
 
 	public Xfrm( Xfrm x )
 	{
-		this.attrs = x.attrs;
-		this.o = x.o;
-		this.e = x.e;
-		this.ns = x.ns;
+		attrs = x.attrs;
+		o = x.o;
+		e = x.e;
+		ns = x.ns;
 	}
 
 	/**
@@ -130,7 +130,7 @@ class Xfrm implements OOXMLElement
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
-		ooxml.append( "<" + this.ns + ":xfrm" );
+		ooxml.append( "<" + ns + ":xfrm" );
 		// attributes
 		if( attrs != null )
 		{
@@ -185,8 +185,8 @@ class Off implements OOXMLElement
 
 	public Off( Off o )
 	{
-		this.attrs = o.attrs;
-		this.ns = o.ns;
+		attrs = o.attrs;
+		ns = o.ns;
 	}
 
 	public void setNS( String ns )
@@ -239,7 +239,7 @@ class Off implements OOXMLElement
 	public String getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
-		ooxml.append( "<" + this.ns + ":off" );
+		ooxml.append( "<" + ns + ":off" );
 		// attributes
 		Iterator<String> i = attrs.keySet().iterator();
 		while( i.hasNext() )

@@ -52,17 +52,20 @@ public class AxisParent extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = -2247258217367570732L;
 	private short iax = 0;
-	private int x = 0, y = 0, dx = 0, dy = 0;
+	private int x = 0;
+	private int y = 0;
+	private int dx = 0;
+	private int dy = 0;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		iax = ByteTools.readShort( this.getData()[0], this.getData()[1] );
-		x = ByteTools.readInt( this.getBytesAt( 2, 4 ) );
-		y = ByteTools.readInt( this.getBytesAt( 6, 4 ) );
-		dx = ByteTools.readInt( this.getBytesAt( 10, 4 ) );
-		dy = ByteTools.readInt( this.getBytesAt( 14, 4 ) );
+		iax = ByteTools.readShort( getData()[0], getData()[1] );
+		x = ByteTools.readInt( getBytesAt( 2, 4 ) );
+		y = ByteTools.readInt( getBytesAt( 6, 4 ) );
+		dx = ByteTools.readInt( getBytesAt( 10, 4 ) );
+		dy = ByteTools.readInt( getBytesAt( 14, 4 ) );
 
 	}
 
@@ -117,17 +120,17 @@ public class AxisParent extends GenericChartObject implements ChartObject
 		if( (nChart > 0) && (nChart <= 9) )
 		{
 			ChartFormat cf = (ChartFormat) ChartFormat.getPrototype();
-			cf.setParentChart( this.getParentChart() );
+			cf.setParentChart( getParentChart() );
 			Bar b = (Bar) Bar.getPrototype();
 			cf.chartArr.add( b );    // add a dummy chart object - will be replaced later
 			ChartFormatLink cfl = (ChartFormatLink) ChartFormatLink.getPrototype();
 			cf.chartArr.add( cfl );
 			SeriesList sl = new SeriesList();
 			sl.setOpcode( SERIESLIST );
-			sl.setParentChart( this.getParentChart() );
+			sl.setParentChart( getParentChart() );
 			cf.chartArr.add( sl );
 			cf.setDrawingOrder( nChart );
-			this.chartArr.add( cf );    // add chartformat to chart array of axis parent
+			chartArr.add( cf );    // add chartformat to chart array of axis parent
 			return cf;
 		}
 		return null;
@@ -333,13 +336,13 @@ public class AxisParent extends GenericChartObject implements ChartObject
 		{
 			// if didn't find axis, then add axis + text disp ...
 			// first, add TD
-			td = (TextDisp) TextDisp.getPrototype( axisType, "", this.wkbook );
-			td.setParentChart( this.getParentChart() );
-			this.chartArr.add( lastTd + 1, td );
+			td = (TextDisp) TextDisp.getPrototype( axisType, "", wkbook );
+			td.setParentChart( getParentChart() );
+			chartArr.add( lastTd + 1, td );
 			// next, add axis
 			a = (Axis) Axis.getPrototype( axisType );
-			a.setParentChart( this.getParentChart() );
-			this.chartArr.add( lastAxis + 1, a );
+			a.setParentChart( getParentChart() );
+			chartArr.add( lastAxis + 1, a );
 			a.setAP( this );    // ensure axis is linked to it's parent AxisParent 20090108 KSC:
 		}
 		if( a != null )
@@ -429,6 +432,6 @@ public class AxisParent extends GenericChartObject implements ChartObject
 		{
 			iax = 0;
 		}
-		this.getData()[0] = (byte) iax;
+		getData()[0] = (byte) iax;
 	}
 }

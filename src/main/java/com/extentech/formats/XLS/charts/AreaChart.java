@@ -54,10 +54,11 @@ public class AreaChart extends ChartType
 	{
 		JSONObject chartObjectJSON = new JSONObject();
 		// Type JSON
-		chartObjectJSON.put( "type", this.getTypeJSON() );
+		chartObjectJSON.put( "type", getTypeJSON() );
 
 		// Series
-		double yMax = 0.0, yMin = 0.0;
+		double yMax = 0.0;
+		double yMin = 0.0;
 		int nSeries = 0;
 		JSONArray seriesJSON = new JSONArray();
 		JSONArray seriesCOLORS = new JSONArray();
@@ -109,7 +110,7 @@ public class AreaChart extends ChartType
 	{
 		JSONObject typeJSON = new JSONObject();
 		String dojoType;
-		if( !this.isStacked() )
+		if( !isStacked() )
 		{
 			dojoType = "Areas";
 		}
@@ -154,7 +155,8 @@ public class AreaChart extends ChartType
 		StringBuffer svg = new StringBuffer();
 		int[] dls = getDataLabelInts(); // get array of data labels (can be specific per series ...)
 
-		double xfactor = 0, yfactor = 0;    //
+		double xfactor = 0;    //
+		double yfactor = 0;
 		if( categories.length > 1 )
 		{
 			xfactor = w / (categories.length - 1);    // w/#categories
@@ -201,7 +203,7 @@ public class AreaChart extends ChartType
 						{
 							labels = "";
 						}
-						labels = "<text x='" + (x + (w / 2)) + "' y='" + yy + "' vertical-align='middle' " + this.getDataLabelFontSVG() + " style='text-align:middle;'>" + l + "</text>\r\n";
+						labels = "<text x='" + (x + (w / 2)) + "' y='" + yy + "' vertical-align='middle' " + getDataLabelFontSVG() + " style='text-align:middle;'>" + l + "</text>\r\n";
 					}
 					else if( showValue || showValueLabel )
 					{ // labels at each data point
@@ -210,7 +212,7 @@ public class AreaChart extends ChartType
 							labels = "";
 						}
 						double yy = (((y + h) - ((yval - (curseries[j] * .5)) * yfactor)));
-						labels += "<text x='" + x1 + "' y='" + yy + "' style='text-anchor: middle;' " + this.getDataLabelFontSVG()/*+" fill='"+getDarkColor()+"'*/ + ">" + l + "</text>\r\n";
+						labels += "<text x='" + x1 + "' y='" + yy + "' style='text-anchor: middle;' " + getDataLabelFontSVG()/*+" fill='"+getDarkColor()+"'*/ + ">" + l + "</text>\r\n";
 					}
 				}
 			}
@@ -248,11 +250,11 @@ public class AreaChart extends ChartType
 		cooxml.append( "\r\n" );
 		cooxml.append( "<c:grouping val=\"" );
 
-		if( this.is100PercentStacked() )
+		if( is100PercentStacked() )
 		{
 			cooxml.append( "percentStacked" );
 		}
-		else if( this.isStacked() )
+		else if( isStacked() )
 		{
 			cooxml.append( "stacked" );
 		}
@@ -267,14 +269,14 @@ public class AreaChart extends ChartType
 		// vary colors???
 
 		// *** Series Data:	ser, cat, val for most chart types
-		cooxml.append( this.getParentChart().getChartSeries().getOOXML( this.getChartType(), false, 0 ) );
+		cooxml.append( getParentChart().getChartSeries().getOOXML( getChartType(), false, 0 ) );
 
 		//TODO: FINISH		    	
 		// chart data labels, if any
 		//cooxml.append(getDataLabelsOOXML(cf));
-		if( this.cf.getChartLinesRec() != null )
+		if( cf.getChartLinesRec() != null )
 		{
-			cooxml.append( this.cf.getChartLinesRec().getOOXML() );
+			cooxml.append( cf.getChartLinesRec().getOOXML() );
 		}
 
 		// axis ids	 - unsigned int strings

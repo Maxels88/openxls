@@ -48,9 +48,9 @@ public final class TabID extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		for( int i = 0; i < (this.getLength() - 4); )
+		for( int i = 0; i < (getLength() - 4); )
 		{
-			short s = ByteTools.readShort( this.getByteAt( i ), this.getByteAt( i + 1 ) );
+			short s = ByteTools.readShort( getByteAt( i ), getByteAt( i + 1 ) );
 			Short sh = s;
 			tabIDs.add( sh );
 			i += 2;
@@ -74,7 +74,7 @@ public final class TabID extends com.extentech.formats.XLS.XLSRecord
 			}
 		}
 		tabIDs.remove( Short.valueOf( largest ) );
-		this.updateRecord();
+		updateRecord();
 	}
 
 	/**
@@ -96,7 +96,7 @@ public final class TabID extends com.extentech.formats.XLS.XLSRecord
 		largest += 0x1;
 		Short sh = largest;
 		tabIDs.add( sh );
-		this.updateRecord();
+		updateRecord();
 	}
 
 	/**
@@ -114,7 +114,7 @@ public final class TabID extends com.extentech.formats.XLS.XLSRecord
 		Object b = tabIDs.get( sheet );
 		tabIDs.remove( b );
 		tabIDs.insertElementAt( b, newpos );
-		this.updateRecord();
+		updateRecord();
 		return true;
 	}
 
@@ -135,7 +135,7 @@ public final class TabID extends com.extentech.formats.XLS.XLSRecord
 			newbody[counter + 1] = b[1];
 			counter += 2;
 		}
-		this.setData( newbody );
+		setData( newbody );
 	}
 
 	/**

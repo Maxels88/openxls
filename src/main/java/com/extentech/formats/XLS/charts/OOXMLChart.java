@@ -86,7 +86,7 @@ public class OOXMLChart extends Chart
 		// chartlaout?
 		// txpr?
 		// name?
-		this.name = c.getTitle();
+		name = c.getTitle();
 		if( c.hasDataLegend() )
 		{
 			ooxmlLegend = com.extentech.formats.OOXML.Legend.createLegend( c.getLegend() );
@@ -151,11 +151,13 @@ public class OOXMLChart extends Chart
 		if( type == 0 )
 		{
 			plotareashapeProps = spPr;    // plot area
-			int lw = -1, lclr = 0, bgcolor = -1;
+			int lw = -1;
+			int lclr = 0;
+			int bgcolor = -1;
 			lw = spPr.getLineWidth();    // TO DO: Style
 			lclr = spPr.getLineColor();
 			//bgcolor= spPr.getColor();
-			this.getAxes().setPlotAreaBorder( lw, lclr );
+			getAxes().setPlotAreaBorder( lw, lclr );
 		}
 		else if( type == 1 )
 		{
@@ -188,7 +190,9 @@ public class OOXMLChart extends Chart
 			fid = 5;    // default ...?
 		}
 		float[] coords = null;
-		int lw = -1, lclr = 0, bgcolor = 0;
+		int lw = -1;
+		int lclr = 0;
+		int bgcolor = 0;
 		if( ttl.getLayout() != null )
 		{    // pos
 			coords = ttl.getLayout().getCoords();
@@ -231,7 +235,7 @@ public class OOXMLChart extends Chart
 	 */
 	public String getEditMovement()
 	{
-		return this.editMovement;
+		return editMovement;
 	}
 
 	/**
@@ -248,7 +252,7 @@ public class OOXMLChart extends Chart
 	 */
 	public String getOOXMLName()
 	{
-		return this.name;
+		return name;
 	}
 
 	/**
@@ -366,13 +370,13 @@ public class OOXMLChart extends Chart
 		StringBuffer cooxml = new StringBuffer();
 		try
 		{
-			int[] allCharts = this.getAllChartTypes();        // usually only 1 chart but some have overlay charts in addition to the default chart (chart 0)
+			int[] allCharts = getAllChartTypes();        // usually only 1 chart but some have overlay charts in addition to the default chart (chart 0)
 
 			// lang
-			cooxml.append( "<c:lang val=\"" + this.lang + "\"/>" );
+			cooxml.append( "<c:lang val=\"" + lang + "\"/>" );
 			cooxml.append( "\r\n" );
 			// rounded corners
-			if( this.roundedCorners )
+			if( roundedCorners )
 			{
 				cooxml.append( "<c:roundedCorners val=\"1\"/>" );
 			}
@@ -380,23 +384,23 @@ public class OOXMLChart extends Chart
 			cooxml.append( "<c:chart>" );
 			cooxml.append( "\r\n" );
 			// title
-			if( this.getOOXMLTitle() == null )
+			if( getOOXMLTitle() == null )
 			{// if no OOXML title, see if have a BIFF8 title
-				if( !this.getTitle().equals( "" ) )
+				if( !getTitle().equals( "" ) )
 				{
-					this.setOOXMLTitle( new Title( this.getTitleTd(), this.wbh.getWorkBook() ), this.wbh );
+					setOOXMLTitle( new Title( getTitleTd(), wbh.getWorkBook() ), wbh );
 				}
 			}
-			if( this.getOOXMLTitle() != null )    // otherwise there's no title
+			if( getOOXMLTitle() != null )    // otherwise there's no title
 			{
-				cooxml.append( this.getOOXMLTitle().getOOXML() );
+				cooxml.append( getOOXMLTitle().getOOXML() );
 			}
 
 			if( allCharts[0] != BUBBLECHART )
 			{    // bubble threeD handled in series for some reason
 				// Q: what if overlay charts are not 3D?  what if default isn't and overlay is?
 				// view 3D
-				ThreeD td = this.getThreeDRec( 0 );
+				ThreeD td = getThreeDRec( 0 );
 				if( td != null )
 				{
 					cooxml.append( td.getOOXML() );
@@ -410,16 +414,16 @@ public class OOXMLChart extends Chart
 			cooxml.append( "<c:plotArea>" );
 			cooxml.append( "\r\n" );
 			// layout: size and position
-			if( this.plotAreaLayout == null )
+			if( plotAreaLayout == null )
 			{    // if converted from XLS will hit here
-				HashMap<String, Double> chartMetrics = this.getMetrics( wbh );
+				HashMap<String, Double> chartMetrics = getMetrics( wbh );
 				double x = chartMetrics.get( "x" ) / chartMetrics.get( "canvasw" );
 				double y = chartMetrics.get( "y" ) / chartMetrics.get( "canvash" );
 				double w = chartMetrics.get( "w" ) / chartMetrics.get( "canvasw" );
 				double h = chartMetrics.get( "h" ) / chartMetrics.get( "canvash" );
-				this.plotAreaLayout = new Layout( "inner", new double[]{ x, y, w, h } );
+				plotAreaLayout = new Layout( "inner", new double[]{ x, y, w, h } );
 			}
-			cooxml.append( this.plotAreaLayout.getOOXML() );
+			cooxml.append( plotAreaLayout.getOOXML() );
 
 			for( ChartType ch : chartgroup )
 			{
@@ -448,20 +452,20 @@ public class OOXMLChart extends Chart
 
 			// ******************************************************************************
 			// after chart type ooxml, axes (if present)
-			cooxml.append( this.getAxes().getOOXML( XAXIS, 0, catAxisId, valAxisId ) );
-			cooxml.append( this.getAxes().getOOXML( XVALAXIS, 2, catAxisId, valAxisId ) );    // valAx - for bubble/scatter
+			cooxml.append( getAxes().getOOXML( XAXIS, 0, catAxisId, valAxisId ) );
+			cooxml.append( getAxes().getOOXML( XVALAXIS, 2, catAxisId, valAxisId ) );    // valAx - for bubble/scatter
 			// val axis
-			cooxml.append( this.getAxes().getOOXML( YAXIS, 1, valAxisId, catAxisId ) );    // val axis
+			cooxml.append( getAxes().getOOXML( YAXIS, 1, valAxisId, catAxisId ) );    // val axis
 			// ser axis
-			cooxml.append( this.getAxes().getOOXML( ZAXIS, 3, serAxisId, valAxisId ) );    // ser axis (crosses val axis)
+			cooxml.append( getAxes().getOOXML( ZAXIS, 3, serAxisId, valAxisId ) );    // ser axis (crosses val axis)
 			// TODO: dateAx
-			if( this.getSpPr( 0 ) != null )
+			if( getSpPr( 0 ) != null )
 			{    // plot area shape props
-				cooxml.append( this.getSpPr( 0 ).getOOXML() );
+				cooxml.append( getSpPr( 0 ).getOOXML() );
 			}
-			else if( !this.wbh.getIsExcel2007() )
+			else if( !wbh.getIsExcel2007() )
 			{
-				SpPr sp = new SpPr( "c", this.getPlotAreaBgColor().substring( 1 ), 12700, this.getPlotAreaLnColor().substring( 1 ) );
+				SpPr sp = new SpPr( "c", getPlotAreaBgColor().substring( 1 ), 12700, getPlotAreaLnColor().substring( 1 ) );
 				cooxml.append( sp.getOOXML() );
 
 			}
@@ -469,9 +473,9 @@ public class OOXMLChart extends Chart
 			cooxml.append( "</c:plotArea>" );
 			cooxml.append( "\r\n" );
 			// legend
-			if( this.ooxmlLegend != null )
+			if( ooxmlLegend != null )
 			{
-				cooxml.append( this.ooxmlLegend.getOOXML() );
+				cooxml.append( ooxmlLegend.getOOXML() );
 			}
 
 			cooxml.append( "<c:plotVisOnly val=\"1\"/>" );        // specifies that only visible cells should be plotted on the chart
@@ -479,13 +483,13 @@ public class OOXMLChart extends Chart
 			cooxml.append( "\r\n" );
 			cooxml.append( "</c:chart>" );
 			cooxml.append( "\r\n" );
-			if( this.getSpPr( 1 ) != null )
+			if( getSpPr( 1 ) != null )
 			{ // chart space shape props
-				cooxml.append( this.getSpPr( 1 ).getOOXML() );
+				cooxml.append( getSpPr( 1 ).getOOXML() );
 			}
-			if( this.getTxPr() != null )
+			if( getTxPr() != null )
 			{ // text formatting
-				cooxml.append( this.getTxPr().getOOXML() );
+				cooxml.append( getTxPr().getOOXML() );
 			}
 		}
 		catch( Exception e )

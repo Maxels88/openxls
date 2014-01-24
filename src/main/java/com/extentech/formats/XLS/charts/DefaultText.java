@@ -50,7 +50,7 @@ public class DefaultText extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		grbit = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		grbit = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 	}
 
 	// 20070716 KSC: Need to create new records
@@ -80,8 +80,8 @@ public class DefaultText extends GenericChartObject implements ChartObject
 	{
 		grbit = type;
 		byte[] b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 }

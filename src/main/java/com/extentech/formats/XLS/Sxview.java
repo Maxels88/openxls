@@ -215,39 +215,39 @@ public class Sxview extends XLSRecord implements XLSConstants
 	public void init()
 	{
 		super.init();
-		if( this.getLength() <= 0 )
+		if( getLength() <= 0 )
 		{  // Is this record populated?
 				log.debug( "no data in SXVIEW" );
 		}
 		else
 		{ // parse out all the fields
-			rwFirst = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-			rwLast = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-			colFirst = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-			colLast = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
-			rwFirstHead = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
-			rwFirstData = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );
-			colFirstData = ByteTools.readShort( this.getByteAt( 12 ), this.getByteAt( 13 ) );
-			iCache = ByteTools.readShort( this.getByteAt( 14 ), this.getByteAt( 15 ) );
+			rwFirst = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+			rwLast = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+			colFirst = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+			colLast = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
+			rwFirstHead = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );
+			rwFirstData = ByteTools.readShort( getByteAt( 10 ), getByteAt( 11 ) );
+			colFirstData = ByteTools.readShort( getByteAt( 12 ), getByteAt( 13 ) );
+			iCache = ByteTools.readShort( getByteAt( 14 ), getByteAt( 15 ) );
 
 			// 16 & 17 - reserved must be zero
 
-			sxaxis4Data = ByteTools.readShort( this.getByteAt( 18 ), this.getByteAt( 19 ) );
-			ipos4Data = ByteTools.readShort( this.getByteAt( 20 ), this.getByteAt( 21 ) );
-			cDim = ByteTools.readShort( this.getByteAt( 22 ), this.getByteAt( 23 ) );
-			cDimRw = ByteTools.readShort( this.getByteAt( 24 ), this.getByteAt( 25 ) );
-			cDimCol = ByteTools.readShort( this.getByteAt( 26 ), this.getByteAt( 27 ) );
-			cDimPg = ByteTools.readShort( this.getByteAt( 28 ), this.getByteAt( 29 ) );
-			cDimData = ByteTools.readShort( this.getByteAt( 30 ), this.getByteAt( 31 ) );
-			cRw = ByteTools.readShort( this.getByteAt( 32 ), this.getByteAt( 33 ) );
-			cCol = ByteTools.readShort( this.getByteAt( 34 ), this.getByteAt( 35 ) );
-			grbit1 = this.getByteAt( 37 );
-			grbit2 = this.getByteAt( 36 );
+			sxaxis4Data = ByteTools.readShort( getByteAt( 18 ), getByteAt( 19 ) );
+			ipos4Data = ByteTools.readShort( getByteAt( 20 ), getByteAt( 21 ) );
+			cDim = ByteTools.readShort( getByteAt( 22 ), getByteAt( 23 ) );
+			cDimRw = ByteTools.readShort( getByteAt( 24 ), getByteAt( 25 ) );
+			cDimCol = ByteTools.readShort( getByteAt( 26 ), getByteAt( 27 ) );
+			cDimPg = ByteTools.readShort( getByteAt( 28 ), getByteAt( 29 ) );
+			cDimData = ByteTools.readShort( getByteAt( 30 ), getByteAt( 31 ) );
+			cRw = ByteTools.readShort( getByteAt( 32 ), getByteAt( 33 ) );
+			cCol = ByteTools.readShort( getByteAt( 34 ), getByteAt( 35 ) );
+			grbit1 = getByteAt( 37 );
+			grbit2 = getByteAt( 36 );
 
-			this.initGrbit(); // note the manual hibyting
-			itblAutoFmt = ByteTools.readShort( this.getByteAt( 38 ), this.getByteAt( 39 ) );
-			cchName = ByteTools.readShort( this.getByteAt( 40 ), this.getByteAt( 41 ) );
-			cchData = ByteTools.readShort( this.getByteAt( 42 ), this.getByteAt( 43 ) );
+			initGrbit(); // note the manual hibyting
+			itblAutoFmt = ByteTools.readShort( getByteAt( 38 ), getByteAt( 39 ) );
+			cchName = ByteTools.readShort( getByteAt( 40 ), getByteAt( 41 ) );
+			cchData = ByteTools.readShort( getByteAt( 42 ), getByteAt( 43 ) );
 			int fullnamelen = cchName + (cchData);
 			rgch = new byte[fullnamelen];
 			int pos = 44;
@@ -258,9 +258,9 @@ public class Sxview extends XLSRecord implements XLSConstants
 				// 0x1  All the characters in the string are saved as double-byte characters in rgb.
 				// reserved (7 bits): MUST be zero, and MUST be ignored.
 
-				byte encoding = this.getByteAt( pos++ );
+				byte encoding = getByteAt( pos++ );
 
-				byte[] tmp = this.getBytesAt( pos, (cchName) * (encoding + 1) );
+				byte[] tmp = getBytesAt( pos, (cchName) * (encoding + 1) );
 				try
 				{
 					if( encoding == 0 )
@@ -280,8 +280,8 @@ public class Sxview extends XLSRecord implements XLSConstants
 			}
 			if( cchData > 0 )
 			{
-				byte encoding = this.getByteAt( pos++ );
-				byte[] tmp = this.getBytesAt( pos, (cchData) * (encoding + 1) );
+				byte encoding = getByteAt( pos++ );
+				byte[] tmp = getBytesAt( pos, (cchData) * (encoding + 1) );
 				try
 				{
 					if( encoding == 0 )
@@ -299,7 +299,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 				}
 			}
 		}
-			log.debug( "SXVIEW: name:" + this.getTableName() + " iCache:" + iCache + " cDim:" + cDim + " cDimRw:" + cDimRw + " cDimCol:" + cDimCol + " cDimPg:" + cDimPg + " cDimData:" + cDimData + " cRw:" + cRw + " cCol:" + cCol + " datafieldname:" + DataFieldName );
+			log.debug( "SXVIEW: name:" + getTableName() + " iCache:" + iCache + " cDim:" + cDim + " cDimRw:" + cDimRw + " cDimCol:" + cDimCol + " cDimPg:" + cDimPg + " cDimData:" + cDimData + " cRw:" + cRw + " cCol:" + cCol + " datafieldname:" + DataFieldName );
 	}
 
 	/**
@@ -369,7 +369,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 			BiffRec br = subRecs.get( i );
 			if( br.getOpcode() != SXEX )
 			{
-				this.getSheet().removeRecFromVec( br );
+				getSheet().removeRecFromVec( br );
 				subRecs.remove( i );
 				i--;
 			}
@@ -386,17 +386,17 @@ public class Sxview extends XLSRecord implements XLSConstants
 		cRw = 0;
 		cCol = 0;
 		// now add the required records for each field
-		int zz = this.getRecordIndex() + 1;
+		int zz = getRecordIndex() + 1;
 		for( int i = 0; i < cDim; i++ )
 		{
 			Sxvd svd = (Sxvd) Sxvd.getPrototype();    // for each pivot field (which goes on an axis)
-			svd.setSheet( this.getSheet() );
-			this.getSheet().getSheetRecs().add( zz++, svd );
-			this.subRecs.add( i * 2, svd );
+			svd.setSheet( getSheet() );
+			getSheet().getSheetRecs().add( zz++, svd );
+			subRecs.add( i * 2, svd );
 			SxVdEX svdex = (SxVdEX) SxVdEX.getPrototype();
-			svdex.setSheet( this.getSheet() );
-			this.getSheet().getSheetRecs().add( zz++, svdex );
-			this.subRecs.add( (i * 2) + 1, svdex );
+			svdex.setSheet( getSheet() );
+			getSheet().getSheetRecs().add( zz++, svdex );
+			subRecs.add( (i * 2) + 1, svdex );
 		}
 	}
 
@@ -417,7 +417,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 	 */
 	public Sxvd addPivotFieldToAxis( int axis, int fieldIndex )
 	{
-		int zz = this.getRecordIndex() + 1;
+		int zz = getRecordIndex() + 1;
 		SxVdEX sxvdex = (SxVdEX) getSubRec( SXVDEX, fieldIndex );    // end of last pivot field set (PIVOTVD rule)
 		if( sxvdex != null )
 		{
@@ -425,13 +425,13 @@ public class Sxview extends XLSRecord implements XLSConstants
 		}
 
 		Sxvd sxvd = (Sxvd) Sxvd.getPrototype();    // for each pivot field (which goes on an axis)
-		sxvd.setSheet( this.getSheet() );
-		this.getSheet().getSheetRecs().add( zz++, sxvd );
-		this.subRecs.add( cDim * 2, sxvd );
+		sxvd.setSheet( getSheet() );
+		getSheet().getSheetRecs().add( zz++, sxvd );
+		subRecs.add( cDim * 2, sxvd );
 		SxVdEX svdex = (SxVdEX) SxVdEX.getPrototype();
-		svdex.setSheet( this.getSheet() );
-		this.getSheet().getSheetRecs().add( zz++, svdex );
-		this.subRecs.add( (cDim * 2) + 1, svdex );
+		svdex.setSheet( getSheet() );
+		getSheet().getSheetRecs().add( zz++, svdex );
+		subRecs.add( (cDim * 2) + 1, svdex );
 		cDim++;
 		sxvd.setAxis( axis );
 		return sxvd;
@@ -473,9 +473,9 @@ public class Sxview extends XLSRecord implements XLSConstants
 			if( zz > 0 )
 			{ // should!!!
 				sxivd = (Sxivd) Sxivd.getPrototype();
-				sxivd.setSheet( this.getSheet() );
-				this.getSheet().getSheetRecs().add( subRecs.get( zz ).getRecordIndex(), sxivd );
-				this.subRecs.add( zz, sxivd );
+				sxivd.setSheet( getSheet() );
+				getSheet().getSheetRecs().add( subRecs.get( zz ).getRecordIndex(), sxivd );
+				subRecs.add( zz, sxivd );
 			}
 		}
 		sxivd.addField( fieldNumber );
@@ -496,9 +496,9 @@ public class Sxview extends XLSRecord implements XLSConstants
 			if( zz > 0 )
 			{ // should!!
 				sxivd = (Sxivd) Sxivd.getPrototype();
-				sxivd.setSheet( this.getSheet() );
-				this.getSheet().getSheetRecs().add( subRecs.get( zz ).getRecordIndex(), sxivd );
-				this.subRecs.add( zz, sxivd );
+				sxivd.setSheet( getSheet() );
+				getSheet().getSheetRecs().add( subRecs.get( zz ).getRecordIndex(), sxivd );
+				subRecs.add( zz, sxivd );
 			}
 		}
 		sxivd.addField( fieldNumber );
@@ -541,9 +541,9 @@ public class Sxview extends XLSRecord implements XLSConstants
 			if( zz > 0 )
 			{ // should!!!
 				sxpi = (SxPI) SxPI.getPrototype();
-				sxpi.setSheet( this.getSheet() );
-				this.getSheet().getSheetRecs().add( subRecs.get( zz ).getRecordIndex(), sxpi );
-				this.subRecs.add( zz, sxpi );
+				sxpi.setSheet( getSheet() );
+				getSheet().getSheetRecs().add( subRecs.get( zz ).getRecordIndex(), sxpi );
+				subRecs.add( zz, sxpi );
 			}
 		}
 		sxpi.addPageField( fieldIndex, itemIndex );
@@ -577,9 +577,9 @@ public class Sxview extends XLSRecord implements XLSConstants
 		if( zz > 0 )
 		{ // should!!!
 			sxdi = (SxDI) SxDI.getPrototype();
-			sxdi.setSheet( this.getSheet() );
-			this.getSheet().getSheetRecs().add( subRecs.get( zz ).getRecordIndex(), sxdi );
-			this.subRecs.add( zz, sxdi );
+			sxdi.setSheet( getSheet() );
+			getSheet().getSheetRecs().add( subRecs.get( zz ).getRecordIndex(), sxdi );
+			subRecs.add( zz, sxdi );
 		}
 /*	    }*/
 		sxdi.addDataField( fieldIndex, aggregateFunction, name );
@@ -624,8 +624,8 @@ public class Sxview extends XLSRecord implements XLSConstants
 		Sxvi sxvi = (Sxvi) Sxvi.getPrototype();                // pivot item record
 		sxvi.setItemType( itemType );
 		sxvi.setCacheItem( cacheItem );
-		sxvi.setSheet( this.getSheet() );
-		this.getSheet().getSheetRecs().add( subRecs.get( zz ).getRecordIndex(), sxvi );
+		sxvi.setSheet( getSheet() );
+		getSheet().getSheetRecs().add( subRecs.get( zz ).getRecordIndex(), sxvi );
 		subRecs.add( zz, sxvi );
 	 	/*if (axis.getAxisType()==Sxvd.AXIS_ROW) {
      	} else if (axis.getAxisType()==Sxvd.AXIS_COL) {
@@ -636,7 +636,7 @@ public class Sxview extends XLSRecord implements XLSConstants
      	}*/
 		if( cacheItem != -1 )
 		{
-			PivotCache pc = this.getWorkBook().getPivotCache();    // TODO should this be here or in Sxstream?
+			PivotCache pc = getWorkBook().getPivotCache();    // TODO should this be here or in Sxstream?
 			pc.addCacheItem( iCache, cacheItem );    // adds the cache item to the "used" list, as it were
 		}
 	}
@@ -661,15 +661,15 @@ public class Sxview extends XLSRecord implements XLSConstants
 			int zz = getPivotRecordInsertionIndexes( SXLI, 0, -1 );
 			if( zz > 0 )
 			{ // should!!!
-				sxli = (Sxli) Sxli.getPrototype( this.getWorkBook() );
-				sxli.setSheet( this.getSheet() );
-				this.getSheet().getSheetRecs().add( subRecs.get( zz ).getRecordIndex(), sxli );
-				this.subRecs.add( zz, sxli );
+				sxli = (Sxli) Sxli.getPrototype( getWorkBook() );
+				sxli.setSheet( getSheet() );
+				getSheet().getSheetRecs().add( subRecs.get( zz ).getRecordIndex(), sxli );
+				subRecs.add( zz, sxli );
 				sxli.addField( repeat, nLines, type, indexes );
-				sxli = (Sxli) Sxli.getPrototype( this.getWorkBook() );
-				sxli.setSheet( this.getSheet() );
-				this.getSheet().getSheetRecs().add( subRecs.get( zz + 1 ).getRecordIndex(), sxli );
-				this.subRecs.add( zz + 1, sxli );
+				sxli = (Sxli) Sxli.getPrototype( getWorkBook() );
+				sxli.setSheet( getSheet() );
+				getSheet().getSheetRecs().add( subRecs.get( zz + 1 ).getRecordIndex(), sxli );
+				subRecs.add( zz + 1, sxli );
 			}
 		}
 		else
@@ -710,9 +710,9 @@ public class Sxview extends XLSRecord implements XLSConstants
 			if( zz == -1 )
 			{ // shouldn't!
 				sxli = (Sxli) Sxli.getPrototype();
-				sxli.setSheet( this.getSheet() );
-				this.getSheet().getSheetRecs().add( subRecs.get( zz ).getRecordIndex(), sxli );
-				this.subRecs.add( zz, sxli );
+				sxli.setSheet( getSheet() );
+				getSheet().getSheetRecs().add( subRecs.get( zz ).getRecordIndex(), sxli );
+				subRecs.add( zz, sxli );
 			}
 		}
 		sxli.addField( repeat, nLines, type, indexes );
@@ -827,8 +827,8 @@ public class Sxview extends XLSRecord implements XLSConstants
 		{
 			fNumber = false;
 		}
-		this.getData()[36] = grbit2;
-		this.getData()[37] = grbit1;
+		getData()[36] = grbit2;
+		getData()[37] = grbit1;
 	}
 
 	/**
@@ -860,7 +860,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 			{
 				grbit1 = (byte) (grbit1 | 0x1);
 			}
-			this.initGrbit();
+			initGrbit();
 		}
 	}
 
@@ -891,7 +891,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 			{
 				grbit1 = (byte) (grbit1 | 0x2);
 			}
-			this.initGrbit();
+			initGrbit();
 		}
 	}
 
@@ -920,7 +920,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 			{
 				grbit1 = (byte) (grbit1 | 0x4);
 			}
-			this.initGrbit();
+			initGrbit();
 		}
 	}
 
@@ -946,7 +946,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 			{
 				grbit1 = (byte) (grbit1 | 0x10);
 			}
-			this.initGrbit();
+			initGrbit();
 		}
 	}
 
@@ -972,7 +972,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 			{
 				grbit1 = (byte) (grbit1 | 0x20);
 			}
-			this.initGrbit();
+			initGrbit();
 		}
 	}
 
@@ -1003,7 +1003,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 			{
 				grbit1 = (byte) (grbit1 | 0x40);
 			}
-			this.initGrbit();
+			initGrbit();
 		}
 	}
 
@@ -1034,7 +1034,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 			{
 				grbit1 = (byte) (grbit1 | 0x80);
 			}
-			this.initGrbit();
+			initGrbit();
 		}
 	}
 
@@ -1065,7 +1065,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 			{
 				grbit2 = (byte) (grbit2 | 0x1);
 			}
-			this.initGrbit();
+			initGrbit();
 		}
 	}
 
@@ -1094,7 +1094,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 			{
 				grbit2 = (byte) (grbit2 | 0x1);
 			}
-			this.initGrbit();
+			initGrbit();
 		}
 	}
 
@@ -1239,7 +1239,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 		grbit2 = b[0];
 		grbit1 = b[1];
 		System.arraycopy( b, 0, data, 36, 2 );
-		this.initGrbit();
+		initGrbit();
 	}
 
 	public void setItblAutoFmt( short s )
@@ -1260,7 +1260,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 	public void setTableName( String s )
 	{
 		PivotTableName = s;
-		this.buildRgch();
+		buildRgch();
 		// also set associated qsitag pivot view name
 		QsiSXTag qsi = (QsiSXTag) getSubRec( QSISXTAG, -1 );
 		if( qsi != null )
@@ -1297,7 +1297,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 	public void setDataName( String s )
 	{
 		DataFieldName = s;
-		this.buildRgch();
+		buildRgch();
 	}
 
 	public String getDataName()
@@ -1311,7 +1311,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 	private void buildRgch()
 	{
 		byte[] data = new byte[44];
-		System.arraycopy( this.getData(), 0, data, 0, 44 );
+		System.arraycopy( getData(), 0, data, 0, 44 );
 		byte[] strbytes = new byte[0];
 		byte[] databytes = new byte[0];
 		try
@@ -1347,7 +1347,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 		System.arraycopy( databytes, 0, newrgch, cchName + 2, cchData );
 
 		data = ByteTools.append( newrgch, data );
-		this.setData( data );
+		setData( data );
 	}
 
 	/**
@@ -1384,7 +1384,7 @@ public class Sxview extends XLSRecord implements XLSConstants
 		int i = 0;
 		for(; i < subRecs.size(); i++ )
 		{
-			if( br == subRecs.get( i ) )
+			if( br.equals( subRecs.get( i ) ) )
 			{
 				break;
 			}
@@ -1428,7 +1428,8 @@ public class Sxview extends XLSRecord implements XLSConstants
 	 */
 	private int getPivotRecordInsertionIndexes( int opcode, int index, int pivotFieldIndex )
 	{
-		int i, j = 0;
+		int i;
+		int j = 0;
 		if( pivotFieldIndex < 0 )
 		{
 			for( i = subRecs.size() - 1; i >= 0; i-- )
@@ -1520,8 +1521,8 @@ public class Sxview extends XLSRecord implements XLSConstants
     	 * 
     	 */
 		ArrayList initialrecs = new ArrayList();
-		this.setSheet( sheet );
-		this.setWorkBook( sheet.getWorkBook() );
+		setSheet( sheet );
+		setWorkBook( sheet.getWorkBook() );
 		// SXEX
 		SxEX sxex = (SxEX) SxEX.getPrototype();
 		addInit( initialrecs, sxex, sheet );
@@ -1562,13 +1563,13 @@ public class Sxview extends XLSRecord implements XLSConstants
 	{
 		initialrecs.add( rec );
 		rec.setSheet( sheet );
-		rec.setWorkBook( this.getWorkBook() );
-		this.addSubrecord( rec );
+		rec.setWorkBook( getWorkBook() );
+		addSubrecord( rec );
 	}
 
 	public String toString()
 	{
-		return "SXVIEW: name:" + this.getTableName() + " iCache:" + iCache + " cDim:" + cDim + " cDimRw:" + cDimRw + " cDimCol:" + cDimCol +
+		return "SXVIEW: name:" + getTableName() + " iCache:" + iCache + " cDim:" + cDim + " cDimRw:" + cDimRw + " cDimCol:" + cDimCol +
 				" cDimPg:" + cDimPg + " cDimData:" + cDimData +
 				" cRw:" + cRw + " cCol:" + cCol +
 				" datafieldname:" + DataFieldName;

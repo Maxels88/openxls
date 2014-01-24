@@ -78,11 +78,11 @@ public class GeneralCellFormat extends Format implements CellFormat
 	@Override
 	public String format( Cell cell )
 	{
-		return this.format( cell.getVal() );
+		return format( cell.getVal() );
 	}
 
 	public String format( String val )
 	{
-		return this.format( val );
+		return format( val );
 	}
 }

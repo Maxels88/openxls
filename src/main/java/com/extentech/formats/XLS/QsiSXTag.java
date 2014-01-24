@@ -94,7 +94,9 @@ public class QsiSXTag extends XLSRecord implements XLSConstants
 {
 	private static final Logger log = LoggerFactory.getLogger( QsiSXTag.class );
 	private static final long serialVersionUID = 2639291289806138985L;
-	private short flags, ver, cchName;
+	private short flags;
+	private short ver;
+	private short cchName;
 	private String name;
 
 	@Override
@@ -112,14 +114,14 @@ public class QsiSXTag extends XLSRecord implements XLSConstants
 		//0,			// encoding byte 
 		//80, 105, 118, 111, 116, 84, 97, 98, 108, 101, 49,	// pivot table 1 
 		// 0, 0]		// reserved
-		flags = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
-		byte verSxLastUpdated = this.getByteAt( 12 );    //
-		byte verSxUpdatableMin = this.getByteAt( 13 );    // either 0 or 3
-		cchName = ByteTools.readShort( this.getByteAt( 16 ), this.getByteAt( 17 ) );
+		flags = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
+		byte verSxLastUpdated = getByteAt( 12 );    //
+		byte verSxUpdatableMin = getByteAt( 13 );    // either 0 or 3
+		cchName = ByteTools.readShort( getByteAt( 16 ), getByteAt( 17 ) );
 		if( cchName > 0 )
 		{
-			byte encoding = this.getByteAt( 18 );
-			byte[] tmp = this.getBytesAt( 19, (cchName) * (encoding + 1) );
+			byte encoding = getByteAt( 18 );
+			byte[] tmp = getBytesAt( 19, (cchName) * (encoding + 1) );
 			try
 			{
 				if( encoding == 0 )
@@ -158,7 +160,7 @@ public class QsiSXTag extends XLSRecord implements XLSConstants
 	{
 		this.name = name;
 		byte[] data = new byte[18];
-		System.arraycopy( this.getData(), 0, data, 0, 15 );
+		System.arraycopy( getData(), 0, data, 0, 15 );
 		if( name != null )
 		{
 			byte[] strbytes = null;
@@ -184,7 +186,7 @@ public class QsiSXTag extends XLSRecord implements XLSConstants
 			data = ByteTools.append( newrgch, data );
 			data = ByteTools.append( new byte[]{ 0, 0 }, data );
 		}
-		this.setData( data );
+		setData( data );
 	}
 
 	private byte[] PROTOTYPE_BYTES = new byte[]{

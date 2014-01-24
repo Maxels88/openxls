@@ -66,7 +66,7 @@ public final class StringRec extends com.extentech.formats.XLS.XLSRecord
 		//this.setIsValueForCell(true);
 		// will get "picked up" by formula due to WorkBook.addRecord code
 		// isValueForCell will DELETE THE CELL if remove/change NOT WHAT WE WANT HERE
-		this.isString = true;
+		isString = true;
 	}
 
 	/**
@@ -84,9 +84,9 @@ public final class StringRec extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public StringRec( String newValue )
 	{
-		this.setOpcode( STRINGREC );
+		setOpcode( STRINGREC );
 		us = Sst.createUnicodeString( newValue, null, WorkBook.STRING_ENCODING_AUTO );
-		this.setData( us.read() );
+		setData( us.read() );
 		//this.setValueForCell(true); why ??? not true
 	}
 
@@ -109,7 +109,7 @@ public final class StringRec extends com.extentech.formats.XLS.XLSRecord
 	public void setStringVal( String s )
 	{
 		us.updateUnicodeString( s );
-		this.setData( us.read() );
+		setData( us.read() );
 	}
 
 	@Override

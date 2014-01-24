@@ -69,7 +69,7 @@ public class IndirectOutputStream extends OutputStream
 	public IndirectOutputStream( OutputStream sink, boolean discard )
 	{
 		this.sink = sink;
-		this.discardOnNull = discard;
+		discardOnNull = discard;
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class IndirectOutputStream extends OutputStream
 	{
 		// don't bother with a write lock, a single write is atomic
 		// as are all uses of this field 
-		this.discardOnNull = discard;
+		discardOnNull = discard;
 	}
 
 	private boolean checkSink() throws IOException
@@ -145,7 +145,7 @@ public class IndirectOutputStream extends OutputStream
 		lock.readLock().lock();
 		try
 		{
-			if( this.checkSink() )
+			if( checkSink() )
 			{
 				return;
 			}
@@ -163,7 +163,7 @@ public class IndirectOutputStream extends OutputStream
 		lock.readLock().lock();
 		try
 		{
-			if( this.checkSink() )
+			if( checkSink() )
 			{
 				return;
 			}
@@ -181,7 +181,7 @@ public class IndirectOutputStream extends OutputStream
 		lock.readLock().lock();
 		try
 		{
-			if( this.checkSink() )
+			if( checkSink() )
 			{
 				return;
 			}
@@ -199,7 +199,7 @@ public class IndirectOutputStream extends OutputStream
 		lock.readLock().lock();
 		try
 		{
-			if( this.checkSink() )
+			if( checkSink() )
 			{
 				return;
 			}
@@ -217,7 +217,7 @@ public class IndirectOutputStream extends OutputStream
 		lock.readLock().lock();
 		try
 		{
-			if( this.checkSink() )
+			if( checkSink() )
 			{
 				return;
 			}

@@ -66,7 +66,7 @@ public class PtgFuncVar extends GenericPtg implements Ptg
 	public PtgFuncVar( int funcType, int numArgs, XLSRecord parentRec )
 	{
 		this( funcType, numArgs );
-		this.setParentRec( parentRec );
+		setParentRec( parentRec );
 	}
 
 	public PtgFuncVar( int funcType, int numArgs )
@@ -94,7 +94,7 @@ public class PtgFuncVar extends GenericPtg implements Ptg
 		recbyte[1] = (byte) numArgs;
 		recbyte[2] = b[0];
 		recbyte[3] = b[1];
-		this.init( recbyte );
+		init( recbyte );
 	}
 
 	public PtgFuncVar()
@@ -126,7 +126,7 @@ public class PtgFuncVar extends GenericPtg implements Ptg
 	public void setNumParams( byte nParams )
 	{
 		record[1] = nParams;
-		this.populateVals();
+		populateVals();
 	}
 
 	// should be handled by super?
@@ -181,7 +181,7 @@ public class PtgFuncVar extends GenericPtg implements Ptg
 		record = b;
 		fprompt = false;
 		fCE = false;
-		this.populateVals();
+		populateVals();
 	}
 
 	/**

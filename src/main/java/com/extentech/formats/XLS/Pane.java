@@ -61,7 +61,10 @@ public final class Pane extends com.extentech.formats.XLS.XLSRecord
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 5314818835334217157L;
-	short px, py, visRow, visCol;
+	short px;
+	short py;
+	short visRow;
+	short visCol;
 	byte pActive;
 	boolean bFrozen;
 	Window2 win2;
@@ -70,15 +73,15 @@ public final class Pane extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		px = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		px = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		;
-		py = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
+		py = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
 		;
-		visRow = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
+		visRow = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
 		;
-		visCol = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
+		visCol = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
 		;
-		pActive = this.getByteAt( 8 );
+		pActive = getByteAt( 8 );
 
 	}
 
@@ -197,7 +200,7 @@ public final class Pane extends com.extentech.formats.XLS.XLSRecord
 
 	protected void updateData()
 	{
-		this.getData();
+		getData();
 		byte[] b = ByteTools.shortToLEBytes( px );
 		data[0] = b[0];
 		data[1] = b[1];

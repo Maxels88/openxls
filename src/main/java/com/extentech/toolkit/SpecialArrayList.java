@@ -136,7 +136,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 * The array buffer into which the elements of the ArrayList are stored.
 	 * The capacity of the ArrayList is the length of this array buffer.
 	 */
-	Object elementData[];
+	Object[] elementData;
 
 	/**
 	 * The size of the ArrayList (the number of elements it contains).
@@ -159,7 +159,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 		{
 			throw new IllegalArgumentException( "Illegal Capacity: " + initialCapacity );
 		}
-		this.elementData = new Object[initialCapacity];
+		elementData = new Object[initialCapacity];
 	}
 
 	/**
@@ -198,7 +198,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 		int oldCapacity = elementData.length;
 		if( size < oldCapacity )
 		{
-			Object oldData[] = elementData;
+			Object[] oldData = elementData;
 			elementData = new Object[size];
 			System.arraycopy( oldData, 0, elementData, 0, size );
 		}
@@ -217,7 +217,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 		int oldCapacity = elementData.length;
 		if( minCapacity > oldCapacity )
 		{
-			Object oldData[] = elementData;
+			Object[] oldData = elementData;
 			int newCapacity = ((oldCapacity * 3) / 2) + 1;
 			if( newCapacity < minCapacity )
 			{
@@ -394,7 +394,7 @@ class SpecialArrayList extends AbstractList implements List, RandomAccess, Clone
 	 *                             of the runtime type of every element in this list.
 	 */
 	@Override
-	public Object[] toArray( Object a[] )
+	public Object[] toArray( Object[] a )
 	{
 		if( a.length < size )
 		{

@@ -52,7 +52,8 @@ public final class SeriesText extends GenericChartObject implements ChartObject
 {
 	private static final Logger log = LoggerFactory.getLogger( SeriesText.class );
 	private static final long serialVersionUID = -3794355940075116165L;
-	protected int id = -1, cch = -1;
+	protected int id = -1;
+	protected int cch = -1;
 	private String text = "";
 
 	public void setText( String t )
@@ -79,8 +80,8 @@ public final class SeriesText extends GenericChartObject implements ChartObject
 		newbytes[2] = (byte) lent;
 		newbytes[3] = uni;
 		System.arraycopy( strbytes, 0, newbytes, 4, strbytes.length );
-		this.setData( newbytes );
-		this.text = t;
+		setData( newbytes );
+		text = t;
 	}
 
 	@Override
@@ -89,18 +90,18 @@ public final class SeriesText extends GenericChartObject implements ChartObject
 		super.init();
 		//byte[] data = this.getData();
 		int multi = 2;
-		if( this.getByteAt( 3 ) == 0x0 )
+		if( getByteAt( 3 ) == 0x0 )
 		{
 			multi = 1;
 		}
-		cch = this.getByteAt( 2 ) * multi;
+		cch = getByteAt( 2 ) * multi;
 		if( cch < 0 )
 		{
 			cch *= -1; // strangely it can be negative...
 		}
 		try
 		{
-			byte[] namebytes = this.getBytesAt( 4, cch );
+			byte[] namebytes = getBytesAt( 4, cch );
 			try
 			{
 				text = new String( namebytes, WorkBookFactory.UNICODEENCODING );
@@ -120,7 +121,7 @@ public final class SeriesText extends GenericChartObject implements ChartObject
 
 	public String toString()
 	{
-		return this.text;
+		return text;
 	}
 
 	public static SeriesText getPrototype( String text )

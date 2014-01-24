@@ -126,7 +126,7 @@ public final class Obj extends com.extentech.formats.XLS.XLSRecord
 
 	public Obj()
 	{
-		this.ftCmo = new FtCmo();
+		ftCmo = new FtCmo();
 	}
 
 	/**
@@ -139,12 +139,12 @@ public final class Obj extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public Obj( int obType, int obId, int grbit )
 	{
-		this.setOpcode( OBJ );
-		this.ftCmo = new FtCmo();
-		this.ftCmo.setObjId( obId );
-		this.ftCmo.setObjType( obType );
-		this.ftCmo.setGrbit( grbit );
-		this.setData( this.ftCmo.getRec() );
+		setOpcode( OBJ );
+		ftCmo = new FtCmo();
+		ftCmo.setObjId( obId );
+		ftCmo.setObjType( obType );
+		ftCmo.setGrbit( grbit );
+		setData( ftCmo.getRec() );
 	}
 
 	/**
@@ -294,7 +294,7 @@ obj.ftCmo.getRec()[17]= (byte)0x02;
 	@Override
 	public void setSheet( Sheet b )
 	{
-		this.worksheet = b;
+		worksheet = b;
 		((Boundsheet) b).lastObjId = Math.max( ((Boundsheet) b).lastObjId, ftCmo.getObjId() );
 	}
 
@@ -306,7 +306,7 @@ obj.ftCmo.getRec()[17]= (byte)0x02;
 	{
 		super.init();
 
-		byte[] data = this.getData();
+		byte[] data = getData();
 		ftCmo = new FtCmo();    // Parse 1st FtCmo Record - contains object type, object id and grbit
 		ftCmo.parse( data, 0 );
 
@@ -410,9 +410,9 @@ obj.ftCmo.getRec()[17]= (byte)0x02;
 		b = ByteTools.shortToLEBytes( ftCmo.getGrbit() );
 		retData[4] = b[0];
 		retData[5] = b[1];
-		byte[] updated = this.getData();
+		byte[] updated = getData();
 		System.arraycopy( retData, 0, updated, 4, retData.length );    // update a portion of the initial ftcmo rec starting at byte 4
-		this.setData( updated );
+		setData( updated );
 	}
 
 	// 20100430 KSC: actually, the only Continue that follows Obj records are masked Mso's -- see ContinueHandler.addRec
@@ -846,11 +846,11 @@ obj.ftCmo.getRec()[17]= (byte)0x02;
 	 */
 	public String debugOutput()
 	{
-		byte[] data = this.getData();
+		byte[] data = getData();
 		StringBuffer log = new StringBuffer();
 		FtCmo ftCmo = new FtCmo();    // Parse 1st FtCmo Record - contains object type, object id and grbit
 		ftCmo.parse( data, 0 );
-		log.append( this.toString() );
+		log.append( toString() );
 		log.append( "\r\n\t" );
 		log.append( "FtCmo" );
 		log.append( "\t" + ByteTools.getByteDump( data, 0, 22 ) );

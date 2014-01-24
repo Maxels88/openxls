@@ -79,7 +79,7 @@ public class PtgAreaErr3d extends PtgArea3d implements Ptg
 		ixti = ByteTools.readShort( record[1], record[2] );
 		if( ixti > 0 )
 		{
-			this.sheetname = GenericPtg.qualifySheetname( this.getSheetName() );
+			sheetname = GenericPtg.qualifySheetname( getSheetName() );
 		}
 
 	}
@@ -108,10 +108,10 @@ public class PtgAreaErr3d extends PtgArea3d implements Ptg
 		try
 		{
 			int xloc = xsht.insertLocation( boundnum, boundnum );
-			this.ixti = (short) xloc;
+			ixti = (short) xloc;
 			if( ixti > 0 )
 			{
-				this.sheetname = GenericPtg.qualifySheetname( this.getSheetName() );
+				sheetname = GenericPtg.qualifySheetname( getSheetName() );
 			}
 		}
 		catch( WorkSheetNotFoundException e )

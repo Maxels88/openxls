@@ -156,6 +156,6 @@ public class FileBuffer
 	 */
 	public void setBuffer( ByteBuffer b )
 	{
-		this.buffer = b;
+		buffer = b;
 	}
 }

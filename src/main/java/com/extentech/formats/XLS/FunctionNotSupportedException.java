@@ -49,7 +49,7 @@ public final class FunctionNotSupportedException extends java.lang.RuntimeExcept
 	{
 		// This method is derived from class java.lang.Throwable
 		// to do: code goes here
-		return this.toString();
+		return toString();
 	}
 
 	public String toString()

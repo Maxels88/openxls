@@ -31,21 +31,36 @@ public abstract class XLSCellRecord extends XLSRecord implements CellRec
 {
 	private static final long serialVersionUID = 7387720078386279196L;
 
+	public XLSCellRecord()
+	{
+
+	}
+
+	/**
+	 * UNIT TESTING ONLY.  DO NOT USE EXCEPT IN JUNIT TEST CASES.
+	 * @param row
+	 * @param col
+	 */
+	XLSCellRecord( int row, int col )
+	{
+		super( row, col );
+	}
+
 	@Override
 	public int getColFirst()
 	{
-		return this.getColNumber();
+		return getColNumber();
 	}
 
 	@Override
 	public int getColLast()
 	{
-		return this.getColNumber();
+		return getColNumber();
 	}
 
 	@Override
 	public boolean isSingleCol()
 	{
-		return (this.getColFirst() == this.getColLast());
+		return (getColFirst() == getColLast());
 	}
 }

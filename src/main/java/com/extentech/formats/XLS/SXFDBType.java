@@ -111,8 +111,8 @@ public class SXFDBType extends XLSRecord implements XLSConstants, PivotCacheReco
 	public void init()
 	{
 		super.init();
-		wTypeSql = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-			log.debug( "SXFDBType - {}", Arrays.toString( this.getData() ) );
+		wTypeSql = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+			log.debug( "SXFDBType - {}", Arrays.toString( getData() ) );
 	}
 
 	/**
@@ -139,14 +139,14 @@ public class SXFDBType extends XLSRecord implements XLSConstants, PivotCacheReco
 	{
 		wTypeSql = (short) type;
 		byte[] b = ByteTools.shortToLEBytes( wTypeSql );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	public String toString()
 	{
 		return "SXFDBType: " + wTypeSql +
-				Arrays.toString( this.getRecord() );
+				Arrays.toString( getRecord() );
 	}
 
 	public int getType()
@@ -163,9 +163,9 @@ public class SXFDBType extends XLSRecord implements XLSConstants, PivotCacheReco
 	public byte[] getRecord()
 	{
 		byte[] b = new byte[4];
-		System.arraycopy( ByteTools.shortToLEBytes( this.getOpcode() ), 0, b, 0, 2 );
-		System.arraycopy( ByteTools.shortToLEBytes( (short) this.getData().length ), 0, b, 2, 2 );
-		return ByteTools.append( this.getData(), b );
+		System.arraycopy( ByteTools.shortToLEBytes( getOpcode() ), 0, b, 0, 2 );
+		System.arraycopy( ByteTools.shortToLEBytes( (short) getData().length ), 0, b, 2, 2 );
+		return ByteTools.append( getData(), b );
 
 	}
 }

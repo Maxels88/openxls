@@ -522,7 +522,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public ColHandle getCol( String name ) throws ColumnNotFoundException
 	{
-		return this.getCol( ExcelTools.getIntVal( name ) );
+		return getCol( ExcelTools.getIntVal( name ) );
 	}
 
 	/**
@@ -544,7 +544,7 @@ public class WorkSheetHandle implements Handle
 				{
 					try
 					{
-						columns.add( this.getCol( i ) );
+						columns.add( getCol( i ) );
 					}
 					catch( ColumnNotFoundException e )
 					{
@@ -595,7 +595,7 @@ public class WorkSheetHandle implements Handle
 		if( x == null )
 		{
 			throw new RowNotFoundException( "Row " + t +
-					                                " not found in :" + this.getSheetName() );
+					                                " not found in :" + getSheetName() );
 		}
 		return new RowHandle( x, this );
 	}
@@ -637,7 +637,7 @@ public class WorkSheetHandle implements Handle
 	{
 		try
 		{
-			this.getCell( addr );
+			getCell( addr );
 			return true;
 		}
 		catch( CellNotFoundException e )
@@ -653,7 +653,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public int getNumRows()
 	{
-		return this.mysheet.getNumRows();
+		return mysheet.getNumRows();
 	}
 
 	/**
@@ -663,7 +663,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public int getNumCols()
 	{
-		return this.mysheet.getNumCols();
+		return mysheet.getNumCols();
 	}
 
 	/**
@@ -768,10 +768,10 @@ public class WorkSheetHandle implements Handle
 		mysheet.removeRows( rownum, 1, true );
 
 		// Delete chart series IF SERIES ARE ROW-BASED -- do before updateReferences
-		List charts = this.mysheet.getCharts();
+		List charts = mysheet.getCharts();
 		for( Object chart : charts )
 		{
-			String sht = GenericPtg.qualifySheetname( this.getSheetName() );
+			String sht = GenericPtg.qualifySheetname( getSheetName() );
 			Chart c = (Chart) chart;
 			HashMap seriesmap = c.getSeriesPtgs();
 			Iterator ii = seriesmap.keySet().iterator();
@@ -823,12 +823,12 @@ public class WorkSheetHandle implements Handle
 
 		if( flag != WorkSheetHandle.ROW_DELETE_NO_REFERENCE_UPDATE )
 		{
-			ReferenceTracker.updateReferences( rownum, -1, this.mysheet, true );
+			ReferenceTracker.updateReferences( rownum, -1, mysheet, true );
 		}
 
 		// Adjust image row so that height remains constant
 		int rnum = rownum + 1;
-		ImageHandle[] images = this.getImages();
+		ImageHandle[] images = getImages();
 		for( ImageHandle ih : images )
 		{
 			int row = ih.getRow();
@@ -853,7 +853,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void clearCols( int first, int count )
 	{
-		this.removeCols( first, count, false );
+		removeCols( first, count, false );
 	}
 
 	/**
@@ -864,7 +864,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void removeCols( int first, int count )
 	{
-		this.removeCols( first, count, true );
+		removeCols( first, count, true );
 	}
 
 	private void removeCols( int first, int count, boolean shift )
@@ -890,7 +890,7 @@ public class WorkSheetHandle implements Handle
 	@Deprecated
 	public void removeCol( String colstr ) throws ColumnNotFoundException
 	{
-		this.removeCols( ExcelTools.getIntVal( colstr ), 1, false );
+		removeCols( ExcelTools.getIntVal( colstr ), 1, false );
 	}
 
 	/**
@@ -904,7 +904,7 @@ public class WorkSheetHandle implements Handle
 	@Deprecated
 	public void removeCol( String colstr, boolean shiftcols ) throws ColumnNotFoundException
 	{
-		this.removeCols( ExcelTools.getIntVal( colstr ), 1, shiftcols );
+		removeCols( ExcelTools.getIntVal( colstr ), 1, shiftcols );
 	}
 
 	/**
@@ -930,7 +930,7 @@ public class WorkSheetHandle implements Handle
 		NameHandle[] nands = new NameHandle[nand.length];
 		for( int x = 0; x < nand.length; x++ )
 		{
-			nands[x] = new NameHandle( nand[x], this.wbh );
+			nands[x] = new NameHandle( nand[x], wbh );
 		}
 		return nands;
 	}
@@ -950,7 +950,7 @@ public class WorkSheetHandle implements Handle
 		{
 			throw new CellNotFoundException( rangename );
 		}
-		return new NameHandle( nand, this.wbh );
+		return new NameHandle( nand, wbh );
 	}
 
 	/**
@@ -1012,7 +1012,7 @@ public class WorkSheetHandle implements Handle
 		}
 		catch( Throwable e )
 		{
-			log.error( "Serializing Sheet: " + this.toString() + " failed: " + e, e );
+			log.error( "Serializing Sheet: " + toString() + " failed: " + e, e );
 		}
 		return b;
 		//return mysheet.getSheetBytes();
@@ -1030,7 +1030,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void writeAsTabbedText( OutputStream dest ) throws IOException
 	{
-		this.mysheet.writeAsTabbedText( dest );
+		mysheet.writeAsTabbedText( dest );
 	}
 
 	/**
@@ -1041,9 +1041,9 @@ public class WorkSheetHandle implements Handle
 	 */
 	protected WorkSheetHandle( Boundsheet sht, WorkBookHandle b )
 	{
-		this.wbh = b;
-		this.mysheet = sht;
-		this.mybook = sht.getWorkBook();
+		wbh = b;
+		mysheet = sht;
+		mybook = sht.getWorkBook();
 		// 20080624 KSC: add flag for shift formula rules upon row insertion/deletion
 		String shiftRule = (String) System.getProperties().get( "com.extentech.extenXLS.WorkSheetHandle.shiftInclusive" );
 		if( (shiftRule != null) && shiftRule.equalsIgnoreCase( "true" ) )
@@ -1075,7 +1075,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void setVal( String address, Object val ) throws CellNotFoundException, CellTypeMismatchException
 	{
-		CellHandle c = this.getCell( address );
+		CellHandle c = getCell( address );
 		c.setVal( val );
 	}
 
@@ -1091,7 +1091,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void setVal( String address, double d ) throws CellNotFoundException, CellTypeMismatchException
 	{
-		CellHandle c = this.getCell( address );
+		CellHandle c = getCell( address );
 		c.setVal( d );
 	}
 
@@ -1104,7 +1104,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void setVal( String address, String s ) throws CellNotFoundException, CellTypeMismatchException
 	{
-		CellHandle c = this.getCell( address );
+		CellHandle c = getCell( address );
 		c.setVal( s );
 	}
 
@@ -1122,7 +1122,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void setSheetName( String name )
 	{
-		wbh.sheethandles.remove( this.getSheetName() );    // keep sheethandles (name->wsh) updated
+		wbh.sheethandles.remove( getSheetName() );    // keep sheethandles (name->wsh) updated
 		mysheet.setSheetName( name );
 		wbh.sheethandles.put( name, this );
 	}
@@ -1136,7 +1136,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void setVal( String address, int i ) throws CellNotFoundException, CellTypeMismatchException
 	{
-		CellHandle c = this.getCell( address );
+		CellHandle c = getCell( address );
 		c.setVal( i );
 	}
 
@@ -1152,7 +1152,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public Object getVal( String address ) throws CellNotFoundException
 	{
-		CellHandle c = this.getCell( address );
+		CellHandle c = getCell( address );
 		return c.getVal();
 	}
 
@@ -1401,7 +1401,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public boolean insertRow( int rownum, RowHandle copyRow, int flag, boolean shiftrows )
 	{
-		return this.insertRow( rownum, copyRow.myRow, flag, shiftrows );
+		return insertRow( rownum, copyRow.myRow, flag, shiftrows );
 	}
 
 	/**
@@ -1509,14 +1509,14 @@ public class WorkSheetHandle implements Handle
 		if( copyRow == null )
 		{
 			// insert a blank
-			this.add( null, "A" + rownum + 1 );
+			add( null, "A" + rownum + 1 );
 			copyRow = mysheet.getRowByNumber( rownum );
 
 		}
 		// handle tracking of inserted rows -- if flag is false rows can be inserted multiple times at the same index
 		if( flag == WorkSheetHandle.ROW_INSERT_ONCE )
 		{ // not inserted
-			if( this.addedrows.contains( Integer.valueOf( rownum ) ) )
+			if( addedrows.contains( Integer.valueOf( rownum ) ) )
 			{
 				return false; // can't add an existing row!
 			}
@@ -1540,8 +1540,7 @@ public class WorkSheetHandle implements Handle
 				refUpdateStart++;
 			}
 			ReferenceTracker.updateReferences( refUpdateStart,
-			                                   offset,
-			                                   this.mysheet,
+			                                   offset, mysheet,
 			                                   true );    //shift or expand/contract ALL affected references including named ranges
 		}
 
@@ -1586,13 +1585,13 @@ public class WorkSheetHandle implements Handle
 			CellHandle newCellHandle = null;
 			Mulblank aMul = null;        // KSC: Mulblank handling
 			short c = -1;                // ""
-			String sheetname = GenericPtg.qualifySheetname( this.toString() );
+			String sheetname = GenericPtg.qualifySheetname( toString() );
 			for( Object copyRowCell1 : copyRowCells )
 			{
 				BiffRec copyRowCell = (BiffRec) copyRowCell1;
 				if( copyRowCell.getOpcode() == XLSConstants.MULBLANK )
 				{
-					if( copyRowCell == aMul )
+					if( copyRowCell.equals( aMul ) )
 					{
 						c++;    // ref next blank in range - nec. for ixfe (FormatId) see below
 					}
@@ -1603,7 +1602,7 @@ public class WorkSheetHandle implements Handle
 					}
 					aMul.setCurrentCell( c );
 				}
-				CellHandle copyCellHandle = new CellHandle( copyRowCell, this.wbh );
+				CellHandle copyCellHandle = new CellHandle( copyRowCell, wbh );
 				copyCellHandle.setWorkSheetHandle( this );
 				// this.cellhandles.put(copyCellHandle.getCellAddress(), copyCellHandle);
 				int colnum = copyCellHandle.getColNum();
@@ -1622,7 +1621,7 @@ public class WorkSheetHandle implements Handle
 						{
 							try
 							{
-								newCellHandle = this.getCell( rownum, colnum );
+								newCellHandle = getCell( rownum, colnum );
 							}
 							catch( CellNotFoundException e )
 							{
@@ -1647,7 +1646,7 @@ public class WorkSheetHandle implements Handle
 					{
 						try
 						{
-							newCellHandle = this.getCell( rownum, colnum );
+							newCellHandle = getCell( rownum, colnum );
 						}
 						catch( CellNotFoundException e )
 						{
@@ -1669,7 +1668,7 @@ public class WorkSheetHandle implements Handle
 					// check if we've already created...
 					if( newmerges.get( newrng ) == null )
 					{
-						newmerge = new CellRange( newrng, this.wbh, true );
+						newmerge = new CellRange( newrng, wbh, true );
 							log.debug( "WorksheetHandle.insertRow() created new Merge Range: " + newrng );
 						newmerges.put( newmerge.toString(), newmerge );
 					}
@@ -1705,11 +1704,11 @@ public class WorkSheetHandle implements Handle
 			}
 		}
 		// Insert chart series IF SERIES ARE ROW-BASED			
-		List charts = this.mysheet.getCharts();
+		List charts = mysheet.getCharts();
 		for( Object chart : charts )
 		{
 			Chart c = (Chart) chart;
-			ReferenceTracker.insertChartSeries( c, GenericPtg.qualifySheetname( this.getSheetName() ), rownum );
+			ReferenceTracker.insertChartSeries( c, GenericPtg.qualifySheetname( getSheetName() ), rownum );
 			// also shift charts down [BugTracker 2858]
 			int row = c.getRow0();
 			// only move charts whose top is >= copyRow
@@ -1732,10 +1731,10 @@ public class WorkSheetHandle implements Handle
 	 */
 	public ConditionalFormatHandle[] getConditionalFormatHandles()
 	{
-		ConditionalFormatHandle[] cfx = new ConditionalFormatHandle[this.mysheet.getConditionalFormats().size()];
+		ConditionalFormatHandle[] cfx = new ConditionalFormatHandle[mysheet.getConditionalFormats().size()];
 		for( int i = 0; i < cfx.length; i++ )
 		{
-			Condfmt cfmt = (Condfmt) this.mysheet.getConditionalFormats().get( i );
+			Condfmt cfmt = (Condfmt) mysheet.getConditionalFormats().get( i );
 			cfx[i] = new ConditionalFormatHandle( cfmt, this );
 		}
 		return cfx;
@@ -1748,7 +1747,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public WorkBookHandle getWorkBook()
 	{
-		return this.wbh;
+		return wbh;
 	}
 
 	/**
@@ -1763,7 +1762,7 @@ public class WorkSheetHandle implements Handle
 		{
 			return mysheet.getImageVect().get( idz );
 		}
-		throw new ImageNotFoundException( "Could not find " + name + " in " + this.getSheetName() );
+		throw new ImageNotFoundException( "Could not find " + name + " in " + getSheetName() );
 	}
 
 	/**
@@ -1773,7 +1772,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public ImageHandle[] getImages()
 	{
-		return this.mysheet.getImages();
+		return mysheet.getImages();
 	}
 
 	/**
@@ -1784,7 +1783,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public int getNumImages()
 	{
-		return this.mysheet.imageMap.size();
+		return mysheet.imageMap.size();
 	}
 
 	/**
@@ -1828,11 +1827,11 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void extractChartToDirectory( String outdir )
 	{
-		ArrayList charts = (ArrayList) this.mysheet.getCharts();
-		String sheetname = this.getSheetName();
+		ArrayList charts = (ArrayList) mysheet.getCharts();
+		String sheetname = getSheetName();
 		for( Object chart : charts )
 		{
-			ChartHandle ch = new ChartHandle( (Chart) chart, this.getWorkBook() );
+			ChartHandle ch = new ChartHandle( (Chart) chart, getWorkBook() );
 			String fname = sheetname + "_Chart" + ch.getId() + ".svg";
 			try
 			{
@@ -1855,7 +1854,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void insertImage( ImageHandle im )
 	{
-		this.mysheet.insertImage( im );
+		mysheet.insertImage( im );
 	}
 
 	/**
@@ -1889,7 +1888,7 @@ public class WorkSheetHandle implements Handle
 	@Deprecated
 	public void insertCol( int colnum )
 	{
-		this.insertCols( colnum, 1 );
+		insertCols( colnum, 1 );
 	}
 
 	/**
@@ -1901,7 +1900,7 @@ public class WorkSheetHandle implements Handle
 	@Deprecated
 	public void insertCol( String colnum )
 	{
-		this.insertCols( ExcelTools.getIntVal( colnum ), 1 );
+		insertCols( ExcelTools.getIntVal( colnum ), 1 );
 	}
 
 	/**
@@ -1940,7 +1939,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public CellHandle add( Object obj, int row, int col )
 	{
-		return add( obj, row, col, this.getWorkBook().getWorkBook().getDefaultIxfe() );
+		return add( obj, row, col, getWorkBook().getWorkBook().getDefaultIxfe() );
 	}
 
 	/**
@@ -1964,7 +1963,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public CellHandle[] addValidated( Object obj, int row, int col ) throws ValidationException
 	{
-		return addValidated( obj, row, col, this.getWorkBook().getWorkBook().getDefaultIxfe() );
+		return addValidated( obj, row, col, getWorkBook().getWorkBook().getDefaultIxfe() );
 	}
 
 	/**
@@ -1992,12 +1991,12 @@ public class WorkSheetHandle implements Handle
 	public CellHandle[] addValidated( Object obj, int row, int col, int formatId ) throws ValidationException
 	{
 		int[] rc = { row, col };
-		ValidationHandle vh = this.getValidationHandle( ExcelTools.formatLocation( rc ) );
+		ValidationHandle vh = getValidationHandle( ExcelTools.formatLocation( rc ) );
 		if( vh != null )
 		{
 			vh.isValid( obj );
 		}
-		return this.addValidated( obj, ExcelTools.formatLocation( rc ) );
+		return addValidated( obj, ExcelTools.formatLocation( rc ) );
 	}
 
 	/**
@@ -2025,7 +2024,7 @@ public class WorkSheetHandle implements Handle
 		if( obj instanceof java.util.Date )
 		{
 			String address = ExcelTools.formatLocation( rc );
-			this.add( (java.util.Date) obj, address, null );
+			add( (java.util.Date) obj, address, null );
 		}
 		else
 		{
@@ -2036,8 +2035,8 @@ public class WorkSheetHandle implements Handle
 		{
 			try
 			{
-				CellHandle c = this.getCell( row, col );
-				if( this.wbh.getFormulaCalculationMode() != wbh.CALCULATE_EXPLICIT )
+				CellHandle c = getCell( row, col );
+				if( wbh.getFormulaCalculationMode() != wbh.CALCULATE_EXPLICIT )
 				{
 					c.clearAffectedCells(); // blow out cache
 				}
@@ -2083,14 +2082,14 @@ public class WorkSheetHandle implements Handle
 		if( obj instanceof java.util.Date )
 		{
 			String address = ExcelTools.formatLocation( rc );
-			this.add( (java.util.Date) obj, address, null );
+			add( (java.util.Date) obj, address, null );
 		}
 		else
 		{
 			BiffRec reca = mysheet.addValue( obj, rc, formatId );
-			if( this.wbh.getFormulaCalculationMode() != wbh.CALCULATE_EXPLICIT )
+			if( wbh.getFormulaCalculationMode() != wbh.CALCULATE_EXPLICIT )
 			{
-				ReferenceTracker rt = this.wbh.getWorkBook().getRefTracker();
+				ReferenceTracker rt = wbh.getWorkBook().getRefTracker();
 				rt.clearAffectedFormulaCells( reca );
 			}
 				if( reca != null )
@@ -2110,7 +2109,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void setFastCellAdds( boolean fastadds )
 	{
-		this.mysheet.setFastCellAdds( fastadds );
+		mysheet.setFastCellAdds( fastadds );
 	}
 
 	/**
@@ -2118,7 +2117,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public boolean getFastCellAdds()
 	{
-		return this.mysheet.fastCellAdds;
+		return mysheet.fastCellAdds;
 	}
 
 	/**
@@ -2145,7 +2144,7 @@ public class WorkSheetHandle implements Handle
 		}
 		else if( obj instanceof Date )
 		{
-			this.add( (Date) obj, address, null );
+			add( (Date) obj, address, null );
 		}
 		else
 		{
@@ -2153,14 +2152,14 @@ public class WorkSheetHandle implements Handle
 		}
 
 		// fast-adds optimzation -- do not return a CellHandle
-		if( this.mysheet.fastCellAdds )
+		if( mysheet.fastCellAdds )
 		{
 			return null;
 		}
 
 		try
 		{
-			return this.getCell( address );
+			return getCell( address );
 		}
 		catch( CellNotFoundException e )
 		{
@@ -2191,7 +2190,7 @@ public class WorkSheetHandle implements Handle
 		}
 		else if( obj instanceof Date )
 		{
-			this.add( (Date) obj, address, null );
+			add( (Date) obj, address, null );
 		}
 		else
 		{
@@ -2203,8 +2202,8 @@ public class WorkSheetHandle implements Handle
 		{
 			try
 			{
-				CellHandle c = this.getCell( address );
-				if( this.wbh.getFormulaCalculationMode() != wbh.CALCULATE_EXPLICIT )
+				CellHandle c = getCell( address );
+				if( wbh.getFormulaCalculationMode() != wbh.CALCULATE_EXPLICIT )
 				{
 					c.clearAffectedCells(); // blow out cache
 				}
@@ -2240,12 +2239,12 @@ public class WorkSheetHandle implements Handle
 	 */
 	public CellHandle[] addValidated( Object obj, String address ) throws ValidationException
 	{
-		ValidationHandle vh = this.getValidationHandle( address );
+		ValidationHandle vh = getValidationHandle( address );
 		if( vh != null )
 		{
 			vh.isValid( obj );
 		}
-		CellHandle ch = this.add( obj, address );
+		CellHandle ch = add( obj, address );
 		List cxrs = ch.calculateAffectedCellsOnSheet();
 
 		//	 return the cellhandles
@@ -2281,7 +2280,7 @@ public class WorkSheetHandle implements Handle
 			fmt = "m/d/yyyy h:mm:ss";
 		}
 		Date dx = new Date( dt.getTime() );
-		return this.add( dx, address, fmt );
+		return add( dx, address, fmt );
 	}
 
 	/**
@@ -2308,7 +2307,7 @@ public class WorkSheetHandle implements Handle
 			fmt = "m/d/yyyy h:mm:ss";
 		}
 		Date dx = new Date( dt.getTime() );
-		return this.addValidated( dx, address, fmt );
+		return addValidated( dx, address, fmt );
 	}
 
 	/**
@@ -2399,11 +2398,11 @@ public class WorkSheetHandle implements Handle
 	 */
 	public CellHandle add( java.util.Date dt, int row, int col, String fmt )
 	{
-		double x = DateConverter.getXLSDateVal( dt, this.mybook.getDateFormat() );
-		CellHandle thisCell = this.add( x, row, col );
+		double x = DateConverter.getXLSDateVal( dt, mybook.getDateFormat() );
+		CellHandle thisCell = add( x, row, col );
 
 		// first handle fast adds
-		if( (thisCell == null) && this.mysheet.fastCellAdds )
+		if( (thisCell == null) && mysheet.fastCellAdds )
 		{
 			try
 			{
@@ -2411,7 +2410,7 @@ public class WorkSheetHandle implements Handle
 			}
 			catch( CellNotFoundException exp )
 			{
-				log.warn( "adding date to WorkSheet failed: " + this.getSheetName() + ":" + row + ":" + col );
+				log.warn( "adding date to WorkSheet failed: " + getSheetName() + ":" + row + ":" + col );
 				return null;
 			}
 		}
@@ -2471,12 +2470,12 @@ public class WorkSheetHandle implements Handle
 	public CellHandle[] addValidated( java.util.Date dt, int row, int col, String fmt ) throws ValidationException
 	{
 		int[] rc = { row, col };
-		ValidationHandle vh = this.getValidationHandle( ExcelTools.formatLocation( rc ) );
+		ValidationHandle vh = getValidationHandle( ExcelTools.formatLocation( rc ) );
 		if( vh != null )
 		{
 			vh.isValid( dt );
 		}
-		CellHandle ch = this.add( dt, row, col, fmt );
+		CellHandle ch = add( dt, row, col, fmt );
 		List cxrs = ch.calculateAffectedCellsOnSheet();
 
 		//FIXME: Use List.toArray instead of for loop
@@ -2499,8 +2498,8 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void remove()
 	{
-		mybook.removeWorkSheet( this.mysheet );
-		wbh.sheethandles.remove( this.getSheetName() );
+		mybook.removeWorkSheet( mysheet );
+		wbh.sheethandles.remove( getSheetName() );
 	}
 
 	/**
@@ -2512,7 +2511,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public CellRange getCellRange( String rangeName ) throws CellNotFoundException
 	{
-		CellRange cr = new CellRange( this.getSheetName() + "!" + rangeName, this.getWorkBook() );
+		CellRange cr = new CellRange( getSheetName() + "!" + rangeName, getWorkBook() );
 		return cr;
 	}
 
@@ -2537,7 +2536,7 @@ public class WorkSheetHandle implements Handle
 				}
 				else
 				{ // Handle MULBLANKS proper column number
-					if( cells[i] == aMul )
+					if( cells[i].equals( aMul ) )
 					{
 						c++;
 					}
@@ -2552,13 +2551,13 @@ public class WorkSheetHandle implements Handle
 			catch( CellNotFoundException cnfe )
 			{
 				// try harder
-				retval[i] = new CellHandle( cells[i], this.wbh );
+				retval[i] = new CellHandle( cells[i], wbh );
 				retval[i].setWorkSheetHandle( this );
 				if( cells[i].getOpcode() == XLSConstants.MULBLANK )
 				{
 					// handle Mulblanks: ref a range of cells; to get correct cell address,
 					// traverse thru range and set cellhandle ref to correct column
-					if( cells[i] == aMul )
+					if( cells[i].equals( aMul ) )
 					{
 						c++;
 					}
@@ -2583,7 +2582,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public FormulaHandle getFormula( String addr ) throws FormulaNotFoundException, CellNotFoundException
 	{
-		CellHandle c = this.getCell( addr );
+		CellHandle c = getCell( addr );
 		return c.getFormulaHandle();
 	}
 
@@ -2596,6 +2595,11 @@ public class WorkSheetHandle implements Handle
 	 */
 	public CellHandle getCell( String addr ) throws CellNotFoundException
 	{
+		if( addr == null )
+		{
+			throw new IllegalArgumentException("Cell address cannot be null!");
+		}
+
 		CellHandle ret = null; // 
 
 		BiffRec c = mysheet.getCell( addr.toUpperCase() );
@@ -2604,20 +2608,17 @@ public class WorkSheetHandle implements Handle
 			String sn = "";
 			try
 			{
-				sn = this.getSheetName();
+				sn = getSheetName();
 				sn += "!";
 			}
 			catch( Exception e )
 			{
 				;
 			}
-			if( addr == null )
-			{
-				addr = "undefined cell address";
-			}
+
 			throw new CellNotFoundException( sn + addr );
 		}
-		ret = new CellHandle( c, this.wbh );
+		ret = new CellHandle( c, wbh );
 		ret.setWorkSheetHandle( this );
 		return ret;
 	}
@@ -2661,12 +2662,12 @@ public class WorkSheetHandle implements Handle
 			{
 				return ret;
 			}
-			ret = new CellHandle( this.mysheet.getCell( row, col ), this.wbh );
+			ret = new CellHandle( mysheet.getCell( row, col ), wbh );
 			ret.setWorkSheetHandle( this );
 			//	cellhandles.put(address,ret);
 			return ret;
 		}
-		ret = new CellHandle( this.mysheet.getCell( row, col ), this.wbh );
+		ret = new CellHandle( mysheet.getCell( row, col ), wbh );
 		ret.setWorkSheetHandle( this );
 		return ret;
 	}
@@ -2679,8 +2680,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void moveCell( CellHandle c, String addr ) throws CellPositionConflictException
 	{
-		this.mysheet.moveCell( c.getCellAddress(), addr );
-		// c.moveTo(addr); < redundant call to above.  070104 -jm
+		mysheet.moveCell( c.getCellAddress(), addr );
 	}
 
 	/**
@@ -2822,7 +2822,7 @@ public class WorkSheetHandle implements Handle
 		CellHandle c = null;
 		try
 		{
-			c = this.getCell( CellAddress );
+			c = getCell( CellAddress );
 		}
 		catch( CellNotFoundException e )
 		{
@@ -2838,12 +2838,12 @@ public class WorkSheetHandle implements Handle
 	 */
 	public boolean getShowFormulaResults()
 	{
-		return this.mysheet.getWindow2().getShowFormulaResults();
+		return mysheet.getWindow2().getShowFormulaResults();
 	}
 
 	public void setShowFormulaResults( boolean b )
 	{
-		this.mysheet.getWindow2().setShowFormulaResults( b );
+		mysheet.getWindow2().setShowFormulaResults( b );
 	}
 
 	/**
@@ -2853,7 +2853,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public boolean getShowGridlines()
 	{
-		return this.mysheet.getWindow2().getShowGridlines();
+		return mysheet.getWindow2().getShowGridlines();
 	}
 
 	/**
@@ -2863,7 +2863,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void setShowGridlines( boolean b )
 	{
-		this.mysheet.getWindow2().setShowGridlines( b );
+		mysheet.getWindow2().setShowGridlines( b );
 	}
 
 	/**
@@ -2873,7 +2873,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public boolean getShowSheetHeaders()
 	{
-		return this.mysheet.getWindow2().getShowSheetHeaders();
+		return mysheet.getWindow2().getShowSheetHeaders();
 	}
 
 	/**
@@ -2883,7 +2883,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void setShowSheetHeaders( boolean b )
 	{
-		this.mysheet.getWindow2().setShowSheetHeaders( b );
+		mysheet.getWindow2().setShowSheetHeaders( b );
 	}
 
 	/**
@@ -2893,7 +2893,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public boolean getShowZeroValues()
 	{
-		return this.mysheet.getWindow2().getShowZeroValues();
+		return mysheet.getWindow2().getShowZeroValues();
 	}
 
 	/**
@@ -2903,7 +2903,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void setShowZeroValues( boolean b )
 	{
-		this.mysheet.getWindow2().setShowZeroValues( b );
+		mysheet.getWindow2().setShowZeroValues( b );
 	}
 
 	/**
@@ -2913,7 +2913,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public boolean getShowOutlineSymbols()
 	{
-		return this.mysheet.getWindow2().getShowOutlineSymbols();
+		return mysheet.getWindow2().getShowOutlineSymbols();
 	}
 
 	/**
@@ -2923,7 +2923,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void setShowOutlineSymbols( boolean b )
 	{
-		this.mysheet.getWindow2().setShowOutlineSymbols( b );
+		mysheet.getWindow2().setShowOutlineSymbols( b );
 	}
 
 	/**
@@ -2933,7 +2933,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public boolean getShowInNormalView()
 	{
-		return this.mysheet.getWindow2().getShowInNormalView();
+		return mysheet.getWindow2().getShowInNormalView();
 	}
 
 	/**
@@ -2943,7 +2943,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void setShowInNormalView( boolean b )
 	{
-		this.mysheet.getWindow2().setShowInNormalView( !b ); // opposite of expected behavior
+		mysheet.getWindow2().setShowInNormalView( !b ); // opposite of expected behavior
 	}
 
 	/**
@@ -2953,7 +2953,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public boolean hasFrozenPanes()
 	{
-		return this.mysheet.getWindow2().getFreezePanes();
+		return mysheet.getWindow2().getFreezePanes();
 	}
 
 	/**
@@ -2963,10 +2963,10 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void setHasFrozenPanes( boolean b )
 	{
-		this.mysheet.getWindow2().setFreezePanes( b );
-		if( !b && (this.mysheet.getPane() != null) )
+		mysheet.getWindow2().setFreezePanes( b );
+		if( !b && (mysheet.getPane() != null) )
 		{
-			this.mysheet.removePane();    // remove pane rec if unfreezing ... can also convert to plain splits, but a bit more complicated ...
+			mysheet.removePane();    // remove pane rec if unfreezing ... can also convert to plain splits, but a bit more complicated ...
 		}
 	}
 
@@ -2977,7 +2977,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void setZoom( float zm )
 	{
-		this.mysheet.getScl().setZoom( zm );
+		mysheet.getScl().setZoom( zm );
 	}
 
 	/**
@@ -2988,9 +2988,9 @@ public class WorkSheetHandle implements Handle
 	 */
 	public String getTopLeftCell()
 	{
-		if( this.mysheet.getPane() != null )
+		if( mysheet.getPane() != null )
 		{
-			return this.mysheet.getPane().getTopLeftCell();
+			return mysheet.getPane().getTopLeftCell();
 		}
 		return null;
 	}
@@ -3002,7 +3002,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public float getZoom()
 	{
-		return this.mysheet.getScl().getZoom();
+		return mysheet.getScl().getZoom();
 	}
 
 	/**
@@ -3012,11 +3012,11 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void freezeRow( int row )
 	{
-		if( this.mysheet.getPane() == null )
+		if( mysheet.getPane() == null )
 		{
-			this.mysheet.setPane( null );    // will add new
+			mysheet.setPane( null );    // will add new
 		}
-		this.mysheet.getPane().setFrozenRow( row );
+		mysheet.getPane().setFrozenRow( row );
 	}
 
 	/**
@@ -3026,11 +3026,11 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void freezeCol( int col )
 	{
-		if( this.mysheet.getPane() == null )
+		if( mysheet.getPane() == null )
 		{
-			this.mysheet.setPane( null );    // will add new
+			mysheet.setPane( null );    // will add new
 		}
-		this.mysheet.getPane().setFrozenColumn( col );
+		mysheet.getPane().setFrozenColumn( col );
 	}
 
 	/**
@@ -3043,11 +3043,11 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void splitCol( int col, int splitpos )
 	{
-		if( this.mysheet.getPane() == null )
+		if( mysheet.getPane() == null )
 		{
-			this.mysheet.setPane( null );    // will add new
+			mysheet.setPane( null );    // will add new
 		}
-		this.mysheet.getPane().setSplitColumn( col, splitpos );
+		mysheet.getPane().setSplitColumn( col, splitpos );
 	}
 
 	/**
@@ -3060,11 +3060,11 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void splitRow( int row, int splitpos )
 	{
-		if( this.mysheet.getPane() == null )
+		if( mysheet.getPane() == null )
 		{
-			this.mysheet.setPane( null );    // will add new
+			mysheet.setPane( null );    // will add new
 		}
-		this.mysheet.getPane().setSplitRow( row, splitpos );
+		mysheet.getPane().setSplitRow( row, splitpos );
 	}
 
 	/**
@@ -3076,11 +3076,11 @@ public class WorkSheetHandle implements Handle
 	 */
 	public int getSplitRowLocation()
 	{
-		if( this.mysheet.getPane() == null )
+		if( mysheet.getPane() == null )
 		{
 			return -1;
 		}
-		return this.mysheet.getPane().getVisibleRow();
+		return mysheet.getPane().getVisibleRow();
 	}
 
 	/**
@@ -3092,11 +3092,11 @@ public class WorkSheetHandle implements Handle
 	 */
 	public int getSplitColLocation()
 	{
-		if( this.mysheet.getPane() == null )
+		if( mysheet.getPane() == null )
 		{
 			return -1;
 		}
-		return this.mysheet.getPane().getVisibleCol();
+		return mysheet.getPane().getVisibleCol();
 	}
 
 	/**
@@ -3107,11 +3107,11 @@ public class WorkSheetHandle implements Handle
 	 */
 	public int getSplitLocation()
 	{
-		if( this.mysheet.getPane() == null )
+		if( mysheet.getPane() == null )
 		{
 			return -1;
 		}
-		return this.mysheet.getPane().getRowSplitLoc();
+		return mysheet.getPane().getRowSplitLoc();
 	}
 
 	/**
@@ -3121,7 +3121,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public boolean getManualGridLineColor()
 	{
-		return this.mysheet.getWindow2().getManualGridLineColor();
+		return mysheet.getWindow2().getManualGridLineColor();
 	}
 
 	/**
@@ -3131,7 +3131,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public void setManualGridLineColor( boolean b )
 	{
-		this.mysheet.getWindow2().setManualGridLineColor( b );
+		mysheet.getWindow2().setManualGridLineColor( b );
 	}
 
 	public CompatibleVector getAddedrows()
@@ -3162,11 +3162,11 @@ public class WorkSheetHandle implements Handle
 
 		if( (cellAddress != null) && (cellAddress.indexOf( "!" ) == -1) )
 		{
-			cellAddress = this.getSheetName() + "!" + cellAddress;
+			cellAddress = getSheetName() + "!" + cellAddress;
 		}
-		Condfmt cfm = this.mysheet.createCondfmt( cellAddress, this.wbh );
+		Condfmt cfm = mysheet.createCondfmt( cellAddress, wbh );
 
-		Cf cfr = this.mysheet.createCf( cfm );
+		Cf cfr = mysheet.createCf( cfm );
 		cfr.setOperator( operator );
 
 		// only place this is done..
@@ -3191,7 +3191,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public CommentHandle createNote( String address, String txt, String author )
 	{
-		Note n = this.getMysheet().createNote( address, txt, author );
+		Note n = getMysheet().createNote( address, txt, author );
 		return new CommentHandle( n );
 	}
 
@@ -3207,7 +3207,7 @@ public class WorkSheetHandle implements Handle
 	 */
 	public CommentHandle createNote( String address, Unicodestring txt, String author )
 	{
-		Note n = this.getMysheet().createNote( address, txt, author );
+		Note n = getMysheet().createNote( address, txt, author );
 		return new CommentHandle( n );
 	}
 
@@ -3237,8 +3237,8 @@ public class WorkSheetHandle implements Handle
 	 */
 	public PivotTableHandle createPivotTable( String name, String range, int sId )
 	{
-		Sxview sx = getMysheet().addPivotTable( range, this.wbh, sId, name );
-		PivotTableHandle pth = new PivotTableHandle( sx, this.getWorkBook() );
+		Sxview sx = getMysheet().addPivotTable( range, wbh, sId, name );
+		PivotTableHandle pth = new PivotTableHandle( sx, getWorkBook() );
 		pth.setSourceDataRange( range );
 		return pth;
 	}
@@ -3254,9 +3254,9 @@ public class WorkSheetHandle implements Handle
 	 */
 	public ValidationHandle getValidationHandle( String cellAddress )
 	{
-		if( this.mysheet.getDvalRec() != null )
+		if( mysheet.getDvalRec() != null )
 		{
-			Dv d = this.mysheet.getDvalRec().getDv( cellAddress );
+			Dv d = mysheet.getDvalRec().getDv( cellAddress );
 			if( d == null )
 			{
 				return null;
@@ -3290,7 +3290,7 @@ public class WorkSheetHandle implements Handle
 	                                                String firstCondition,
 	                                                String secondCondition )
 	{
-		Dv d = this.mysheet.createDv( cellAddress );
+		Dv d = mysheet.createDv( cellAddress );
 		d.setValType( valueType );
 		/*// KSC: APPARENTLY NOT NEEDED
         if (valueType==ValidationHandle.VALUE_USER_DEFINED_LIST) { // ensure Mso Drop-downs are defined        	
@@ -3421,7 +3421,7 @@ public class WorkSheetHandle implements Handle
 
 	protected Boundsheet getBoundsheet()
 	{
-		return this.mysheet;
+		return mysheet;
 	}
 
 	/**

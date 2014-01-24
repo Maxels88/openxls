@@ -88,13 +88,13 @@ public class Window1 extends com.extentech.formats.XLS.XLSRecord
 	{
 		mybs = bs;
 		int t = mybs.getSheetNum();
-		Boundsheet[] bounds = this.getWorkBook().getWorkSheets();
+		Boundsheet[] bounds = getWorkBook().getWorkSheets();
 		for( Boundsheet bound : bounds )
 		{
 			bound.getWindow2().setSelected( false );
 		}
 		mybs.getWindow2().setSelected( true );
-		byte[] mydata = this.getData();
+		byte[] mydata = getData();
 		itabCur = (short) t;
 		byte[] tabbytes = ByteTools.shortToLEBytes( (short) t );
 		mydata[10] = tabbytes[0];
@@ -110,7 +110,7 @@ public class Window1 extends com.extentech.formats.XLS.XLSRecord
 	 */
 	public void setFirstTab( int t )
 	{
-		byte[] mydata = this.getData();
+		byte[] mydata = getData();
 		itabFirst = (short) t;
 		byte[] tabbytes = ByteTools.shortToLEBytes( (short) t );
 		mydata[12] = tabbytes[0];
@@ -124,15 +124,15 @@ public class Window1 extends com.extentech.formats.XLS.XLSRecord
 	public void init()
 	{
 		super.init();
-		xWn = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		yWn = ByteTools.readShort( this.getByteAt( 2 ), this.getByteAt( 3 ) );
-		dxWn = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		dyWn = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
-		grbit = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
-		itabCur = ByteTools.readShort( this.getByteAt( 10 ), this.getByteAt( 11 ) );
-		itabFirst = ByteTools.readShort( this.getByteAt( 12 ), this.getByteAt( 13 ) );
-		ctabSel = ByteTools.readShort( this.getByteAt( 14 ), this.getByteAt( 15 ) );
-		wTabRatio = ByteTools.readShort( this.getByteAt( 16 ), this.getByteAt( 17 ) );
+		xWn = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		yWn = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );
+		dxWn = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+		dyWn = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
+		grbit = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );
+		itabCur = ByteTools.readShort( getByteAt( 10 ), getByteAt( 11 ) );
+		itabFirst = ByteTools.readShort( getByteAt( 12 ), getByteAt( 13 ) );
+		ctabSel = ByteTools.readShort( getByteAt( 14 ), getByteAt( 15 ) );
+		wTabRatio = ByteTools.readShort( getByteAt( 16 ), getByteAt( 17 ) );
 
 	}
 
@@ -158,7 +158,7 @@ public class Window1 extends com.extentech.formats.XLS.XLSRecord
 			grbit &= ~0x20;
 		}
 		byte[] b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[8] = b[0];
-		this.getData()[9] = b[1];
+		getData()[8] = b[0];
+		getData()[9] = b[1];
 	}
 }

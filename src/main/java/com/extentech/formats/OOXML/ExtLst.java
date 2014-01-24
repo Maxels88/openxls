@@ -47,13 +47,13 @@ public class ExtLst implements OOXMLElement
 	public ExtLst( HashMap<String, String> attrs, String ns )
 	{
 		this.attrs = attrs;
-		this.nameSpace = ns;
+		nameSpace = ns;
 	}
 
 	public ExtLst( ExtLst e )
 	{
-		this.attrs = e.attrs;
-		this.nameSpace = e.nameSpace;
+		attrs = e.attrs;
+		nameSpace = e.nameSpace;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -104,7 +104,7 @@ public class ExtLst implements OOXMLElement
 	 */
 	public void setNamespace( String ns )
 	{
-		this.nameSpace = ns;
+		nameSpace = ns;
 	}
 
 	@Override

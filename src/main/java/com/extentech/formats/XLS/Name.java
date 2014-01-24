@@ -134,21 +134,21 @@ public final class Name extends XLSRecord
 	public Name( WorkBook bk, String namestr )
 	{
 		byte[] bl = PROTOTYPE_NAME_BYTES;
-		this.setData( bl );
-		this.setOpcode( NAME );
-		this.setLength( (short) (bl.length) );
-		this.setWorkBook( bk );
+		setData( bl );
+		setOpcode( NAME );
+		setLength( (short) (bl.length) );
+		setWorkBook( bk );
 		try
 		{
-			this.setExternsheet( bk.getExternSheet() );
+			setExternsheet( bk.getExternSheet() );
 		}
 		catch( WorkSheetNotFoundException x )
 		{
 			log.warn( "Name could not reference WorkBook Externsheet." + x.toString() );
 		}
 
-		this.init( false );
-		this.setName( namestr );
+		init( false );
+		setName( namestr );
 		bk.insertName( this );
 	}
 
@@ -162,19 +162,19 @@ public final class Name extends XLSRecord
 	public Name( WorkBook bk, boolean b )
 	{
 		byte[] bl = FILLER_NAME_BYTES;
-		this.setData( bl );
-		this.setOpcode( NAME );
-		this.setLength( (short) (bl.length) );
-		this.setWorkBook( bk );
+		setData( bl );
+		setOpcode( NAME );
+		setLength( (short) (bl.length) );
+		setWorkBook( bk );
 		try
 		{
-			this.setExternsheet( bk.getExternSheet() );
+			setExternsheet( bk.getExternSheet() );
 		}
 		catch( WorkSheetNotFoundException x )
 		{
 			log.warn( "Name could not reference WorkBook Externsheet." + x.toString() );
 		}
-		this.init();
+		init();
 		bk.insertName( this );
 	}
 
@@ -199,7 +199,7 @@ public final class Name extends XLSRecord
 
 	public void updateIlblListeners()
 	{
-		short ilbl = (short) this.getWorkBook().getNameNumber( this.getName() );
+		short ilbl = (short) getWorkBook().getNameNumber( getName() );
 		Iterator i = ilblListeners.iterator();
 		while( i.hasNext() )
 		{
@@ -226,20 +226,20 @@ public final class Name extends XLSRecord
 	public void init( boolean initExpression )
 	{
 		super.init();
-		this.getData();
+		getData();
 		//  Logger.logInfo("[" + ByteTools.getByteString(data, false) + "]");
 
-		grbit = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-		chKey = this.getByteAt( 2 );
-		cch = this.getByteAt( 3 );
-		cce = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
-		ixals = ByteTools.readShort( this.getByteAt( 6 ), this.getByteAt( 7 ) );
-		itab = ByteTools.readShort( this.getByteAt( 8 ), this.getByteAt( 9 ) );
+		grbit = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
+		chKey = getByteAt( 2 );
+		cch = getByteAt( 3 );
+		cce = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+		ixals = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
+		itab = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );
 
-		cchCustMenu = this.getByteAt( 10 );
-		cchDescript = this.getByteAt( 11 );
-		cchHelpTopic = this.getByteAt( 12 );
-		cchStatusText = this.getByteAt( 13 );
+		cchCustMenu = getByteAt( 10 );
+		cchDescript = getByteAt( 11 );
+		cchHelpTopic = getByteAt( 12 );
+		cchStatusText = getByteAt( 13 );
 
 		if( (grbit & 0x20) == 0x20 )
 		{
@@ -247,15 +247,15 @@ public final class Name extends XLSRecord
 		}
 
 		int pos = 15;
-		if( this.getByteAt( 14 ) == 0x1 )
+		if( getByteAt( 14 ) == 0x1 )
 		{
 			cch *= 2;
 		}// rich byte;
 		// get the Name
 		try
 		{
-			byte[] namebytes = this.getBytesAt( pos, cch );
-			if( this.getByteAt( 14 ) == 0x1 )
+			byte[] namebytes = getBytesAt( pos, cch );
+			if( getByteAt( 14 ) == 0x1 )
 			{
 				rgch = new String( namebytes, UNICODEENCODING );
 			}
@@ -325,12 +325,12 @@ public final class Name extends XLSRecord
 			{
 				rgch = new String( namebytes );
 			}
-				log.info( this.getName() );
+				log.info( getName() );
 			pos += cch;
 
 			// get the parsed expression
 		        /*byte[] */
-			expressionbytes = this.getBytesAt( pos, cce );
+			expressionbytes = getBytesAt( pos, cce );
 			if( initExpression )
 			{
 				parseExpression();
@@ -339,7 +339,7 @@ public final class Name extends XLSRecord
 		}
 		catch( Exception e )
 		{
-				log.warn( "problem reading Name record expression for Name:" + this.getName() + " " + e );
+				log.warn( "problem reading Name record expression for Name:" + getName() + " " + e );
 		}
 	}
 
@@ -351,7 +351,6 @@ public final class Name extends XLSRecord
 		if( (expressionbytes != null) && (expression == null) )
 		{
 			expression = ExpressionParser.parseExpression( expressionbytes, this );
-				log.debug( this.getName() + ":" + this.getDefinition() );
 			if( expression == null )
 			{
 				PtgMystery gpg = new PtgMystery();
@@ -369,7 +368,7 @@ public final class Name extends XLSRecord
 		{
 			try
 			{
-				this.initPtga();
+				initPtga();
 			}
 			catch( Exception e )
 			{
@@ -379,7 +378,7 @@ public final class Name extends XLSRecord
 		if( ptga instanceof PtgRef3d )
 		{
 			PtgRef3d p3d = (PtgRef3d) ptga;
-			Boundsheet b = p3d.getSheet( this.getWorkBook() );
+			Boundsheet b = p3d.getSheet( getWorkBook() );
 			Boundsheet[] ret = new Boundsheet[1];
 			ret[0] = b;
 			return ret;
@@ -387,12 +386,12 @@ public final class Name extends XLSRecord
 		if( ptga instanceof PtgArea3d )
 		{
 			PtgArea3d p3d = (PtgArea3d) ptga;
-			return p3d.getSheets( this.getWorkBook() );
+			return p3d.getSheets( getWorkBook() );
 		}
 		if( ptga instanceof PtgMemFunc )
 		{
 			PtgMemFunc p = (PtgMemFunc) ptga;
-			return p.getSheets( this.getWorkBook() );
+			return p.getSheets( getWorkBook() );
 		}
 		return null;
 	}
@@ -405,7 +404,7 @@ public final class Name extends XLSRecord
 	 */
 	public String toString()
 	{
-		return this.getName();
+		return getName();
 	}
 
 	/**
@@ -415,13 +414,13 @@ public final class Name extends XLSRecord
 	 */
 	public String getExpressionString()
 	{
-		if( ((this.expression == null) || (this.expression.size() == 0)) && (this.getCachedOOXMLExpression() != null) )
+		if( ((expression == null) || (expression.size() == 0)) && (getCachedOOXMLExpression() != null) )
 		{
-			return "=" + this.getCachedOOXMLExpression();
+			return "=" + getCachedOOXMLExpression();
 		}
-		if( this.expression != null )
+		if( expression != null )
 		{
-			return FormulaParser.getExpressionString( this.expression );
+			return FormulaParser.getExpressionString( expression );
 		}
 		return "=";
 	}
@@ -433,7 +432,7 @@ public final class Name extends XLSRecord
 	 */
 	public Stack getExpression()
 	{
-		return this.expression;
+		return expression;
 	}
 
 	/**
@@ -442,7 +441,7 @@ public final class Name extends XLSRecord
 	public void setExpression( Stack x )
 	{
 		expression = x;
-		this.updatePtgs();
+		updatePtgs();
 	}
 
 	/**
@@ -458,7 +457,7 @@ public final class Name extends XLSRecord
 		{
 			try
 			{
-				this.initPtga();
+				initPtga();
 			}
 			catch( Exception e )
 			{
@@ -471,7 +470,7 @@ public final class Name extends XLSRecord
 		}
 		if( ptga instanceof PtgRefErr3d )        // 20080228 KSC: return Exception rather than null upon Deleted Named Range
 		{
-			throw new com.extentech.formats.XLS.CellNotFoundException( "Named Range " + this.getName() + " has been deleted or it's referenced cell is invalid" );    // JM - why not return loc? 'Cause it's deleted!!! :) // 20071203 KSC
+			throw new com.extentech.formats.XLS.CellNotFoundException( "Named Range " + getName() + " has been deleted or it's referenced cell is invalid" );    // JM - why not return loc? 'Cause it's deleted!!! :) // 20071203 KSC
 		}
 		if( ptga instanceof PtgArea3d )
 		{
@@ -491,7 +490,7 @@ public final class Name extends XLSRecord
 	 */
 	public boolean isStringReference()
 	{
-		if( (this.expression.size() == 1) && (this.expression.get( 0 ) instanceof PtgStr) )
+		if( (expression.size() == 1) && (expression.get( 0 ) instanceof PtgStr) )
 		{
 			return true;
 		}
@@ -511,12 +510,12 @@ public final class Name extends XLSRecord
 	{
 		try
 		{
-			this.setLocation( xpression, false );
+			setLocation( xpression, false );
 		}
 		catch( FunctionNotSupportedException e )
 		{
 			log.warn( "Unable to parse Name record expression: " + xpression );
-			this.cachedOOXMLExpression = xpression;
+			cachedOOXMLExpression = xpression;
 		}
 	}
 
@@ -540,7 +539,7 @@ public final class Name extends XLSRecord
 		}
 		if( ptga == null )
 		{
-			this.initPtga();
+			initPtga();
 		}
 		if( ptga != null )
 		{
@@ -550,7 +549,7 @@ public final class Name extends XLSRecord
 		try
 		{// can be a named value constant
 			Formula f = new Formula();
-			f.setWorkBook( this.wkbook );
+			f.setWorkBook( wkbook );
 			Stack ptgs = FormulaParser.getPtgsFromFormulaString( f, newloc );
 			if( ptgs.size() == 1 )
 			{    // usual case of 1 ref or 1 PtgMemFunc (complex expression)
@@ -587,7 +586,7 @@ public final class Name extends XLSRecord
 					{
 						if( aB != null )
 						{
-							this.getWorkBook().getRefTracker().clearAffectedFormulaCells( aB );
+							getWorkBook().getRefTracker().clearAffectedFormulaCells( aB );
 						}
 					}
 				}
@@ -602,7 +601,7 @@ public final class Name extends XLSRecord
 			expression.add( ptga );    // update expression with new Ptg -- assume there's only 1 ptg!!
 			try
 			{
-				this.externsheet.addPtgListener( (IxtiListener) ptga );
+				externsheet.addPtgListener( (IxtiListener) ptga );
 			}
 			catch( Exception e )
 			{
@@ -613,7 +612,7 @@ public final class Name extends XLSRecord
 		{
 			initPtga();    // will calculate and set ptga to
 		}
-		this.updatePtgs();
+		updatePtgs();
 	}
 
 	// remove the name
@@ -622,7 +621,7 @@ public final class Name extends XLSRecord
 	public boolean remove( boolean b )
 	{
 		boolean ret = super.remove( true );
-		this.wkbook.removeName( this );
+		wkbook.removeName( this );
 		return ret;
 	}
 
@@ -637,10 +636,10 @@ public final class Name extends XLSRecord
 	 */
 	void setExternsheet( Externsheet e ) throws WorkSheetNotFoundException
 	{
-		this.externsheet = e;
+		externsheet = e;
 		if( e == null )
 		{
-			this.externsheet = wkbook.getExternSheet( true );
+			externsheet = wkbook.getExternSheet( true );
 		}
 	}
 
@@ -653,7 +652,7 @@ public final class Name extends XLSRecord
 	{
 		if( expression == null )
 		{
-			this.init();
+			init();
 		}
 		if( (expression == null) || (expression.size() == 0) )
 		{
@@ -661,7 +660,7 @@ public final class Name extends XLSRecord
 		}
 		Ptg p;
 		//if the usual case of 1 reference-type (area, ref, memfunc...) ptg:
-		if( this.expression.size() == 1 )
+		if( expression.size() == 1 )
 		{
 			p = (Ptg) expression.get( 0 );
 			if( p.getIsReference() )
@@ -671,7 +670,7 @@ public final class Name extends XLSRecord
 		}
 		else
 		{ // otherwise it's a formula expression
-			p = FormulaCalculator.calculateFormulaPtg( this.expression );
+			p = FormulaCalculator.calculateFormulaPtg( expression );
 			if( p.getIsReference() )
 			{
 				ptga = p;
@@ -725,14 +724,14 @@ public final class Name extends XLSRecord
 	{
 		if( ptga == null )
 		{
-			this.initPtga();
+			initPtga();
 		}
 		if( ptga instanceof PtgArea3d )
 		{    // PtgRef3d,etc
 			PtgArea3d p = (PtgArea3d) ptga;
 			try
 			{
-				this.getWorkBook().getWorkSheetByName( p.getSheetName() );
+				getWorkBook().getWorkSheetByName( p.getSheetName() );
 				ptga.setLocation( ptga.toString() );
 			}
 			catch( WorkSheetNotFoundException we )
@@ -755,10 +754,10 @@ public final class Name extends XLSRecord
 		try
 		{
 			int modnamelen = 0;
-			byte[] dta = this.getData();
+			byte[] dta = getData();
 			byte[] namebytes;
 			boolean isuni = false;
-			if( this.getByteAt( 14 ) == 0x1 )
+			if( getByteAt( 14 ) == 0x1 )
 			{    // 20100604 KSC: added handling of unicode
 				namebytes = newname.getBytes( UNICODEENCODING );
 				isuni = true;
@@ -784,7 +783,7 @@ public final class Name extends XLSRecord
 			{
 				newbytes[3] = (byte) (cch / 2);
 			}
-			this.setData( newbytes );
+			setData( newbytes );
 			rgch = newname;
 			// search for dreferenced names to rehook up
 		}
@@ -823,7 +822,7 @@ public final class Name extends XLSRecord
 	 */
 	public Object getCalculatedValue() throws FunctionNotSupportedException
 	{
-		return FormulaCalculator.calculateFormula( this.expression );
+		return FormulaCalculator.calculateFormula( expression );
 
 	}
 
@@ -870,7 +869,7 @@ public final class Name extends XLSRecord
 		}
 		catch( Exception e )
 		{
-			log.warn( "problem updating Name record expression for Name:" + this.getName() );
+			log.warn( "problem updating Name record expression for Name:" + getName() );
 		}
 
 	}
@@ -884,7 +883,7 @@ public final class Name extends XLSRecord
 		{
 			return;
 		}
-		byte[] rkdata = this.getData();
+		byte[] rkdata = getData();
 		int offset = 15 + cch; // the start of the parsed expression
 		int sz = offset;
 		int sz2 = rkdata.length - (offset + cce);
@@ -942,20 +941,20 @@ public final class Name extends XLSRecord
 		{
 			System.arraycopy( rkdata, (rkdata.length - sz2), updated, offset, sz2 );
 		}
-		this.setData( updated );
+		setData( updated );
 	}
 
 	@Override
 	public String getCellAddress()
 	{
-		if( this.getSheet() != null )
+		if( getSheet() != null )
 		{
-			return this.getSheet() + "!" + this.getName();
+			return getSheet() + "!" + getName();
 		}
 		//try{
 		//	return this.getLocation();
 		//}catch(Exception e){
-		return this.getName(); // ok
+		return getName(); // ok
 		//}
 	}
 
@@ -1026,7 +1025,7 @@ public final class Name extends XLSRecord
 			}
 			// do nothing
 		}
-		this.updatePtgs();
+		updatePtgs();
 	}
 
 	/**
@@ -1059,7 +1058,7 @@ public final class Name extends XLSRecord
 
 	public boolean setLocationPolicy( String loc, int l )
 	{
-		List dx = this.getPtgsByLocation( loc );
+		List dx = getPtgsByLocation( loc );
 		Iterator lx = dx.iterator();
 		while( lx.hasNext() )
 		{
@@ -1116,8 +1115,8 @@ public final class Name extends XLSRecord
 		newData[1] = grbytes[1];
 		newData[3] = 0x1;            // cch
 		newData[15] = builtinType;
-		this.setData( newData );
-		this.init();
+		setData( newData );
+		init();
 	}
 
 	public short getIxals()
@@ -1129,10 +1128,10 @@ public final class Name extends XLSRecord
 	{
 		this.ixals = ixals;
 		byte[] b = ByteTools.shortToLEBytes( ixals );
-		byte[] rkdata = this.getData();
+		byte[] rkdata = getData();
 		rkdata[6] = b[0];
 		rkdata[7] = b[1];
-		this.setData( rkdata );
+		setData( rkdata );
 	}
 
 	/**
@@ -1149,8 +1148,8 @@ public final class Name extends XLSRecord
 	{
 		this.itab = itab;
 		byte[] b = ByteTools.shortToLEBytes( itab );
-		this.getData()[8] = b[0];
-		this.getData()[9] = b[1];
+		getData()[8] = b[0];
+		getData()[9] = b[1];
 	}
 
 	/**
@@ -1164,23 +1163,23 @@ public final class Name extends XLSRecord
 	public Name( WorkBook bk, String namestr, String value, int scope )
 	{
 		byte[] bl = PROTOTYPE_NAME_BYTES;
-		this.setData( bl );
-		this.setOpcode( NAME );
-		this.setLength( (short) (bl.length) );
-		this.setItab( (short) scope );
-		this.setWorkBook( bk );
+		setData( bl );
+		setOpcode( NAME );
+		setLength( (short) (bl.length) );
+		setItab( (short) scope );
+		setWorkBook( bk );
 		try
 		{
-			this.setExternsheet( bk.getExternSheet() );
+			setExternsheet( bk.getExternSheet() );
 		}
 		catch( WorkSheetNotFoundException x )
 		{
 			log.warn( "Name could not reference WorkBook Externsheet." + x.toString() );
 		}
-		this.init();
-		this.setName( namestr );
+		init();
+		setName( namestr );
 		bk.insertName( this );    // calls addRecord which calls addName
-		this.initializeExpression( value );
+		initializeExpression( value );
 	}
 
 	/**
@@ -1207,25 +1206,25 @@ public final class Name extends XLSRecord
 	 */
 	public void setNewScope( int newitab ) throws WorkSheetNotFoundException
 	{
-		if( this.itab == 0 )
+		if( itab == 0 )
 		{
-			this.getWorkBook().removeLocalName( this );
+			getWorkBook().removeLocalName( this );
 		}
 		else
 		{
-			this.getWorkBook().getWorkSheetByNumber( this.itab - 1 ).removeLocalName( this );
+			getWorkBook().getWorkSheetByNumber( itab - 1 ).removeLocalName( this );
 			;
 		}
 		if( newitab == 0 )
 		{
-			this.getWorkBook().addLocalName( this );
+			getWorkBook().addLocalName( this );
 		}
 		else
 		{
-			this.getWorkBook().getWorkSheetByNumber( newitab - 1 ).addLocalName( this );
+			getWorkBook().getWorkSheetByNumber( newitab - 1 ).addLocalName( this );
 			;
 		}
-		this.setItab( (short) newitab );
+		setItab( (short) newitab );
 	}
 
 	/**
@@ -1234,7 +1233,7 @@ public final class Name extends XLSRecord
 	@Override
 	public void close()
 	{
-		this.externsheet = null;
+		externsheet = null;
 		if( ptga != null )
 		{
 			if( ptga instanceof PtgRef )
@@ -1269,6 +1268,6 @@ public final class Name extends XLSRecord
 	@Override
 	protected void finalize()
 	{
-		this.close();
+		close();
 	}
 }

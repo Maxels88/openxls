@@ -130,7 +130,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	public void init()
 	{
 		super.init();
-		wType = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		wType = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 	}
 
 	private byte[] PROTOTYPE_BYTES = new byte[]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -148,8 +148,8 @@ public class Axis extends GenericChartObject implements ChartObject
 			wType = XAXIS;        // 20090108 KSC: XVALAXIS is type of X axis with VAL records
 		}
 		byte[] b = ByteTools.shortToLEBytes( (short) wType );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	public static XLSRecord getPrototype( int wType )
@@ -380,7 +380,7 @@ public class Axis extends GenericChartObject implements ChartObject
 			if( linkedtd != null )
 			{
 				Fontx fx = (Fontx) Chart.findRec( linkedtd.chartArr, Fontx.class );
-				return this.getParentChart().getWorkBook().getFont( fx.getIfnt() );
+				return getParentChart().getWorkBook().getFont( fx.getIfnt() );
 			}
 		}
 		catch( Exception e )
@@ -416,7 +416,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		}
 		if( (linkedtd == null) && add )
 		{
-			linkedtd = (TextDisp) TextDisp.getPrototype( tdtype, "", this.wkbook );
+			linkedtd = (TextDisp) TextDisp.getPrototype( tdtype, "", wkbook );
 			if( pos < 0 )
 			{
 				pos = Chart.findRecPosition( ap.chartArr, PlotArea.class );
@@ -435,7 +435,7 @@ public class Axis extends GenericChartObject implements ChartObject
 			{
 				pos = Chart.findRecPosition( ap.chartArr, ChartFormat.class );
 			}
-			linkedtd.setParentChart( this.getParentChart() );
+			linkedtd.setParentChart( getParentChart() );
 			ap.chartArr.add( pos, linkedtd );
 		}
 	}
@@ -449,7 +449,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	{
 		if( l == null )
 		{
-			this.removeTitle();
+			removeTitle();
 			return;
 		}
 		if( linkedtd == null )
@@ -484,7 +484,7 @@ public class Axis extends GenericChartObject implements ChartObject
 			getTitleTD( true );    // finds or adds TextDisp records for this axis (for labels and fonts)
 		}
 		int idx = linkedtd.getFontId();
-		return this.getWorkBook().getFont( idx );
+		return getWorkBook().getFont( idx );
 	}
 
 	/**
@@ -497,11 +497,11 @@ public class Axis extends GenericChartObject implements ChartObject
 		try
 		{
 			Fontx fx = (Fontx) Chart.findRec( chartArr, Fontx.class );
-			return this.getParentChart().getWorkBook().getFont( fx.getIfnt() );
+			return getParentChart().getWorkBook().getFont( fx.getIfnt() );
 		}
 		catch( NullPointerException e )
 		{
-			return this.getParentChart().getDefaultFont();
+			return getParentChart().getDefaultFont();
 		}
 
 	}
@@ -517,7 +517,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		if( csr == null )
 		{
 			csr = (CatserRange) CatserRange.getPrototype();
-			csr.setParentChart( this.getParentChart() );
+			csr.setParentChart( getParentChart() );
 			chartArr.add( 0, csr );
 		}
 		return csr;
@@ -639,9 +639,9 @@ public class Axis extends GenericChartObject implements ChartObject
 		alf = (AxisLineFormat) AxisLineFormat.getPrototype();
 		alf.setId( type );    // default has major gridlines
 		chartArr.add( j++, alf );
-		alf.setParentChart( this.getParentChart() );
+		alf.setParentChart( getParentChart() );
 		LineFormat lf = (LineFormat) LineFormat.getPrototype();
-		lf.setParentChart( this.getParentChart() );
+		lf.setParentChart( getParentChart() );
 		chartArr.add( j, lf );
 		return alf;
 
@@ -701,7 +701,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		if( (ym == null) && bCreate )
 		{
 			ym = (YMult) YMult.getPrototype();
-			ym.setParentChart( this.getParentChart() );
+			ym.setParentChart( getParentChart() );
 			chartArr.add( 1, ym );    // 2nd, after ValueRange
 		}
 		return ym;
@@ -724,7 +724,7 @@ public class Axis extends GenericChartObject implements ChartObject
 				return c.isReversed();
 			}
 		}
-		ValueRange v = (ValueRange) Chart.findRec( this.chartArr, ValueRange.class );
+		ValueRange v = (ValueRange) Chart.findRec( chartArr, ValueRange.class );
 		if( v != null )
 		{ // shouldn't
 			return v.isReversed();
@@ -734,7 +734,7 @@ public class Axis extends GenericChartObject implements ChartObject
 
 	public String getNumberFormat()
 	{
-		Ifmt f = (Ifmt) Chart.findRec( this.chartArr, Ifmt.class );
+		Ifmt f = (Ifmt) Chart.findRec( chartArr, Ifmt.class );
 		int i = 0;
 		if( f != null )
 		{
@@ -743,7 +743,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		else
 		{
 			// see if have series-specific formats
-			java.util.Vector s = this.getParentChart().getAllSeries( -1 );
+			java.util.Vector s = getParentChart().getAllSeries( -1 );
 			if( s.size() > 0 )
 			{
 				if( wType == YAXIS )
@@ -796,7 +796,7 @@ public class Axis extends GenericChartObject implements ChartObject
 				{
 					CatserRange c = ((CatserRange) b);
 					// for x/Category axis:  if has labels, gather and input into axis label JSON array
-					String[] categories = this.getParentChart().getCategories( -1 );
+					String[] categories = getParentChart().getCategories( -1 );
 					if( categories != null )
 					{
 						// Category Labels
@@ -912,7 +912,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	{
 		if( op.equalsIgnoreCase( "Label" ) )
 		{
-			this.setTitle( val );
+			setTitle( val );
 			return true;
 		}
 		if( op.equalsIgnoreCase( "CatCross" ) )
@@ -978,21 +978,21 @@ public class Axis extends GenericChartObject implements ChartObject
 			{
 				AxisLineFormat alf0 = (AxisLineFormat) AxisLineFormat.getPrototype();
 				alf0.setId( AxisLineFormat.ID_AXIS_LINE );
-				this.addChartRecord( alf0 );
+				addChartRecord( alf0 );
 				LineFormat lf0 = (LineFormat) LineFormat.getPrototype( 0, 0 );
-				this.addChartRecord( lf0 );
+				addChartRecord( lf0 );
 			}
 			AxisLineFormat alf = (AxisLineFormat) AxisLineFormat.getPrototype();
 			alf.setId( AxisLineFormat.ID_WALLORFLOOR );
-			this.addChartRecord( alf );
+			addChartRecord( alf );
 			LineFormat lf = (LineFormat) LineFormat.getPrototype( 0, -1 );
 			if( wType == 1 )
 			{
 				lf.setLineStyle( 5 );    //none
 			}
-			this.addChartRecord( lf );
+			addChartRecord( lf );
 			AreaFormat af = (AreaFormat) AreaFormat.getPrototype( wType );
-			this.addChartRecord( af );
+			addChartRecord( af );
 			return true;
 		}
 		else if( op.equals( "AreaFg" ) )
@@ -1080,7 +1080,7 @@ public class Axis extends GenericChartObject implements ChartObject
 			if( cl == null )
 			{
 				cl = (CatLab) CatLab.getPrototype();
-				cl.setParentChart( this.getParentChart() );
+				cl.setParentChart( getParentChart() );
 				chartArr.add( 1, cl );    // second in chart array, after CatSerRange
 			}
 			cl.setOption( op, val );
@@ -1237,7 +1237,7 @@ public class Axis extends GenericChartObject implements ChartObject
 				{
 					CatserRange c = ((CatserRange) b);
 					// for x/Category axis:  if has labels, gather and input into axis label JSON array
-					String[] categories = this.getParentChart().getCategories( -1 );
+					String[] categories = getParentChart().getCategories( -1 );
 					if( categories != null )
 					{
 						JSONArray cats = CellRange.getValuesAsJSON( categories[0], wbh );    // parse category range into JSON Array
@@ -1372,7 +1372,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	 */
 	public double getMaxScale( double[] minmax )
 	{
-		ValueRange v = (ValueRange) Chart.findRec( this.chartArr, ValueRange.class );
+		ValueRange v = (ValueRange) Chart.findRec( chartArr, ValueRange.class );
 		if( v != null )
 		{ // shouldn't
 			if( v.isAutomaticMax() )
@@ -1386,7 +1386,7 @@ public class Axis extends GenericChartObject implements ChartObject
 
 	protected double[] getMinMax()
 	{
-		ValueRange v = (ValueRange) Chart.findRec( this.chartArr, ValueRange.class );
+		ValueRange v = (ValueRange) Chart.findRec( chartArr, ValueRange.class );
 		if( v != null )
 		{ // shouldn't
 			return new double[]{ v.getMin(), v.getMax() };
@@ -1410,7 +1410,7 @@ public class Axis extends GenericChartObject implements ChartObject
  * However, you can change the number of categories to display between tick marks, the order in which 
  * to display categories, and the point where the two axes cross.        	
  */
-		ValueRange v = (ValueRange) Chart.findRec( this.chartArr, ValueRange.class );
+		ValueRange v = (ValueRange) Chart.findRec( chartArr, ValueRange.class );
 		if( v != null )
 		{
 			/*
@@ -1436,7 +1436,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	 */
 	public int getMajorUnit()
 	{
-		ValueRange v = (ValueRange) Chart.findRec( this.chartArr, ValueRange.class );
+		ValueRange v = (ValueRange) Chart.findRec( chartArr, ValueRange.class );
 		if( v != null )
 		{
 			return new Double( v.getMajorTick() ).intValue();
@@ -1451,7 +1451,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	 */
 	public int getMinorUnit()
 	{
-		ValueRange v = (ValueRange) Chart.findRec( this.chartArr, ValueRange.class );
+		ValueRange v = (ValueRange) Chart.findRec( chartArr, ValueRange.class );
 		if( v != null )
 		{
 			return new Double( v.getMinorTick() ).intValue();
@@ -1466,7 +1466,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	 */
 	public boolean isAutomaticScale()
 	{
-		ValueRange v = (ValueRange) Chart.findRec( this.chartArr, ValueRange.class );
+		ValueRange v = (ValueRange) Chart.findRec( chartArr, ValueRange.class );
 		if( v != null )
 		{
 			return (v.isAutomaticMin() || v.isAutomaticMax());
@@ -1482,7 +1482,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	 */
 	public void setAutomaticScale( boolean b )
 	{
-		ValueRange v = (ValueRange) Chart.findRec( this.chartArr, ValueRange.class );
+		ValueRange v = (ValueRange) Chart.findRec( chartArr, ValueRange.class );
 		if( v != null )
 		{
 			v.setAutomaticMin( b );
@@ -1499,7 +1499,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	public void setMinScale( int min )
 	{
 		// TODO: also update ticks?   
-		ValueRange v = (ValueRange) Chart.findRec( this.chartArr, ValueRange.class );
+		ValueRange v = (ValueRange) Chart.findRec( chartArr, ValueRange.class );
 		if( v != null )
 		{ // shouldn't
 			v.setMin( min );
@@ -1515,7 +1515,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	public void setMaxScale( int max )
 	{
 		// TODO: also update ticks?   
-		ValueRange v = (ValueRange) Chart.findRec( this.chartArr, ValueRange.class );
+		ValueRange v = (ValueRange) Chart.findRec( chartArr, ValueRange.class );
 		if( v != null )
 		{ // shouldn't
 			v.setMax( max );
@@ -1534,7 +1534,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	 */
 	public void setAxisPlacement( int Placement )
 	{
-		Tick t = (Tick) Chart.findRec( this.chartArr, Tick.class );
+		Tick t = (Tick) Chart.findRec( chartArr, Tick.class );
 		if( t != null )
 		{    // shoudn't 
 			switch( Placement )
@@ -1566,7 +1566,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	 */
 	public int getAxisPlacement()
 	{
-		Tick t = (Tick) Chart.findRec( this.chartArr, Tick.class );
+		Tick t = (Tick) Chart.findRec( chartArr, Tick.class );
 		if( t != null )
 		{    // shoudn't 
 			String p = t.getOption( "tickLblPos" );
@@ -1617,23 +1617,23 @@ public class Axis extends GenericChartObject implements ChartObject
 						String s = sc.getOption( "orientation" );
 						if( s != null )
 						{
-							this.setOption( "orientation", s );
+							setOption( "orientation", s );
 						}
 						s = sc.getOption( "min" );
 						if( s != null )
 						{
-							this.setOption( "min", s );
+							setOption( "min", s );
 						}
 						s = sc.getOption( "max" );
 						if( s != null )
 						{
-							this.setOption( "max", s );
+							setOption( "max", s );
 						}
 						// the below children only have 1 attribute: val
 					}
 					else if( tnm.equals( "axPos" ) )
 					{        // // position of the axis (b, t, r, l)
-						this.setOption( tnm, xpp.getAttributeValue( 0 ) );
+						setOption( tnm, xpp.getAttributeValue( 0 ) );
 					}
 					else if( tnm.equals( "majorGridlines" ) || tnm.equals( "minorGridlines" ) )
 					{
@@ -1643,38 +1643,38 @@ public class Axis extends GenericChartObject implements ChartObject
 					else if( tnm.equals( "title" ) )
 					{
 						lastTag.push( tnm );
-						this.setOOXMLTitle( (Title) Title.parseOOXML( xpp, lastTag, bk ).cloneElement() );
-						this.setTitle( this.getOOXMLTitle().getTitle() );
+						setOOXMLTitle( (Title) Title.parseOOXML( xpp, lastTag, bk ).cloneElement() );
+						setTitle( getOOXMLTitle().getTitle() );
 					}
 					else if( tnm.equals( "numFmt" ) )
 					{
-						this.nf = (NumFmt) NumFmt.parseOOXML( xpp ).cloneElement();
+						nf = (NumFmt) NumFmt.parseOOXML( xpp ).cloneElement();
 					}
 					else if( tnm.equals( "majorTickMark" ) ||    // major tick mark position (cross, in, none, out)
 							tnm.equals( "minorTickMark" ) ||        // minor tick mark position ("")
 							tnm.equals( "tickLblPos" ) )
 					{        // tick label position (high, low, nextTo, none)
-						this.setOption( tnm, xpp.getAttributeValue( 0 ) );
+						setOption( tnm, xpp.getAttributeValue( 0 ) );
 					}
 					else if( tnm.equals( "spPr" ) )
 					{    // axis shape properties - for axis or gridlines
 						lastTag.push( tnm );
-						this.setSpPr( (SpPr) SpPr.parseOOXML( xpp, lastTag, bk ).cloneElement() );
+						setSpPr( (SpPr) SpPr.parseOOXML( xpp, lastTag, bk ).cloneElement() );
 					}
 					else if( tnm.equals( "txPr" ) )
 					{        // text Properties for axis
 						lastTag.push( tnm );
-						this.settxPr( (TxPr) TxPr.parseOOXML( xpp, lastTag, bk ).cloneElement() );
+						settxPr( (TxPr) TxPr.parseOOXML( xpp, lastTag, bk ).cloneElement() );
 						// crossesAx = crossing axis id - need ?
 					}
 					else if( tnm.equals( "crosses" ) ||            // possible crossing points (autoZero, max, min) 
 							tnm.equals( "crossesAt" ) )
 					{            // where on axis the perpendicular axis crosses (double val)
-						this.setOption( tnm, xpp.getAttributeValue( 0 ) );
+						setOption( tnm, xpp.getAttributeValue( 0 ) );
 					}
 					else if( tnm.equals( "crossBetween" ) )
 					{        // whether axis crosses the cat. axis between or on categories (value axis only)  (between, midCat)
-						this.setOption( tnm, xpp.getAttributeValue( 0 ) );
+						setOption( tnm, xpp.getAttributeValue( 0 ) );
 					}
 					else if(        // cat, date, ser ax only
 						// auto -- Date only?
@@ -1683,7 +1683,7 @@ public class Axis extends GenericChartObject implements ChartObject
 									tnm.equals( "tickLblSkip" ) ||        // how many tick labels to skip between label (int >= 1)
 									tnm.equals( "tickMarkSkip" ) )
 					{        // how many tick marks to skip betwen ticks (int >= 1)
-						this.setOption( tnm, xpp.getAttributeValue( 0 ) );
+						setOption( tnm, xpp.getAttributeValue( 0 ) );
 // TODO: noMultiLvlLbl		            	 
 					}
 					else if(    // val, ser ax + some date ax
@@ -1691,7 +1691,7 @@ public class Axis extends GenericChartObject implements ChartObject
 									tnm.equals( "majorUnit" ) ||            // distance between major tick marks (val, date ax only) (double >= 0)
 									tnm.equals( "minorUnit" ) )
 					{            // distance between minor tick marks (val, date ax only) (double >= 0)
-						this.setOption( tnm, xpp.getAttributeValue( 0 ) );
+						setOption( tnm, xpp.getAttributeValue( 0 ) );
 					}
 					else if( tnm.equals( "dispUnits" ) )
 					{    // valAx only
@@ -1726,7 +1726,7 @@ public class Axis extends GenericChartObject implements ChartObject
 	private void parseGridlinesOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
 	{
 		String endTag = lastTag.peek();
-		this.setOption( endTag, "true" );
+		setOption( endTag, "true" );
 		try
 		{
 			int eventType = xpp.getEventType();
@@ -1851,9 +1851,9 @@ public class Axis extends GenericChartObject implements ChartObject
 
 	public String getOOXML( int type, String id, String crossId )
 	{
-		if( this.getParentChart() == null )    // happens on ZAxis, XYValAxis ...
+		if( getParentChart() == null )    // happens on ZAxis, XYValAxis ...
 		{
-			this.setParentChart( this.ap.getParentChart() );
+			setParentChart( ap.getParentChart() );
 		}
 		boolean from2003 = (!parentChart.getWorkBook().getIsExcel2007());
 
@@ -1883,8 +1883,8 @@ public class Axis extends GenericChartObject implements ChartObject
 		axisooxml.append( "<c:axId val=\"" + id + "\"/>" );
 		axisooxml.append( "\r\n" );
 		// scaling - required
-		String s = this.getOption( "orientation" );
-		double[] d = this.getMinMax();
+		String s = getOption( "orientation" );
+		double[] d = getMinMax();
 		if( (s != null) || (d[0] != d[1]) )
 		{    // if have orientation or min/max set ..
 			axisooxml.append( "<c:scaling>\r\n" );
@@ -1895,14 +1895,14 @@ public class Axis extends GenericChartObject implements ChartObject
 			axisooxml.append( "</c:scaling>\r\n" );
 		}
 		// axPos - required
-		if( this.getOption( "axPos" ) != null )
+		if( getOption( "axPos" ) != null )
 		{
-			axisooxml.append( "<c:axPos val=\"" + this.getOption( "axPos" ) + "\"/>" );
+			axisooxml.append( "<c:axPos val=\"" + getOption( "axPos" ) + "\"/>" );
 			axisooxml.append( "\r\n" );
 		}
 		else
 		{// it's required
-			if( this.getParentChart().getChartType() != BARCHART )
+			if( getParentChart().getChartType() != BARCHART )
 			{
 				if( axis.equals( "catAx" ) || axis.equals( "serAx" ) )
 				{
@@ -1927,29 +1927,29 @@ public class Axis extends GenericChartObject implements ChartObject
 			axisooxml.append( "\r\n" );
 		}
 		// major Gridlines
-		if( this.hasGridlines( AxisLineFormat.ID_MAJOR_GRID ) )
+		if( hasGridlines( AxisLineFormat.ID_MAJOR_GRID ) )
 		{
 			axisooxml.append( "<c:majorGridlines>" );
 			axisooxml.append( getAxisLine( AxisLineFormat.ID_MAJOR_GRID ).getOOXML() );
 			axisooxml.append( "</c:majorGridlines>\r\n" );
 		}
 		// minor Gridlines
-		if( this.hasGridlines( AxisLineFormat.ID_MINOR_GRID ) )
+		if( hasGridlines( AxisLineFormat.ID_MINOR_GRID ) )
 		{
 			axisooxml.append( "<c:minorGridlines>" );
 			axisooxml.append( getAxisLine( AxisLineFormat.ID_MINOR_GRID ).getOOXML() );
 			axisooxml.append( "</c:minorGridlines>\r\n" );
 		}
 		// Title
-		if( this.getOOXMLTitle() != null )
+		if( getOOXMLTitle() != null )
 		{
-			axisooxml.append( this.getOOXMLTitle().getOOXML() );
+			axisooxml.append( getOOXMLTitle().getOOXML() );
 		}
 		else if( from2003 )
 		{    // create OOXML title     		
-			if( !this.getTitle().equals( "" ) )
+			if( !getTitle().equals( "" ) )
 			{
-				com.extentech.formats.OOXML.Title ttl = new com.extentech.formats.OOXML.Title( this.getTitle() );
+				com.extentech.formats.OOXML.Title ttl = new com.extentech.formats.OOXML.Title( getTitle() );
 				if( type == 0 )
 				{
 					ttl.setLayout( .026, .378 );
@@ -1962,37 +1962,37 @@ public class Axis extends GenericChartObject implements ChartObject
 			}
 		}
 		// numFmt
-		if( this.nf != null )
+		if( nf != null )
 		{
 			axisooxml.append( nf.getOOXML( "c:" ) );        //need a default???: axisooxml.append("<c:numFmt formatCode=\"General\" sourceLinked=\"1\"/>");	axisooxml.append("\r\n");
 		}
 		// majorTickMark
-		s = this.getOption( "majorTickMark" );    // default= "cross"
+		s = getOption( "majorTickMark" );    // default= "cross"
 		if( s != null )
 		{
 			axisooxml.append( "<c:majorTickMark val=\"" + s + "\"/>" );
 		}
 		// minorTickMark
-		s = this.getOption( "minorTickMark" );    // default= "cross"
+		s = getOption( "minorTickMark" );    // default= "cross"
 		if( s != null )
 		{
 			axisooxml.append( "<c:minorTickMark val=\"" + s + "\"/>" );
 		}
 		// tickLblPos
-		s = this.getOption( "tickLblPos" );    // default= "nextTo"
+		s = getOption( "tickLblPos" );    // default= "nextTo"
 		if( s != null )
 		{
 			axisooxml.append( "<c:tickLblPos val=\"" + s + "\"/>" );
 		}
 		// shape properties
-		if( this.getSpPr() != null )
+		if( getSpPr() != null )
 		{
-			axisooxml.append( this.getSpPr().getOOXML() );
+			axisooxml.append( getSpPr().getOOXML() );
 		}
 		// text props
-		if( this.gettxPr() != null )
+		if( gettxPr() != null )
 		{
-			axisooxml.append( this.gettxPr().getOOXML() );
+			axisooxml.append( gettxPr().getOOXML() );
 		}
 		else if( from2003 )
 		{    // XLS->XLSX
@@ -2002,7 +2002,7 @@ public class Axis extends GenericChartObject implements ChartObject
    return  this.getParentChart().getWorkBook().getFont(fx.getIfnt());
 */
 			int rot = 0;
-			Tick t = (Tick) Chart.findRec( this.chartArr, Tick.class );
+			Tick t = (Tick) Chart.findRec( chartArr, Tick.class );
 			if( t != null )
 			{    // shoudn't
 				rot = t.getRotation();
@@ -2026,7 +2026,7 @@ public class Axis extends GenericChartObject implements ChartObject
 						break;
 				}
 				// TODO: is vert rotation from td? 
-				TxPr txpr = new TxPr( this.getLabelFont(), rot, null );
+				TxPr txpr = new TxPr( getLabelFont(), rot, null );
 				axisooxml.append( txpr.getOOXML() );
 			}
 			axisooxml.append( "\r\n" );
@@ -2035,31 +2035,31 @@ public class Axis extends GenericChartObject implements ChartObject
 		axisooxml.append( "<c:crossAx val=\"" + crossId + "\"/>" );
 		axisooxml.append( "\r\n" ); // crosses axis ...
 		// crosses -- autoZero, max, min
-		if( this.getOption( "crosses" ) != null )
+		if( getOption( "crosses" ) != null )
 		{
-			axisooxml.append( "<c:crosses val=\"" + this.getOption( "crosses" ) + "\"/>" );
+			axisooxml.append( "<c:crosses val=\"" + getOption( "crosses" ) + "\"/>" );
 		}
 		axisooxml.append( "\r\n" );// where axis crosses it's perpendicular axis
 		if( axis.equals( "catAx" ) || axis.equals( "serAx" ) )
 		{
 			// auto
 			axisooxml.append( "<c:auto val=\"1\"/>\r\n" );
-			s = this.getOption( "lblAlgn" );
+			s = getOption( "lblAlgn" );
 			if( s != null )
 			{
 				axisooxml.append( "<c:lblAlgn val=\"" + s + "\"/>\r\n" );
 			}
-			s = this.getOption( "lblOffset" );
+			s = getOption( "lblOffset" );
 			if( s != null )
 			{
 				axisooxml.append( "<c:lblOffset val=\"" + s + "\"/>\r\n" );
 			}
-			s = this.getOption( "tickLblSkip" );
+			s = getOption( "tickLblSkip" );
 			if( s != null )
 			{
 				axisooxml.append( "<c:tickLblSkip val=\"" + s + "\"/>\r\n" );
 			}
-			s = this.getOption( "tickMarkSkip" );
+			s = getOption( "tickMarkSkip" );
 			if( s != null )
 			{
 				axisooxml.append( "<c:tickMarkSkip val=\"" + s + "\"/>\r\n" );
@@ -2068,17 +2068,17 @@ public class Axis extends GenericChartObject implements ChartObject
 		}
 		else
 		{    // val or date
-			s = this.getOption( "crossBetween" );
+			s = getOption( "crossBetween" );
 			if( s != null )
 			{
 				axisooxml.append( "<c:crossBetween val=\"" + s + "\"/>\r\n" );
 			}
-			s = this.getOption( "majorUnit" );
+			s = getOption( "majorUnit" );
 			if( s != null )
 			{
 				axisooxml.append( "<c:majorUnit val=\"" + s + "\"/>\r\n" );
 			}
-			s = this.getOption( "minorUnit" );
+			s = getOption( "minorUnit" );
 			if( s != null )
 			{
 				axisooxml.append( "<c:minorUnit val=\"" + s + "\"/>\r\n" );
@@ -2108,7 +2108,7 @@ public class Axis extends GenericChartObject implements ChartObject
 
 		try
 		{
-			labelfontSVG = this.getLabelFont().getSVG();    // uses specific or default for chart
+			labelfontSVG = getLabelFont().getSVG();    // uses specific or default for chart
 		}
 		catch( Exception e )
 		{    // shouldn't
@@ -2116,12 +2116,13 @@ public class Axis extends GenericChartObject implements ChartObject
 		}
 		try
 		{
-			titlefontSVG = linkedtd.getFont( this.getParentChart().getWorkBook() ).getSVG();
+			titlefontSVG = linkedtd.getFont( getParentChart().getWorkBook() ).getSVG();
 		}
 		catch( NullPointerException e )
 		{
 		}
-		boolean showMinorTickMarks = false, showMajorTickMarks = true;
+		boolean showMinorTickMarks = false;
+		boolean showMajorTickMarks = true;
 		try
 		{
 			Tick t = (Tick) Chart.findRec( chartArr, Tick.class );
@@ -2133,7 +2134,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		}
 
 		// BAR CHART AXES ARE SWITCHED - handle seperately for clarity; radar axes are also handled separately as are significantly different than regualr charts
-		int charttype = this.getParentChart().getChartType();
+		int charttype = getParentChart().getChartType();
 		if( charttype == ChartConstants.BARCHART )
 		{
 			return getSVGBARCHART( ca, titlefontSVG, labelfontSVG, showMinorTickMarks, showMajorTickMarks, chartMetrics, categories );
@@ -2208,7 +2209,10 @@ public class Axis extends GenericChartObject implements ChartObject
 
 		// when x axis is reversed means that categories are right to left and the y axis is on the RHS
 		// when y axis is reversed means the categories are on TOP of the chart and y axis labels are reversed
-		double x0, x1, y0, y1;
+		double x0;
+		double x1;
+		double y0;
+		double y1;
 		double inc;
 		java.awt.Font f = null;
 		double x = chartMetrics.get( "x" );
@@ -2226,7 +2230,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		if( labelRot != 0 )
 		{
 			// get font object so can calculate rotation point
-			com.extentech.formats.XLS.Font lf = this.getLabelFont();
+			com.extentech.formats.XLS.Font lf = getLabelFont();
 			try
 			{
 				// get awt Font so can compute and fit category in width
@@ -2333,7 +2337,10 @@ public class Axis extends GenericChartObject implements ChartObject
 		// Y or Value Axis- must be non-textual; values obtained in calling method
 		// When Y Axis is reversed, scale is reversed and x axis labels and title are on top
 		// When X Axis is reversed, Y scale/labels and title are on RHS
-		double x0, x1, y0, y1;
+		double x0;
+		double x1;
+		double y0;
+		double y1;
 		double inc;
 		// major and minor tick marks, max and min axis scales NOTE: for MOST category (usually x) axes, they are textual; the max=# of categories; min=0
 		double x = chartMetrics.get( "x" );
@@ -2471,7 +2478,10 @@ public class Axis extends GenericChartObject implements ChartObject
 	                                 Object[] categories )
 	{
 		StringBuffer svg = new StringBuffer();
-		double x0, x1, y0, y1;
+		double x0;
+		double x1;
+		double y0;
+		double y1;
 		double minorinc = 0;
 		double inc;
 		// Y or Value Axis- must be non-textual; values obtained in calling method
@@ -2491,7 +2501,8 @@ public class Axis extends GenericChartObject implements ChartObject
 
 		if( (categories != null) && (categories.length > 0) )
 		{ // shouldn't
-			double xmin = Double.MAX_VALUE, xmax = Double.MIN_VALUE;
+			double xmin = Double.MAX_VALUE;
+			double xmax = Double.MIN_VALUE;
 			boolean TEXTUALXAXIS = true;
 			for( Object category : categories )
 			{
@@ -2509,7 +2520,7 @@ public class Axis extends GenericChartObject implements ChartObject
 			}
 			if( !TEXTUALXAXIS )
 			{
-				double d[] = ValueRange.calcMaxMin( xmax, xmin, w );
+				double[] d = ValueRange.calcMaxMin( xmax, xmin, w );
 				minor = (int) d[0];
 				major = (int) d[1];
 				xmax = d[2];
@@ -2605,7 +2616,10 @@ public class Axis extends GenericChartObject implements ChartObject
 
 		// major and minor tick marks, max and min axis scales NOTE: for MOST category (usually x) axes, they are textual; the max=# of categories; min=0
 		// X Axis/Cats in reversed order means X axis on Top, Y axis labels in reversed order (along with bars)
-		double x0, x1, y0, y1;
+		double x0;
+		double x1;
+		double y0;
+		double y1;
 		double inc;
 		int rfX = 1;    // reverse factor used to reverse order + position of axes
 		int rfY = 1;    // ""
@@ -2785,7 +2799,8 @@ public class Axis extends GenericChartObject implements ChartObject
 				double percentage = 1 / n;        // divide into equal sections
 				double radius = Math.min( w, h ) / 2.3;    // should take up almost entire w/h of chart
 				double radiusinc = radius / (max / major);
-				double lastx = centerx, lasty = centery - radius;    // again, start straight up
+				double lastx = centerx;    // again, start straight up
+				double lasty = centery - radius;
 				int k = 0;    // axis label index
 				for( double j = min; j <= max; j += major )
 				{    // each major unit is a concentric line				
@@ -2849,7 +2864,10 @@ public class Axis extends GenericChartObject implements ChartObject
 	{
 		// Category Labels - centered within area on X Axis
 		StringBuffer svg = new StringBuffer();
-		double x0, x1, y0, y1;
+		double x0;
+		double x1;
+		double y0;
+		double y1;
 		int k = labelfontSVG.indexOf( "font-size=" ) + 11;
 		double fh = Double.parseDouble( labelfontSVG.substring( k,
 		                                                        labelfontSVG.indexOf( "pt" ) ) );    // approximate height of a line of labels
@@ -2911,7 +2929,7 @@ public class Axis extends GenericChartObject implements ChartObject
 		svg.append( "<g>\r\n" );
 		svg.append( "<text " + getScript( scriptTitle ) + " x='" + x + "' y='" + y +
 				            ((titleRot == 0) ? "" : ("' transform='rotate(-" + titleRot + ", " + x + " ," + y + ")")) +
-				            "' style='text-anchor: middle;' " + titlefontSVG + ">" + this.getTitle() + "</text>\r\n" );
+				            "' style='text-anchor: middle;' " + titlefontSVG + ">" + getTitle() + "</text>\r\n" );
 		svg.append( "</g>\r\n" );
 		return svg.toString();
 	}
@@ -2921,7 +2939,10 @@ public class Axis extends GenericChartObject implements ChartObject
 class Scaling implements OOXMLElement
 {
 	private static final Logger log = LoggerFactory.getLogger( Scaling.class );
-	private String logBase, max, min, orientation;
+	private String logBase;
+	private String max;
+	private String min;
+	private String orientation;
 
 	public Scaling()
 	{    // no-param constructor, set up common defaults 
@@ -2937,10 +2958,10 @@ class Scaling implements OOXMLElement
 
 	public Scaling( Scaling sc )
 	{
-		this.logBase = sc.logBase;
-		this.max = sc.max;
-		this.min = sc.min;
-		this.orientation = sc.orientation;
+		logBase = sc.logBase;
+		max = sc.max;
+		min = sc.min;
+		orientation = sc.orientation;
 	}
 
 	/**
@@ -2952,7 +2973,10 @@ class Scaling implements OOXMLElement
 	 */
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack lastTag )
 	{
-		String logBase = null, max = null, min = null, orientation = null;
+		String logBase = null;
+		String max = null;
+		String min = null;
+		String orientation = null;
 		try
 		{
 			int eventType = xpp.getEventType();

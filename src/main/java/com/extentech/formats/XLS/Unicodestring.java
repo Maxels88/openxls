@@ -116,9 +116,11 @@ public final class Unicodestring implements XLSConstants, Serializable
 	private byte grbit;
 
 	// private Isstinf mybucket = null;
-	private int numformattingruns = 0, sstpos = -1;
+	private int numformattingruns = 0;
+	private int sstpos = -1;
 	private byte[] stringarray;
-	private int stringlen, offer;
+	private int stringlen;
+	private int offer;
 	private boolean westernencoding = true;
 
 	/**
@@ -131,16 +133,16 @@ public final class Unicodestring implements XLSConstants, Serializable
 		{
 			// compare Unicode strings at byte level rather than just string value
 			// if(val.equals(obj.toString()))return true;
-			if( this.westernencoding )
+			if( westernencoding )
 			{
-				if( java.util.Arrays.equals( this.getWesternBytes(), ((Unicodestring) obj).getWesternBytes() ) )
+				if( java.util.Arrays.equals( getWesternBytes(), ((Unicodestring) obj).getWesternBytes() ) )
 				{
 					return true;
 				}
 			}
 			else
 			{
-				if( java.util.Arrays.equals( this.getEasternBytes(), ((Unicodestring) obj).getEasternBytes() ) )
+				if( java.util.Arrays.equals( getEasternBytes(), ((Unicodestring) obj).getEasternBytes() ) )
 				{
 					return true;
 				}
@@ -148,7 +150,7 @@ public final class Unicodestring implements XLSConstants, Serializable
 		}
 		else if( obj instanceof String )
 		{
-			String val = this.toString();
+			String val = toString();
 			if( val.equals( obj ) )
 			{
 				return true;
@@ -198,7 +200,7 @@ public final class Unicodestring implements XLSConstants, Serializable
 	 */
 	byte getGrbit()
 	{
-		return this.grbit;
+		return grbit;
 	}
 
 	/**
@@ -259,11 +261,11 @@ public final class Unicodestring implements XLSConstants, Serializable
 			if( (grbit & 0x4) == 0x4 )
 			{
 				westernencoding = false;
-				this.initEasternEncoding( ustrdata, extrstbrk );
+				initEasternEncoding( ustrdata, extrstbrk );
 			}
 			else
 			{
-				this.initWesternEncoding( ustrdata );
+				initWesternEncoding( ustrdata );
 			}
 		}
 		catch( NegativeArraySizeException e )
@@ -439,16 +441,16 @@ public final class Unicodestring implements XLSConstants, Serializable
 	 */
 	boolean isBreakable( int pos )
 	{
-		int mypos = this.getSSTPos();
+		int mypos = getSSTPos();
 		int strstart = mypos + offer;
 		int strend = strstart + stringarray.length;
-		byte[] bts = this.read();
+		byte[] bts = read();
 		int brkpos = (strstart - pos);
 		if( brkpos < 0 )
 		{
 			brkpos *= -1;
 		}
-		if( this.cch < 2 )
+		if( cch < 2 )
 		{
 			return false; // don't break one-char strings -- the 0x1 is confused as a grbit
 		}
@@ -464,7 +466,7 @@ public final class Unicodestring implements XLSConstants, Serializable
 
 		if( (pos > strstart) && (pos < strend) )
 		{
-			if( this.getLength() > 8220 )
+			if( getLength() > 8220 )
 			{
 				return true;
 			}
@@ -481,10 +483,10 @@ public final class Unicodestring implements XLSConstants, Serializable
 	 */
 	public boolean charBreakOnBounds( int pos )
 	{
-		int mypos = this.getSSTPos();
+		int mypos = getSSTPos();
 		int strstart = mypos + offer;
 		int strend = strstart + stringarray.length;
-		byte[] bts = this.read();
+		byte[] bts = read();
 		int brkpos = (strstart - pos);
 		if( brkpos < 0 )
 		{
@@ -531,9 +533,9 @@ public final class Unicodestring implements XLSConstants, Serializable
 	{
 		if( westernencoding )
 		{
-			return this.getWesternBytes();
+			return getWesternBytes();
 		}
-		return this.getEasternBytes();
+		return getEasternBytes();
 	}
 
 	/**
@@ -625,7 +627,7 @@ public final class Unicodestring implements XLSConstants, Serializable
 	 */
 	public void updateUnicodeString( String s )
 	{
-		if( s.equals( this.toString() ) )
+		if( s.equals( toString() ) )
 		{
 			return;
 		}
@@ -675,14 +677,14 @@ public final class Unicodestring implements XLSConstants, Serializable
 		System.arraycopy( blen, 0, newbytes, 0, 2 );
 
 		System.arraycopy( strbytes, 0, newbytes, offer, strdatalen );
-		if( this.isRichString() )
+		if( isRichString() )
 		{
-			System.arraycopy( this.formattingarray, 0, newbytes, strdatalen + this.offer, this.formatlen );
+			System.arraycopy( formattingarray, 0, newbytes, strdatalen + offer, formatlen );
 			// put the number of formatting runs back
-			newbytes[3] = this.formatrunnum[0];
-			newbytes[4] = this.formatrunnum[1];
+			newbytes[3] = formatrunnum[0];
+			newbytes[4] = formatrunnum[1];
 		}
-		this.init( newbytes, false );
+		init( newbytes, false );
 	}
 
 	public int getLen()
@@ -692,7 +694,7 @@ public final class Unicodestring implements XLSConstants, Serializable
 
 	public void setLen( int leng )
 	{
-		this.len = leng;
+		len = leng;
 	}
 
 	public String getStringVal()

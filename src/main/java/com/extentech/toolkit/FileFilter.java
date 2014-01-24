@@ -44,7 +44,7 @@ public class FileFilter implements java.io.FileFilter
 	 */
 	public FileFilter( String fx )
 	{
-		this.fix = fx;
+		fix = fx;
 	}
 
 	/**

@@ -48,22 +48,22 @@ public class Legend implements OOXMLElement
 
 	public Legend( String pos, String overlay, Layout l, LegendEntry le, SpPr sp, TxPr txpr )
 	{
-		this.legendpos = pos;
+		legendpos = pos;
 		this.le = le;
 		this.overlay = overlay;
-		this.layout = l;
-		this.shapeProps = sp;
+		layout = l;
+		shapeProps = sp;
 		this.txpr = txpr;
 	}
 
 	public Legend( Legend l )
 	{
-		this.legendpos = l.legendpos;
-		this.le = l.le;
-		this.overlay = l.overlay;
-		this.layout = l.layout;
-		this.shapeProps = l.shapeProps;
-		this.txpr = l.txpr;
+		legendpos = l.legendpos;
+		le = l.le;
+		overlay = l.overlay;
+		layout = l.layout;
+		shapeProps = l.shapeProps;
+		txpr = l.txpr;
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class Legend implements OOXMLElement
 				break;
 			}
 		}
-		if( this.hasBox() )
+		if( hasBox() )
 		{
 			l_2003.addBox();
 		}
@@ -214,9 +214,9 @@ public class Legend implements OOXMLElement
 	 */
 	public boolean hasBox()
 	{
-		if( this.shapeProps != null )
+		if( shapeProps != null )
 		{
-			return this.shapeProps.hasLine();
+			return shapeProps.hasLine();
 		}
 		return false;
 	}
@@ -264,15 +264,15 @@ class LegendEntry implements OOXMLElement
 	public LegendEntry( int idx, boolean d, TxPr tx )
 	{
 		this.idx = idx;
-		this.delete = d;
+		delete = d;
 		this.tx = tx;
 	}
 
 	public LegendEntry( LegendEntry le )
 	{
-		this.idx = le.idx;
-		this.delete = le.delete;
-		this.tx = le.tx;
+		idx = le.idx;
+		delete = le.delete;
+		tx = le.tx;
 	}
 
 	public static LegendEntry parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )

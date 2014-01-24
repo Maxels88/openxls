@@ -81,7 +81,7 @@ public class PtgRefErr3d extends PtgRef3d implements Ptg
 		ixti = ByteTools.readShort( record[1], record[2] );
 		if( ixti > 0 )
 		{
-			this.sheetname = GenericPtg.qualifySheetname( this.getSheetName() );
+			sheetname = GenericPtg.qualifySheetname( getSheetName() );
 		}
 	}
 

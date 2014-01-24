@@ -47,7 +47,7 @@ public class GelFrame extends GenericChartObject implements ChartObject
 		MsofbtOPT optrec = new MsofbtOPT( MSODrawingConstants.MSOFBTOPT,
 		                                  0,
 		                                  3 );    //version is always 3, inst is current count of properties.
-		optrec.setData( this.getData() );    // sets and parses msoFbtOpt data, including imagename, shapename and imageindex
+		optrec.setData( getData() );    // sets and parses msoFbtOpt data, including imagename, shapename and imageindex
 		fillColor = optrec.getFillColor();
 	}
 

@@ -62,16 +62,16 @@ public class ColorChoice implements OOXMLElement
 
 	private void setTheme( Theme t )
 	{
-		this.theme = t;
+		theme = t;
 	}
 
 	public ColorChoice( ColorChoice c )
 	{
-		this.s = c.s;
-		this.srgb = c.srgb;
-		this.sys = c.sys;
-		this.scrgb = c.scrgb;
-		this.p = c.p;
+		s = c.s;
+		srgb = c.srgb;
+		sys = c.sys;
+		scrgb = c.scrgb;
+		p = c.p;
 	}
 
 	public static OOXMLElement parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -238,14 +238,14 @@ class SchemeClr implements OOXMLElement
 	{
 		this.val = val;
 		this.clrTransform = clrTransform;
-		this.theme = t;
+		theme = t;
 	}
 
 	public SchemeClr( SchemeClr sc )
 	{
-		this.val = sc.val;
-		this.clrTransform = sc.clrTransform;
-		this.theme = sc.theme;
+		val = sc.val;
+		clrTransform = sc.clrTransform;
+		theme = sc.theme;
 	}
 
 	public static SchemeClr parseOOXML( XmlPullParser xpp, Stack<String> lastTag, WorkBookHandle bk )
@@ -312,7 +312,7 @@ class SchemeClr implements OOXMLElement
 	public int getColor()
 	{
 		double tint = ((clrTransform == null) ? 0 : clrTransform.getTint());
-		Object[] o = Color.parseThemeColor( val, tint, (short) 0, this.theme );
+		Object[] o = Color.parseThemeColor( val, tint, (short) 0, theme );
 		return (Integer) o[0];
 	}
 }
@@ -348,9 +348,9 @@ class SysClr implements OOXMLElement
 
 	public SysClr( SysClr sc )
 	{
-		this.val = sc.val;
-		this.lastClr = sc.lastClr;
-		this.clrTransform = sc.clrTransform;
+		val = sc.val;
+		lastClr = sc.lastClr;
+		clrTransform = sc.clrTransform;
 	}
 
 	public static SysClr parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -474,8 +474,8 @@ class SrgbClr implements OOXMLElement
 
 	public SrgbClr( SrgbClr sc )
 	{
-		this.val = sc.val;
-		this.clrTransform = sc.clrTransform;
+		val = sc.val;
+		clrTransform = sc.clrTransform;
 	}
 
 	public static SrgbClr parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -581,8 +581,8 @@ class ScrgbClr implements OOXMLElement
 
 	public ScrgbClr( ScrgbClr sc )
 	{
-		this.attrs = sc.attrs;
-		this.clrTransform = sc.clrTransform;
+		attrs = sc.attrs;
+		clrTransform = sc.clrTransform;
 	}
 
 	public static ScrgbClr parseOOXML( XmlPullParser xpp, Stack<String> lastTag )
@@ -702,8 +702,8 @@ class PrstClr implements OOXMLElement
 
 	public PrstClr( PrstClr sc )
 	{
-		this.val = sc.val;
-		this.clrTransform = sc.clrTransform;
+		val = sc.val;
+		clrTransform = sc.clrTransform;
 	}
 
 	public static PrstClr parseOOXML( XmlPullParser xpp, Stack<String> lastTag )

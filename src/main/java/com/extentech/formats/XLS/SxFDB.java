@@ -96,34 +96,43 @@ public class SxFDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 {
 	private static final Logger log = LoggerFactory.getLogger( SxFDB.class );
 	private static final long serialVersionUID = 9027599480633995587L;
-	private short ifdbParent, ifdbBase, csxoper, cisxoper, catm, grbit;
+	private short ifdbParent;
+	private short ifdbBase;
+	private short csxoper;
+	private short cisxoper;
+	private short catm;
+	private short grbit;
 	private String stFieldName;
 	// significant bit fields 
-	boolean fAllAtoms, fRangeGroup, fNumField, fTextEtcField, fnumMinMaxValid, fNonDates, fDateInField, fCalculatedField, fShortItms;
+	boolean fAllAtoms;
+	boolean fRangeGroup;
+	boolean fNumField;
+	boolean fTextEtcField;
+	boolean fnumMinMaxValid;
+	boolean fNonDates;
+	boolean fDateInField;
+	boolean fCalculatedField;
+	boolean fShortItms;
 
 	// TODO: handle ranges/grouping and all the complications that it entails
 	@Override
 	public void init()
 	{
 		super.init();
-		grbit = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		grbit = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		// grouping-related
-		ifdbParent = ByteTools.readShort( this.getByteAt( 2 ),
-		                                  this.getByteAt( 3 ) );    // specifies the cache field index, as specified by Cache Fields, of the grouping cache field for this cache field
-		ifdbBase = ByteTools.readShort( this.getByteAt( 4 ),
-		                                this.getByteAt( 5 ) );        // specifies the cache field index, as specified by Cache Fields, of the base cache field
+		ifdbParent = ByteTools.readShort( getByteAt( 2 ), getByteAt( 3 ) );    // specifies the cache field index, as specified by Cache Fields, of the grouping cache field for this cache field
+		ifdbBase = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );        // specifies the cache field index, as specified by Cache Fields, of the base cache field
 		//ignored:  citmUnq= ByteTools.readShort(this.getByteAt(6),this.getByteAt(7)); // "Undefined and MUST be ignored."
-		csxoper = ByteTools.readShort( this.getByteAt( 8 ),
-		                               this.getByteAt( 9 ) );        // specifies the number of cache items in this cache field when this cache field is a grouping cache field,
-		cisxoper = ByteTools.readShort( this.getByteAt( 10 ),
-		                                this.getByteAt( 11 ) );    // specifies the number of cache items in the base cache field that are grouped by this cache field
+		csxoper = ByteTools.readShort( getByteAt( 8 ), getByteAt( 9 ) );        // specifies the number of cache items in this cache field when this cache field is a grouping cache field,
+		cisxoper = ByteTools.readShort( getByteAt( 10 ), getByteAt( 11 ) );    // specifies the number of cache items in the base cache field that are grouped by this cache field
 		// + fHasParent, fRangeGroup ...
-		catm = ByteTools.readShort( this.getByteAt( 12 ), this.getByteAt( 13 ) );        // number of cache items
-		int cch = ByteTools.readShort( this.getByteAt( 14 ), this.getByteAt( 15 ) );
+		catm = ByteTools.readShort( getByteAt( 12 ), getByteAt( 13 ) );        // number of cache items
+		int cch = ByteTools.readShort( getByteAt( 14 ), getByteAt( 15 ) );
 		if( cch > 0 )
 		{        // 0xFFFF if none
-			byte encoding = this.getByteAt( 16 );
-			byte[] tmp = this.getBytesAt( 17, (cch) * (encoding + 1) );
+			byte encoding = getByteAt( 16 );
+			byte[] tmp = getBytesAt( 17, (cch) * (encoding + 1) );
 			try
 			{
 				if( encoding == 0 )
@@ -153,7 +162,7 @@ public class SxFDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 		fDateInField = (grbit & 0x4000) == 0x4000;        // at least one date field (SxDtr follows)
 		fCalculatedField = (grbit & 0x8000) == 0x8000;    // Sxformulas follow "A calculated field is a cache field (section 2.2.5.3.5) and does not correspond to a column in the source data (section 2.2.5.3.2). The values for a calculated field are calculated based on the formula specified for the calculated field"
 
-			log.debug( "{}", this.toString() );
+			log.debug( "{}", toString() );
 	}
 
 	public String toString()
@@ -181,9 +190,9 @@ public class SxFDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 	public byte[] getRecord()
 	{
 		byte[] b = new byte[4];
-		System.arraycopy( ByteTools.shortToLEBytes( this.getOpcode() ), 0, b, 0, 2 );
-		System.arraycopy( ByteTools.shortToLEBytes( (short) this.getData().length ), 0, b, 2, 2 );
-		return ByteTools.append( this.getData(), b );
+		System.arraycopy( ByteTools.shortToLEBytes( getOpcode() ), 0, b, 0, 2 );
+		System.arraycopy( ByteTools.shortToLEBytes( (short) getData().length ), 0, b, 2, 2 );
+		return ByteTools.append( getData(), b );
 
 	}
 
@@ -215,8 +224,8 @@ public class SxFDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 	{
 		catm = (short) n;                // If this cache field corresponds to source data entities then there MUST be an equal number of SRCSXOPER rules in this cache field.
 		byte[] b = ByteTools.shortToLEBytes( catm );
-		this.getData()[12] = b[0];
-		this.getData()[13] = b[1];
+		getData()[12] = b[0];
+		getData()[13] = b[1];
 
 		if( n > 0 )
 		{
@@ -230,8 +239,8 @@ public class SxFDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 			grbit &= ~0x1;    // turn off fAllAtoms ...
 		}
 		b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 
 	/**
@@ -268,13 +277,13 @@ public class SxFDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 		short cch = (short) strbytes.length;
 		byte[] nm = ByteTools.shortToLEBytes( cch );
 		byte[] data = new byte[14];
-		System.arraycopy( this.getData(), 0, data, 0, 14 );
+		System.arraycopy( getData(), 0, data, 0, 14 );
 		byte[] newdata = new byte[cch + 3];    // account for encoding bytes + cch
 		System.arraycopy( nm, 0, newdata, 0, 2 );
 		System.arraycopy( strbytes, 0, newdata, 3, cch );
 
 		data = ByteTools.append( newdata, data );
-		this.setData( data );
+		setData( data );
 	}
 
 	/**
@@ -374,7 +383,7 @@ public class SxFDB extends XLSRecord implements XLSConstants, PivotCacheRecord
 		}
 
 		byte[] b = ByteTools.shortToLEBytes( grbit );
-		this.getData()[0] = b[0];
-		this.getData()[1] = b[1];
+		getData()[0] = b[0];
+		getData()[1] = b[1];
 	}
 }

@@ -49,13 +49,16 @@ public class Dat extends GenericChartObject implements ChartObject
 	 */
 	private static final long serialVersionUID = 1138056714558134785L;
 	private short grbit;
-	boolean fHasBordHorz, fHasBordVert, fHasBordOutline, fShowSeriesKey;
+	boolean fHasBordHorz;
+	boolean fHasBordVert;
+	boolean fHasBordOutline;
+	boolean fShowSeriesKey;
 
 	@Override
 	public void init()
 	{
 		super.init();
-		grbit = ByteTools.readShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
+		grbit = ByteTools.readShort( getByteAt( 0 ), getByteAt( 1 ) );
 		fHasBordHorz = ((grbit & 0x1) == 0x1);
 		fHasBordVert = ((grbit & 0x2) == 0x2);
 		fHasBordOutline = ((grbit & 0x4) == 0x4);
@@ -110,6 +113,6 @@ public class Dat extends GenericChartObject implements ChartObject
 	private void updateRecord()
 	{
 		byte[] b = ByteTools.shortToLEBytes( grbit );
-		this.setData( b );
+		setData( b );
 	}
 }

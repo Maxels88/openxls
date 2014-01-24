@@ -192,7 +192,7 @@ public class DiscontiguousRefStruct implements Serializable
 	{
 /* KSC: try to decrease processing time by using refPtgs treemap            SqRef sr = new SqRef(range, this.parentRec);
         sqrefs.add(sr);*/
-		allrefs.add( range, this.parentRec );
+		allrefs.add( range, parentRec );
 	}
 
 	/**
@@ -469,7 +469,7 @@ class refPtgs extends TreeMap implements Serializable
 	{
 		try
 		{
-			super.put( this.getKey( o ), o );
+			super.put( getKey( o ), o );
 		}
 		catch( IllegalArgumentException e )
 		{    // SHOULD NOT HAPPEN -- happens upon RefErrs but they shouldnt be added ...
@@ -493,7 +493,7 @@ class refPtgs extends TreeMap implements Serializable
 		String location = ExcelTools.formatRangeRowCol( rc, bool );
 		PtgArea pa = new PtgArea( location, parentRec );
 		pa.addToRefTracker();
-		return this.add( pa );
+		return add( pa );
 	}
 
 	public boolean add( String range, XLSRecord parentRec )
@@ -503,7 +503,7 @@ class refPtgs extends TreeMap implements Serializable
 		{
 			PtgArea pa = new PtgArea( range, parentRec );
 			pa.addToRefTracker();
-			return this.add( pa );
+			return add( pa );
 		}
 		return false;
 	}
@@ -524,7 +524,7 @@ class refPtgs extends TreeMap implements Serializable
 	public boolean containsReference( int[] rc )
 	{
 		long loc = PtgRef.getHashCode( rc[0], rc[1] );    // get location in hashcode notation
-		Map m = this.subMap( getKey( loc, 0 ), getKey( loc + 1, 0 ) );    // +1 for max parent
+		Map m = subMap( getKey( loc, 0 ), getKey( loc + 1, 0 ) );    // +1 for max parent
 		Object key;
 		if( (m != null) && (m.size() > 0) )
 		{
@@ -542,7 +542,7 @@ class refPtgs extends TreeMap implements Serializable
 			}
 		}
 		// now see if test cell falls into any areas
-		m = this.tailMap( getKey( SECONDPTGFACTOR, 0 ) ); // ALL AREAS ...
+		m = tailMap( getKey( SECONDPTGFACTOR, 0 ) ); // ALL AREAS ...
 		if( m != null )
 		{
 			Iterator ii = m.keySet().iterator();
@@ -558,7 +558,7 @@ class refPtgs extends TreeMap implements Serializable
 					int col1 = (int) secondkey % XLSRecord.MAXCOLS;
 					int rw0 = ((int) (firstkey / XLSRecord.MAXCOLS)) - 1;
 					int rw1 = ((int) (secondkey / XLSRecord.MAXCOLS)) - 1;
-					if( this.isaffected( rc, new int[]{ rw0, col0, rw1, col1 } ) )
+					if( isaffected( rc, new int[]{ rw0, col0, rw1, col1 } ) )
 					{
 //System.out.print(": Found area " + ((PtgRef)this.get(index)));
 						return true;
@@ -615,7 +615,7 @@ class refPtgs extends TreeMap implements Serializable
 
 	public Object[] toArray()
 	{
-		return this.values().toArray();
+		return values().toArray();
 	}
 }
 

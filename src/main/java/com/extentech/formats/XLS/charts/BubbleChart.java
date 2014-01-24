@@ -100,11 +100,14 @@ public class BubbleChart extends ChartType
 		int[] markers = getMarkerFormats();    // get an array of marker formats per series
 		int n = series.size();
 		double[] seriesx = null;
-		double xfactor = 0, yfactor = 0, bfactor = 0;    //
+		double xfactor = 0;    //
+		double yfactor = 0;
+		double bfactor = 0;
 		boolean TEXTUALXAXIS = true;
 		// get x axis max/min for an x axis which is a value axis
 		seriesx = new double[categories.length];
-		double xmin = Double.MAX_VALUE, xmax = Double.MIN_VALUE;
+		double xmin = Double.MAX_VALUE;
+		double xmax = Double.MIN_VALUE;
 		for( int j = 0; j < categories.length; j++ )
 		{
 			try
@@ -121,7 +124,7 @@ public class BubbleChart extends ChartType
 		}
 		if( !TEXTUALXAXIS )
 		{
-			double d[] = ValueRange.calcMaxMin( xmax, xmin, w );
+			double[] d = ValueRange.calcMaxMin( xmax, xmin, w );
 			xfactor = w / (d[2]);        // w/maximum scale
 		}
 		else
@@ -139,7 +142,8 @@ public class BubbleChart extends ChartType
 			double[] seriesy = (double[]) series.get( i );
 			String[] curranges = (String[]) s.getSeriesRanges().get( i );
 			int nseries = seriesy.length / 2;
-			double bmin = Double.MAX_VALUE, bmax = Double.MIN_VALUE;
+			double bmin = Double.MAX_VALUE;
+			double bmax = Double.MIN_VALUE;
 			for( int j = nseries; j < seriesy.length; j++ )
 			{
 				bmax = Math.max( bmax, seriesy[j] );
@@ -188,7 +192,7 @@ public class BubbleChart extends ChartType
 				String l = getSVGDataLabels( dls, axisMetrics, seriesy[j + nseries], 0, i, legends, categories[j].toString() );
 				if( l != null )
 				{
-					labels += "<text x='" + (r + 10 + (x) + (xval * xfactor)) + "' y='" + (((y + h) - (seriesy[j] * yfactor))) + "' " + this.getDataLabelFontSVG() + ">" + l + "</text>\r\n";
+					labels += "<text x='" + (r + 10 + (x) + (xval * xfactor)) + "' y='" + (((y + h) - (seriesy[j] * yfactor))) + "' " + getDataLabelFontSVG() + ">" + l + "</text>\r\n";
 				}
 			}
 			// labels after lines and markers  
@@ -240,12 +244,12 @@ public class BubbleChart extends ChartType
 		// vary colors???
 
 		// *** Series Data:	ser, cat, val for most chart types
-		cooxml.append( this.getParentChart().getChartSeries().getOOXML( this.getChartType(), false, 0 ) );
+		cooxml.append( getParentChart().getChartSeries().getOOXML( getChartType(), false, 0 ) );
 
 		// chart data labels, if any
 		//TODO: FINISH		    	
 		//cooxml.append(getDataLabelsOOXML(cf));		
-		if( this.is3d )
+		if( is3d )
 		{
 			cooxml.append( "bubble3d val=\"1\"" );
 		}

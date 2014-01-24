@@ -76,7 +76,7 @@ public class CellAddressComparator implements Comparator, Serializable
 	 */
 	public boolean equals( Object obj )
 	{
-		return (obj != null) && this.getClass().equals( obj.getClass() );
+		return (obj != null) && getClass().equals( obj.getClass() );
 	}
 
 	/**

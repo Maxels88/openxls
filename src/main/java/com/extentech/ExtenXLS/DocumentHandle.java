@@ -174,7 +174,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	 */
 	public void setStreamingSheets( boolean streamSheets )
 	{
-		this.streamingSheets = streamSheets;
+		streamingSheets = streamSheets;
 	}
 
 	/**
@@ -398,7 +398,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	@Override
 	public void write( OutputStream dest ) throws IOException
 	{
-		this.write( dest, FORMAT_NATIVE );
+		write( dest, FORMAT_NATIVE );
 	}
 
 	/**
@@ -426,7 +426,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 			}
 		}
 		OutputStream stream = new BufferedOutputStream( new FileOutputStream( file ) );
-		this.write( stream, format );
+		write( stream, format );
 		this.file = file;    // necesary for OOXML re-write ...
 		stream.flush();
 		stream.close();
@@ -441,7 +441,7 @@ public abstract class DocumentHandle implements Document, Handle, Closeable
 	@Override
 	public void write( File file ) throws IOException
 	{
-		this.write( file, FORMAT_NATIVE );
+		write( file, FORMAT_NATIVE );
 	}
 
 	/**
