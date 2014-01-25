@@ -328,30 +328,6 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	}
 
 	/**
-	 * returns the underlying BIFF8 record for the Cell <br>
-	 * NOTE: the underlying record is not a part of the public API and may
-	 * change at any time.
-	 *
-	 * @return Returns the underlying biff record.
-	 */
-	public XLSRecord getRecord()
-	{
-		return mycell;
-	}
-
-	/**
-	 * sets the underlying BIFF8 record for the Cell <br>
-	 * NOTE: the underlying record is not a part of the public API and may
-	 * change at any time.
-	 *
-	 * @param XLSRecord rec - The BIFF record to set.
-	 */
-	public void setRecord( XLSRecord rec )
-	{
-		mycell = rec;
-	}
-
-	/**
 	 * Sets a default "empty" value appropriate for the cell type of this
 	 * CellHandle <br>
 	 * For example, will set the value to 0.0 for TYPE_DOUBLE, an empty String

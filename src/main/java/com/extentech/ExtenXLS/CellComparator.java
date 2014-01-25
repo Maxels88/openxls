@@ -34,7 +34,7 @@ import java.util.Comparator;
  * Date values are sorted according to their internal date representation.  Note that currently this means
  * Dates will always sort above strings due to them storing their value as a long.
  */
-public class CellComparator implements Comparator
+public class CellComparator implements Comparator<CellHandle>
 {
 
 	/**
@@ -45,11 +45,8 @@ public class CellComparator implements Comparator
 	 * as numbers internally in excel so are sorted against numbers
 	 */
 	@Override
-	public int compare( Object cellHandle1, Object cellHandle2 )
+	public int compare( CellHandle cell1, CellHandle cell2 )
 	{
-		CellHandle cell1 = (CellHandle) cellHandle1;
-		CellHandle cell2 = (CellHandle) cellHandle2;
-
 		int cellType1 = cell1.getCellType();
 		int cellType2 = cell1.getCellType();
 
@@ -170,5 +167,4 @@ public class CellComparator implements Comparator
 		String val2 = cell2.getStringVal();
 		return val1.compareTo( val2 );
 	}
-
 }

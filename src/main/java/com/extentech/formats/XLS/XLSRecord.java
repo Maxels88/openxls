@@ -84,6 +84,9 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 	boolean isReadOnly = false;
 	int originalsize = -1;
 	int originalOffset = 0;
+	/**
+	 * ixfe - an unsigned integer that specifies a 0-based index of a cell XF record in the collection of XF records in the globals substream
+	 */
 	int ixfe = -1;
 	Row myrow = null;
 	CellRange mergeRange;
