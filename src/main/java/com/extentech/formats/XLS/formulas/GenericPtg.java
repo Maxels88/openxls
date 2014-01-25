@@ -667,7 +667,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 			}
 			else if( o instanceof Integer )
 			{
-				returnDbl[i] = (double) o;
+				returnDbl[i] = (double)(Integer) o;
 			}
 			else if( o instanceof Boolean )
 			{    // Excel converts booleans to numbers in calculations 20090129 KSC
@@ -733,7 +733,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 		}
 		else if( o instanceof Integer )
 		{
-			ret = (double) o;
+			ret = (double) (Integer)o;
 		}
 		else if( o instanceof Boolean )
 		{    // Excel converts booleans to numbers in calculations 20090129 KSC

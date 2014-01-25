@@ -22,6 +22,9 @@
  */
 package com.extentech.formats.XLS.formulas;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Array;
 
 /*
@@ -34,9 +37,7 @@ import java.lang.reflect.Array;
 */
 public class PtgAdd extends GenericPtg implements Ptg
 {
-	/**
-	 * serialVersionUID
-	 */
+	private static final Logger log = LoggerFactory.getLogger( PtgAdd.class );
 	private static final long serialVersionUID = -964400139336259946L;
 
 	@Override
@@ -168,7 +169,10 @@ public class PtgAdd extends GenericPtg implements Ptg
 			return perr;
 		}
 		catch( Exception e )
-		{    // handle error ala Excel
+		{
+			// At least log the error so the devs have a chance to see it and fix it...
+			log.error( "Error during addition", e );
+			// handle error ala Excel
 			PtgErr perr = new PtgErr( PtgErr.ERROR_VALUE );
 			return perr;
 		}
