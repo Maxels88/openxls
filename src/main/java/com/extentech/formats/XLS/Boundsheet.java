@@ -1837,18 +1837,21 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	@Override
 	public void addCell( CellRec cell )
 	{
+		if( cell == null )
+		{
+			throw new IllegalArgumentException("CellRec cannot be null.");
+		}
 		cellsByRow.put( cell, cell );
 		cellsByCol.add( cell );
+
 		Row row = rows.get( cell.getRowNumber() );
 		if( null == row )
 		{
 			row = addNewRow( cell );
 		}
+
 		row.addCell( cell );
-		if( cell != null )
-		{
-			cell.setSheet( this );
-		}
+		cell.setSheet( this );
 		updateDimensions( cell.getRowNumber(), cell.getColNumber() );
 	}
 
