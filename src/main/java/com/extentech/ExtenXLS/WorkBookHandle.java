@@ -1221,6 +1221,10 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	public WorkBookHandle( InputStream inx )
 	{
+		if( inx == null )
+		{
+			throw new IllegalArgumentException( "InputStream cannot be null!" );
+		}
 		initFromStream( inx );
 	}
 
