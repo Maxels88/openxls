@@ -64,14 +64,14 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 
 	Mulblank(int row, int firstCol, int lastCol)
 	{
-		this.rw = row;
-		this.colFirst = (short) firstCol;
-		this.colLast = (short) lastCol;
+		rw = row;
+		colFirst = (short) firstCol;
+		colLast = (short) lastCol;
 	}
 
 	public String toString()
 	{
-		return this.getCellAddress();
+		return getCellAddress();
 	}
 
 	/**
@@ -133,7 +133,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 	@Override
 	public void setSheet( Sheet bs )
 	{
-		this.worksheet = bs;
+		worksheet = bs;
 	}
 
 	/**
@@ -147,19 +147,19 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 
 		data = getData();
 		super.init();
-		if( (this.getLength() - 4) <= 0 )
+		if( (getLength() - 4) <= 0 )
 		{
 				log.debug( "no data in MULBLANK" );
 		}
 		else
 		{
-			rw = ByteTools.readUnsignedShort( this.getByteAt( 0 ), this.getByteAt( 1 ) );
-			byte b2 = this.getByteAt( 2 );
-			byte b3 = this.getByteAt( 3 );
+			rw = ByteTools.readUnsignedShort( getByteAt( 0 ), getByteAt( 1 ) );
+			byte b2 = getByteAt( 2 );
+			byte b3 = getByteAt( 3 );
 			colFirst = ByteTools.readShort( b2, b3 );
 			//col = colFirst;
 			col = -1;    // flag that this rec hasn't been referred to one cell
-			colLast = ByteTools.readShort( this.getByteAt( this.reclen - 2 ), this.getByteAt( this.reclen - 1 ) );
+			colLast = ByteTools.readShort( getByteAt( reclen - 2 ), getByteAt( reclen - 1 ) );
 
 			log.info( "colFirst: " + colFirst + ", colLast: " + colLast );
 			//			Sometimes colFirst & colLast are reversed... WTFM$? -jm
@@ -179,11 +179,11 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 				//log.info((numblanks >> 12)*-1); ha!
 				return;
 			}
-			rgixfe = this.getBytesAt( 4, numblanks * 2 );
+			rgixfe = getBytesAt( 4, numblanks * 2 );
 		}
 		// KSC: to use as a blank: 
-		this.setIsValueForCell( true );
-		this.isBlank = true;
+		setIsValueForCell( true );
+		isBlank = true;
 	}
 
 	/**
@@ -291,18 +291,18 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 				{
 					byte[] newblank = { 0, 0, 0, 0, 0, 0 };
 					// set the row...
-					System.arraycopy( this.getBytesAt( 0, 2 ), 0, newblank, 0, 2 );
+					System.arraycopy( getBytesAt( 0, 2 ), 0, newblank, 0, 2 );
 					// set the col...
 					System.arraycopy( ByteTools.shortToLEBytes( (short) i ), 0, newblank, 2, 2 );
 					// set the ixfe
 					System.arraycopy( rgixfe, ((i - colFirst) * 2), newblank, 4, 2 );
 					Blank b = new Blank( newblank );
-					b.streamer = this.streamer;
-					b.setWorkBook( this.getWorkBook() );
-					b.setSheet( this.getSheet() );
-					b.setMergeRange( this.getMergeRange( i - colFirst ) );
-					this.getRow().removeCell( (short) i );// remove this mulblank from the cells array
-					this.getWorkBook().addRecord( b, true );    // and add a blank in it's place
+					b.streamer = streamer;
+					b.setWorkBook( getWorkBook() );
+					b.setSheet( getSheet() );
+					b.setMergeRange( getMergeRange( i - colFirst ) );
+					getRow().removeCell( (short) i );// remove this mulblank from the cells array
+					getWorkBook().addRecord( b, true );    // and add a blank in it's place
 				}
 				// truncate the rgixfe:
 				byte[] tmp = new byte[(2 * ((c - colFirst) + 1))];
@@ -325,19 +325,19 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 		{// covert to a single blank
 			byte[] newblank = { 0, 0, 0, 0, 0, 0 };
 			// set the row...
-			System.arraycopy( this.getBytesAt( 0, 2 ), 0, newblank, 0, 2 );
+			System.arraycopy( getBytesAt( 0, 2 ), 0, newblank, 0, 2 );
 			// set the col...
 			System.arraycopy( ByteTools.shortToLEBytes( colFirst ), 0, newblank, 2, 2 );
 			// set the ixfe
 			System.arraycopy( rgixfe, 0, newblank, 4, 2 );
 			Blank b = new Blank( newblank );
-			b.streamer = this.streamer;
-			b.setWorkBook( this.getWorkBook() );
-			b.setSheet( this.getSheet() );
-			b.setMergeRange( this.getMergeRange( colFirst ) );
+			b.streamer = streamer;
+			b.setWorkBook( getWorkBook() );
+			b.setSheet( getSheet() );
+			b.setMergeRange( getMergeRange( colFirst ) );
 			col = colFirst;
-			this.getRow().removeCell( this );// remove this mulblank from the cells array
-			this.getWorkBook().addRecord( b, true );
+			getRow().removeCell( this );// remove this mulblank from the cells array
+			getWorkBook().addRecord( b, true );
 			col = c;    // still have to remove cell at col c
 			return false;    // no more mulblanks
 		}
@@ -428,8 +428,8 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 			idx = (col - colFirst) * 2;
 		}
 		ixfe = ByteTools.readShort( rgixfe[idx], rgixfe[idx + 1] );
-		myxf = this.getWorkBook().getXf( ixfe );    // set myxf to correct xf for cell in group of mulblanks
-		return this.ixfe;
+		myxf = getWorkBook().getXf( ixfe );    // set myxf to correct xf for cell in group of mulblanks
+		return ixfe;
 	}
 
 	/**
@@ -438,7 +438,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 	public ArrayList<Integer> getColReferences()
 	{
 		ArrayList<Integer> colRefs = new ArrayList<>();
-		for( int i = this.colFirst; i <= this.colLast; i++ )
+		for( int i = colFirst; i <= colLast; i++ )
 		{
 			colRefs.add( i );
 		}
@@ -463,7 +463,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 		rgixfe[idx + 1] = b[1];
 		updateRecord();
 		ixfe = i;
-		myxf = this.getWorkBook().getXf( ixfe );
+		myxf = getWorkBook().getXf( ixfe );
 	}
 
 	/**
@@ -481,8 +481,8 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 	private void updateRecord()
 	{
 		byte[] data = new byte[2 + 2 + 2 + rgixfe.length];
-		data[0] = this.getData()[0];        // row shouldn't have changed
-		data[1] = this.getData()[1];
+		data[0] = getData()[0];        // row shouldn't have changed
+		data[1] = getData()[1];
 		byte[] b = ByteTools.shortToLEBytes( colFirst );
 		data[2] = b[0];
 		data[3] = b[1];

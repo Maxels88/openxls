@@ -129,7 +129,7 @@ class testadds
 		System.out.println( " Strings took: " + ((System.currentTimeMillis() - ltimr)) + " milliseconds." );
 
 		ltimr = System.currentTimeMillis();
-		this.testWrite( book );
+		testWrite( book );
 		System.out.println( "Done." );
 		System.out.print( "Writing " + book );
 		System.out.println( " took: " + ((System.currentTimeMillis() - ltimr)) + " milliseconds." );

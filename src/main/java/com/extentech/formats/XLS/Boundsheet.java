@@ -246,18 +246,18 @@ public final class Boundsheet extends XLSRecord implements Sheet
 
 		private NumberAsStringFormat( String id, String format )
 		{
-			this.identifier = id;
-			this.pattern = format;
+			identifier = id;
+			pattern = format;
 		}
 
 		public String identifier()
 		{
-			return this.identifier;
+			return identifier;
 		}
 
 		public String pattern()
 		{
-			return this.pattern;
+			return pattern;
 		}
 
 		/**
@@ -265,7 +265,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		 */
 		public double adjustValue( double inputVal )
 		{
-			if( this.identifier.equals( "%" ) )
+			if( identifier.equals( "%" ) )
 			{
 				return inputVal * .01;
 			}
@@ -342,7 +342,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 
 	public void setSheetRecs( AbstractList shtRecs )
 	{
-		this.SheetRecs = shtRecs;
+		SheetRecs = shtRecs;
 	}
 
 	@Override
@@ -354,19 +354,19 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	@Override
 	public Headerrec getHeader()
 	{
-		return this.hdr;
+		return hdr;
 	}
 
 	@Override
 	public void setHeader( BiffRec h )
 	{
-		this.hdr = (Headerrec) h;
+		hdr = (Headerrec) h;
 	}
 
 	@Override
 	public Footerrec getFooter()
 	{
-		return this.ftr;
+		return ftr;
 	}
 
 	@Override
@@ -398,7 +398,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public void setLocalRecs( FastAddVector l )
 	{
-		this.localrecs = l;
+		localrecs = l;
 	}
 
 	@Override
@@ -424,7 +424,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public void insertImage( ImageHandle im, boolean bAddUnconditionally )
 	{
-		MSODrawingGroup msodg = this.wkbook.getMSODrawingGroup();
+		MSODrawingGroup msodg = wkbook.getMSODrawingGroup();
 		MSODrawing msoDrawing = (MSODrawing) MSODrawing.getPrototype();
 		msoDrawing.setSheet( this );
 		msoDrawing.setCoords( im.getCoords() );
@@ -435,10 +435,10 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		// now add to proper place in stream
 		if( msodg != null )
 		{ // already have drawing records; just add to records + update msodg
-			insertIndex = this.getIndexOf( MSODRAWINGSELECTION );
+			insertIndex = getIndexOf( MSODRAWINGSELECTION );
 			if( insertIndex < 0 )
 			{
-				insertIndex = this.getIndexOf( WINDOW2 );
+				insertIndex = getIndexOf( WINDOW2 );
 			}
 			if( msodg.getMsoHeaderRec( this ) == null )    //  handle case of multiple sheets- each needs it's own mso header ...
 			{
@@ -448,8 +448,8 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		else
 		{ // No images present in workbook, must add appropriate records
 			// Create new msodg rec
-			this.wkbook.setMSODrawingGroup( (MSODrawingGroup) MSODrawingGroup.getPrototype() );
-			msodg = this.wkbook.getMSODrawingGroup();
+			wkbook.setMSODrawingGroup( (MSODrawingGroup) MSODrawingGroup.getPrototype() );
+			msodg = wkbook.getMSODrawingGroup();
 			msodg.initNewMSODrawingGroup();    // generate and add required records for drawing records
 			// also add 1st portion for drawing rec
 			msoDrawing.setIsHeader();
@@ -461,16 +461,16 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			// 20071120 KSC: retrieve idx in order to reuse/link to existing image bytes if duplicating images
 			int idx = msodg.addImage( im.getImageBytes(), im.getImageType(), bAddUnconditionally );
 			imageMap.put( im, im.getImageIndex() - 1 );            // add new image to map and link to actual imageIndex - moved from above
-			msoDrawing.createRecord( ++this.wkbook.lastSPID,
+			msoDrawing.createRecord( ++wkbook.lastSPID,
 			                         im.getImageName(),
 			                         im.getShapeName(),
 			                         idx );        // generate msoDrawing using correct values moved from above
-			this.SheetRecs.add( insertIndex++, msoDrawing );
-			this.SheetRecs.add( insertIndex++, obj );
+			SheetRecs.add( insertIndex++, msoDrawing );
+			SheetRecs.add( insertIndex++, obj );
 			msodg.addMsodrawingrec( msoDrawing );    // add the new drawing rec to the msodrawinggroup set of recs
 			wkbook.updateMsodrawingHeaderRec( this );        // find the msodrawing header record and update it (using info from other msodrawing recs)
 			// 20080908 KSC: moved from above
-			msodg.setSpidMax( this.wkbook.lastSPID + 1 ); // was ++lastSPID
+			msodg.setSpidMax( wkbook.lastSPID + 1 ); // was ++lastSPID
 			msodg.updateRecord();        // given all information, generate appropriate bytes
 			msodg.dirtyflag = true;
 		}
@@ -500,11 +500,11 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public Name[] getSheetScopedNames()
 	{
-		if( this.sheetNameRecs == null )
+		if( sheetNameRecs == null )
 		{
-			this.sheetNameRecs = new HashMap();
+			sheetNameRecs = new HashMap();
 		}
-		ArrayList a = new ArrayList( this.sheetNameRecs.values() );
+		ArrayList a = new ArrayList( sheetNameRecs.values() );
 		Name[] n = new Name[a.size()];
 		a.toArray( n );
 		return n;
@@ -542,9 +542,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public Dval insertDvalRec()
 	{
-		if( this.getDvalRec() != null )
+		if( getDvalRec() != null )
 		{
-			return this.getDvalRec();
+			return getDvalRec();
 		}
 		Dval d = (Dval) Dval.getPrototype();
 		d.setSheet( this );
@@ -561,8 +561,8 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			insertIdx++;
 			opc = ((BiffRec) SheetRecs.get( insertIdx )).getOpcode();
 		}
-		this.SheetRecs.add( insertIdx, d );
-		this.setDvalRec( d );
+		SheetRecs.add( insertIdx, d );
+		setDvalRec( d );
 		return d;
 	}
 
@@ -576,19 +576,19 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public Dv createDv( String location )
 	{
-		if( this.getDvalRec() == null )
+		if( getDvalRec() == null )
 		{
-			this.insertDvalRec();
+			insertDvalRec();
 		}
-		Dv dv = this.getDvalRec().createDvRec( location );
-		int insertIdx = this.SheetRecs.size() - 2; // start at 1 before EOF
+		Dv dv = getDvalRec().createDvRec( location );
+		int insertIdx = SheetRecs.size() - 2; // start at 1 before EOF
 		int opc = ((BiffRec) SheetRecs.get( insertIdx )).getOpcode();
 		while( (opc != DV) && (opc != DVAL) )
 		{
 			insertIdx--; // insert after last DV
 			opc = ((BiffRec) SheetRecs.get( insertIdx )).getOpcode();
 		}
-		this.SheetRecs.add( insertIdx + 1, dv ); // insert after DVAL or last DV
+		SheetRecs.add( insertIdx + 1, dv ); // insert after DVAL or last DV
 		return dv;
 	}
 
@@ -603,7 +603,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	{
 		Condfmt cfx = (Condfmt) Condfmt.getPrototype();
 		int insertIdx = win2.getRecordIndex() + 1;
-		BiffRec rec = (BiffRec) this.SheetRecs.get( insertIdx );
+		BiffRec rec = (BiffRec) SheetRecs.get( insertIdx );
 		while( (rec.getOpcode() != HLINK) &&
 				(rec.getOffset() != DVAL) &&
 				(rec.getOpcode() != 0x0862) &&
@@ -611,14 +611,14 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				(rec.getOpcode() != 0x0868) &&
 				(rec.getOpcode() != EOF) )
 		{
-			rec = (BiffRec) this.SheetRecs.get( ++insertIdx );
+			rec = (BiffRec) SheetRecs.get( ++insertIdx );
 		}
 
-		this.SheetRecs.add( insertIdx, cfx );
+		SheetRecs.add( insertIdx, cfx );
 		cfx.setStreamer( streamer );
-		cfx.setWorkBook( this.getWorkBook() );
+		cfx.setWorkBook( getWorkBook() );
 		cfx.resetRange( location );
-		this.addConditionalFormat( cfx );
+		addConditionalFormat( cfx );
 		cfx.setSheet( this );
 		return cfx;
 	}
@@ -636,9 +636,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		Cf cf = (Cf) Cf.getPrototype();
 		// we add this rec to vec right after its Condfmt
 		int insertIdx = cfx.getRecordIndex() + 1;
-		this.SheetRecs.add( insertIdx, cf );
+		SheetRecs.add( insertIdx, cf );
 		cf.setStreamer( streamer );
-		cf.setWorkBook( this.getWorkBook() );
+		cf.setWorkBook( getWorkBook() );
 		cf.setSheet( this );
 		cf.setCondfmt( cfx );
 		cfx.addRule( cf );
@@ -799,7 +799,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	{
 		if( sheetHash.equals( "" ) )
 		{
-			sheetHash = this.getSheetName() + this.getSheetNum() + this.getRealRecordIndex();
+			sheetHash = getSheetName() + getSheetNum() + getRealRecordIndex();
 		}
 		return sheetHash;
 	}
@@ -839,14 +839,14 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public void writeAsTabbedText( OutputStream dest ) throws IOException
 	{
-		int lastrow = this.getMaxRow();
-		int lastcol = this.getMaxCol();
+		int lastrow = getMaxRow();
+		int lastcol = getMaxCol();
 		boolean isInteger = false;
 		byte[] tab = { 9 };
 		byte[] crlf = { 13, 10 };
 		for( int i = 0; i < lastrow; i++ )
 		{
-			Row r = this.getRowByNumber( i );
+			Row r = getRowByNumber( i );
 			if( r != null )
 			{
 				for( int j = 0; j < lastcol; j++ )
@@ -911,9 +911,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public List getDvRecs()
 	{
-		if( this.getDvalRec() != null )
+		if( getDvalRec() != null )
 		{
-			return this.getDvalRec().getDvs();
+			return getDvalRec().getDvs();
 		}
 		return null;
 	}
@@ -926,10 +926,10 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	@Override
 	public void removeCell( String celladdr )
 	{
-		BiffRec c = this.getCell( celladdr );
+		BiffRec c = getCell( celladdr );
 		if( c != null )
 		{
-			this.removeCell( c );
+			removeCell( c );
 		}
 	}
 
@@ -973,7 +973,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		if( cell.getOpcode() == XLSConstants.FORMULA )
 		{
 			Formula f = (Formula) cell;
-			this.wkbook.removeFormula( f );
+			wkbook.removeFormula( f );
 		}
 		BiffRec removedFromRowMap = cellsByRow.remove( cell );
 		if( removedFromRowMap == null )
@@ -1011,7 +1011,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{ // adds new
 			p = (Pane) Pane.getPrototype();
 			int insertIdx = win2.getRecordIndex() + 1;
-			this.SheetRecs.add( insertIdx, p );
+			SheetRecs.add( insertIdx, p );
 		}
 		pane = p;
 		pane.setWindow2( win2 );
@@ -1034,8 +1034,8 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		BiffRec c;
 		try
 		{
-			c = this.getCell( row, col );
-			this.removeCell( c );
+			c = getCell( row, col );
+			removeCell( c );
 		}
 		catch( CellNotFoundException e )
 		{
@@ -1055,12 +1055,12 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		if( rec.getOpcode() == RK )
 		{
 			Rk thisrk = (Rk) rec;
-			this.removeMulrk( thisrk );
+			removeMulrk( thisrk );
 		}
 		else if( rec.getOpcode() == FORMULA )
 		{
 			Formula f = (Formula) rec;
-			this.wkbook.removeFormula( f );
+			wkbook.removeFormula( f );
 		}
 		else if( rec.getOpcode() == LABELSST )
 		{
@@ -1140,20 +1140,20 @@ public final class Boundsheet extends XLSRecord implements Sheet
 					String loc = temprk.getCellAddress();
 
 					Double d = temprk.getDblVal();
-					BiffRec g = this.getCell( loc );
+					BiffRec g = getCell( loc );
 					int fmt = g.getIxfe();
 					g.getRow().removeCell( g );
-					this.removeCell( loc );
+					removeCell( loc );
 
-					this.addValue( d, loc );
-					this.getCell( loc ).setIxfe( fmt );
+					addValue( d, loc );
+					getCell( loc ).setIxfe( fmt );
 					streamer.removeRecord( temprk );
 				}
 			}
 			if( deletemulrk )
 			{
 				mymul.removed = true;
-				this.removeRecFromVec( mymul );
+				removeRecFromVec( mymul );
 			}
 		}
 
@@ -1169,7 +1169,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	{
 		try
 		{
-			BiffRec rec = (BiffRec) this.SheetRecs.get( idx );
+			BiffRec rec = (BiffRec) SheetRecs.get( idx );
 			removeRecFromVec( rec );
 		}
 		catch( Exception e )
@@ -1209,11 +1209,11 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				// map will silently do nothing instead of throwing a CME.
 				iter.remove();
 
-				this.removeCell( cell );
+				removeCell( cell );
 			}
 
 			rows.remove( rowIdx );
-			this.removeRecFromVec( row );
+			removeRecFromVec( row );
 		}
 
 		// shift all following rows up to fill the gap left by the removed rows
@@ -1229,12 +1229,12 @@ public final class Boundsheet extends XLSRecord implements Sheet
 					continue;
 				}
 
-				this.shiftRow( row, shiftBy );
+				shiftRow( row, shiftBy );
 			}
 		}
 
 		// update sheet dimensions
-		this.dimensions.setRowLast( (null != lastRow) ? lastRow.getRowNumber() : 0 );
+		dimensions.setRowLast( (null != lastRow) ? lastRow.getRowNumber() : 0 );
 	}
 
 	/**
@@ -1244,22 +1244,22 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public void removeRowContents( int rownum ) throws RowNotFoundException
 	{
-		Row r = this.getRowByNumber( rownum );
+		Row r = getRowByNumber( rownum );
 		// First delete the desired row
 		if( r != null )
 		{
 			Object[] cells = r.getCellArray();
 			for( Object cell : cells )
 			{ // adjust cell's in row
-				this.removeCell( (BiffRec) cell );
+				removeCell( (BiffRec) cell );
 			}
 			rows.remove( rownum );
-			this.removeRecFromVec( r );
+			removeRecFromVec( r );
 			r = null;
 		}
 		else
 		{
-			throw new RowNotFoundException( this.getSheetName() + ":" + rownum );
+			throw new RowNotFoundException( getSheetName() + ":" + rownum );
 		}
 
 	}
@@ -1289,14 +1289,14 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{
 
 			// update or remove the ColInfo record as appropriate
-			Colinfo info = this.getColInfo( colIdx );
+			Colinfo info = getColInfo( colIdx );
 			if( null != info )
 			{
 				if( info.getColLast() < (first + count) )
 				{
 					if( info.getColFirst() >= first )
 					{
-						this.removeColInfo( info );
+						removeColInfo( info );
 					}
 					else
 					{
@@ -1312,7 +1312,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			// remove the cells in the column
 			try
 			{
-				List<BiffRec> cells = this.getCellsByCol( colIdx );
+				List<BiffRec> cells = getCellsByCol( colIdx );
 				int cellCount = cells.size();
 				for( int idx = cellCount - 1; idx >= 0; idx-- )
 				{
@@ -1322,7 +1322,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						continue;
 					}
 
-					this.removeCell( cell );
+					removeCell( cell );
 				}
 			}
 			catch( CellNotFoundException e )
@@ -1335,15 +1335,15 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		if( shift )
 		{
 			int shiftBy = -1 * count;
-			int maxcol = this.getRealMaxCol();
+			int maxcol = getRealMaxCol();
 			for( int colIdx = first + 1; colIdx <= maxcol; colIdx++ )
 			{
-				this.shiftCol( colIdx, shiftBy );
+				shiftCol( colIdx, shiftBy );
 			}
 		}
 
 		// make sure dimensions record is correctly updated upon output
-		this.dimensions.setColLast( this.getRealMaxCol() );
+		dimensions.setColLast( getRealMaxCol() );
 	}
 
 	/**
@@ -1357,7 +1357,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		List<? extends BiffRec> theCells = cellsByCol.get( colNum );
 		if( theCells.size() == 0 )
 		{
-			throw new CellNotFoundException( this.sheetname, 0, col );
+			throw new CellNotFoundException( sheetname, 0, col );
 		}
 
 		Iterator<? extends BiffRec> i = theCells.iterator();
@@ -1378,7 +1378,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	@Override
 	public Colinfo getColInfo( int col )
 	{
-		Colinfo info = this.colinfos.get( new ColumnRange.Reference( col, col ) );
+		Colinfo info = colinfos.get( new ColumnRange.Reference( col, col ) );
 		if( null == info )
 		{
 			return null;
@@ -1403,7 +1403,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		                                                                  new CellAddressible.Reference( rowNum + 1, 0 ) );
 		if( theCells.size() == 0 )
 		{
-			throw new CellNotFoundException( this.sheetname, 0, col );
+			throw new CellNotFoundException( sheetname, 0, col );
 		}
 
 		Collection<BiffRec> cells = theCells.values();
@@ -1425,16 +1425,16 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			int opcode = rx[t].getOpcode();    // Handle continues masking mso's
 			if( (opcode != MSODRAWING) && !((opcode == CONTINUE) && (((Continue) rx[t]).maskedMso != null)) )
 			{
-				this.removeRecFromVec( rx[t] );
+				removeRecFromVec( rx[t] );
 			}
 			else // must update MSODrawingGroup record as well ...
 				if( opcode == MSODRAWING )
 				{
-					this.wkbook.msodg.removeMsodrawingrec( (MSODrawing) rx[t], this, false ); // don't remove assoc object record
+					wkbook.msodg.removeMsodrawingrec( (MSODrawing) rx[t], this, false ); // don't remove assoc object record
 				}
 				else    // a Continue record masking an MSoo
 				{
-					this.wkbook.msodg.removeMsodrawingrec( ((Continue) rx[t]).maskedMso, this, false ); // don't remove assoc object record
+					wkbook.msodg.removeMsodrawingrec( ((Continue) rx[t]).maskedMso, this, false ); // don't remove assoc object record
 				}
 			rx[t] = null;
 		}
@@ -1471,7 +1471,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	@Override
 	public int getSheetNum()
 	{
-		return this.wkbook.getSheetVect().indexOf( this );
+		return wkbook.getSheetVect().indexOf( this );
 	}
 
 	/**
@@ -1490,11 +1490,11 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	@Override
 	public void updateMergedCells()
 	{
-		if( this.mc.size() < 1 )
+		if( mc.size() < 1 )
 		{
 			return;
 		}
-		Iterator mcs = this.mc.iterator();
+		Iterator mcs = mc.iterator();
 		while( mcs.hasNext() )
 		{
 			((Mergedcells) mcs.next()).update();
@@ -1556,7 +1556,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{
 			return mybof.getLbPlyPos();
 		}
-		return this.lbPlyPos;
+		return lbPlyPos;
 
 	}
 
@@ -1576,8 +1576,8 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	public void setLbPlyPos( long newpos )
 	{
 		byte[] newposbytes = ByteTools.cLongToLEBytes( (int) newpos );
-		System.arraycopy( newposbytes, 0, this.getData(), 0, 4 );
-		this.lbPlyPos = newpos;
+		System.arraycopy( newposbytes, 0, getData(), 0, 4 );
+		lbPlyPos = newpos;
 	}
 
 	/**
@@ -1586,13 +1586,13 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	@Override
 	public void setSelected( boolean b )
 	{
-		if( this.win2 != null )
+		if( win2 != null )
 		{
-			this.win2.setSelected( b );
+			win2.setSelected( b );
 		}
 		if( b )
 		{
-			this.getWorkBook().setSelectedSheet( this );
+			getWorkBook().setSelectedSheet( this );
 		}
 		selected = b;
 	}
@@ -1649,7 +1649,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			dimensions = d;
 			if( myidx != null )
 			{
-				this.myidx.setDimensions( d );
+				myidx.setDimensions( d );
 			}
 		}
 
@@ -1662,7 +1662,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	public List getColNames()
 	{
 		FastAddVector retvec = new FastAddVector();
-		for( int x = 0; x < this.getRealMaxCol(); x++ )
+		for( int x = 0; x < getRealMaxCol(); x++ )
 		{
 			String c = ExcelTools.getAlphaVal( x );
 			retvec.add( c );
@@ -1769,9 +1769,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{
 			dimensions.updateDimensions( row - 1, col );
 		}
-		if( this.myidx != null )
+		if( myidx != null )
 		{
-			this.myidx.updateRowDimensions( this.getMinRow(), this.getMaxRow() ); // TODO: investigate why no Index is possible
+			myidx.updateRowDimensions( getMinRow(), getMaxRow() ); // TODO: investigate why no Index is possible
 		}
 	}
 
@@ -1794,27 +1794,27 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		rec.setRowCol( rc );
 		rec.setIsValueForCell( true );
 		rec.setStreamer( streamer );
-		rec.setWorkBook( this.getWorkBook() );
+		rec.setWorkBook( getWorkBook() );
 
-		if( !this.fastCellAdds )
+		if( !fastCellAdds )
 		{
 
 			Row ro;
 			ro = rows.get( rc[0] );
 			if( ro == null )
 			{
-				ro = this.addNewRow( rec );
+				ro = addNewRow( rec );
 			}
 
 		}
-		if( copypriorformats && !this.fastCellAdds )
+		if( copypriorformats && !fastCellAdds )
 		{
-			this.copyPriorCellFormatForNewCells( rec );
+			copyPriorCellFormatForNewCells( rec );
 		}
 
 		try
 		{
-			this.addCell( (CellRec) rec );
+			addCell( (CellRec) rec );
 		}
 		catch( ArrayIndexOutOfBoundsException ax )
 		{
@@ -1826,7 +1826,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	@Override
 	public void setCopyPriorCellFormats( boolean f )
 	{
-		this.copypriorformats = f;
+		copypriorformats = f;
 	}
 
 	/**
@@ -1842,14 +1842,14 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		Row row = rows.get( cell.getRowNumber() );
 		if( null == row )
 		{
-			row = this.addNewRow( cell );
+			row = addNewRow( cell );
 		}
 		row.addCell( cell );
 		if( cell != null )
 		{
 			cell.setSheet( this );
 		}
-		this.updateDimensions( cell.getRowNumber(), cell.getColNumber() );
+		updateDimensions( cell.getRowNumber(), cell.getColNumber() );
 	}
 
 	/**
@@ -1861,9 +1861,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	@Override
 	public void addColinfo( Colinfo c )
 	{
-		if( !this.colinfos.containsValue( c ) )
+		if( !colinfos.containsValue( c ) )
 		{
-			this.colinfos.put( c, c );
+			colinfos.put( c, c );
 		}
 	}
 
@@ -1873,7 +1873,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	@Override
 	public Colinfo getColinfo( String c )
 	{
-		return this.getColInfo( ExcelTools.getIntVal( c ) );
+		return getColInfo( ExcelTools.getIntVal( c ) );
 	}
 
 	/**
@@ -1899,7 +1899,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		int[] rc = ExcelTools.getRowColFromString( address );
 		try
 		{
-			return this.getCell( rc[0], rc[1] );
+			return getCell( rc[0], rc[1] );
 		}
 		catch( CellNotFoundException ex )
 		{
@@ -1922,7 +1922,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		BiffRec theCell = cellsByRow.get( new CellAddressible.Reference( row, col ) );
 		if( null == theCell )
 		{
-			throw new CellNotFoundException( this.sheetname, row, col );
+			throw new CellNotFoundException( sheetname, row, col );
 		}
 
 		if( (theCell != null) && (theCell.getOpcode() == MULBLANK) )
@@ -1972,7 +1972,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{
 			return null; // 20081031 KSC- don't automatically add new!
 		}
-		return (Mergedcells) this.getMergedCellsRecs().get( this.getMergedCellsRecs().size() - 1 );
+		return (Mergedcells) getMergedCellsRecs().get( getMergedCellsRecs().size() - 1 );
 	}
 
 	/**
@@ -1999,7 +1999,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	@Override
 	public void setGrbitChr( byte gb )
 	{
-		this.grbitChr = gb;
+		grbitChr = gb;
 	}
 
 	/**
@@ -2043,18 +2043,18 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		byte[] newdata = new byte[namebytes.length + 8];
 		if( data == null )
 		{
-			this.data = newdata;
+			data = newdata;
 		}
 		else
 		{
-			System.arraycopy( this.getData(), 0, newdata, 0, 8 );
+			System.arraycopy( getData(), 0, newdata, 0, 8 );
 		}
 
 		System.arraycopy( namebytes, 0, newdata, 8, namebytes.length );
 		newdata[6] = cch;
 		newdata[7] = grbitChr;
-		this.setData( newdata );
-		this.init();
+		setData( newdata );
+		init();
 	}
 
 	/**
@@ -2065,7 +2065,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	@Override
 	public byte[] getSheetBytes() throws IOException
 	{
-		this.setLocalRecs();
+		setLocalRecs();
 		ObjectOutputStream obs;
 		byte[] b;
 
@@ -2087,7 +2087,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	{
 		localrecs = new CompatibleVector();
 
-		List newSheetRecs = this.assembleSheetRecs();
+		List newSheetRecs = assembleSheetRecs();
 
 		Iterator shtr = newSheetRecs.iterator();
 		while( shtr.hasNext() )
@@ -2109,7 +2109,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		}
 		// add the charts to the boundsheet, as they are stored in the workbook normally.  (why?)
 		charts.clear();
-		Chart[] chts = this.getWorkBook().getCharts();
+		Chart[] chts = getWorkBook().getCharts();
 		for( Chart cht : chts )
 		{
 			if( cht.getSheet().equals( this ) )
@@ -2182,11 +2182,11 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			coords[0] = origCoords[0];    // don't set X and Y (keep to original row and column
 			coords[1] = origCoords[1];
 			destChart.setCoords( coords ); // but set w + h
-			destChart.setId( this.lastObjId + 1 );    // 20100210 KSC: track last obj id per sheet ...
+			destChart.setId( lastObjId + 1 );    // 20100210 KSC: track last obj id per sheet ...
 			HashMap localFonts = null; // fonts currently in workbook
-			if( (this.getTransferFonts() != null) && (this.getTransferFonts().size() > 0) )
+			if( (getTransferFonts() != null) && (getTransferFonts().size() > 0) )
 			{    // then must translate old font indexes to new font indexes
-				localFonts = (HashMap) this.getWorkBook().getFontRecsAsXML();    // fonts in this workbook
+				localFonts = (HashMap) getWorkBook().getFontRecsAsXML();    // fonts in this workbook
 			}
 			List recs = destChart.getXLSrecs();
 			for( Object rec1 : recs )
@@ -2232,7 +2232,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				}
 				//try{log.info("Boundsheet Added new Chart rec:" + rec);}catch(Exception e){log.warn("Boundsheet.addChart() could not get String for rec: "+ rec.getCellAddress());}
 			}
-			this.wkbook.getChartVect().add( destChart );
+			wkbook.getChartVect().add( destChart );
 		}
 		charts.add( destChart );
 		return destChart;
@@ -2261,7 +2261,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	public Row insertRow( int rownum, int flag, boolean shiftrows )
 	{
 		Row roe = null;
-		if( shiftrows && !this.fastCellAdds )
+		if( shiftrows && !fastCellAdds )
 		{
 			try
 			{
@@ -2282,7 +2282,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						{
 							try
 							{
-								this.shiftRow( rowtoshift, 1 );// pass original row # for formula shifting + flag
+								shiftRow( rowtoshift, 1 );// pass original row # for formula shifting + flag
 							}
 							catch( Exception e )
 							{
@@ -2293,12 +2293,12 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				}
 
 				// we add a blank because a row cannot be empty
-				roe = this.getRowByNumber( rownum );
+				roe = getRowByNumber( rownum );
 				if( roe == null )
 				{
 					int[] rc = { rownum, 0 };
-					this.addRecord( Blank.getPrototype(), rc );
-					roe = this.getRowByNumber( rownum );
+					addRecord( Blank.getPrototype(), rc );
+					roe = getRowByNumber( rownum );
 				}
 
 			}
@@ -2309,18 +2309,18 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		}
 		else
 		{
-			roe = this.getRowByNumber( rownum );
+			roe = getRowByNumber( rownum );
 			if( roe == null )
 			{
 				Row r = new Row( rownum, wkbook );
 				// must also update maxrow on sheet
-				if( rownum >= this.getMaxRow() )
+				if( rownum >= getMaxRow() )
 				{
 					dimensions.setRowLast( rownum );
 				}
 				r.setSheet( this );
-				this.addRowRec( r );
-				roe = this.getRowByNumber( rownum );
+				addRowRec( r );
+				roe = getRowByNumber( rownum );
 				roe.resetCacheBytes();
 			}
 		}
@@ -2343,7 +2343,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			rows.put( rwn, r );
 			if( lastRow == null )
 			{
-				this.lastRow = r;
+				lastRow = r;
 			}
 			else if( rwn > lastRow.getRowNumber() )
 			{
@@ -2459,21 +2459,21 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		                                   false );    //shift or expand/contract ALL affected references including named ranges
 
 		// shift the existing columns to the right to make room
-		for( int colIdx = this.getRealMaxCol(); colIdx >= first; colIdx-- )
+		for( int colIdx = getRealMaxCol(); colIdx >= first; colIdx-- )
 		{
-			this.shiftCol( colIdx, count );
+			shiftCol( colIdx, count );
 		}
 
 		// update the new colinfos to include the formatting and the width of the inserted col
-		Colinfo movedCol = this.getColInfo( first + count );
+		Colinfo movedCol = getColInfo( first + count );
 		if( movedCol != null )
 		{
 			for( int i = 0; i < count; i++ )
 			{
-				Colinfo newcol = this.getColInfo( first + i );
+				Colinfo newcol = getColInfo( first + i );
 				if( newcol == null )
 				{
-					this.addColinfo( first + i, first + i, movedCol.getColWidth(), movedCol.getIxfe(), movedCol.getGrbit() );
+					addColinfo( first + i, first + i, movedCol.getColWidth(), movedCol.getIxfe(), movedCol.getGrbit() );
 				}
 				else
 				{
@@ -2485,7 +2485,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		}
 
 		// ensure the sheet bounds are accurate
-		this.dimensions.setColLast( this.getRealMaxCol() );
+		dimensions.setColLast( getRealMaxCol() );
 	}
 
 	/**
@@ -2504,10 +2504,10 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		ci.setGrbit( grbit );
 		ci.setWorkBook( getWorkBook() );
 		ci.setSheet( this );
-		this.addColinfo( ci );
-		int recpos = this.getDimensions().getRecordIndex();
+		addColinfo( ci );
+		int recpos = getDimensions().getRecordIndex();
 		recpos--;
-		List sr = this.getSheetRecs();
+		List sr = getSheetRecs();
 		// get to last Colinfo record
 		BiffRec rec = (BiffRec) sr.get( recpos );
 		// TODO: is it ABSOLUTELY true that if no Colinfos there must be a DefColWidth record????
@@ -2524,7 +2524,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			rec = (BiffRec) sr.get( --recpos );
 		}
 		recpos++;
-		this.getStreamer().addRecordAt( ci, recpos );
+		getStreamer().addRecordAt( ci, recpos );
 		return ci;
 	}
 
@@ -2538,12 +2538,12 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public Colinfo createColinfo( int first, int last, Colinfo template )
 	{
-		return this.createColinfo( first, last, template.getColWidth(), template.getIxfe(), template.getGrbit() );
+		return createColinfo( first, last, template.getColWidth(), template.getIxfe(), template.getGrbit() );
 	}
 
 	public Colinfo createColinfo( int first, int last )
 	{
-		return this.createColinfo( first, last, Colinfo.DEFAULT_COLWIDTH, 0, 0 );
+		return createColinfo( first, last, Colinfo.DEFAULT_COLWIDTH, 0, 0 );
 	}
 
 	/**
@@ -2596,7 +2596,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public BiffRec addValue( Object obj, int[] rc, boolean fixNumberAsString )
 	{
-		return addValue( obj, rc, this.getWorkBook().getDefaultIxfe(), fixNumberAsString );
+		return addValue( obj, rc, getWorkBook().getDefaultIxfe(), fixNumberAsString );
 	}
 
 	/**
@@ -2635,7 +2635,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			throw new InvalidRecordException( "Cell Row number: " + rc[0] + " is greater than maximum allowable row: " + WorkBook.MAXROWS );
 		}
 
-		Row r = this.getRowByNumber( rc[0] );
+		Row r = getRowByNumber( rc[0] );
 
 		/*
 		 * from Doc: The default cell format is always present in an Excel file,
@@ -2646,13 +2646,13 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		 */
 		if( FORMAT_ID <= 0 )
 		{
-			FORMAT_ID = this.getWorkBook().getDefaultIxfe();
+			FORMAT_ID = getWorkBook().getDefaultIxfe();
 		}
-		if( FORMAT_ID == this.getWorkBook().getDefaultIxfe() )
+		if( FORMAT_ID == getWorkBook().getDefaultIxfe() )
 		{
-			if( this.getColInfo( rc[1] ) != null )
+			if( getColInfo( rc[1] ) != null )
 			{	/* get default colinfo if possible */
-				Colinfo co = this.getColInfo( rc[1] );
+				Colinfo co = getColInfo( rc[1] );
 				if( (co != null) && (co.getIxfe() != 0) )
 				{
 					FORMAT_ID = co.getIxfe();
@@ -2670,15 +2670,15 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{
 			try
 			{
-				BiffRec mycell = this.getCell( rc[0], rc[1] );
+				BiffRec mycell = getCell( rc[0], rc[1] );
 				BiffRec rec = mycell;
 				merge_range = rec.getMergeRange();
 				// specific cell format overrides any other formats: if (FORMAT_ID == defaultFormatId)
-				if( (rec.getIxfe() != this.getWorkBook().getDefaultIxfe()) && (rec.getIxfe() != 0) )
+				if( (rec.getIxfe() != getWorkBook().getDefaultIxfe()) && (rec.getIxfe() != 0) )
 				{
 					FORMAT_ID = rec.getIxfe();
 				}
-				this.removeCell( mycell );
+				removeCell( mycell );
 			}
 			catch( CellNotFoundException cnfe )
 			{
@@ -2693,7 +2693,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{
 			try
 			{
-				fixed = this.fixNumberStoredAsString( obj );
+				fixed = fixNumberStoredAsString( obj );
 				obj = fixed[0];
 			}
 			catch( Exception e )
@@ -2702,7 +2702,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			}
 		}
 
-		XLSRecord rec = this.createValrec( obj, rc, FORMAT_ID );
+		XLSRecord rec = createValrec( obj, rc, FORMAT_ID );
 
 		if( !fastCellAdds )
 		{ // reapply conditional format and merges
@@ -2713,11 +2713,11 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		}
 
 		// check this does not touch affectedcells
-		this.addRecord( rec, rc );
+		addRecord( rec, rc );
 
 		if( fixed != null )
 		{
-			FormatHandle f = new FormatHandle( this.wkbook, this.getWorkBook().getDefaultIxfe() );
+			FormatHandle f = new FormatHandle( wkbook, getWorkBook().getDefaultIxfe() );
 			f.setFormatPattern( fixed[1].toString() );
 			rec.setXFRecord( f.getFormatId() );
 		}
@@ -2726,10 +2726,10 @@ public final class Boundsheet extends XLSRecord implements Sheet
 
 		if( r == null )
 		{ // if no row initially, check default row height; if not Excel's default, set row height
-			double rh = this.getDefaultRowHeight();
+			double rh = getDefaultRowHeight();
 			if( rh != 12.75 )
 			{// the default
-				r = this.getRowByNumber( rc[0] );
+				r = getRowByNumber( rc[0] );
 				r.setRowHeight( (int) (rh * 20) );
 			}
 		}
@@ -2742,7 +2742,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public int getRealMaxCol()
 	{
-		return this.maximumCellCol;
+		return maximumCellCol;
 	}
 
 	/**
@@ -2761,10 +2761,10 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		ci.setGrbit( grbit );
 		ci.setWorkBook( getWorkBook() );
 		ci.setSheet( this );
-		this.addColinfo( ci );
-		int recpos = this.getDimensions().getRecordIndex();
+		addColinfo( ci );
+		int recpos = getDimensions().getRecordIndex();
 		recpos--;
-		List sr = this.getSheetRecs();
+		List sr = getSheetRecs();
 		// get to last Colinfo record
 		BiffRec rec = (BiffRec) sr.get( recpos );
 		// TODO: is it ABSOLUTELY true that if no Colinfos there must be a DefColWidth record????
@@ -2781,7 +2781,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			rec = (BiffRec) sr.get( --recpos );
 		}
 		recpos++;
-		this.getStreamer().addRecordAt( ci, recpos );
+		getStreamer().addRecordAt( ci, recpos );
 		return ci;
 	}
 
@@ -2796,8 +2796,8 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			try
 			{
 				Double d = c.getDblVal();
-				this.removeCell( c );
-				this.addValue( d, endaddr );
+				removeCell( c );
+				addValue( d, endaddr );
 			}
 			catch( Exception e )
 			{
@@ -2810,7 +2810,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			c.setCol( (short) s[1] );
 			c.setRowNumber( s[0] );
 			removeCell( startaddr );
-			this.addCell( (CellRec) c );
+			addCell( (CellRec) c );
 		}
 	}
 
@@ -2826,8 +2826,8 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			try
 			{
 				Double d = c.getDblVal();
-				this.removeCell( c );
-				this.addValue( d, endaddr );
+				removeCell( c );
+				addValue( d, endaddr );
 			}
 			catch( Exception e )
 			{
@@ -2839,7 +2839,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			int[] s = ExcelTools.getRowColFromString( endaddr );
 			c.setCol( (short) s[1] );
 			c.setRowNumber( s[0] );
-			this.addCell( (CellRec) c );
+			addCell( (CellRec) c );
 		}
 	}
 
@@ -2850,7 +2850,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public String getPrintArea()
 	{
-		Name n = this.getPrintAreaNameRec();
+		Name n = getPrintAreaNameRec();
 		if( n != null )
 		{
 			String ret = "";
@@ -2913,7 +2913,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	{
 		if( type != Name.PRINT_TITLES )
 		{// can have multiple print title refs
-			Name n = this.getPrintAreaNameRec( type );
+			Name n = getPrintAreaNameRec( type );
 			if( n != null )
 			{ // TODO: should check if same SHEET -- look at!
 				Stack s = n.getExpression();
@@ -2942,14 +2942,14 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			{
 				t = "PRINT_TITLES";
 			}
-			Name n = new Name( this.getWorkBook(), "Built-in: " + t );
+			Name n = new Name( getWorkBook(), "Built-in: " + t );
 			n.setBuiltIn( type );
-			int xref = this.getWorkBook().getExternSheet( true ).insertLocation( this.getSheetNum(), this.getSheetNum() );
+			int xref = getWorkBook().getExternSheet( true ).insertLocation( getSheetNum(), getSheetNum() );
 			n.setExternsheetRef( xref );
 			n.updateSheetReferences( this );
 			n.setSheet( this );
-			n.setIxals( (short) (this.getSheetNum()) );
-			n.setItab( (short) (this.getSheetNum() + 1) );
+			n.setIxals( (short) (getSheetNum()) );
+			n.setItab( (short) (getSheetNum() + 1) );
 			Stack<Ptg> s = new Stack<Ptg>();
 			Ptg p = PtgRef.createPtgRefFromString( printarea, n );
 			s.push( p );
@@ -2969,7 +2969,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	public ArrayList getNotes()
 	{
 		ArrayList notes = new ArrayList();
-		int idx = this.getIndexOf( NOTE );
+		int idx = getIndexOf( NOTE );
 		while( idx > -1 )
 		{
 			notes.add( SheetRecs.get( idx++ ) );
@@ -2990,8 +2990,8 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	{
 		Mergedcells mec = (Mergedcells) Mergedcells.getPrototype();
 		mec.setSheet( this );
-		this.getStreamer().addRecordAt( mec, this.getSheetRecs().size() - 1 );
-		this.addMergedCellsRec( mec );
+		getStreamer().addRecordAt( mec, getSheetRecs().size() - 1 );
+		addMergedCellsRec( mec );
 		return mec;
 	}
 
@@ -3037,16 +3037,16 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	public void init()
 	{
 		super.init();
-		int lt = ByteTools.readInt( this.getByteAt( 0 ), this.getByteAt( 1 ), this.getByteAt( 2 ), this.getByteAt( 3 ) );
+		int lt = ByteTools.readInt( getByteAt( 0 ), getByteAt( 1 ), getByteAt( 2 ), getByteAt( 3 ) );
 
 		// this is the index used by the BOF's Sheet to associate the record
 		lbPlyPos = lt;
-		grbit = ByteTools.readShort( this.getByteAt( 4 ), this.getByteAt( 5 ) );
+		grbit = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
 			log.trace( "Sheet grbit: " + grbit );
 			log.trace( " lbplypos: " + lbPlyPos );
-		cch = this.getByteAt( 6 );
-		grbitChr = this.getByteAt( 7 );
-		byte[] namebytes = this.getBytesAt( 8, this.getLength() - 12 );
+		cch = getByteAt( 6 );
+		grbitChr = getByteAt( 7 );
+		byte[] namebytes = getBytesAt( 8, getLength() - 12 );
 		try
 		{
 			if( grbitChr == 0x1 )
@@ -3280,7 +3280,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public Chart addChart( byte[] inbytes, short[] coords )
 	{
-		return this.addChart( inbytes, "useDefault", coords );
+		return addChart( inbytes, "useDefault", coords );
 	}
 
 	/**
@@ -3289,8 +3289,8 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public void populateForTransfer()
 	{
-		this.getSheetHash();
-		BiffRec[] recs = this.getCells();
+		getSheetHash();
+		BiffRec[] recs = getCells();
 		for( BiffRec rec : recs )
 		{
 			if( rec.getOpcode() == XLSConstants.LABELSST )
@@ -3299,14 +3299,14 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				mylabel.initUnsharedString();
 			}
 		}
-		transferXfs = this.getWorkBook().getXfrecs();
+		transferXfs = getWorkBook().getXfrecs();
 		for( Object transferXf : transferXfs )
 		{
 			Xf x = (Xf) transferXf;
 			x.populateForTransfer();
 		}
 
-		transferFonts = this.getWorkBook().getFontRecs();
+		transferFonts = getWorkBook().getFontRecs();
 		for( Object transferFont : transferFonts )
 		{
 			Font x = (Font) transferFont;
@@ -3351,7 +3351,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		if( scl == null )
 		{ // we needs one!
 			scl = new Scl();
-			this.SheetRecs.add( this.getIndexOfWindow2(), scl );
+			SheetRecs.add( getIndexOfWindow2(), scl );
 			scl.setSheet( this );
 		}
 		return scl;
@@ -3364,7 +3364,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public void setScl( Scl s )
 	{
-		this.scl = s;
+		scl = s;
 	}
 
 	/**
@@ -3438,10 +3438,10 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	public Note createNote( String address, String txt, String author )
 	{
 		// first check if a note is already attached to this addrss
-		ArrayList notes = this.getNotes();
+		ArrayList notes = getNotes();
 		if( address.indexOf( '!' ) == -1 )
 		{
-			address = this.getSheetName() + "!" + address;
+			address = getSheetName() + "!" + address;
 		}
 		for( Object note : notes )
 		{
@@ -3456,18 +3456,18 @@ public final class Boundsheet extends XLSRecord implements Sheet
 
 		// add required Mso/object records
 		int[] coords = ExcelTools.getRowColFromString( address );
-		int insertIndex = this.insertMSOObjectsForNote( coords );
+		int insertIndex = insertMSOObjectsForNote( coords );
 
 		// after mso/obj/mso, now add txo/continue/continue and note record
 		Txo t = (Txo) Txo.getPrototype();
 		t.setSheet( this );
-		this.SheetRecs.add( insertIndex++, t );
-		this.SheetRecs.add( insertIndex++, t.text );    // add the associated Continues that defines the text
+		SheetRecs.add( insertIndex++, t );
+		SheetRecs.add( insertIndex++, t.text );    // add the associated Continues that defines the text
 		t.text.setPredecessor( t ); // link this continues to it's predecessor
 		Continue c = Continue.getBasicFormattingRunContinues();
 		c.setPredecessor( t ); // TODO: is this correct????
 		c.setSheet( this );
-		this.SheetRecs.add( insertIndex++, c );    // and add associated formatting runs
+		SheetRecs.add( insertIndex++, c );    // and add associated formatting runs
 		try
 		{
 			t.setStringVal( txt ); // must do *after* adding continues
@@ -3477,12 +3477,12 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			log.error( e.toString() );
 		}
 		// after (mso/obj/mso/txo/continue/continue) * n, note records are listed in order
-		insertIndex = this.getIndexOf( WINDOW2 );
+		insertIndex = getIndexOf( WINDOW2 );
 		Note n = (Note) Note.getPrototype( author );
-		n.setId( this.lastObjId ); // same as Obj record above
+		n.setId( lastObjId ); // same as Obj record above
 		n.setSheet( this );
 		n.setRowCol( coords[0], coords[1] );
-		this.SheetRecs.add( insertIndex, n );
+		SheetRecs.add( insertIndex, n );
 		return n;
 	}
 
@@ -3494,18 +3494,18 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	public int insertDropDownBox( int colNum )
 	{
 		int insertIndex;
-		MSODrawingGroup msodg = this.wkbook.getMSODrawingGroup();
+		MSODrawingGroup msodg = wkbook.getMSODrawingGroup();
 		if( msodg == null )
 		{
-			msodg = this.wkbook.createMSODrawingGroup();
+			msodg = wkbook.createMSODrawingGroup();
 			msodg.initNewMSODrawingGroup();
 		}
 
 		// insert either above first NOTE record or before WINDOW2 and certain other XLSRECORDS
-		insertIndex = this.getIndexOf( NOTE );
+		insertIndex = getIndexOf( NOTE );
 		if( insertIndex == -1 ) // no existing notes - find proper insert index
 		{
-			insertIndex = this.getIndexOf( WINDOW2 );
+			insertIndex = getIndexOf( WINDOW2 );
 		}
 		while( (insertIndex - 1) > 0 )
 		{
@@ -3551,7 +3551,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		MSODrawing msoheader = msodg.getMsoHeaderRec( this );
 		MSODrawing msoDrawing = (MSODrawing) MSODrawing.getPrototype();
 		msoDrawing.setSheet( this );
-		msoDrawing.setWorkBook( this.getWorkBook() );
+		msoDrawing.setWorkBook( getWorkBook() );
 		if( msoheader == null )
 		{
 			msoDrawing.setIsHeader();
@@ -3561,18 +3561,18 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		msoDrawing.createDropDownListStyle( colNum );    // create the records necessary to define the dropdown box symbol at the desired column
 
 		// object record which defines a basic dropdown list
-		Obj obj = Obj.getBasicObjRecord( Obj.otDropdownlist, ++this.lastObjId );    // create a drop-down object record for each
+		Obj obj = Obj.getBasicObjRecord( Obj.otDropdownlist, ++lastObjId );    // create a drop-down object record for each
 		int objID = obj.getObjId();
 
 		// insert new mso + obj records into sheet
-		this.SheetRecs.add( insertIndex++, msoDrawing );
-		this.SheetRecs.add( insertIndex++, obj );
+		SheetRecs.add( insertIndex++, msoDrawing );
+		SheetRecs.add( insertIndex++, obj );
 
 		// now update msodg + msoheader rec
 		msoheader.numShapes++;
 		msodg.addMsodrawingrec( msoDrawing );    // add the new drawing rec to the msodrawinggroup set of recs
 		wkbook.updateMsodrawingHeaderRec( this );        // find the msodrawing header record and update it (using info from other msodrawing recs)
-		msodg.setSpidMax( this.wkbook.lastSPID + 1 );
+		msodg.setSpidMax( wkbook.lastSPID + 1 );
 		msodg.updateRecord();        // given all information, generate appropriate bytes
 		msodg.dirtyflag = true;
 
@@ -3590,7 +3590,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public Note createNote( String address, Unicodestring txt, String author )
 	{
-		Note nh = this.createNote( address, txt.getStringVal(), author );
+		Note nh = createNote( address, txt.getStringVal(), author );
 		// TODO: deal with formats - incorporate into Txo/Continues -- for now they are just stored as-is, no modification allowed
 		nh.setFormattingRuns( txt.getFormattingRuns() );
 		return nh;
@@ -3604,26 +3604,26 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	public void removeNote( Note n )
 	{
 		int id = n.getId();
-		int idx = this.getIndexOf( OBJ );
+		int idx = getIndexOf( OBJ );
 		if( idx == -1 )
 		{
 			return;    // should't!
 		}
-		while( idx < this.SheetRecs.size() )
+		while( idx < SheetRecs.size() )
 		{
-			if( ((BiffRec) this.SheetRecs.get( idx )).getOpcode() == OBJ )
+			if( ((BiffRec) SheetRecs.get( idx )).getOpcode() == OBJ )
 			{
-				Obj o = ((Obj) this.SheetRecs.get( idx ));
+				Obj o = ((Obj) SheetRecs.get( idx ));
 				// if it's of type Note + has the same id, this is it
 				if( (o.getObjType() == 0x19) && (o.getObjId() == id) )
 				{ // got it!
 					// apparently sometimes you don't find the mso/obj/mso combo, so check
-					if( ((BiffRec) this.SheetRecs.get( idx - 1 )).getOpcode() == MSODRAWING )
+					if( ((BiffRec) SheetRecs.get( idx - 1 )).getOpcode() == MSODRAWING )
 					{
 						idx--;
 						break;
 					}
-					if( (((BiffRec) this.SheetRecs.get( idx + 1 )).getOpcode() == CONTINUE) && ((((Continue) this.SheetRecs.get( idx + 1 ))).maskedMso != null) )
+					if( (((BiffRec) SheetRecs.get( idx + 1 )).getOpcode() == CONTINUE) && ((((Continue) SheetRecs.get( idx + 1 ))).maskedMso != null) )
 					{
 						// idx++;
 						break;
@@ -3637,10 +3637,10 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		int objidx = 0;
 		int msoidx = 0;
 		boolean maskedMso = true; // handle continues masking mso's
-		while( idx < this.SheetRecs.size() )
+		while( idx < SheetRecs.size() )
 		{
 			MSODrawing mso = null;
-			BiffRec rec = (BiffRec) this.SheetRecs.get( idx );
+			BiffRec rec = (BiffRec) SheetRecs.get( idx );
 			if( rec.getOpcode() == OBJ )
 			{
 				objidx++;
@@ -3678,20 +3678,20 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			{
 				break;
 			}
-			this.SheetRecs.remove( idx ); // otherwise, ok to delete
+			SheetRecs.remove( idx ); // otherwise, ok to delete
 			if( (mso != null) && mso.isShape )
 			{// if removed an mso, must update msodg
-				MSODrawingGroup msodg = this.wkbook.getMSODrawingGroup();
+				MSODrawingGroup msodg = wkbook.getMSODrawingGroup();
 				msodg.removeMsodrawingrec( mso, this, true );
 			}
 		}
 		// now remove the actual note record
-		idx = this.getIndexOf( NOTE );
-		while( (idx < this.SheetRecs.size()) && (((BiffRec) this.SheetRecs.get( idx )).getOpcode() == NOTE) )
+		idx = getIndexOf( NOTE );
+		while( (idx < SheetRecs.size()) && (((BiffRec) SheetRecs.get( idx )).getOpcode() == NOTE) )
 		{
-			if( this.SheetRecs.get( idx ).equals( n ) )
+			if( SheetRecs.get( idx ).equals( n ) )
 			{
-				this.SheetRecs.remove( idx );
+				SheetRecs.remove( idx );
 				break; // we're done
 			}
 			idx++;
@@ -3711,10 +3711,10 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		// to define dropdown box next to each column
 		// also must add built-in name _FILTERDATABASE +
 		// must add a mystery XlSRecord with opcode== 0x9D -- cannot find any information about this opcode
-		if( (this.autoFilters == null) || (this.autoFilters.size() == 0) )
+		if( (autoFilters == null) || (autoFilters.size() == 0) )
 		{
 			// add _FILTERDATABASE Name
-			this.addFilterDatabase();
+			addFilterDatabase();
 
 			/* 20100216 KSC: WHAT ARE  THESE RECORD??? They are necessary for new AutoFilter's */
 			int zz = getIndexOf( COLINFO );
@@ -3724,7 +3724,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			}
 			else
 			{
-				while( ((BiffRec) this.SheetRecs.get( zz )).getOpcode() == COLINFO )
+				while( ((BiffRec) SheetRecs.get( zz )).getOpcode() == COLINFO )
 				{
 					zz++;
 				}
@@ -3733,26 +3733,26 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			XLSRecord rec = new XLSRecord();
 			rec.setOpcode( (short) 155 ); // no data for this record
 			rec.setData( new byte[]{ } );
-			this.SheetRecs.add( zz++, rec );
+			SheetRecs.add( zz++, rec );
 			rec = new XLSRecord();
 			rec.setOpcode( (short) 157 );    // this has SOMETHING to do with # columns ...
-			rec.setData( new byte[]{ (byte) this.getMaxCol(), 0 } );
-			this.SheetRecs.add( zz, rec );
+			rec.setData( new byte[]{ (byte) getMaxCol(), 0 } );
+			SheetRecs.add( zz, rec );
 
 			// add required Mso/object records
 			int insertIndex;
-			MSODrawingGroup msodg = this.wkbook.getMSODrawingGroup();
+			MSODrawingGroup msodg = wkbook.getMSODrawingGroup();
 			if( msodg != null )
 			{ // already have drawing records; just add to records + update msodg
-				insertIndex = this.getIndexOf( MSODRAWINGSELECTION );
+				insertIndex = getIndexOf( MSODRAWINGSELECTION );
 				if( insertIndex < 0 )
 				{
-					insertIndex = this.getIndexOf( WINDOW2 );
+					insertIndex = getIndexOf( WINDOW2 );
 				}
 			}
 			else
 			{ // No images present in workbook, must add appropriate records
-				msodg = this.wkbook.createMSODrawingGroup();
+				msodg = wkbook.createMSODrawingGroup();
 				msodg.initNewMSODrawingGroup();    // generate and add required records for drawing records
 				// insertion point for new msodrawing rec
 				insertIndex = getIndexOf( DIMENSIONS ) + 1;
@@ -3761,11 +3761,11 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			MSODrawing msoheader = msodg.getMsoHeaderRec( this );
 
 			// Must add for each column
-			for( int i = 0; i < this.getRealMaxCol(); i++ )
+			for( int i = 0; i < getRealMaxCol(); i++ )
 			{
 				try
 				{
-					if( this.getCellsByCol( i ).size() == 0 )
+					if( getCellsByCol( i ).size() == 0 )
 					{
 						break;
 					}
@@ -3778,7 +3778,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				// short j= (short) ci.getColFirst(); // column number'
 				short j = (short) i;
 				MSODrawing msoDrawing = (MSODrawing) MSODrawing.getPrototype();
-				msoDrawing.setWorkBook( this.wkbook );
+				msoDrawing.setWorkBook( wkbook );
 				msoDrawing.setSheet( this );
 				if( msoheader == null )
 				{
@@ -3789,17 +3789,17 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				msoDrawing.createDropDownListStyle( j );    // create the records necessary to define the dropdown box symbol
 
 				// object record which defines a basic dropdown list
-				Obj obj = Obj.getBasicObjRecord( Obj.otDropdownlist, ++this.lastObjId );    // create a drop-down object record for each
+				Obj obj = Obj.getBasicObjRecord( Obj.otDropdownlist, ++lastObjId );    // create a drop-down object record for each
 
 				// insert new mso + obj records into sheet
-				this.SheetRecs.add( insertIndex++, msoDrawing );
-				this.SheetRecs.add( insertIndex++, obj );
+				SheetRecs.add( insertIndex++, msoDrawing );
+				SheetRecs.add( insertIndex++, obj );
 
 				// now update msodg + msoheader rec
 				msoheader.numShapes++;
 				msodg.addMsodrawingrec( msoDrawing );    // add the new drawing rec to the msodrawinggroup set of recs
 				wkbook.updateMsodrawingHeaderRec( this );        // find the msodrawing header record and update it (using info from other msodrawing recs)
-				msodg.setSpidMax( this.wkbook.lastSPID + 1 );
+				msodg.setSpidMax( wkbook.lastSPID + 1 );
 				msodg.updateRecord();        // given all information, generate appropriate bytes
 				msodg.dirtyflag = true;
 			}
@@ -3809,9 +3809,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		af.setSheet( this );
 		af.setCol( column );
 		int i = getIndexOf( DIMENSIONS ); // insert just before DIMENSIONS record
-		this.SheetRecs.add( i, af );
+		SheetRecs.add( i, af );
 
-		this.autoFilters.add( af );
+		autoFilters.add( af );
 		return af;
 	}
 
@@ -3820,26 +3820,26 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public void removeAutoFilter()
 	{
-		this.removeFilterDatabase();    // remove the _FILTER_DATABASE name necessary for AutoFilters
+		removeFilterDatabase();    // remove the _FILTER_DATABASE name necessary for AutoFilters
 		int zz = getIndexOf( AUTOFILTER ); // remove all AutoFitler records
 		while( zz != -1 )
 		{
-			this.SheetRecs.remove( zz );
+			SheetRecs.remove( zz );
 			zz = getIndexOf( AUTOFILTER );
 		}
 		// remove the two unknown records
 		zz = getIndexOf( (short) 155 );
 		if( zz > -1 )
 		{
-			this.SheetRecs.remove( zz );
+			SheetRecs.remove( zz );
 		}
 		zz = getIndexOf( (short) 157 );
 		if( zz > -1 )
 		{
-			this.SheetRecs.remove( zz );
+			SheetRecs.remove( zz );
 		}
 		// and hows about the Mso/Obj records, huh? huh?
-		this.autoFilters.clear();
+		autoFilters.clear();
 		// finally, must set all rows to NOT hidden - I believe Excel does this when AutoFilters are turned off
 		for( int i = 0; i < rows.size(); i++ )
 		{
@@ -3858,20 +3858,20 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public Sxview addPivotTable( String ref, WorkBookHandle wbh, int sId, String tablename )
 	{
-		this.wkbook.addPivotCache( ref, wbh, sId );    // create the directory/storage for a pivot cache, if not already created
+		wkbook.addPivotCache( ref, wbh, sId );    // create the directory/storage for a pivot cache, if not already created
 		// ensure the proper directory/storage and pivot cache record is created
 		int zz = win2.getRecordIndex() - 1;
 		while( zz > 0 )
 		{
-			if( ((BiffRec) this.SheetRecs.get( zz )).getOpcode() == NOTE )
+			if( ((BiffRec) SheetRecs.get( zz )).getOpcode() == NOTE )
 			{
 				break;
 			}
-			if( ((BiffRec) this.SheetRecs.get( zz )).getOpcode() == OBJ )
+			if( ((BiffRec) SheetRecs.get( zz )).getOpcode() == OBJ )
 			{
 				break;
 			}
-			if( ((BiffRec) this.SheetRecs.get( zz )).getOpcode() == DIMENSIONS )
+			if( ((BiffRec) SheetRecs.get( zz )).getOpcode() == DIMENSIONS )
 			{
 				break;
 			}
@@ -3880,10 +3880,10 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		zz++;
 		// minimal configuration
 		Sxview sx = (Sxview) Sxview.getPrototype();
-		this.SheetRecs.add( zz++, sx );
-		this.SheetRecs.addAll( zz, sx.addInitialRecords( this ) );
+		SheetRecs.add( zz++, sx );
+		SheetRecs.addAll( zz, sx.addInitialRecords( this ) );
 		sx.setTableName( tablename );
-		this.wkbook.addPivotTable( sx );    // add to lookup
+		wkbook.addPivotTable( sx );    // add to lookup
 		return sx;
 	}
 
@@ -3909,7 +3909,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		// now evaluate all autofilters
 		for( int i = 0; i < autoFilters.size(); i++ )
 		{
-			(this.autoFilters.get( i )).evaluate();
+			(autoFilters.get( i )).evaluate();
 		}
 	}
 
@@ -4179,7 +4179,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public Name getScopedName( String nameRef )
 	{
-		Object o = this.sheetNameRecs.get( nameRef.toUpperCase() );    // case insensitive
+		Object o = sheetNameRecs.get( nameRef.toUpperCase() );    // case insensitive
 		if( o == null )
 		{
 			return null;
@@ -4245,9 +4245,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public Name[] getAllNames()
 	{
-		if( this.sheetNameRecs == null )
+		if( sheetNameRecs == null )
 		{
-			this.sheetNameRecs = new HashMap();
+			sheetNameRecs = new HashMap();
 		}
 		ArrayList retnames = new ArrayList( sheetNameRecs.values() );
 		Name[] names = new Name[retnames.size()];
@@ -4262,14 +4262,14 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	public void addMarginRecord( BiffRec r )
 	{
 		r.setSheet( this );
-		int i = this.getIndexOf( SETUP );
+		int i = getIndexOf( SETUP );
 		int thisOpCode = r.getOpcode();
 		// iterate up from SETUP record
 		// desired order:
 		// WsBool, HeaderRec, FooterRec, HCenter, VCenter, LeftMargin, RightMargin, TopMargin, BottomMargin, Pls
 		while( i > 0 )
 		{
-			int prevOpCode = ((BiffRec) this.getSheetRecs().get( --i )).getOpcode();
+			int prevOpCode = ((BiffRec) getSheetRecs().get( --i )).getOpcode();
 			if( (prevOpCode == VCENTER) || (prevOpCode == FOOTERREC) ||
 					(prevOpCode == LEFT_MARGIN) )
 			{
@@ -4288,7 +4288,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				break;
 			}
 		}
-		this.SheetRecs.add( ++i, r );
+		SheetRecs.add( ++i, r );
 	}
 
 	public DefColWidth getDefColWidth()
@@ -4309,7 +4309,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	protected Name getPrintAreaNameRec( byte type )
 	{
-		ArrayList<Name> names = this.getBuiltInNames();
+		ArrayList<Name> names = getBuiltInNames();
 		for( Object name : names )
 		{
 			Name n = (Name) name;
@@ -4419,11 +4419,11 @@ public final class Boundsheet extends XLSRecord implements Sheet
 					if( target != null )
 					{
 						String[] embeds = OOXMLReader.storeEmbeds( zip, target, p, externalDir );   // passes thru embedded objects
-						this.addOOXMLShape( new Object[]{ vml, embeds } );
+						addOOXMLShape( new Object[]{ vml, embeds } );
 					}
 					else
 					{
-						this.addOOXMLShape( vml );
+						addOOXMLShape( vml );
 					}
 	            /**/
 				}
@@ -4437,7 +4437,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 							String[] h = (String[]) hyperlink1;
 							try
 							{    // target= cl[2], ref= h[1], desc= h[2]
-								bk.getWorkSheet( this.getSheetName() ).getCell( h[1] ).setURL( rId,
+								bk.getWorkSheet( getSheetName() ).getCell( h[1] ).setURL( rId,
 								                                                               h[2],
 								                                                               "" );  // TODO: hyperlink text mark
 							}
@@ -4474,7 +4474,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
                 	PivotTableDefinition.parseOOXML(bk, /*cacheid, * /this, wrapInputStream(zip.getInputStream(target)));*/
 					try
 					{    // SAVE FOR LATER INPUT -- must do after all sheets are input ...
-						pivotTables.put( p + f, bk.getWorkSheet( this.getSheetName() ) );
+						pivotTables.put( p + f, bk.getWorkSheet( getSheetName() ) );
 					}
 					catch( WorkSheetNotFoundException we )
 					{
@@ -4526,11 +4526,11 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{
 			return;
 		}
-		Iterator i = this.sheetNameRecs.values().iterator();
+		Iterator i = sheetNameRecs.values().iterator();
 		while( i.hasNext() )
 		{
 			Name n = (Name) i.next();
-			n.setItab( (short) (this.getSheetNum() + 1) );
+			n.setItab( (short) (getSheetNum() + 1) );
 		}
 	}
 
@@ -4593,11 +4593,11 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			}
 			else
 			{ // it's a new font for this workbook, add it in
-				fid = this.getWorkBook().insertFont( thisFont ) + 1;
+				fid = getWorkBook().insertFont( thisFont ) + 1;
 				localFonts.put( xmlFont, fid );
 			}
 		}
-		if( fid > this.getWorkBook().getNumFonts() )
+		if( fid > getWorkBook().getNumFonts() )
 		{    // if fid is still incorrect, set to 0
 			fid = 0;
 		}
@@ -4644,60 +4644,60 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						String v = xpp.getAttributeValue( i );
 						if( n.equals( "thickBottom" ) )
 						{
-							this.setThickBottom( true );
+							setThickBottom( true );
 						}
 						else if( n.equals( "thickTop" ) )
 						{
-							this.setThickTop( true );
+							setThickTop( true );
 						}
 						else if( n.equals( "zeroHeight" ) )
 						{
-							this.setZeroHeight( v.equals( "1" ) );
+							setZeroHeight( v.equals( "1" ) );
 						}
 						else if( n.equals( "customHeight" ) )
 						{
-							this.setHasCustomHeight( v.equals( "1" ) );
+							setHasCustomHeight( v.equals( "1" ) );
 						}
 						else if( n.equals( "defaultColWidth" ) )
 						{
-							this.setDefaultColumnWidth( new Float( v ) );
+							setDefaultColumnWidth( new Float( v ) );
 						}
 						else if( n.equals( "defaultRowHeight" ) )
 						{
-							this.setDefaultRowHeight( new Double( v ) );
+							setDefaultRowHeight( new Double( v ) );
 						}
 					}
 				}
 				else if( tnm.equals( "sheetView" ) )
 				{      // TODO: finish handling options
 					SheetView s = (SheetView) SheetView.parseOOXML( xpp ).cloneElement();
-					this.setSheetView( s );
-					this.getWindow2().setShowGridlines( !(s.getAttrS( "showGridlines" )).equals( "0" ) );
+					setSheetView( s );
+					getWindow2().setShowGridlines( !(s.getAttrS( "showGridlines" )).equals( "0" ) );
 					if( s.getAttr( "showRowColHeaders" ) != null )
 					{
-						this.getWindow2().setShowSheetHeaders( (s.getAttrS( "showRowColHeaders" )).equals( "1" ) );
+						getWindow2().setShowSheetHeaders( (s.getAttrS( "showRowColHeaders" )).equals( "1" ) );
 					}
 					if( s.getAttr( "showZeros" ) != null )
 					{
-						this.getWindow2().setShowZeroValues( (s.getAttrS( "showZeros" )).equals( "1" ) );
+						getWindow2().setShowZeroValues( (s.getAttrS( "showZeros" )).equals( "1" ) );
 					}
 					if( s.getAttr( "showOutlineSymbols" ) != null )
 					{
-						this.getWindow2().setShowOutlineSymbols( (s.getAttrS( "showOutlineSymbols" )).equals( "1" ) );
+						getWindow2().setShowOutlineSymbols( (s.getAttrS( "showOutlineSymbols" )).equals( "1" ) );
 					}
 					if( s.getAttr( "tabSelected" ) != null )
 					{
-						this.setSelected( (s.getAttrS( "tabSelected" )).equals( "1" ) );
+						setSelected( (s.getAttrS( "tabSelected" )).equals( "1" ) );
 					}
 					if( s.getAttr( "zoomScale" ) != null )
 					{
-						this.getScl().setZoom( new Double( s.getAttrS( "zoomScale" ) ).floatValue() / 100 );
+						getScl().setZoom( new Double( s.getAttrS( "zoomScale" ) ).floatValue() / 100 );
 					}
 				}
 				else if( tnm.equals( "sheetPr" ) )
 				{    // sheet properties element
 					SheetPr sp = (SheetPr) SheetPr.parseOOXML( xpp ).cloneElement();
-					this.setSheetPr( sp );
+					setSheetPr( sp );
 				}
 				else if( tnm.equals( "dimension" ) )
 				{  // ref attribute
@@ -4716,11 +4716,11 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						String v = xpp.getAttributeValue( i );
 						if( nm.equals( "password" ) )
 						{
-							this.getProtectionManager().setPasswordHashed( v );
+							getProtectionManager().setPasswordHashed( v );
 						}
 						else if( nm.equals( "sheet" ) )
 						{
-							this.getProtectionManager().setProtected( OOXMLReader.parseBoolean( v ) );
+							getProtectionManager().setProtected( OOXMLReader.parseBoolean( v ) );
 						}
 					}
 				}
@@ -4781,9 +4781,9 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						if( nm.equals( "r" ) )
 						{
 							int rownum = Integer.valueOf( v ) - 1;
-							r = this.insertRow( rownum,
+							r = insertRow( rownum,
 							                    false ); // now insertRow with no shift rows does NOT add a blank cell so no need to delete extra cell anymore
-							r.setIxfe( this.getWorkBook().getDefaultIxfe() );
+							r.setIxfe( getWorkBook().getDefaultIxfe() );
 						}
 						else if( nm.equals( "ht" ) )
 						{
@@ -4837,7 +4837,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				{// element c child v= value
 					if( cellAddr != null )
 					{
-						if( r.getExplicitFormatSet() || (((formatId != this.getWorkBook().getDefaultIxfe()) && (formatId != 0))) )
+						if( r.getExplicitFormatSet() || (((formatId != getWorkBook().getDefaultIxfe()) && (formatId != 0))) )
 						{ //default or not specified NOTE: default for OOXML is 0 not 15
 							int[] rc = ExcelTools.getRowColFromString( cellAddr );
 							OOXMLReader.sheetAdd( sheet, null, rc[0], rc[1], formatId );
@@ -4874,7 +4874,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						inlineStrs = new HashMap();
 					}
 					String s = OOXMLReader.getInlineString( xpp );
-					inlineStrs.put( this.getSheetName() + "!" + cellAddr, s );
+					inlineStrs.put( getSheetName() + "!" + cellAddr, s );
 					int[] rc = ExcelTools.getRowColFromString( cellAddr );
 					OOXMLReader.sheetAdd( sheet, "", rc[0], rc[1], formatId );   // add placeholder here
 					cellAddr = null;
@@ -4908,7 +4908,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						}
 						String v = OOXMLReader.getNextText( xpp );
 						formulas.add( new String[]{
-								this.getSheetName(), cellAddr, "=" + v, si, ref, ftype, ca, Integer.valueOf( formatId ).toString(), ""
+								getSheetName(), cellAddr, "=" + v, si, ref, ftype, ca, Integer.valueOf( formatId ).toString(), ""
 						} );
 						type = "f"; // cell will not be added below; rather, formula cells are processed en mass in parse
 					}
@@ -4931,7 +4931,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 							Labelsst labl = Labelsst.getPrototype( null, bk.getWorkBook() );
 							labl.setIsst( Integer.valueOf( v ) );
 							labl.setIxfe( formatId );
-							this.addRecord( labl, rc );
+							addRecord( labl, rc );
 						}
 						else if( type.equals( "n" ) )
 						{
@@ -4981,7 +4981,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 					String ref = xpp.getAttributeValue( 0 );
 					try
 					{
-						CellRange cr = new CellRange( this.getSheetName() + "!" + ref, bk );
+						CellRange cr = new CellRange( getSheetName() + "!" + ref, bk );
 						cr.mergeCells( false );
 					}
 					catch( CellNotFoundException e )
@@ -4997,7 +4997,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				}
 				else if( tnm.equals( "autoFilter" ) )
 				{   // Appears to sometimes work in tandem with dataValidtions (see Modeling Workbook - WKSHT.xlsm)
-					this.setOOAutoFilter( (com.extentech.formats.OOXML.AutoFilter) com.extentech.formats.OOXML.AutoFilter.parseOOXML( xpp ) );
+					setOOAutoFilter( (com.extentech.formats.OOXML.AutoFilter) com.extentech.formats.OOXML.AutoFilter.parseOOXML( xpp ) );
 				}
 				else if( tnm.equals( "hyperlink" ) )
 				{
@@ -5026,15 +5026,15 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				}
 				else if( tnm.equals( "pageSetup" ) )
 				{      // scale orientation r:id ...
-					this.addExternalInfo( shExternalLinkInfo, xpp );
+					addExternalInfo( shExternalLinkInfo, xpp );
 				}
 				else if( tnm.equals( "oleObject" ) )
 				{      // progId  shapeId r:id ...
-					this.addExternalInfo( shExternalLinkInfo, xpp );
+					addExternalInfo( shExternalLinkInfo, xpp );
 				}
 				else if( tnm.equals( "control" ) )
 				{        // progId  shapeId r:id ...
-					this.addExternalInfo( shExternalLinkInfo, xpp );
+					addExternalInfo( shExternalLinkInfo, xpp );
 					// TODO: handle AlternateContent Machinery!
 					// for now, we are ignoring choice and fallback and ONLY
 					// extracting control element
@@ -5074,7 +5074,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 
 					int[] rc = ExcelTools.getRowColFromString( cellAddr );
 					// if masking an explicit row format or if it's a unique format, set to new blank cell
-					if( r.getExplicitFormatSet() || (((formatId != this.getWorkBook().getDefaultIxfe()) && (formatId != 0))) )
+					if( r.getExplicitFormatSet() || (((formatId != getWorkBook().getDefaultIxfe()) && (formatId != 0))) )
 					{ //default or not specified NOTE: default for OOXML is 0 not 15 (unless converted from XLS ((:
 //                         if (r.myRow.getExplicitFormatSet() || (/*formatId!=15 && */formatId!=0 && uniqueFormat)) { //default or not specified NOTE: default for OOXML==0 NOT 15
 						OOXMLReader.sheetAdd( sheet, null, rc[0], rc[1], formatId );
@@ -5127,7 +5127,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 					{
 						if( (comment != null) && !"".equals( addr ) )
 						{
-							this.createNote( addr, comment, authors.get( authId ) );
+							createNote( addr, comment, authors.get( authId ) );
 						}
 						addr = xpp.getAttributeValue( "", "ref" );
 						authId = Integer.valueOf( xpp.getAttributeValue( "", "authorId" ) );
@@ -5149,7 +5149,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			}
 			if( !"".equals( comment ) && !"".equals( addr ) )
 			{
-				this.createNote( addr, comment, authors.get( authId ) );
+				createNote( addr, comment, authors.get( authId ) );
 			}
 		}
 		catch( Exception e )
@@ -5204,7 +5204,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			// and edited here for the actual text and formats ... ms's legacy drawing stuff makes for alot of convoluted processing ((;
 			FastAddVector nhs = new FastAddVector();
 			{
-				CommentHandle[] anhs = bk.getWorkSheet( this.getSheetName() ).getCommentHandles();
+				CommentHandle[] anhs = bk.getWorkSheet( getSheetName() ).getCommentHandles();
 				for( CommentHandle anh : anhs )
 				{
 					nhs.add( anh );
@@ -5365,7 +5365,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 								ZipEntry img = new ZipEntry( imgFile );
 								BufferedInputStream is = new BufferedInputStream( zip.getInputStream( img ) );
 								ImageHandle im = new ImageHandle( is, this );
-								this.insertImage( im );
+								insertImage( im );
 								im.setName( t.getName() );
 								im.setShapeName( t.getDescr() );
 								im.setBounds( TwoCellAnchor.convertBoundsToBIFF8( this, t.getBounds() ) );        // must do after insert
@@ -5385,7 +5385,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 								{
 									name = "Untitled Chart";
 								}
-								ChartHandle ch = bk.createChart( name, bk.getWorkSheet( this.getSheetName() ) );
+								ChartHandle ch = bk.createChart( name, bk.getWorkSheet( getSheetName() ) );
 								ch.setRelativeBounds( TwoCellAnchor.convertBoundsToBIFF8( this,
 								                                                          t.getBounds() ) );        // must do after insert
 								ch.setEditMovement( t.getEditAs() );  // specify how to resize or move
@@ -5446,7 +5446,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						}
 						else if( t.hasShape() )
 						{
-							this.addOOXMLShape( t );       // just store shape for later output since prev. versions do not handle shapes
+							addOOXMLShape( t );       // just store shape for later output since prev. versions do not handle shapes
 							if( t.getEmbed() != null )
 							{                  // if this shape has embedded objects such as images
 								String imgFile = OOXMLReader.parsePathForZip( OOXMLReader.getFilename( drawingFiles, t.getEmbed() ),
@@ -5475,7 +5475,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 								ZipEntry img = new ZipEntry( imgFile );
 								BufferedInputStream is = new BufferedInputStream( OOXMLReader.wrapInputStream( zip.getInputStream( img ) ) );
 								ImageHandle im = new ImageHandle( is, this );
-								this.insertImage( im );
+								insertImage( im );
 								im.setName( oca.getName() );
 								im.setShapeName( oca.getDescr() );
 								im.setBounds( oca.getBounds() );        // must do after insert
@@ -5494,7 +5494,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 								{
 									name = "Untitled Chart";
 								}
-								ChartHandle ch = bk.createChart( name, bk.getWorkSheet( this.getSheetName() ) );
+								ChartHandle ch = bk.createChart( name, bk.getWorkSheet( getSheetName() ) );
 								ch.setRelativeBounds( oca.getBounds() );
 								//ch.setChartTitle(name);
 								chart = OOXMLReader.parsePathForZip( chart, parentDir );
@@ -5504,7 +5504,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 						}
 						else if( oca.hasShape() )
 						{
-							this.addOOXMLShape( oca );     // just store shape for later output since prev. versions do not handle shapes
+							addOOXMLShape( oca );     // just store shape for later output since prev. versions do not handle shapes
 						}
 						else
 						{   // TESTING!
@@ -5535,18 +5535,18 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	private void shiftCol( int colNum, int shift )
 	{
-		Colinfo info = this.getColInfo( colNum );
+		Colinfo info = getColInfo( colNum );
 		int oldCol = colNum;
 		int newCol = oldCol + shift;
 
 		List<BiffRec> cells;
 		try
 		{
-			cells = this.getCellsByCol( colNum );
+			cells = getCellsByCol( colNum );
 			for( BiffRec cell : cells )
 			{
 				cell.setCol( (short) newCol );
-				this.updateDimensions( cell.getRowNumber(), cell.getColNumber() );
+				updateDimensions( cell.getRowNumber(), cell.getColNumber() );
 			}
 		}
 		catch( CellNotFoundException e )
@@ -5572,8 +5572,8 @@ public final class Boundsheet extends XLSRecord implements Sheet
 
 	private void removeColInfo( Colinfo ci )
 	{
-		this.removeRecFromVec( ci );
-		this.colinfos.remove( ci );
+		removeRecFromVec( ci );
+		colinfos.remove( ci );
 	}
 
 	/**
@@ -5601,7 +5601,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				skipMulBlank = (Mulblank) cell;
 			}
 
-			this.shiftCellRow( cell, shift );
+			shiftCellRow( cell, shift );
 		}
 
 		int oldRow = row.getRowNumber();
@@ -5611,10 +5611,10 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		rows.remove( oldRow );
 		rows.put( newRow, row );
 
-		if( this.dimensions.getRowLast() < newRow )
+		if( dimensions.getRowLast() < newRow )
 		{
-			this.dimensions.setRowLast( newRow );
-			this.lastRow = row;
+			dimensions.setRowLast( newRow );
+			lastRow = row;
 		}
 	}
 
@@ -5669,14 +5669,14 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	private Row addNewRow( BiffRec cell )
 	{
 		int rn = cell.getRowNumber();
-		if( this.getRowByNumber( rn ) != null )
+		if( getRowByNumber( rn ) != null )
 		{
-			return this.getRowByNumber( rn ); // already exists!
+			return getRowByNumber( rn ); // already exists!
 		}
 		Row r = new Row( rn, wkbook );
 		try
 		{    //Out-of-spec wb's may not have dimensions record -- will be handled upon validation
-			if( rn >= this.getMaxRow() )
+			if( rn >= getMaxRow() )
 			{
 				dimensions.setRowLast( rn );
 			}
@@ -5685,7 +5685,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{
 		}
 		r.setSheet( this );
-		this.addRowRec( r );
+		addRowRec( r );
 		return r;
 
 	}
@@ -5742,7 +5742,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				catch( Exception e )
 				{
 					// 20070212 KSC: add sheet name + address log.warn("adding new Formula at row:" + rc[0] +" col: " + rc[1] + ":"+obj.toString()+" failed, adding value to worksheet as String.");
-					throw new FunctionNotSupportedException( "Adding new Formula at " + this.getSheetName() + "!" + ExcelTools.formatLocation(
+					throw new FunctionNotSupportedException( "Adding new Formula at " + getSheetName() + "!" + ExcelTools.formatLocation(
 							rc ) + " failed: " + e.toString() + "." );
 					//rec = Labelsst.getPrototype((String) obj, this.getWorkBook().getSharedStringTable());
 				}
@@ -5756,7 +5756,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				}
 				catch( Exception e )
 				{
-					throw new FunctionNotSupportedException( "Adding new Formula at " + this.getSheetName() + "!" + ExcelTools.formatLocation(
+					throw new FunctionNotSupportedException( "Adding new Formula at " + getSheetName() + "!" + ExcelTools.formatLocation(
 							rc ) + " failed: " + e.toString() + "." );
 				}
 			}
@@ -5766,7 +5766,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			}
 			else
 			{
-				rec = Labelsst.getPrototype( (String) obj, this.getWorkBook() );
+				rec = Labelsst.getPrototype( (String) obj, getWorkBook() );
 			}
 		}
 		else if( obj instanceof Integer )
@@ -5796,7 +5796,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		// 20100607 KSC: update maxrow/maxcol if necessary
 		if( (rc[0] > getMaxRow()) || (rc[1] > getMaxCol()) )
 		{
-			this.updateDimensions( rc[0], rc[1] );
+			updateDimensions( rc[0], rc[1] );
 		}
 		return rec;
 	}
@@ -5805,7 +5805,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	{
 		int row = c.getRowNumber() + 1; // get the prior cell addy
 		String cnm = ExcelTools.getAlphaVal( c.getColNumber() );
-		BiffRec ch = this.getCell( cnm + row ); // try it...
+		BiffRec ch = getCell( cnm + row ); // try it...
 		if( ch == null )
 		{
 			return false;
@@ -5822,10 +5822,10 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	private ArrayList<Name> getBuiltInNames()
 	{
 		ArrayList<Name> retlist = new ArrayList<Name>();
-		Name[] ns = this.getWorkBook().getNames();
+		Name[] ns = getWorkBook().getNames();
 		for( Name n : ns )
 		{
-			if( n.isBuiltIn() && ((n.getIxals() == (this.getSheetNum() + 1)) || (n.getItab() == (this.getSheetNum() + 1))) )
+			if( n.isBuiltIn() && ((n.getIxals() == (getSheetNum() + 1)) || (n.getItab() == (getSheetNum() + 1))) )
 			{
 				retlist.add( n );
 			}
@@ -5839,7 +5839,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	private void addFilterDatabase()
 	{
-		List<Name> names = this.getBuiltInNames();
+		List<Name> names = getBuiltInNames();
 		Name n = null;
 		for( int i = 0; (i < names.size()) && (n == null); i++ )
 		{
@@ -5852,19 +5852,19 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		{ // not present
 			try
 			{
-				n = new Name( this.getWorkBook(), "Built-in: _FILTER_DATABASE" );
+				n = new Name( getWorkBook(), "Built-in: _FILTER_DATABASE" );
 				n.setBuiltIn( Name._FILTER_DATABASE );
-				int xref = this.getWorkBook().getExternSheet( true ).insertLocation( this.getSheetNum(), this.getSheetNum() );
+				int xref = getWorkBook().getExternSheet( true ).insertLocation( getSheetNum(), getSheetNum() );
 				n.setExternsheetRef( xref );
 				n.updateSheetReferences( this );
 				n.setSheet( this );
-				n.setIxals( (short) (this.getSheetNum()/* +1 */) );
-				n.setItab( (short) (this.getSheetNum() + 1) );
+				n.setIxals( (short) (getSheetNum()/* +1 */) );
+				n.setItab( (short) (getSheetNum() + 1) );
 				String loc = ExcelTools.formatLocation( new int[]{
-						this.getMinRow(), this.getMinCol(), this.getMaxRow() - 1, this.getMaxCol() - 1
+						getMinRow(), getMinCol(), getMaxRow() - 1, getMaxCol() - 1
 				}, false, false );
 				Stack<Ptg> s = new Stack<Ptg>();
-				s.push( PtgRef.createPtgRefFromString( this.getSheetName() + "!" + loc, n ) );
+				s.push( PtgRef.createPtgRefFromString( getSheetName() + "!" + loc, n ) );
 				n.setExpression( s );
 			}
 			catch( Exception e )
@@ -5879,7 +5879,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	private void removeFilterDatabase()
 	{
-		List<Name> names = this.getBuiltInNames();
+		List<Name> names = getBuiltInNames();
 		Name n = null;
 		try
 		{
@@ -5888,7 +5888,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 				if( (names.get( i )).getBuiltInType() == Name._FILTER_DATABASE )
 				{
 					n = names.get( i );
-					this.getWorkBook().removeName( n );
+					getWorkBook().removeName( n );
 					break;
 				}
 			}
@@ -5921,18 +5921,18 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	private int insertMSOObjectsForNote( int[] coords )
 	{
 		int insertIndex;
-		MSODrawingGroup msodg = this.wkbook.getMSODrawingGroup();
+		MSODrawingGroup msodg = wkbook.getMSODrawingGroup();
 		if( msodg == null )
 		{
-			msodg = this.wkbook.createMSODrawingGroup();
+			msodg = wkbook.createMSODrawingGroup();
 			msodg.initNewMSODrawingGroup();
 		}
 
 		// insert either above first NOTE record or before WINDOW2 and certain other XLSRECORDS
-		insertIndex = this.getIndexOf( NOTE );
+		insertIndex = getIndexOf( NOTE );
 		if( insertIndex == -1 ) // no existing notes - find proper insert index
 		{
-			insertIndex = this.getIndexOf( WINDOW2 );
+			insertIndex = getIndexOf( WINDOW2 );
 		}
 		while( (insertIndex - 1) > 0 )
 		{
@@ -5969,7 +5969,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		MSODrawing msoheader = msodg.getMsoHeaderRec( this );
 		MSODrawing msoDrawing = (MSODrawing) MSODrawing.getPrototype();
 		msoDrawing.setSheet( this );
-		msoDrawing.setWorkBook( this.getWorkBook() );
+		msoDrawing.setWorkBook( getWorkBook() );
 		if( msoheader == null )
 		{
 			msoDrawing.setIsHeader();
@@ -5978,23 +5978,23 @@ public final class Boundsheet extends XLSRecord implements Sheet
 
 		// mso record which creates a text box
 		msoDrawing.createCommentBox( coords[0], coords[1] );
-		this.SheetRecs.add( insertIndex++, msoDrawing );
+		SheetRecs.add( insertIndex++, msoDrawing );
 		msoheader.numShapes++;
 		msodg.addMsodrawingrec( msoDrawing ); // add the new drawing rec to the msodrawinggroup set of recs
 
 		// object record which defines a basic note
-		Obj obj = Obj.getBasicObjRecord( Obj.otNote, ++this.lastObjId );    // create a note object
-		this.SheetRecs.add( insertIndex++, obj );
+		Obj obj = Obj.getBasicObjRecord( Obj.otNote, ++lastObjId );    // create a note object
+		SheetRecs.add( insertIndex++, obj );
 
 		// now add attached text-type mso, specifying the shape has attached text
 		msoDrawing = (MSODrawing) MSODrawing.getTextBoxPrototype();
 		msoDrawing.setSheet( this );
-		this.SheetRecs.add( insertIndex++, msoDrawing );
+		SheetRecs.add( insertIndex++, msoDrawing );
 		msodg.addMsodrawingrec( msoDrawing ); // add the new drawing rec to the msodrawinggroup set of recs
 
 		// now update msodg + msoheader rec
 		wkbook.updateMsodrawingHeaderRec( this );     // find the msodrawing header record and update it (using info from other msodrawing recs)
-		msodg.setSpidMax( this.wkbook.lastSPID + 1 );
+		msodg.setSpidMax( wkbook.lastSPID + 1 );
 		msodg.updateRecord();       // given all information, generate appropriate bytes for the Mso rec
 		msodg.dirtyflag = true;
 		return insertIndex;

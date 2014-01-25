@@ -105,7 +105,7 @@ class testformula
 	{
 		try
 		{
-			this.openSheet( finpath, sheetname );
+			openSheet( finpath, sheetname );
 			// c4 + d4 = f4
 			CellHandle mycell1 = sheet.getCell( "C4" );
 			CellHandle mycell2 = sheet.getCell( "D4" );
@@ -143,7 +143,7 @@ class testformula
 	{
 		try
 		{
-			this.openSheet( finpath, sheetname );
+			openSheet( finpath, sheetname );
 			CellHandle mycell = sheet.getCell( "A10" );
 			FormulaHandle form = mycell.getFormulaHandle();
 			form.changeFormulaLocation( "A3", "G10" );
@@ -166,7 +166,7 @@ class testformula
 	{
 		try
 		{
-			this.openSheet( finpath, sheetname );
+			openSheet( finpath, sheetname );
 			CellHandle mycell = sheet.getCell( "E8" );
 			FormulaHandle myhandle = mycell.getFormulaHandle();
 			boolean b = myhandle.changeFormulaLocation( "A1:B2", "D1:D28" );
@@ -189,7 +189,7 @@ class testformula
 	{
 		try
 		{
-			this.openSheet( finpath, sheetname );
+			openSheet( finpath, sheetname );
 			CellHandle mycell = sheet.getCell( "E8" );
 			CellHandle secondcell = sheet.getCell( "D19" );
 			FormulaHandle myhandle = mycell.getFormulaHandle();
@@ -215,7 +215,7 @@ class testformula
 		{
 			String finpath = wd + "testFormula.xls";
 			String sheetname = "Sheet1";
-			this.openSheet( finpath, sheetname );
+			openSheet( finpath, sheetname );
 			sheet.removeRow( 2, true );
 			testWrite( "testFormula_out.xls" );
 		}

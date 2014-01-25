@@ -130,7 +130,7 @@ public class PrinterSettingsDemo
 		testWrite( book, "PrinterSettings_out.xls" );
 
 		// read it in
-		book = new WorkBookHandle( this.outputdir + "PrinterSettings_out.xls" );
+		book = new WorkBookHandle( outputdir + "PrinterSettings_out.xls" );
 		try
 		{
 			sheet = book.getWorkSheet( 0 );

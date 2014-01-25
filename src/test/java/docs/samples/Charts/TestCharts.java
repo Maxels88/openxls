@@ -162,7 +162,7 @@ public class TestCharts
 			chart2.addSeriesRange( "Bubble!C1", "Bubble!C2", "Bubble!C3", "Bubble!C4" );
 			chart2.addSeriesRange( "Bubble!D1", "Bubble!D2", "Bubble!D3", "Bubble!D4" );
 
-			this.testWrite( book, "NewBubbleChartOut.xls" );
+			testWrite( book, "NewBubbleChartOut.xls" );
 		}
 		catch( Exception e )
 		{
@@ -225,7 +225,7 @@ public class TestCharts
 		{
 			log.error( "Problem accessing new chart.", ex );
 		}
-		this.testWrite( book, "NewChartOut.xls" );
+		testWrite( book, "NewChartOut.xls" );
 
 	}
 

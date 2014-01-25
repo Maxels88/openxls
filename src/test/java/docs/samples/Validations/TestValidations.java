@@ -70,7 +70,7 @@ public class TestValidations
 			                                                    "12",
 			                                                    "44" );
 			vh.addRange( "C1:C2" );
-			this.testWrite( book, "new_validation_output" );
+			testWrite( book, "new_validation_output" );
 		}
 		catch( Exception e )
 		{
@@ -113,7 +113,7 @@ public class TestValidations
 			vh.setPromptBoxText( "ExtenXLS Says: Please enter a value bigger than a breadbox" );
 
 			// entering incorrect value in D15 will show the error box text above
-			this.testWrite( book, "testValidationOutput" );
+			testWrite( book, "testValidationOutput" );
 
 		}
 		catch( Exception e )

@@ -123,8 +123,8 @@ public class ColumnMajorComparatorTest
 		public RowCols( int row, int col )
 		{
 			this.row = row;
-			this.colFirst = col;
-			this.colLast = col;
+			colFirst = col;
+			colLast = col;
 		}
 
 		@Override
