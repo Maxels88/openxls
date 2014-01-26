@@ -18,14 +18,14 @@
         <level value="INFO"/>
     </logger>
 
-    <logger name="com.extentech">
+    <logger name="com.openxls">
         <level value="DEBUG"/>
     </logger>
 
-    <logger name="com.extentech.formats.XLS.XLSRecordFactory">
+    <logger name="org.openxls.formats.XLS.XLSRecordFactory">
         <level value="INFO"/>
     </logger>
-    <logger name="com.extentech.formats.LEO.LEOFile">
+    <logger name="org.openxls.formats.LEO.LEOFile">
         <level value="INFO"/>
     </logger>
 

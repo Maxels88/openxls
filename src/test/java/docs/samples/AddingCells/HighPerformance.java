@@ -22,12 +22,12 @@
  */
 package docs.samples.AddingCells;
 
-import com.extentech.ExtenXLS.CellHandle;
-import com.extentech.ExtenXLS.DateConverter;
-import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.formats.XLS.WorkSheetNotFoundException;
-import com.extentech.toolkit.StringTool;
+import org.openxls.ExtenXLS.CellHandle;
+import org.openxls.ExtenXLS.DateConverter;
+import org.openxls.ExtenXLS.WorkBookHandle;
+import org.openxls.ExtenXLS.WorkSheetHandle;
+import org.openxls.formats.XLS.WorkSheetNotFoundException;
+import org.openxls.toolkit.StringTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +66,7 @@ public class HighPerformance
 			// bookHandle.setDupeStringMode(WorkBookHandle.SHAREDUPES);
 			bookHandle.setStringEncodingMode( WorkBookHandle.STRING_ENCODING_COMPRESSED ); // Change to UNICODE if you have eastern strings
 
-			// System.setProperty("com.extentech.ExtenXLS.cacheCellHandles","true");
+			// System.setProperty("org.openxls.ExtenXLS.cacheCellHandles","true");
 
 			log.info( "ExtenXLS Version: " + WorkBookHandle.getVersion() );
 			BufferedReader fileReader = null;
@@ -271,7 +271,7 @@ public class HighPerformance
 		{
 			sheetHandle = bookHandle.getWorkSheet( k );
 		}
-		catch( com.extentech.formats.XLS.WorkSheetNotFoundException e1 )
+		catch( WorkSheetNotFoundException e1 )
 		{
 			sheetHandle = bookHandle.createWorkSheet( "sheet" + k );
 

@@ -22,12 +22,12 @@
  */
 package docs.samples.Formats;
 
-import com.extentech.ExtenXLS.CellHandle;
-import com.extentech.ExtenXLS.CellRange;
-import com.extentech.ExtenXLS.FormatHandle;
-import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.formats.XLS.FormatConstants;
+import org.openxls.ExtenXLS.CellHandle;
+import org.openxls.ExtenXLS.CellRange;
+import org.openxls.ExtenXLS.FormatHandle;
+import org.openxls.ExtenXLS.WorkBookHandle;
+import org.openxls.ExtenXLS.WorkSheetHandle;
+import org.openxls.formats.XLS.FormatConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

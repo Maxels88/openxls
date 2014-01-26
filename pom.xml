@@ -81,7 +81,7 @@
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
-                    <include>com/extentech/ExtenXLS/build.properties</include>
+                    <include>org/openxls/ExtenXLS/build.properties</include>
                 </includes>
             </resource>
         </resources>
@@ -136,24 +136,24 @@
                                     <encoding>ISO-8859-1</encoding>
 
                                     <subpackages>
-                                        com.extentech.ExtenXLS
+                                        com.openxls.ExtenXLS
                                     </subpackages>
 
                                     <additionalparam>
                                         <!-- individual classes for inclusion
                                            - these have to be given as source files because
                                            - there's no way to include only part of a package -->
-                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/CellNotFoundException.java
-                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/FormulaNotFoundException.java
-                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/FunctionNotSupportedException.java
-                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/RowNotFoundException.java
-                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/ColumnNotFoundException.java
-                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/FormulaNotFoundException.java
-                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/WorkSheetNotFoundException.java
-                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/CellTypeMismatchException.java
-                                        ${project.build.sourceDirectory}/com/extentech/formats/XLS/CellPositionConflictException.java
-                                        ${project.build.sourceDirectory}/com/extentech/toolkit/ByteTools.java
-                                        ${project.build.sourceDirectory}/com/extentech/toolkit/StringTool.java
+                                        ${project.build.sourceDirectory}/org/openxls/formats/XLS/CellNotFoundException.java
+                                        ${project.build.sourceDirectory}/org/openxls/formats/XLS/FormulaNotFoundException.java
+                                        ${project.build.sourceDirectory}/org/openxls/formats/XLS/FunctionNotSupportedException.java
+                                        ${project.build.sourceDirectory}/org/openxls/formats/XLS/RowNotFoundException.java
+                                        ${project.build.sourceDirectory}/org/openxls/formats/XLS/ColumnNotFoundException.java
+                                        ${project.build.sourceDirectory}/org/openxls/formats/XLS/FormulaNotFoundException.java
+                                        ${project.build.sourceDirectory}/org/openxls/formats/XLS/WorkSheetNotFoundException.java
+                                        ${project.build.sourceDirectory}/org/openxls/formats/XLS/CellTypeMismatchException.java
+                                        ${project.build.sourceDirectory}/org/openxls/formats/XLS/CellPositionConflictException.java
+                                        ${project.build.sourceDirectory}/org/openxls/toolkit/ByteTools.java
+                                        ${project.build.sourceDirectory}/org/openxls/toolkit/StringTool.java
                                     </additionalparam>
                                 </configuration>
                             </execution>

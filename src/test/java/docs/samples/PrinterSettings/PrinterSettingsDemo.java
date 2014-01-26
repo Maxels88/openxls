@@ -22,9 +22,9 @@
  */
 package docs.samples.PrinterSettings;
 
-import com.extentech.ExtenXLS.PrinterSettingsHandle;
-import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.ExtenXLS.WorkSheetHandle;
+import org.openxls.ExtenXLS.PrinterSettingsHandle;
+import org.openxls.ExtenXLS.WorkBookHandle;
+import org.openxls.ExtenXLS.WorkSheetHandle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

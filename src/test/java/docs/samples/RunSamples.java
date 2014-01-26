@@ -22,7 +22,7 @@
  */
 package docs.samples;
 
-import com.extentech.toolkit.StringTool;
+import org.openxls.toolkit.StringTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

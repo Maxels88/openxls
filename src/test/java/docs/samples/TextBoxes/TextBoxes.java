@@ -1,15 +1,15 @@
 package docs.samples.TextBoxes;
 
-import com.extentech.ExtenXLS.CommentHandle;
-import com.extentech.ExtenXLS.ImageHandle;
-import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.formats.XLS.Boundsheet;
-import com.extentech.formats.XLS.MSODrawing;
-import com.extentech.formats.XLS.MSODrawingGroup;
-import com.extentech.formats.XLS.WorkBook;
-import com.extentech.formats.XLS.WorkSheetNotFoundException;
-import com.extentech.formats.escher.MsofbtOPT;
+import org.openxls.ExtenXLS.CommentHandle;
+import org.openxls.ExtenXLS.ImageHandle;
+import org.openxls.ExtenXLS.WorkBookHandle;
+import org.openxls.ExtenXLS.WorkSheetHandle;
+import org.openxls.formats.XLS.Boundsheet;
+import org.openxls.formats.XLS.MSODrawing;
+import org.openxls.formats.XLS.MSODrawingGroup;
+import org.openxls.formats.XLS.WorkBook;
+import org.openxls.formats.XLS.WorkSheetNotFoundException;
+import org.openxls.formats.escher.MsofbtOPT;
 
 import java.util.AbstractList;
 import java.util.HashMap;

@@ -28,8 +28,8 @@
  */
 package docs.samples.CopySheets;
 
-import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.ExtenXLS.WorkSheetHandle;
+import org.openxls.ExtenXLS.WorkBookHandle;
+import org.openxls.ExtenXLS.WorkSheetHandle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

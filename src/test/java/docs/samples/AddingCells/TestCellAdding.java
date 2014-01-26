@@ -22,11 +22,11 @@
  */
 package docs.samples.AddingCells;
 
-import com.extentech.ExtenXLS.CellHandle;
-import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.formats.XLS.CellNotFoundException;
-import com.extentech.formats.XLS.WorkSheetNotFoundException;
+import org.openxls.ExtenXLS.CellHandle;
+import org.openxls.ExtenXLS.WorkBookHandle;
+import org.openxls.ExtenXLS.WorkSheetHandle;
+import org.openxls.formats.XLS.CellNotFoundException;
+import org.openxls.formats.XLS.WorkSheetNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

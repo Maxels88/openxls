@@ -22,11 +22,11 @@
  */
 package docs.samples.ExcelWriterRefugee;
 
-import com.extentech.ExtenXLS.CellHandle;
-import com.extentech.ExtenXLS.FormatHandle;
-import com.extentech.ExtenXLS.RowHandle;
-import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.ExtenXLS.WorkSheetHandle;
+import org.openxls.ExtenXLS.CellHandle;
+import org.openxls.ExtenXLS.FormatHandle;
+import org.openxls.ExtenXLS.RowHandle;
+import org.openxls.ExtenXLS.WorkBookHandle;
+import org.openxls.ExtenXLS.WorkSheetHandle;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;

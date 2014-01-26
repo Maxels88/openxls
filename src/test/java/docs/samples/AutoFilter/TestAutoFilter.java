@@ -22,10 +22,10 @@
  */
 package docs.samples.AutoFilter;
 
-import com.extentech.ExtenXLS.AutoFilterHandle;
-import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.toolkit.StringTool;
+import org.openxls.ExtenXLS.AutoFilterHandle;
+import org.openxls.ExtenXLS.WorkBookHandle;
+import org.openxls.ExtenXLS.WorkSheetHandle;
+import org.openxls.toolkit.StringTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

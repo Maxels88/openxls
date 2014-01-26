@@ -29,11 +29,11 @@ package docs.samples.Charts;
 
  */
 
-import com.extentech.ExtenXLS.ChartHandle;
-import com.extentech.ExtenXLS.WorkBookHandle;
-import com.extentech.ExtenXLS.WorkSheetHandle;
-import com.extentech.formats.XLS.ChartNotFoundException;
-import com.extentech.formats.XLS.WorkSheetNotFoundException;
+import org.openxls.ExtenXLS.ChartHandle;
+import org.openxls.ExtenXLS.WorkBookHandle;
+import org.openxls.ExtenXLS.WorkSheetHandle;
+import org.openxls.formats.XLS.ChartNotFoundException;
+import org.openxls.formats.XLS.WorkSheetNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
