@@ -181,7 +181,7 @@ public class TestImages
 		}
 	}
 
-	public void testWrite( WorkBookHandle b, String fout )
+	public static void testWrite( WorkBookHandle b, String fout )
 	{
 		try
 		{

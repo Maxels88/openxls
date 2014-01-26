@@ -92,7 +92,7 @@ public final class Extsst extends com.extentech.formats.XLS.XLSRecord
 	 * records and all BOUNDSHEET BOFs, the lbPlyPos needs
 	 * to change for all Worksheets when this record's size changes.
 	 */
-	public boolean getUpdatesAllBOFPositions()
+	public static boolean getUpdatesAllBOFPositions()
 	{
 		return true;
 	}

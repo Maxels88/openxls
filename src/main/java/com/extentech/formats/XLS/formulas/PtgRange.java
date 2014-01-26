@@ -339,7 +339,7 @@ public class PtgRange extends GenericPtg implements Ptg
 		}
 	}
 
-	private void adjustRange( int[] rc, int[] rng )
+	private static void adjustRange( int[] rc, int[] rng )
 	{
 		if( ExcelTools.isBeforeRange( rc, rng ) )
 		{

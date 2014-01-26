@@ -142,9 +142,6 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 	@Override
 	public void init()
 	{
-		log.info( "MulBlank: " + System.identityHashCode( this ) );
-		log.info( "MulBlank::init()" );
-
 		data = getData();
 		super.init();
 		if( (getLength() - 4) <= 0 )

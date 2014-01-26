@@ -425,7 +425,7 @@ public class OOXMLAdapter implements OOXMLConstants
 	 * @param type e.g. "vba", "custprops"
 	 * @return
 	 */
-	private boolean hasObject( WorkBookHandle bk, String type )
+	private static boolean hasObject( WorkBookHandle bk, String type )
 	{
 		List externalOOXML = bk.getWorkBook().getOOXMLObjects();
 		for( Object anExternalOOXML : externalOOXML )
@@ -517,7 +517,7 @@ public class OOXMLAdapter implements OOXMLConstants
 	 * @param type
 	 * @return
 	 */
-	protected String getContentType( String type )
+	protected static String getContentType( String type )
 	{
 		for( String[] contentType : contentTypes )
 		{
@@ -536,7 +536,7 @@ public class OOXMLAdapter implements OOXMLConstants
 	 * @return
 	 * @see OOXMLConstnats
 	 */
-	protected String getRelationshipType( String type )
+	protected static String getRelationshipType( String type )
 	{
 		for( String[] relsContentType : relsContentTypes )
 		{
@@ -568,7 +568,7 @@ public class OOXMLAdapter implements OOXMLConstants
 	}
 
 	// this is for testing purposes only, not used so no need to comment out logger msg :)
-	private void getZipEntries( ZipFile zf )
+	private static void getZipEntries( ZipFile zf )
 	{
 		// testing!!
 		try
@@ -899,7 +899,7 @@ The preceding code points ranges contain the following controls which are only v
 	 *
 	 * @param wbContentList
 	 */
-	protected void reorderWbContentList( ArrayList wbContentList )
+	protected static void reorderWbContentList( ArrayList wbContentList )
 	{
 		for( int j = 0; j < wbContentList.size(); j++ )
 		{
@@ -949,7 +949,7 @@ The preceding code points ranges contain the following controls which are only v
 	 * @param origStack
 	 * @return
 	 */
-	protected Stack cloneStack( Stack origStack )
+	protected static Stack cloneStack( Stack origStack )
 	{
 		Stack s = new Stack();
 		for( int i = 0; i < origStack.size(); i++ )

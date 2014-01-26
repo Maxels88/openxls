@@ -96,7 +96,7 @@ public class CopySheets
 		testWrite( newbook, wd + "source_sheets_out.xls" );
 	}
 
-	public void testWrite( WorkBookHandle b, String fout )
+	public static void testWrite( WorkBookHandle b, String fout )
 	{
 		try
 		{

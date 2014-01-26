@@ -363,7 +363,7 @@ System.out.println(rec.getClass().getName().substring(rec.getClass().getName().l
 	 * @param wbh workbookhandle
 	 * @param sId Stream or cachid Id -- links back to SxStream set of records
 	 */
-	byte[] createPivotCacheRecords( String ref, WorkBookHandle wbh, int sId )
+	static byte[] createPivotCacheRecords( String ref, WorkBookHandle wbh, int sId )
 	{
 		byte[] newbytes = new byte[0];
 		try

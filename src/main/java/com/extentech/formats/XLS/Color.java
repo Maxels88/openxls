@@ -43,7 +43,7 @@ public final class Color implements Serializable
 
 	// methods from BiffRec
 
-	public boolean isDirty( Object obj )
+	public static boolean isDirty( Object obj )
 	{
 		return false; //immutable for now...
 	}

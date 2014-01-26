@@ -60,7 +60,7 @@ class testit
 	private static final Logger log = LoggerFactory.getLogger( testit.class );
 	public static final String wd = System.getProperty( "user.dir" ) + "/docs/samples/TemplateModifications/";
 
-	public void test( String args )
+	public static void test( String args )
 	{
 		try
 		{

@@ -2598,7 +2598,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	/**
 	 * Get the typename for this object.
 	 */
-	String getTypeName()
+	static String getTypeName()
 	{
 		return "WorkBook";
 	}

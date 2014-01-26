@@ -534,7 +534,7 @@ public final class Rk extends XLSCellRecord implements Mulled
 		}
 	}
 
-	public String getTypeName()
+	public static String getTypeName()
 	{
 		return "Rkdouble";
 	}

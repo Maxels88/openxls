@@ -588,7 +588,7 @@ public final class Cf extends com.extentech.formats.XLS.XLSRecord
 	 * @param f
 	 * @return
 	 */
-	private byte[] getFormulaExpression( Formula f )
+	private static byte[] getFormulaExpression( Formula f )
 	{
 		boolean hasArray = false;
 		byte[] expbytes = new byte[0];

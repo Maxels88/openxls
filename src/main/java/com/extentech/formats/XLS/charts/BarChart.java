@@ -165,7 +165,7 @@ public class BarChart extends ChartType
 	/**
 	 * replaces generic getJSON with Bar/Column specifics (necessary for stacked-type charts)
 	 */
-	public JSONObject getJSON( ChartSeriesHandle[] series, WorkBookHandle wbh, Double[] minMax ) throws JSONException
+	public static JSONObject getJSON( ChartSeriesHandle[] series, WorkBookHandle wbh, Double[] minMax ) throws JSONException
 	{
 		JSONObject chartObjectJSON = new JSONObject();
 

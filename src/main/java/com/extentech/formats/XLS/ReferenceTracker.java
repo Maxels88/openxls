@@ -1101,7 +1101,7 @@ class TrackedPtgs extends TreeMap
 	 * @param o
 	 * @return
 	 */
-	private Object getKey( Object o ) throws IllegalArgumentException
+	private static Object getKey( Object o ) throws IllegalArgumentException
 	{
 		long loc = ((PtgRef) o).hashcode;
 		if( loc == -1 )    // may happen on a referr (should have been caught earlier) or if not initialized yet
@@ -1119,7 +1119,7 @@ class TrackedPtgs extends TreeMap
 	 * @param ploc -- location key for a parent rec
 	 * @return Object key
 	 */
-	private Object getKey( long loc, long ploc )
+	private static Object getKey( long loc, long ploc )
 	{
 		return new long[]{ loc, ploc };
 	}
@@ -1240,7 +1240,7 @@ class TrackedPtgs extends TreeMap
 	 * @param arearc
 	 * @return
 	 */
-	private boolean isaffected( int[] cellrc, int[] arearc )
+	private static boolean isaffected( int[] cellrc, int[] arearc )
 	{
 		if( cellrc[0] < arearc[0] )
 		{

@@ -143,12 +143,12 @@ public class ByteStreamer implements Serializable, XLSConstants
 		return myname;
 	}
 
-	public String getSubstreamTypeName()
+	public static String getSubstreamTypeName()
 	{
 		return "ByteStreamer";
 	}
 
-	public short getSubstreamType()
+	public static short getSubstreamType()
 	{
 		return WK_WORKSHEET;
 	}
@@ -316,7 +316,7 @@ public class ByteStreamer implements Serializable, XLSConstants
 		return dlen - 4;
 	}
 
-	public void writeRecord( OutputStream out, BiffRec rec ) throws IOException
+	public static void writeRecord( OutputStream out, BiffRec rec ) throws IOException
 	{
 		byte[] op = ByteTools.shortToLEBytes( rec.getOpcode() );
 		byte[] dt = rec.getData();

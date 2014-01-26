@@ -81,7 +81,7 @@ public class WriteExcelFromResultset
 		}
 	}
 
-	public void testWrite( WorkBookHandle b, String nm )
+	public static void testWrite( WorkBookHandle b, String nm )
 	{
 		try
 		{
@@ -101,7 +101,7 @@ public class WriteExcelFromResultset
 		}
 	}
 
-	private ResultSet getReportResultSet()
+	private static ResultSet getReportResultSet()
 	{
 		Connection m_sqlCon = null;
 		Statement m_stmt = null;
@@ -138,7 +138,7 @@ public class WriteExcelFromResultset
 		return rs;
 	}
 
-	private void setDataSource( WorkBookHandle _book, HashMap variableList, ResultSet _rs, String whichSheet )
+	private static void setDataSource( WorkBookHandle _book, HashMap variableList, ResultSet _rs, String whichSheet )
 	{
 		String cellData = "";
 		HashMap fieldList = null;
@@ -234,7 +234,7 @@ public class WriteExcelFromResultset
 		}
 	}
 
-	private void setCellDataSource( String cellText, String whichCell, WorkBookHandle _book, HashMap variableList )
+	private static void setCellDataSource( String cellText, String whichCell, WorkBookHandle _book, HashMap variableList )
 	{
 		HashMap _c = (HashMap) variableList.get( whichCell );
 		int sheet = ((Integer) _c.get( "sheet" )).intValue();

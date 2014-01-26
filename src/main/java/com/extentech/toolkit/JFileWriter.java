@@ -69,7 +69,7 @@ public class JFileWriter
 		data = d;
 	}
 
-	void printErr( String err )
+	static void printErr( String err )
 	{
 		log.error( "Error in JFileWriter: " + err );
 	}
@@ -156,7 +156,7 @@ public class JFileWriter
 		return true;
 	}
 
-	public boolean writeIt( String data, String filename, String path )
+	public static boolean writeIt( String data, String filename, String path )
 	{
 		try
 		{

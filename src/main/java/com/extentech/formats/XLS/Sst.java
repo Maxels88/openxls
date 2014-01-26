@@ -191,7 +191,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 	 * BOFs, the lbPlyPos needs to change for all of them when record size
 	 * changes.
 	 */
-	public boolean getUpdatesAllBOFPositions()
+	public static boolean getUpdatesAllBOFPositions()
 	{
 		return true;
 	}
@@ -1257,7 +1257,7 @@ public final class Sst extends com.extentech.formats.XLS.XLSRecord
 	 * This returns the Continue record grbit which is either 0 or 1 -- NOT the
 	 * string's grbit which determines much more...
 	 */
-	byte getContinueGrbitFromString( Unicodestring str )
+	static byte getContinueGrbitFromString( Unicodestring str )
 	{
 		byte grb = 0x0;
 		switch( str.getGrbit() )

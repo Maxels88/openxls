@@ -428,7 +428,7 @@ public final class Formula extends XLSCellRecord
 		this.isExternalRef = isExternalRef;
 	}
 
-	public String getTypeName()
+	public static String getTypeName()
 	{
 		return "formula";
 	}

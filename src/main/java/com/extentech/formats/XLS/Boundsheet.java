@@ -4546,7 +4546,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 * @param s
 	 * @return Object[Double value, String formatPattern]
 	 */
-	Object[] fixNumberStoredAsString( Object s ) throws NumberFormatException
+	static Object[] fixNumberStoredAsString( Object s ) throws NumberFormatException
 	{
 		String input = s.toString();
 		if( input.indexOf( " " ) > -1 )
@@ -5629,7 +5629,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 * @param cell  the cell record to be shifted
 	 * @param shift the number of rows by which to shift the cell
 	 */
-	private void shiftCellRow( BiffRec cell, int shift )
+	private static void shiftCellRow( BiffRec cell, int shift )
 	{
 		int newrow = cell.getRowNumber() + shift;
 		cell.setRowNumber( newrow );

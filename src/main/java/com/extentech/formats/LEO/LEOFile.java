@@ -713,7 +713,7 @@ public class LEOFile implements Serializable
 	 * @param difatidx - indexes of blocks > 13952 (= 109 blocks described by DIFAT * 128 indexes in each block)
 	 * @return
 	 */
-	private Storage buildExtraDIFAT( int[] difatidx, int xbbpos )
+	private static Storage buildExtraDIFAT( int[] difatidx, int xbbpos )
 	{
 //			handle Extra blocks beyond the 109*128 blocks described by the regular DIFAT (109 limit)
 		if( difatidx != null )
@@ -775,7 +775,7 @@ public class LEOFile implements Serializable
 	 * @param numsbs   total number of miniFAT blocks
 	 * @return Storage[] - two storage containers: 1 contains smallblocks, 2 contains smallblock index
 	 */
-	private Storage[] buildMiniFAT( List storages, int numsbs )
+	private static Storage[] buildMiniFAT( List storages, int numsbs )
 	{
 		// once more, now gathering the sbidx's (miniFAT index)		
 		int[] sbidx = new int[(int) Math.ceil( numsbs / (IDXBLOCKSIZE * 1.0) ) * IDXBLOCKSIZE];

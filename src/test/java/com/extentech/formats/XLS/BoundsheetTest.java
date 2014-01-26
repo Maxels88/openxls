@@ -42,7 +42,7 @@ public class BoundsheetTest
 		assertEquals( 3, cellsByCol.size() );
 	}
 
-	private CellRec createMulblank( int row, int colFirst, int colLast )
+	private static CellRec createMulblank( int row, int colFirst, int colLast )
 	{
 		Mulblank mulblank = new Mulblank(row, colFirst, colLast);
 		return mulblank;
@@ -105,7 +105,7 @@ public class BoundsheetTest
 		}
 	}
 
-	Blank createBlank( int row, int col )
+	static Blank createBlank( int row, int col )
 	{
 		Blank blank = new Blank( );
 		blank.setRow( row );
@@ -113,7 +113,7 @@ public class BoundsheetTest
 		return blank;
 	}
 
-	Labelsst createLabel( int row, int col, String val )
+	static Labelsst createLabel( int row, int col, String val )
 	{
 		Labelsst cell = new Labelsst(row, col);
 		cell.setStringVal( val );

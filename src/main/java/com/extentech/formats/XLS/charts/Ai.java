@@ -804,7 +804,7 @@ public final class Ai extends GenericChartObject implements ChartObject
 	/**
 	 * get the display name
 	 */
-	String getName()
+	static String getName()
 	{
 		return "Chart Ai";
 	}

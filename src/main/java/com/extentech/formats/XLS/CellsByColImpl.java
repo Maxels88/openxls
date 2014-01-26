@@ -46,7 +46,7 @@ public class CellsByColImpl implements CellsByCol
 
 		validate( first, last );
 
-		log.info( "Adding R{}C{}-{}", cell.getRowNumber(), first, last);
+		log.debug( "Adding R{}C{}-{}", cell.getRowNumber(), first, last);
 		//
 		// While we do double loop on this, I want the data structure usage safety over any potential performance issues right now.
 		// If add() is being invoked for a Cell that already exists, that implies an incorrect usage and it should be fixed.
@@ -59,7 +59,7 @@ public class CellsByColImpl implements CellsByCol
 			{
 				String msg = String.format( "Attempt to add cell '%s' that is already in Column %d.  Existing cell: {}", cell, col );
 				log.error( msg );
-				// FIXME: Code upstream invokes this multiple times - I dont want to make this changeset any bigger than it already is.
+				// FIXME: Code upstream invokes this multiple times and needs to be fixed before re-enabling this exception (which I intend to do)
 //				throw new IllegalArgumentException( msg );
 			}
 		}
@@ -119,7 +119,7 @@ public class CellsByColImpl implements CellsByCol
 		return cell;
 	}
 
-	private void validate( int first, int last )
+	private static void validate( int first, int last )
 	{
 		if( first > last )
 		{

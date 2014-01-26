@@ -309,7 +309,7 @@ public class StorageTable implements Serializable
 	 * @param FAT
 	 * @return
 	 */
-	private List getMiniFAT( int pos, List blockvect, int[] FAT )
+	private static List getMiniFAT( int pos, List blockvect, int[] FAT )
 	{
 		Storage miniFATContainer = null;
 		miniFATContainer = new Storage();
@@ -382,7 +382,7 @@ public class StorageTable implements Serializable
 	/**
 	 * init a Storage
 	 */
-	void initStorage( Storage rec, List sourceblocks, int[] idx, int blocktype )
+	static void initStorage( Storage rec, List sourceblocks, int[] idx, int blocktype )
 	{
 		String name = rec.getName();
 		int recsize = rec.getActualFileSize();
@@ -579,7 +579,7 @@ public class StorageTable implements Serializable
 	/**
 	 * get the header record for a Directory
 	 */
-	ByteBuffer getDirectoryHeaderBytes( Storage thisStorage )
+	static ByteBuffer getDirectoryHeaderBytes( Storage thisStorage )
 	{
 		// create a new byte buffer
 		ByteBuffer buff = null;

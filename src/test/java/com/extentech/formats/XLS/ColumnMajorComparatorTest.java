@@ -106,7 +106,7 @@ public class ColumnMajorComparatorTest
 	//
 	//
 
-	private void dumpMap( Map<CellAddressible, Integer> map )
+	private static void dumpMap( Map<CellAddressible, Integer> map )
 	{
 		for( Map.Entry<CellAddressible, Integer> entry : map.entrySet() )
 		{

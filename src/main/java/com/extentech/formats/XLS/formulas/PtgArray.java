@@ -288,7 +288,7 @@ public class PtgArray extends GenericPtg implements Ptg
 		}
 	}
 
-	public int getVal()
+	public static int getVal()
 	{
 		return -1;
 	}
@@ -409,7 +409,7 @@ public class PtgArray extends GenericPtg implements Ptg
 	 * @param compVect
 	 * @return
 	 */
-	private byte[] valuesIntoByteArray( String constVal )
+	private static byte[] valuesIntoByteArray( String constVal )
 	{
 		byte[] databytes = new byte[0];
 		byte[] thisElement = new byte[9];

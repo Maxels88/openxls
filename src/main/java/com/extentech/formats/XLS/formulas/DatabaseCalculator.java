@@ -1094,7 +1094,7 @@ class Criteria extends DB
 	// TODO: Handle formula criteria!
 	// TODO: To perform an operation on an entire column in a database, enter a blank line below the column labels in the criteria range
 	// TODO: Handle various EQUALS:  currency, number ...
-	public boolean matches( String v, Object cx )
+	public static boolean matches( String v, Object cx )
 	{
 		boolean bMatches = false;
 		String c = "";

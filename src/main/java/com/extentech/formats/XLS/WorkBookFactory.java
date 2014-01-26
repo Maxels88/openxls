@@ -126,7 +126,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 	/**
 	 * return the next opcode/length in the Stream from the given record.
 	 */
-	public short lookAhead( BiffRec rec )
+	public static short lookAhead( BiffRec rec )
 	{
 		int i = rec.getOffset() + rec.getLength();
 		BlockByteReader parsedata = rec.getByteReader();
@@ -441,7 +441,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 	 *
 	 * @param map
 	 */
-	private void fillGlobalSubstream( LinkedHashMap<Short, R> map )
+	private static void fillGlobalSubstream( LinkedHashMap<Short, R> map )
 	{
 		// ordered list of all records in the global (workbook) substream, along
 		// with if they are required or not
@@ -561,7 +561,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 	 *
 	 * @param map
 	 */
-	private void fillWorksSheetSubstream( LinkedHashMap<Short, R> map )
+	private static void fillWorksSheetSubstream( LinkedHashMap<Short, R> map )
 	{
 		map.put( BOF, new R( true ) );
 		map.put( (short) 94, new R( false ) );    //	Uncalced
@@ -829,7 +829,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 	 * @param list    list of actual records
 	 * @param opcodes ordered list of opcodes
 	 */
-	private void validateRecordOrder( LinkedHashMap<Short, R> map, java.util.List list, Short[] opcodes )
+	private static void validateRecordOrder( LinkedHashMap<Short, R> map, java.util.List list, Short[] opcodes )
 	{
 	/* debugging:
 	System.out.println("BeFORE order:");	
@@ -924,7 +924,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 	 * @param bs     boundsheet- if null it's a wb level record
 	 * @return new BiffRec
 	 */
-	private BiffRec createMissingRequiredRecord( short opcode, Book book, Boundsheet bs )
+	private static BiffRec createMissingRequiredRecord( short opcode, Book book, Boundsheet bs )
 	{
 		BiffRec record = XLSRecordFactory.getBiffRecord( opcode );
 		if( bs != null )
@@ -1314,7 +1314,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 	 *
 	 * @param map
 	 */
-	private void reInitSubstream( LinkedHashMap<Short, R> map )
+	private static void reInitSubstream( LinkedHashMap<Short, R> map )
 	{
 		Iterator ii = map.keySet().iterator();
 		while( ii.hasNext() )
@@ -1329,7 +1329,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 	/**
 	 * mark record present and record pertinent information for record-level validation
 	 */
-	private void markRecord( LinkedHashMap<Short, R> map, BiffRec rec, short opcode )
+	private static void markRecord( LinkedHashMap<Short, R> map, BiffRec rec, short opcode )
 	{
 		try
 		{
@@ -1353,7 +1353,7 @@ public class WorkBookFactory implements com.extentech.toolkit.ProgressNotifier, 
 	/**
 	 * debug utility
 	 */
-	private void displayRecsInStream( LinkedHashMap<Short, R> map )
+	private static void displayRecsInStream( LinkedHashMap<Short, R> map )
 	{
 		Iterator<Short> ii = map.keySet().iterator();
 		log.info( "Present Records" );

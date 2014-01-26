@@ -752,7 +752,7 @@ class HSLColor
 		}
 	}
 
-	private int hueToRGB( int mag1, int mag2, int Hue )
+	private static int hueToRGB( int mag1, int mag2, int Hue )
 	{
 		// check the range
 		if( Hue < 0 )
@@ -782,7 +782,7 @@ class HSLColor
 		return mag1;
 	}
 
-	private int iMax( int a, int b )
+	private static int iMax( int a, int b )
 	{
 		if( a > b )
 		{
@@ -791,7 +791,7 @@ class HSLColor
 		return b;
 	}
 
-	private int iMin( int a, int b )
+	private static int iMin( int a, int b )
 	{
 		if( a < b )
 		{

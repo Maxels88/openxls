@@ -179,7 +179,7 @@ public class PrinterSettingsDemo
 	 * @param o1
 	 * @param o2
 	 */
-	private void assertEquals( int o1, int o2 )
+	private static void assertEquals( int o1, int o2 )
 	{
 		if( o1 != o2 )
 		{
@@ -194,7 +194,7 @@ public class PrinterSettingsDemo
 	 * @param o1
 	 * @param o2
 	 */
-	private void assertEquals( boolean o1, boolean o2 )
+	private static void assertEquals( boolean o1, boolean o2 )
 	{
 		if( o1 != o2 )
 		{

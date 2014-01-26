@@ -132,7 +132,7 @@ public class testFormControls
 		System.out.println( "Successfully read: " + newbook );
 	}
 
-	public void testWrite( WorkBookHandle b, String fout )
+	public static void testWrite( WorkBookHandle b, String fout )
 	{
 		try
 		{

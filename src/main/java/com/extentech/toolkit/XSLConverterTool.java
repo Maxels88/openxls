@@ -47,7 +47,7 @@ public class XSLConverterTool
 	 * @param ifmt from XF record
 	 * @return date format pattern
 	 */
-	public String getDateFormatPattern( String ifmt )
+	public static String getDateFormatPattern( String ifmt )
 	{
 		if( ifmt.equals( "14" ) )
 		{
@@ -79,7 +79,7 @@ public class XSLConverterTool
 	 * @param ifmt from XF record
 	 * @return calendar format pattern
 	 */
-	public String getJsCalendarFormatPattern( String ifmt )
+	public static String getJsCalendarFormatPattern( String ifmt )
 	{
 		if( ifmt.equals( "14" ) )
 		{
@@ -112,7 +112,7 @@ public class XSLConverterTool
 	 * @param fmt
 	 * @return
 	 */
-	public String getCurrencyFormat( String fmt, String value )
+	public static String getCurrencyFormat( String fmt, String value )
 	{
 		try
 		{
@@ -175,7 +175,7 @@ public class XSLConverterTool
 		return returnString.toString();
 	}
 
-	private String getEmptyCellHTML( String sheet, String address )
+	private static String getEmptyCellHTML( String sheet, String address )
 	{
 		return "<td id=\"" + address + "\" > </td>";
 	}

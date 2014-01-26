@@ -607,7 +607,7 @@ public final class ByteTools implements Serializable
 	 * <p/>
 	 * Also performs 'little-endian' conversion.
 	 */
-	public byte[] cLongToLEBytesOLD( int i )
+	public static byte[] cLongToLEBytesOLD( int i )
 	{
 		//if(true)return Integer.
 		short[] sbuf = cLongToLEShorts( i );

@@ -209,7 +209,7 @@ public class BubbleChart extends ChartType
 	 * @param seriescolors
 	 * @return String SVG
 	 */
-	private String get3DBubbleSVG( String[] seriescolors )
+	private static String get3DBubbleSVG( String[] seriescolors )
 	{
 		StringBuffer svg = new StringBuffer();
 		svg.append( "<defs>\r\n" );

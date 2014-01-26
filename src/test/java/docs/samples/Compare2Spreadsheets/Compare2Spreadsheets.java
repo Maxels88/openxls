@@ -124,7 +124,7 @@ public class Compare2Spreadsheets
 	 * @param cx
 	 * @return
 	 */
-	String getCellText( CellHandle[] cx )
+	static String getCellText( CellHandle[] cx )
 	{
 		StringBuffer sbx = new StringBuffer();
 

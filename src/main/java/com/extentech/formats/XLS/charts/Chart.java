@@ -436,7 +436,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 * @param cRecs
 	 * @return
 	 */
-	private int getMatchingEndRecordLocation( int startLoc, BiffRec[] cRecs )
+	private static int getMatchingEndRecordLocation( int startLoc, BiffRec[] cRecs )
 	{
 		int offset = 0;
 		for( int i = startLoc + 2; i < cRecs.length; i++ )

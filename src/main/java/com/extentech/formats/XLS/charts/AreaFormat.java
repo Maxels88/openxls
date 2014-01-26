@@ -361,7 +361,7 @@ public class AreaFormat extends GenericChartObject implements ChartObject
 		}
 	}
 
-	public StringBuffer getOOXML()
+	public static StringBuffer getOOXML()
 	{
 		StringBuffer ooxml = new StringBuffer();
 		ooxml.append( "<a:solidFill>" );

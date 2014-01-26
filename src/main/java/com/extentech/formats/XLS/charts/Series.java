@@ -941,7 +941,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	 * @param clr
 	 * @return
 	 */
-	private int ensureCorrectColorInt( int clr )
+	private static int ensureCorrectColorInt( int clr )
 	{
 		// "The Chart color table is a subset of the full color table"
 		if( clr == FormatConstants.COLOR_RED )
@@ -1373,7 +1373,7 @@ public final class Series extends GenericChartObject implements ChartObject
 	 *               xval contain numeric references
 	 * @return
 	 */
-	public StringBuffer getCatOOXML( String cat, String catstr )
+	public static StringBuffer getCatOOXML( String cat, String catstr )
 	{
 		StringBuffer ooxml = new StringBuffer();
 		if( !"".equals( cat ) )

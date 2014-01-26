@@ -2849,18 +2849,18 @@ public class Axis extends GenericChartObject implements ChartObject
 	 * @param XAXISLABELOFFSET
 	 * @return
 	 */
-	private String getCategoriesSVG( double x,
-	                                 double y,
-	                                 double w,
-	                                 double h,
-	                                 double inc,
-	                                 int labelRot,
-	                                 Object[] categories,
-	                                 java.awt.Font f,
-	                                 String labelfontSVG,
-	                                 boolean yAxisReversed,
-	                                 boolean xAxisReversed,
-	                                 double XAXISLABELOFFSET )
+	private static String getCategoriesSVG( double x,
+	                                        double y,
+	                                        double w,
+	                                        double h,
+	                                        double inc,
+	                                        int labelRot,
+	                                        Object[] categories,
+	                                        java.awt.Font f,
+	                                        String labelfontSVG,
+	                                        boolean yAxisReversed,
+	                                        boolean xAxisReversed,
+	                                        double XAXISLABELOFFSET )
 	{
 		// Category Labels - centered within area on X Axis
 		StringBuffer svg = new StringBuffer();

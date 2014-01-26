@@ -81,7 +81,7 @@ public class GeneralCellFormat extends Format implements CellFormat
 		return format( cell.getVal() );
 	}
 
-	public String format( String val )
+	public static String format( String val )
 	{
 		return format( val );
 	}

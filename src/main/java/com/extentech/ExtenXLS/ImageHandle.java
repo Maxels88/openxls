@@ -336,7 +336,7 @@ public class ImageHandle implements Serializable
 	 * @param imagebytestream
 	 * @return
 	 */
-	public byte[] convertData( InputStream imagebytestream )
+	public static byte[] convertData( InputStream imagebytestream )
 	{
 		try
 		{
@@ -364,7 +364,7 @@ public class ImageHandle implements Serializable
 	 * @param imagebytestream
 	 * @return
 	 */
-	public String getImageFormat( InputStream imagebytestream )
+	public static String getImageFormat( InputStream imagebytestream )
 	{
 
 		try

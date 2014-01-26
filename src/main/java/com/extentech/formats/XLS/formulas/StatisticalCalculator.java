@@ -1963,7 +1963,7 @@ NEGBINOMDIST
 		return y;
 	}
 
-	private int R_Q_P01_check( int p, boolean log_p )
+	private static int R_Q_P01_check( int p, boolean log_p )
 	{
 		if( (log_p && (p > 0)) || (!log_p && ((p < 0) || (p > 1))) )
 		{

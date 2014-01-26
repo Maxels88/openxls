@@ -512,7 +512,7 @@ public class ChartFormat extends GenericChartObject implements ChartObject
 	 *
 	 * @return
 	 */
-	public boolean getHasDropLines()
+	public static boolean getHasDropLines()
 	{
 		/* chartline:  
 		line, chartformatlink, <serieslist>, <3d>, <legend>, chartline, lineformat, startblock, 

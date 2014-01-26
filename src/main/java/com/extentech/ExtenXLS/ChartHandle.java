@@ -981,7 +981,7 @@ public class ChartHandle implements ChartConstants
 	 * @param lock     status setting
 	 * @return boolean whether the Cell Reference was found and modified
 	 */
-	private boolean setLocationPolicy( String loc, int l )
+	private static boolean setLocationPolicy( String loc, int l )
 	{
 		log.error( "ChartHandle.setLocationPolicy is broken" );
 		
@@ -1999,7 +1999,7 @@ public class ChartHandle implements ChartConstants
 		return mychart.getChartOptionsXML( 0 ); // 0 for default chart
 	}
 
-	private String t( int n )
+	private static String t( int n )
 	{
 		String tabs = "\t\t\t\t\t\t\t\t\t\t\t\t\t";
 		return (tabs.substring( 0, n ));
@@ -3533,7 +3533,7 @@ public class ChartHandle implements ChartConstants
 	 * @param source
 	 * @param input
 	 */
-	protected void inputJSONObject( JSONObject source, JSONObject input )
+	protected static void inputJSONObject( JSONObject source, JSONObject input )
 	{
 		if( source != null )
 		{
@@ -3792,7 +3792,7 @@ if (WorkBookFactory.PID==WorkBookFactory.E360) { // save svg for testing purpose
 	 *
 	 * @return
 	 */
-	protected String getJavaScript()
+	protected static String getJavaScript()
 	{
 		StringBuffer svg = new StringBuffer();
 		svg.append( "<script type='text/ecmascript'>" );

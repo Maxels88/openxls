@@ -352,7 +352,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		addSheet( sheetnum, sheetnum );
 	}
 
-	private byte getAddInIndex( Supbook[] sb )
+	private static byte getAddInIndex( Supbook[] sb )
 	{
 		int i = 0;
 		while( i < sb.length )
@@ -366,7 +366,7 @@ public final class Externsheet extends com.extentech.formats.XLS.XLSRecord
 		return (byte) -1;
 	}
 
-	private byte getGlobalSupBookIndex( Supbook[] sb )
+	private static byte getGlobalSupBookIndex( Supbook[] sb )
 	{
 		int i = 0;
 		while( i < sb.length )

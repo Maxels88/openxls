@@ -215,7 +215,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 	 * @param externalOOXML List of previously saved external Objects
 	 * @return
 	 */
-	private ArrayList getExternalRefType( String type, List externalOOXML )
+	private static ArrayList getExternalRefType( String type, List externalOOXML )
 	{
 		ArrayList refs = new ArrayList();
 		for( Object anExternalOOXML : externalOOXML )
@@ -836,7 +836,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 	 * @param numfmts
 	 * @param fonts
 	 */
-	private void addXFToStyle( Xf xf, ArrayList cellxfs, ArrayList fills, ArrayList borders, ArrayList numfmts, ArrayList fonts )
+	private static void addXFToStyle( Xf xf, ArrayList cellxfs, ArrayList fills, ArrayList borders, ArrayList numfmts, ArrayList fonts )
 	{
 
 		int[] refs = new int[13];
@@ -1632,7 +1632,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 	 * @param sheet
 	 * @return
 	 */
-	private StringBuffer getColOOXML( WorkBookHandle bk, WorkSheetHandle sheet )
+	private static StringBuffer getColOOXML( WorkBookHandle bk, WorkSheetHandle sheet )
 	{
 		StringBuffer colooxml = new StringBuffer();
 		// ColHandle cols[]= sheet.getColumns();

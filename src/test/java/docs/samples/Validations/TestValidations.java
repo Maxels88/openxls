@@ -123,7 +123,7 @@ public class TestValidations
 
 	}
 
-	public void testWrite( WorkBookHandle b, String file )
+	public static void testWrite( WorkBookHandle b, String file )
 	{
 		try
 		{

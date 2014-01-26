@@ -272,7 +272,7 @@ public class ContinueHandler implements Serializable, XLSConstants
 	 * @param data - record data
 	 * @return true if data is in form of an MSODrawing record
 	 */
-	private boolean isMaskedMSODrawingRec( byte[] data )
+	private static boolean isMaskedMSODrawingRec( byte[] data )
 	{
 		if( data.length > 3 )
 		{

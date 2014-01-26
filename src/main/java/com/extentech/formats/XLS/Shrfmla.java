@@ -519,7 +519,7 @@ public final class Shrfmla extends XLSRecord
 	 * @param isExcel2007
 	 * @return
 	 */
-	private int adjustCol( int c, boolean isExcel2007 )
+	private static int adjustCol( int c, boolean isExcel2007 )
 	{
 		if( (c >= MAXCOLS_BIFF8) && !isExcel2007 )
 		{

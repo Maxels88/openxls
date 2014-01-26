@@ -789,7 +789,7 @@ public class PtgMemFunc extends GenericPtg
 	 * @param last
 	 * @return
 	 */
-	private Stack<Comparable> mergeStacks( Stack<Comparable> first, Stack<Comparable> last )
+	private static Stack<Comparable> mergeStacks( Stack<Comparable> first, Stack<Comparable> last )
 	{
 		first.addAll( last );
 		return first;

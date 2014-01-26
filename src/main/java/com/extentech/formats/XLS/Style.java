@@ -93,7 +93,7 @@ public class Style extends com.extentech.formats.XLS.XLSRecord
 
 	}
 
-	public String getTypeName()
+	public static String getTypeName()
 	{
 		return "Style";
 	}

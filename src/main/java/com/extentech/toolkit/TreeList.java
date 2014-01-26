@@ -734,7 +734,7 @@ class TreeList extends AbstractList
 		/**
 		 * Gets the relative position.
 		 */
-		private int getOffset( AVLNode node )
+		private static int getOffset( AVLNode node )
 		{
 			if( node == null )
 			{
@@ -769,7 +769,7 @@ class TreeList extends AbstractList
 		/**
 		 * Returns the height of the node or -1 if the node is null.
 		 */
-		private int getHeight( AVLNode node )
+		private static int getHeight( AVLNode node )
 		{
 			return ((node == null) ? -1 : node.height);
 		}

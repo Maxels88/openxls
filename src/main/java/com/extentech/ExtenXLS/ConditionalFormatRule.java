@@ -737,7 +737,7 @@ public class ConditionalFormatRule implements Handle
 		currentCf.setCondition1( setval );
 	}
 
-	public int getConditionalFormatType()
+	public static int getConditionalFormatType()
 	{
 		// TODO Auto-generated method stub
 		return 0;

@@ -418,7 +418,7 @@ public class OneCellAnchor implements OOXMLElement
 	 * @param name
 	 * @param id
 	 */
-	public void setAsImage( String rid, String name, String id )
+	public static void setAsImage( String rid, String name, String id )
 	{
 		ObjectChoice o = new ObjectChoice();
 		o.setObject( new Pic() );

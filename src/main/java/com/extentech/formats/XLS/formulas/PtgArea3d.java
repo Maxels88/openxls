@@ -728,7 +728,7 @@ public class PtgArea3d extends PtgArea implements Ptg, IxtiListener
 	 *
 	 * @return
 	 */
-	public Object[] getAllVals()
+	public static Object[] getAllVals()
 	{
 
 		return null;

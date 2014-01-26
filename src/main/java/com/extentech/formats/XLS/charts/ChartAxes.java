@@ -1106,7 +1106,7 @@ public class ChartAxes implements ChartConstants, Serializable
 	 * @param s   string to display
 	 * @param rot rotation (0= none)
 	 */
-	private double getRotatedWidth( java.awt.Font f, AtomicInteger height, String s, int rot )
+	private static double getRotatedWidth( java.awt.Font f, AtomicInteger height, String s, int rot )
 	{
 		double retWidth = 0;
 		String[] slines = s.split( "\n" );
@@ -1143,7 +1143,7 @@ public class ChartAxes implements ChartConstants, Serializable
 	 * @param s   string to display
 	 * @param rot rotation (0= none)
 	 */
-	private double getRotatedWidthVert( java.awt.Font f, AtomicInteger height, String s, int rot )
+	private static double getRotatedWidthVert( java.awt.Font f, AtomicInteger height, String s, int rot )
 	{
 		double retWidth = 0;
 		String[] slines = s.split( "\n" );

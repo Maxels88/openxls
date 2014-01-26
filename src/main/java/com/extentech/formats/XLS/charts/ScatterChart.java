@@ -320,7 +320,7 @@ public class ScatterChart extends ChartType
 	 * @param clr    SVG color String
 	 * @return
 	 */
-	private String getLineSVG( String points, String clr )
+	private static String getLineSVG( String points, String clr )
 	{
 		String s = "";
 		// each line is comprised of 1 black line and 1 series color line:			

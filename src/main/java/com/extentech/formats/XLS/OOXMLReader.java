@@ -1083,7 +1083,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 	 * @param sarr String[]
 	 * @return int index into sarr
 	 */
-	private int sLookup( String s, String[] sarr )
+	private static int sLookup( String s, String[] sarr )
 	{
 		if( (sarr != null) && (s != null) )
 		{
@@ -1161,7 +1161,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 	 * @param bk
 	 * @param namedRanges
 	 */
-	void addNames( WorkBookHandle bk, ArrayList namedRanges )
+	static void addNames( WorkBookHandle bk, ArrayList namedRanges )
 	{
 		// now input named ranges before processing sheet data 
 		for( Object namedRange : namedRanges )
@@ -1241,7 +1241,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 	 * @param bk
 	 * @param inlineStrs HashMap
 	 */
-	void addInlineStrings( WorkBookHandle bk, HashMap inlineStrs )
+	static void addInlineStrings( WorkBookHandle bk, HashMap inlineStrs )
 	{
 		Iterator ii = inlineStrs.keySet().iterator();
 		while( ii.hasNext() )
@@ -1264,7 +1264,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 	/**
 	 * intercept Sheet adds and hand off to parse event listener as needed
 	 */
-	protected CellHandle sheetAdd( WorkSheetHandle sheet, Object val, Object cachedval, int r, int c, int fmtid )
+	protected static CellHandle sheetAdd( WorkSheetHandle sheet, Object val, Object cachedval, int r, int c, int fmtid )
 	{
 		CellHandle ch = sheetAdd( sheet, val, r, c, fmtid );
 		((Formula) ch.getCell()).setCachedValue( cachedval );
@@ -1495,7 +1495,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 	 * @param zip         open ZipFile
 	 * @param pivotTables Strings name pivot table files within zip
 	 */
-	void addPivotTables( WorkBookHandle bk, ZipFile zip, HashMap<String, WorkSheetHandle> pivotTables ) throws IOException
+	static void addPivotTables( WorkBookHandle bk, ZipFile zip, HashMap<String, WorkSheetHandle> pivotTables ) throws IOException
 	{
 		Iterator ii = pivotTables.keySet().iterator();
 		while( ii.hasNext() )
@@ -1583,7 +1583,7 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 	 * @param rid String rid
 	 * @return
 	 */
-	private Object lookupRid( ArrayList lst, String rid )
+	private static Object lookupRid( ArrayList lst, String rid )
 	{
 		for( Object aLst : lst )
 		{

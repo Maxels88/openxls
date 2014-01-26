@@ -121,7 +121,7 @@ public final class Scl extends com.extentech.formats.XLS.XLSRecord
 			log.debug( "Scl.init() sheet zoom:" + getZoom() );
 	}
 
-	private int[] gcd( int numerator, int denominator )
+	private static int[] gcd( int numerator, int denominator )
 	{
 		int highest;
 		int n = 1;

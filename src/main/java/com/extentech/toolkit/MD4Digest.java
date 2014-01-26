@@ -86,7 +86,7 @@ public class MD4Digest
 		X[15] = (int) (bitLength >>> 32);
 	}
 
-	private void unpackWord( int word, byte[] out, int outOff )
+	private static void unpackWord( int word, byte[] out, int outOff )
 	{
 		out[outOff] = (byte) word;
 		out[outOff + 1] = (byte) (word >>> 8);
@@ -161,7 +161,7 @@ public class MD4Digest
 	/*
 	 * rotate int x left n bits.
 	 */
-	private int rotateLeft( int x, int n )
+	private static int rotateLeft( int x, int n )
 	{
 		return (x << n) | (x >>> (32 - n));
 	}
@@ -169,17 +169,17 @@ public class MD4Digest
 	/*
 	 * F, G, H and I are the basic MD4 functions.
 	 */
-	private int F( int u, int v, int w )
+	private static int F( int u, int v, int w )
 	{
 		return (u & v) | (~u & w);
 	}
 
-	private int G( int u, int v, int w )
+	private static int G( int u, int v, int w )
 	{
 		return (u & v) | (u & w) | (v & w);
 	}
 
-	private int H( int u, int v, int w )
+	private static int H( int u, int v, int w )
 	{
 		return u ^ v ^ w;
 	}
@@ -335,7 +335,7 @@ public class MD4Digest
 		processBlock();
 	}
 
-	public int getByteLength()
+	public static int getByteLength()
 	{
 		return BYTE_LENGTH;
 	}
