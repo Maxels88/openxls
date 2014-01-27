@@ -45,8 +45,8 @@ import java.util.LinkedHashMap;
 public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializable
 {
 	public static final long serialVersionUID = 1233423412323l;
-	private static final Logger log = LoggerFactory.getLogger( WorkBookFactory.class );
 	protected LEOFile myLEO;
+	private static final Logger log = LoggerFactory.getLogger( WorkBookFactory.class );
 	private String fname;
 
 	// Methods from ProgressNotifier
@@ -54,75 +54,6 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 	private int progress = 0;
 	private boolean done = false;
 	private String progresstext = "";
-
-	@Override
-	public void register( ProgressListener j )
-	{
-		progresslistener = j;
-		j.addTarget( this );
-	}
-
-	@Override
-	public void fireProgressChanged()
-	{
-		// if (progresslistener != null) {
-		// progresslistener.updateProgress();
-		// }
-	}
-
-	@Override
-	public int getProgress()
-	{
-		return progress;
-	}
-
-	@Override
-	public String getProgressText()
-	{
-		return progresstext;
-	}
-
-	@Override
-	public void setProgress( int progress )
-	{
-		this.progress = progress;
-	}
-
-	@Override
-	public void setProgressText( String s )
-	{
-		progresstext = s;
-	}
-
-	@Override
-	public boolean iscompleted()
-	{
-		return done;
-	}
-
-	// end ProgressNotifier methods
-
-	/**
-	 * get the file name for the WorkBook
-	 */
-	public String getFileName()
-	{
-		if( fname == null )
-		{
-			fname = myLEO.getFileName();
-		}
-		return fname;
-	}
-
-	/**
-	 * sets the workbook filename associated with this wbfactory
-	 *
-	 * @param f
-	 */
-	public void setFileName( String f )
-	{
-		fname = f;
-	}
 
 	/**
 	 * return the next opcode/length in the Stream from the given record.
@@ -140,268 +71,6 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 
 		short opcode = ByteTools.readShort( b1[0], b1[1] );
 		return opcode;
-	}
-
-	LEOFile getLEOFile()
-	{
-		return myLEO;
-	}
-
-	/**
-	 * read in a WorkBook from a byte array.
-	 */
-	public Book getWorkBook( BlockByteReader parsedata, LEOFile leo ) throws InvalidRecordException
-	{
-		Book book = new WorkBook();
-		return initWorkBook( book, parsedata, leo );
-	}
-
-	/**
-	 * Initialize the workbook
-	 *
-	 * @param book
-	 * @param parsedata
-	 * @param leo
-	 * @return
-	 * @throws InvalidRecordException
-	 */
-	public Book initWorkBook( Book book, BlockByteReader parsedata, LEOFile leo ) throws InvalidRecordException
-	{
-
-		BlockByteReader blockByteReader = parsedata;
-		blockByteReader.setApplyRelativePosition( true );
-
-		/** KSC: record-level validation */
-		boolean bPerformRecordLevelValidation = false;    // perform record-level validation if set
-		if( System.getProperty( VALIDATEWORKBOOK ) != null )
-		{
-			if( System.getProperty( VALIDATEWORKBOOK ).equals( "true" ) )
-			{
-				bPerformRecordLevelValidation = true;
-			}
-		}
-		java.util.LinkedHashMap<Short, R> curSubstream = null;
-		java.util.LinkedHashMap<Short, R> sheetSubstream = null;
-		if( bPerformRecordLevelValidation )
-		{
-			java.util.LinkedHashMap<Short, R> globalSubstream = new java.util.LinkedHashMap();
-			fillGlobalSubstream( globalSubstream );
-			sheetSubstream = new java.util.LinkedHashMap();
-			fillWorksSheetSubstream( sheetSubstream );
-			curSubstream = globalSubstream;
-		}
-
-		myLEO = leo;
-
-		book.setFactory( this );
-		boolean infile = false;
-		boolean isWBBOF = true;
-		short opcode = 0x00;
-		short reclen = 0x00;
-		short lastOpcode = 0x00;
-		int BofCount = 0; // track the number of 'Bof' records
-
-		BiffRec rec = null;
-		int blen = parsedata.getLength();
-
-		// init the progress listener
-		progresstext = "Initializing Workbook...";
-		progress = 0;
-		if( progresslistener != null )
-		{
-			progresslistener.setMaxProgress( blen );
-		}
-		fireProgressChanged();
-			log.info( "XLS File Size: " + String.valueOf( blen ) );
-
-		for( int i = 0; i <= (blen - 4); )
-		{
-
-			fireProgressChanged(); // ""
-			byte[] headerbytes = parsedata.getHeaderBytes( i );
-			opcode = ByteTools.readShort( headerbytes[0], headerbytes[1] );
-			reclen = ByteTools.readShort( headerbytes[2], headerbytes[3] );
-
-			if( ((lastOpcode == EOF) && (opcode == 0)) || (opcode == 0xffffffff) )
-			{
-				int startpos = i - 3;
-				int junkreclen = 0;
-				int offset = 0;
-
-				if( offset != 0 )
-				{
-					junkreclen = (offset - startpos);
-				}
-				else
-				{
-					junkreclen = blen - i;
-				}
-				i += junkreclen - 1;
-				i += junkreclen - 1;
-			}
-			else
-			{ // REAL REC
-				// sanity checks
-				if( reclen < 0 )
-				{
-					throw new InvalidRecordException( "WorkBookFactory.getWorkBook() Negative Reclen encountered pos:" + i + " opcode:0x" + Integer
-							.toHexString( opcode ) );
-				}
-				if( (reclen + 1) > blen )
-				{
-					throw new InvalidRecordException( "WorkBookFactory.getWorkBook() Reclen longer than data pos:" + i + " opcode:0x" + Integer
-							.toHexString( opcode ) );
-				}
-
-				if( (opcode == BOF) || infile )
-				{ // if the first Bof has been
-					// reached, start
-					infile = true;
-
-					// Init Record'
-					rec = parse( book, opcode, i, reclen, blockByteReader );
-
-					if( progresslistener != null )
-					{
-						progresslistener.setValue( i );
-					}
-
-					/**** KSC: record-level validation ****/
-					if( bPerformRecordLevelValidation && (curSubstream != null) )
-					{
-						markRecord( curSubstream, rec, opcode );
-					}
-
-					// write to the dump file if necessary
-					if( WorkBookHandle.dump_input != null )
-					{
-						try
-						{
-							WorkBookHandle.dump_input.write( "-------------------------------------" + "-------------------------\n" + ((XLSRecord) rec)
-									.getRecDesc() + ByteTools.getByteDump( blockByteReader.get( (XLSRecord) rec, 0, reclen ), 0 ) + "\n" );
-							WorkBookHandle.dump_input.flush();
-						}
-						catch( Exception e )
-						{
-							log.error( "error writing to dump file, ceasing dump output: ", e );
-							WorkBookHandle.dump_input = null;
-						}
-					}
-
-					if( rec == null )
-					{ // Effectively an EOF
-							log.debug( "done parsing WorkBook storage." );
-						done = true;
-						progresstext = "Done Reading WorkBook.";
-						fireProgressChanged();
-						return book;
-					}
-					// not used anymore ((XLSRecord)rec).resetCacheBytes();
-					// int reco = rec.getOffset() ;
-					// int recl = rec.getLength();
-					int thisrecpos = i + reclen + 4;
-
-					if( opcode == BOF )
-					{
-						if( isWBBOF )
-						{    // do first Bof initialization
-							book.setFirstBof( (Bof) rec );
-							isWBBOF = false;
-						}
-						else if( bPerformRecordLevelValidation && (BofCount == 0) && (lastOpcode != EOF) && (curSubstream != null) )
-						{
-							/***** KSC: record-level validation ****/
-							// invalid record structure-  no EOF before BOF
-							validateRecords( curSubstream, book, rec.getSheet() );
-						}
-
-						BofCount++;
-						/***** KSC: record-level validation ****/
-						if( bPerformRecordLevelValidation && (curSubstream == null) )
-						{
-							// after global substream is processed, switch to sheet substream
-							reInitSubstream( sheetSubstream );
-							curSubstream = sheetSubstream;
-							curSubstream.get( BOF ).isPresent = true;
-							curSubstream.get( BOF ).recordPos = 0;
-						}
-					}
-					else if( opcode == EOF )
-					{
-						BofCount--;
-
-						/***** KSC: record-level validation ****/
-						if( bPerformRecordLevelValidation && (BofCount == 0) && (curSubstream != null) )
-						{
-							validateRecords( curSubstream, book, rec.getSheet() );
-							curSubstream = null;
-						}
-					}
-					// end of Workbook
-					if( BofCount == -1 )
-					{
-							log.debug( "Last Bof" );
-						i += reclen;
-						thisrecpos = blen;
-					}
-					if( thisrecpos > 0 )
-					{
-						i = thisrecpos;
-					}
-					lastOpcode = opcode;
-				}
-				else
-				{
-					throw new InvalidRecordException( "No valid record found." );
-				}
-
-			}
-		}
-			log.info( "done" );
-		progress = blen;
-		progresstext = "Done Reading WorkBook.";
-		fireProgressChanged();
-
-		done = true;
-		// flag the book so we know it's ready for shared access
-		// book.setReady(true); ENTERPRISE ONLY
-		// recordata.setApplyRelativePosition(false);
-		return book;
-	}
-
-	/**
-	 * create the individual records based on type
-	 */
-	protected synchronized BiffRec parse( Book book, short opcode, int offset, int datalen, BlockByteReader bytebuf ) throws
-	                                                                                                                  InvalidRecordException
-	{
-//Logger.logInfo( "Opcode/Offset/DataLen: " + opcode + ", " + offset + ", " + datalen );
-		// sanity checks
-		if( (datalen < 0) || (datalen > XLSConstants.MAXRECLEN) )
-		{
-			throw new InvalidRecordException( "InvalidRecordException BAD RECORD LENGTH: " + " off: " + offset + " op: " + Integer.toHexString(
-					opcode ) + " len: " + datalen );
-		}
-		if( (offset + datalen) > bytebuf.getLength() )
-		{
-			throw new InvalidRecordException( "InvalidRecordException RECORD LENGTH LONGER THAN FILE: " + " off: " + offset + " op: " + Integer
-					.toHexString( opcode ) + " len: " + datalen + " buflen:" + bytebuf.getLength() );
-		}
-
-		// Create a new Record
-		BiffRec rec = XLSRecordFactory.getBiffRecord( opcode );
-
-		// init the mighty rec
-		rec.setWorkBook( (WorkBook) book );
-		rec.setByteReader( bytebuf );
-		rec.setLength( (short) datalen );
-		rec.setOffset( offset );
-		rec.setStreamer( book.getStreamer() );
-
-		// send it to the CONTINUE handler
-		book.getContinueHandler().addRec( rec, (short) datalen );
-		// add it to the record stream
-		return book.addRecord( rec, true );
 	}
 
 	/**
@@ -428,14 +97,6 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 		return x - 3;
 	}
 
-	/**
-	 * record-level validation:
-	 * <li>have ordered list of records for each substream (wb/global, worksheet)
-	 * <li>upon each record that is processed, look up in list and mark present + record pos in correseponding list (streamer or sheet)
-	 * <li>upon EOF for stream, traverse thru list, if required and not present, add
-	 * <br>Limitations:
-	 * This methodology does NOT validate Chart records, Chart-only sheets, Macro Sheets, Dialog Sheets or Custom Views
-	 */
 	/**
 	 * fill map with EVERY possible global (workbook)-level record, IN ORDER, plus flag if they are required or not
 	 * Used in record-level validation
@@ -592,12 +253,12 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 		map.put( TOP_MARGIN, new R( false ) );
 		map.put( BOTTOM_MARGIN, new R( false ) );
 		map.put( PLS, new R( false ) );
-//	Continue 
+//	Continue
 		map.put( SETUP, new R( true ) );
 		map.put( (short) 0x89c, new R( false ) );    //[HeaderFooter]
 		map.put( (short) 233, new R( false ) );    //[ BkHim ]
 		map.put( (short) 1048, new R( false ) );    // BigName
-//       *ContinueBigName 
+//       *ContinueBigName
 		map.put( PROTECT, new R( false ) );
 		map.put( SCENPROTECT, new R( false ) );
 		map.put( OBJPROTECT, new R( false ) );
@@ -702,8 +363,8 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 		map.put( SELECTION, new R( false ) );
 		map.put( (short) 426, new R( false ) );    // UserSViewBegin
 /*		map.put(SELECTION, new R(false));
-		map.put(HORIZONTAL_PAGE_BREAKS, new R(false)); 
-		map.put(VERTICAL_PAGE_BREAKS, new R(false));	 
+		map.put(HORIZONTAL_PAGE_BREAKS, new R(false));
+		map.put(VERTICAL_PAGE_BREAKS, new R(false));
 		map.put(HEADERREC, new R(false));
 		map.put(FOOTERREC, new R(false));
 		map.put(HCENTER,  new R(false));
@@ -714,16 +375,16 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 		map.put(BOTTOM_MARGIN,  new R(false));
 		map.put(PLS, new R(false));
 		map.put(SETUP, new R(false));
-		map.put((short) 51, new R(false));	//([PrintSize] 
+		map.put((short) 51, new R(false));	//([PrintSize]
 		map.put((short) 2204, new R(false));	//[HeaderFooter]*/
-		// here ??? [AUTOFILTER] 
+		// here ??? [AUTOFILTER]
 		map.put( (short) 427, new R( false ) );    //UserSViewEnd
 
 		map.put( (short) 319, new R( false ) );    // RRSort
 		map.put( (short) 153, new R( false ) );    //[DxGCol]
 		map.put( MERGEDCELLS, new R( false ) );    //*MergeCells
 		map.put( (short) 351, new R( false ) );    // [LRng]
-//	*QUERYTABLE 
+//	*QUERYTABLE
 		map.put( PHONETIC, new R( false ) );
 		map.put( CONDFMT, new R( false ) );
 		map.put( CF, new R( false ) );
@@ -740,86 +401,10 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 		map.put( (short) 2146, new R( false ) );    // SheetExt]
 		map.put( FEATHEADR, new R( false ) );
 		map.put( (short) 2152, new R( false ) );    // FEAT
-//		*FEAT11 
+//		*FEAT11
 //		*RECORD12
 		map.put( (short) 2248, new R( false ) );    // UNKNOWN RECORD!!!
 		map.put( EOF, new R( true ) );
-	}
-
-	/**
-	 * add all missing REQUIRED records from the appropriate substream for record-level validation
-	 *
-	 * @param map  substream list storing if present, required ...
-	 * @param book
-	 */
-	private void validateRecords( LinkedHashMap<Short, R> map, Book book, Boundsheet bs )
-	{
-		// use array instead of iterator as may have to traverse more than once
-		Short[] opcodes = new Short[0];
-		java.util.Set<Short> ss = map.keySet();
-		opcodes = ss.toArray( opcodes );
-		R lastR = new R( false );
-		lastR.recordPos = 0;
-		int lastOp = -1;
-		if( (bs != null) && bs.isChartOnlySheet() )
-		{
-			return;    // don't validate chart-only sheets
-		}
-
-		// traverse thru stream list, ensuring required records are present; create if not
-		for( Short op : opcodes )
-		{
-			R r = map.get( op );
-			if( !r.isPresent && r.isRequired )
-			{
-				// System.out.println("A required record is not present: " +  op);
-				// Create a new Record
-				BiffRec rec = createMissingRequiredRecord( op, book, bs );
-				int recPos = lastR.recordPos + 1;
-				try
-				{
-					while( true )
-					{    // now get to LAST record if there are multiple records
-						BiffRec lastRec = (bs == null) ? book.getStreamer().getRecordAt( recPos ) : (BiffRec) bs.getSheetRecs()
-						                                                                                        .get( recPos );
-						if( lastRec.getOpcode() != lastOp )
-						{
-							break;
-						}
-						recPos++;
-					}
-				}
-				catch( IndexOutOfBoundsException e )
-				{
-				}
-				book.getStreamer().addRecordAt( rec, recPos );
-				book.addRecord( rec, false );    // false= already added to streamer or sheet
-				if( bs != null )
-				{
-					rec.setSheet( bs );
-				}
-
-				r.recordPos = rec.getRecordIndex();
-
-				// now must adjust ensuing record positions to account for inserted record
-				for( Short opcode : opcodes )
-				{
-					R nextR = map.get( opcode );
-					if( nextR.isPresent && !r.equals( nextR ) && (nextR.recordPos >= r.recordPos) )
-					{
-						nextR.recordPos++;
-					}
-				}
-				r.isPresent = true;
-			}
-			if( r.isPresent )
-			{
-				lastR = r;
-				lastOp = op;
-			}
-		}
-		// go thru 1 more time to ensure record order is correct
-		validateRecordOrder( map, ((bs == null) ? book.getStreamer().records : bs.getSheetRecs()), opcodes );
 	}
 
 	/**
@@ -833,7 +418,7 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 	private static void validateRecordOrder( LinkedHashMap<Short, R> map, java.util.List list, Short[] opcodes )
 	{
 	/* debugging:
-	System.out.println("BeFORE order:");	
+	System.out.println("BeFORE order:");
 	for (int zz= 0; zz < list.size(); zz++) {
 		    System.out.println(zz + "-" + list.get(zz));
 	}*/
@@ -885,7 +470,7 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 								{
 									r.recordPos = recToMove.getRecordIndex();
 								}
-//System.out.println("\tMoved To " + recToMove.getRecordIndex());				    
+//System.out.println("\tMoved To " + recToMove.getRecordIndex());
 								recsMovedCount++;
 								recToMove = (BiffRec) list.get( origRecPos );
 							} while( recToMove.getOpcode() == op );
@@ -907,15 +492,11 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 				lastOp = op;
 			}
 		}
-	/*System.out.println("AFTER order:");	
+	/*System.out.println("AFTER order:");
 	for (int zz= 0; zz < list.size(); zz++) {
 		    System.out.println(zz + "-" + list.get(zz));
 	}*/
 	}
-
-	// TODO: handle fonts,formats,xf, style -- what's minimum necessary??
-	// TODO: handle TabId
-	// TODO: is Index OK?
 
 	/**
 	 * create missing required records for record-level validation
@@ -1279,7 +860,7 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 						}
 
 //			z= ((Colinfo)bs.getColinfos().get(bs.getColinfos().size())).getColLast();
-//			((Dimensions) record).setColLast(z);			
+//			((Dimensions) record).setColLast(z);
 					}
 					break;
 				case WINDOW2:
@@ -1327,6 +908,8 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 		}
 	}
 
+	// end ProgressNotifier methods
+
 	/**
 	 * mark record present and record pertinent information for record-level validation
 	 */
@@ -1343,7 +926,7 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 		}
 		catch( NullPointerException ne )
 		{
-/*	    if (opcode != CONTINUE && opcode!=DBCELL 
+/*	    if (opcode != CONTINUE && opcode!=DBCELL
 		    && opcode < 4000 /* chart records * /
 		    && !rec.isValueForCell()) // ignore CELLTABLE records
 //		System.out.println("COULDN'T FIND Opcode: " + opcode);*/
@@ -1357,16 +940,430 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 	private static void displayRecsInStream( LinkedHashMap<Short, R> map )
 	{
 		Iterator<Short> ii = map.keySet().iterator();
-		log.info( "Present Records" );
+		log.debug( "Present Records" );
 		while( ii.hasNext() )
 		{
 			short op = ii.next();
 			R r = map.get( op );
 			if( r.isPresent )
 			{
-				log.info( op + " at " + r.recordPos );
+				log.debug( op + " at " + r.recordPos );
 			}
 		}
+	}
+
+	@Override
+	public void register( ProgressListener j )
+	{
+		progresslistener = j;
+		j.addTarget( this );
+	}
+
+	@Override
+	public void fireProgressChanged()
+	{
+	}
+
+	@Override
+	public int getProgress()
+	{
+		return progress;
+	}
+
+	@Override
+	public void setProgress( int progress )
+	{
+		this.progress = progress;
+	}
+
+	@Override
+	public String getProgressText()
+	{
+		return progresstext;
+	}
+
+	@Override
+	public void setProgressText( String s )
+	{
+		progresstext = s;
+	}
+
+	/**
+	 * record-level validation:
+	 * <li>have ordered list of records for each substream (wb/global, worksheet)
+	 * <li>upon each record that is processed, look up in list and mark present + record pos in correseponding list (streamer or sheet)
+	 * <li>upon EOF for stream, traverse thru list, if required and not present, add
+	 * <br>Limitations:
+	 * This methodology does NOT validate Chart records, Chart-only sheets, Macro Sheets, Dialog Sheets or Custom Views
+	 */
+
+	@Override
+	public boolean iscompleted()
+	{
+		return done;
+	}
+
+	/**
+	 * get the file name for the WorkBook
+	 */
+	public String getFileName()
+	{
+		if( fname == null )
+		{
+			fname = myLEO.getFileName();
+		}
+		return fname;
+	}
+
+	/**
+	 * sets the workbook filename associated with this wbfactory
+	 *
+	 * @param f
+	 */
+	public void setFileName( String f )
+	{
+		fname = f;
+	}
+
+	/**
+	 * read in a WorkBook from a byte array.
+	 */
+	public Book getWorkBook( BlockByteReader parsedata, LEOFile leo ) throws InvalidRecordException
+	{
+		Book book = new WorkBook();
+		return initWorkBook( book, parsedata, leo );
+	}
+
+	// TODO: handle fonts,formats,xf, style -- what's minimum necessary??
+	// TODO: handle TabId
+	// TODO: is Index OK?
+
+	/**
+	 * Initialize the workbook
+	 *
+	 * @param book
+	 * @param parsedata
+	 * @param leo
+	 * @return
+	 * @throws InvalidRecordException
+	 */
+	public Book initWorkBook( Book book, BlockByteReader parsedata, LEOFile leo ) throws InvalidRecordException
+	{
+
+		BlockByteReader blockByteReader = parsedata;
+		blockByteReader.setApplyRelativePosition( true );
+
+		/** KSC: record-level validation */
+		boolean bPerformRecordLevelValidation = false;    // perform record-level validation if set
+		if( System.getProperty( VALIDATEWORKBOOK ) != null )
+		{
+			if( System.getProperty( VALIDATEWORKBOOK ).equals( "true" ) )
+			{
+				bPerformRecordLevelValidation = true;
+			}
+		}
+		java.util.LinkedHashMap<Short, R> curSubstream = null;
+		java.util.LinkedHashMap<Short, R> sheetSubstream = null;
+		if( bPerformRecordLevelValidation )
+		{
+			java.util.LinkedHashMap<Short, R> globalSubstream = new java.util.LinkedHashMap();
+			fillGlobalSubstream( globalSubstream );
+			sheetSubstream = new java.util.LinkedHashMap();
+			fillWorksSheetSubstream( sheetSubstream );
+			curSubstream = globalSubstream;
+		}
+
+		myLEO = leo;
+
+		book.setFactory( this );
+		boolean infile = false;
+		boolean isWBBOF = true;
+		short opcode = 0x00;
+		short reclen = 0x00;
+		short lastOpcode = 0x00;
+		int BofCount = 0; // track the number of 'Bof' records
+
+		BiffRec rec = null;
+		int blen = parsedata.getLength();
+
+		// init the progress listener
+		progresstext = "Initializing Workbook...";
+		progress = 0;
+		if( progresslistener != null )
+		{
+			progresslistener.setMaxProgress( blen );
+		}
+		fireProgressChanged();
+		log.debug( "XLS File Size: " + blen );
+
+		for( int i = 0; i <= (blen - 4); )
+		{
+
+			fireProgressChanged(); // ""
+			byte[] headerbytes = parsedata.getHeaderBytes( i );
+			opcode = ByteTools.readShort( headerbytes[0], headerbytes[1] );
+			reclen = ByteTools.readShort( headerbytes[2], headerbytes[3] );
+
+			if( ((lastOpcode == EOF) && (opcode == 0)) || (opcode == 0xffffffff) )
+			{
+				int startpos = i - 3;
+				int junkreclen = 0;
+				int offset = 0;
+
+				if( offset != 0 )
+				{
+					junkreclen = (offset - startpos);
+				}
+				else
+				{
+					junkreclen = blen - i;
+				}
+				i += junkreclen - 1;
+				i += junkreclen - 1;
+			}
+			else
+			{ // REAL REC
+				// sanity checks
+				if( reclen < 0 )
+				{
+					throw new InvalidRecordException( "WorkBookFactory.getWorkBook() Negative Reclen encountered pos:" + i + " opcode:0x" + Integer
+							.toHexString( opcode ) );
+				}
+				if( (reclen + 1) > blen )
+				{
+					throw new InvalidRecordException( "WorkBookFactory.getWorkBook() Reclen longer than data pos:" + i + " opcode:0x" + Integer
+							.toHexString( opcode ) );
+				}
+
+				if( (opcode == BOF) || infile )
+				{ // if the first Bof has been
+					// reached, start
+					infile = true;
+
+					// Init Record'
+					rec = parse( book, opcode, i, reclen, blockByteReader );
+
+					if( progresslistener != null )
+					{
+						progresslistener.setValue( i );
+					}
+
+					/**** KSC: record-level validation ****/
+					if( bPerformRecordLevelValidation && (curSubstream != null) )
+					{
+						markRecord( curSubstream, rec, opcode );
+					}
+
+					// write to the dump file if necessary
+					if( WorkBookHandle.dump_input != null )
+					{
+						try
+						{
+							WorkBookHandle.dump_input.write( "-------------------------------------" + "-------------------------\n" + ((XLSRecord) rec)
+									.getRecDesc() + ByteTools.getByteDump( blockByteReader.get( (XLSRecord) rec, 0, reclen ), 0 ) + "\n" );
+							WorkBookHandle.dump_input.flush();
+						}
+						catch( Exception e )
+						{
+							log.error( "error writing to dump file, ceasing dump output: ", e );
+							WorkBookHandle.dump_input = null;
+						}
+					}
+
+					if( rec == null )
+					{ // Effectively an EOF
+						log.debug( "done parsing WorkBook storage." );
+						done = true;
+						progresstext = "Done Reading WorkBook.";
+						fireProgressChanged();
+						return book;
+					}
+					// not used anymore ((XLSRecord)rec).resetCacheBytes();
+					// int reco = rec.getOffset() ;
+					// int recl = rec.getLength();
+					int thisrecpos = i + reclen + 4;
+
+					if( opcode == BOF )
+					{
+						if( isWBBOF )
+						{    // do first Bof initialization
+							book.setFirstBof( (Bof) rec );
+							isWBBOF = false;
+						}
+						else if( bPerformRecordLevelValidation && (BofCount == 0) && (lastOpcode != EOF) && (curSubstream != null) )
+						{
+							/***** KSC: record-level validation ****/
+							// invalid record structure-  no EOF before BOF
+							validateRecords( curSubstream, book, rec.getSheet() );
+						}
+
+						BofCount++;
+						/***** KSC: record-level validation ****/
+						if( bPerformRecordLevelValidation && (curSubstream == null) )
+						{
+							// after global substream is processed, switch to sheet substream
+							reInitSubstream( sheetSubstream );
+							curSubstream = sheetSubstream;
+							curSubstream.get( BOF ).isPresent = true;
+							curSubstream.get( BOF ).recordPos = 0;
+						}
+					}
+					else if( opcode == EOF )
+					{
+						BofCount--;
+
+						/***** KSC: record-level validation ****/
+						if( bPerformRecordLevelValidation && (BofCount == 0) && (curSubstream != null) )
+						{
+							validateRecords( curSubstream, book, rec.getSheet() );
+							curSubstream = null;
+						}
+					}
+					// end of Workbook
+					if( BofCount == -1 )
+					{
+						log.debug( "Last Bof" );
+						i += reclen;
+						thisrecpos = blen;
+					}
+					if( thisrecpos > 0 )
+					{
+						i = thisrecpos;
+					}
+					lastOpcode = opcode;
+				}
+				else
+				{
+					throw new InvalidRecordException( "No valid record found." );
+				}
+
+			}
+		}
+		log.debug( "Done reading workbook." );
+		progress = blen;
+		progresstext = "Done Reading WorkBook.";
+		fireProgressChanged();
+
+		done = true;
+		// flag the book so we know it's ready for shared access
+		// book.setReady(true); ENTERPRISE ONLY
+		// recordata.setApplyRelativePosition(false);
+		return book;
+	}
+
+	/**
+	 * create the individual records based on type
+	 */
+	protected synchronized BiffRec parse( Book book, short opcode, int offset, int datalen, BlockByteReader bytebuf ) throws
+	                                                                                                                  InvalidRecordException
+	{
+		// sanity checks
+		if( (datalen < 0) || (datalen > XLSConstants.MAXRECLEN) )
+		{
+			throw new InvalidRecordException( "InvalidRecordException BAD RECORD LENGTH: " + " off: " + offset + " op: " + Integer.toHexString(
+					opcode ) + " len: " + datalen );
+		}
+		if( (offset + datalen) > bytebuf.getLength() )
+		{
+			throw new InvalidRecordException( "InvalidRecordException RECORD LENGTH LONGER THAN FILE: " + " off: " + offset + " op: " + Integer
+					.toHexString( opcode ) + " len: " + datalen + " buflen:" + bytebuf.getLength() );
+		}
+
+		// Create a new Record
+		BiffRec rec = XLSRecordFactory.getBiffRecord( opcode );
+
+		// init the mighty rec
+		rec.setWorkBook( (WorkBook) book );
+		rec.setByteReader( bytebuf );
+		rec.setLength( (short) datalen );
+		rec.setOffset( offset );
+		rec.setStreamer( book.getStreamer() );
+
+		// send it to the CONTINUE handler
+		book.getContinueHandler().addRec( rec, (short) datalen );
+		// add it to the record stream
+		return book.addRecord( rec, true );
+	}
+
+	LEOFile getLEOFile()
+	{
+		return myLEO;
+	}
+
+	/**
+	 * add all missing REQUIRED records from the appropriate substream for record-level validation
+	 *
+	 * @param map  substream list storing if present, required ...
+	 * @param book
+	 */
+	private void validateRecords( LinkedHashMap<Short, R> map, Book book, Boundsheet bs )
+	{
+		// use array instead of iterator as may have to traverse more than once
+		Short[] opcodes = new Short[0];
+		java.util.Set<Short> ss = map.keySet();
+		opcodes = ss.toArray( opcodes );
+		R lastR = new R( false );
+		lastR.recordPos = 0;
+		int lastOp = -1;
+		if( (bs != null) && bs.isChartOnlySheet() )
+		{
+			return;    // don't validate chart-only sheets
+		}
+
+		// traverse thru stream list, ensuring required records are present; create if not
+		for( Short op : opcodes )
+		{
+			R r = map.get( op );
+			if( !r.isPresent && r.isRequired )
+			{
+				// System.out.println("A required record is not present: " +  op);
+				// Create a new Record
+				BiffRec rec = createMissingRequiredRecord( op, book, bs );
+				int recPos = lastR.recordPos + 1;
+				try
+				{
+					while( true )
+					{    // now get to LAST record if there are multiple records
+						BiffRec lastRec = (bs == null) ? book.getStreamer().getRecordAt( recPos ) : (BiffRec) bs.getSheetRecs()
+						                                                                                        .get( recPos );
+						if( lastRec.getOpcode() != lastOp )
+						{
+							break;
+						}
+						recPos++;
+					}
+				}
+				catch( IndexOutOfBoundsException e )
+				{
+				}
+				book.getStreamer().addRecordAt( rec, recPos );
+				book.addRecord( rec, false );    // false= already added to streamer or sheet
+				if( bs != null )
+				{
+					rec.setSheet( bs );
+				}
+
+				r.recordPos = rec.getRecordIndex();
+
+				// now must adjust ensuing record positions to account for inserted record
+				for( Short opcode : opcodes )
+				{
+					R nextR = map.get( opcode );
+					if( nextR.isPresent && !r.equals( nextR ) && (nextR.recordPos >= r.recordPos) )
+					{
+						nextR.recordPos++;
+					}
+				}
+				r.isPresent = true;
+			}
+			if( r.isPresent )
+			{
+				lastR = r;
+				lastOp = op;
+			}
+		}
+		// go thru 1 more time to ensure record order is correct
+		validateRecordOrder( map, ((bs == null) ? book.getStreamer().records : bs.getSheetRecs()), opcodes );
 	}
 }
 

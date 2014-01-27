@@ -158,7 +158,7 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 			col = -1;    // flag that this rec hasn't been referred to one cell
 			colLast = ByteTools.readShort( getByteAt( reclen - 2 ), getByteAt( reclen - 1 ) );
 
-			log.info( "colFirst: " + colFirst + ", colLast: " + colLast );
+			log.trace( "colFirst: " + colFirst + ", colLast: " + colLast );
 			//			Sometimes colFirst & colLast are reversed... WTFM$? -jm
 			if( colLast < colFirst )
 			{

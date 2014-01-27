@@ -3230,7 +3230,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		}
 		catch( JSONException e )
 		{
-			log.error( "error getting JSON for the cell: " + e );
+			log.error( "error getting JSON for the cell: " + e.getMessage(), e );
 		}
 		return theCell;
 	}
@@ -3249,7 +3249,8 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		}
 		catch( Exception e )
 		{
-			; // somewhat normal?
+			log.debug( "Error obtaining validation handle", e );
+			// somewhat normal?
 		}
 		return ret;
 	}
@@ -3466,6 +3467,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		}
 		catch( Exception e )
 		{
+			log.warn( "Error creating new XF record", e );
 			return null;
 		}
 	}
