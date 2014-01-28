@@ -74,6 +74,10 @@ import java.util.Stack;
  */
 public final class Formula extends XLSCellRecord
 {
+	/**
+	 * The target ShrFmla record, if this is a shared formula reference.
+	 */
+	public Shrfmla shared = null;
 	private static final Logger log = LoggerFactory.getLogger( Formula.class );
 	private static final long serialVersionUID = 7563301825566021680L;
 	/**
@@ -85,52 +89,51 @@ public final class Formula extends XLSCellRecord
 	 */
 	private static final short FCALCONLOAD = 0x02;
 	/**
+	 * Contains bitfield flags.
+	 */
+	private short grbit = FCALCONLOAD;
+	/**
 	 * Mask for the fShrFmla grbit flag.
 	 */
 	private static final short FSHRFMLA = 0x08;
-
+	private static ThreadLocal<Integer> recurseCount = new ThreadLocal<Integer>()
+	{
+		@Override
+		protected Integer initialValue()
+		{
+			return 0;
+		}
+	};
 	private Object cachedValue;
 	private Stack expression;
-
 	/**
 	 * Whether the record data needs to be updated.
 	 */
 	private boolean dirty = false;
-
 	/**
 	 * Whether this formula contains an indirect reference.
 	 */
 	private boolean containsIndirectFunction = false;
-
 	/**
 	 * Whether this FORMULA record has an attached STRING record.
 	 */
 	private boolean haveStringRec = false;
-
-	/**
-	 * Contains bitfield flags.
-	 */
-	private short grbit = FCALCONLOAD;
-
 	/**
 	 * The attached STRING record, if one exists.
 	 */
 	private StringRec string = null;
-
-	/**
-	 * The target ShrFmla record, if this is a shared formula reference.
-	 */
-	public Shrfmla shared = null;
-
 	/**
 	 * List of records attached to this one.
 	 */
 	private List internalRecords;
-
 	/**
 	 * true if it's sub-ptgs are defined in other workbooks and therefore unable to be resolved
 	 */
 	private boolean isExternalRef = false;
+	/**
+	 * clear out object references in prep for closing workbook
+	 */
+	private boolean closed = false;
 
 	/**
 	 * Default constructor
@@ -142,155 +145,138 @@ public final class Formula extends XLSCellRecord
 		isFormula = true;
 	}
 
-	/**
-	 * Parses the record bytes.
-	 * This method only needs to be called when the record is being constructed
-	 * from bytes. Calling it on a programmatically created formula is
-	 * unnecessary and will probably throw an exception.
-	 */
-	@Override
-	public void init()
+	public static String getTypeName()
 	{
-		// Prevent misuse of init
-		if( expression != null )
-		{
-			throw new IllegalStateException( "can't init a formula created from a string" );
-		}
-
-		super.init();
-		if( (data = getData()) == null )
-		{
-			throw new IllegalStateException( "can't init a formula without record bytes" );
-		}
-		super.initRowCol();
-		ixfe = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
-		grbit = ByteTools.readShort( getByteAt( 14 ), getByteAt( 15 ) );
-
-		// get the cached value bytes from the record
-		byte[] currVal = getBytesAt( 6, 8 );
-
-		// Is this a non-numeric value?
-		if( (currVal[6] == (byte) 0xFF) && (currVal[7] == (byte) 0xFF) )
-		{
-			// String value
-			if( currVal[0] == (byte) 0x00 )
-			{
-				haveStringRec = true;        // bytes 1-5 are not used
-				// Normally cachedValue will be set by StringRec's init.
-				// Setting cachedValue null forces calculation in the rare
-				// event that the STRING record is missing or fails to init.
-				cachedValue = null;
-			}
-
-			// Empty string value
-			else if( currVal[0] == (byte) 0x03 )
-			{
-				// There is no attached STRING record. Set cachedValue directly.
-				cachedValue = "";
-			}
-
-			// Boolean value
-			else if( currVal[0] == (byte) 0x01 )
-			{
-				cachedValue = currVal[2] != (byte) 0x00;
-			}
-
-			// Error value
-			else if( currVal[0] == (byte) 0x02 )
-			{
-				cachedValue = new CalculationException( currVal[2] );
-			}
-
-			// Unknown value type
-			else
-			{
-				cachedValue = null;
-			}
-
-		}
-		else
-		{
-			// do not cache NaN stored bytes
-			double dbv = ByteTools.eightBytetoLEDouble( currVal );
-			if( !Double.isNaN( dbv ) )
-			{
-				cachedValue = dbv;
-			}
-		}
-
-		if( getSheet() == null )
-		{
-			setSheet( wkbook.getLastbound() );
-		}
-
-			try
-			{
-				log.debug( "Formula " + getCellAddress() + getFormulaString() );
-			}
-			catch( Exception e )
-			{
-				log.warn( "Debug output of Formula failed: " + e );
-			}
-
-		// The expression needs to be parsed on input in order to add it to
-		// the reference tracker
-		//TODO: Add a no calculation / read only mode without ref tracking
-		populateExpression();
-		// Perform some special handling for formulas with indirect references
-		if( containsIndirectFunction )
-		{
-			registerIndirectFunction();
-		}
-		dirty = false;
+		return "formula";
 	}
 
 	/**
-	 * Performs cleanup required before changing or removing this Formula.
-	 * This nulls out the expression, so save a copy if you need it.
-	 * Possible sub-records associated with Formula: array, shared string and/or shared formula
+	 * Returns the correct string representation of a double for excel.
+	 * <p/>
+	 * Note this is for the standards that were determined with excel and extenxls
+	 *
+	 * @param num
+	 * @return
 	 */
-	private void clearExpression()
+	private static String getDoubleAsFormattedString( double theNum )
 	{
-		if( expression == null )
-		{
-			return;
-		}
+		return ExcelTools.getNumberAsString( theNum );
+	}
 
-		if( isArrayFormula() )
+	/**
+	 * increment each PtgRef in expression stack via row or column based
+	 * on rowInc or colInc values
+	 * Used in OOXML parsing
+	 */
+	public static void incrementSharedFormula( java.util.Stack origStack, int rowInc, int colInc, int[] range )
+	{
+		// traverse thru ptg's, incrementing row reference
+		//java.util.Stack origStack= form.getExpression();	Don't do "in place" as alters original expression
+		//Logger.logInfo("Before Inc: " + this.getFormulaString());
+		for( int i = 0; i < origStack.size(); i++ )
 		{
-			Array a = getArray();
-			if( a != null )
+			Ptg p = (Ptg) origStack.elementAt( i );
+			try
 			{
-				getSheet().removeRecFromVec( a );
+				String s = p.getLocation();
+				if( p.getIsReference() )
+				{
+					if( !((((PtgRef) p).wholeRow && (colInc != 0)) || (((PtgRef) p).wholeCol && (rowInc != 0))) )
+					{
+						if( !(p instanceof PtgArea) )
+						{
+							boolean[] bRelRefs = { ((PtgRef) p).isRowRel(), ((PtgRef) p).isColRel() };
+							int[] rc = ExcelTools.getRowColFromString( s );
+							if( bRelRefs[0] )
+							{
+								rc[0] += rowInc;
+							}
+							if( bRelRefs[1] )
+							{
+								rc[1] += colInc;
+							}
+							PtgRef pr = new PtgRef();
+							pr.setParentRec( p.getParentRec() );
+							pr.setUseReferenceTracker( false );    // 20090827 KSC: don't petform expensive calcs on init + removereferenceTracker blows out cached value
+							pr.setLocation( ExcelTools.formatLocation( rc, bRelRefs[0], bRelRefs[1] ) );
+							pr.setUseReferenceTracker( true );
+							origStack.set( i, pr );
+						}
+						else
+						{
+							String sh = ExcelTools.stripSheetNameFromRange( s )[0];
+							int[] rc = ExcelTools.getRangeRowCol( s );
+							boolean[] bRelRefs = {
+									((PtgArea) p).getFirstPtg().isRowRel(),
+									((PtgArea) p).getLastPtg().isRowRel(),
+									((PtgArea) p).getFirstPtg().isColRel(),
+									((PtgArea) p).getLastPtg().isColRel()
+							};
+							if( bRelRefs[0] )
+							{
+								rc[0] += rowInc;
+							}
+							if( bRelRefs[1] )
+							{
+								rc[2] += rowInc;
+							}
+							if( bRelRefs[2] )
+							{
+								rc[1] += colInc;
+							}
+							if( bRelRefs[3] )
+							{
+								rc[3] += colInc;
+							}
+							PtgArea pa = new PtgArea( false );
+							pa.setParentRec( p.getParentRec() );
+							if( sh != null )
+							{
+								pa.setLocation( sh + "!" + ExcelTools.formatRangeRowCol( rc, bRelRefs ) );
+							}
+							else
+							{
+								pa.setLocation( ExcelTools.formatRangeRowCol( rc, bRelRefs ) );
+							}
+							pa.setUseReferenceTracker( true );
+							origStack.set( i, pa );
+						}
+					}
+				}
+			}
+			catch( Exception ex )
+			{
+				log.error( "Formula.incrementSharedFormula: " + ex.toString() );
 			}
 		}
-		if( hasAttachedString() )
-		{    // remove that too
-			if( string != null )
-			{
-				getSheet().removeRecFromVec( string );
-			}
-			string = null;
-		}
+	}
 
-		if( isSharedFormula() )
+	/**
+	 * returns true if the value s is one of the Excel defined Error Strings
+	 *
+	 * @param s
+	 * @return
+	 */
+	public static boolean isErrorValue( String s )
+	{
+		if( s == null )
 		{
-			shared.removeMember( this );
-			shared = null;
-			setSharedFormula( false );
+			return false;
 		}
+		return (Collections.binarySearch( Arrays.asList( new String[]{
+				"#DIV/0!", "#N/A", "#NAME?", "#NULL!", "#NUM!", "#REF!", "#VALUE!"
+		} ), s.trim() ) > -1);
+	}
 
-		Iterator iter = expression.iterator();
-		while( iter.hasNext() )
-		{
-			Ptg ptg = (Ptg) iter.next();
-			if( ptg instanceof PtgRef )
-			{
-				((PtgRef) ptg).removeFromRefTracker();
-			}
-		}
-
-		expression = null;
+	/**
+	 * get the expression stack
+	 *
+	 * @return
+	 */
+	public Stack getExpression()
+	{
+		populateExpression();
+		return expression;
 	}
 
 	/**
@@ -305,17 +291,6 @@ public final class Formula extends XLSCellRecord
 		}
 		expression = exp;
 		updateRecord();
-	}
-
-	/**
-	 * get the expression stack
-	 *
-	 * @return
-	 */
-	public Stack getExpression()
-	{
-		populateExpression();
-		return expression;
 	}
 
 	/**
@@ -426,154 +401,6 @@ public final class Formula extends XLSCellRecord
 	public void setIsExternalRef( boolean isExternalRef )
 	{
 		this.isExternalRef = isExternalRef;
-	}
-
-	public static String getTypeName()
-	{
-		return "formula";
-	}
-
-	/**
-	 * Adds an indirect function to the list of functions to be evaluated post load
-	 */
-	protected void registerIndirectFunction()
-	{
-		getWorkBook().addIndirectFormula( this );
-	}
-
-	/**
-	 * If the method contains an indirect function then
-	 * register those ptgs into the reference tracker.
-	 * <p/>
-	 * In order to do this it is necessary to calculate the formula
-	 * to retrieve the Ptg's
-	 */
-	protected void calculateIndirectFunction()
-	{
-		clearCachedValue();
-		try
-		{
-			calculateFormula();
-		}
-		catch( FunctionNotSupportedException e )
-		{
-			// If we do not support the function, calculation will throw a FNE anyway, so no need for logging
-		}
-		catch( Exception e )
-		{
-			// problematic here.  As the calculation is happening on parse we dont really
-			// want to throw an exception and crap out on the book loading
-			// but the client should be informed in some way.  Also a generic exception is caught
-			// because our code does not bubble a calc exception up.
-			log.error( "Error registering lookup for INDIRECT() function at cell: " + getCellAddress() + " : " + e );
-		}
-	}
-
-	/**
-	 * Populates the expression in the formula.  This has been moved out of init for performance reasons.
-	 * The idea is that the processing is offloaded as a JIT for calculation/value retrieval.
-	 */
-	//TODO: refactor external references and make private
-	void populateExpression()
-	{
-		if( (expression != null) || (data == null) )
-		{
-			return;
-		}
-
-		try
-		{
-			short length = ByteTools.readShort( getByteAt( 20 ), getByteAt( 21 ) );
-
-			if( (length + 22) > data.length )
-			{
-				throw new Exception( "cce longer than record" );
-			}
-
-			expression = ExpressionParser.parseExpression( getBytesAt( 22, reclen - 22 ), this, length );
-
-			// If this is a shared formula reference, do some special init
-			if( isSharedFormula() )
-			{
-				initSharedFormula( null );
-			}
-		}
-		catch( Exception e )
-		{
-				log.warn( "Formula.init:  Parsing Formula failed: " + e );
-		}
-	}
-
-	/**
-	 * Performs special initialization for shared formula references.
-	 *
-	 * @param target the target <code>SHRFMLA</code> record. If this is
-	 *               <code>null</code> it will be retrieved from the cell pointed to
-	 *               by the <code>PtgExp</code>.
-	 * @throws FormulaNotFoundException if the target shared formula is missing
-	 * @throws IllegalArgumentException if this is not a shared formula member
-	 */
-	void initSharedFormula( Shrfmla target ) throws FormulaNotFoundException
-	{
-		if( !isSharedFormula() )
-		{
-			setSharedFormula( true );
-		}
-
-		// If we're already done, silently do nothing
-		if( shared != null )
-		{
-			return;
-		}
-
-		// If this is an instantiation instead of a reference
-		if( (expression.size() != 1) || !(expression.get( 0 ) instanceof PtgExp) )
-		{
-			//TODO: find which ShrFmla this is and convert to reference
-			// For now, just clear fShrFmla
-			setSharedFormula( false );
-			return;
-		}
-
-		PtgExp pointer = (PtgExp) expression.get( 0 );
-
-		if( target != null )
-		{
-			shared = target;
-		}
-		else
-		{
-			try
-			{
-				shared = ((Formula) getSheet().getCell( pointer.getRwFirst(),
-				                                        pointer.getColFirst() )).shared;    // find shared cell linked to host/first formula cell in shared formula series
-				if( shared == null )
-				{
-					throw new Exception();
-				}
-			}
-			catch( Exception e )
-			{
-				// If this is the host cell, fail silently. This method will be
-				// re-called by the ShrFmla record's init method.
-				if( getCellAddress().equals( pointer.getReferent() ) )
-				{
-					return;
-				}
-
-				// Otherwise, complain and clear fShrFmla
-				throw new FormulaNotFoundException( "FORMULA at " + getCellAddress() + " refers to missing SHRFMLA at " + pointer.getReferent() );
-			}
-		}
-
-		//Shared Formula Init Performance Changes:  do not instantiate until calculate
-//		expression = shared.instantiate( pointer );
-		shared.addMember( this );
-
-		if( shared.containsIndirectFunction )
-		{
-			registerIndirectFunction();
-		}
 	}
 
 	/**
@@ -698,6 +525,398 @@ public final class Formula extends XLSCellRecord
 		}
 	}
 
+	@Override
+	public Object clone()
+	{
+		// Make the record bytes available to XLSRecord.clone
+		preStream();
+		return super.clone();
+	}
+
+	public String toString()
+	{
+		populateExpression();
+		return super.toString();
+		//return this.worksheet.getSheetName() + "!" + this.getCellAddress() + ":" + this.getStringVal();
+	}
+
+	@Override
+	public void close()
+	{
+		if( expression != null )
+		{
+			while( !expression.isEmpty() )
+			{
+				GenericPtg p = (GenericPtg) expression.pop();
+				if( p instanceof PtgRef )
+				{
+					p.close();
+				}
+/*	        	else if (p instanceof PtgExp ) {
+	        		Ptg[] ptgs= ((PtgExp)p).getConvertedExpression();
+	        		for (int i= 0; i < ptgs.length; i++) {
+	    	        	if (ptgs[i] instanceof PtgRef)
+	    	        		((PtgRef) ptgs[i]).close();
+	    	        	else
+	    	        		((GenericPtg)ptgs[i]).close();
+	        		}
+	        	} */
+				else
+				{
+					p.close();
+				}
+				p = null;
+			}
+		}
+		if( string != null )
+		{
+			string.close();
+			string = null;
+		}
+		if( shared != null )
+		{
+			if( (shared.getMembers() == null) || (shared.getMembers().size() == 1) )    // last one
+			{
+				shared.close();
+			}
+			else
+			{
+				shared.removeMember( this );
+			}
+			shared = null;
+		}
+		if( internalRecords != null )
+		{
+			internalRecords.clear();
+		}
+		super.close();
+		closed = true;
+	}
+
+	/**
+	 * Parses the record bytes.
+	 * This method only needs to be called when the record is being constructed
+	 * from bytes. Calling it on a programmatically created formula is
+	 * unnecessary and will probably throw an exception.
+	 */
+	@Override
+	public void init()
+	{
+		// Prevent misuse of init
+		if( expression != null )
+		{
+			throw new IllegalStateException( "can't init a formula created from a string" );
+		}
+
+		super.init();
+		if( (data = getData()) == null )
+		{
+			throw new IllegalStateException( "can't init a formula without record bytes" );
+		}
+		super.initRowCol();
+		ixfe = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
+		grbit = ByteTools.readShort( getByteAt( 14 ), getByteAt( 15 ) );
+
+		// get the cached value bytes from the record
+		byte[] currVal = getBytesAt( 6, 8 );
+
+		// Is this a non-numeric value?
+		if( (currVal[6] == (byte) 0xFF) && (currVal[7] == (byte) 0xFF) )
+		{
+			// String value
+			if( currVal[0] == (byte) 0x00 )
+			{
+				haveStringRec = true;        // bytes 1-5 are not used
+				// Normally cachedValue will be set by StringRec's init.
+				// Setting cachedValue null forces calculation in the rare
+				// event that the STRING record is missing or fails to init.
+				cachedValue = null;
+			}
+
+			// Empty string value
+			else if( currVal[0] == (byte) 0x03 )
+			{
+				// There is no attached STRING record. Set cachedValue directly.
+				cachedValue = "";
+			}
+
+			// Boolean value
+			else if( currVal[0] == (byte) 0x01 )
+			{
+				cachedValue = currVal[2] != (byte) 0x00;
+			}
+
+			// Error value
+			else if( currVal[0] == (byte) 0x02 )
+			{
+				cachedValue = new CalculationException( currVal[2] );
+			}
+
+			// Unknown value type
+			else
+			{
+				cachedValue = null;
+			}
+
+		}
+		else
+		{
+			// do not cache NaN stored bytes
+			double dbv = ByteTools.eightBytetoLEDouble( currVal );
+			if( !Double.isNaN( dbv ) )
+			{
+				cachedValue = dbv;
+			}
+		}
+
+		if( getSheet() == null )
+		{
+			setSheet( wkbook.getLastbound() );
+		}
+
+		try
+		{
+			log.trace( "Formula " + getCellAddress() + getFormulaString() );
+		}
+		catch( Exception e )
+		{
+			log.warn( "Debug output of Formula failed: " + e );
+		}
+
+		// The expression needs to be parsed on input in order to add it to
+		// the reference tracker
+		//TODO: Add a no calculation / read only mode without ref tracking
+		populateExpression();
+		// Perform some special handling for formulas with indirect references
+		if( containsIndirectFunction )
+		{
+			registerIndirectFunction();
+		}
+		dirty = false;
+	}
+
+	@Override
+	public boolean getBooleanVal()
+	{
+		Object obx = calculateFormula();
+		try
+		{
+			if( obx instanceof Boolean )
+			{
+				return (Boolean) obx;
+			}
+		}
+		catch( Exception e )
+		{
+			log.error( "getBooleanVal failed for: " + toString(), e );
+		}
+
+		try
+		{
+			String s = String.valueOf( obx );
+			if( s.equalsIgnoreCase( "true" ) || s.equals( "1" ) )
+			{
+				return true;
+			}
+
+		}
+		catch( Exception e )
+		{
+			log.warn( "getBooleanVal() failed: " + e );
+		}
+		return false;
+	}
+
+	/**
+	 * Get the value of the formula as an integer.
+	 * If the formula exceeds integer boundaries, or is a float with
+	 * a non-zero mantissa throw an exception
+	 *
+	 * @see XLSRecord#getIntVal()
+	 */
+	@Override
+	public int getIntVal() throws RuntimeException
+	{
+		Object obx = calculateFormula();
+		try
+		{
+			double tl = (Double) obx;
+			if( tl > Integer.MAX_VALUE )
+			{
+				throw new NumberFormatException( "getIntVal: Formula value is larger than the maximum java signed int size" );
+			}
+			if( tl < Integer.MIN_VALUE )
+			{
+				throw new NumberFormatException( "getIntVal: Formula value is smaller than the minimum java signed int size" );
+			}
+			double db = (Double) obx;
+			int ret = ((Double) obx).intValue();
+			if( ((db - ret) > 0) )
+			{
+				log.warn( "Loss of precision converting " + tl + " to int." );
+			}
+
+			return ret;
+			// not back-compat return Integer.valueOf(new Long((long) tl).intValue()).intValue();
+			// throw new NumberFormatException("Loss of precision converting " + tl + " to int.");
+		}
+		catch( ClassCastException e )
+		{
+			;
+		}
+
+		long l = 0;
+		String s = String.valueOf( obx );
+
+		// return a zero for empties
+		if( s.equals( "" ) )
+		{
+			s = "0";
+		}
+		try
+		{
+			String t = "";
+			java.math.BigDecimal bd = new java.math.BigDecimal( s );
+			l = bd.longValue();    // 20090514 KSC: bd.intValueExact(); is 1.6 compatible -- MAY CAUSE INFOTERIA REGRESSION ERROR
+			if( l > Integer.MAX_VALUE )
+			{
+				throw new NumberFormatException( "Formula value is larger than the maximum java signed int size" );
+			}
+			if( l < Integer.MIN_VALUE )
+			{
+				throw new NumberFormatException( "Formula value is smaller than the minimum java signed int size" );
+			}
+			return Integer.valueOf( new Long( l ).toString() );
+		}
+		catch( NumberFormatException ne )
+		{
+			throw new NumberFormatException( "getIntVal: Formula is a non-numeric value" );
+		}
+		catch( Exception e )
+		{
+			throw new NumberFormatException( "getIntVal: " + e );
+		}
+	}
+
+	@Override
+	public double getDblVal()
+	{
+		Object obx = calculateFormula();
+		try
+		{
+			if( obx instanceof Double )
+			{
+				double d = (Double) obx;
+				return d;
+			}
+		}
+		catch( Exception e )
+		{
+			log.error( "Formula.getDblVal failed for: " + toString(), e );
+		}
+
+		String s = String.valueOf( obx );
+
+		// return a zero for empties
+		if( s.equals( "" ) )
+		{
+			s = "0";
+		}
+		try
+		{
+			Double d = new Double( s );
+			return d;
+		}
+		catch( NumberFormatException ex )
+		{
+			return Double.NaN;
+		}
+		catch( Exception e )
+		{
+			log.warn( "Formula.getDblVal() failed: " + e );
+		}
+		return Double.NaN;
+	}
+
+	@Override
+	public float getFloatVal()
+	{
+		Object obx = calculateFormula();
+		try
+		{
+			if( obx instanceof Float )
+			{
+				float d = (Float) obx;
+				return d;
+			}
+		}
+		catch( Exception e )
+		{
+			log.error( "Formula.getFloatVal failed for: " + toString(), e );
+		}
+
+		try
+		{
+			String s = String.valueOf( obx );
+
+			// return a zero for empties
+			if( s.equals( "" ) )
+			{
+				s = "0";
+			}
+			Float d = new Float( s );
+			return d;
+		}
+		catch( NumberFormatException ex )
+		{
+			return Float.NaN;
+		}
+		catch( Exception e )
+		{
+			log.warn( "Formula.getFloatVal() failed: " + e );
+		}
+		return Float.NaN;
+	}
+
+	/**
+	 * return the String representation of the current Formula value
+	 */
+	@Override
+	public String getStringVal()
+	{
+		Object obx = calculateFormula();
+		try
+		{
+			if( obx instanceof Double )
+			{
+				double d = (Double) obx;
+				if( !Double.isNaN( d ) )
+				{
+					return Formula.getDoubleAsFormattedString( d );
+				}
+				return "NaN";
+			}
+		}
+		catch( Exception e )
+		{
+			log.error( "Formula.getStringVal failed for: " + toString(), e );
+		}
+		// if null, return empty string
+		if( obx == null )
+		{
+			return "";
+		}
+		return obx.toString();
+
+	}
+
+	@Override
+	public void setStringVal( String v )
+	{
+		throw new CellTypeMismatchException( "Attempting to set a string value on a formula" );
+		// TODO: set the string value of the attached string?
+	}
+
 	/**
 	 * Updates the record data if necessary to prepare for streaming.
 	 */
@@ -747,7 +966,7 @@ public final class Formula extends XLSCellRecord
 		Stack expr = expression;
 		if( isSharedFormula() )
 		{	/* ONLY need to do this if shared formula member(s) have changed-
-    									a better choice is to trap and change in respective method */
+										a better choice is to trap and change in respective method */
 			expr = new Stack();
 			expr.add( shared.getPointer() );
 		}
@@ -865,242 +1084,6 @@ public final class Formula extends XLSCellRecord
 		dirty = false;
 	}
 
-	@Override
-	public Object clone()
-	{
-		// Make the record bytes available to XLSRecord.clone
-		preStream();
-		return super.clone();
-	}
-
-	/**
-	 * Get the value of the formula as an integer.
-	 * If the formula exceeds integer boundaries, or is a float with
-	 * a non-zero mantissa throw an exception
-	 *
-	 * @see XLSRecord#getIntVal()
-	 */
-	@Override
-	public int getIntVal() throws RuntimeException
-	{
-		Object obx = calculateFormula();
-		try
-		{
-			double tl = (Double) obx;
-			if( tl > Integer.MAX_VALUE )
-			{
-				throw new NumberFormatException( "getIntVal: Formula value is larger than the maximum java signed int size" );
-			}
-			if( tl < Integer.MIN_VALUE )
-			{
-				throw new NumberFormatException( "getIntVal: Formula value is smaller than the minimum java signed int size" );
-			}
-			double db = (Double) obx;
-			int ret = ((Double) obx).intValue();
-			if( ((db - ret) > 0) )
-			{
-				log.warn( "Loss of precision converting " + tl + " to int." );
-			}
-
-			return ret;
-			// not back-compat return Integer.valueOf(new Long((long) tl).intValue()).intValue();
-			// throw new NumberFormatException("Loss of precision converting " + tl + " to int.");
-		}
-		catch( ClassCastException e )
-		{
-			;
-		}
-
-		long l = 0;
-		String s = String.valueOf( obx );
-
-		// return a zero for empties
-		if( s.equals( "" ) )
-		{
-			s = "0";
-		}
-		try
-		{
-			String t = "";
-			java.math.BigDecimal bd = new java.math.BigDecimal( s );
-			l = bd.longValue();    // 20090514 KSC: bd.intValueExact(); is 1.6 compatible -- MAY CAUSE INFOTERIA REGRESSION ERROR
-			if( l > Integer.MAX_VALUE )
-			{
-				throw new NumberFormatException( "Formula value is larger than the maximum java signed int size" );
-			}
-			if( l < Integer.MIN_VALUE )
-			{
-				throw new NumberFormatException( "Formula value is smaller than the minimum java signed int size" );
-			}
-			return Integer.valueOf( new Long( l ).toString() );
-		}
-		catch( NumberFormatException ne )
-		{
-			throw new NumberFormatException( "getIntVal: Formula is a non-numeric value" );
-		}
-		catch( Exception e )
-		{
-			throw new NumberFormatException( "getIntVal: " + e );
-		}
-	}
-
-	@Override
-	public float getFloatVal()
-	{
-		Object obx = calculateFormula();
-		try
-		{
-			if( obx instanceof Float )
-			{
-				float d = (Float) obx;
-				return d;
-			}
-		}
-		catch( Exception e )
-		{
-			log.error( "Formula.getFloatVal failed for: " + toString(), e );
-		}
-
-		try
-		{
-			String s = String.valueOf( obx );
-
-			// return a zero for empties
-			if( s.equals( "" ) )
-			{
-				s = "0";
-			}
-			Float d = new Float( s );
-			return d;
-		}
-		catch( NumberFormatException ex )
-		{
-			return Float.NaN;
-		}
-		catch( Exception e )
-		{
-			log.warn( "Formula.getFloatVal() failed: " + e );
-		}
-		return Float.NaN;
-	}
-
-	@Override
-	public boolean getBooleanVal()
-	{
-		Object obx = calculateFormula();
-		try
-		{
-			if( obx instanceof Boolean )
-			{
-				return (Boolean) obx;
-			}
-		}
-		catch( Exception e )
-		{
-			log.error( "getBooleanVal failed for: " + toString(), e );
-		}
-
-		try
-		{
-			String s = String.valueOf( obx );
-			if( s.equalsIgnoreCase( "true" ) || s.equals( "1" ) )
-			{
-				return true;
-			}
-
-		}
-		catch( Exception e )
-		{
-			log.warn( "getBooleanVal() failed: " + e );
-		}
-		return false;
-	}
-
-	@Override
-	public double getDblVal()
-	{
-		Object obx = calculateFormula();
-		try
-		{
-			if( obx instanceof Double )
-			{
-				double d = (Double) obx;
-				return d;
-			}
-		}
-		catch( Exception e )
-		{
-			log.error( "Formula.getDblVal failed for: " + toString(), e );
-		}
-
-		String s = String.valueOf( obx );
-
-		// return a zero for empties
-		if( s.equals( "" ) )
-		{
-			s = "0";
-		}
-		try
-		{
-			Double d = new Double( s );
-			return d;
-		}
-		catch( NumberFormatException ex )
-		{
-			return Double.NaN;
-		}
-		catch( Exception e )
-		{
-			log.warn( "Formula.getDblVal() failed: " + e );
-		}
-		return Double.NaN;
-	}
-
-	/**
-	 * Returns the correct string representation of a double for excel.
-	 * <p/>
-	 * Note this is for the standards that were determined with excel and extenxls
-	 *
-	 * @param num
-	 * @return
-	 */
-	private static String getDoubleAsFormattedString( double theNum )
-	{
-		return ExcelTools.getNumberAsString( theNum );
-	}
-
-	/**
-	 * return the String representation of the current Formula value
-	 */
-	@Override
-	public String getStringVal()
-	{
-		Object obx = calculateFormula();
-		try
-		{
-			if( obx instanceof Double )
-			{
-				double d = (Double) obx;
-				if( !Double.isNaN( d ) )
-				{
-					return Formula.getDoubleAsFormattedString( d );
-				}
-				return "NaN";
-			}
-		}
-		catch( Exception e )
-		{
-			log.error( "Formula.getStringVal failed for: " + toString(), e );
-		}
-		// if null, return empty string
-		if( obx == null )
-		{
-			return "";
-		}
-		return obx.toString();
-
-	}
-
 	/**
 	 * Calculates the formula honoring calculation mode.
 	 *
@@ -1108,7 +1091,7 @@ public final class Formula extends XLSCellRecord
 	 */
 	public Object calculateFormula() throws FunctionNotSupportedException
 	{
-		// if this is calc explicit, we ALWAYS use cache 
+		// if this is calc explicit, we ALWAYS use cache
 		if( getWorkBook().getCalcMode() == CALCULATE_EXPLICIT )
 		{
 			return cachedValue;
@@ -1128,15 +1111,6 @@ public final class Formula extends XLSCellRecord
 		return calculate();
 
 	}
-
-	private static ThreadLocal<Integer> recurseCount = new ThreadLocal<Integer>()
-	{
-		@Override
-		protected Integer initialValue()
-		{
-			return 0;
-		}
-	};
 
 	/**
 	 * Calculate the formula if necessary.  This accessor resets the recurse count on the
@@ -1166,6 +1140,368 @@ public final class Formula extends XLSCellRecord
 	}
 
 	/**
+	 * Returns whether this is a reference to a shared formula.
+	 */
+	public boolean isSharedFormula()
+	{
+		return (grbit & FSHRFMLA) != 0;
+	}
+
+	/**
+	 * Sets whether this is a reference to a shared formula.
+	 */
+	private void setSharedFormula( boolean isSharedFormula )
+	{
+		if( isSharedFormula )
+		{
+			grbit |= FSHRFMLA;
+		}
+		else
+		{
+			grbit &= ~FSHRFMLA;
+		}
+	}
+
+	/**
+	 * return truth of "this is an array formula" i.e. contains an Array sub-record
+	 *
+	 * @return
+	 */
+	public boolean isArrayFormula()
+	{
+		if( (internalRecords != null) && (internalRecords.size() > 0) )
+		{
+			return (internalRecords.get( 0 ) instanceof Array);
+		}
+		return false;
+	}
+
+	/**
+	 * fetches the internal Array record linked to this formula, if any,
+	 * or null if not an array formula
+	 *
+	 * @return array record
+	 * @see isArrayFormula
+	 */
+	public Array getArray()
+	{
+		try
+		{
+			return ((Array) internalRecords.get( 0 ));
+		}
+		catch( Exception e )
+		{
+			;
+		}
+/*		if (expression.get(0) instanceof PtgExp) {
+			// if it's the child of a parent array formula, obtain it's Array record
+			// TODO: verify this is correct + finish
+		}*/
+		return null;
+	}
+
+	/**
+	 * Set the cached value of this formula,
+	 * in cases where the formula is null, set the cache to null,
+	 * as well as updating the attached string to null in order to force
+	 * recalc
+	 *
+	 * @see XLSRecord#setCachedValue(java.lang.Object)
+	 */
+	public void setCachedValue( Object newValue )
+	{
+		if( newValue == null )
+		{
+			clearCachedValue();
+		}
+		else
+		{
+			cachedValue = newValue;    // TODO: need to check/validate StringRec ????
+		}
+	}
+
+	/**
+	 * Set the cached value of this formula,
+	 * in cases where the formula is null, set the cache to null,
+	 * as welll as updating the attached string to null in order to force
+	 * recalc
+	 *
+	 * @see XLSRecord#setCachedValue(java.lang.Object)
+	 */
+	public void clearCachedValue()
+	{
+		cachedValue = null;
+		haveStringRec = false;
+//         this.updateRecord(); no need; will be updated after recalc, which will automatically happen on write
+	}
+
+	public String getArrayRefs()
+	{
+		if( (internalRecords != null) && (internalRecords.size() > 0) )
+		{
+			Object o = internalRecords.get( 0 );
+			return ((Array) o).getArrayRefs();
+		}
+		return "";
+	}
+
+	/**
+	 * OOXML-specific: set the range the Array references
+	 *
+	 * @param s
+	 */
+	public void setArrayRefs( String s )
+	{
+		if( (internalRecords != null) && (internalRecords.size() > 0) )
+		{
+			Object o = internalRecords.get( 0 );
+			if( o instanceof Array )
+			{
+				Array a = (Array) o;
+				int[] rc = ExcelTools.getRangeRowCol( s );
+				a.setFirstRow( rc[0] );
+				a.setFirstCol( rc[1] );
+				a.setLastRow( rc[2] );
+				a.setLastCol( rc[3] );
+			}
+		}
+	}
+
+	/**
+	 * Performs cleanup needed before removing the formula cell from the
+	 * work sheet. The formula will not behave correctly once this is called.
+	 */
+	public void destroy()
+	{
+		clearExpression();
+	}
+
+	/**
+	 * Replaces a ptg in the active expression.  Useful for replacing a ptgRef with a ptgError after a bad movement.
+	 *
+	 * @param thisptg
+	 * @param ptgErr
+	 */
+	public void replacePtg( Ptg thisptg, Ptg ptgErr )
+	{
+		ptgErr.setParentRec( this );
+		int idx = expression.indexOf( thisptg );
+		expression.remove( idx );
+		expression.insertElementAt( ptgErr, idx );
+	}
+
+	/**
+	 * Adds an indirect function to the list of functions to be evaluated post load
+	 */
+	protected void registerIndirectFunction()
+	{
+		getWorkBook().addIndirectFormula( this );
+	}
+
+	/**
+	 * If the method contains an indirect function then
+	 * register those ptgs into the reference tracker.
+	 * <p/>
+	 * In order to do this it is necessary to calculate the formula
+	 * to retrieve the Ptg's
+	 */
+	protected void calculateIndirectFunction()
+	{
+		clearCachedValue();
+		try
+		{
+			calculateFormula();
+		}
+		catch( FunctionNotSupportedException e )
+		{
+			// If we do not support the function, calculation will throw a FNE anyway, so no need for logging
+		}
+		catch( Exception e )
+		{
+			// problematic here.  As the calculation is happening on parse we dont really
+			// want to throw an exception and crap out on the book loading
+			// but the client should be informed in some way.  Also a generic exception is caught
+			// because our code does not bubble a calc exception up.
+			log.error( "Error registering lookup for INDIRECT() function at cell: " + getCellAddress() + " : " + e );
+		}
+	}
+
+	/**
+	 * Set if the formula contains Indirect()
+	 *
+	 * @param containsIndirectFunction The containsIndirectFunction to set.
+	 */
+	protected void setContainsIndirectFunction( boolean containsIndirectFunction )
+	{
+		this.containsIndirectFunction = containsIndirectFunction;
+	}
+
+	@Override
+	protected void finalize()
+	{
+		if( !closed )
+		{
+			close();
+		}
+	}
+
+	/**
+	 * Populates the expression in the formula.  This has been moved out of init for performance reasons.
+	 * The idea is that the processing is offloaded as a JIT for calculation/value retrieval.
+	 */
+	//TODO: refactor external references and make private
+	void populateExpression()
+	{
+		if( (expression != null) || (data == null) )
+		{
+			return;
+		}
+
+		try
+		{
+			short length = ByteTools.readShort( getByteAt( 20 ), getByteAt( 21 ) );
+
+			if( (length + 22) > data.length )
+			{
+				throw new Exception( "cce longer than record" );
+			}
+
+			expression = ExpressionParser.parseExpression( getBytesAt( 22, reclen - 22 ), this, length );
+
+			// If this is a shared formula reference, do some special init
+			if( isSharedFormula() )
+			{
+				initSharedFormula( null );
+			}
+		}
+		catch( Exception e )
+		{
+			log.error( "Formula.init:  Parsing Formula failed: " + e );
+		}
+	}
+
+	/**
+	 * Performs special initialization for shared formula references.
+	 *
+	 * @param target the target <code>SHRFMLA</code> record. If this is
+	 *               <code>null</code> it will be retrieved from the cell pointed to
+	 *               by the <code>PtgExp</code>.
+	 * @throws FormulaNotFoundException if the target shared formula is missing
+	 * @throws IllegalArgumentException if this is not a shared formula member
+	 */
+	void initSharedFormula( Shrfmla target ) throws FormulaNotFoundException
+	{
+		if( !isSharedFormula() )
+		{
+			setSharedFormula( true );
+		}
+
+		// If we're already done, silently do nothing
+		if( shared != null )
+		{
+			return;
+		}
+
+		// If this is an instantiation instead of a reference
+		if( (expression.size() != 1) || !(expression.get( 0 ) instanceof PtgExp) )
+		{
+			//TODO: find which ShrFmla this is and convert to reference
+			// For now, just clear fShrFmla
+			setSharedFormula( false );
+			return;
+		}
+
+		PtgExp pointer = (PtgExp) expression.get( 0 );
+
+		if( target != null )
+		{
+			shared = target;
+		}
+		else
+		{
+			try
+			{
+				shared = ((Formula) getSheet().getCell( pointer.getRwFirst(),
+				                                        pointer.getColFirst() )).shared;    // find shared cell linked to host/first formula cell in shared formula series
+				if( shared == null )
+				{
+					throw new Exception();
+				}
+			}
+			catch( Exception e )
+			{
+				// If this is the host cell, fail silently. This method will be
+				// re-called by the ShrFmla record's init method.
+				if( getCellAddress().equals( pointer.getReferent() ) )
+				{
+					return;
+				}
+
+				// Otherwise, complain and clear fShrFmla
+				throw new FormulaNotFoundException( "FORMULA at " + getCellAddress() + " refers to missing SHRFMLA at " + pointer.getReferent() );
+			}
+		}
+
+		//Shared Formula Init Performance Changes:  do not instantiate until calculate
+//		expression = shared.instantiate( pointer );
+		shared.addMember( this );
+
+		if( shared.containsIndirectFunction )
+		{
+			registerIndirectFunction();
+		}
+	}
+
+	/**
+	 * Performs cleanup required before changing or removing this Formula.
+	 * This nulls out the expression, so save a copy if you need it.
+	 * Possible sub-records associated with Formula: array, shared string and/or shared formula
+	 */
+	private void clearExpression()
+	{
+		if( expression == null )
+		{
+			return;
+		}
+
+		if( isArrayFormula() )
+		{
+			Array a = getArray();
+			if( a != null )
+			{
+				getSheet().removeRecFromVec( a );
+			}
+		}
+		if( hasAttachedString() )
+		{    // remove that too
+			if( string != null )
+			{
+				getSheet().removeRecFromVec( string );
+			}
+			string = null;
+		}
+
+		if( isSharedFormula() )
+		{
+			shared.removeMember( this );
+			shared = null;
+			setSharedFormula( false );
+		}
+
+		Iterator iter = expression.iterator();
+		while( iter.hasNext() )
+		{
+			Ptg ptg = (Ptg) iter.next();
+			if( ptg instanceof PtgRef )
+			{
+				((PtgRef) ptg).removeFromRefTracker();
+			}
+		}
+
+		expression = null;
+	}
+
+	/**
 	 * Calculates the formula if necessary regardless of calculation mode.
 	 * If there is a cached value it will be returned. Otherwise, the formula
 	 * will be calculated and the result will be cached and returned. If you
@@ -1192,8 +1528,7 @@ public final class Formula extends XLSCellRecord
 
 		if( cachedValue == null )
 		{
-			throw new FunctionNotSupportedException( "Unable to calculate Formula " + getFormulaString() + " at: " + getSheet()
-			                                                                                                                  .getSheetName() + "!" + getCellAddress() );
+			throw new FunctionNotSupportedException( "Unable to calculate Formula " + getFormulaString() + " at: " + getSheet().getSheetName() + "!" + getCellAddress() );
 		}
 
 		if( cachedValue.toString().equals( "#CIR_ERR!" ) )
@@ -1254,7 +1589,7 @@ public final class Formula extends XLSCellRecord
 			{
 				; // let it go
 			}
-				log.debug( "Cached Value: {}", cachedValue );
+			log.debug( "Cached Value: {}", cachedValue );
 		}
 		if( getAttatchedString() != null )
 		{
@@ -1263,353 +1598,6 @@ public final class Formula extends XLSCellRecord
 
 		updateRecord();
 		return cachedValue;
-	}
-
-	public String toString()
-	{
-		populateExpression();
-		return super.toString();
-		//return this.worksheet.getSheetName() + "!" + this.getCellAddress() + ":" + this.getStringVal();
-	}
-
-	/**
-	 * Returns whether this is a reference to a shared formula.
-	 */
-	public boolean isSharedFormula()
-	{
-		return (grbit & FSHRFMLA) != 0;
-	}
-
-	/**
-	 * Sets whether this is a reference to a shared formula.
-	 */
-	private void setSharedFormula( boolean isSharedFormula )
-	{
-		if( isSharedFormula )
-		{
-			grbit |= FSHRFMLA;
-		}
-		else
-		{
-			grbit &= ~FSHRFMLA;
-		}
-	}
-
-	@Override
-	public void setStringVal( String v )
-	{
-		throw new CellTypeMismatchException( "Attempting to set a string value on a formula" );
-		// TODO: set the string value of the attached string?
-	}
-
-	/**
-	 * return truth of "this is an array formula" i.e. contains an Array sub-record
-	 *
-	 * @return
-	 */
-	public boolean isArrayFormula()
-	{
-		if( (internalRecords != null) && (internalRecords.size() > 0) )
-		{
-			return (internalRecords.get( 0 ) instanceof Array);
-		}
-		return false;
-	}
-
-	/**
-	 * fetches the internal Array record linked to this formula, if any,
-	 * or null if not an array formula
-	 *
-	 * @return array record
-	 * @see isArrayFormula
-	 */
-	public Array getArray()
-	{
-		try
-		{
-			return ((Array) internalRecords.get( 0 ));
-		}
-		catch( Exception e )
-		{
-			;
-		}
-/*		if (expression.get(0) instanceof PtgExp) {
-			// if it's the child of a parent array formula, obtain it's Array record
-			// TODO: verify this is correct + finish
-		}*/
-		return null;
-	}
-
-	/**
-	 * OOXML-specific: set the range the Array references
-	 *
-	 * @param s
-	 */
-	public void setArrayRefs( String s )
-	{
-		if( (internalRecords != null) && (internalRecords.size() > 0) )
-		{
-			Object o = internalRecords.get( 0 );
-			if( o instanceof Array )
-			{
-				Array a = (Array) o;
-				int[] rc = ExcelTools.getRangeRowCol( s );
-				a.setFirstRow( rc[0] );
-				a.setFirstCol( rc[1] );
-				a.setLastRow( rc[2] );
-				a.setLastCol( rc[3] );
-			}
-		}
-	}
-
-	/**
-	 * Set the cached value of this formula,
-	 * in cases where the formula is null, set the cache to null,
-	 * as well as updating the attached string to null in order to force
-	 * recalc
-	 *
-	 * @see XLSRecord#setCachedValue(java.lang.Object)
-	 */
-	public void setCachedValue( Object newValue )
-	{
-		if( newValue == null )
-		{
-			clearCachedValue();
-		}
-		else
-		{
-			cachedValue = newValue;    // TODO: need to check/validate StringRec ????
-		}
-	}
-
-	/**
-	 * Set the cached value of this formula,
-	 * in cases where the formula is null, set the cache to null,
-	 * as welll as updating the attached string to null in order to force
-	 * recalc
-	 *
-	 * @see XLSRecord#setCachedValue(java.lang.Object)
-	 */
-	public void clearCachedValue()
-	{
-		cachedValue = null;
-		haveStringRec = false;
-//         this.updateRecord(); no need; will be updated after recalc, which will automatically happen on write
-	}
-
-	public String getArrayRefs()
-	{
-		if( (internalRecords != null) && (internalRecords.size() > 0) )
-		{
-			Object o = internalRecords.get( 0 );
-			return ((Array) o).getArrayRefs();
-		}
-		return "";
-	}
-
-	/**
-	 * increment each PtgRef in expression stack via row or column based
-	 * on rowInc or colInc values
-	 * Used in OOXML parsing
-	 */
-	public static void incrementSharedFormula( java.util.Stack origStack, int rowInc, int colInc, int[] range )
-	{
-		// traverse thru ptg's, incrementing row reference
-		//java.util.Stack origStack= form.getExpression();	Don't do "in place" as alters original expression
-		//Logger.logInfo("Before Inc: " + this.getFormulaString());
-		for( int i = 0; i < origStack.size(); i++ )
-		{
-			Ptg p = (Ptg) origStack.elementAt( i );
-			try
-			{
-				String s = p.getLocation();
-				if( p.getIsReference() )
-				{
-					if( !((((PtgRef) p).wholeRow && (colInc != 0)) || (((PtgRef) p).wholeCol && (rowInc != 0))) )
-					{
-						if( !(p instanceof PtgArea) )
-						{
-							boolean[] bRelRefs = { ((PtgRef) p).isRowRel(), ((PtgRef) p).isColRel() };
-							int[] rc = ExcelTools.getRowColFromString( s );
-							if( bRelRefs[0] )
-							{
-								rc[0] += rowInc;
-							}
-							if( bRelRefs[1] )
-							{
-								rc[1] += colInc;
-							}
-							PtgRef pr = new PtgRef();
-							pr.setParentRec( p.getParentRec() );
-							pr.setUseReferenceTracker( false );    // 20090827 KSC: don't petform expensive calcs on init + removereferenceTracker blows out cached value
-							pr.setLocation( ExcelTools.formatLocation( rc, bRelRefs[0], bRelRefs[1] ) );
-							pr.setUseReferenceTracker( true );
-							origStack.set( i, pr );
-						}
-						else
-						{
-							String sh = ExcelTools.stripSheetNameFromRange( s )[0];
-							int[] rc = ExcelTools.getRangeRowCol( s );
-							boolean[] bRelRefs = {
-									((PtgArea) p).getFirstPtg().isRowRel(),
-									((PtgArea) p).getLastPtg().isRowRel(),
-									((PtgArea) p).getFirstPtg().isColRel(),
-									((PtgArea) p).getLastPtg().isColRel()
-							};
-							if( bRelRefs[0] )
-							{
-								rc[0] += rowInc;
-							}
-							if( bRelRefs[1] )
-							{
-								rc[2] += rowInc;
-							}
-							if( bRelRefs[2] )
-							{
-								rc[1] += colInc;
-							}
-							if( bRelRefs[3] )
-							{
-								rc[3] += colInc;
-							}
-							PtgArea pa = new PtgArea( false );
-							pa.setParentRec( p.getParentRec() );
-							if( sh != null )
-							{
-								pa.setLocation( sh + "!" + ExcelTools.formatRangeRowCol( rc, bRelRefs ) );
-							}
-							else
-							{
-								pa.setLocation( ExcelTools.formatRangeRowCol( rc, bRelRefs ) );
-							}
-							pa.setUseReferenceTracker( true );
-							origStack.set( i, pa );
-						}
-					}
-				}
-			}
-			catch( Exception ex )
-			{
-				log.error( "Formula.incrementSharedFormula: " + ex.toString() );
-			}
-		}
-	}
-
-	/**
-	 * Set if the formula contains Indirect()
-	 *
-	 * @param containsIndirectFunction The containsIndirectFunction to set.
-	 */
-	protected void setContainsIndirectFunction( boolean containsIndirectFunction )
-	{
-		this.containsIndirectFunction = containsIndirectFunction;
-	}
-
-	/**
-	 * Performs cleanup needed before removing the formula cell from the
-	 * work sheet. The formula will not behave correctly once this is called.
-	 */
-	public void destroy()
-	{
-		clearExpression();
-	}
-
-	/**
-	 * returns true if the value s is one of the Excel defined Error Strings
-	 *
-	 * @param s
-	 * @return
-	 */
-	public static boolean isErrorValue( String s )
-	{
-		if( s == null )
-		{
-			return false;
-		}
-		return (Collections.binarySearch( Arrays.asList( new String[]{
-				"#DIV/0!", "#N/A", "#NAME?", "#NULL!", "#NUM!", "#REF!", "#VALUE!"
-		} ), s.trim() ) > -1);
-	}
-
-	/**
-	 * clear out object references in prep for closing workbook
-	 */
-	private boolean closed = false;
-
-	@Override
-	public void close()
-	{
-		if( expression != null )
-		{
-			while( !expression.isEmpty() )
-			{
-				GenericPtg p = (GenericPtg) expression.pop();
-				if( p instanceof PtgRef )
-				{
-					p.close();
-				}
-/*	        	else if (p instanceof PtgExp ) {
-	        		Ptg[] ptgs= ((PtgExp)p).getConvertedExpression(); 
-	        		for (int i= 0; i < ptgs.length; i++) {
-	    	        	if (ptgs[i] instanceof PtgRef)
-	    	        		((PtgRef) ptgs[i]).close();
-	    	        	else 
-	    	        		((GenericPtg)ptgs[i]).close();
-	        		}
-	        	} */
-				else
-				{
-					p.close();
-				}
-				p = null;
-			}
-		}
-		if( string != null )
-		{
-			string.close();
-			string = null;
-		}
-		if( shared != null )
-		{
-			if( (shared.getMembers() == null) || (shared.getMembers().size() == 1) )    // last one
-			{
-				shared.close();
-			}
-			else
-			{
-				shared.removeMember( this );
-			}
-			shared = null;
-		}
-		if( internalRecords != null )
-		{
-			internalRecords.clear();
-		}
-		super.close();
-		closed = true;
-	}
-
-	@Override
-	protected void finalize()
-	{
-		if( !closed )
-		{
-			close();
-		}
-	}
-
-	/**
-	 * Replaces a ptg in the active expression.  Useful for replacing a ptgRef with a ptgError after a bad movement.
-	 *
-	 * @param thisptg
-	 * @param ptgErr
-	 */
-	public void replacePtg( Ptg thisptg, Ptg ptgErr )
-	{
-		ptgErr.setParentRec( this );
-		int idx = expression.indexOf( thisptg );
-		expression.remove( idx );
-		expression.insertElementAt( ptgErr, idx );
 	}
 
 }
