@@ -40,6 +40,16 @@ In the meantime, you can access the snapshots by adding the following to your Ma
     </repositories>
 ```
 
+and reference this dependency:
+
+```xml
+        <dependency>
+            <groupId>org.openxls</groupId>
+            <artifactId>openxls</artifactId>
+            <version>12.0-SNAPSHOT</version>
+        </dependency>
+```
+
 ## 2014-01-25
 Replaced an internal TreeMap of Boundsheet that handled cells in columns with an alternative unit tested implementation.  This fixes a bug
 we were hitting relating to overrunning an array since the cells-by-col method was returning an incorrect set of Cells in some cases.
