@@ -90,7 +90,6 @@
     <distributionManagement>
     </distributionManagement>
 
-
     <build>
         <resources>
             <resource>

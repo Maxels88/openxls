@@ -16,12 +16,37 @@ A big issue for us right now is the corruption of one of the two TreeMaps held w
 variables that are part of the ordering are being modified in place.  This prevents the nodes from being found in subsequent searches and
 deletions.
 
+## 2014-01-28
+Snapshots are now being built on our CI server (TeamCity) and published to Sonatype's OSS Snapshot Repo.  We will package, sign and publish
+a release build shortly (which will be auto-synced from Sonatype's Release Repo to Maven Central)
+
+In the meantime, you can access the snapshots by adding the following to your Maven pom.xml:
+
+```xml
+    <repositories>
+
+        <repository>
+            <id>Sonatype Snapshots</id>
+            <name>Sonatype OSS Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+
+    </repositories>
+```
+
+## 2014-01-25
+Replaced an internal TreeMap of Boundsheet that handled cells in columns with an alternative unit tested implementation.  This fixes a bug
+we were hitting relating to overrunning an array since the cells-by-col method was returning an incorrect set of Cells in some cases.
+
 ## 2014-01-22
 Logging has been moved to SLF4J.  There will likely be many log lines that are being recorded at the wrong level (i.e. too much noise).
 Please feel free to send a pull request with your level changes, or log an issue with the file name and line number, the current level and
 what you think it should be.  If you think there should be additional log lines (in currently empty Exception catch blocks) please feel
 free to suggest additions.
 
-## 2014-01-25
-Replaced an internal TreeMap of Boundsheet that handled cells in columns with an alternative unit tested implementation.  This fixes a bug
-we were hitting relating to overrunning an array since the cells-by-col method was returning an incorrect set of Cells in some cases.
