@@ -222,7 +222,7 @@ public final class ExpressionParser implements java.io.Serializable
 			{
 
 				case ptgExp:
-					log.debug( "ptgExp Located" );
+					log.trace( "ptgExp Located" );
 					if( i == 0 )
 					{// MUST BE THE ONLY PTG in the formula expression
 						PtgExp px = new PtgExp();
@@ -240,7 +240,7 @@ public final class ExpressionParser implements java.io.Serializable
 					// ptgStr is one of the only ptg's that varies in length, so there is some special handling
 					// going on for it.
 				case ptgStr:
-					log.debug( "ptgStr Located" );
+					log.trace( "ptgStr Located" );
 					int x = i;
 					x += 1; // move past the opcode to the cch
 					ptgLen = function[x] & 0xff; // this is the cch
@@ -264,7 +264,7 @@ public final class ExpressionParser implements java.io.Serializable
 				/* */
 
 				case ptgMemAreaA:
-					log.debug( "ptgMemAreaA Located" + function[i] );
+					log.trace( "ptgMemAreaA Located" + function[i] );
 					x = i;
 					x += 5; // move past the opcode & reserved to the cce
 					ptgLen = ByteTools.readShort( function[x], function[x + 1] ); // this is the cce
@@ -281,7 +281,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgMemAreaN:
-					log.debug( "ptgMemAreaN Located" + function[i] );
+					log.trace( "ptgMemAreaN Located" + function[i] );
 					PtgMemAreaN pmemn = new PtgMemAreaN();
 					ptgLen = pmemn.getLength();
 					b = new byte[ptgLen];
@@ -295,7 +295,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgMemAreaNV:
-					log.debug( "ptgMemAreaNV Located" + function[i] );
+					log.trace( "ptgMemAreaNV Located" + function[i] );
 					x = i;
 					x += 5; // move past the opcode & reserved to the cce
 					ptgLen = ByteTools.readShort( function[x], function[x + 1] ); // this is the cce
@@ -313,7 +313,7 @@ public final class ExpressionParser implements java.io.Serializable
 
 //				ptgMemArea also varies in length...							
 				case ptgMemArea:
-					log.debug( "ptgMemArea Located" + function[i] );
+					log.trace( "ptgMemArea Located" + function[i] );
 					ptgLen = 7;
 					PtgMemArea pmem = new PtgMemArea();
 					b = new byte[ptgLen];
@@ -340,7 +340,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgMemFunc:
-					log.debug( "ptgMemFunc Located" );
+					log.trace( "ptgMemFunc Located" );
 					PtgMemFunc pmemf = new PtgMemFunc();
 					x = i;
 					x += 1; // move past the opcode to the cce
@@ -357,7 +357,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgInt:
-					log.debug( "ptgInt Located" );
+					log.trace( "ptgInt Located" );
 					PtgInt pi = new PtgInt();
 					ptgLen = pi.getLength();
 					b = new byte[ptgLen];
@@ -371,7 +371,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgErr:
-					log.debug( "ptgErr Located" );
+					log.trace( "ptgErr Located" );
 					PtgErr perr = new PtgErr();
 					ptgLen = perr.getLength();
 					b = new byte[ptgLen];
@@ -385,7 +385,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgNum:
-					log.debug( "ptgNum Located" );
+					log.trace( "ptgNum Located" );
 					PtgNumber pnum = new PtgNumber();
 					ptgLen = pnum.getLength();
 					b = new byte[ptgLen];
@@ -399,7 +399,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgBool:
-					log.debug( "ptgBool Located" );
+					log.trace( "ptgBool Located" );
 					PtgBool pboo = new PtgBool();
 					ptgLen = pboo.getLength();
 					b = new byte[ptgLen];
@@ -413,7 +413,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgName:
-					log.debug( "ptgName Located" );
+					log.trace( "ptgName Located" );
 					PtgName pn = new PtgName();
 					ptgLen = pn.getLength();
 					b = new byte[ptgLen];
@@ -437,7 +437,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgNameX:
-					log.debug( "ptgNameX Located" );
+					log.trace( "ptgNameX Located" );
 						log.warn( "referencing external spreadsheets unsupported." );
 					PtgNameX pnx = new PtgNameX();
 					ptgLen = pnx.getLength();
@@ -453,7 +453,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgRef:
-					log.debug( "ptgRef Located " );
+					log.trace( "ptgRef Located " );
 					PtgRef pt = new PtgRef();
 					ptgLen = pt.getLength();
 					b = new byte[ptgLen];
@@ -469,7 +469,7 @@ public final class ExpressionParser implements java.io.Serializable
 
 				case ptgArray:
 					hasArrays = true;
-					log.debug( "ptgArray Located " );
+					log.trace( "ptgArray Located " );
 					PtgArray pa = new PtgArray();
 					ptgLen = 8;  //7 len + id
 					b = new byte[ptgLen];
@@ -484,7 +484,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgRefN:
-					log.debug( "ptgRefN Located " );
+					log.trace( "ptgRefN Located " );
 					PtgRefN ptn = new PtgRefN( false );
 					ptgLen = ptn.getLength();
 					b = new byte[ptgLen];
@@ -502,7 +502,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgArea:
-					log.debug( "ptgArea Located " );
+					log.trace( "ptgArea Located " );
 					PtgArea pg = new PtgArea();
 					ptgLen = pg.getLength();
 					b = new byte[ptgLen];
@@ -517,7 +517,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgArea3d:
-					log.debug( "ptgArea3d Located " );
+					log.trace( "ptgArea3d Located " );
 					PtgArea3d pg3 = new PtgArea3d();
 					ptgLen = pg3.getLength();
 					b = new byte[ptgLen];
@@ -532,7 +532,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgAreaN:
-					log.debug( "ptgAreaN Located " );
+					log.trace( "ptgAreaN Located " );
 					PtgAreaN pgn = new PtgAreaN();
 					ptgLen = pgn.getLength();
 					b = new byte[ptgLen];
@@ -550,7 +550,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgAreaErr3d:
-					log.debug( "ptgAreaErr3d Located" );
+					log.trace( "ptgAreaErr3d Located" );
 					PtgAreaErr3d ptfa = new PtgAreaErr3d();
 					ptgLen = ptfa.getLength();
 					b = new byte[ptgLen];
@@ -565,7 +565,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgRefErr3d:
-					log.debug( "ptgRefErr3d Located" );
+					log.trace( "ptgRefErr3d Located" );
 					PtgRefErr3d ptfr = new PtgRefErr3d();
 					ptgLen = ptfr.getLength();
 					b = new byte[ptgLen];
@@ -580,7 +580,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgMemErr:
-					log.debug( "ptgMemErr Located" );
+					log.trace( "ptgMemErr Located" );
 					PtgMemErr pm = new PtgMemErr();
 					ptgLen = pm.getLength();
 					b = new byte[ptgLen];
@@ -594,7 +594,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgRefErr:
-					log.debug( "ptgRefErr Located" );
+					log.trace( "ptgRefErr Located" );
 					PtgRefErr pr = new PtgRefErr();
 					ptgLen = pr.getLength();
 					b = new byte[ptgLen];
@@ -608,7 +608,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgEndSheet:
-					log.debug( "ptgEndSheet Located" );
+					log.trace( "ptgEndSheet Located" );
 					PtgEndSheet prs = new PtgEndSheet();
 					ptgLen = prs.getLength();
 					b = new byte[ptgLen];
@@ -622,7 +622,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgRef3d:
-					log.debug( "ptgRef3d Located" );
+					log.trace( "ptgRef3d Located" );
 					PtgRef3d pr3 = new PtgRef3d();
 					ptgLen = pr3.getLength();
 					b = new byte[ptgLen];
@@ -646,7 +646,7 @@ public final class ExpressionParser implements java.io.Serializable
                  */
 				case ptgAtr:
 					PtgAtr pat = new PtgAtr( (byte) 0 );
-					log.debug( "PtgAtr Located" );
+					log.trace( "PtgAtr Located" );
 					ptgLen = pat.getLength();
 					if( (function[i + 1] & 0x4) == 0x4 )
 					{
@@ -667,7 +667,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgFunc:
-					log.debug( "ptgFunc Located" );
+					log.trace( "ptgFunc Located" );
 					PtgFunc ptf = new PtgFunc();
 					ptgLen = ptf.getLength();
 					b = new byte[ptgLen];
@@ -681,7 +681,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgFuncVar:
-					log.debug( "ptgFuncVar Located" );
+					log.trace( "ptgFuncVar Located" );
 					PtgFuncVar ptfv = new PtgFuncVar();
 					ptgLen = ptfv.getLength();
 					b = new byte[ptgLen];
@@ -748,7 +748,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgAdd:
-					log.debug( "ptgAdd Located" );
+					log.trace( "ptgAdd Located" );
 					PtgAdd pad = new PtgAdd();
 					ptgLen = pad.getLength();
 					b = new byte[ptgLen];
@@ -760,7 +760,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgMissArg:
-					log.debug( "ptgMissArg Located" );
+					log.trace( "ptgMissArg Located" );
 					PtgMissArg pmar = new PtgMissArg();
 					ptgLen = pmar.getLength();
 					b = new byte[ptgLen];
@@ -772,7 +772,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgSub:
-					log.debug( "PtgSub Located" );
+					log.trace( "PtgSub Located" );
 					PtgSub psb = new PtgSub();
 					ptgLen = psb.getLength();
 					b = new byte[ptgLen];
@@ -786,7 +786,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgMlt:
-					log.debug( "PtgMlt Located" );
+					log.trace( "PtgMlt Located" );
 					PtgMlt pml = new PtgMlt();
 					ptgLen = pml.getLength();
 					b = new byte[ptgLen];
@@ -800,7 +800,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgDiv:
-					log.debug( "PtgDiv Located" );
+					log.trace( "PtgDiv Located" );
 					PtgDiv pdiv = new PtgDiv();
 					ptgLen = pdiv.getLength();
 					b = new byte[ptgLen];
@@ -814,7 +814,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgUPlus:
-					log.debug( "PtgUPlus Located" );
+					log.trace( "PtgUPlus Located" );
 					PtgUPlus puplus = new PtgUPlus();
 					ptgLen = puplus.getLength();
 					b = new byte[ptgLen];
@@ -828,7 +828,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgUMinus:
-					log.debug( "PtgUminus Located" );
+					log.trace( "PtgUminus Located" );
 					PtgUMinus puminus = new PtgUMinus();
 					ptgLen = puminus.getLength();
 					b = new byte[ptgLen];
@@ -842,7 +842,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgPercent:
-					log.debug( "ptgPercent Located" );
+					log.trace( "ptgPercent Located" );
 					PtgPercent pperc = new PtgPercent();
 					ptgLen = pperc.getLength();
 					b = new byte[ptgLen];
@@ -856,7 +856,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgPower:
-					log.debug( "PtgPower Located" );
+					log.trace( "PtgPower Located" );
 					PtgPower pow = new PtgPower();
 					ptgLen = pow.getLength();
 					b = new byte[ptgLen];
@@ -870,7 +870,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgConcat:
-					log.debug( "PtgConcat Located" );
+					log.trace( "PtgConcat Located" );
 					PtgConcat pcon = new PtgConcat();
 					ptgLen = pcon.getLength();
 					b = new byte[ptgLen];
@@ -884,7 +884,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgLT:
-					log.debug( "PtgLT Located" );
+					log.trace( "PtgLT Located" );
 					PtgLT plt = new PtgLT();
 					ptgLen = plt.getLength();
 					b = new byte[ptgLen];
@@ -898,7 +898,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgLE:
-					log.debug( "PtgLE Located" );
+					log.trace( "PtgLE Located" );
 					PtgLE ple = new PtgLE();
 					ptgLen = ple.getLength();
 					b = new byte[ptgLen];
@@ -912,7 +912,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgEQ:
-					log.debug( "PtgEQ Located" );
+					log.trace( "PtgEQ Located" );
 					PtgEQ peq = new PtgEQ();
 					ptgLen = peq.getLength();
 					b = new byte[ptgLen];
@@ -926,7 +926,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgGE:
-					log.debug( "PtgGE Located" );
+					log.trace( "PtgGE Located" );
 					PtgGE pge = new PtgGE();
 					ptgLen = pge.getLength();
 					b = new byte[ptgLen];
@@ -940,7 +940,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgGT:
-					log.debug( "PtgGT Located" );
+					log.trace( "PtgGT Located" );
 					PtgGT pgt = new PtgGT();
 					ptgLen = pgt.getLength();
 					b = new byte[ptgLen];
@@ -954,7 +954,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgNE:
-					log.debug( "PtgNE Located" );
+					log.trace( "PtgNE Located" );
 					PtgNE pne = new PtgNE();
 					ptgLen = pne.getLength();
 					b = new byte[ptgLen];
@@ -969,7 +969,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgIsect:
-					log.debug( "PtgIsect Located" );
+					log.trace( "PtgIsect Located" );
 					PtgIsect pist = new PtgIsect();
 					ptgLen = pist.getLength();
 					b = new byte[ptgLen];
@@ -984,7 +984,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgUnion:
-					log.debug( "ptgUnion Located" );
+					log.trace( "ptgUnion Located" );
 					PtgUnion pun = new PtgUnion();
 					ptgLen = pun.getLength();
 					b = new byte[ptgLen];
@@ -998,7 +998,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgRange:
-					log.debug( "ptgRange Located" );
+					log.trace( "ptgRange Located" );
 					PtgRange pran = new PtgRange();
 					ptgLen = pran.getLength();
 					b = new byte[ptgLen];
@@ -1012,7 +1012,7 @@ public final class ExpressionParser implements java.io.Serializable
 					break;
 
 				case ptgParen:
-					log.debug( "PtgParens Located" );
+					log.trace( "PtgParens Located" );
 					PtgParen pp = new PtgParen();
 					ptgLen = pp.getLength();
 					b = new byte[ptgLen];
@@ -1073,7 +1073,7 @@ public final class ExpressionParser implements java.io.Serializable
         	// 	   array (variable): An array of Ref8U that specifies the range. The number of elements MUST be equal to count.
         		pma.setPostExpression(function, expressionLen);
         }*/
-		log.debug( "finished formula" );
+		log.trace( "Finished formula" );
 		return stack;
 
 	}

@@ -51,27 +51,107 @@ import java.util.ArrayList;
 
 public final class Mulblank extends XLSCellRecord /*implements Mul*/
 {
+	byte[] rgixfe;
 	private static final Logger log = LoggerFactory.getLogger( Mulblank.class );
 	private static final long serialVersionUID = 2707362447402042745L;
-
 	private short colFirst, colLast; // the colFirst/ColLast indexes determine
-	byte[] rgixfe;
 
 	public Mulblank()
 	{
 		super();
 	}
 
-	Mulblank(int row, int firstCol, int lastCol)
+	Mulblank( int row, int firstCol, int lastCol )
 	{
 		rw = row;
 		colFirst = (short) firstCol;
 		colLast = (short) lastCol;
 	}
 
+	public static XLSRecord getPrototype()
+	{
+		Mulblank mb = new Mulblank();
+		mb.setOpcode( MULBLANK );
+		mb.setData( new byte[]{ 0, 0, 0, 0, 0, 0 } );
+		mb.col = -1;
+		return mb;
+	}
+
 	public String toString()
 	{
 		return getCellAddress();
+	}
+
+	/**
+	 * NOTE: Mublanks can have a portion of it's blank range which is merged: must determine if
+	 * the current cell is truly part of the merge range ...
+	 *
+	 * @return
+	 */
+	@Override
+	public CellRange getMergeRange()
+	{
+		if( mergeRange == null )
+		{
+			return null;
+		}
+		if( col == -1 )
+		{
+			return mergeRange;    // this shouldn't happen ...
+		}
+		if( mergeRange.contains( new int[]{ getRowNumber(), col, getRowNumber(), col } ) )
+		{
+			return mergeRange;
+		}
+		return null;    // desired cell is NOT contained within master merge range
+	}
+
+	/**
+	 * returns the cell address in int[] {row, col} format
+	 */
+	@Override
+	public int[] getIntLocation()
+	{
+		if( col == -1 )
+		{
+			return new int[]{ rw, colFirst, rw, colLast };
+		}
+		return new int[]{ rw, col };
+	}
+
+	/**
+	 * set the Boundsheet for the Mulblank
+	 * this is needed because Blanks are BiffRec valrecs and
+	 * need to be assigned a BiffRec in the sheet...
+	 * <p/>
+	 * the Mulblank itself does not get a cell.
+	 */
+	@Override
+	public void setSheet( Sheet bs )
+	{
+		worksheet = bs;
+	}
+
+	/**
+	 * set the column
+	 */
+	@Override
+	public void setCol( short i )
+	{
+		col = i;
+	}
+
+	/**
+	 * returnt the "current" column indicator, if set
+	 */
+	@Override
+	public short getColNumber()
+	{
+		if( col != -1 )
+		{
+			return col;
+		}
+		return colFirst;
 	}
 
 	/**
@@ -94,116 +174,6 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 			retval = ExcelTools.getAlphaVal( col ) + String.valueOf( rownum );
 		}
 		return retval;
-	}
-
-	/**
-	 * returns the cell address in int[] {row, col} format
-	 */
-	@Override
-	public int[] getIntLocation()
-	{
-		if( col == -1 )
-		{
-			return new int[]{ rw, colFirst, rw, colLast };
-		}
-		return new int[]{ rw, col };
-	}
-
-	/**
-	 * return entire range this Mulblank refers to
-	 *
-	 * @return
-	 */
-	public String getMulblankRange()
-	{
-		String retval = "00";
-		int rownum = getRowNumber() + 1;
-		retval = ExcelTools.getAlphaVal( colFirst ) + String.valueOf( rownum );
-		retval += ":" + ExcelTools.getAlphaVal( colLast ) + String.valueOf( rownum );
-		return retval;
-	}
-
-	/**
-	 * set the Boundsheet for the Mulblank
-	 * this is needed because Blanks are BiffRec valrecs and
-	 * need to be assigned a BiffRec in the sheet...
-	 * <p/>
-	 * the Mulblank itself does not get a cell.
-	 */
-	@Override
-	public void setSheet( Sheet bs )
-	{
-		worksheet = bs;
-	}
-
-	/**
-	 * initialize this record
-	 */
-	@Override
-	public void init()
-	{
-		data = getData();
-		super.init();
-		if( (getLength() - 4) <= 0 )
-		{
-				log.debug( "no data in MULBLANK" );
-		}
-		else
-		{
-			rw = ByteTools.readUnsignedShort( getByteAt( 0 ), getByteAt( 1 ) );
-			byte b2 = getByteAt( 2 );
-			byte b3 = getByteAt( 3 );
-			colFirst = ByteTools.readShort( b2, b3 );
-			//col = colFirst;
-			col = -1;    // flag that this rec hasn't been referred to one cell
-			colLast = ByteTools.readShort( getByteAt( reclen - 2 ), getByteAt( reclen - 1 ) );
-
-			log.trace( "colFirst: " + colFirst + ", colLast: " + colLast );
-			//			Sometimes colFirst & colLast are reversed... WTFM$? -jm
-			if( colLast < colFirst )
-			{
-				short csav = colLast;
-				colLast = colFirst;
-				colFirst = csav;
-				colLast--;
-			}
-				log.debug( "INFO: MULBLANK range: " + colFirst + ":" + colLast );
-			int numblanks = (colLast - colFirst) + 1;
-//			blanks = new ArrayList();
-			if( numblanks < 1 )
-			{
-				log.warn( "WARNING: could not parse Mulblank record: numblanks reported  as:" + numblanks );
-				//log.info((numblanks >> 12)*-1); ha!
-				return;
-			}
-			rgixfe = getBytesAt( 4, numblanks * 2 );
-		}
-		// KSC: to use as a blank: 
-		setIsValueForCell( true );
-		isBlank = true;
-	}
-
-	/**
-	 * returnt the "current" column indicator, if set
-	 */
-	@Override
-	public short getColNumber()
-	{
-		if( col != -1 )
-		{
-			return col;
-		}
-		return colFirst;
-	}
-
-	/**
-	 * reset the "current" column use to reference a single blank of this Mulblank range of blank cells
-	 *
-	 * @return
-	 */
-	public void resetCol()
-	{
-		col = colFirst;
 	}
 
 	/**
@@ -233,6 +203,86 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 		colLast = (short) c;
 	}
 */
+
+	/**
+	 * initialize this record
+	 */
+	@Override
+	public void init()
+	{
+		data = getData();
+		super.init();
+		if( (getLength() - 4) <= 0 )
+		{
+			log.debug( "no data in MULBLANK" );
+		}
+		else
+		{
+			rw = ByteTools.readUnsignedShort( getByteAt( 0 ), getByteAt( 1 ) );
+			byte b2 = getByteAt( 2 );
+			byte b3 = getByteAt( 3 );
+			colFirst = ByteTools.readShort( b2, b3 );
+			//col = colFirst;
+			col = -1;    // flag that this rec hasn't been referred to one cell
+			colLast = ByteTools.readShort( getByteAt( reclen - 2 ), getByteAt( reclen - 1 ) );
+
+			log.trace( "colFirst: " + colFirst + ", colLast: " + colLast );
+			//			Sometimes colFirst & colLast are reversed... WTFM$? -jm
+			if( colLast < colFirst )
+			{
+				short csav = colLast;
+				colLast = colFirst;
+				colFirst = csav;
+				colLast--;
+			}
+			log.trace( "MULBLANK range: " + colFirst + ":" + colLast );
+			int numblanks = (colLast - colFirst) + 1;
+//			blanks = new ArrayList();
+			if( numblanks < 1 )
+			{
+				log.warn( "WARNING: could not parse Mulblank record: numblanks reported  as:" + numblanks );
+				//log.info((numblanks >> 12)*-1); ha!
+				return;
+			}
+			rgixfe = getBytesAt( 4, numblanks * 2 );
+		}
+		// KSC: to use as a blank:
+		setIsValueForCell( true );
+		isBlank = true;
+	}
+
+	/**
+	 * return a blank string val
+	 */
+	@Override
+	public String getStringVal()
+	{
+		return "";
+	}
+
+	/**
+	 * return entire range this Mulblank refers to
+	 *
+	 * @return
+	 */
+	public String getMulblankRange()
+	{
+		String retval = "00";
+		int rownum = getRowNumber() + 1;
+		retval = ExcelTools.getAlphaVal( colFirst ) + String.valueOf( rownum );
+		retval += ":" + ExcelTools.getAlphaVal( colLast ) + String.valueOf( rownum );
+		return retval;
+	}
+
+	/**
+	 * reset the "current" column use to reference a single blank of this Mulblank range of blank cells
+	 *
+	 * @return
+	 */
+	public void resetCol()
+	{
+		col = colFirst;
+	}
 
 	/**
 	 * return sthe first column of the range of blank cells referenced by this Mulblank
@@ -347,15 +397,6 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 	}
 
 	/**
-	 * return a blank string val
-	 */
-	@Override
-	public String getStringVal()
-	{
-		return "";
-	}
-
-	/**
 	 * used to set the cell which this will be referred to, used when trying to access
 	 * ixfe
 	 *
@@ -364,53 +405,6 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 	public void setCurrentCell( short c )
 	{
 		col = c;
-	}
-
-	/**
-	 * NOTE: Mublanks can have a portion of it's blank range which is merged: must determine if
-	 * the current cell is truly part of the merge range ...
-	 *
-	 * @return
-	 */
-	@Override
-	public CellRange getMergeRange()
-	{
-		if( mergeRange == null )
-		{
-			return null;
-		}
-		if( col == -1 )
-		{
-			return mergeRange;    // this shouldn't happen ...
-		}
-		if( mergeRange.contains( new int[]{ getRowNumber(), col, getRowNumber(), col } ) )
-		{
-			return mergeRange;
-		}
-		return null;    // desired cell is NOT contained within master merge range
-	}
-
-	/**
-	 * retrieves the merged range for the desired cell in this group of blanks
-	 *
-	 * @param col
-	 * @return
-	 */
-	private CellRange getMergeRange( int col )
-	{
-		if( mergeRange == null )
-		{
-			return null;
-		}
-		if( col == -1 )
-		{
-			return mergeRange;    // this shouldn't happen ...
-		}
-		if( mergeRange.contains( new int[]{ getRowNumber(), col, getRowNumber(), col } ) )
-		{
-			return mergeRange;
-		}
-		return null;    // desired cell is NOT contained within master merge range
 	}
 
 	/**
@@ -443,6 +437,14 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 	}
 
 	/**
+	 * returns the number of ixfe fields
+	 */
+	int getNumFields()
+	{
+		return (colLast - colFirst) + 1;
+	}
+
+	/**
 	 * sets the ixfe for the specific cell of the Mulblank
 	 * (each cell in a series of multiple blanks has their own ixfe)
 	 */
@@ -464,12 +466,26 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 	}
 
 	/**
-	 * set the column
+	 * retrieves the merged range for the desired cell in this group of blanks
+	 *
+	 * @param col
+	 * @return
 	 */
-	@Override
-	public void setCol( short i )
+	private CellRange getMergeRange( int col )
 	{
-		col = i;
+		if( mergeRange == null )
+		{
+			return null;
+		}
+		if( col == -1 )
+		{
+			return mergeRange;    // this shouldn't happen ...
+		}
+		if( mergeRange.contains( new int[]{ getRowNumber(), col, getRowNumber(), col } ) )
+		{
+			return mergeRange;
+		}
+		return null;    // desired cell is NOT contained within master merge range
 	}
 
 	/**
@@ -489,23 +505,6 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 		data[4 + rgixfe.length] = b[0];
 		data[5 + rgixfe.length] = b[1];
 		setData( data );
-	}
-
-	public static XLSRecord getPrototype()
-	{
-		Mulblank mb = new Mulblank();
-		mb.setOpcode( MULBLANK );
-		mb.setData( new byte[]{ 0, 0, 0, 0, 0, 0 } );
-		mb.col = -1;
-		return mb;
-	}
-
-	/**
-	 * returns the number of ixfe fields
-	 */
-	int getNumFields()
-	{
-		return (colLast - colFirst) + 1;
 	}
 
 }

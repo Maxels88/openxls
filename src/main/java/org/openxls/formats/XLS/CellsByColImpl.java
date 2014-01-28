@@ -46,7 +46,7 @@ public class CellsByColImpl implements CellsByCol
 
 		validate( first, last );
 
-		log.debug( "Adding R{}C{}-{}", cell.getRowNumber(), first, last);
+		log.trace( "Adding R{}C{}-{}", cell.getRowNumber(), first, last);
 		//
 		// While we do double loop on this, I want the data structure usage safety over any potential performance issues right now.
 		// If add() is being invoked for a Cell that already exists, that implies an incorrect usage and it should be fixed.
@@ -80,7 +80,7 @@ public class CellsByColImpl implements CellsByCol
 			}
 		}
 
-		log.debug( "Added Cell '{}' to Cols: {}-{}", cell, first, last );
+		log.trace( "Added Cell '{}' to Cols: {}-{}", cell, first, last );
 	}
 
 	@Override
