@@ -4,17 +4,18 @@ openxls
 This is a copy of the LGPL shared openxls library.  It's no longer supported by the owners, but we're using it and are fixing things as we
 encounter any problems.  If you find an issue, please open an issue on Github and/or provide a pull request.  For any issues logged, please
 provide a small simple test case.  Small simple Excel files are also useful in dealing with the multitude of file formats and versions out
-there.
+there.  Complete stack traces and logs (at debug and trace level) also help.
+
+OpenXLS supports col/row/cell inserts (and updates formula references when doing so), so this makes it invaluable to us.  This was one of
+the reasons we switched from Apache POI (which is also a good library and we have used successfully on several projects).  However, we
+invariably end up wrapping POI or OpenXLS since the interfaces don't quite work for us in common situations.  In fact we have one project
+that leverages both libraries - something we would like to move away from.  Unfortunately, the functionality provided by OpenXLS and POI
+don't fully overlap, so we have to use both libraries behind an SPI facade in order to achieve our goals.
 
 ## Plan
-Initial commits are going to be code cleanup - bringing the code base up to JDK7 level. We've noticed several bugs while
+Initial commits are code cleanup - bringing the code base up to JDK7 level. We've noticed several bugs while
 doing this and will attempt to fix the ones we encounter as we go. The aim is to add unit tests as we fix these issues, but please bear
-with us as the code base is many years old and has lots of fixes and workarounds for oddities encountered in the field.  We're also moving
-the logging to SLF4J, and ensuring that all exceptions are logged at WARN or ERROR level (depending on severity).
-
-A big issue for us right now is the corruption of one of the two TreeMaps held within Boundsheet - this is an ordered tree, and instance
-variables that are part of the ordering are being modified in place.  This prevents the nodes from being found in subsequent searches and
-deletions.
+with us as the code base is around 10 years old and has lots of fixes and workarounds for oddities encountered in the field.
 
 ## 2014-01-28
 Snapshots are now being built on our CI server (TeamCity) and published to Sonatype's OSS Snapshot Repo.  We will package, sign and publish
