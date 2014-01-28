@@ -579,7 +579,6 @@ public final class ByteTools implements Serializable
 		b[7] = bite[0];
 		return b;
 	}
-	//  private boolean DEBUG = false;
 
 	/**
 	 * write bytes to a file

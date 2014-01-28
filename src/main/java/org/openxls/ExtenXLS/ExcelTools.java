@@ -28,6 +28,10 @@ import org.openxls.toolkit.StringTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.IllegalFormatConversionException;
@@ -44,582 +48,8 @@ import java.util.StringTokenizer;
  * @see ByteTools
  */
 
-public class ExcelTools implements java.io.Serializable
+public class ExcelTools implements Serializable
 {
-	private static final Logger log = LoggerFactory.getLogger( ExcelTools.class );
-	private static final long serialVersionUID = 7622857355626065370L;
-
-	/**
-	 * Formats a double in the standard ExtenXLS (General) format. Up to
-	 * 99999999999 is expressed in standard notation. Above that is formatted in
-	 * scientific notation
-	 * <p/>
-	 * In addition, Excel precision of 9 digits is maintained
-	 * <p/>
-	 * <p/>
-	 * returns a number formatted in Excel's General format, (assuming a wide
-	 * enough column width - see below) example:
-	 * formatNumericNotation(1234567890123) returns "1.23457E+12"
-	 * <p/>
-	 * Information on NOTATION_STANDARD_EXCEL (i.e. Excel's General Format): //
-	 * Excel will show as many decimal places that the text item has room for,
-	 * it won't use a thousands separator, and if the // number can't fit, Excel
-	 * uses a scientific number format. // RULES: // 1- Assuming the column is
-	 * wide enough numbers will only be displayed in the scientific format when
-	 * they contain more than 10 digits. // 2- If you enter a number into a cell
-	 * and thre is not enough room to display all the digits // then the number
-	 * will either be displayed in scientific format or will not be displayed at
-	 * all, meaning that ##### will appear. // The exact precision of the
-	 * scientific format will depend on the width of the actual cell.
-	 *
-	 * @param fpnum
-	 * @return String formatted number
-	 */
-	public static String getNumberAsString( double fpnum )
-	{
-		// Ensure precision and number of digits ala Excel
-		// double issues - use BigDecimal
-		java.math.BigDecimal bd = new java.math.BigDecimal( fpnum );
-		int scale = bd.scale();
-		if( (Math.abs( fpnum ) > 0.000000001) && (scale > 9) )
-		{
-			bd = bd.setScale( 9, java.math.RoundingMode.HALF_UP );
-		}
-		else if( scale > 9 )
-		{
-			bd = new java.math.BigDecimal( fpnum, new java.math.MathContext( 5, java.math.RoundingMode.HALF_UP ) );
-		}
-		bd = bd.stripTrailingZeros();
-		String s = bd.toPlainString();
-		int len = s.length();
-		// If larger than 11 characters, truncate string
-		if( ((len > 11) && (fpnum > 0)) || (len > 12) )
-		{ // must deal with exponents and such as well
-			if( scale == 0 )
-			{
-				s = new java.math.BigDecimal( bd.toString(), new java.math.MathContext( 6, java.math.RoundingMode.HALF_UP ) ).toString();
-			}
-			else if( bd.toString().indexOf( "E" ) == -1 )
-			{
-				s = new java.math.BigDecimal( bd.toString(), new java.math.MathContext( 10, java.math.RoundingMode.HALF_UP ) ).toString();
-				while( (s.length() > 0) && (s.charAt( s.length() - 1 ) == '0') )
-				{
-					s = s.substring( 0, s.length() - 1 );
-				}
-				if( s.endsWith( "." ) )
-				{
-					s = s.substring( 0, s.length() - 1 );
-				}
-			}
-			else
-			{ // 5 + E+XX + sign
-				s = new java.math.BigDecimal( bd.toString(), new java.math.MathContext( 5, java.math.RoundingMode.HALF_UP ) ).toString();
-			}
-		}
-		return s;
-	}
-
-	/**
-	 * static version of getFormattedStringVal; given an object value, a
-	 * valid Excel format pattern, return the formatted string value.
-	 *
-	 * @param Object  o
-	 * @param String  pattern	if General or "" returns string value
-	 * @param boolean isInteger	if General pattern, attempt to use integer value (rather than double)
-	 */
-	public static String getFormattedStringVal( Object o, String pattern/*, boolean isInteger*/ )
-	{
-		if( o == null )
-		{
-			o = "";
-		}
-
-		boolean isInteger = false;
-		if( (o instanceof Integer) || ((o instanceof Double) && (((Double) o).intValue() == (Double) o)) )
-		{
-			isInteger = true;
-		}
-		else
-		{
-			isInteger = false;
-		}
-
-		if( (pattern == null) || pattern.equals( "" ) || pattern.equalsIgnoreCase( "GENERAL" ) )
-		{
-			if( isInteger )
-			{
-				return String.valueOf( Double.valueOf( o.toString() ).intValue() );
-			}    // general double numbers have default precision ...
-			try
-			{
-				double d = new Double( o.toString() );
-				return ExcelTools.getNumberAsString( Double.valueOf( o.toString() ) );    // handles default precision
-			}
-			catch( NumberFormatException e )
-			{
-			}
-			return o.toString();
-		}
-		if( pattern.equals( "000-00-0000" ) )
-		{ // special case for SSN format ... sigh ...
-			try
-			{
-				new Double( o.toString() );    // if it can't be converted to a number, return original string (tis what excel does)
-				String s = o.toString();
-				while( s.length() < 9 )    // tis what excel does ...
-				{
-					s = '0' + s;
-				}
-				return s.substring( 0, 3 ) + "-" + s.substring( 3, 5 ) + "-" + s.substring( 5 );
-			}
-			catch( Exception e )
-			{
-				return o.toString();
-			}
-		}
-
-		/** try to determine if the format is numeric (+currency) or date */
-		boolean isNumeric = false;
-		boolean isDate = false;
-		boolean isString = false;
-
-		/** excel formats can have up to 4 parts:  <positive>;<negative>;<zero>;<text> */
-		String[] pats = pattern.split( ";" );    // assign the correct pattern according to double or string value
-
-		String tester = StringTool.convertPatternExtractBracketedExpression( pats[0] );
-		if( tester.matches( ".*(((y{1,4}|m{1,5}|d{1,4}|h{1,2}|s{1,2}).*)+).*" ) )
-		{
-			isDate = true;
-			pats[0] = tester; // ignore locale and other info for dates ...
-		}
-		if( !isDate )
-		{
-			int idx = pats.length - 1;    // default with string
-			try
-			{
-				double d = new Double( o.toString() );
-				isNumeric = true;
-				if( d > 0 )        // 1st expression is for + numbers
-				{
-					idx = 0;
-				}
-				else if( (pats.length > 1) && (d < 0) )    // 2nd is for - numbers
-				{
-					idx = 1;
-				}
-				else if( (pats.length > 2) && (d == 0) )    // 3rd for 0
-				{
-					idx = 2;
-				}
-				pattern = StringTool.convertPatternFromExcelToStringFormatter( pats[idx],
-				                                                               d < 0 );    // get correct format for String.format formatter
-			}
-			catch( NumberFormatException e )
-			{    // 4th for text (non-numeric)
-				if( pats.length > 3 )
-				{
-					idx = 3;
-				}
-				isString = true;
-				pattern = StringTool.convertPatternFromExcelToStringFormatter( pats[idx],
-				                                                               false );    // get correct format for String.format formatter
-			}
-		}
-		else
-		{
-			pattern = pats[0];
-			pattern = StringTool.convertDatePatternFromExcelToStringFormatter( pattern );    // get correct format for SimpleDateFormat
-		}
-
-		if( isString )
-		{    // use string portion of format, if any
-			try
-			{
-				return String.format( pattern, o );
-			}
-			catch( IllegalFormatConversionException e )
-			{
-				return o.toString();
-			}
-		}
-		if( isNumeric )
-		{
-			try
-			{
-				double d = new Double( o.toString() );
-				if( !Double.isNaN( d ) )
-				{
-					d = Math.abs( d );    // negative number intricacies have been handled in convertPattern method
-					// ugly, but has to be done ...
-					if( pattern.indexOf( "%%" ) != -1 ) // convert to percent
-					{
-						d *= 100;
-					}
-					// special case of "@" -- integers converted to doubles format incorrectly ...
-					if( pattern.equals( "%s" ) )
-					{
-						return o.toString();
-					}
-					return String.format( pattern, d );
-				}
-			}
-			catch( Exception e )
-			{
-			}
-			return o.toString();
-		}
-		if( isDate )
-		{
-			try
-			{
-				WorkBookHandle.simpledateformat.applyPattern( pattern );
-			}
-			catch( Exception ex )
-			{
-				return o.toString();
-			}
-			try
-			{
-				return WorkBookHandle.simpledateformat.format( DateConverter.getCalendarFromNumber( o ).getTime() );
-/*// KSC: TESTING				
-Date d= DateConverter.getCalendarFromNumber(o).getTime();				
-return WorkBookHandle.simpledateformat.format(d);*/
-			}
-			catch( NumberFormatException e )
-			{
-				try
-				{
-					return WorkBookHandle.simpledateformat.format( new Date( o.toString() ).getTime() );
-				}
-				catch( IllegalArgumentException i )
-				{
-					if( o instanceof Number )
-					{
-						log.warn( "Unable to format date in " + pattern );
-					}
-				}
-			}
-			catch( IllegalArgumentException e )
-			{
-				if( o instanceof Number )
-				{
-					log.warn( "Unable to format date in " + pattern );
-				}
-			}
-		}
-		// otherwise
-		return o.toString();
-	}
-
-	/**
-	 * A FAIL FAST implementation for finding whether a cell string address
-	 * falls within a set of row/col range coordinates.
-	 * <p/>
-	 * Sep 21, 2010
-	 *
-	 * @param rng      the range you want to test
-	 * @param rowFirst in the target range
-	 * @param rowLast  in the target range
-	 * @param colFirst in the target range
-	 * @param colLast  in the target range
-	 * @return
-	 */
-	public static boolean isInRange( String rng, int rowFirst, int rowLast, int colFirst, int colLast )
-	{
-		int[] sh = ExcelTools.getRowColFromString( rng );
-
-		// the guantlet
-		if( sh[1] < colFirst )
-		{
-			return false;
-		}
-		if( sh[1] > colLast )
-		{
-			return false;
-		}
-		if( sh[0] < rowFirst )
-		{
-			return false;
-		}
-		if( sh[0] > rowLast )
-		{
-			return false;
-		}
-
-		return true; // passes!
-
-	}
-
-	/**
-	 * returns true if range intersects with range2
-	 *
-	 * @param rng
-	 * @param rc
-	 * @return
-	 */
-	public static boolean intersects( String rng, int[] rc )
-	{
-		int[] rc2 = ExcelTools.getRangeCoords( rng );
-		if( (rc[0] >= rc2[0]) && (rc[2] <= rc2[2]) && (rc[1] >= rc2[1]) && (rc[3] <= rc2[3]) )
-		{
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * returns true if address is before the range coordinates defined by rc
-	 *
-	 * @param rc  row col of address
-	 * @param rng int[] coordinates as: row0, col0, row1, col1
-	 * @return true if address is before the range coordinates
-	 */
-	public static boolean isBeforeRange( int[] rc, int[] rng )
-	{
-		if( (rc[0] < rng[0]) || ((rc[0] == rng[0]) && (rc[1] < rng[1])) )
-		{
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * returns true if address is before the range coordinates defined by rc
-	 *
-	 * @param rc  row col of address
-	 * @param rng int[] coordinates as: row0, col0, row1, col1
-	 * @return true if address is before the range coordinates
-	 */
-	public static boolean isAfterRange( int[] rc, int[] rng )
-	{
-		if( (rc[0] > rng[2]) || ((rc[0] == rng[2]) && (rc[1] > rng[3])) )
-		{
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Takes an input Object and attempts to convert to numeric Objects of the
-	 * highest precision possible.
-	 * <p/>
-	 * This method is useful for avoiding the Excel warnings
-	 * "Number Stored As Text" when storing string data that contains numbers.
-	 * <p/>
-	 * NOTE: this method is useful for ensuring that Formula references contain
-	 * true numeric values as not all String numbers are properly interpreted in
-	 * Formula engines, and can silently fail.
-	 * <p/>
-	 * For this reason, always use numeric, non-string values to calculated
-	 * cells.
-	 *
-	 * @param input
-	 * @return
-	 */
-	public static Object getObject( Object in )
-	{
-		// do not record -- only called from other methods
-		if( !(in instanceof String) )
-		{
-			return in;
-		}
-
-		String input = String.valueOf( in );
-		Object ret = input; // default is the original string
-
-		try
-		{
-			ret = new Double( input );
-			return ret;
-		}
-		catch( NumberFormatException ex )
-		{
-			try
-			{
-				ret = new Float( input );
-				return ret;
-			}
-			catch( NumberFormatException ex2 )
-			{
-				try
-				{
-					ret = Integer.valueOf( input );
-					return ret;
-				}
-				catch( NumberFormatException ex3 )
-				{
-					// ret Is set outside of loop incase no match is ever found.
-				}
-			}
-		}
-
-		// list of formatting chars to check for
-		String[][] fmtlist = { { "$", "," }, { ",", "," }, { "%", "," } };
-
-		// strip the formatting
-		for( String[] aFmtlist : fmtlist )
-		{
-			if( input.indexOf( aFmtlist[0] ) > -1 )
-			{ // contains!
-				String converted = StringTool.replaceText( input, aFmtlist[0], "" ); // strip first token (ie: '$')
-				converted = StringTool.replaceText( converted, aFmtlist[1], "" ); // strip
-				// second
-				// token
-				// (ie: ',')
-				try
-				{
-					ret = new Double( converted );
-					return ret;
-				}
-				catch( NumberFormatException ex )
-				{
-					try
-					{
-						ret = new Float( converted );
-						return ret;
-					}
-					catch( NumberFormatException ex2 )
-					{
-						try
-						{
-							ret = Integer.valueOf( converted );
-							return ret;
-						}
-						catch( NumberFormatException ex3 )
-						{
-							// ret Is set outside of loop incase no match is
-							// ever found.
-						}
-					}
-				}
-			}
-
-		}
-
-		return ret;
-	}
-
-	/**
-	 * convert twips to pixels
-	 * <p/>
-	 * <p/>
-	 * In addition to a calculated size unit derived from the average size of
-	 * the default characters 0-9, Excel uses the 'twips' measurement which is
-	 * defined as:
-	 * <p/>
-	 * 1 twip = 1/20 point or 20 twips = 1 point 1 twip = 1/567 centimeter or
-	 * 567 twips = 1 centimeter 1 twip = 1/1440 inch or 1440 twips = 1 inch
-	 * <p/>
-	 * <p/>
-	 * 1 pixel = 0.75 points 1 pixel * 1.3333 = 1 point 1 twip * 20 = 1 point
-	 *
-	 * @param pixels
-	 * @return twips
-	 */
-	public static final float getPixels( float twips )
-	{
-		float points = twips / 20;
-		float pixels = points * 1.3333333f; // good enuff precision
-		return pixels;
-	}
-
-	/**
-	 * convert pixels to twips
-	 * <p/>
-	 * <p/>
-	 * In addition to a calculated size unit derived from the average size of
-	 * the default characters 0-9, Excel uses the 'twips' measurement which is
-	 * defined as:
-	 * <p/>
-	 * 1 pixel = 0.75 points 1 pixel * 1.3333 = 1 point 1 twip * 20 = 1 point
-	 *
-	 * @param pixels
-	 * @return twips
-	 */
-	public static final float getTwips( float pixels )
-	{
-		float points = pixels * .75f;
-		float twips = points * 20;
-		return twips;
-	}
-
-	/**
-	 * get recordy byte def as a String
-	 * <p/>
-	 * public static String getRecordByteDef(XLSRecord rec){ byte[] b =
-	 * rec.read(); StringBuffer sb = new StringBuffer("byte[] rbytes = {");
-	 * for(int t = 0;t<b.length;t++){
-	 * <p/>
-	 * Byte thisb = new Byte(b[t]);
-	 * <p/>
-	 * sb.append(thisb.toString() + ", "); } sb.append("};"); return
-	 * sb.toString(); }
-	 */
-
-	public static String getLogDate()
-	{
-		return String.valueOf( new Date( System.currentTimeMillis() ) );
-	}
-
-	/**
-	 * tracks minimal info container for counters -> start time, last time,
-	 * start mem, last mem
-	 *
-	 * @param info
-	 * @param perfobj
-	 */
-	public static void benchmark( String info, Object perfobj )
-	{
-		Runtime rt = Runtime.getRuntime();
-		long[] p = null;
-		long lasttime = 0l;
-		long lastmem = 0l;
-		if( System.getProperties().get( perfobj.toString() ) != null )
-		{
-			p = (long[]) System.getProperties().get( perfobj.toString() );
-			lasttime = p[1];
-			lastmem = p[3];
-			p[1] = System.currentTimeMillis();
-			p[3] = rt.freeMemory();
-			double elapsedsec = p[1] - lasttime;
-			double usedmem = lastmem - p[3]; // - lastmem;
-			if( usedmem < 0 )
-			{
-				usedmem *= -1;
-			}
-			log.info( getLogDate() + " " + info );
-			log.info( " time: " + elapsedsec + " millis" );
-			log.info( " mem: " + usedmem + " bytes." );
-		}
-		else
-		{
-			p = new long[4];
-			p[0] = System.currentTimeMillis();
-			p[1] = System.currentTimeMillis();
-			p[2] = rt.freeMemory();
-			p[3] = rt.freeMemory();
-			lasttime = p[1];
-			lastmem = p[3];
-			System.getProperties().put( perfobj.toString(), p );
-		}
-
-	}
-
-	/**
-	 * get the bytes from a Vector of objects public byte[]
-	 * getBytesFrom(CompatibleVector objs){
-	 * <p/>
-	 * for(int t = 0;t<objs.size();t++){
-	 * <p/>
-	 * }
-	 * <p/>
-	 * <p/>
-	 * }
-	 */
-
-	static char[] alpharr = {
-			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
-	};
 	/*
 	 * NOT USED ANYMORE -- see getAlphaVal -- OK to remove??
 	 */
@@ -885,6 +315,586 @@ return WorkBookHandle.simpledateformat.format(d);*/
 			"IY",
 			"IZ",
 	};
+	/**
+	 * get the bytes from a Vector of objects public byte[]
+	 * getBytesFrom(CompatibleVector objs){
+	 * <p/>
+	 * for(int t = 0;t<objs.size();t++){
+	 * <p/>
+	 * }
+	 * <p/>
+	 * <p/>
+	 * }
+	 */
+
+	static char[] alpharr = {
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+	};
+	private static final Logger log = LoggerFactory.getLogger( ExcelTools.class );
+	private static final long serialVersionUID = 7622857355626065370L;
+
+	/**
+	 * Formats a double in the standard ExtenXLS (General) format. Up to 99999999999 is expressed in standard notation. Above that is
+	 * formatted in scientific notation
+	 * <p/>
+	 * In addition, Excel precision of 9 digits is maintained
+	 * <p/>
+	 * <p/>
+	 * returns a number formatted in Excel's General format, (assuming a wide
+	 * enough column width - see below) example:
+	 * formatNumericNotation(1234567890123) returns "1.23457E+12"
+	 * <p/>
+	 * Information on NOTATION_STANDARD_EXCEL (i.e. Excel's General Format):
+	 * <p/>
+	 * Excel will show as many decimal places that the text item has room for, it won't use a thousands separator, and if the number can't
+	 * fit, Excel uses a scientific number format.
+	 * <p></p>
+	 * RULES:
+	 * <ol>
+	 * <li>
+	 * 1- Assuming the column is wide enough numbers will only be displayed in the scientific format when
+	 * they contain more than 10 digits.
+	 * </li>
+	 * <li>
+	 * 2- If you enter a number into a cell and there is not enough room to display all the digits then the number will either be displayed
+	 * in scientific format or will not be displayed at all, meaning that ##### will appear.
+	 * </li>
+	 * </ol>
+	 * <p/>
+	 * The exact precision of the scientific format will depend on the width of the actual cell.
+	 *
+	 * @param fpnum
+	 * @return String formatted number
+	 */
+	public static String getNumberAsString( double fpnum )
+	{
+		// Ensure precision and number of digits ala Excel
+		// double issues - use BigDecimal
+		BigDecimal bd = new BigDecimal( fpnum );
+		int scale = bd.scale();
+		if( (Math.abs( fpnum ) > 0.000000001) && (scale > 9) )
+		{
+			bd = bd.setScale( 9, RoundingMode.HALF_UP );
+		}
+		else if( scale > 9 )
+		{
+			bd = new BigDecimal( fpnum, new MathContext( 5, RoundingMode.HALF_UP ) );
+		}
+		bd = bd.stripTrailingZeros();
+		String s = bd.toPlainString();
+		int len = s.length();
+		// If larger than 11 characters, truncate string
+		if( ((len > 11) && (fpnum > 0)) || (len > 12) )
+		{ // must deal with exponents and such as well
+			if( scale == 0 )
+			{
+				s = new BigDecimal( bd.toString(), new MathContext( 6, RoundingMode.HALF_UP ) ).toString();
+			}
+			else if( !bd.toString().contains( "E" ) )
+			{
+				s = new BigDecimal( bd.toString(), new MathContext( 10, RoundingMode.HALF_UP ) ).toString();
+				while( !s.isEmpty() && (s.charAt( s.length() - 1 ) == '0') )
+				{
+					s = s.substring( 0, s.length() - 1 );
+				}
+				if( s.endsWith( "." ) )
+				{
+					s = s.substring( 0, s.length() - 1 );
+				}
+			}
+			else
+			{ // 5 + E+XX + sign
+				s = new BigDecimal( bd.toString(), new MathContext( 5, RoundingMode.HALF_UP ) ).toString();
+			}
+		}
+		return s;
+	}
+
+	/**
+	 * static version of getFormattedStringVal; given an object value, a
+	 * valid Excel format pattern, return the formatted string value.
+	 *
+	 * @param Object  o
+	 * @param String  pattern	if General or "" returns string value
+	 * @param boolean isInteger	if General pattern, attempt to use integer value (rather than double)
+	 */
+	public static String getFormattedStringVal( Object o, String pattern/*, boolean isInteger*/ )
+	{
+		if( o == null )
+		{
+			o = "";
+		}
+
+		boolean isInteger;
+		if( (o instanceof Integer) || ((o instanceof Double) && (((Double) o).intValue() == (Double) o)) )
+		{
+			isInteger = true;
+		}
+		else
+		{
+			isInteger = false;
+		}
+
+		if( (pattern == null) || pattern.equals( "" ) || pattern.equalsIgnoreCase( "GENERAL" ) )
+		{
+			if( isInteger )
+			{
+				return String.valueOf( Double.valueOf( o.toString() ).intValue() );
+			}    // general double numbers have default precision ...
+			try
+			{
+				double d = new Double( o.toString() );
+				return getNumberAsString( Double.valueOf( o.toString() ) );    // handles default precision
+			}
+			catch( NumberFormatException e )
+			{
+			}
+			return o.toString();
+		}
+		if( pattern.equals( "000-00-0000" ) )
+		{ // special case for SSN format ... sigh ...
+			try
+			{
+				new Double( o.toString() );    // if it can't be converted to a number, return original string (tis what excel does)
+				String s = o.toString();
+				while( s.length() < 9 )    // tis what excel does ...
+				{
+					s = '0' + s;
+				}
+				return s.substring( 0, 3 ) + "-" + s.substring( 3, 5 ) + "-" + s.substring( 5 );
+			}
+			catch( Exception e )
+			{
+				return o.toString();
+			}
+		}
+
+		/** try to determine if the format is numeric (+currency) or date */
+		boolean isNumeric = false;
+		boolean isDate = false;
+		boolean isString = false;
+
+		/** excel formats can have up to 4 parts:  <positive>;<negative>;<zero>;<text> */
+		String[] pats = pattern.split( ";" );    // assign the correct pattern according to double or string value
+
+		String tester = StringTool.convertPatternExtractBracketedExpression( pats[0] );
+		if( tester.matches( ".*(((y{1,4}|m{1,5}|d{1,4}|h{1,2}|s{1,2}).*)+).*" ) )
+		{
+			isDate = true;
+			pats[0] = tester; // ignore locale and other info for dates ...
+		}
+		if( !isDate )
+		{
+			int idx = pats.length - 1;    // default with string
+			try
+			{
+				double d = new Double( o.toString() );
+				isNumeric = true;
+				if( d > 0 )        // 1st expression is for + numbers
+				{
+					idx = 0;
+				}
+				else if( (pats.length > 1) && (d < 0) )    // 2nd is for - numbers
+				{
+					idx = 1;
+				}
+				else if( (pats.length > 2) && (d == 0) )    // 3rd for 0
+				{
+					idx = 2;
+				}
+				pattern = StringTool.convertPatternFromExcelToStringFormatter( pats[idx],
+				                                                               d < 0 );    // get correct format for String.format formatter
+			}
+			catch( NumberFormatException e )
+			{    // 4th for text (non-numeric)
+				if( pats.length > 3 )
+				{
+					idx = 3;
+				}
+				isString = true;
+				pattern = StringTool.convertPatternFromExcelToStringFormatter( pats[idx],
+				                                                               false );    // get correct format for String.format formatter
+			}
+		}
+		else
+		{
+			pattern = pats[0];
+			pattern = StringTool.convertDatePatternFromExcelToStringFormatter( pattern );    // get correct format for SimpleDateFormat
+		}
+
+		if( isString )
+		{    // use string portion of format, if any
+			try
+			{
+				return String.format( pattern, o );
+			}
+			catch( IllegalFormatConversionException e )
+			{
+				return o.toString();
+			}
+		}
+		if( isNumeric )
+		{
+			try
+			{
+				double d = new Double( o.toString() );
+				if( !Double.isNaN( d ) )
+				{
+					d = Math.abs( d );    // negative number intricacies have been handled in convertPattern method
+					// ugly, but has to be done ...
+					if( pattern.contains( "%%" ) ) // convert to percent
+					{
+						d *= 100;
+					}
+					// special case of "@" -- integers converted to doubles format incorrectly ...
+					if( pattern.equals( "%s" ) )
+					{
+						return o.toString();
+					}
+					return String.format( pattern, d );
+				}
+			}
+			catch( Exception e )
+			{
+			}
+			return o.toString();
+		}
+		if( isDate )
+		{
+			try
+			{
+				WorkBookHandle.simpledateformat.applyPattern( pattern );
+			}
+			catch( Exception ex )
+			{
+				return o.toString();
+			}
+			try
+			{
+				return WorkBookHandle.simpledateformat.format( DateConverter.getCalendarFromNumber( o ).getTime() );
+/*// KSC: TESTING
+Date d= DateConverter.getCalendarFromNumber(o).getTime();
+return WorkBookHandle.simpledateformat.format(d);*/
+			}
+			catch( NumberFormatException e )
+			{
+				try
+				{
+					return WorkBookHandle.simpledateformat.format( new Date( o.toString() ).getTime() );
+				}
+				catch( IllegalArgumentException i )
+				{
+					if( o instanceof Number )
+					{
+						log.warn( "Unable to format date in " + pattern );
+					}
+				}
+			}
+			catch( IllegalArgumentException e )
+			{
+				if( o instanceof Number )
+				{
+					log.warn( "Unable to format date in " + pattern );
+				}
+			}
+		}
+		// otherwise
+		return o.toString();
+	}
+
+	/**
+	 * A FAIL FAST implementation for finding whether a cell string address
+	 * falls within a set of row/col range coordinates.
+	 * <p/>
+	 * Sep 21, 2010
+	 *
+	 * @param rng      the range you want to test
+	 * @param rowFirst in the target range
+	 * @param rowLast  in the target range
+	 * @param colFirst in the target range
+	 * @param colLast  in the target range
+	 * @return
+	 */
+	public static boolean isInRange( String rng, int rowFirst, int rowLast, int colFirst, int colLast )
+	{
+		int[] sh = getRowColFromString( rng );
+
+		// the guantlet
+		if( sh[1] < colFirst )
+		{
+			return false;
+		}
+		if( sh[1] > colLast )
+		{
+			return false;
+		}
+		if( sh[0] < rowFirst )
+		{
+			return false;
+		}
+		if( sh[0] > rowLast )
+		{
+			return false;
+		}
+
+		return true; // passes!
+
+	}
+
+	/**
+	 * returns true if range intersects with range2
+	 *
+	 * @param rng
+	 * @param rc
+	 * @return
+	 */
+	public static boolean intersects( String rng, int[] rc )
+	{
+		int[] rc2 = getRangeCoords( rng );
+		if( (rc[0] >= rc2[0]) && (rc[2] <= rc2[2]) && (rc[1] >= rc2[1]) && (rc[3] <= rc2[3]) )
+		{
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * returns true if address is before the range coordinates defined by rc
+	 *
+	 * @param rc  row col of address
+	 * @param rng int[] coordinates as: row0, col0, row1, col1
+	 * @return true if address is before the range coordinates
+	 */
+	public static boolean isBeforeRange( int[] rc, int[] rng )
+	{
+		if( (rc[0] < rng[0]) || ((rc[0] == rng[0]) && (rc[1] < rng[1])) )
+		{
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * returns true if address is before the range coordinates defined by rc
+	 *
+	 * @param rc  row col of address
+	 * @param rng int[] coordinates as: row0, col0, row1, col1
+	 * @return true if address is before the range coordinates
+	 */
+	public static boolean isAfterRange( int[] rc, int[] rng )
+	{
+		if( (rc[0] > rng[2]) || ((rc[0] == rng[2]) && (rc[1] > rng[3])) )
+		{
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Takes an input Object and attempts to convert to numeric Objects of the
+	 * highest precision possible.
+	 * <p/>
+	 * This method is useful for avoiding the Excel warnings
+	 * "Number Stored As Text" when storing string data that contains numbers.
+	 * <p/>
+	 * NOTE: this method is useful for ensuring that Formula references contain
+	 * true numeric values as not all String numbers are properly interpreted in
+	 * Formula engines, and can silently fail.
+	 * <p/>
+	 * For this reason, always use numeric, non-string values to calculated
+	 * cells.
+	 *
+	 * @param input
+	 * @return
+	 */
+	public static Object getObject( Object in )
+	{
+		// do not record -- only called from other methods
+		if( !(in instanceof String) )
+		{
+			return in;
+		}
+
+		String input = String.valueOf( in );
+		Object ret = input; // default is the original string
+
+		try
+		{
+			ret = new Double( input );
+			return ret;
+		}
+		catch( NumberFormatException ex )
+		{
+			try
+			{
+				ret = new Float( input );
+				return ret;
+			}
+			catch( NumberFormatException ex2 )
+			{
+				try
+				{
+					ret = Integer.valueOf( input );
+					return ret;
+				}
+				catch( NumberFormatException ex3 )
+				{
+					// ret Is set outside of loop incase no match is ever found.
+				}
+			}
+		}
+
+		// list of formatting chars to check for
+		String[][] fmtlist = { { "$", "," }, { ",", "," }, { "%", "," } };
+
+		// strip the formatting
+		for( String[] aFmtlist : fmtlist )
+		{
+			if( input.contains( aFmtlist[0] ) )
+			{ // contains!
+				String converted = StringTool.replaceText( input, aFmtlist[0], "" ); // strip first token (ie: '$')
+				converted = StringTool.replaceText( converted, aFmtlist[1], "" ); // strip
+				// second
+				// token
+				// (ie: ',')
+				try
+				{
+					ret = new Double( converted );
+					return ret;
+				}
+				catch( NumberFormatException ex )
+				{
+					try
+					{
+						ret = new Float( converted );
+						return ret;
+					}
+					catch( NumberFormatException ex2 )
+					{
+						try
+						{
+							ret = Integer.valueOf( converted );
+							return ret;
+						}
+						catch( NumberFormatException ex3 )
+						{
+							// ret Is set outside of loop incase no match is
+							// ever found.
+						}
+					}
+				}
+			}
+
+		}
+
+		return ret;
+	}
+
+	/**
+	 * convert twips to pixels
+	 * <p/>
+	 * <p/>
+	 * In addition to a calculated size unit derived from the average size of
+	 * the default characters 0-9, Excel uses the 'twips' measurement which is
+	 * defined as:
+	 * <p/>
+	 * 1 twip = 1/20 point or 20 twips = 1 point 1 twip = 1/567 centimeter or
+	 * 567 twips = 1 centimeter 1 twip = 1/1440 inch or 1440 twips = 1 inch
+	 * <p/>
+	 * <p/>
+	 * 1 pixel = 0.75 points 1 pixel * 1.3333 = 1 point 1 twip * 20 = 1 point
+	 *
+	 * @param pixels
+	 * @return twips
+	 */
+	public static final float getPixels( float twips )
+	{
+		float points = twips / 20;
+		float pixels = points * 1.3333333f; // good enuff precision
+		return pixels;
+	}
+
+	/**
+	 * convert pixels to twips
+	 * <p/>
+	 * <p/>
+	 * In addition to a calculated size unit derived from the average size of
+	 * the default characters 0-9, Excel uses the 'twips' measurement which is
+	 * defined as:
+	 * <p/>
+	 * 1 pixel = 0.75 points 1 pixel * 1.3333 = 1 point 1 twip * 20 = 1 point
+	 *
+	 * @param pixels
+	 * @return twips
+	 */
+	public static final float getTwips( float pixels )
+	{
+		float points = pixels * .75f;
+		float twips = points * 20;
+		return twips;
+	}
+
+	/**
+	 * get recordy byte def as a String
+	 * <p/>
+	 * public static String getRecordByteDef(XLSRecord rec){ byte[] b =
+	 * rec.read(); StringBuffer sb = new StringBuffer("byte[] rbytes = {");
+	 * for(int t = 0;t<b.length;t++){
+	 * <p/>
+	 * Byte thisb = new Byte(b[t]);
+	 * <p/>
+	 * sb.append(thisb.toString() + ", "); } sb.append("};"); return
+	 * sb.toString(); }
+	 */
+
+	public static String getLogDate()
+	{
+		return String.valueOf( new Date( System.currentTimeMillis() ) );
+	}
+
+	/**
+	 * tracks minimal info container for counters -> start time, last time,
+	 * start mem, last mem
+	 *
+	 * @param info
+	 * @param perfobj
+	 */
+	public static void benchmark( String info, Object perfobj )
+	{
+		Runtime rt = Runtime.getRuntime();
+		long[] p;
+		long lasttime;
+		long lastmem;
+		if( System.getProperties().get( perfobj.toString() ) != null )
+		{
+			p = (long[]) System.getProperties().get( perfobj.toString() );
+			lasttime = p[1];
+			lastmem = p[3];
+			p[1] = System.currentTimeMillis();
+			p[3] = rt.freeMemory();
+			double elapsedsec = p[1] - lasttime;
+			double usedmem = lastmem - p[3]; // - lastmem;
+			if( usedmem < 0 )
+			{
+				usedmem *= -1;
+			}
+			log.info( getLogDate() + " " + info );
+			log.info( " time: " + elapsedsec + " millis" );
+			log.info( " mem: " + usedmem + " bytes." );
+		}
+		else
+		{
+			p = new long[4];
+			p[0] = System.currentTimeMillis();
+			p[1] = System.currentTimeMillis();
+			p[2] = rt.freeMemory();
+			p[3] = rt.freeMemory();
+			lasttime = p[1];
+			lastmem = p[3];
+			System.getProperties().put( perfobj.toString(), p );
+		}
+
+	}
 
 	/**
 	 * get the Excel-style Column alphabetical representation of an integer
@@ -904,21 +914,21 @@ return WorkBookHandle.simpledateformat.format(d);*/
 				z--;
 				leftover = 676;
 			}
-			ret = String.valueOf( ExcelTools.alpharr[z] );
+			ret = String.valueOf( alpharr[z] );
 			i = i % 676;
 			i += leftover;
 		}
 		if( i > 25 )
 		{ // has 2nd digit
 			int z = (i / 26) - 1; // -1 to account for 0-based
-			ret = ret + ExcelTools.alpharr[z];
+			ret = ret + alpharr[z];
 			i = i % 26;
 		}
 
 		// bbennett: this raises AIOOB if i = -1. In this situation we don't
 		// care about alpha because it will just be in the message of the
 		// exception that flags cell as non existent.
-		ret += i < 0 ? Integer.toString( i ) : String.valueOf( ExcelTools.alpharr[(i)] );
+		ret += i < 0 ? Integer.toString( i ) : String.valueOf( alpharr[i] );
 
 		return ret;
 	}
@@ -965,15 +975,15 @@ return WorkBookHandle.simpledateformat.format(d);*/
 	public static int[] getRowColFromString( String address )
 	{
 
-		if( address.indexOf( "$" ) > -1 )
+		if( address.contains( "$" ) )
 		{
 			address = StringTool.strip( address, "$" );
 		}
-		if( address.indexOf( "!" ) > -1 )
+		if( address.contains( "!" ) )
 		{
 			address = address.substring( address.indexOf( "!" ) + 1 );
 		}
-		if( address.indexOf( ":" ) > -1 )
+		if( address.contains( ":" ) )
 		{
 			return getRangeRowCol( address );
 		}
@@ -1113,8 +1123,8 @@ return WorkBookHandle.simpledateformat.format(d);*/
 	 */
 	public static String formatLocation( int[] rowCol )
 	{
-		StringBuffer sb = new StringBuffer( getAlphaVal( rowCol[1] ) );
-		sb.append( String.valueOf( rowCol[0] + 1 ) );
+		StringBuilder sb = new StringBuilder( getAlphaVal( rowCol[1] ) );
+		sb.append( rowCol[0] + 1 );
 
 		// handle ranges
 		if( rowCol.length > 3 )
@@ -1126,7 +1136,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 			}
 			sb.append( ":" );
 			sb.append( getAlphaVal( rowCol[3] ) );
-			sb.append( String.valueOf( rowCol[2] + 1 ) );
+			sb.append( rowCol[2] + 1 );
 		}
 
 		return sb.toString();
@@ -1149,7 +1159,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 	 */
 	public static String formatLocation( int[] s, boolean bRelRow, boolean bRelCol )
 	{
-		StringBuffer sb = new StringBuffer( (bRelCol ? "" : "$") );
+		StringBuilder sb = new StringBuilder( bRelCol ? "" : "$" );
 		if( s[1] > -1 ) // account for WholeRow/WholeCol references
 		{
 			sb.append( getAlphaVal( s[1] ) );
@@ -1167,7 +1177,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 				return sb.toString();
 			}
 			sb.append( ":" );
-			sb.append( (bRelCol ? "" : "$") );
+			sb.append( bRelCol ? "" : "$" );
 			sb.append( getAlphaVal( s[3] ) );
 			sb.append( (bRelRow ? "" : "$") + String.valueOf( s[2] + 1 ) );
 		}
@@ -1296,7 +1306,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 		}
 		String preString;
 		String postString;
-		String fullString = "";
+		String fullString;
 		switch( notationType )
 		{
 			case 0: // NOTATION_STANDARD
@@ -1315,8 +1325,8 @@ return WorkBookHandle.simpledateformat.format(d);*/
 				}
 				preString = num.substring( 0, i );
 				CompatibleBigDecimal outNumD = new CompatibleBigDecimal( preString );
-				String exp = "";
-				if( num.indexOf( "+" ) == -1 )
+				String exp;
+				if( !num.contains( "+" ) )
 				{
 					exp = num.substring( i + 1, num.length() );
 				}
@@ -1354,17 +1364,17 @@ return WorkBookHandle.simpledateformat.format(d);*/
 				}
 				break;
 			case 1: // NOTATION_SCIENTIFIC
-				if( (num.indexOf( "E" ) != -1) && (num.indexOf( "+" ) == -1) )
+				if( num.contains( "E" ) && !num.contains( "+" ) )
 				{
 					fullString = num;
 				}
-				else if( num.indexOf( "+" ) != -1 )
+				else if( num.contains( "+" ) )
 				{
 					preString = num.substring( 0, num.indexOf( "+" ) );
 					postString = num.substring( num.indexOf( "+" ) + 1, num.length() );
 					return preString + postString;
 				}
-				else if( num.indexOf( "." ) != -1 )
+				else if( num.contains( "." ) )
 				{
 					int pos = num.indexOf( "." );
 					preString = num.substring( 0, 1 ) + "." + num.substring( 1, num.indexOf( "." ) );
@@ -1400,17 +1410,17 @@ return WorkBookHandle.simpledateformat.format(d);*/
 				}
 				break;
 			case 2: // NOTATION_SCIENTIFIC_EXCEL
-				if( (num.indexOf( "E" ) != -1) && (num.indexOf( "+" ) != -1) )
+				if( num.contains( "E" ) && num.contains( "+" ) )
 				{
 					fullString = num;
 				}
-				else if( num.indexOf( "E" ) != -1 )
+				else if( num.contains( "E" ) )
 				{
 					preString = num.substring( 0, num.indexOf( "E" ) + 1 );
 					postString = "+" + num.substring( num.indexOf( "E" ) + 1, num.length() );
 					fullString = preString + postString;
 				}
-				else if( num.indexOf( "." ) != -1 )
+				else if( num.contains( "." ) )
 				{
 					int pos = num.indexOf( "." );
 					CompatibleBigDecimal d = new CompatibleBigDecimal( num );
@@ -1475,14 +1485,14 @@ return WorkBookHandle.simpledateformat.format(d);*/
 		do
 		{
 			String element = (String) cellTokenizer.nextElement();
-			if( element.indexOf( ":" ) != -1 )
+			if( element.contains( ":" ) )
 			{
 				CellRange aRange = new CellRange( sheet.getSheetName() + "!" + strRange, sheet.wbh, true );
 				cells.addAll( aRange.getCellList() );
 			}
 			else
 			{
-				CellHandle aCell = null;
+				CellHandle aCell;
 				try
 				{
 					aCell = sheet.getCell( element );
@@ -1521,7 +1531,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 		int m = address.indexOf( '!' );
 		if( m > -1 )
 		{
-			if( address.substring( 0, m ).indexOf( ":" ) == -1 )
+			if( !address.substring( 0, m ).contains( ":" ) )
 			{
 				sheetname = address.substring( 0, m );
 			}
@@ -1587,15 +1597,15 @@ return WorkBookHandle.simpledateformat.format(d);*/
 	 */
 	public static int[] getRangeCoords( String range )
 	{
-		int numrows = 0;
-		int numcols = 0;
-		int numcells = 0;
+		int numrows;
+		int numcols;
+		int numcells;
 		int[] coords = new int[5];
 		String temprange = range;
 		// figure out the sheet bounds using the range string
-		temprange = ExcelTools.stripSheetNameFromRange( temprange )[1];
-		String startcell = "";
-		String endcell = "";
+		temprange = stripSheetNameFromRange( temprange )[1];
+		String startcell;
+		String endcell;
 		int lastcolon = temprange.lastIndexOf( ":" );
 		endcell = temprange.substring( lastcolon + 1 );
 		if( lastcolon == -1 ) // no range
@@ -1629,7 +1639,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 		{ // could be a whole-col-style ref
 		}
 		String firstcellcolstr = startcell.substring( 0, charct ).trim();
-		int firstcellcol = ExcelTools.getIntVal( firstcellcolstr );
+		int firstcellcol = getIntVal( firstcellcolstr );
 		// get the last cell's coordinates
 		charct = endcell.length();
 		while( charct > 0 )
@@ -1650,7 +1660,7 @@ return WorkBookHandle.simpledateformat.format(d);*/
 		{ // could be a whole-col-style ref
 		}
 		String lastcellcolstr = endcell.substring( 0, charct );
-		int lastcellcol = ExcelTools.getIntVal( lastcellcolstr );
+		int lastcellcol = getIntVal( lastcellcolstr );
 		numrows = (lastcellrow - firstcellrow) + 1;
 		numcols = (lastcellcol - firstcellcol) + 1;
 		/*
