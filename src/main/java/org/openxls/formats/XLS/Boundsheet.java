@@ -5791,6 +5791,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 		}
 		else
 		{
+			log.warn( "Assuming double value - will convert supplied Object '{}' to java.lang.String first.", obj.getClass().getName() );
 			double d = new Double( String.valueOf( obj ) );        // 20080211 KSC: Double.valueOf(String.valueOf(obj)).doubleValue();
 			rec = new NumberRec( d );
 		}

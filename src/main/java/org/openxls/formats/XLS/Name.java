@@ -325,7 +325,7 @@ public final class Name extends XLSRecord
 			{
 				rgch = new String( namebytes );
 			}
-				log.info( getName() );
+				log.debug( getName() );
 			pos += cch;
 
 			// get the parsed expression
