@@ -104,7 +104,7 @@ public final class NumberRec extends XLSCellRecord
 //      get the long
 		fpnum = ByteTools.eightBytetoLEDouble( getBytesAt( 6, 8 ) );
 		setIsValueForCell( true );
-			log.trace( "NumberRec: " + getCellAddress() + ":" + getStringVal() );
+		log.trace( "NumberRec: " + getCellAddress() + ", val:" + getStringVal() );
 
 		String d = String.valueOf( fpnum );
 		if( d.length() > 12 )

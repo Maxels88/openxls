@@ -44,21 +44,22 @@ public class CellsByColImpl implements CellsByCol
 		int first = cell.getColFirst();
 		int last = cell.getColLast();
 
-		validate( first, last );
+		validate( cell.getColNumber(), first, last );
 
-		log.trace( "Adding R{}C{}-{}", cell.getRowNumber(), first, last);
+		log.debug( "Adding R{}C{}-{} {} - {}", cell.getRowNumber(), first, last, cell.getClass().getName(), cell.toString() );
+
 		//
 		// While we do double loop on this, I want the data structure usage safety over any potential performance issues right now.
 		// If add() is being invoked for a Cell that already exists, that implies an incorrect usage and it should be fixed.
 		//
-
 		for( int col = first; col <= last; col++ )
 		{
 			SortedSet<CellRec> colCells = cells.get( col );
 			if( (colCells != null) && colCells.contains( cell ) )
 			{
-				String msg = String.format( "Attempt to add cell '%s' that is already in Column %d.  Existing cell: {}", cell, col );
+				String msg = String.format( "Attempt to add cell '%s' that is already in Column %d.", cell, col );
 				log.error( msg );
+				log.error( "THIS IS AN OPENXLS CODE ERROR - WE SHOULD NOT BE DOING THIS" );
 				// FIXME: Code upstream invokes this multiple times and needs to be fixed before re-enabling this exception (which I intend to do)
 //				throw new IllegalArgumentException( msg );
 			}
@@ -89,7 +90,7 @@ public class CellsByColImpl implements CellsByCol
 		int first = cell.getColFirst();
 		int last = cell.getColLast();
 
-		validate( first, last );
+		validate( cell.getColNumber(), first, last );
 
 		//
 		// While we double loop on this, I want the data structure usage safety over any potential performance issues right now.
@@ -119,11 +120,16 @@ public class CellsByColImpl implements CellsByCol
 		return cell;
 	}
 
-	private static void validate( int first, int last )
+	private static void validate( int col, int first, int last )
 	{
+		if( (col < first) || (col > last) )
+		{
+			log.error( "What sort of messed up scenario is this? colNumber({}) not within col range: {}-{}", col, first, last );
+		}
+
 		if( first > last )
 		{
-			log.error( "What sort of messed up scenario is this? first({}) > last({})", first, last );
+			log.error( "What sort of messed up scenario is this? colFirst({}) > colLast({})", first, last );
 		}
 	}
 

@@ -240,6 +240,7 @@ public class FormatHandle implements Handle, FormatConstants
 		wkbook = book.getWorkBook();
 		if( c == null )
 		{
+			// FIXME
 			// ok, this is a horrible hack, as its only correct if the top left
 			// cell of the range has the same background format
 			// as the cell a user is hitting. Lame, but i've been handed this at
@@ -397,6 +398,12 @@ public class FormatHandle implements Handle, FormatConstants
 	public boolean equals( Object another )
 	{
 		return another.toString().equals( toString() );
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return toString().hashCode();
 	}
 
 	/**
@@ -2222,7 +2229,7 @@ public class FormatHandle implements Handle, FormatConstants
 					for(; z < pats[i].length(); z++ )
 					{
 						char c = pats[i].charAt( z );
-						if( ((c == '0') || (c == '#') || (c == '?')) )    // numeric placeholders
+						if( (c == '0') || (c == '#') || (c == '?') )    // numeric placeholders
 						{
 							foundit = true;
 						}
@@ -2256,7 +2263,7 @@ public class FormatHandle implements Handle, FormatConstants
 					for(; z >= 0; z-- )
 					{
 						char c = pats[i].charAt( z );
-						if( ((c == '0') || (c == '#') || (c == '?')) )
+						if( (c == '0') || (c == '#') || (c == '?') )
 						{    // found last numeric placeholder
 							foundit = true;
 							break;
@@ -3147,79 +3154,87 @@ public class FormatHandle implements Handle, FormatConstants
 	 */
 	private void updateXf( Xf xf )
 	{
-		if( !myxf.toString().equals( xf.toString() ) )
+		String existingXfStr = myxf.toString();
+		String updatedXfStr = xf.toString();
+
+		if( existingXfStr.equals( updatedXfStr ) )
 		{
-			if( (myxf.getUseCount() <= 1) && (xfe > 15) )
-			{ // used only by one cell, OK to modify
-				if( writeImmediate || (wkbook.getFormatCache().get( xf.toString() ) == null) )
+			log.trace( "Formats are the same, not updating! Format: {}", existingXfStr );
+			return;
+		}
+
+		log.trace( "Formats are different: Existing: '{}' vs Updated: '{}", existingXfStr, updatedXfStr );
+
+		if( (myxf.getUseCount() <= 1) && (xfe > 15) )
+		{ // used only by one cell, OK to modify
+			if( writeImmediate || (wkbook.getFormatCache().get( updatedXfStr ) == null) )
+			{
+				// myxf hasn't been used yet; modify bytes and re-init ***
+				byte[] xfbytes = xf.getBytes();
+				myxf.setData( xfbytes );
+				if( xf.fill != null )
 				{
-					// myxf hasn't been used yet; modify bytes and re-init ***
-					byte[] xfbytes = xf.getBytes();
-					myxf.setData( xfbytes );
-					if( xf.fill != null )
-					{
-						myxf.fill = (Fill) xf.fill.cloneElement();
-					}
-					myxf.init();
-					myxf.setFont( myxf.getIfnt() ); // set font as well ..
-					wkbook.updateFormatCache( myxf ); // ensure new xf signature
-					// is stored
+					myxf.fill = (Fill) xf.fill.cloneElement();
 				}
-				else
-				{
-					if( myxf.getUseCount() > 0 )
-					{
-						myxf.decUseCoount();    // flag original xf that 1 less record is referencing it
-					}
-					myxf = (Xf) wkbook.getFormatCache().get( xf.toString() );
-					xfe = myxf.getIdx(); // update the pointer
-					if( xfe == -1 ) // hasn't been added to wb yet - should this ever happen???
-					{
-						myxf = duplicateXf( xf ); // create a duplicate and leave original
-					}
-					else
-					{
-						myxf.incUseCount();
-					}
-				}
+				myxf.init();
+				myxf.setFont( myxf.getIfnt() ); // set font as well ..
+				wkbook.updateFormatCache( myxf ); // ensure new xf signature
+				// is stored
 			}
 			else
-			{ // cannot modify original - either find matching or create new
+			{
 				if( myxf.getUseCount() > 0 )
 				{
 					myxf.decUseCoount();    // flag original xf that 1 less record is referencing it
 				}
-				if( wkbook.getFormatCache().get( xf.toString() ) == null )
-				{ // doesn't exist yet
+				myxf = (Xf) wkbook.getFormatCache().get( updatedXfStr );
+				xfe = myxf.getIdx(); // update the pointer
+				if( xfe == -1 ) // hasn't been added to wb yet - should this ever happen???
+				{
 					myxf = duplicateXf( xf ); // create a duplicate and leave original
 				}
 				else
 				{
-					myxf = (Xf) (wkbook.getFormatCache().get( xf.toString() ));
-					xfe = myxf.getIdx(); // update the pointer
-					if( xfe == -1 ) // hasn't been added to the record store yet 	// - should ever happen???
-					{
-						myxf = duplicateXf( xf ); // create a duplicate and leave original
-					}
-					else
-					{
-						myxf.incUseCount();
-					}
+					myxf.incUseCount();
 				}
 			}
+		}
+		else
+		{ // cannot modify original - either find matching or create new
+			if( myxf.getUseCount() > 0 )
+			{
+				myxf.decUseCoount();    // flag original xf that 1 less record is referencing it
+			}
+			if( wkbook.getFormatCache().get( updatedXfStr ) == null )
+			{ // doesn't exist yet
+				myxf = duplicateXf( xf ); // create a duplicate and leave original
+			}
+			else
+			{
+				myxf = (Xf) wkbook.getFormatCache().get( updatedXfStr );
+				xfe = myxf.getIdx(); // update the pointer
+				if( xfe == -1 ) // hasn't been added to the record store yet 	// - should ever happen???
+				{
+					myxf = duplicateXf( xf ); // create a duplicate and leave original
+				}
+				else
+				{
+					myxf.incUseCount();
+				}
+			}
+		}
 
-			for( Object mycell : mycells )
-			{
-				((BiffRec) mycell).setXFRecord( xfe ); // make sure all linked cells are updated as well
-			}
-			if( mycol != null )
-			{
-				mycol.setFormatId( xfe );
-			}
-			if( myrow != null )
-			{
-				myrow.setFormatId( xfe );
-			}
+		for( Object mycell : mycells )
+		{
+			((BiffRec) mycell).setXFRecord( xfe ); // make sure all linked cells are updated as well
+		}
+		if( mycol != null )
+		{
+			mycol.setFormatId( xfe );
+		}
+		if( myrow != null )
+		{
+			myrow.setFormatId( xfe );
 		}
 	}
 

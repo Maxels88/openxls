@@ -22,6 +22,8 @@
  */
 package org.openxls.formats.XLS.charts;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.openxls.ExtenXLS.ChartHandle;
 import org.openxls.ExtenXLS.ChartHandle.ChartOptions;
 import org.openxls.ExtenXLS.ExcelTools;
@@ -35,8 +37,6 @@ import org.openxls.formats.XLS.Obj;
 import org.openxls.formats.XLS.Sheet;
 import org.openxls.formats.XLS.XLSConstants;
 import org.openxls.formats.XLS.XLSRecord;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +46,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -103,15 +102,15 @@ public class Chart extends GenericChartObject implements ChartObject
 	// TODO: MANAGE FONTS ---?  
 
 	// internal chart records
-	protected ArrayList chartRecs = new ArrayList();
-	protected AbstractList preRecs;
-	protected AbstractList postRecs = new ArrayList();
+	protected List chartRecs = new ArrayList();
+	protected List preRecs;
+	protected List postRecs = new ArrayList();
 	protected boolean dirtyflag = false;    // if anything has changed in the chart (except series, which is handled via another var) 
 	protected boolean metricsDirty = true;    // initially true so creates min, max and other metrics, true if should be recalculated   
 	// below vars used to save state in addInitialChartRecord recursion
 	protected Ai currentAi;                // used in init only
 	protected int hierarchyDepth = 0;    //	""
-	protected ArrayList initobs = new ArrayList();
+	protected List initobs = new ArrayList();
 
     
     /*
@@ -501,7 +500,7 @@ public class Chart extends GenericChartObject implements ChartObject
 	 *
 	 * @param recs
 	 */
-	public void setPreRecords( AbstractList recs )
+	public void setPreRecords( List recs )
 	{
 		preRecs = recs;
 	}

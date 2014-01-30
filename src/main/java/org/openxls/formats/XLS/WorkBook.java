@@ -51,7 +51,6 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -61,7 +60,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
-import java.util.Vector;
 
 /**
  * <pre>
@@ -80,18 +78,25 @@ import java.util.Vector;
 
 public class WorkBook implements Serializable, XLSConstants, Book
 {
-	private static final Logger log = LoggerFactory.getLogger( WorkBook.class );
-	private static final long serialVersionUID = 2282017774412632087L;
-
-	DateConverter.DateFormat dateFormat = DateConverter.DateFormat.LEGACY_1900;
-
-	// public constants
 	public static int STRING_ENCODING_AUTO = 0;
 	public static int STRING_ENCODING_UNICODE = 1;
 	public static int STRING_ENCODING_COMPRESSED = 2;
 	public static int ALLOWDUPES = 0;
 	public static int SHAREDUPES = 1;
-
+	public Color[] colorTable;
+	public HashMap formatCache = new HashMap();
+	public List msodgMerge = new ArrayList();
+	public MSODrawingGroup msodg = null;
+	public int lastSPID = 1024;    // 20071030 last or next SPID (= shape ID or image ID); incremented upon new images ... appropriate to store at book level (?)
+	DateConverter.DateFormat dateFormat = DateConverter.DateFormat.LEGACY_1900;
+	List formulas = new FastAddVector();
+	WorkBookFactory factory;
+	Formula lastFormula = null;
+	XLSRecord countryRec = null;
+	boolean inChartSubstream = false;
+	List chartTemp = new ArrayList();
+	private static final Logger log = LoggerFactory.getLogger( WorkBook.class );
+	private static final long serialVersionUID = 2282017774412632087L;
 	private int bofct = 0;
 	private int eofct = 0;
 	private int indexnum = 0;
@@ -100,62 +105,47 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	private int defaultLanguage = 0;    // default language code for the current workbook
 	private boolean copying = false;
 	private boolean sharedupes = false;
-	private AbstractList xfrecs = new Vector();
-	private AbstractList indexes = new Vector();
-	private AbstractList names = new Vector(); // ALL of the names (including worksheet scoped, etc)
-	private AbstractList orphanedPtgNames = new Vector();
-	private AbstractList externalnames = new Vector();
-	AbstractList formulas = new FastAddVector();
-	private AbstractList fonts = new Vector();
-	public Color[] colorTable;
-
+	private List xfrecs = new ArrayList();
+	private List indexes = new ArrayList();
+	private List names = new ArrayList(); // ALL of the names (including worksheet scoped, etc)
+	private List orphanedPtgNames = new ArrayList();
+	private List externalnames = new ArrayList();
+	private List fonts = new ArrayList();
 	/**
 	 * The list of Format records indexed by format ID.
 	 */
 	private TreeMap formats = new TreeMap();
-	private AbstractList charts = new Vector();
+	private List charts = new ArrayList();
 	/**
 	 * OOXML-specific
 	 */
-	private AbstractList ooxmlObjects = new Vector();    // stores OOXML objects external to workbook e.g. oleObjects,
+	private List ooxmlObjects = new ArrayList();    // stores OOXML objects external to workbook e.g. oleObjects,
 	private String ooxmlcodename = null;            // stores OOXML codename
-	private ArrayList dxfs = null;            // 20090622 KSC: stores dxf's (incremental style info) per workbook				
+	private List dxfs = null;            // 20090622 KSC: stores dxf's (incremental style info) per workbook
 	private int firstSheet = 0;                // specifies first sheet (ooxml)
 	private Theme theme = null;
-
 	// Reference Tracking
 	private ReferenceTracker refTracker = new ReferenceTracker();
-
 	// various
-	private AbstractList boundsheets = new Vector();  //TODO:  remove this variable?  its duplicated in workSheets
-	private AbstractList hlinklookup = new Vector( 20 );
-	private AbstractList mergecelllookup = new Vector( 20 );
-
+	private List<Boundsheet> boundsheets = new ArrayList<>();  //TODO:  remove this variable?  its duplicated in workSheets
+	private List hlinklookup = new ArrayList( 20 );
+	private List mergecelllookup = new ArrayList( 20 );
 	/*Indirect formulas that need to be calculated after load for reftracker*/
-	private AbstractList indirectFormulas = new ArrayList();
-	private AbstractList supBooks = new Vector();
-
-	/* This is here only to allow client code to compile, should be removed */
-	public static String CONVERTMULBLANKS = "deprecated";
-
+	private List indirectFormulas = new ArrayList();
+	private List<Supbook> supBooks = new ArrayList<>();
 	// We should consider using an ordered collections class for some of these?
 	// an enumeration of worksheets for instance will not always be in the same
 	// order, causing tests to fail...
 	private Hashtable workSheets = new Hashtable( 100, .950f );
 	private HashMap bookNameRecs = new HashMap();
 	private Hashtable formulashash = new Hashtable();
-
 	/**
 	 * Maps number format patterns to their IDs.
 	 */
 	private Hashtable formatlookup = new Hashtable( 30 );
-
-	private Hashtable ptViews = new Hashtable( 20 );// TODO: move to sheet - sheet-level pivot table view recordss    
-	private ArrayList ptstream = new ArrayList();        // wb-level pivot cache definitions usually only 1
+	private Hashtable ptViews = new Hashtable( 20 );// TODO: move to sheet - sheet-level pivot table view recordss
+	private List ptstream = new ArrayList();        // wb-level pivot cache definitions usually only 1
 	private PivotCache ptcache = null;                    // if has pivot tables this is the one and only pivot cache
-
-	public HashMap formatCache = new HashMap();
-
 	private Index lastidx;
 	private Sst stringTable;
 	private Bof lastBOF;
@@ -169,41 +159,57 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	private Chart currchart;
 	private Ai currai;
 	private Supbook myADDINSUPBOOK = null; // for external names SUPBOOK
-	WorkBookFactory factory;
 	private ContinueHandler contHandler = new ContinueHandler( this );
 	private Usersviewbegin usersview;
 	private Eof lasteof;
 	private BiffRec xl2k = null;
-	public AbstractList msodgMerge = new Vector();
-	public MSODrawingGroup msodg = null;
-	public int lastSPID = 1024;    // 20071030 last or next SPID (= shape ID or image ID); incremented upon new images ... appropriate to store at book level (?) 
 	private MSODrawing currdrw = null;
-
 	private BookProtectionManager protector;
+	private Boundsheet lastbound = null;
+	// OOXML Additions
+	private boolean isExcel2007 = false;
 
-	protected void reflectiveClone( WorkBook source )
+	/**
+	 * default constructor -- do init
+	 */
+	public WorkBook()
 	{
-		for( Field field : WorkBook.class.getDeclaredFields() )
-		{
-			if( Modifier.isStatic( field.getModifiers() ) )
-			{
-				continue;
-			}
 
+		Object cm = System.getProperties().get( WorkBook.CALC_MODE_PROP );
+		if( cm != null )
+		{
 			try
 			{
-				field.set( this, field.get( source ) );
+				CalcMode = Integer.parseInt( cm.toString() );
 			}
-			catch( IllegalAccessException e )
+			catch( Exception e )
 			{
-				throw new RuntimeException( e );
+				log.warn( "Invalid Calc Mode Setting in System properties:" + cm, e );
 			}
+		}
+		if( System.getProperties().get( "org.openxls.ExtenXLS.sharedupes" ) != null )
+		{
+			sharedupes = System.getProperties().get( "org.openxls.ExtenXLS.sharedupes" ).equals( "true" );
+			if( sharedupes )
+			{
+				setDupeStringMode( WorkBook.SHAREDUPES );
+			}
+		}
+		initBuiltinFormats();
+		// re-init color table: initial state of color table if Pallete record exists, changes may occur
+		colorTable = new java.awt.Color[FormatHandle.COLORTABLE.length];
+		for( int i = 0; i < FormatHandle.COLORTABLE.length; i++ )
+		{
+			colorTable[i] = FormatHandle.COLORTABLE[i];
 		}
 	}
 
-	protected ByteStreamer createByteStreamer()
+	/**
+	 * Get the typename for this object.
+	 */
+	static String getTypeName()
 	{
-		return new ByteStreamer( this );
+		return "WorkBook";
 	}
 
 	/**
@@ -218,57 +224,27 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		return protector;
 	}
 
-	/**
-	 * init the ImageHandles
-	 */
-	void initImages()
-	{
-		lastSPID = Math.max( lastSPID,
-		                     msodg.getSpidMax() ); // 20090508 KSC: lastSPID should also account for charts [BUGTRACKER 2372 copyChartToSheet error]
-		// 20071217 KSC: clear out imageMap before inputting!
-		for( int x = 0; x < getWorkSheets().length; x++ )
-		{
-			(getWorkSheets()[x]).imageMap.clear();
-		}
-		for( int i = 0; i < msodg.getMsodrawingrecs().size(); i++ )
-		{    // 20070914 KSC: store msodrawingrecs with MSODrawingGroup instead of here
-			MSODrawing rec = (MSODrawing) msodg.getMsodrawingrecs().get( i );
-			lastSPID = Math.max( lastSPID, rec.getlastSPID() );    // valid for header msodrawing record(s)
-			int imgdx = rec.getImageIndex() - 1;    // it's 1-based
-			byte[] imageData = msodg.getImageBytes( imgdx );
-			if( imageData != null )
-			{
-				ImageHandle im = new ImageHandle( imageData, rec.getSheet() );
-				im.setMsgdrawing( rec );                    //Link 2 actual Msodrawing rec
-				im.setName( rec.getName() );                // set image name from rec ...
-				im.setShapeName( rec.getShapeName() );    // set shape name as well ...
-				im.setImageType( msodg.getImageType( imgdx ) );// 20100519 KSC: added!
-				rec.getSheet().imageMap.put( im, imgdx );
-			}
-		}
-	}
-
 	/*
 	 * Once all the records are parsed, the msodrawinggroup needs to be parsed.
 	 * We first merge all the msodrawinggroup records. From the till now experiment,
 	 * there are maximum of two such records, adjacent to each other. If there are two,
 	 * the size of the first is only 8228 and the remaining data is in second record.
 	 * However, when writing, it doesn't seem important to break it into two and can be written
-	 * as one. 
-	 *  
-	 *  Once msodrawingrecords are parsed, it is not used. However, we have a msodrawingglobal class that 
+	 * as one.
+	 *
+	 *  Once msodrawingrecords are parsed, it is not used. However, we have a msodrawingglobal class that
 	 *  records the current count of msodrawing related records, like shape count, max shape id till now etc.
 	 *  We need to maintain that for writing (creating the msodrawinggroup records) later on.
 	 */
 	public void mergeMSODrawingRecords()
 	{
-		// 20070915 KSC: Now don't re-initialize Msodrawing recs; just merge and parse	
+		// 20070915 KSC: Now don't re-initialize Msodrawing recs; just merge and parse
 		if( msodg != null )
 		{
 			msodg.mergeAndRemoveContinues();
 			for( int i = 1; i < msodgMerge.size(); i++ )
 			{
-				msodg.mergeRecords( (MSODrawingGroup) msodgMerge.get( i ) );  // merges and removes secondary msodrawinggroups 
+				msodg.mergeRecords( (MSODrawingGroup) msodgMerge.get( i ) );  // merges and removes secondary msodrawinggroups
 				// 20071003 KSC: get rid of secondary msodg's, will be created upon createMSODGContinues
 				getStreamer().removeRecord( (MSODrawingGroup) msodgMerge.get( i ) ); // remove existing continues from stream
 			}
@@ -303,7 +279,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				MSODrawing rec = (MSODrawing) msodg.getMsodrawingrecs().get( z );
 				if( rec.getSheet().equals( bs ) )
 				{
-					if( (!rec.equals( msdHeader )) && !rec.isHeader() )
+					if( !rec.equals( msdHeader ) && !rec.isHeader() )
 					{    // added header check- seems like *can* have multiple header recs in charts!
 						spContainerLength += rec.getSPContainerLength();
 						otherContainerLength += rec.getSOLVERContainerLength();
@@ -391,7 +367,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		ret += "Number of Fonts:      " + getNumFonts() + rex;
 		ret += "Number of Formats:    " + getNumFormats() + rex;
 		ret += "Number of Xfs:        " + getNumXfs() + rex;
-		// ret += "StringTable:          " + this.stringTable.toString() + rex;        
+		// ret += "StringTable:          " + this.stringTable.toString() + rex;
 		ret += "-------------------------------------------------\r\n";
 		return ret;
 	}
@@ -399,16 +375,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	public String getXLSVersionString()
 	{
 		return lastBOF.getXLSVersionString();
-	}
-
-	private void addMergedcells( Mergedcells c )
-	{
-		mergecelllookup.add( c );
-	}
-
-	private void addHlink( Hlink r )
-	{
-		hlinklookup.add( r );
 	}
 
 	/**
@@ -539,7 +505,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		return -1;
 	}
 
-	public AbstractList getChartVect()
+	public List getChartVect()
 	{
 		return charts;
 	}
@@ -547,11 +513,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	public Sxview getPivotTableView( String nm )
 	{
 		return (Sxview) ptViews.get( nm );
-	}
-
-	protected void addPivotTable( Sxview sx )
-	{
-		ptViews.put( sx.getTableName(), sx );    // Pivot Table View ==Top-level record for a Pivot Table
 	}
 
 	/**
@@ -607,41 +568,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	}
 
 	/**
-	 * default constructor -- do init
-	 */
-	public WorkBook()
-	{
-
-		Object cm = System.getProperties().get( WorkBook.CALC_MODE_PROP );
-		if( cm != null )
-		{
-			try
-			{
-				CalcMode = Integer.parseInt( cm.toString() );
-			}
-			catch( Exception e )
-			{
-				log.warn( "Invalid Calc Mode Setting in System properties:" + cm, e );
-			}
-		}
-		if( System.getProperties().get( "org.openxls.ExtenXLS.sharedupes" ) != null )
-		{
-			sharedupes = System.getProperties().get( "org.openxls.ExtenXLS.sharedupes" ).equals( "true" );
-			if( sharedupes )
-			{
-				setDupeStringMode( WorkBook.SHAREDUPES );
-			}
-		}
-		initBuiltinFormats();
-		// re-init color table: initial state of color table if Pallete record exists, changes may occur
-		colorTable = new java.awt.Color[FormatHandle.COLORTABLE.length];
-		for( int i = 0; i < FormatHandle.COLORTABLE.length; i++ )
-		{
-			colorTable[i] = FormatHandle.COLORTABLE[i];
-		}
-	}
-
-	/**
 	 * Gets the format ID for a given number format pattern.
 	 * This lookup is completely case-insensitive. For most patterns this
 	 * correctly reflects the case-insensitivity of the tokens. Custom patterns
@@ -658,19 +584,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			return res;
 		}
 		return -1;
-	}
-
-	/**
-	 * Initializes the format lookup to contain the built-in formats.
-	 */
-	private void initBuiltinFormats()
-	{
-		String[][] formats = FormatConstantsImpl.getBuiltinFormats();
-
-		for( String[] format : formats )
-		{
-			formatlookup.put( format[0].toUpperCase(), Short.valueOf( format[1], 16 ) );
-		}
 	}
 
 	/**
@@ -1094,7 +1007,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 //        myName = new Name(this, true);
 //        myName.setName(nameStr);
 		Name[] nmx = getNames();
-		int namepos = -1;
+		int namepos;
 		if( nmx.length >= 1 )
 		{
 			namepos = nmx[nmx.length - 1].getRecordIndex();
@@ -1121,7 +1034,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{    // start from the back so don't initially match defaults...
 			if( f.matches( (Font) fonts.get( i ) ) )
 			{
-				return ((i > 3) ? (i + 1) : i);
+				return i > 3 ? i + 1 : i;
 			}
 		}
 		// return  fonts.indexOf(f);
@@ -1257,7 +1170,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			throw new FormulaNotFoundException( "no formula found at " + cellAddress );
 		}
 
-		return (formula);
+		return formula;
 	}
 
 	/**
@@ -1302,17 +1215,9 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	}
 
 	/**
-	 * associate default row/col size recs
-	 */
-	void setDefaultRowHeightRec( DefaultRowHeight dr )
-	{
-		drh = dr;
-	}
-
-	/**
 	 * set Default row height in twips (1/20 of a point)
 	 */
-	// should be a double as Excel units are 1/20 of what is stored in defaultrowheight 
+	// should be a double as Excel units are 1/20 of what is stored in defaultrowheight
 	// e.g. 12.75 is Excel Units, twips =  12.75*20 = 256 (approx)
 	// should expect users to use Excel units and target method do the 20* conversion
 	public void setDefaultRowHeight( int t )
@@ -1358,34 +1263,18 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		win1.setCurrentTab( bs );
 	}
 
-	Formula lastFormula = null;
-	XLSRecord countryRec = null;
-	boolean inChartSubstream = false;
-	ArrayList chartTemp = new ArrayList();
-
-	/**
-	 * for those cases where a formula calculation adds a new string rec
-	 * need to explicitly set lastFormula before calling addRecord
-	 *
-	 * @param f
-	 */
-	protected void setLastFormula( Formula f )
-	{
-		lastFormula = f;
-	}
-
 	/**
 	 * Associate a record with its containers and related records.
 	 */
 	@Override
 	public BiffRec addRecord( BiffRec rec, boolean addtorec )
 	{
-		short opc = rec.getOpcode();
+		short opcode = rec.getOpcode();
 		rec.setStreamer( streamer );
 		rec.setWorkBook( this );
 
-		Boundsheet bs = null;
-		Long lbplypos = 0l;
+		Boundsheet bs;
+		Long lbplypos;
 
 		// get the relevant Boundsheet for this rec
 		if( rec instanceof Bof )
@@ -1422,20 +1311,20 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 
 		if( bs != null )
-		{ // &&){ 
+		{ // &&){
 			lastbound = bs;
 			if( addtorec )
 			{
 				rec.setSheet( bs );// we don't include Bof or other Book-recs because it lives in the Streamer recvec
 			}
-			if /*((rec.isValueForCell()) 
-            && */( !copying )
+			if /*((rec.isValueForCell())
+	        && */( !copying )
 			{
-				if( (lastFormula != null) && (opc == STRINGREC) )
+				if( (lastFormula != null) && (opcode == STRINGREC) )
 				{
 					lastFormula.addInternalRecord( rec );
 				}
-				else if( (lastFormula != null) && (opc == ARRAY) )
+				else if( (lastFormula != null) && (opcode == ARRAY) )
 				{
 					lastFormula.addInternalRecord( rec );
 				}
@@ -1484,7 +1373,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 
 		// Rows, valrecs, dbcells, and muls are stored in the row, not the byte streamer
-		if( (opc == XLSRecord.DBCELL) || (opc == XLSRecord.ROW) || rec.isValueForCell() || (opc == XLSRecord.MULRK) || (opc == CHART) || (opc == XLSRecord.FILEPASS) || (opc == XLSRecord.SHRFMLA) || (opc == XLSRecord.ARRAY) || (opc == XLSRecord.STRINGREC) )
+		if( (opcode == XLSRecord.DBCELL) || (opcode == XLSRecord.ROW) || rec.isValueForCell() || (opcode == XLSRecord.MULRK) || (opcode == CHART) || (opcode == XLSRecord.FILEPASS) || (opcode == XLSRecord.SHRFMLA) || (opcode == XLSRecord.ARRAY) || (opcode == XLSRecord.STRINGREC) )
 		{
 			addtorec = false;
 		}
@@ -1503,7 +1392,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			}
 		}
 
-		switch( opc )
+		switch( opcode )
 		{
 			case AUTOFILTER:
 				bs.getAutoFilters().add( rec );
@@ -1604,7 +1493,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				}
 				arr.setParentRec( lastFormula );    // [BugTracker 1869] link array formula to it's parent formula rec
 				break;
-                	
+
 /*                case SHRFMLA : done in shrfmla.init
                     Shrfmla form = (Shrfmla) rec;
                     try{ // throws exceptipon during pullparse
@@ -1617,8 +1506,8 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				{
 					dateFormat = DateConverter.DateFormat.LEGACY_1904;
 				}
-				break; 
-                    
+				break;
+
                 /*case PALETTE : // palette now correctly read into COLORTABLE
                     this.pal = (Palette) rec;
                     break;*/
@@ -1634,8 +1523,9 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				{
 					log.error( "DOUBLE STREAM FILE DETECTED!" );
 					log.error( "  OpenXLS is compatible with Excel 97 and above only." );
-					throw new org.openxls.ExtenXLS.WorkBookException( "ERROR: DOUBLE STREAM FILE DETECTED!  OpenXLS is compatible with Excel 97 + only.",
-					                             org.openxls.ExtenXLS.WorkBookException.DOUBLE_STREAM_FILE );
+					throw new org.openxls.ExtenXLS.WorkBookException(
+							"ERROR: DOUBLE STREAM FILE DETECTED!  OpenXLS is compatible with Excel 97 + only.",
+							org.openxls.ExtenXLS.WorkBookException.DOUBLE_STREAM_FILE );
 				}
 				break;
 
@@ -1650,7 +1540,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				break;
 
 			case BOF:
-					log.debug( "BOF:" + bofct + " - " + rec );
+				log.debug( "BOF:" + bofct + " - " + rec );
 				if( eofct == bofct )
 				{
 					if( bs != null )
@@ -1694,33 +1584,33 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				// Added to save position of 1st bound sheet, which is 1 record
 				// before COUNTRY RECORD (= 2 before 1st SUPBOOK record - true in all cases?)
 				countryRec = (XLSRecord) rec;
-				// USA=1, Canada=1, Japan=81, China=86, Thailand= 66, Korea= 82, India=91 ... 
+				// USA=1, Canada=1, Japan=81, China=86, Thailand= 66, Korea= 82, India=91 ...
 				defaultLanguage = ((Country) rec).getDefaultLanguage();
 				break;
 
 			case SUPBOOK:   // KSC: must store ordinal positions of SupBooks, for adding Externsheets
-				supBooks.add( rec );
+				Supbook supbook = (Supbook) rec;
+				supBooks.add( supbook );
 				if( myADDINSUPBOOK == null )
 				{ // see if this is the ADD-IN SUPBOOK rec
-					Supbook sb = (Supbook) rec;
-					if( sb.isAddInRecord() )
+					if( supbook.isAddInRecord() )
 					{
-						myADDINSUPBOOK = sb;
+						myADDINSUPBOOK = supbook;
 					}
 				}
 				break;
 
 			case BOUNDSHEET:
 				Boundsheet sh = (Boundsheet) rec;
-                    
+
                     /*  Here we need to set the selected variable,
                         but not mess with selected tabs
                         when all of the sheets aren't in the book yet.
-                        -jm 
+                        -jm
                     */
 				int ctab = 1;    // default- select 1st sheet if no Windows1 record
 				if( win1 != null )
-				{// Windows1 record is optional 20101004 TestCorruption.TestNPEOnOpen 
+				{// Windows1 record is optional 20101004 TestCorruption.TestNPEOnOpen
 					ctab = win1.getCurrentTab();
 				}
 				int shts = boundsheets.size();
@@ -1737,7 +1627,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				Iterator xit = mul.getRecs().iterator();
 				while( xit.hasNext() )
 				{
-					addRecord( ((Rk) xit.next()), false );
+					addRecord( (Rk) xit.next(), false );
 				}
 				break;
 
@@ -1764,11 +1654,12 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				}
 				catch( Exception e )
 				{
+					log.warn( "Unhandled exception", e );
 				}
 				break;
 
 			case SXVIEW:
-				addPivotTable( ((Sxview) rec) ); // Pivot Table View ==Top-level record for a Pivot Table                    
+				addPivotTable( (Sxview) rec ); // Pivot Table View ==Top-level record for a Pivot Table
 				break;
 
 			// all* possible records associated with SxView (=PivotTable View)	(*hopefully)
@@ -1789,7 +1680,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				}
 				catch( Exception e )
 				{
-					;
+					log.warn( "Unhandled exception", e );
 				}
 				break;
 
@@ -1834,7 +1725,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				break;
 
 			case PHONETIC:
-				// TODO: this isn't necessary anymore!  look at and remove 
+				// TODO: this isn't necessary anymore!  look at and remove
 				if( currdrw != null )
 				{
 					currdrw.setMystery( (Phonetic) rec );
@@ -1858,7 +1749,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				}
 				else
 				{
-					;
 				}
 				// do what???System.out.println("PROBLEM with MSODG!");
 				break;
@@ -1897,7 +1787,9 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				}
 				catch( Exception e )
 				{
-					;// throws exceptions during PullParse
+					log.warn( "Unhandled exception", e );
+
+					// throws exceptions during PullParse
 				}
 				break;
 
@@ -1913,38 +1805,21 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	}
 
 	/**
-	 * Dec 15, 2010
-	 *
-	 * @param rec
-	 * @return
-	 */
-	@Override
-	public Boundsheet getSheetFromRec( BiffRec rec, Long lbplypos )
-	{
-		Boundsheet bs = null;
-
-		if( rec.getSheet() != null )
-		{
-			bs = rec.getSheet();
-		}
-		else if( lbplypos != null )
-		{
-			bs = getWorkSheet( lbplypos );
-		}
-		else
-		{
-			bs = lastbound;
-		}
-		return bs;
-	}
-
-	/**
 	 * get a handle to the ContinueHandler
 	 */
 	@Override
 	public ContinueHandler getContinueHandler()
 	{
 		return contHandler;
+	}
+
+	/**
+	 * Get a substream by name.
+	 */
+	@Override
+	public ByteStreamer getStreamer()
+	{
+		return streamer;
 	}
 
 	/**
@@ -1959,16 +1834,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			addRecord( usersview, false );
 		}
 		return usersview;
-	}
-
-	/**
-	 * get a handle to the Reader for this
-	 * WorkBook.
-	 */
-	@Override
-	public void setFactory( WorkBookFactory r )
-	{
-		factory = r;
 	}
 
 	/**
@@ -2070,24 +1935,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			throw new CellNotFoundException( sheetname + ":" + cellname );
 		}
-	}
-
-	private Boundsheet lastbound = null;
-
-	/**
-	 * add a Boundsheet to the WorkBook
-	 */
-	private void addWorkSheet( Long lbplypos, Boundsheet sheet )
-	{
-		if( sheet == null )
-		{
-			log.warn( "WorkBook.addWorkSheet() attempting to add null sheet." );
-			return;
-		}
-		lastbound = sheet;
-			log.debug( "Workbook Adding Sheet: " + sheet.getSheetName() + ":" + String.valueOf( lbplypos ) );
-		workSheets.put( lbplypos, sheet );
-		boundsheets.add( sheet );
 	}
 
 	/**
@@ -2201,7 +2048,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		// the last one in the vector.
 		if( boundsheets.size() > 0 )
 		{
-			lastbound = (Boundsheet) (boundsheets.get( boundsheets.size() - 1 ));
+			lastbound = boundsheets.get( boundsheets.size() - 1 );
 			lastBOF = lastbound.getMyBof();
 		}
 
@@ -2245,40 +2092,9 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			catch( Exception ee )
 			{
 				throw new org.openxls.ExtenXLS.WorkBookException( "Invalid WorkBook.  WorkBook must contain at least one Sheet.",
-				                             org.openxls.ExtenXLS.WorkBookException.RUNTIME_ERROR );
+				                                                  org.openxls.ExtenXLS.WorkBookException.RUNTIME_ERROR );
 			}
-			;
 		}
-	}
-
-	/**
-	 * Updates all the name records in the workbook that are bound to a
-	 * worksheet scope (as opposed to a workbook scope).  Name records use
-	 * their own non-externsheet based sheet references, so need to be modified
-	 * whenever a sheet delete (or non-last sheet insert) operation occurs
-	 */
-	private void updateScopedNamedRanges()
-	{
-		for( int i = 0; i < boundsheets.size(); i++ )
-		{
-			((Boundsheet) boundsheets.get( i )).updateLocalNameReferences();
-		}
-	}
-
-	/**
-	 * returns the Boundsheet identified by its
-	 * offset to the BOF record indicating the
-	 * start of the Boundsheet data stream.
-	 * <p/>
-	 * used internally to access the Sheets to
-	 * ensure that the lbplypos is correct -- essential
-	 * to proper operation of XLS file.
-	 *
-	 * @param Long lbplypos of Boundsheet
-	 */
-	private Boundsheet getWorkSheet( Long lbplypos )
-	{
-		return (Boundsheet) workSheets.get( lbplypos );
 	}
 
 	/**
@@ -2338,38 +2154,12 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public Boundsheet getWorkSheetByNumber( int i ) throws WorkSheetNotFoundException
 	{
-		Boundsheet bs = null;
-		try
+		if( i > boundsheets.size() )
 		{
-			bs = (Boundsheet) boundsheets.get( i );
+			throw new WorkSheetNotFoundException( i + " not found" );
 		}
-		catch( ArrayIndexOutOfBoundsException e )
-		{
-		}
-		;
-		if( bs == null )
-		{    // External Sheet Ref NOT FOUND
-			throw new WorkSheetNotFoundException( String.valueOf( i ) + " not found" );
-		}
+		Boundsheet bs = boundsheets.get( i );
 		return bs;
-	}
-
-	/**
-	 * set the last processed Index record
-	 */
-	private void setLastINDEX( Index id )
-	{
-		lastidx = id;
-	}
-
-	Index getLastINDEX()
-	{
-		return lastidx;
-	}
-
-	void setSharedStringTable( Sst s )
-	{
-		stringTable = s;
 	}
 
 	public Sst getSharedStringTable()
@@ -2377,67 +2167,22 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		return stringTable;
 	}
 
+	void setSharedStringTable( Sst s )
+	{
+		stringTable = s;
+	}
+
 	/**
 	 * returns the Vector of Boundsheets
 	 */
-	public AbstractList getSheetVect()
+	public List getSheetVect()
 	{
 		return boundsheets;
-	}
-
-	/**
-	 * returns the boundsheets for this book as an array
-	 */
-	Boundsheet[] getWorkSheets()
-	{
-		Boundsheet[] ret = new Boundsheet[boundsheets.size()];
-		return (Boundsheet[]) boundsheets.toArray( ret );
-	}
-
-	/**
-	 * set the last BOF read in the stream
-	 */
-	void setLastBOF( Bof b )
-	{
-		lastBOF = b;
-	}
-	/** return the last BOF read in the stream */
-	// Bof lastBOF{return lastBOF;}
-
-	/**
-	 * get a handle to the first BOF to perform offset functions which don't know where the
-	 * start of the file is due to the compound file format.
-	 * <p/>
-	 * Referred to in Boundsheet as the 'lbPlyPos', this
-	 * is the position of the BOF for the Boundsheet relative
-	 * to the *first* BOF in the file (the firstBOF of the WorkBook)
-	 *
-	 * @see Boundsheet
-	 */
-	@Override
-	public void setFirstBof( Bof b )
-	{
-		firstBOF = b;
-	}
-
-	Bof getFirstBof()
-	{
-		return firstBOF;
 	}
 
 	public String toString()
 	{
 		return getFileName();
-	}
-
-	@Override
-	public String getFileName()
-	{
-		if( factory != null ) // 2003-vers
-		{
-			return factory.getFileName();
-		}
-		return "New Spreadsheet";
 	}
 
 	/**
@@ -2464,8 +2209,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		win1.setFirstTab( bs2.getSheetNum() );
 	}
 
-	// Associate related records
-
 	/**
 	 * return the XF record at the specified index
 	 */
@@ -2484,27 +2227,11 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	}
 
 	/**
-	 * InsertXF inserts an XF record into the workbook level stream,
-	 * For some reason, the addXf only puts it into an array that is never accessed
-	 * on output.  This may have a reason, so I am not overwriting it currently, but
-	 * let's check it out?
-	 */
-	int insertXf( Xf x )
-	{
-		int insertIdx = getXf( getNumXfs() - 1 ).getRecordIndex();
-		// perform default add rsec actions
-		getStreamer().addRecordAt( x, insertIdx + 1 );
-		addRecord( x, false );    // updates xfrecs + formatcache
-		x.ixfe = x.tableidx;
-		return x.tableidx;
-	}
-
-	/**
 	 * internally used in preparation for reading an 2007 and above workbook
 	 */
 	public void removeXfRecs()
 	{
-		// must keep the 1st xf rec as default 
+		// must keep the 1st xf rec as default
 		for( int i = xfrecs.size() - 1; i > 0; i-- )
 		{
 			Xf xf = (Xf) xfrecs.get( i );
@@ -2512,24 +2239,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			xfrecs.remove( i );
 
 		}
-	}
-
-	/**
-	 * TODO: Does this function as desired?   See comment for insertXf() above...
-	 * tracks existing xf recs, used when testing whether xfrec exists or not ...
-	 * -NR 1/06
-	 * ya should - called now from addRecord every time an xf record is added
-	 * NOTE: this is the only place addXf is called
-	 *
-	 * @param xf
-	 * @return
-	 */
-	int addXf( Xf xf )
-	{
-		xfrecs.add( xf );
-		xf.tableidx = xfrecs.size() - 1;    // flag that it's been added to records
-		updateFormatCache( xf );    // links tostring of xf to xf rec for updating/reuse purposes
-		return xf.tableidx;
 	}
 
 	/**
@@ -2543,7 +2252,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	public void updateFormatCache( Xf xf )
 	{
 		if( xf.tableidx != -1 )
-		{    // if this xf has been already added to the workbook 
+		{    // if this xf has been already added to the workbook
 			if( formatCache.containsValue( xf ) )
 			{    // xf signature has changed/it's been updated
 				Iterator ii = formatCache.keySet().iterator();    // remove and update below
@@ -2579,46 +2288,9 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		return formatCache;
 	}
 
-	/**
-	 * Get a substream by name.
-	 */
-	@Override
-	public ByteStreamer getStreamer()
-	{
-		return streamer;
-	}
-
 	public void setSubStream( ByteStreamer s )
 	{
 		streamer = s;
-	}
-
-	/**
-	 * Get the typename for this object.
-	 */
-	static String getTypeName()
-	{
-		return "WorkBook";
-	}
-
-	/**
-	 * Write the contents of the WorkBook bytes to an OutputStream
-	 *
-	 * @param _out
-	 */
-	@Override
-	public int stream( OutputStream _out )
-	{
-		return streamer.streamOut( _out );
-	}
-
-	/**
-	 * get a handle to the factory
-	 */
-	@Override
-	public WorkBookFactory getFactory()
-	{
-		return factory;
 	}
 
 	/**
@@ -2629,7 +2301,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public void copyWorkSheet( String SourceSheetName, String NewSheetName ) throws Exception
 	{
-		Boundsheet origSheet = null;
+		Boundsheet origSheet;
 		origSheet = getWorkSheetByName( SourceSheetName );
 		List chts = origSheet.getCharts();    // 20080630 KSC: Added
 		for( Object cht : chts )
@@ -2666,7 +2338,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public void insertName( Name n )
 	{
-		int namepos = -1;
+		int namepos;
 		Name[] nmx = getNames();
 		if( nmx.length > 0 )
 		{
@@ -2756,11 +2428,11 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		if( msodg == null )
 		{
 			setMSODrawingGroup( (MSODrawingGroup) MSODrawingGroup.getPrototype() );
-			msodg.initNewMSODrawingGroup();    // generate and add required records for drawing records        	
+			msodg.initNewMSODrawingGroup();    // generate and add required records for drawing records
 		}
 		msodg.addMsodrawingrec( mso );
 		MSODrawing hdr = msodg.getMsoHeaderRec( sht );
-		if( (hdr != null) && (!hdr.equals( mso )) )
+		if( (hdr != null) && !hdr.equals( mso ) )
 		{ // already have a header rec
 			if( sht.getCharts().size() > 0 )
 			{
@@ -2778,6 +2450,8 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		msodg.setSpidMax( ++lastSPID );
 		msodg.updateRecord();
 	}
+	/** return the last BOF read in the stream */
+	// Bof lastBOF{return lastBOF;}
 
 	/**
 	 * JM -
@@ -2794,7 +2468,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		if( msodg == null )
 		{
 			setMSODrawingGroup( (MSODrawingGroup) MSODrawingGroup.getPrototype() );
-			msodg.initNewMSODrawingGroup();    // generate and add required records for drawing records        	
+			msodg.initNewMSODrawingGroup();    // generate and add required records for drawing records
 		}
 
 	}
@@ -2808,11 +2482,11 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		Chart chart = getChart( chartname );
 		// TODO: Update Dimensions record??
 		List recs = chart.getXLSrecs();
-		// first rec SHOULD BE MsoDrawing!!!        
+		// first rec SHOULD BE MsoDrawing!!!
 		try
 		{
 			MSODrawing rec = (MSODrawing) recs.get( 0 );
-			msodg.removeMsodrawingrec( rec, sheet, true );    // also remove associated Obj record        
+			msodg.removeMsodrawingrec( rec, sheet, true );    // also remove associated Obj record
 		}
 		catch( Exception e )
 		{
@@ -2840,7 +2514,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	                           String origWorkBookName,
 	                           boolean SSTPopulatedBoundsheet ) throws IOException, ClassNotFoundException
 	{
-		Boundsheet destSheet = null;
+		Boundsheet destSheet;
 		ByteArrayInputStream bais = new ByteArrayInputStream( inbytes );
 		BufferedInputStream bufstr = new BufferedInputStream( bais );
 		ObjectInputStream o = new ObjectInputStream( bufstr );
@@ -2864,7 +2538,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			boundsheets.add( idx, bs );
 			for( int x = 0; x < boundsheets.size(); x++ )
 			{
-				Boundsheet bs1 = (Boundsheet) boundsheets.get( x );
+				Boundsheet bs1 = boundsheets.get( x );
 				boolean udpatewin1 = bs1.selected();
 				if( udpatewin1 )
 				{
@@ -2877,15 +2551,15 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		//remove the existing boundsheet records in the streamer
 		for( int i = 0; i < boundsheets.size(); i++ )
 		{
-			Boundsheet bound = (Boundsheet) boundsheets.get( i );
+			Boundsheet bound = boundsheets.get( i );
 			int position = bound.getRecordIndex();
 			insertLoc = Math.min( insertLoc, position );
-			streamer.removeRecord( (XLSRecord) boundsheets.get( i ) );
+			streamer.removeRecord( boundsheets.get( i ) );
 		}
 		// enter the boundsheet records back in the streamer in correct order
 		for( int i = 0; i < boundsheets.size(); i++ )
 		{
-			Boundsheet bound = (Boundsheet) boundsheets.get( i );
+			Boundsheet bound = boundsheets.get( i );
 			streamer.addRecordAt( bound, insertLoc + i );
 		}
 	}
@@ -2913,7 +2587,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		bound.mc.clear();
 		bound.setWorkBook( this );
 
-		//Check if sheetname already exists!        
+		//Check if sheetname already exists!
 		try
 		{
 			while( getWorkSheetByName( newSheetName ) != null )
@@ -2923,7 +2597,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		catch( WorkSheetNotFoundException we )
 		{
-			; /* good !!!*/
+			/* good !!!*/
 		}
 		bound.setSheetName( newSheetName );
 
@@ -2939,7 +2613,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			}
 			catch( Exception e )
 			{
-				;
 			}
 		}
 		else if( countryRec != null )
@@ -2958,8 +2631,8 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		int newloc = x.offset;
 		// modify the boundsheet rec for its new location/info/name
-		int listenerpos = -1;
-		int newoffset = -1;
+		int listenerpos;
+		int newoffset;
 		if( lastbound != null )
 		{
 			listenerpos = lastbound.getRecordIndex();
@@ -2968,7 +2641,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		else if( x != null )
 		{
-			listenerpos = x.getRecordIndex() - 1;    // account for +1 below     
+			listenerpos = x.getRecordIndex() - 1;    // account for +1 below
 			newoffset = x.offset + x.getLength() + 4;
 		}
 		else
@@ -3002,7 +2675,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		int tout = 0;
 		copying = true;
 
-		// Add an externsheet ref for the new sheet         
+		// Add an externsheet ref for the new sheet
 		if( myexternsheet == null )
 		{
 			addExternsheet();
@@ -3026,7 +2699,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			charts.add( chart );
 		}
 
-		bound.lastObjId = 1;    //  see if resetting obj id helps in file open errors; if so, must reset Note obj id's as well ... 
+		bound.lastObjId = 1;    //  see if resetting obj id helps in file open errors; if so, must reset Note obj id's as well ...
 
 		/********** This loop handles Boundsheet records contained in the sheet level streamer, that is, not the valrecs *****/
 		int numrecs = newrecs.size();
@@ -3034,15 +2707,14 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		{
 			XLSRecord xl = (XLSRecord) newrecs.get( z );
 			addRecord( xl, false );
-				try
-				{
-					log.trace( "Copying: " + xl.toString() + ":" + String.valueOf( newoffset ) + ":" + xl.getLength() );
-				}
-				catch( Exception e )
-				{
-					// TODO This is dumb - if we need the log output for debugging...
-					;
-				}
+			try
+			{
+				log.trace( "Copying: " + xl.toString() + ":" + newoffset + ":" + xl.getLength() );
+			}
+			catch( Exception e )
+			{
+				// TODO This is dumb - if we need the log output for debugging...
+			}
 			if( xl instanceof Codename )
 			{
 				Codename secretagent = (Codename) xl;  // lol -nr
@@ -3056,11 +2728,11 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				n.setExternsheetRef( refnum );
 			}
 			else if( xl instanceof Cf )
-			{    // must check Conditional Format formula refs and handle any external references 
+			{    // must check Conditional Format formula refs and handle any external references
 				try
 				{
 					updateFormulaPtgRefs( ((Cf) xl).getFormula1(), origSheetName, newSheetName, origWorkBookName );
-					// NOTE: FORMULA2 can be null -- TODO: should check here 
+					// NOTE: FORMULA2 can be null -- TODO: should check here
 					updateFormulaPtgRefs( ((Cf) xl).getFormula2(), origSheetName, newSheetName, origWorkBookName );
 				}
 				catch( Exception e )
@@ -3072,7 +2744,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				((Obj) xl).setObjId( bound.lastObjId++ );
 			}
 			else if( (xl.getOpcode() == MSODRAWING) || ((xl.getOpcode() == CONTINUE) && (((Continue) xl).maskedMso != null)) )
-			{    // 20100510 KSC: handle masked mso's            	
+			{    // 20100510 KSC: handle masked mso's
 				MSODrawing mso;
 				if( xl.getOpcode() == MSODRAWING )
 				{
@@ -3089,10 +2761,11 @@ public class WorkBook implements Serializable, XLSConstants, Book
 					msodg.addMsodrawingrec( mso );    // only add when msodg is null b/c otherwise it's added via the addRecord statement above
 				}
 				if( mso.getImageIndex() > 0 )
-				{ //  add image bytes as well, if any        			
+				{ //  add image bytes as well, if any
 					ImageHandle im = bound.getImageByMsoIndex( mso.getImageIndex() );
 					int idx = msodg.addImage( im.getImageBytes(), im.getImageType(), false );
-					bound.imageMap.put( im, idx );    // 20100518 KSC: makes more sense? im.getImageIndex()));	// add new image to map and link to actual imageIndex - moved from above
+					bound.imageMap.put( im,
+					                    idx );    // 20100518 KSC: makes more sense? im.getImageIndex()));	// add new image to map and link to actual imageIndex - moved from above
 					if( idx != mso.getImageIndex() )
 					{
 						mso.updateImageIndex( idx );
@@ -3144,282 +2817,8 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			bound.setSelected( true );
 		}
 
-			log.trace( "changesize for  new boundsheet: " + bound.getSheetName() + ": " + tout );
+		log.trace( "changesize for  new boundsheet: " + bound.getSheetName() + ": " + tout );
 		copying = false;
-	}
-
-	/**
-	 * traverses all rows and their associated cells in the newly transfered sheet,
-	 * ensuring formula/cell references and format references are correctly transfered
-	 * into the current workbook
-	 *
-	 * @param bound source sheet
-	 */
-	private void updateTransferedCellReferences( Boundsheet bound, String origSheetName, String origWorkBookName )
-	{
-		HashMap localFonts = (HashMap) getFontRecsAsXML();
-		List boundFonts = bound.getTransferFonts();        // ALL fonts in the source workbook
-		HashMap localXfs = (HashMap) getXfrecsAsString();
-		List boundXfs = bound.getTransferXfs();
-		// Set the workbook on all the cells
-		Row[] rows = bound.getRows();
-		for( Row row : rows )
-		{
-			row.setWorkBook( this );
-			if( row.getIxfe() != getDefaultIxfe() )
-			{
-				transferFormatRecs( row, localFonts, boundFonts, localXfs, boundXfs );    // 20080709 KSC: handle default ixfe for row
-			}
-			Iterator rowcells = row.getCells().iterator();
-			Mulblank aMul = null;
-			short c = 0;
-			while( rowcells.hasNext() )
-			{
-				BiffRec b = (BiffRec) rowcells.next();
-				if( b.getOpcode() == MULBLANK )
-				{
-					if( aMul.equals( b ) )
-					{
-						c++;
-					}
-					else
-					{
-						aMul = (Mulblank) b;
-						c = (short) aMul.getColFirst();
-					}
-					aMul.setCurrentCell( c );
-				}
-				b.setWorkBook( this );   // Moved to before updateFormulaPtgRefs [BugTracker 1434] 
-				if( b instanceof Formula )
-				{ // Examine Ptg Refs to handle external sheet references not contained in this workbook
-					updateFormulaPtgRefs( (Formula) b, origSheetName, bound.getSheetName(), origWorkBookName );
-					if( ((Formula) b).shared != null )
-					{
-						((Formula) b).shared.setWorkBook( this );
-					}
-
-				}
-				// 20080226 KSC: transfer format, fonts and xf here instead of populateWorkbookWithRemoteData()
-				transferFormatRecs( b, localFonts, boundFonts, localXfs, boundXfs );
-			}
-		}
-		// 20080226 KSC: handle xf's for columns
-		for( Colinfo co : bound.getColinfos() )
-		{
-			transferFormatRecs( co, localFonts, boundFonts, localXfs, boundXfs );
-		}
-		List c = bound.getCharts();
-		for( Object aC : c )
-		{
-			Chart cht = (Chart) aC;
-			ArrayList fontrefs = cht.getFontxRecs();
-			for( Object fontref : fontrefs )
-			{
-				Fontx fontx = (Fontx) fontref;
-				int fid = fontx.getIfnt();
-				if( fid > 3 )
-				{
-					fid = bound.translateFontIndex( fid, localFonts );
-					fontx.setIfnt( fid );
-				}
-			}
-		}
-	}
-
-	/**
-	 * examine all Ptg's referenced by this formula, looking for hanging or missing sheet references
-	 * if found, sets sheet reference to the current sheet (TODO: a better way?)
-	 *
-	 * @param f Formula Rec
-	 */
-	private void updateFormulaPtgRefs( Formula f, String origSheetName, String newSheetName, String origWorkBookName )
-	{
-		try
-		{
-			if( f == null )
-			{
-				return;    // 20100222 KSC
-			}
-			f.populateExpression();
-			Ptg[] p = f.getCellRangePtgs();
-			for( Ptg aP : p )
-			{
-				if( aP instanceof PtgRef )
-				{
-					PtgRef ptg = (PtgRef) aP;
-					try
-					{
-						if( !(ptg instanceof PtgArea3d) || ((PtgArea3d) ptg).getFirstSheet().equals( ((PtgArea3d) ptg).getLastSheet() ) )
-						{
-							String sheetName = ptg.getSheetName();
-							if( sheetName.equals( origSheetName ) )
-							{
-								ptg.setSheetName( newSheetName );
-							}
-							ptg.addToRefTracker();
-/* changed to use above.  don't understand this:
-    						if (!sheetName.equals(origSheetName)) {
-								this.getWorkSheetByName(ptg.getSheetName());
-							ptg.setSheetName(newSheetName);
-    						} else
-    							ptg.setSheetName(newSheetName);
-*/
-						}
-						else
-						{ // uncommon case of two sheet range
-							PtgArea3d pref = (PtgArea3d) ptg;
-//						this.getWorkSheetByName(pref.getFirstPtg().getSheetName());
-// don't understand this			this.getWorkSheetByName(pref.getLastPtg().getSheetName());
-							ptg.setLocation( ptg.toString() );    // reset ixti if nec.
-						}
-					}
-					catch( WorkSheetNotFoundException we )
-					{
-						log.warn( "External Reference encountered upon updating formula references:  Worksheet Reference Found: " + ptg
-								.getSheetName() );
-						ptg.setExternalReference( origWorkBookName );
-					}
-				}
-				else if( aP instanceof PtgExp )
-				{
-					PtgExp ptgexp = (PtgExp) aP;
-					try
-					{
-						Ptg[] pe = ptgexp.getConvertedExpression();    // will fail if ShrFmla hasn't been input yet 
-						for( Ptg aPe : pe )
-						{
-							if( aPe instanceof PtgRef )
-							{
-								PtgRef ptg = (PtgRef) aPe;
-								try
-								{
-									if( ptg instanceof PtgArea3d )
-									{ // PtgRef3d, etc.
-										getWorkSheetByName( ptg.getSheetName() );
-										ptg.setLocation( ptg.toString() );    // reset ixti if nec.
-									}
-									// otherwise, we're good
-								}
-								catch( WorkSheetNotFoundException we )
-								{
-									log.warn(
-											"External References Not Supported:  UpdateFormulaReferences: External Worksheet Reference Found: " + ptg
-													.getSheetName() );
-									ptg.setExternalReference( origWorkBookName );
-								}
-							}
-						}
-					}
-					catch( Exception e )
-					{
-						//if links to "main" ShrFmla, won't be set yet and will give exception - see Shrfmla WorkBook.addRecord 
-					}
-				}
-			}
-		}
-		catch( Exception e )
-		{
-			log.error( "WorkBook.updateFormulaRefs: error parsing expression: " + e, e );
-		}
-	}
-
-	/**
-	 * given a record in an previously external workbook, ensure that xf and font records
-	 * are correctly input into the current workbook and that the pointers are correctly updated
-	 *
-	 * @param b          BiffRec
-	 * @param localFonts HashMap of string version of all fonts, font nums in current workbook
-	 * @param boundFonts List of string version of all fonts, font nums in external workbook
-	 * @param localXfs   HashMap of string version of all xfs, xf nums in current workbook
-	 * @param boundXfs   List of string version of all xfs, xf nums in external workbook
-	 */
-	private void transferFormatRecs( BiffRec b,
-	                                 HashMap<String, Integer> localFonts,
-	                                 List boundFonts,
-	                                 HashMap<String, Integer> localXfs,
-	                                 List boundXfs )
-	{
-		int oldXfNum = b.getIxfe();
-		int localNum = transferFormatRecs( oldXfNum, localFonts, boundFonts, localXfs, boundXfs );
-		if( localNum != -1 )
-		{
-			b.setIxfe( localNum );
-		}
-	}
-
-	/**
-	 * given a record in an previously external workbook, ensure that xf and font records
-	 * are correctly input into the current workbook and that the pointers are correctly updated
-	 *
-	 * @param b          BiffRec
-	 * @param localFonts HashMap of string version of all fonts, font nums in current workbook
-	 * @param boundFonts List of string version of all fonts, font nums in external workbook
-	 * @param localXfs   HashMap of string version of all xfs, xf nums in current workbook
-	 * @param boundXfs   List of string version of all xfs, xf nums in external workbook
-	 */
-	private int transferFormatRecs( int oldXfNum,
-	                                HashMap<String, Integer> localFonts,
-	                                List boundFonts,
-	                                HashMap<String, Integer> localXfs,
-	                                List boundXfs )
-	{
-		int localNum = -1;
-		if( boundXfs.size() > oldXfNum )
-		{// if haven't populatedForTransfer i.e. haven't opted to transfer formats ...
-			Xf origxf = (Xf) boundXfs.get( oldXfNum );        // clone xf so modifcations don't affect original
-			if( origxf != null )
-			{
-				/** FONT **/
-				// must handle font first in order to create xf below
-				// see if referenced xf + fonts are already in workbook; if not, add
-				int localfNum;
-				// check to see if the font needs to be added 
-				int fnum = origxf.getIfnt();
-				if( fnum > 3 )
-				{
-					fnum--;
-				}
-				Font thisFont = (Font) boundFonts.get( fnum );
-				String xmlFont = "<FONT><" + thisFont.getXML() + "/></FONT>";
-				Object fontNum = localFonts.get( xmlFont );
-				if( fontNum != null )
-				{ // then get the fontnum in this book
-					localfNum = (Integer) fontNum;
-				}
-				else
-				{ // it's a new font for this workbook, add it in
-					localfNum = insertFont( thisFont ) + 1;
-					localFonts.put( xmlFont, localfNum );
-				}
-
-				/** XF **/
-				Xf localxf = FormatHandle.cloneXf( origxf, origxf.getFont(), this );    // clone xf so modifcations don't affect original
-				// input "local" versions of format and font
-
-				/** FORMAT **/
-				Format fmt = origxf.getFormat();    // number format - is null if format is general ...
-				if( fmt != null ) // add if necessary
-				{
-					localxf.setFormatPattern( fmt.getFormat() );    // adds new format pattern if not found
-				}
-				localxf.setFont( localfNum );
-
-				// now check out to see if xf needs to be added 
-				String xmlxf = localxf.toString();
-				Object xfNum = localXfs.get( xmlxf );
-				if( xfNum == null )
-				{ // insert it into the book
-					localNum = insertXf( localxf );
-					localXfs.put( xmlxf, localNum );
-				}
-				else  // already exists in the destination
-				{
-					localNum = (Integer) xfNum;
-				}
-
-			}
-		}
-		return localNum;
 	}
 
 	public void setStringEncodingMode( int mode )
@@ -3439,6 +2838,8 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 	}
 
+	// Associate related records
+
 	/**
 	 * Returns a Chart Handle
 	 *
@@ -3446,8 +2847,8 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public Chart getChart( String chartname ) throws ChartNotFoundException
 	{
-		AbstractList cv = getChartVect();
-		Chart cht = null;
+		List cv = getChartVect();
+		Chart cht;
 		// Get by MSODG Drawing Name
 		for( int x = 0; x < cv.size(); x++ )
 		{
@@ -3488,8 +2889,8 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public void removeChart( String chartname ) throws ChartNotFoundException
 	{
-		AbstractList cv = getChartVect();
-		Chart cht = null;
+		List cv = getChartVect();
+		Chart cht;
 		for( int x = 0; x < cv.size(); x++ )
 		{
 			cht = (Chart) cv.get( x );
@@ -3594,7 +2995,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public SxStreamID getPivotStream( int cacheid )
 	{
-//int z= 0;    	
+//int z= 0;
 		for( Object aPtstream : ptstream )
 		{
 			int sid = ((SxStreamID) aPtstream).getStreamID();
@@ -3607,7 +3008,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 /*    	List records= this.getStreamer().records;
     	for (int i= 0; i < records.size(); i++) {
     		int opcode= ((BiffRec) records.get(i)).getOpcode();
-    		if (opcode==SXSTREAMID) { 
+    		if (opcode==SXSTREAMID) {
     			int sid= ((SxStreamID) records.get(i)).getStreamID() + 1;
     			if (sid==cacheid)
     				return (SxStreamID) records.get(i);
@@ -3619,7 +3020,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	/**
 	 * @return
 	 */
-	public AbstractList getHlinklookup()
+	public List getHlinklookup()
 	{
 		return hlinklookup;
 	}
@@ -3627,7 +3028,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	/**
 	 * @return
 	 */
-	public AbstractList getMergecelllookup()
+	public List getMergecelllookup()
 	{
 		return mergecelllookup;
 	}
@@ -3642,7 +3043,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public void initializeIndirectFormulas()
 	{
-		Iterator i = indirectFormulas.iterator();    // contains all INDIRECT funcvars + params 
+		Iterator i = indirectFormulas.iterator();    // contains all INDIRECT funcvars + params
 		while( i.hasNext() )
 		{
 			Formula f = (Formula) i.next();
@@ -3670,10 +3071,10 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				{
 					loc++;
 				}
-				streamer.addRecordAt( sb, loc );    // 20080306 KSC: do first 'cause externsheet now references global sb store 
+				streamer.addRecordAt( sb, loc );    // 20080306 KSC: do first 'cause externsheet now references global sb store
 				addRecord( sb, false );
 				Externsheet ex = (Externsheet) Externsheet.getPrototype( 0, 0, this );
-				streamer.addRecordAt( ex, loc + 1 );// 20080306 KSC: must inc loc since now inserting after sb           
+				streamer.addRecordAt( ex, loc + 1 );// 20080306 KSC: must inc loc since now inserting after sb
 				addRecord( ex, false );
 				myexternsheet = ex;
 			}
@@ -3683,17 +3084,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			}
 
 		}
-	}
-
-	/**
-	 * Sets the ExtenXLS calculation mode for the workbook.
-	 *
-	 * @param CalcMode
-	 * @see WorkBookHandle.setFormulaCalculationMode()
-	 */
-	public void setCalcMode( int mode )
-	{
-		CalcMode = mode;
 	}
 
 	/**
@@ -3708,9 +3098,20 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	}
 
 	/**
+	 * Sets the ExtenXLS calculation mode for the workbook.
+	 *
+	 * @param CalcMode
+	 * @see WorkBookHandle.setFormulaCalculationMode()
+	 */
+	public void setCalcMode( int mode )
+	{
+		CalcMode = mode;
+	}
+
+	/**
 	 * @return Returns the xfrecs.
 	 */
-	public AbstractList getXfrecs()
+	public List getXfrecs()
 	{
 		return xfrecs;
 	}
@@ -3718,7 +3119,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	/**
 	 * Return the font records
 	 */
-	public AbstractList getFontRecs()
+	public List getFontRecs()
 	{
 		return fonts;
 	}
@@ -3824,8 +3225,13 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		return refTracker;
 	}
 
-	// OOXML Additions
-	private boolean isExcel2007 = false;
+	/**
+	 * returns truth of "Excel 2007" format
+	 */
+	public boolean getIsExcel2007()
+	{
+		return isExcel2007;
+	}
 
 	/**
 	 * set truth of "Is Excel 2007"
@@ -3839,20 +3245,22 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	}
 
 	/**
-	 * returns truth of "Excel 2007" format
-	 */
-	public boolean getIsExcel2007()
-	{
-		return isExcel2007;
-	}
-
-	/**
 	 * returns the workbook codename used by vba macros OOXML-specific
 	 */
 	public String getCodename()
 	{
 		return ooxmlcodename;
 	}
+
+	/**
+	 * sets the workbook codename used by vba macros OOXML-specific
+	 *
+	 * @param s
+	 */
+	public void setCodename( String s )
+	{
+		ooxmlcodename = s;
+	}    // TODO: input into Codename record
 
 	/**
 	 * returns true if the default language selected in Excel is one of
@@ -3900,53 +3308,29 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public boolean defaultLanguageIsDBCS()
 	{
-		return ((defaultLanguage == 81) ||
+		return (defaultLanguage == 81) ||
 				(defaultLanguage == 886) ||
 				(defaultLanguage == 86) ||
-				(defaultLanguage == 82));
+				(defaultLanguage == 82);
 		// PROBLEM WITH THIS:  POSSIBLE TO BE SET AS DBCS DEFAULT LANGUAGE
 		// BUT HAVE NON-DBCS TEXT or VISA VERSA
-    	
+
     	/*
-    	 * In a double-byte character set, some characters require two bytes, 
-    	 * while some require only one byte. 
-    	 * The language driver can distinguish between these two types of characters by designating 
-    	 * some characters as "lead bytes." 
-    	 * A lead byte will be followed by another byte (a "tail byte") to create a 
-    	 * Double-Byte Character (DBC). 
-    	 * The set of lead bytes is different for each language. 
-    	 * 
-    	 * Lead bytes are always guaranteed to be extended characters; no 7-bit ASCII characters 
-    	 * can be lead bytes. 
-    	 * The tail byte may be any byte except a NULL byte. 
-    	 * The end of a string is always defined as the first NULL byte in the string. 
-    	 * Lead bytes are legal tail bytes; the only way to tell if a byte is acting as a 
+    	 * In a double-byte character set, some characters require two bytes,
+    	 * while some require only one byte.
+    	 * The language driver can distinguish between these two types of characters by designating
+    	 * some characters as "lead bytes."
+    	 * A lead byte will be followed by another byte (a "tail byte") to create a
+    	 * Double-Byte Character (DBC).
+    	 * The set of lead bytes is different for each language.
+    	 *
+    	 * Lead bytes are always guaranteed to be extended characters; no 7-bit ASCII characters
+    	 * can be lead bytes.
+    	 * The tail byte may be any byte except a NULL byte.
+    	 * The end of a string is always defined as the first NULL byte in the string.
+    	 * Lead bytes are legal tail bytes; the only way to tell if a byte is acting as a
     	 * lead byte is from the context.
     	 */
-	}
-
-	/**
-	 * sets the workbook codename used by vba macros OOXML-specific
-	 *
-	 * @param s
-	 */
-	public void setCodename( String s )
-	{
-		ooxmlcodename = s;
-	}    // TODO: input into Codename record
-
-	/**
-	 * sets the first sheet (int) in the workbook OOXML-specific
-	 * <p/>
-	 * naive implementaiton does not account for hidden sheets
-	 * <p/>
-	 * Mar 15, 2010
-	 *
-	 * @param f
-	 */
-	public void setFirstSheet( int f )
-	{
-		firstSheet = f;
 	}
 
 	/**
@@ -3969,7 +3353,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		}
 		catch( Exception x )
 		{
-			;
 		}
 
 		// first sheet is hidden -- fix
@@ -3985,7 +3368,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			}
 			catch( Exception x )
 			{
-				;
 			}
 		}
 		// all else failed
@@ -3993,19 +3375,33 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	}
 
 	/**
-	 * sets the list of dxf's (incremental style info) (int) OOXML-specific
+	 * sets the first sheet (int) in the workbook OOXML-specific
+	 * <p/>
+	 * naive implementaiton does not account for hidden sheets
+	 * <p/>
+	 * Mar 15, 2010
+	 *
+	 * @param f
 	 */
-	public void setDxfs( ArrayList dxfs )
+	public void setFirstSheet( int f )
 	{
-		this.dxfs = dxfs;
+		firstSheet = f;
 	}
 
 	/**
 	 * returns the list of dxf's (incremental style info) (int) OOXML-specific
 	 */
-	public ArrayList getDxfs()
+	public List getDxfs()
 	{
 		return dxfs;
+	}
+
+	/**
+	 * sets the list of dxf's (incremental style info) (int) OOXML-specific
+	 */
+	public void setDxfs( List dxfs )
+	{
+		this.dxfs = dxfs;
 	}
 
 	/**
@@ -4017,20 +3413,10 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	 */
 	public String[] getAllStrings()
 	{
-		ArrayList al = getSharedStringTable().getAllStrings();
+		List al = getSharedStringTable().getAllStrings();
 		String[] s = new String[al.size()];
 		s = (String[]) al.toArray( s );
 		return s;
-	}
-
-	/**
-	 * set the pivot cache pointer
-	 *
-	 * @param pc initialized pivot cache
-	 */
-	public void setPivotCache( PivotCache pc )
-	{
-		ptcache = pc;
 	}
 
 	/**
@@ -4044,13 +3430,23 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	}
 
 	/**
+	 * set the pivot cache pointer
+	 *
+	 * @param pc initialized pivot cache
+	 */
+	public void setPivotCache( PivotCache pc )
+	{
+		ptcache = pc;
+	}
+
+	/**
 	 * clear out ALL sheet object refs
 	 */
 	public void closeSheets()
 	{
 		for( int i = boundsheets.size() - 1; i > 0; i-- )
 		{
-			Boundsheet b = (Boundsheet) boundsheets.get( i );
+			Boundsheet b = boundsheets.get( i );
 			if( b.streamer != null )
 			{    // do separately because may call boundsheet close
 				b.streamer.close();
@@ -4063,7 +3459,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			}
 		}
 		Object[] recs = getStreamer().getBiffRecords();
-		boolean resetVars = (recs[0] != null);
+		boolean resetVars = recs[0] != null;
 		boundsheets.clear();
 		for( int i = 0; i < formulas.size(); i++ )
 		{
@@ -4132,10 +3528,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 		workSheets.clear();
 	}
 
-	protected void closeRecords()
-	{
-	}
-
 	/**
 	 * clear out object references in prep for closing workbook
 	 */
@@ -4152,7 +3544,6 @@ public class WorkBook implements Serializable, XLSConstants, Book
 			}
 			catch( Exception e )
 			{
-				;
 			}
 		}
 		contHandler.close();
@@ -4300,6 +3691,582 @@ public class WorkBook implements Serializable, XLSConstants, Book
 	public void setDefaultIxfe( int defaultIxfe )
 	{
 		this.defaultIxfe = defaultIxfe;
+	}
+
+	protected void reflectiveClone( WorkBook source )
+	{
+		for( Field field : WorkBook.class.getDeclaredFields() )
+		{
+			if( Modifier.isStatic( field.getModifiers() ) )
+			{
+				continue;
+			}
+
+			try
+			{
+				field.set( this, field.get( source ) );
+			}
+			catch( IllegalAccessException e )
+			{
+				throw new RuntimeException( e );
+			}
+		}
+	}
+
+	protected ByteStreamer createByteStreamer()
+	{
+		return new ByteStreamer( this );
+	}
+
+	protected void addPivotTable( Sxview sx )
+	{
+		ptViews.put( sx.getTableName(), sx );    // Pivot Table View ==Top-level record for a Pivot Table
+	}
+
+	/**
+	 * for those cases where a formula calculation adds a new string rec
+	 * need to explicitly set lastFormula before calling addRecord
+	 *
+	 * @param f
+	 */
+	protected void setLastFormula( Formula f )
+	{
+		lastFormula = f;
+	}
+
+	protected void closeRecords()
+	{
+	}
+
+	/**
+	 * init the ImageHandles
+	 */
+	void initImages()
+	{
+		lastSPID = Math.max( lastSPID,
+		                     msodg.getSpidMax() ); // 20090508 KSC: lastSPID should also account for charts [BUGTRACKER 2372 copyChartToSheet error]
+		// 20071217 KSC: clear out imageMap before inputting!
+		for( int x = 0; x < getWorkSheets().length; x++ )
+		{
+			getWorkSheets()[x].imageMap.clear();
+		}
+		for( int i = 0; i < msodg.getMsodrawingrecs().size(); i++ )
+		{    // 20070914 KSC: store msodrawingrecs with MSODrawingGroup instead of here
+			MSODrawing rec = (MSODrawing) msodg.getMsodrawingrecs().get( i );
+			lastSPID = Math.max( lastSPID, rec.getlastSPID() );    // valid for header msodrawing record(s)
+			int imgdx = rec.getImageIndex() - 1;    // it's 1-based
+			byte[] imageData = msodg.getImageBytes( imgdx );
+			if( imageData != null )
+			{
+				ImageHandle im = new ImageHandle( imageData, rec.getSheet() );
+				im.setMsgdrawing( rec );                    //Link 2 actual Msodrawing rec
+				im.setName( rec.getName() );                // set image name from rec ...
+				im.setShapeName( rec.getShapeName() );    // set shape name as well ...
+				im.setImageType( msodg.getImageType( imgdx ) );// 20100519 KSC: added!
+				rec.getSheet().imageMap.put( im, imgdx );
+			}
+		}
+	}
+
+	/**
+	 * associate default row/col size recs
+	 */
+	void setDefaultRowHeightRec( DefaultRowHeight dr )
+	{
+		drh = dr;
+	}
+
+	Index getLastINDEX()
+	{
+		return lastidx;
+	}
+
+	/**
+	 * set the last processed Index record
+	 */
+	private void setLastINDEX( Index id )
+	{
+		lastidx = id;
+	}
+
+	/**
+	 * returns the boundsheets for this book as an array
+	 */
+	Boundsheet[] getWorkSheets()
+	{
+		Boundsheet[] ret = new Boundsheet[boundsheets.size()];
+		return boundsheets.toArray( ret );
+	}
+
+	/**
+	 * set the last BOF read in the stream
+	 */
+	void setLastBOF( Bof b )
+	{
+		lastBOF = b;
+	}
+
+	Bof getFirstBof()
+	{
+		return firstBOF;
+	}
+
+	/**
+	 * get a handle to the first BOF to perform offset functions which don't know where the
+	 * start of the file is due to the compound file format.
+	 * <p/>
+	 * Referred to in Boundsheet as the 'lbPlyPos', this
+	 * is the position of the BOF for the Boundsheet relative
+	 * to the *first* BOF in the file (the firstBOF of the WorkBook)
+	 *
+	 * @see Boundsheet
+	 */
+	@Override
+	public void setFirstBof( Bof b )
+	{
+		firstBOF = b;
+	}
+
+	/**
+	 * Write the contents of the WorkBook bytes to an OutputStream
+	 *
+	 * @param _out
+	 */
+	@Override
+	public int stream( OutputStream _out )
+	{
+		return streamer.streamOut( _out );
+	}
+
+	@Override
+	public String getFileName()
+	{
+		if( factory != null ) // 2003-vers
+		{
+			return factory.getFileName();
+		}
+		return "New Spreadsheet";
+	}
+
+	/**
+	 * get a handle to the factory
+	 */
+	@Override
+	public WorkBookFactory getFactory()
+	{
+		return factory;
+	}
+
+	/**
+	 * get a handle to the Reader for this
+	 * WorkBook.
+	 */
+	@Override
+	public void setFactory( WorkBookFactory r )
+	{
+		factory = r;
+	}
+
+	/**
+	 * Dec 15, 2010
+	 *
+	 * @param rec
+	 * @return
+	 */
+	@Override
+	public Boundsheet getSheetFromRec( BiffRec rec, Long lbplypos )
+	{
+		Boundsheet bs;
+
+		if( rec.getSheet() != null )
+		{
+			bs = rec.getSheet();
+		}
+		else if( lbplypos != null )
+		{
+			bs = getWorkSheet( lbplypos );
+		}
+		else
+		{
+			bs = lastbound;
+		}
+		return bs;
+	}
+
+	/**
+	 * InsertXF inserts an XF record into the workbook level stream,
+	 * For some reason, the addXf only puts it into an array that is never accessed
+	 * on output.  This may have a reason, so I am not overwriting it currently, but
+	 * let's check it out?
+	 */
+	int insertXf( Xf x )
+	{
+		int insertIdx = getXf( getNumXfs() - 1 ).getRecordIndex();
+		// perform default add rsec actions
+		getStreamer().addRecordAt( x, insertIdx + 1 );
+		addRecord( x, false );    // updates xfrecs + formatcache
+		x.ixfe = x.tableidx;
+		return x.tableidx;
+	}
+
+	/**
+	 * TODO: Does this function as desired?   See comment for insertXf() above...
+	 * tracks existing xf recs, used when testing whether xfrec exists or not ...
+	 * -NR 1/06
+	 * ya should - called now from addRecord every time an xf record is added
+	 * NOTE: this is the only place addXf is called
+	 *
+	 * @param xf
+	 * @return
+	 */
+	int addXf( Xf xf )
+	{
+		xfrecs.add( xf );
+		xf.tableidx = xfrecs.size() - 1;    // flag that it's been added to records
+		updateFormatCache( xf );    // links tostring of xf to xf rec for updating/reuse purposes
+		return xf.tableidx;
+	}
+
+	private void addMergedcells( Mergedcells c )
+	{
+		mergecelllookup.add( c );
+	}
+
+	private void addHlink( Hlink r )
+	{
+		hlinklookup.add( r );
+	}
+
+	/**
+	 * Initializes the format lookup to contain the built-in formats.
+	 */
+	private void initBuiltinFormats()
+	{
+		String[][] formats = FormatConstantsImpl.getBuiltinFormats();
+
+		for( String[] format : formats )
+		{
+			formatlookup.put( format[0].toUpperCase(), Short.valueOf( format[1], 16 ) );
+		}
+	}
+
+	/**
+	 * add a Boundsheet to the WorkBook
+	 */
+	private void addWorkSheet( Long lbplypos, Boundsheet sheet )
+	{
+		if( sheet == null )
+		{
+			log.warn( "WorkBook.addWorkSheet() attempting to add null sheet." );
+			return;
+		}
+		lastbound = sheet;
+		log.debug( "Workbook Adding Sheet: '{}' : lbplypos '{}'", sheet.getSheetName(), lbplypos );
+		workSheets.put( lbplypos, sheet );
+		boundsheets.add( sheet );
+	}
+
+	/**
+	 * Updates all the name records in the workbook that are bound to a
+	 * worksheet scope (as opposed to a workbook scope).  Name records use
+	 * their own non-externsheet based sheet references, so need to be modified
+	 * whenever a sheet delete (or non-last sheet insert) operation occurs
+	 */
+	private void updateScopedNamedRanges()
+	{
+		for( int i = 0; i < boundsheets.size(); i++ )
+		{
+			boundsheets.get( i ).updateLocalNameReferences();
+		}
+	}
+
+	/**
+	 * returns the Boundsheet identified by its
+	 * offset to the BOF record indicating the
+	 * start of the Boundsheet data stream.
+	 * <p/>
+	 * used internally to access the Sheets to
+	 * ensure that the lbplypos is correct -- essential
+	 * to proper operation of XLS file.
+	 *
+	 * @param Long lbplypos of Boundsheet
+	 */
+	private Boundsheet getWorkSheet( Long lbplypos )
+	{
+		return (Boundsheet) workSheets.get( lbplypos );
+	}
+
+	/**
+	 * traverses all rows and their associated cells in the newly transfered sheet,
+	 * ensuring formula/cell references and format references are correctly transfered
+	 * into the current workbook
+	 *
+	 * @param bound source sheet
+	 */
+	private void updateTransferedCellReferences( Boundsheet bound, String origSheetName, String origWorkBookName )
+	{
+		HashMap localFonts = (HashMap) getFontRecsAsXML();
+		List boundFonts = bound.getTransferFonts();        // ALL fonts in the source workbook
+		HashMap localXfs = (HashMap) getXfrecsAsString();
+		List boundXfs = bound.getTransferXfs();
+		// Set the workbook on all the cells
+		Row[] rows = bound.getRows();
+		for( Row row : rows )
+		{
+			row.setWorkBook( this );
+			if( row.getIxfe() != getDefaultIxfe() )
+			{
+				transferFormatRecs( row, localFonts, boundFonts, localXfs, boundXfs );    // 20080709 KSC: handle default ixfe for row
+			}
+			Iterator rowcells = row.getCells().iterator();
+			Mulblank aMul = null;
+			short c = 0;
+			while( rowcells.hasNext() )
+			{
+				BiffRec b = (BiffRec) rowcells.next();
+				if( b.getOpcode() == MULBLANK )
+				{
+					if( aMul.equals( b ) )
+					{
+						c++;
+					}
+					else
+					{
+						aMul = (Mulblank) b;
+						c = (short) aMul.getColFirst();
+					}
+					aMul.setCurrentCell( c );
+				}
+				b.setWorkBook( this );   // Moved to before updateFormulaPtgRefs [BugTracker 1434]
+				if( b instanceof Formula )
+				{ // Examine Ptg Refs to handle external sheet references not contained in this workbook
+					updateFormulaPtgRefs( (Formula) b, origSheetName, bound.getSheetName(), origWorkBookName );
+					if( ((Formula) b).shared != null )
+					{
+						((Formula) b).shared.setWorkBook( this );
+					}
+
+				}
+				// 20080226 KSC: transfer format, fonts and xf here instead of populateWorkbookWithRemoteData()
+				transferFormatRecs( b, localFonts, boundFonts, localXfs, boundXfs );
+			}
+		}
+		// 20080226 KSC: handle xf's for columns
+		for( Colinfo co : bound.getColinfos() )
+		{
+			transferFormatRecs( co, localFonts, boundFonts, localXfs, boundXfs );
+		}
+		List c = bound.getCharts();
+		for( Object aC : c )
+		{
+			Chart cht = (Chart) aC;
+			ArrayList fontrefs = cht.getFontxRecs();
+			for( Object fontref : fontrefs )
+			{
+				Fontx fontx = (Fontx) fontref;
+				int fid = fontx.getIfnt();
+				if( fid > 3 )
+				{
+					fid = bound.translateFontIndex( fid, localFonts );
+					fontx.setIfnt( fid );
+				}
+			}
+		}
+	}
+
+	/**
+	 * examine all Ptg's referenced by this formula, looking for hanging or missing sheet references
+	 * if found, sets sheet reference to the current sheet (TODO: a better way?)
+	 *
+	 * @param f Formula Rec
+	 */
+	private void updateFormulaPtgRefs( Formula f, String origSheetName, String newSheetName, String origWorkBookName )
+	{
+		try
+		{
+			if( f == null )
+			{
+				return;    // 20100222 KSC
+			}
+			f.populateExpression();
+			Ptg[] p = f.getCellRangePtgs();
+			for( Ptg aP : p )
+			{
+				if( aP instanceof PtgRef )
+				{
+					PtgRef ptg = (PtgRef) aP;
+					try
+					{
+						if( !(ptg instanceof PtgArea3d) || ((PtgArea3d) ptg).getFirstSheet().equals( ((PtgArea3d) ptg).getLastSheet() ) )
+						{
+							String sheetName = ptg.getSheetName();
+							if( sheetName.equals( origSheetName ) )
+							{
+								ptg.setSheetName( newSheetName );
+							}
+							ptg.addToRefTracker();
+/* changed to use above.  don't understand this:
+    						if (!sheetName.equals(origSheetName)) {
+								this.getWorkSheetByName(ptg.getSheetName());
+							ptg.setSheetName(newSheetName);
+    						} else
+    							ptg.setSheetName(newSheetName);
+*/
+						}
+						else
+						{ // uncommon case of two sheet range
+							PtgArea3d pref = (PtgArea3d) ptg;
+//						this.getWorkSheetByName(pref.getFirstPtg().getSheetName());
+// don't understand this			this.getWorkSheetByName(pref.getLastPtg().getSheetName());
+							ptg.setLocation( ptg.toString() );    // reset ixti if nec.
+						}
+					}
+					catch( WorkSheetNotFoundException we )
+					{
+						log.warn( "External Reference encountered upon updating formula references:  Worksheet Reference Found: " + ptg.getSheetName() );
+						ptg.setExternalReference( origWorkBookName );
+					}
+				}
+				else if( aP instanceof PtgExp )
+				{
+					PtgExp ptgexp = (PtgExp) aP;
+					try
+					{
+						Ptg[] pe = ptgexp.getConvertedExpression();    // will fail if ShrFmla hasn't been input yet
+						for( Ptg aPe : pe )
+						{
+							if( aPe instanceof PtgRef )
+							{
+								PtgRef ptg = (PtgRef) aPe;
+								try
+								{
+									if( ptg instanceof PtgArea3d )
+									{ // PtgRef3d, etc.
+										getWorkSheetByName( ptg.getSheetName() );
+										ptg.setLocation( ptg.toString() );    // reset ixti if nec.
+									}
+									// otherwise, we're good
+								}
+								catch( WorkSheetNotFoundException we )
+								{
+									log.warn(
+											"External References Not Supported:  UpdateFormulaReferences: External Worksheet Reference Found: " + ptg
+													.getSheetName() );
+									ptg.setExternalReference( origWorkBookName );
+								}
+							}
+						}
+					}
+					catch( Exception e )
+					{
+						//if links to "main" ShrFmla, won't be set yet and will give exception - see Shrfmla WorkBook.addRecord
+					}
+				}
+			}
+		}
+		catch( Exception e )
+		{
+			log.error( "WorkBook.updateFormulaRefs: error parsing expression: " + e, e );
+		}
+	}
+
+	/**
+	 * given a record in an previously external workbook, ensure that xf and font records
+	 * are correctly input into the current workbook and that the pointers are correctly updated
+	 *
+	 * @param b          BiffRec
+	 * @param localFonts HashMap of string version of all fonts, font nums in current workbook
+	 * @param boundFonts List of string version of all fonts, font nums in external workbook
+	 * @param localXfs   HashMap of string version of all xfs, xf nums in current workbook
+	 * @param boundXfs   List of string version of all xfs, xf nums in external workbook
+	 */
+	private void transferFormatRecs( BiffRec b,
+	                                 HashMap<String, Integer> localFonts,
+	                                 List boundFonts,
+	                                 HashMap<String, Integer> localXfs,
+	                                 List boundXfs )
+	{
+		int oldXfNum = b.getIxfe();
+		int localNum = transferFormatRecs( oldXfNum, localFonts, boundFonts, localXfs, boundXfs );
+		if( localNum != -1 )
+		{
+			b.setIxfe( localNum );
+		}
+	}
+
+	/**
+	 * given a record in an previously external workbook, ensure that xf and font records
+	 * are correctly input into the current workbook and that the pointers are correctly updated
+	 *
+	 * @param b          BiffRec
+	 * @param localFonts HashMap of string version of all fonts, font nums in current workbook
+	 * @param boundFonts List of string version of all fonts, font nums in external workbook
+	 * @param localXfs   HashMap of string version of all xfs, xf nums in current workbook
+	 * @param boundXfs   List of string version of all xfs, xf nums in external workbook
+	 */
+	private int transferFormatRecs( int oldXfNum,
+	                                HashMap<String, Integer> localFonts,
+	                                List boundFonts,
+	                                HashMap<String, Integer> localXfs,
+	                                List boundXfs )
+	{
+		int localNum = -1;
+		if( boundXfs.size() > oldXfNum )
+		{// if haven't populatedForTransfer i.e. haven't opted to transfer formats ...
+			Xf origxf = (Xf) boundXfs.get( oldXfNum );        // clone xf so modifcations don't affect original
+			if( origxf != null )
+			{
+				/** FONT **/
+				// must handle font first in order to create xf below
+				// see if referenced xf + fonts are already in workbook; if not, add
+				int localfNum;
+				// check to see if the font needs to be added
+				int fnum = origxf.getIfnt();
+				if( fnum > 3 )
+				{
+					fnum--;
+				}
+				Font thisFont = (Font) boundFonts.get( fnum );
+				String xmlFont = "<FONT><" + thisFont.getXML() + "/></FONT>";
+				Object fontNum = localFonts.get( xmlFont );
+				if( fontNum != null )
+				{ // then get the fontnum in this book
+					localfNum = (Integer) fontNum;
+				}
+				else
+				{ // it's a new font for this workbook, add it in
+					localfNum = insertFont( thisFont ) + 1;
+					localFonts.put( xmlFont, localfNum );
+				}
+
+				/** XF **/
+				Xf localxf = FormatHandle.cloneXf( origxf, origxf.getFont(), this );    // clone xf so modifcations don't affect original
+				// input "local" versions of format and font
+
+				/** FORMAT **/
+				Format fmt = origxf.getFormat();    // number format - is null if format is general ...
+				if( fmt != null ) // add if necessary
+				{
+					localxf.setFormatPattern( fmt.getFormat() );    // adds new format pattern if not found
+				}
+				localxf.setFont( localfNum );
+
+				// now check out to see if xf needs to be added
+				String xmlxf = localxf.toString();
+				Object xfNum = localXfs.get( xmlxf );
+				if( xfNum == null )
+				{ // insert it into the book
+					localNum = insertXf( localxf );
+					localXfs.put( xmlxf, localNum );
+				}
+				else  // already exists in the destination
+				{
+					localNum = (Integer) xfNum;
+				}
+
+			}
+		}
+		return localNum;
 	}
 
 }

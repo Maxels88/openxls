@@ -22,6 +22,9 @@
         <level value="DEBUG"/>
     </logger>
 
+    <logger name="org.openxls.formats.XLS.ExpressionParser">
+        <level value="DEBUG"/>
+    </logger>
     <logger name="org.openxls.formats.XLS.XLSRecordFactory">
         <level value="INFO"/>
     </logger>
@@ -30,7 +33,7 @@
     </logger>
 
     <root>
-        <priority value="TRACE"/>
+        <priority value="DEBUG"/>
         <appender-ref ref="console"/>
     </root>
 

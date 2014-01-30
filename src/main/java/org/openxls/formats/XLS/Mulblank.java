@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <b>Mulblank: Multiple Blank Cells (BEh)</b><br>
@@ -307,15 +308,29 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 	}
 
 	/**
-	 * revise range of cells this Mulblank refers to; return true if no more blanks in range
-	 *
+	 * Revise range of cells this Mulblank refers to.
 	 * @param c col number to remove, 0-based
+	 * @return A list of Cells that replace this Mulblank.  Possibly empty, but never null.
 	 */
-	public boolean removeCell( short c )
+	public List<CellRec> removeCell( short c )
 	{
+		List<CellRec> resultCells = new ArrayList<>();
+
+		if( (c < colFirst) || (c > colLast) )
+		{
+			String msg = String.format( "Attempt to remove col:%d which is outside col range: %d - %d", c, colFirst, colLast );
+			throw new IllegalArgumentException( msg );
+		}
+
 		if( c == colFirst )
 		{
 			colFirst++;
+			col++;
+			if( colFirst > colLast )
+			{
+				return resultCells;
+			}
+
 			byte[] tmp = new byte[rgixfe.length - 2];
 			System.arraycopy( rgixfe, 2, tmp, 0, tmp.length );    // skip first
 			rgixfe = tmp;
@@ -323,77 +338,102 @@ public final class Mulblank extends XLSCellRecord /*implements Mul*/
 		else if( c == colLast )
 		{
 			colLast--;
+			col--;
+			if( colFirst > colLast )
+			{
+				return resultCells;
+			}
+
 			byte[] tmp = new byte[rgixfe.length - 2];
 			System.arraycopy( rgixfe, 0, tmp, 0, tmp.length );    // skip last
 			rgixfe = tmp;
 		}
-		if( (c > colFirst) && (c < colLast) )
+		else
 		{
 			// must break apart Mulblank as now is non-contiguous ...
 			// keep first colFirst->c as a MulBlank
 			try
 			{
-				// create the blank records
+				// TODO: Why doesnt this create a Mulblank?
+				// Create the blank records from the next column to the end of the column range...
 				for( int i = c + 1; i <= colLast; i++ )
 				{
-					byte[] newblank = { 0, 0, 0, 0, 0, 0 };
+					byte[] blankBytes = { 0, 0, 0, 0, 0, 0 };
 					// set the row...
-					System.arraycopy( getBytesAt( 0, 2 ), 0, newblank, 0, 2 );
+					System.arraycopy( getBytesAt( 0, 2 ), 0, blankBytes, 0, 2 );
 					// set the col...
-					System.arraycopy( ByteTools.shortToLEBytes( (short) i ), 0, newblank, 2, 2 );
+					System.arraycopy( ByteTools.shortToLEBytes( (short) i ), 0, blankBytes, 2, 2 );
 					// set the ixfe
-					System.arraycopy( rgixfe, ((i - colFirst) * 2), newblank, 4, 2 );
-					Blank b = new Blank( newblank );
+					System.arraycopy( rgixfe, ((i - colFirst) * 2), blankBytes, 4, 2 );
+					Blank b = new Blank( blankBytes );
 					b.streamer = streamer;
 					b.setWorkBook( getWorkBook() );
 					b.setSheet( getSheet() );
 					b.setMergeRange( getMergeRange( i - colFirst ) );
+
+					resultCells.add( b );
+
+/*
 					getRow().removeCell( (short) i );// remove this mulblank from the cells array
 					getWorkBook().addRecord( b, true );    // and add a blank in it's place
+*/
 				}
-				// truncate the rgixfe:
+
+				// truncate the rgixfe: in 'this' record
 				byte[] tmp = new byte[(2 * ((c - colFirst) + 1))];
 				System.arraycopy( rgixfe, 0, tmp, 0, tmp.length );    // skip last
 				rgixfe = tmp;
-				// now truncate the Mulblank
+				// now truncate the Mulblank (this object)
 				colLast = (short) (c - 1);
 			}
 			catch( Exception e )
 			{
-				log.info( "initializing Mulblank failed: " + e );
+				log.error( "initializing Mulblank failed: " + e );
 			}
-			col = c;    // the blank to remove
+			col = colLast;
+//			col = c;    // the blank to remove
 		}
-		if( (colFirst < 0) || (colLast < 0) )
-		{    // can happen when removing multiple cells ..?
-			return true;
-		}
+
+		//
+		// This Mulblank might have been reduced to a single column range....
+		//
 		if( colFirst == colLast )
-		{// covert to a single blank
-			byte[] newblank = { 0, 0, 0, 0, 0, 0 };
+		{
+			// ...it has, so convert this Mulblank to a single Blank...
+
+			byte[] blankBytes = { 0, 0, 0, 0, 0, 0 };
 			// set the row...
-			System.arraycopy( getBytesAt( 0, 2 ), 0, newblank, 0, 2 );
+			System.arraycopy( getBytesAt( 0, 2 ), 0, blankBytes, 0, 2 );
 			// set the col...
-			System.arraycopy( ByteTools.shortToLEBytes( colFirst ), 0, newblank, 2, 2 );
+			System.arraycopy( ByteTools.shortToLEBytes( colFirst ), 0, blankBytes, 2, 2 );
 			// set the ixfe
-			System.arraycopy( rgixfe, 0, newblank, 4, 2 );
-			Blank b = new Blank( newblank );
+			System.arraycopy( rgixfe, 0, blankBytes, 4, 2 );
+			Blank b = new Blank( blankBytes );
 			b.streamer = streamer;
 			b.setWorkBook( getWorkBook() );
 			b.setSheet( getSheet() );
 			b.setMergeRange( getMergeRange( colFirst ) );
-			col = colFirst;
+			// TODO Not sure why we are setting this since we dont care about it anymore...
+//			col = colFirst;
+
+/*
 			getRow().removeCell( this );// remove this mulblank from the cells array
 			getWorkBook().addRecord( b, true );
-			col = c;    // still have to remove cell at col c
-			return false;    // no more mulblanks
+*/
+
+			// TODO Not sure why we are setting this since we dont care about it anymore...
+//			col = c;    // still have to remove cell at col c
+
+			resultCells.add( b );
 		}
-		updateRecord();
-		if( colFirst > colLast )    // no more blanks in range ... can happen??
+		else
 		{
-			return true;    // can delete it
+			// Ok, we're still a multi column Mulblank, so we need to be added back to the Collections...
+			updateRecord();
+			resultCells.add( this );
 		}
-		return false;    // don't delete this rec
+
+		return resultCells;
 	}
 
 	/**

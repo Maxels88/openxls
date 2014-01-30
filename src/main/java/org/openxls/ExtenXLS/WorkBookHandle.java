@@ -75,7 +75,6 @@ import java.io.Writer;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.AbstractList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -673,7 +672,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	@Override
 	public ChartHandle[] getCharts()
 	{
-		AbstractList cv = mybook.getChartVect();
+		List cv = mybook.getChartVect();
 		ChartHandle[] cht = new ChartHandle[cv.size()];
 		for( int x = 0; x < cv.size(); x++ )
 		{
@@ -691,7 +690,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	public ChartHandle getChartById( int id ) throws ChartNotFoundException
 	{
-		AbstractList cv = mybook.getChartVect();
+		List cv = mybook.getChartVect();
 		Chart cht = null;
 		for( int x = 0; x < cv.size(); x++ )
 		{
@@ -1617,7 +1616,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 
 	void initMerges()
 	{
-		AbstractList mergelookup = mybook.getMergecelllookup();
+		List mergelookup = mybook.getMergecelllookup();
 		for( int t = 0; t < mergelookup.size(); t++ )
 		{
 			Mergedcells mc = (Mergedcells) mergelookup.get( t );
@@ -1627,7 +1626,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 
 	void initHlinks()
 	{
-		AbstractList hlinklookup = mybook.getHlinklookup();
+		List hlinklookup = mybook.getHlinklookup();
 		for( int t = 0; t < hlinklookup.size(); t++ )
 		{
 			Hlink hl = (Hlink) hlinklookup.get( t );
@@ -2538,7 +2537,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 //	    int cfxe = this.getWorkBook().getNumXfs() + 50000; // there would have to be 50k styles on the sheet to conflict here....
 
 		List retl = new Vector();
-		AbstractList v = mybook.getSheetVect();
+		List v = mybook.getSheetVect();
 
 		Iterator its = v.iterator();
 

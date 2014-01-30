@@ -3343,8 +3343,10 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 	 */
 	private void setBiffRecValue( Object obj ) throws CellTypeMismatchException
 	{
-		if( (mycell.getOpcode() == XLSConstants.BLANK) || (mycell.getOpcode() == XLSConstants.MULBLANK) )
+		short opcode = mycell.getOpcode();
+		if( (opcode == XLSConstants.BLANK) || (opcode == XLSConstants.MULBLANK) )
 		{
+			log.debug( "Cell '{}' is a BLANK or MULBLANK ({}), changing type...", getCellAddressWithSheet(), opcode );
 			changeCellType( obj );
 		}
 		else
@@ -3431,8 +3433,10 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		int[] rc = { mycell.getRowNumber(), mycell.getColNumber() };
 		Boundsheet bs = mycell.getSheet();
 		int oldXf = mycell.getIxfe();
+
 		bs.removeCell( mycell );
 		BiffRec addedrec = bs.addValue( obj, rc, true );
+
 		mycell = (XLSRecord) addedrec;
 		mycell.setXFRecord( oldXf );
 	}

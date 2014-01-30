@@ -53,7 +53,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -608,13 +607,13 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		stylesooxml.append( "\r\n" );
 
 		// Now create nodes for various XF elements
-		AbstractList xfs = bk.getWorkBook().getXfrecs();
+		List xfs = bk.getWorkBook().getXfrecs();
 
-		ArrayList cellxfs = new ArrayList();   // references various style source elements for ea xf 
-		ArrayList fills = new ArrayList();
-		ArrayList borders = new ArrayList();
-		ArrayList numfmts = new ArrayList();
-		ArrayList fonts = new ArrayList();
+		List cellxfs = new ArrayList();   // references various style source elements for ea xf
+		List fills = new ArrayList();
+		List borders = new ArrayList();
+		List numfmts = new ArrayList();
+		List fonts = new ArrayList();
 
 		// input default fills -- both appear to be required
 		fills.add( Fill.getOOXML( 0, -1, -1 ) ); // none
@@ -794,7 +793,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 		// dxf's -- incremental style info
 		if( bk.getWorkBook().getDxfs() != null )
 		{
-			ArrayList dxfs = bk.getWorkBook().getDxfs();
+			List dxfs = bk.getWorkBook().getDxfs();
 			if( dxfs.size() > 0 )
 			{
 				stylesooxml.append( "<dxfs count=\"" + dxfs.size() + "\">" );
@@ -836,7 +835,7 @@ public class OOXMLWriter extends OOXMLAdapter implements OOXMLConstants
 	 * @param numfmts
 	 * @param fonts
 	 */
-	private static void addXFToStyle( Xf xf, ArrayList cellxfs, ArrayList fills, ArrayList borders, ArrayList numfmts, ArrayList fonts )
+	private static void addXFToStyle( Xf xf, List cellxfs, List fills, List borders, List numfmts, List fonts )
 	{
 
 		int[] refs = new int[13];

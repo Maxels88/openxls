@@ -37,8 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -2737,7 +2737,7 @@ public final class Cf extends XLSRecord
 	 *
 	 * @return
 	 */
-	public String getOOXML( WorkBookHandle bk, int priority, ArrayList dxfs )
+	public String getOOXML( WorkBookHandle bk, int priority, List dxfs )
 	{
 		StringBuffer ooxml = new StringBuffer();
 

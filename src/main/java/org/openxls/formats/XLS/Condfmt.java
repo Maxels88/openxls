@@ -35,6 +35,7 @@ import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * <b>Condfmt:  Conditional Formatting Range Information 0x1B0</b><br>
@@ -336,7 +337,7 @@ public final class Condfmt extends XLSRecord
 	public static Condfmt parseOOXML( XmlPullParser xpp, WorkBookHandle wb, Boundsheet bs )
 	{
 		Condfmt condfmt = null;
-		ArrayList dxfs = wb.getWorkBook().getDxfs();
+		List dxfs = wb.getWorkBook().getDxfs();
 		if( dxfs == null )
 		{
 			dxfs = new ArrayList();    // shouldn't!
@@ -549,7 +550,7 @@ public final class Condfmt extends XLSRecord
 		// NOTE:  cf.getDxfId/setDxfId links this conditional formatting rule with the proper incremental style
 		// NOTE:  cfRules must have a valid dxfId or the output file will open with errors
 		// NOTE:  for now, dxfs can only be saved from the original styles.xml;
-		ArrayList dxfs = getWorkBook().getDxfs();
+		List dxfs = getWorkBook().getDxfs();
 		if( dxfs == null )
 		{
 			dxfs = new ArrayList();
