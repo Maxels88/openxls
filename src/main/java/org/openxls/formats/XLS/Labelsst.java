@@ -135,6 +135,7 @@ public final class Labelsst extends XLSCellRecord
 			}
 			catch( NullPointerException e )
 			{
+				log.warn( "Exception while initializing sharing on Strings", e );
 				// nothing.  When adding new strings we have access issues, but it doesn't matter, we just care on book initialization for this..
 			}
 		}

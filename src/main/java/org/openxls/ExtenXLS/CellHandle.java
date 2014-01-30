@@ -2211,6 +2211,7 @@ public class CellHandle implements Cell, Serializable, Handle, Comparable<CellHa
 		}
 		catch( Exception e )
 		{
+			log.warn( "Unable to set String value {} on cell {}", s, getCellAddressWithSheet(), e );
 			throw new CellTypeMismatchException( e.toString() );
 		}
 	}

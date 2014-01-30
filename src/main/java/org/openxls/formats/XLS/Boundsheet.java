@@ -2626,7 +2626,6 @@ public final class Boundsheet extends XLSRecord implements Sheet
 	 */
 	public BiffRec addValue( Object obj, int[] rc, int FORMAT_ID, boolean fixNumberAsString )
 	{
-
 		if( rc[1] > MAXCOLS )
 		{
 			throw new InvalidRecordException( "Cell Column number: " + rc[1] + " is greater than maximum allowable Columns: " + MAXCOLS );
@@ -2715,7 +2714,7 @@ public final class Boundsheet extends XLSRecord implements Sheet
 			}
 		}
 
-		// check this does not touch affectedcells
+		// check this does not touch affected cells
 		addRecord( rec, rc );
 
 		if( fixed != null )

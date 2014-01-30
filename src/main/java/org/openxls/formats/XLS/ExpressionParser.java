@@ -78,14 +78,15 @@ import org.openxls.toolkit.CompatibleVector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-import java.util.Vector;
 
 /**
 
  */
-public final class ExpressionParser implements java.io.Serializable
+public final class ExpressionParser implements Serializable
 {
 	private static final Logger log = LoggerFactory.getLogger( ExpressionParser.class );
 	private static final long serialVersionUID = 4745215965823234010L;
@@ -185,16 +186,14 @@ public final class ExpressionParser implements java.io.Serializable
 	 * @param expressionLen
 	 * @return
 	 */
-	public static Stack parseExpression( byte[] function, XLSRecord rec, int expressionLen )
+	public static Stack<Ptg> parseExpression( byte[] function, XLSRecord rec, int expressionLen )
 	{
-		Stack stack = new Stack();
+		Stack<Ptg> stack = new Stack<>();
 		short ptg = 0x0;
 		int ptgLen = 0;
 		boolean hasArrays = false;
-		/* Not really needed
-        //boolean hasPtgExtraMem= false;
-        //PtgMemArea pma= null;*/
-		CompatibleVector arrayLocs = new CompatibleVector();
+
+		CompatibleVector arrayLocs = new CompatibleVector ();
 		if( expressionLen > function.length )
 		{
 			expressionLen = function.length; // deal with out of spec formulas (testJapanese:Open25.xls) -jm
@@ -230,13 +229,16 @@ public final class ExpressionParser implements java.io.Serializable
 						byte[] b = new byte[ptgLen];
 						if( (ptgLen + i) <= function.length )
 						{
-							System.arraycopy( function, (i), b, 0, ptgLen );
+							System.arraycopy( function, i, b, 0, ptgLen );
 						}
 						px.setParentRec( p );
 						px.init( b );
 						stack.push( px );
 						break;
 					}
+
+					// FIXME: POSSIBLE UNINTENTIONAL SWITCH FALL THROUGH HERE....
+
 					// ptgStr is one of the only ptg's that varies in length, so there is some special handling
 					// going on for it.
 				case ptgStr:
@@ -255,7 +257,7 @@ public final class ExpressionParser implements java.io.Serializable
 					byte[] b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pst.init( b );
 					pst.setParentRec( p );
@@ -273,7 +275,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pmema.init( b );
 					pmema.setParentRec( p );
@@ -287,7 +289,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pmemn.init( b );
 					pmemn.setParentRec( p );
@@ -304,7 +306,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pmemv.init( b );
 					pmemv.setParentRec( p );
@@ -319,7 +321,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pmem.init( b );
 					// now grab the rest of the "extra data" that defines the ptgmemarea
@@ -331,7 +333,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pmem.setSubExpression( b );
 					stack.push( pmem );
@@ -349,7 +351,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pmemf.setParentRec( p );
 					pmemf.init( b );
@@ -363,7 +365,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pi.init( b );
 					pi.setParentRec( p );
@@ -377,7 +379,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					perr.init( b );
 					perr.setParentRec( p );
@@ -391,7 +393,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pnum.init( b );
 					pnum.setParentRec( p );
@@ -405,7 +407,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pboo.init( b );
 					pboo.setParentRec( p );
@@ -419,13 +421,13 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pn.setParentRec( p );
 					pn.init( b );
 					pn.addListener();
 					stack.push( pn );
-					int chk = (i + ptgLen);
+					int chk = i + ptgLen;
 					if( chk < function.length )
 					{
 						if( function[i + ptgLen] == 0x0 )
@@ -444,7 +446,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pnx.init( b );
 					pnx.setParentRec( p );
@@ -459,7 +461,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pt.setParentRec( p );    // parent rec must be set before init
 					pt.init( b );
@@ -475,7 +477,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pa.init( b );    //setArrVals(b);	// 20090820 KSC: b represents base record not array values
 					Integer ingr = stack.size();    // constant value array for PtgArray appears at end of stack see hasArrays below
@@ -490,7 +492,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					ptn.setParentRec( rec );    // parent rec must be set before init
 					ptn.init( b );
@@ -508,7 +510,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pg.setParentRec( p );    // parent rec must be set before init
 					pg.init( b );
@@ -523,7 +525,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pg3.init( b, p ); // we need this to init the sub-ptgs correctly
 					pg3.addListener();
@@ -538,7 +540,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pgn.setParentRec( rec );
 					pgn.init( b );
@@ -556,7 +558,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					ptfa.setParentRec( p );
 					ptfa.init( b );
@@ -571,7 +573,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					ptfr.setParentRec( p );
 					ptfr.init( b );
@@ -586,7 +588,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pm.setParentRec( p );
 					pm.init( b );
@@ -600,7 +602,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pr.setParentRec( p );    // parent rec must be set before init
 					pr.init( b );
@@ -614,7 +616,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					prs.init( b );
 					prs.setParentRec( p );
@@ -628,7 +630,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pr3.setParentRec( p );
 					pr3.init( b );
@@ -658,7 +660,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pat.init( b );
 					pat.init();
@@ -673,7 +675,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					ptf.init( b );
 					ptf.setParentRec( p );
@@ -685,9 +687,9 @@ public final class ExpressionParser implements java.io.Serializable
 					PtgFuncVar ptfv = new PtgFuncVar();
 					ptgLen = ptfv.getLength();
 					b = new byte[ptgLen];
-					if( ((ptgLen) + (i)) <= function.length )
+					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 
 					ptfv.init( b );
@@ -753,7 +755,7 @@ public final class ExpressionParser implements java.io.Serializable
 					ptgLen = pad.getLength();
 					b = new byte[ptgLen];
 					//if((ptgLen+i) <= function.length)
-					System.arraycopy( function, (i), b, 0, ptgLen );
+					System.arraycopy( function, i, b, 0, ptgLen );
 					pad.init( b );
 					pad.setParentRec( p );
 					stack.push( pad );
@@ -765,7 +767,7 @@ public final class ExpressionParser implements java.io.Serializable
 					ptgLen = pmar.getLength();
 					b = new byte[ptgLen];
 					//if((ptgLen+i) <= function.length) 
-					System.arraycopy( function, (i), b, 0, ptgLen );
+					System.arraycopy( function, i, b, 0, ptgLen );
 					pmar.init( b );
 					pmar.setParentRec( p );
 					stack.push( pmar );
@@ -778,7 +780,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					psb.init( b );
 					psb.setParentRec( p );
@@ -792,7 +794,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pml.init( b );
 					pml.setParentRec( p );
@@ -806,7 +808,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pdiv.init( b );
 					pdiv.setParentRec( p );
@@ -820,7 +822,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					puplus.init( b );
 					puplus.setParentRec( p );
@@ -834,7 +836,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					puminus.init( b );
 					puminus.setParentRec( p );
@@ -848,7 +850,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pperc.init( b );
 					pperc.setParentRec( p );
@@ -862,7 +864,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pow.init( b );
 					pow.setParentRec( p );
@@ -876,7 +878,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pcon.init( b );
 					pcon.setParentRec( p );
@@ -890,7 +892,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					plt.init( b );
 					plt.setParentRec( p );
@@ -904,7 +906,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					ple.init( b );
 					ple.setParentRec( p );
@@ -918,7 +920,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					peq.init( b );
 					peq.setParentRec( p );
@@ -932,7 +934,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pge.init( b );
 					pge.setParentRec( p );
@@ -946,7 +948,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pgt.init( b );
 					pgt.setParentRec( p );
@@ -960,7 +962,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 
 					pne.init( b );
@@ -975,7 +977,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 
 					pist.init( b );
@@ -990,7 +992,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pun.init( b );
 					pun.setParentRec( p );
@@ -1004,7 +1006,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 					pran.init( b );
 					pran.setParentRec( p );
@@ -1018,7 +1020,7 @@ public final class ExpressionParser implements java.io.Serializable
 					b = new byte[ptgLen];
 					if( (ptgLen + i) <= function.length )
 					{
-						System.arraycopy( function, (i), b, 0, ptgLen );
+						System.arraycopy( function, i, b, 0, ptgLen );
 					}
 
 					pp.init( b );
@@ -1062,8 +1064,12 @@ public final class ExpressionParser implements java.io.Serializable
 					startPos += parr.setArrVals( b );
 				}
 				catch( Exception e )
-				{//TODO: this needs to be caught due to "name" records being parsed incorrectly.  The problem has to do with the lenght of the name record not including the extra 7 bytes of space.  Temporary fix for infoteria
-					log.debug( "ExpressionParser.parseExpression: Array: " + e );
+				{
+					// FIXME This comment sounds like something is knowingly being parsed incorrectly
+					// TODO: this needs to be caught due to "name" records being parsed incorrectly.
+					// TODO: The problem has to do with the lenght of the name record not including the extra 7 bytes of space.
+					// TODO: Temporary fix for infoteria
+					log.error( "ExpressionParser.parseExpression: Array: " + e, e );
 				}
 			}
 		} /* no need to keep PtgExtraMem as can regenerate easily else
@@ -1073,7 +1079,6 @@ public final class ExpressionParser implements java.io.Serializable
         	// 	   array (variable): An array of Ref8U that specifies the range. The number of elements MUST be equal to count.
         		pma.setPostExpression(function, expressionLen);
         }*/
-		log.trace( "Finished formula" );
 		return stack;
 
 	}
@@ -1082,9 +1087,9 @@ public final class ExpressionParser implements java.io.Serializable
 		rec can either be in the format "C5" or a range, such as "C4:D9"
 
 	*/
-	public static List getPtgsByLocation( String loc, Stack expression ) throws FormulaNotFoundException
+	public static List<Ptg> getPtgsByLocation( String loc, Stack expression ) throws FormulaNotFoundException
 	{
-		List lv = new Vector();
+		List<Ptg> lv = new ArrayList<>();
 		for( int i = 0; i < expression.size(); i++ )
 		{
 			Object o = expression.elementAt( i );
@@ -1105,9 +1110,9 @@ public final class ExpressionParser implements java.io.Serializable
 					lo = "none";
 				}
 				String comp = loc;
-				if( loc.indexOf( "!" ) > -1 )
+				if( loc.contains( "!" ) )
 				{ // the sheet is referenced
-					if( lo.indexOf( "!" ) == -1 )
+					if( !lo.contains( "!" ) )
 					{ // and the ptg does not have sheet referenced
 						comp = loc.substring( loc.indexOf( "!" ) + 1 );
 					}
@@ -1247,7 +1252,7 @@ public final class ExpressionParser implements java.io.Serializable
 	 */
 	public static Ptg[] getCellRangePtgs( Stack expression ) throws FormulaNotFoundException
 	{
-		Vector ret = new Vector();
+		List ret = new ArrayList();
 		for( int i = 0; i < expression.size(); i++ )
 		{
 			Object o = expression.elementAt( i );
@@ -1273,6 +1278,7 @@ public final class ExpressionParser implements java.io.Serializable
 				}
 				else if( (part instanceof PtgRefErr) || (part instanceof PtgAreaErr3d) )
 				{
+					// FIXME THIS IS SIMPLY BROKEN.  .toArray() will die below...
 					ret.add( "#REF!" );
 				}
 				else if( part instanceof PtgMemFunc )
@@ -1294,6 +1300,8 @@ public final class ExpressionParser implements java.io.Serializable
 				}
 			}
 		}
+
+		// FIXME: What if we added a String above? This is an ArrayStoreException waiting to happen!
 		Ptg[] retp = new Ptg[ret.size()];
 		return (Ptg[]) ret.toArray( retp );
 	}
