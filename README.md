@@ -17,6 +17,9 @@ Initial commits are code cleanup - bringing the code base up to JDK7 level. We'v
 doing this and will attempt to fix the ones we encounter as we go. The aim is to add unit tests as we fix these issues, but please bear
 with us as the code base is around 10 years old and has lots of fixes and workarounds for oddities encountered in the field.
 
+## 2014-01-30
+Squashed another bug relating to Mulblank handling
+
 ## 2014-01-28
 Snapshots are now being built on our CI server (TeamCity) and published to Sonatype's OSS Snapshot Repo.  We will package, sign and publish
 a release build shortly (which will be auto-synced from Sonatype's Release Repo to Maven Central)
