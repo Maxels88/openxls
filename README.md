@@ -1,10 +1,10 @@
 openxls
 =======
 
-This is a copy of the LGPL shared openxls library.  It's no longer supported by the owners, but we're using it and are fixing things as we
-encounter any problems.  If you find an issue, please open an issue on Github and/or provide a pull request.  For any issues logged, please
+This is a copy of the LGPL shared openxls library.  It's no longer supported by the owners, but we're using it and are addressing problems as
+they crop up.  If you find an issue, please open an issue on Github and/or provide a pull request with a patch.  For any issues logged, please
 provide a small simple test case.  Small simple Excel files are also useful in dealing with the multitude of file formats and versions out
-there.  Complete stack traces and logs (at debug and trace level) also help.
+there.  Complete stack traces and logs at trace level also help.
 
 OpenXLS supports col/row/cell inserts (and updates formula references when doing so), so this makes it invaluable to us.  This was one of
 the reasons we switched from Apache POI (which is also a good library and we have used successfully on several projects).  However, we
