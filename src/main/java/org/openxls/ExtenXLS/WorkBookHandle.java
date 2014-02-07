@@ -1606,12 +1606,26 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	 */
 	void postLoad()
 	{
+		log.debug( "Performing postLoad operations..." );
+
 		initHlinks();
 		initMerges();
 		mybook.initializeNames(); // must initialize name expressions AFTER loading sheet records  
 		mybook.mergeMSODrawingRecords();
 		mybook.initializeIndirectFormulas();
+
 		initPivotCache();    // if any
+
+		int recalculationMode = mybook.getRecalculationMode();
+		if( recalculationMode != WorkBookHandle.CALCULATE_ALWAYS )
+		{
+			log.debug( "Recalculating formulas on initial load..." );
+			recalc();
+		}
+		else
+		{
+			log.debug( "Workbook is set to *not* auto calculate." );
+		}
 	}
 
 	void initMerges()
@@ -2009,7 +2023,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 	public void recalc()
 	{
 		int calcmode = mybook.getCalcMode();
-		mybook.setCalcMode( CALCULATE_AUTO );    // ensure referenced functions are calcualted as necesary!
+		mybook.setCalcMode( CALCULATE_AUTO );    // ensure referenced functions are calculated as necessary!
 		Formula[] formulas = mybook.getFormulas();
 		for( Formula formula : formulas )
 		{
@@ -2020,7 +2034,7 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 			}
 			catch( FunctionNotSupportedException fe )
 			{
-				log.error( "WorkBookHandle.recalc:  Error calculating Formula " + fe.toString() );
+				log.error( "WorkBookHandle.recalc:  Error calculating Formula " + fe.toString(), fe );
 			}
 		}
 		// KSC: Clear out lookup caches!

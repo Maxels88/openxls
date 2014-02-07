@@ -1481,8 +1481,9 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				break;
 
 			case FORMULA:
-				addFormula( (Formula) rec );
-				lastFormula = (Formula) rec;
+				Formula formula = (Formula) rec;
+				addFormula( formula );
+				lastFormula = formula;
 				break;
 
 			case ARRAY:

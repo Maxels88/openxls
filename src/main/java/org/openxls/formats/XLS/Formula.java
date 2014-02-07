@@ -263,9 +263,7 @@ public final class Formula extends XLSCellRecord
 		{
 			return false;
 		}
-		return (Collections.binarySearch( Arrays.asList( new String[]{
-				"#DIV/0!", "#N/A", "#NAME?", "#NULL!", "#NUM!", "#REF!", "#VALUE!"
-		} ), s.trim() ) > -1);
+		return (Collections.binarySearch( Arrays.asList( "#DIV/0!", "#N/A", "#NAME?", "#NULL!", "#NUM!", "#REF!", "#VALUE!" ), s.trim() ) > -1);
 	}
 
 	/**
@@ -320,16 +318,12 @@ public final class Formula extends XLSCellRecord
 				haveStringRec = true;
 				string = (StringRec) b;
 				cachedValue = string.getStringVal();
-			}/* TODO: this is such a rare occurrence - due possibly to OUR processing - keep if and wa
-				else
-        		log.error("Formula.init:  Out of Spec Formula Encountered (Multiple String Recs Encountered)- Ignoring");
-        		*/
+			}
 		}
 		else    // array formula
 		{
 			internalRecords.add( b );
 		}
-
 	}
 
 	public void removeInternalRecord( BiffRec b )

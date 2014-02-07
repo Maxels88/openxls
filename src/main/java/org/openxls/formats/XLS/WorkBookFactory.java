@@ -1030,7 +1030,7 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 	 */
 	public Book getWorkBook( BlockByteReader parsedata, LEOFile leo ) throws InvalidRecordException
 	{
-		Book book = new WorkBook();
+		WorkBook book = new WorkBook();
 		return initWorkBook( book, parsedata, leo );
 	}
 
@@ -1096,6 +1096,8 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 		fireProgressChanged();
 		log.debug( "XLS File Size: " + blen );
 
+		boolean formulasNeedRecalc = false;
+
 		for( int i = 0; i <= (blen - 4); )
 		{
 
@@ -1142,6 +1144,14 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 
 					// Init Record'
 					rec = parse( book, opcode, i, reclen, blockByteReader );
+					if( rec instanceof Formula )
+					{
+						Formula formula = (Formula) rec;
+						if( formula.getCalcAlways() )
+						{
+							formulasNeedRecalc = true;
+						}
+					}
 
 					if( progresslistener != null )
 					{
@@ -1248,6 +1258,12 @@ public class WorkBookFactory implements ProgressNotifier, XLSConstants, Serializ
 		// flag the book so we know it's ready for shared access
 		// book.setReady(true); ENTERPRISE ONLY
 		// recordata.setApplyRelativePosition(false);
+
+		if( formulasNeedRecalc )
+		{
+
+		}
+
 		return book;
 	}
 

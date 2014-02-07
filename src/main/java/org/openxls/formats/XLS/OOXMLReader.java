@@ -1479,11 +1479,11 @@ public class OOXMLReader extends OOXMLAdapter implements OOXMLConstants
 			}
 			catch( FunctionNotSupportedException e )
 			{
-				log.error( "OOXMLAdapter.parse: failed setting formula " + s[1] + " to cell " + s[0] + ": " + e.toString() );
+				log.error( "OOXMLAdapter.parse: failed setting formula " + s[1] + " to cell " + s[0] + ": " + e.toString(), e );
 			}
 			catch( Exception e )
 			{
-				log.error( "OOXMLAdapter.parse: failed setting formula " + s[1] + " to cell " + s[0] + ": " + e.toString() );
+				log.error( "OOXMLAdapter.parse: failed setting formula " + s[1] + " to cell " + s[0] + ": " + e.toString(), e );
 			}
 		}
 	}

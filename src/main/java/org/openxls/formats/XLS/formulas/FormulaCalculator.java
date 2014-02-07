@@ -172,13 +172,13 @@ public class FormulaCalculator
 			{
 				adr = "addr: " + p.getParentRec().getCellAddress();
 			}
-			log.debug( adr + " val: " + p.toString() );
+			log.trace( adr + " val: " + p.toString() );
 			vals.push( p );// push it back on the stack
 
 		}
 		else if( p.getIsOperand() )
 		{
-			log.debug( "opr: " + p.toString() );
+			log.trace( "opr: " + p.toString() );
 
 			vals.push( p );
 
