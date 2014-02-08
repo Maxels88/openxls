@@ -224,7 +224,7 @@ public final class Sst extends XLSRecord
 		int strlen = 0;
 		int strpos = 8;
 
-		log.debug( "INFO: initializing Sst: " + sst.cstTotal + " total Strings, " + sst.cstUnique + " unique Strings." );
+		log.trace( "INFO: initializing Sst: " + sst.cstTotal + " total Strings, " + sst.cstUnique + " unique Strings." );
 		// Initialize continues records
 		sst.initContinues();
 
@@ -375,7 +375,7 @@ public final class Sst extends XLSRecord
 				strpos += strlen + basereclen + runlen;
 			}
 		}
-			log.debug( "Done reading SST." );
+			log.trace( "Done reading SST." );
 	}
 
 	/**
@@ -410,7 +410,7 @@ public final class Sst extends XLSRecord
 		{// string is on the boundary - easy!
 			if( (numconts == 0) || (numconts == contcounter) )
 			{
-					log.debug( "Last String in SST encountered." );
+					log.trace( "Last String in SST encountered." );
 			}
 			byte[] newStringBytes = getData( uLen, pos, ustrStart, cchExtRst, runlen, doublebyte, false );
 			initString( newStringBytes, pos, false );

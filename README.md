@@ -1,5 +1,5 @@
-openxls
-=======
+openxls - Feb 2014
+==================
 
 This is a copy of the LGPL shared openxls library.  It's no longer supported by the owners, but we're using it and are addressing problems as
 they crop up.  If you find an issue, please open an issue on Github and/or provide a pull request with a patch.  For any issues logged, please

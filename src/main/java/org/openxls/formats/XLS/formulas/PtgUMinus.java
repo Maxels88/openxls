@@ -90,6 +90,7 @@ public class PtgUMinus extends GenericPtg implements Ptg
 		{
 			Ptg p = form[0];
 			Ptg ret = null;
+
 			if( p instanceof PtgInt )
 			{
 				int val = p.getIntVal();

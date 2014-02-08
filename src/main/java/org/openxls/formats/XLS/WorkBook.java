@@ -1295,7 +1295,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 
 		if( lastBOF == null )
 		{
-			log.debug( "WorkBook: NULL Last BOF" );
+			log.trace( "WorkBook: NULL Last BOF" );
 		}
 		long lb = lastBOF.getLbPlyPos();
 		if( !lastBOF.isValidBIFF8() )
@@ -1541,7 +1541,7 @@ public class WorkBook implements Serializable, XLSConstants, Book
 				break;
 
 			case BOF:
-				log.debug( "BOF:" + bofct + " - " + rec );
+				log.trace( "BOF:" + bofct + " - " + rec );
 				if( eofct == bofct )
 				{
 					if( bs != null )

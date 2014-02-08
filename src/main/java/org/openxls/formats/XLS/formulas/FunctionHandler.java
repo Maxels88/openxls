@@ -45,11 +45,10 @@ public class FunctionHandler
 	*/
 	public static final Ptg calculateFunction( Ptg[] ptgs ) throws FunctionNotSupportedException, CalculationException
 	{
-		Ptg funk; // the function identifier
-		Ptg[] operands; // the ptgs acted upon by the function
+		// the function identifier
+		Ptg funk = ptgs[0];
 		int funkId = 0;   //what function are we calling?
 
-		funk = ptgs[0];
 		// if ptgs are missing parent_recs, populate from funk
 		XLSRecord bpar = funk.getParentRec();
 		if( bpar != null )
@@ -64,7 +63,8 @@ public class FunctionHandler
 		}
 
 		int oplen = ptgs.length - 1;
-		operands = new Ptg[oplen];
+		// the ptgs acted upon by the function
+		Ptg[] operands = new Ptg[oplen];
 		System.arraycopy( ptgs, 1, operands, 0, oplen );
 		if( (funk.getOpcode() == 0x21) || (funk.getOpcode() == 0x41) || (funk.getOpcode() == 0x61) )
 		{  // ptgfunc

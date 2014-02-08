@@ -308,7 +308,7 @@ public interface Ptg extends XLSConstants, Serializable
 
 	/**
 	 * return a Ptg  consisting of the calculated values
-	 * of the ptg's passed in.  Returns null for any non-operater
+	 * of the ptg's passed in.  Returns null for any non-operator
 	 * ptg.
 	 *
 	 * @throws CalculationException
@@ -332,7 +332,7 @@ public interface Ptg extends XLSConstants, Serializable
 	 * <p/>
 	 * This can result in loss of precision for floating point values.
 	 * <p/>
-	 * -1 will be returned for values that are not translateable to an integer
+	 * -1 will be returned for values that are not translatable to an integer
 	 *
 	 * @return integer representing the ptg, or NAN
 	 */
@@ -340,7 +340,7 @@ public interface Ptg extends XLSConstants, Serializable
 
 	public double getDoubleVal();
 
-	public boolean isBlank();    // 20081112 KSC
+	public boolean isBlank();
 
 	public void close();
 

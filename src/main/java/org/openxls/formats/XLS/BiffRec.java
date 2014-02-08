@@ -140,6 +140,7 @@ public interface BiffRec
 	 * get a string address for the cell based on row and col ie: "H22"
 	 */
 	public abstract String getCellAddress();
+	public abstract String getCellAddressWithSheet();
 
 	/**
 	 * perform record initialization

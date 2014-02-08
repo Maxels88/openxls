@@ -2027,6 +2027,8 @@ public class WorkBookHandle extends DocumentHandle implements WorkBook
 		Formula[] formulas = mybook.getFormulas();
 		for( Formula formula : formulas )
 		{
+			String cellAddress = formula.getCellAddressWithSheet();
+			log.debug( "Recalculating formula ({}) : {}", cellAddress, formula.getFormulaString() );
 			try
 			{
 				formula.clearCachedValue();

@@ -85,31 +85,39 @@ public class PtgAdd extends GenericPtg implements Ptg
 		return PTG_ADD_LENGTH;
 	}
 
-	/*  Operator specific calculate method, this one adds two values.
-
-	*/
+	/**
+	 * Operator specific calculate method, this one adds two values.
+	 * @param form
+	 * @return
+	 */
 	@Override
 	public Ptg calculatePtg( Ptg[] form )
 	{
 		try
 		{
-			Object[] o = super.getValuesFromPtgs( form );
-			if( o == null )
+			Object[] args = getValuesFromPtgs( form );
+			if( args == null )
 			{
 				return new PtgErr( PtgErr.ERROR_VALUE );
 			}
-			if( !o[0].getClass().isArray() )
+
+			int nArrays = java.lang.reflect.Array.getLength( args );
+			if( nArrays != 2 )
 			{
-				if( o.length != 2 )
-				{
-					return new PtgErr( PtgErr.ERROR_VALUE );
-				}
-				double o0 = 0;
-				double o1 = 0;
+				return new PtgErr( PtgErr.ERROR_VALUE );
+			}
+			nArrays = 2;
+
+			// FIXME THIS NEEDS TO CHECK IF EITHER ARG IS AN ARRAY, NOT JUST THE FIRST ONE! IT NEEDS TO BE ASSOCIATIVE...
+
+			if( !args[0].getClass().isArray() && !args[1].getClass().isArray() )
+			{
+				double o0;
+				double o1;
 				try
 				{
-					o0 = getDoubleValue( o[0], parent_rec );
-					o1 = getDoubleValue( o[1], parent_rec );
+					o0 = getDoubleValue( args[0], parent_rec );
+					o1 = getDoubleValue( args[1], parent_rec );
 				}
 				catch( NumberFormatException e )
 				{
@@ -118,50 +126,67 @@ public class PtgAdd extends GenericPtg implements Ptg
 				double returnVal = o0 + o1;
 				PtgNumber n = new PtgNumber( returnVal );
 				return n;
-			}    // handle array fomulas
+			}
+
+			//
+			// handle array formulas
+			//
 			String retArry = "";
-			int nArrays = java.lang.reflect.Array.getLength( o );
-			if( nArrays != 2 )
+			Object arrArg;
+			Object arg2;
+
+			if( args[0].getClass().isArray() )
 			{
-				return new PtgErr( PtgErr.ERROR_VALUE );
+				arrArg = args[0];
+				arg2 = args[1];
 			}
-			int nVals = java.lang.reflect.Array.getLength( o[0] );    // use first array element to determine length of values as subsequent vals might not be arrays
-			for( int i = 0; i < (nArrays - 1); i += 2 )
+			else
 			{
-				Object secondOp = null;
-				boolean comparitorIsArray = o[i + 1].getClass().isArray();
-				if( !comparitorIsArray )
-				{
-					secondOp = o[i + 1];
-				}
-				for( int j = 0; j < nVals; j++ )
-				{
-					Object firstOp = Array.get( o[i], j );    // first array index j
-					if( comparitorIsArray )
-					{
-						secondOp = Array.get( o[i + 1], j );    // second array index j
-					}
-					double o0 = 0;
-					double o1 = 0;
-					try
-					{
-						o0 = getDoubleValue( firstOp, parent_rec );
-						o1 = getDoubleValue( secondOp, parent_rec );
-					}
-					catch( NumberFormatException e )
-					{
-						retArry = retArry + "#VALUE!" + ",";
-						continue;
-					}
-					double retVal = o0 + o1;
-					retArry = retArry + retVal + ",";
-				}
+				arrArg = args[1];
+				arg2 = args[0];
 			}
+
+			// use first array element to determine length of values as subsequent vals might not be arrays
+			int nVals = java.lang.reflect.Array.getLength( arrArg );
+
+			boolean arg2IsArray = arg2.getClass().isArray();
+
+			for( int j = 0; j < nVals; j++ )
+			{
+				Object firstOp = Array.get( arrArg, j );    // first array index j
+				Object secondOp;
+
+				if( arg2IsArray )
+				{
+					secondOp = Array.get( arg2, j );    // second array index j
+				}
+				else
+				{
+					secondOp = arg2;
+				}
+
+				double o0;
+				double o1;
+
+				try
+				{
+					o0 = getDoubleValue( firstOp, parent_rec );
+					o1 = getDoubleValue( secondOp, parent_rec );
+				}
+				catch( NumberFormatException e )
+				{
+					retArry = retArry + "#VALUE!" + ",";
+					continue;
+				}
+				double retVal = o0 + o1;
+				retArry = retArry + retVal + ",";
+			}
+
 			retArry = "{" + retArry.substring( 0, retArry.length() - 1 ) + "}";
 			PtgArray pa = new PtgArray();
 			pa.setVal( retArry );
-			return pa;
 
+			return pa;
 		}
 		catch( NumberFormatException e )
 		{
@@ -177,5 +202,4 @@ public class PtgAdd extends GenericPtg implements Ptg
 			return perr;
 		}
 	}
-
 }

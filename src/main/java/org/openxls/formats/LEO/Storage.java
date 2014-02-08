@@ -317,7 +317,7 @@ public class Storage extends BlockByteReader
 		{
 			miniStreamStorage = true;
 		}
-			log.debug( "Storage: " + name + " storageType: " + storageType + " directoryColor:" + directoryColor +
+			log.trace( "Storage: " + name + " storageType: " + storageType + " directoryColor:" + directoryColor +
 					                " prevSID:" + prevStorageID + " nextSID:" + nextStorageID + " childSID:" + childStorageID + " sz:" + sz );
 	}
 
@@ -577,7 +577,7 @@ public class Storage extends BlockByteReader
 
 		if( miniFAT == null )
 		{ // error: trying to access smallblocks but no smallblock container found
-				log.debug( "initMiniFAT: no miniFAT container found" );
+				log.trace( "initMiniFAT: no miniFAT container found" );
 			return;
 		}
 		myblocks = new ArrayList();
@@ -653,13 +653,13 @@ public class Storage extends BlockByteReader
 			{
 
 				case -4: // extraDIFAT sector
-					log.debug( "INFO: Storage.init() encountered extra DIFAT sector." );
+					log.trace( "INFO: Storage.init() encountered extra DIFAT sector." );
 					break;
 
 				case -3: // special block	= DIFAT - defines the FAT
 					if( getActualFileSize() > 0 )
 					{
-						log.debug( "WARNING: Storage.init() Special block containing headerData." );
+						log.trace( "WARNING: Storage.init() Special block containing headerData." );
 						setIsSpecial( true );
 
 						thisbb = (Block) dta.get( i++ );
@@ -706,7 +706,7 @@ public class Storage extends BlockByteReader
 					if( nextIdx != (i + 1) )
 					{
 						//the next is a jumper, pickup the orphan
-							log.debug( "INFO: Storage init: jumper skipping: " + String.valueOf( i ) );
+							log.trace( "INFO: Storage init: jumper skipping: " + String.valueOf( i ) );
 						Block skipbb = (Block) dta.get( i + 1 );
 
 						addBlock( skipbb ); //
@@ -731,7 +731,7 @@ public class Storage extends BlockByteReader
 			{
 				if( Math.ceil( sz / 512.0 ) != myblocks.size() )
 				{
-					log.debug( "Storage.init:  Number of blocks do not equal storage size: {} {}", sz, myblocks.size() );
+					log.trace( "Storage.init:  Number of blocks do not equal storage size: {} {}", sz, myblocks.size() );
 				}
 			}
 		}

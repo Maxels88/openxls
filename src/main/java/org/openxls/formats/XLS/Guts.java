@@ -58,7 +58,7 @@ public final class Guts extends XLSRecord
 		iLevelRwMac = ByteTools.readShort( getByteAt( 4 ), getByteAt( 5 ) );
 		iLevelColMac = ByteTools.readShort( getByteAt( 6 ), getByteAt( 7 ) );
 
-			log.debug( "INFO: Guts settings: dxRwGut:" + dxRwGut + " dyColGut:" + dyColGut + " iLevelRwMac:" + iLevelRwMac + " iLevelColMac:" + iLevelColMac );
+			log.trace( "INFO: Guts settings: dxRwGut:" + dxRwGut + " dyColGut:" + dyColGut + " iLevelRwMac:" + iLevelRwMac + " iLevelColMac:" + iLevelColMac );
 	}
 
 	public void setRowGutterSize( int i )

@@ -296,56 +296,84 @@ public class PtgArray extends GenericPtg implements Ptg
 	@Override
 	public Object getValue()
 	{
-		// 20090820 KSC: value = entire array instead of 1st value; desired value is determined by cell position as compared to current formula; see Formula.calculate [BugTracker 2683]
-		//return elementAt(0).getValue(-1);	// default: return 1st value
+		// TODO: 20140207 Not sure why this is returning a String - wouldnt it be better off returning the components or itself.
 		return getString();
 	}
 
+	@Override
+	public double getDoubleVal()
+	{
+		// Not sure this is valid across all excel formulas, so feel free to add a unit test that shows why its not...
+
+		Ptg[] components = getComponents();
+		// If all components are booleans, then we can calculate, otherwise we return NaN
+
+		int total = 0;
+		for( Ptg component : components )
+		{
+			if( component instanceof PtgBool )
+			{
+				PtgBool ptgBool = (PtgBool) component;
+				boolean val = ptgBool.getBooleanValue();
+				if( val )
+				{
+					total++;
+				}
+			}
+			else
+			{
+				return Double.NaN;
+			}
+		}
+
+		return total;
+	}
+
 	/*
-	 *  returns the string value of the name
-		@see org.openxls.formats.XLS.formulas.Ptg#getValue()
-	 */
+		 *  returns the string value of the name
+			@see org.openxls.formats.XLS.formulas.Ptg#getValue()
+		 */
 	@Override
 	public String getString()
 	{
-		Object retVal = null;
 		Ptg[] p = getComponents();
-		String retstr = "";
+		StringBuilder buf = new StringBuilder();
+		buf.append( "{" );
+
 		if( (nc == 0) && (nr == 0) )
 		{    // if it's a single value, just return val
 			for( int i = 0; i < p.length; i++ )
 			{
 				if( i != 0 )
 				{
-					retstr += ",";
+					buf.append(",");
 				}
-				retstr += p[i].getValue().toString();
+				buf.append( p[i].getValue().toString() );
 			}
 		}
 		else
 		{
-			retstr = "";
 			int loc = 0;
 			for( int x = 0; x < (nr + 1); x++ )
 			{
 				if( x != 0 )
 				{
-					retstr += ";";
+					buf.append(";");
 				}
+
 				for( int i = 0; i < (nc + 1); i++ )
 				{
 					if( i != 0 )
 					{
-						retstr += ",";
+						buf.append( ",");
 					}
-					retstr += p[loc++].getValue().toString();
+					buf.append( p[loc++].getValue().toString() );
 				}
 			}
-			//retstr += "}";
-			//retVal = retstr.substring(0,retstr.length()-1);
 		}
-		retVal = retstr;
-		return "{" + retVal + "}";
+
+		buf.append( "}" );
+		return buf.toString();
 	}
 
 	@Override
@@ -364,8 +392,8 @@ public class PtgArray extends GenericPtg implements Ptg
 		}
 
 		// parse all array strings into rows, cols
-		String[] rows = null;
-		String[][] cols = null;
+		String[] rows;
+		String[][] cols;
 		// split rows
 		rows = arrStr.split( ";" );
 		cols = new String[rows.length][];

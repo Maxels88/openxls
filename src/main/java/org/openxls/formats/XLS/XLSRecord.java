@@ -436,8 +436,9 @@ public class XLSRecord implements BiffRec, BlockByteConsumer, Serializable, XLSC
 		}
 		catch( Exception e )
 		{
+			log.error( "Exception while getting internal value on Cell: " + getCellAddressWithSheet(), e );
 			return null;
-		} // should never happen here...
+		}
 	}
 
 	/**

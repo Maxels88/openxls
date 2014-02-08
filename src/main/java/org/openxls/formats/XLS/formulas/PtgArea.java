@@ -69,297 +69,10 @@ import java.util.Vector;
  */
 public class PtgArea extends PtgRef implements Ptg
 {
-	private static final Logger log = LoggerFactory.getLogger( PtgArea.class );
 	public static final long serialVersionUID = 666555444333222l;
-
-	@Override
-	public boolean getIsOperand()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean getIsReference()
-	{
-		return true;
-	}
-
 	protected PtgRef firstPtg;
 	protected PtgRef lastPtg;
-
-	/* constructor, takes the array of the ptgRef, including
-	the identifier so we do not need to figure it out again later...
-	*/
-	@Override
-	public void init( byte[] b )
-	{
-		locax = null; // cache reset
-		ptgId = b[0];
-		record = b;
-		populateVals();
-	}
-
-	/*
-	 Throw this data into two ptgref's
-	*/
-	@Override
-	public void populateVals()
-	{
-		byte[] temp1 = new byte[5];
-		byte[] temp2 = new byte[5];
-		temp1[0] = 0x24;
-		temp2[0] = 0x24;
-		System.arraycopy( record, 1, temp1, 1, 2 );
-		System.arraycopy( record, 5, temp1, 3, 2 );
-		System.arraycopy( record, 3, temp2, 1, 2 );
-		System.arraycopy( record, 7, temp2, 3, 2 );
-		try
-		{
-			getSheetName(); // 20080212 KSC:
-		}
-		catch( WorkSheetNotFoundException we )
-		{
-			log.error( "Error getting sheet name",we );
-		}
-		firstPtg = new PtgRef( temp1, parent_rec, false );    // don't add to ref tracker as it's part of area
-		firstPtg.sheetname = sheetname;
-
-		lastPtg = new PtgRef( temp2, parent_rec, false );        // don't add to ref tracker as it's part of area
-		lastPtg.sheetname = sheetname;
-		setWholeRowCol();
-		hashcode = getHashCode();
-	}
-
-	/**
-	 * Returns all of the cells of this range as PtgRef's.
-	 * This includes empty cells, values, formulas, etc.
-	 * Note the setting of parent-rec requires finding the cell
-	 * the PtgRef refer's to.  If that is null then the PtgRef
-	 * will exist, just with a null value.  This could cause issues when
-	 * programatically populating cells.
-	 */
-	@Override
-	public Ptg[] getComponents()
-	{
-		Vector v = new Vector();
-		try
-		{
-//       TODO: check rc sanity here
-			int startcol = -1;
-			int startrow = -1;
-			int endrow = -1;
-			int endcol = -1;
-			int[] startloc = null;
-			int[] endloc = null;
-
-        /*if (this.wholeRow) {
-			startcol= 0;
-			endcol= this.getSheet().getMaxCol();
-			startrow= endrow= firstPtg.rw;
-        } if (this.wholeCol) {
-		    startrow= 0;	// Get Actual Coordinates
-			startcol= endcol= firstPtg.col;
-			endrow= this.getSheet().getMaxRow();
-        } */
-			if( firstPtg != null )
-			{
-				startloc = firstPtg.getRealIntLocation();
-				startcol = startloc[1];
-				startrow = startloc[0];
-			}
-			else
-			{
-				startloc = ExcelTools.getRangeRowCol( locax );
-				startcol = startloc[1];
-				startrow = startloc[0];
-			}
-
-			if( lastPtg != null )
-			{
-				endloc = lastPtg.getRealIntLocation();
-				endcol = endloc[1];
-				endrow = endloc[0];
-			}
-			else
-			{
-				endloc = ExcelTools.getRangeRowCol( locax );
-				endcol = endloc[3];
-				endrow = endloc[2];
-			}
-
-			// usually don't need to set sheet on setlocation becuase uses parent_rec's sheet
-			// cases of named range or if location sheet does not = parent_rec sheet, set sheet explicitly
-			String sht = null;    // usual case, don't need to set sheet
-			Boundsheet sh = parent_rec.getSheet();
-			if( (sh == null) || ((sheetname != null) && !sheetname.equals( sh.getSheetName() )) )
-			{
-				if( (sh == null) || !GenericPtg.qualifySheetname( sheetname )
-				                               .equals( GenericPtg.qualifySheetname( sh.getSheetName() ) ) )
-				{
-					sht = sheetname + "!";
-				}
-			}
-			// loop through the cols
-			for(; startcol <= endcol; startcol++ )
-			{
-				// loop through the rows inside
-				int rowholder = startrow;
-				for(; rowholder <= endrow; rowholder++ )
-				{
-					String displaycol = ExcelTools.getAlphaVal( startcol );
-					int displayrow = rowholder + 1;
-					PtgRef pref;
-					if( sht == null )
-					{
-						pref = new PtgRef( displaycol + displayrow, parent_rec, false );
-					}
-					else
-					{
-						pref = new PtgRef( sht + displaycol + displayrow, parent_rec, false );
-					}
-					v.add( pref );
-				}
-			}
-		}
-		catch( Exception e )
-		{
-			log.error( "calculating formula range value failed.", e );
-		}
-		PtgRef[] pref = new PtgRef[v.size()];
-		v.toArray( pref );
-		return pref;
-	}
-
-	/**
-	 * returns the row/col ints for the ref
-	 * <p/>
-	 * Format is FirstRow,FirstCol,LastRow,LastCol
-	 *
-	 * @return
-	 */
-	@Override
-	public int[] getRowCol()
-	{
-		if( firstPtg == null )
-		{
-			return null;
-		}
-		if( (lastPtg == null) && (firstPtg != null) )
-		{
-			int[] rc1 = firstPtg.getRowCol();
-			int[] ret = { rc1[0], rc1[1], rc1[0], rc1[1] };
-			return ret;
-		}
-		int[] rc1 = firstPtg.getRowCol();
-		int[] rc2 = lastPtg.getRowCol();
-		int[] ret = { rc1[0], rc1[1], rc2[0], rc2[1] };
-		return ret;
-	}
-
-	/**
-	 * returns whether this CellRange Contains a Cell
-	 *
-	 * @param the cell to test
-	 * @return whether the cell is in the range
-	 */
-	public boolean contains( CellHandle ch )
-	{
-		String chsheet = ch.getWorkSheetName();
-		String mysheet = "";
-		if( getParentRec() != null )
-		{
-			BiffRec b = getParentRec();
-			if( b.getSheet() != null )
-			{
-				mysheet = b.getSheet().getSheetName();
-			}
-		}
-		if( !chsheet.equalsIgnoreCase( mysheet ) )
-		{
-			return false;
-		}
-		String adr = ch.getCellAddress();
-//      FIX broken COLROW
-		int[] rc = ExcelTools.getRowColFromString( adr );
-		return contains( rc );
-	}
-
-	/**
-	 * check to see if the sheet and row/col are contained
-	 * in this ref
-	 *
-	 * @param sheetname
-	 * @param rc
-	 * @return
-	 */
-	public boolean contains( String sn, int[] rc )
-	{
-		if( sheetname == null )
-		{
-			try
-			{
-				sheetname = getSheetName();
-			}
-			catch( Exception e )
-			{
-				;
-			}
-		}
-		if( !sn.equalsIgnoreCase( sheetname ) )
-		{
-			return false;
-		}
-		return contains( rc );
-	}
-
-	/**
-	 * returns whether this PtgArea Contains the specified row/col coordinate
-	 * <p/>
-	 * <p/>
-	 * [0] = firstrow
-	 * [1] = firstcol
-	 * [2] = lastrow
-	 * [3] = lastcol
-	 *
-	 * @param the rc coordinates to test
-	 * @return whether the coordinates are in the range
-	 */
-	public boolean contains( int[] rc )
-	{
-		int[] thisRange = getIntLocation();
-		// test the first rc
-		if( rc[0] < thisRange[0] )
-		{
-			return false; // row above the first ref row?
-		}
-		if( rc[0] > thisRange[2] )
-		{
-			return false; // row after the last ref row?
-		}
-
-		if( rc[1] < thisRange[1] )
-		{
-			return false; // col before the first ref col?
-		}
-		if( rc[1] > thisRange[3] )
-		{
-			return false; // col after the last ref col?
-		}
-
-		return true;
-	}
-
-	// private byte[] PROTOTYPE_BYTES = {0x25, 0, 0, 0, 0, 0, 0, 0, 0};
-
-	/**
-	 * return the human-readable String representation of
-	 * this ptg -- if applicable
-	 */
-	@Override
-	public String getString()
-	{
-		return getLocation();
-	}
+	private static final Logger log = LoggerFactory.getLogger( PtgArea.class );
 
 	/*
 	 * Creates a new PtgArea.  The parent rec is needed
@@ -439,24 +152,6 @@ public class PtgArea extends PtgRef implements Ptg
 		updateRecord();
 	}
 
-	/**
-	 * set the wholeRow and/or wholeCol flag for this PtgArea
-	 * for ranges such as:
-	 * $B:$B and $5:%9
-	 */
-	public void setWholeRowCol()
-	{
-		if( (firstPtg.rw <= 1) && lastPtg.wholeCol ) // TODO: inconsistencies in 0-based or 1-based rows
-		{
-			wholeCol = true;
-		}
-		wholeRow = lastPtg.wholeRow;
-		if( wholeCol )
-		{
-			useReferenceTracker = false;
-		}
-	}
-
 	/*
 	 * Default constructor
 	 */
@@ -471,6 +166,18 @@ public class PtgArea extends PtgRef implements Ptg
 	{
 		this();
 		this.useReferenceTracker = useReferenceTracker;
+	}
+
+	@Override
+	public boolean getIsOperand()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean getIsReference()
+	{
+		return true;
 	}
 
 	/**
@@ -498,6 +205,61 @@ public class PtgArea extends PtgRef implements Ptg
 		record[0] = ptgId;
 	}
 
+	// private byte[] PROTOTYPE_BYTES = {0x25, 0, 0, 0, 0, 0, 0, 0, 0};
+
+	/* constructor, takes the array of the ptgRef, including
+	the identifier so we do not need to figure it out again later...
+	*/
+	@Override
+	public void init( byte[] b )
+	{
+		locax = null; // cache reset
+		ptgId = b[0];
+		record = b;
+		populateVals();
+	}
+
+	/*
+	 Throw this data into two ptgref's
+	*/
+	@Override
+	public void populateVals()
+	{
+		byte[] temp1 = new byte[5];
+		byte[] temp2 = new byte[5];
+		temp1[0] = 0x24;
+		temp2[0] = 0x24;
+		System.arraycopy( record, 1, temp1, 1, 2 );
+		System.arraycopy( record, 5, temp1, 3, 2 );
+		System.arraycopy( record, 3, temp2, 1, 2 );
+		System.arraycopy( record, 7, temp2, 3, 2 );
+		try
+		{
+			getSheetName(); // 20080212 KSC:
+		}
+		catch( WorkSheetNotFoundException we )
+		{
+			log.error( "Error getting sheet name", we );
+		}
+		firstPtg = new PtgRef( temp1, parent_rec, false );    // don't add to ref tracker as it's part of area
+		firstPtg.sheetname = sheetname;
+
+		lastPtg = new PtgRef( temp2, parent_rec, false );        // don't add to ref tracker as it's part of area
+		lastPtg.sheetname = sheetname;
+		setWholeRowCol();
+		hashcode = getHashCode();
+	}
+
+	/**
+	 * return the human-readable String representation of
+	 * this ptg -- if applicable
+	 */
+	@Override
+	public String getString()
+	{
+		return getLocation();
+	}
+
 	public String toString()
 	{
 		String ret = getString();
@@ -516,127 +278,48 @@ public class PtgArea extends PtgRef implements Ptg
 				}
 				catch( WorkSheetNotFoundException we )
 				{
-					log.error("Error getting sheet name",  we );
+					log.error( "Error getting sheet name", we );
 				}
 			}
 		}
 		return ret;
 	}
 
-	@Override
-	public void setParentRec( XLSRecord rec )
-	{
-		super.setParentRec( rec );
-		// 20080221 KSC: just set parent_rec super.setParentRec(rec);
-		if( firstPtg != null )
-		{
-			firstPtg.setParentRec( parent_rec );
-		}
-		if( lastPtg != null )
-		{
-			lastPtg.setParentRec( parent_rec );
-		}
-	}
-
-	/* Set the location of this PtgRef.  This takes a location
-	   such as "a14:b15"
-	*/
-	@Override
-	public void setLocation( String address )
-	{
-		String[] s = ExcelTools.stripSheetNameFromRange( address );
-		setLocation( s );
-		hashcode = getHashCode();
-	}
-
 	/**
-	 * set Ptg to parsed location
+	 * returns the row/col ints for the ref
+	 * <p/>
+	 * Format is FirstRow,FirstCol,LastRow,LastCol
 	 *
-	 * @param loc String[] sheet1, range, sheet2, exref1, exref2
+	 * @return
 	 */
 	@Override
-	public void setLocation( String[] loc )
+	public int[] getRowCol()
 	{
-		locax = null; // cache reset
 		if( firstPtg == null )
 		{
-			record = new byte[]{ 0x25, 0, 0, 0, 0, 0, 0, 0, 0 };
-
-			if( getParentRec() != null )
-			{
-				populateVals();
-			}
+			return null;
 		}
-		else if( useReferenceTracker )
+		if( (lastPtg == null) && (firstPtg != null) )
 		{
-			removeFromRefTracker();
+			int[] rc1 = firstPtg.getRowCol();
+			int[] ret = { rc1[0], rc1[1], rc1[0], rc1[1] };
+			return ret;
 		}
-		int i = loc[1].indexOf( ":" );
-		// handle single cell addresses as:  A1:A1
-		if( i == -1 )
-		{
-			loc[1] = loc[1] + ":" + loc[1];
-			i = loc[1].indexOf( ":" );
-		}
-		String firstloc = loc[1].substring( 0, i );
-		String lastloc = loc[1].substring( i + 1 );
-		if( loc[0] != null )
-		{
-			firstloc = loc[0] + "!" + firstloc;
-		}
-		if( loc[2] != null )
-		{
-			lastloc = loc[2] + "!" + lastloc;
-		}
-		if( loc[3] != null )        // 20090325 KSC: store OOXML External References
-		{
-			firstloc = loc[3] + firstloc;
-		}
-		if( loc[4] != null )        // 20090325 KSC: store OOXML External References
-		{
-			lastloc = loc[4] + lastloc;
-		}
-
-		// TODO: do we need to remove refs from tracker?
-		firstPtg.setParentRec( getParentRec() );
-		lastPtg.setParentRec( getParentRec() );
-
-		firstPtg.setUseReferenceTracker( false );
-		lastPtg.setUseReferenceTracker( false );
-		firstPtg.setLocation( firstloc );
-		lastPtg.setLocation( lastloc );
-		setWholeRowCol();
-		hashcode = getHashCode();
-		updateRecord();
-		if( useReferenceTracker )
-		{// check of boolean useReferenceTracker
-			if( !getIsWholeCol() && !getIsWholeRow() )
-			{
-				addToRefTracker();
-			}
-			else
-			{
-				useReferenceTracker = false;
-			}
-		}
+		int[] rc1 = firstPtg.getRowCol();
+		int[] rc2 = lastPtg.getRowCol();
+		int[] ret = { rc1[0], rc1[1], rc2[0], rc2[1] };
+		return ret;
 	}
 
-	/**
-	 * returns the location of the ptg as an array of ints.
-	 * [0] = firstRow
-	 * [1] = firstCol
-	 * [2] = lastRow
-	 * [3] = lastCol
-	 */
+	/*
+		Returns the location of the Ptg as a string
+	*/
 	@Override
-	public int[] getIntLocation()
+	public String getLocation()
 	{
-		int[] first = firstPtg.getIntLocation();
-		int[] last = lastPtg.getIntLocation();
-		int[] returning = new int[4];
-		System.arraycopy( first, 0, returning, 0, 2 );
-		System.arraycopy( last, 0, returning, 2, 2 );
-		return returning;
+		String lc = getLocationHelper();
+		locax = lc;
+		return lc;
 	}
 
 	/**
@@ -649,7 +332,7 @@ public class PtgArea extends PtgRef implements Ptg
 		locax = null; // cache reset
 		if( firstPtg == null )
 		{
-			//this.record = new byte[] {0x25, 0, 0, 0, 0, 0, 0, 0, 0}; -- don't as can be called from PtgArea3d			
+			//this.record = new byte[] {0x25, 0, 0, 0, 0, 0, 0, 0, 0}; -- don't as can be called from PtgArea3d
 			if( getParentRec() != null )
 			{
 				populateVals();
@@ -680,107 +363,6 @@ public class PtgArea extends PtgRef implements Ptg
 		{
 			addToRefTracker();
 		}
-	}
-
-	/*
-		Returns the location of the Ptg as a string
-	*/
-	@Override
-	public String getLocation()
-	{
-		String lc = getLocationHelper();
-		locax = lc;
-		return lc;
-	}
-
-	private String getLocationHelper()
-	{
-		//String loc= null;
-		if( (firstPtg == null) || (lastPtg == null) )
-		{
-			populateVals();
-			if( (firstPtg == null) || (lastPtg == null) ) // we tried!
-			{
-				throw new AssertionError( "PtgArea.getLocationHelper null ptgs" );
-			}
-		}
-		String s = firstPtg.getLocation();
-		String y = lastPtg.getLocation();
-
-		String[] loc1 = ExcelTools.stripSheetNameFromRange( s );    // sheet, addr
-		String[] loc2 = ExcelTools.stripSheetNameFromRange( y );    // sheet, addr
-
-		String sh1 = loc1[0];
-		String sh2 = loc2[0];
-		String addr1 = loc1[1];
-		String addr2 = loc2[1];
-
-		if( !(this instanceof PtgArea3d) )
-		{
-			//if (addr1.equals(addr2))	// this is proper but makes so many assertions fail, revert for now
-			//return addr2;
-			return addr1 + ":" + addr2;
-		}
-
-		if( sh1 == null )
-		{
-			sh1 = sheetname;
-		}
-		if( sh1 == null )    // no sheetname avail
-		{
-			return addr1 + ":" + addr2;
-		}
-
-		// handle OOXML external references
-		if( externalLink1 > 0 )
-		{
-			sh1 = "[" + externalLink1 + "]" + sh1;
-		}
-		if( (externalLink2 > 0) && (sh2 != null) )
-		{
-			sh2 = "[" + externalLink2 + "]" + sh2;
-		}
-
-		sh1 = qualifySheetname( sh1 );
-
-		// have sheetname
-		if( sh1.equals( sh2 ) )
-		{ // range is in one sheet
-			if( !sh1.equals( "" ) )
-			{
-				if( !addr1.equals( addr2 ) )
-				{
-					return sh1 + "!" + addr1 + ":" + addr2;
-				}
-				return sh1 + "!" + addr1;
-			}
-			if( sheetname != null )
-			{    // both sheets in sub-ptgs are null
-				sh1 = sheetname;
-				// 20090325 KSC: handle OOXML external references
-				if( externalLink1 > 0 )
-				{
-					sh1 = "[" + externalLink1 + "]" + sh1;
-				}
-				sh1 = qualifySheetname( sh1 );
-				if( !addr1.equals( addr2 ) )  // 20081215 KSC:
-				{
-					return sh1 + "!" + addr1 + ":" + addr2;
-				}
-				return sh1 + "!" + addr1;
-			}
-		}
-		else if( sh2 == null )
-		{    // only 1 sheetnaame specified
-			if( !addr1.equals( addr2 ) )  // 20081215 KSC:
-			{
-				return sh1 + "!" + addr1 + ":" + addr2;
-			}
-			return sh1 + "!" + addr1;
-		}
-		// otherwise, include both sheets in return string
-		sh2 = qualifySheetname( sh2 );
-		return sh1 + ":" + sh2 + "!" + addr1 + ":" + addr2;
 	}
 
 	/* Updates the record bytes so it can be pulled back out.
@@ -839,14 +421,16 @@ public class PtgArea extends PtgRef implements Ptg
 	{
 		// 20080214 KSC: underlying cells may have changed ...if(refCell==null)
 		refCell = getRefCells();
+
 		Object returnval = (double) 0;
 		String retstr = null;
 		String array = "";
 		boolean isArray = (parent_rec instanceof Array);
+
 		for( BiffRec cel : refCell )
 		{
 			if( cel == null )
-			{ // 20090203 KSC
+			{
 				continue;
 			}
 
@@ -859,33 +443,33 @@ public class PtgArea extends PtgRef implements Ptg
 					String s = String.valueOf( oby );
 					try
 					{
-						//Double d = new Double(s);
 						returnval = new Double( s );
 					}
 					catch( NumberFormatException ex )
 					{
-						retstr = s;                    // 20090202 KSC: was +=
+						retstr = s;
 					}
-
 				}
 				else
 				{
-					returnval = cel.getInternalVal();    //DblVal();	// 20090202 KSC: was +=
+					returnval = cel.getInternalVal();
 				}
 			}
 			catch( FunctionNotSupportedException e )
 			{
-				; // keep going???
+				log.error( "Function not supported", e );
 			}
 			catch( Exception e )
 			{
-				returnval = cel.getInternalVal();    //DblVal();		// 20090202 KSC: was +=
+				// TODO: 20140207 Why would an exception become a value? Why not #ERR?
+				returnval = cel.getInternalVal();
 			}
+
 			if( !isArray )  // 20080730 KSC: if not an array, retrieve only 1st referenced cell value
 			{
 				break;
 			}
-			//
+
 			if( retstr != null )
 			{
 				array = array + retstr + ",";
@@ -896,6 +480,7 @@ public class PtgArea extends PtgRef implements Ptg
 			}
 			retstr = null;
 		}
+
 		if( isArray && (array != null) && (array.length() > 1) )
 		{   // 20090817 KSC:  [BugTracker 2683]
 			array = "{" + array.substring( 0, array.length() - 1 ) + "}";
@@ -903,150 +488,13 @@ public class PtgArea extends PtgRef implements Ptg
 			pa.setVal( array );
 			return pa;
 		}
+
 		if( retstr != null )
 		{
 			return retstr;
 		}
 
-		return returnval;    //new Double(returnval);
-	}
-
-	/*
-		Returns all of the cells of this range as PtgRef's.
-		This includes empty cells, values, formulas, etc.
-		Note the setting of parent-rec requires finding the cell
-		the PtgRef refer's to.  If that is null then the PtgRef
-		will exist, just with a null value.  This could cause issues when
-		programatically populating cells.
-	*/
-	public Ptg[] getColComponents( int colNum )
-	{
-		if( colNum < 0 )
-		{
-			return null;
-		}
-		String lu = toString();
-		Object p = parent_rec.getWorkBook().getRefTracker().getVlookups().get( lu );
-
-		if( p != null )
-		{
-			PtgArea par = (PtgArea) p;
-			Ptg[] ret = (Ptg[]) par.getParentRec()
-			                       .getWorkBook()
-			                       .getRefTracker()
-			                       .getLookupColCache()
-			                       .get( lu + ":" + colNum );
-			if( ret != null )
-			{
-				return ret;
-			}
-		}
-
-		PtgRef[] v = null;
-		try
-		{
-//			 TODO: check rc sanity here
-			int[] startloc = firstPtg.getRealIntLocation();
-			int startcol = colNum; // startloc[0];
-			int startrow = startloc[0];
-			int[] endloc = lastPtg.getRealIntLocation();
-			int endrow = endloc[0];
-			// error trap
-			if( endrow < startrow )    // can happen if wholerow/wholecol, getMaxRow may be less than startRow
-			{
-				endrow = startrow;
-			}
-			int sz = endrow - startrow;
-			sz++;
-			v = new PtgRef[sz];
-			// loop through the cols
-			// loop through the rows inside
-			int rowholder = startrow;
-			int pos = 0;
-			String sht = toString();
-			if( sht.indexOf( "!" ) > -1 )
-			{
-				sht = sht.substring( 0, sht.indexOf( "!" ) );
-			}
-			for(; rowholder <= endrow; rowholder++ )
-			{
-				String displaycol = ExcelTools.getAlphaVal( startcol );
-				int displayrow = rowholder + 1;
-				String loc = sht + "!" + displaycol + displayrow;
-
-				PtgRef pref = new PtgRef( loc, parent_rec, useReferenceTracker );
-
-				v[pos++] = pref;
-			}
-		}
-		catch( Exception e )
-		{
-			log.error( "Getting column range in PtgArea failed.", e );
-		}
-
-		// cache
-		parent_rec.getWorkBook().getRefTracker().getVlookups().put( toString(), this );
-		parent_rec.getWorkBook().getRefTracker().getLookupColCache().put( lu + ":" + colNum, v );
-		return v;
-	}
-
-	/**
-	 * return the ptg components for a certain column within a ptgArea()
-	 *
-	 * @param rowNum
-	 * @return all Ptg's within colNum
-	 */
-	public Ptg[] getRowComponents( int rowNum )
-	{
-		FastAddVector v = new FastAddVector();
-		Ptg[] allComponents = getComponents();
-		for( Ptg allComponent : allComponents )
-		{
-			PtgRef p = (PtgRef) allComponent;
-//			 TODO: check rc sanity here
-			int[] x = p.getRealIntLocation();
-			if( x[0] == rowNum )
-			{
-				v.add( p );
-			}
-		}
-		PtgRef[] pref = new PtgRef[v.size()];
-		v.toArray( pref );
-		return pref;
-	}
-
-	/**
-	 * @return
-	 */
-	public PtgRef getFirstPtg()
-	{
-		return firstPtg;
-	}
-
-	/**
-	 * @return
-	 */
-	public PtgRef getLastPtg()
-	{
-		return lastPtg;
-	}
-
-	/**
-	 * @param ref
-	 */
-	public void setFirstPtg( PtgRef ref )
-	{
-		locax = null; // cache reset
-		firstPtg = ref;
-	}
-
-	/**
-	 * @param ref
-	 */
-	public void setLastPtg( PtgRef ref )
-	{
-		locax = null; // cache reset
-		lastPtg = ref;
+		return returnval;
 	}
 
 	/**
@@ -1055,10 +503,9 @@ public class PtgArea extends PtgRef implements Ptg
 	@Override
 	public BiffRec[] getRefCells()
 	{
-		double returnval = 0;
 		try
 		{
-			Boundsheet bs = null; // this.parent_rec.getWorkBook().getWorkSheetByName(this.getSheetName());
+			Boundsheet bs;
 			getSheetName();
 			// handle misc sheets
 			if( sheetname != null )
@@ -1156,18 +603,6 @@ public class PtgArea extends PtgRef implements Ptg
 					startcol--;
 				}
 			}
-
-            /*
-            for (;startcol<=endcol;startcol++){ // loop the cols
-                int rowpos = startrow;
-                for (;rowpos<=endrow;rowpos++){ // loop through the rows
-                    Row r = bs.getRowByNumber(rowpos);
-                    if (r!=null)
-                        refCell[rowctr] = (BiffRec)r.getCell((short)(startcol));
-                    rowctr++;
-                }
-            }
-            */
 		}
 		catch( Exception ex )
 		{
@@ -1177,8 +612,558 @@ public class PtgArea extends PtgRef implements Ptg
 	}
 
 	@Override
+	public void setParentRec( XLSRecord rec )
+	{
+		super.setParentRec( rec );
+		// 20080221 KSC: just set parent_rec super.setParentRec(rec);
+		if( firstPtg != null )
+		{
+			firstPtg.setParentRec( parent_rec );
+		}
+		if( lastPtg != null )
+		{
+			lastPtg.setParentRec( parent_rec );
+		}
+	}
+
+	@Override
 	protected long getHashCode()
 	{
 		return lastPtg.hashcode + ((firstPtg.hashcode) * (MAXCOLS + ((long) MAXROWS * MAXCOLS)));
+	}
+
+	/**
+	 * returns the location of the ptg as an array of ints.
+	 * [0] = firstRow
+	 * [1] = firstCol
+	 * [2] = lastRow
+	 * [3] = lastCol
+	 */
+	@Override
+	public int[] getIntLocation()
+	{
+		int[] first = firstPtg.getIntLocation();
+		int[] last = lastPtg.getIntLocation();
+		int[] returning = new int[4];
+		System.arraycopy( first, 0, returning, 0, 2 );
+		System.arraycopy( last, 0, returning, 2, 2 );
+		return returning;
+	}
+
+	/* Set the location of this PtgRef.  This takes a location
+	   such as "a14:b15"
+	*/
+	@Override
+	public void setLocation( String address )
+	{
+		String[] s = ExcelTools.stripSheetNameFromRange( address );
+		setLocation( s );
+		hashcode = getHashCode();
+	}
+
+	/**
+	 * set Ptg to parsed location
+	 *
+	 * @param loc String[] sheet1, range, sheet2, exref1, exref2
+	 */
+	@Override
+	public void setLocation( String[] loc )
+	{
+		locax = null; // cache reset
+		if( firstPtg == null )
+		{
+			record = new byte[]{ 0x25, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+			if( getParentRec() != null )
+			{
+				populateVals();
+			}
+		}
+		else if( useReferenceTracker )
+		{
+			removeFromRefTracker();
+		}
+		int i = loc[1].indexOf( ":" );
+		// handle single cell addresses as:  A1:A1
+		if( i == -1 )
+		{
+			loc[1] = loc[1] + ":" + loc[1];
+			i = loc[1].indexOf( ":" );
+		}
+		String firstloc = loc[1].substring( 0, i );
+		String lastloc = loc[1].substring( i + 1 );
+		if( loc[0] != null )
+		{
+			firstloc = loc[0] + "!" + firstloc;
+		}
+		if( loc[2] != null )
+		{
+			lastloc = loc[2] + "!" + lastloc;
+		}
+		if( loc[3] != null )        // 20090325 KSC: store OOXML External References
+		{
+			firstloc = loc[3] + firstloc;
+		}
+		if( loc[4] != null )        // 20090325 KSC: store OOXML External References
+		{
+			lastloc = loc[4] + lastloc;
+		}
+
+		// TODO: do we need to remove refs from tracker?
+		firstPtg.setParentRec( getParentRec() );
+		lastPtg.setParentRec( getParentRec() );
+
+		firstPtg.setUseReferenceTracker( false );
+		lastPtg.setUseReferenceTracker( false );
+		firstPtg.setLocation( firstloc );
+		lastPtg.setLocation( lastloc );
+		setWholeRowCol();
+		hashcode = getHashCode();
+		updateRecord();
+		if( useReferenceTracker )
+		{// check of boolean useReferenceTracker
+			if( !getIsWholeCol() && !getIsWholeRow() )
+			{
+				addToRefTracker();
+			}
+			else
+			{
+				useReferenceTracker = false;
+			}
+		}
+	}
+
+	/**
+	 * Returns all of the cells of this range as PtgRef's.
+	 * This includes empty cells, values, formulas, etc.
+	 * Note the setting of parent-rec requires finding the cell
+	 * the PtgRef refer's to.  If that is null then the PtgRef
+	 * will exist, just with a null value.  This could cause issues when
+	 * programatically populating cells.
+	 */
+	@Override
+	public Ptg[] getComponents()
+	{
+		Vector v = new Vector();
+		try
+		{
+//       TODO: check rc sanity here
+			int startcol = -1;
+			int startrow = -1;
+			int endrow = -1;
+			int endcol = -1;
+			int[] startloc = null;
+			int[] endloc = null;
+
+        /*if (this.wholeRow) {
+			startcol= 0;
+			endcol= this.getSheet().getMaxCol();
+			startrow= endrow= firstPtg.rw;
+        } if (this.wholeCol) {
+		    startrow= 0;	// Get Actual Coordinates
+			startcol= endcol= firstPtg.col;
+			endrow= this.getSheet().getMaxRow();
+        } */
+			if( firstPtg != null )
+			{
+				startloc = firstPtg.getRealIntLocation();
+				startcol = startloc[1];
+				startrow = startloc[0];
+			}
+			else
+			{
+				startloc = ExcelTools.getRangeRowCol( locax );
+				startcol = startloc[1];
+				startrow = startloc[0];
+			}
+
+			if( lastPtg != null )
+			{
+				endloc = lastPtg.getRealIntLocation();
+				endcol = endloc[1];
+				endrow = endloc[0];
+			}
+			else
+			{
+				endloc = ExcelTools.getRangeRowCol( locax );
+				endcol = endloc[3];
+				endrow = endloc[2];
+			}
+
+			// usually don't need to set sheet on setlocation becuase uses parent_rec's sheet
+			// cases of named range or if location sheet does not = parent_rec sheet, set sheet explicitly
+			String sht = null;    // usual case, don't need to set sheet
+			Boundsheet sh = parent_rec.getSheet();
+			if( (sh == null) || ((sheetname != null) && !sheetname.equals( sh.getSheetName() )) )
+			{
+				if( (sh == null) || !GenericPtg.qualifySheetname( sheetname ).equals( GenericPtg.qualifySheetname( sh.getSheetName() ) ) )
+				{
+					sht = sheetname + "!";
+				}
+			}
+			// loop through the cols
+			for(; startcol <= endcol; startcol++ )
+			{
+				// loop through the rows inside
+				int rowholder = startrow;
+				for(; rowholder <= endrow; rowholder++ )
+				{
+					String displaycol = ExcelTools.getAlphaVal( startcol );
+					int displayrow = rowholder + 1;
+					PtgRef pref;
+					if( sht == null )
+					{
+						pref = new PtgRef( displaycol + displayrow, parent_rec, false );
+					}
+					else
+					{
+						pref = new PtgRef( sht + displaycol + displayrow, parent_rec, false );
+					}
+					v.add( pref );
+				}
+			}
+		}
+		catch( Exception e )
+		{
+			log.error( "calculating formula range value failed.", e );
+		}
+		PtgRef[] pref = new PtgRef[v.size()];
+		v.toArray( pref );
+		return pref;
+	}
+
+	/**
+	 * returns whether this CellRange Contains a Cell
+	 *
+	 * @param the cell to test
+	 * @return whether the cell is in the range
+	 */
+	public boolean contains( CellHandle ch )
+	{
+		String chsheet = ch.getWorkSheetName();
+		String mysheet = "";
+		if( getParentRec() != null )
+		{
+			BiffRec b = getParentRec();
+			if( b.getSheet() != null )
+			{
+				mysheet = b.getSheet().getSheetName();
+			}
+		}
+		if( !chsheet.equalsIgnoreCase( mysheet ) )
+		{
+			return false;
+		}
+		String adr = ch.getCellAddress();
+//      FIX broken COLROW
+		int[] rc = ExcelTools.getRowColFromString( adr );
+		return contains( rc );
+	}
+
+	/**
+	 * check to see if the sheet and row/col are contained
+	 * in this ref
+	 *
+	 * @param sheetname
+	 * @param rc
+	 * @return
+	 */
+	public boolean contains( String sn, int[] rc )
+	{
+		if( sheetname == null )
+		{
+			try
+			{
+				sheetname = getSheetName();
+			}
+			catch( Exception e )
+			{
+				;
+			}
+		}
+		if( !sn.equalsIgnoreCase( sheetname ) )
+		{
+			return false;
+		}
+		return contains( rc );
+	}
+
+	/**
+	 * returns whether this PtgArea Contains the specified row/col coordinate
+	 * <p/>
+	 * <p/>
+	 * [0] = firstrow
+	 * [1] = firstcol
+	 * [2] = lastrow
+	 * [3] = lastcol
+	 *
+	 * @param the rc coordinates to test
+	 * @return whether the coordinates are in the range
+	 */
+	public boolean contains( int[] rc )
+	{
+		int[] thisRange = getIntLocation();
+		// test the first rc
+		if( rc[0] < thisRange[0] )
+		{
+			return false; // row above the first ref row?
+		}
+		if( rc[0] > thisRange[2] )
+		{
+			return false; // row after the last ref row?
+		}
+
+		if( rc[1] < thisRange[1] )
+		{
+			return false; // col before the first ref col?
+		}
+		if( rc[1] > thisRange[3] )
+		{
+			return false; // col after the last ref col?
+		}
+
+		return true;
+	}
+
+	/**
+	 * set the wholeRow and/or wholeCol flag for this PtgArea
+	 * for ranges such as:
+	 * $B:$B and $5:%9
+	 */
+	public void setWholeRowCol()
+	{
+		if( (firstPtg.rw <= 1) && lastPtg.wholeCol ) // TODO: inconsistencies in 0-based or 1-based rows
+		{
+			wholeCol = true;
+		}
+		wholeRow = lastPtg.wholeRow;
+		if( wholeCol )
+		{
+			useReferenceTracker = false;
+		}
+	}
+
+	/*
+		Returns all of the cells of this range as PtgRef's.
+		This includes empty cells, values, formulas, etc.
+		Note the setting of parent-rec requires finding the cell
+		the PtgRef refer's to.  If that is null then the PtgRef
+		will exist, just with a null value.  This could cause issues when
+		programatically populating cells.
+	*/
+	public Ptg[] getColComponents( int colNum )
+	{
+		if( colNum < 0 )
+		{
+			return null;
+		}
+		String lu = toString();
+		Object p = parent_rec.getWorkBook().getRefTracker().getVlookups().get( lu );
+
+		if( p != null )
+		{
+			PtgArea par = (PtgArea) p;
+			Ptg[] ret = (Ptg[]) par.getParentRec().getWorkBook().getRefTracker().getLookupColCache().get( lu + ":" + colNum );
+			if( ret != null )
+			{
+				return ret;
+			}
+		}
+
+		PtgRef[] v = null;
+		try
+		{
+//			 TODO: check rc sanity here
+			int[] startloc = firstPtg.getRealIntLocation();
+			int startcol = colNum; // startloc[0];
+			int startrow = startloc[0];
+			int[] endloc = lastPtg.getRealIntLocation();
+			int endrow = endloc[0];
+			// error trap
+			if( endrow < startrow )    // can happen if wholerow/wholecol, getMaxRow may be less than startRow
+			{
+				endrow = startrow;
+			}
+			int sz = endrow - startrow;
+			sz++;
+			v = new PtgRef[sz];
+			// loop through the cols
+			// loop through the rows inside
+			int rowholder = startrow;
+			int pos = 0;
+			String sht = toString();
+			if( sht.indexOf( "!" ) > -1 )
+			{
+				sht = sht.substring( 0, sht.indexOf( "!" ) );
+			}
+			for(; rowholder <= endrow; rowholder++ )
+			{
+				String displaycol = ExcelTools.getAlphaVal( startcol );
+				int displayrow = rowholder + 1;
+				String loc = sht + "!" + displaycol + displayrow;
+
+				PtgRef pref = new PtgRef( loc, parent_rec, useReferenceTracker );
+
+				v[pos++] = pref;
+			}
+		}
+		catch( Exception e )
+		{
+			log.error( "Getting column range in PtgArea failed.", e );
+		}
+
+		// cache
+		parent_rec.getWorkBook().getRefTracker().getVlookups().put( toString(), this );
+		parent_rec.getWorkBook().getRefTracker().getLookupColCache().put( lu + ":" + colNum, v );
+		return v;
+	}
+
+	/**
+	 * return the ptg components for a certain column within a ptgArea()
+	 *
+	 * @param rowNum
+	 * @return all Ptg's within colNum
+	 */
+	public Ptg[] getRowComponents( int rowNum )
+	{
+		FastAddVector v = new FastAddVector();
+		Ptg[] allComponents = getComponents();
+		for( Ptg allComponent : allComponents )
+		{
+			PtgRef p = (PtgRef) allComponent;
+//			 TODO: check rc sanity here
+			int[] x = p.getRealIntLocation();
+			if( x[0] == rowNum )
+			{
+				v.add( p );
+			}
+		}
+		PtgRef[] pref = new PtgRef[v.size()];
+		v.toArray( pref );
+		return pref;
+	}
+
+	/**
+	 * @return
+	 */
+	public PtgRef getFirstPtg()
+	{
+		return firstPtg;
+	}
+
+	/**
+	 * @param ref
+	 */
+	public void setFirstPtg( PtgRef ref )
+	{
+		locax = null; // cache reset
+		firstPtg = ref;
+	}
+
+	/**
+	 * @return
+	 */
+	public PtgRef getLastPtg()
+	{
+		return lastPtg;
+	}
+
+	/**
+	 * @param ref
+	 */
+	public void setLastPtg( PtgRef ref )
+	{
+		locax = null; // cache reset
+		lastPtg = ref;
+	}
+
+	private String getLocationHelper()
+	{
+		//String loc= null;
+		if( (firstPtg == null) || (lastPtg == null) )
+		{
+			populateVals();
+			if( (firstPtg == null) || (lastPtg == null) ) // we tried!
+			{
+				throw new AssertionError( "PtgArea.getLocationHelper null ptgs" );
+			}
+		}
+		String s = firstPtg.getLocation();
+		String y = lastPtg.getLocation();
+
+		String[] loc1 = ExcelTools.stripSheetNameFromRange( s );    // sheet, addr
+		String[] loc2 = ExcelTools.stripSheetNameFromRange( y );    // sheet, addr
+
+		String sh1 = loc1[0];
+		String sh2 = loc2[0];
+		String addr1 = loc1[1];
+		String addr2 = loc2[1];
+
+		if( !(this instanceof PtgArea3d) )
+		{
+			//if (addr1.equals(addr2))	// this is proper but makes so many assertions fail, revert for now
+			//return addr2;
+			return addr1 + ":" + addr2;
+		}
+
+		if( sh1 == null )
+		{
+			sh1 = sheetname;
+		}
+		if( sh1 == null )    // no sheetname avail
+		{
+			return addr1 + ":" + addr2;
+		}
+
+		// handle OOXML external references
+		if( externalLink1 > 0 )
+		{
+			sh1 = "[" + externalLink1 + "]" + sh1;
+		}
+		if( (externalLink2 > 0) && (sh2 != null) )
+		{
+			sh2 = "[" + externalLink2 + "]" + sh2;
+		}
+
+		sh1 = qualifySheetname( sh1 );
+
+		// have sheetname
+		if( sh1.equals( sh2 ) )
+		{ // range is in one sheet
+			if( !sh1.equals( "" ) )
+			{
+				if( !addr1.equals( addr2 ) )
+				{
+					return sh1 + "!" + addr1 + ":" + addr2;
+				}
+				return sh1 + "!" + addr1;
+			}
+			if( sheetname != null )
+			{    // both sheets in sub-ptgs are null
+				sh1 = sheetname;
+				// 20090325 KSC: handle OOXML external references
+				if( externalLink1 > 0 )
+				{
+					sh1 = "[" + externalLink1 + "]" + sh1;
+				}
+				sh1 = qualifySheetname( sh1 );
+				if( !addr1.equals( addr2 ) )  // 20081215 KSC:
+				{
+					return sh1 + "!" + addr1 + ":" + addr2;
+				}
+				return sh1 + "!" + addr1;
+			}
+		}
+		else if( sh2 == null )
+		{    // only 1 sheetnaame specified
+			if( !addr1.equals( addr2 ) )  // 20081215 KSC:
+			{
+				return sh1 + "!" + addr1 + ":" + addr2;
+			}
+			return sh1 + "!" + addr1;
+		}
+		// otherwise, include both sheets in return string
+		sh2 = qualifySheetname( sh2 );
+		return sh1 + ":" + sh2 + "!" + addr1 + ":" + addr2;
 	}
 }

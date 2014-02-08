@@ -198,7 +198,7 @@ public class PtgExp extends GenericPtg implements Ptg
 	public Ptg calculatePtg( Ptg[] parsething )
 	{
 		Object o = null;
-		;
+
 		Formula f = ((Formula) getParentRec());
 		if( f.isSharedFormula() )
 		{

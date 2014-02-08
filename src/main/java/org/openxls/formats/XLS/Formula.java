@@ -530,7 +530,7 @@ public final class Formula extends XLSCellRecord
 	public String toString()
 	{
 		populateExpression();
-		return super.toString();
+		return super.toString() + " : " + getFormulaString();
 		//return this.worksheet.getSheetName() + "!" + this.getCellAddress() + ":" + this.getStringVal();
 	}
 
@@ -1118,6 +1118,7 @@ public final class Formula extends XLSCellRecord
 
 		try
 		{
+			log.debug( "Calculating Formula: {}", getFormulaString() );
 			recurseCount.set( depth + 1 );
 			if( depth > WorkBookHandle.RECURSION_LEVELS_ALLOWED )
 			{
@@ -1506,9 +1507,12 @@ public final class Formula extends XLSCellRecord
 		// If we have a cached value, return it instead of calculating
 		if( cachedValue != null )
 		{
+			log.trace( "Returning cached value..." );
 			return cachedValue;
 		}
+
 		populateExpression();
+
 		try
 		{
 			cachedValue = FormulaCalculator.calculateFormula( expression );

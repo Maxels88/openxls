@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -1757,7 +1758,7 @@ Returns a subtotal in a list or database
 		}
 		catch( Exception e )
 		{
-			;
+			log.error( "Unknown exception", e );
 		}
 		return new PtgErr( PtgErr.ERROR_NULL );
 	}
@@ -1770,17 +1771,20 @@ Returns a subtotal in a list or database
 	{
 		double res = 0;
 		int dim = 0;    // all arrays must have same dimension see below
-		ArrayList arrays = new ArrayList();
+		List<Ptg[]> arrays = new ArrayList<>();
 		for( Ptg operand : operands )
 		{
+			// If any of the operands are in error, then this is in error. Period. Standard Excel processing.
 			if( operand instanceof PtgErr )
 			{
-				return new PtgErr( PtgErr.ERROR_NA );    // it's what excel does
+				// it's what excel does
+				return new PtgErr( PtgErr.ERROR_NA );
 			}
+
 			Ptg[] a = operand.getComponents();
 			if( a == null )
 			{
-				arrays.add( operand );
+				arrays.add( new Ptg[]{operand} );
 				if( dim == 0 )
 				{
 					dim = 1;
@@ -1788,6 +1792,7 @@ Returns a subtotal in a list or database
 				}
 				return new PtgErr( PtgErr.ERROR_VALUE );
 			}
+
 			if( dim == 0 )
 			{
 				dim = a.length;
@@ -1796,14 +1801,21 @@ Returns a subtotal in a list or database
 			{
 				return new PtgErr( PtgErr.ERROR_VALUE );
 			}
+
 			arrays.add( a );
 		}
+
+		// For each 'row' in the array(s)...
 		for( int j = 0; j < dim; j++ )
 		{
 			double d = 1;
+
+			// Multiply each value in each of the arrays at the specified row index...
 			for( Object array : arrays )
 			{
-				Object o = ((Ptg[]) array)[j].getValue();
+				Ptg[] ptgArray = (Ptg[]) array;
+				Ptg ptg = ptgArray[j];
+				Object o = ptg.getValue();
 				if( o instanceof Double )
 				{
 					d = d * (Double) o;

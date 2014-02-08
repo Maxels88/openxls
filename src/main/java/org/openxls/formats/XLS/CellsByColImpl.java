@@ -46,7 +46,7 @@ public class CellsByColImpl implements CellsByCol
 
 		validate( cell.getColNumber(), first, last );
 
-		log.debug( "Adding R{}C{}-{} {} - {}", cell.getRowNumber(), first, last, cell.getClass().getName(), cell.toString() );
+		log.debug( "Adding Cell: {} R{}C{}-{} {} - {}", cell.getCellAddressWithSheet(), cell.getRowNumber(), first, last, cell.getClass().getName(), cell.toString() );
 
 		//
 		// While we do double loop on this, I want the data structure usage safety over any potential performance issues right now.

@@ -29,7 +29,7 @@ import org.openxls.toolkit.ByteTools;
 import java.util.Locale;
 
 /**
- * PtgFunc is a fuction operator that refers to the header file in order to
+ * PtgFunc is a function operator that refers to the header file in order to
  * use the correct function.
  * <p/>
  * PtgFuncVar is only used with a variable number of arguments.
@@ -118,7 +118,7 @@ public class PtgFuncVar extends GenericPtg implements Ptg
 	}
 
 	/**
-	 * set the number of parmeters in the FuncVar record
+	 * set the number of parameters in the FuncVar record
 	 *
 	 * @param byte nParams
 	 */

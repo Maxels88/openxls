@@ -1009,7 +1009,7 @@ public class PtgRef extends GenericPtg
 	}
 
 	/**
-	 * returns the value of the cell refereced by the PtgRef
+	 * returns the value of the cell referenced by the PtgRef
 	 */
 	@Override
 	public Object getValue()
@@ -1041,6 +1041,7 @@ public class PtgRef extends GenericPtg
 		}
 		catch( NullPointerException e )
 		{
+			log.error( "NPE: ", e );
 			// assume zero, which the vast majority of cases are
 		}
 		return 0;

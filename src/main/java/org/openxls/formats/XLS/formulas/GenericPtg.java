@@ -36,29 +36,121 @@ import java.util.Calendar;
 
 public abstract class GenericPtg implements Ptg, Cloneable
 {
-	private static final Logger log = LoggerFactory.getLogger( GenericPtg.class );
-	double doublePrecision = 0.00000001;        // doubles/floats cannot be compared for exactness so use precision comparator
 	public static final long serialVersionUID = 666555444333222l;
+	// Parent Rec is the BiffRec record referenced by Operand Ptgs
+	protected XLSRecord parent_rec;
+	double doublePrecision = 0.00000001;        // doubles/floats cannot be compared for exactness so use precision comparator
 	byte ptgId;
 	byte[] record;
-
 	Ptg[] vars = null;
 	int lock_id = -1;
+	private static final Logger log = LoggerFactory.getLogger( GenericPtg.class );
 	private int locationLocked = PTG_LOCATION_POLICY_UNLOCKED;
 	private BiffRec trackercell = null;
 
-	@Override
-	public Object clone()
+	/**
+	 * convert a value to a double, throws exception if cannot
+	 *
+	 * @param o
+	 * @return double value if possible
+	 * @throws NumberFormatException
+	 */
+	public static double getDoubleValue( Object o, XLSRecord parent ) throws NumberFormatException
 	{
-		try
+		if( o instanceof Double )
 		{
-			return super.clone();
+			return (Double) o;
 		}
-		catch( CloneNotSupportedException e )
+		if( (o == null) || o.toString().equals( "" ) )
 		{
-			// This is, in theory, impossible
-			return null;
+			// empty string is interpreted as 0 if show zero values
+			if( (parent != null) && parent.getSheet().getWindow2().getShowZeroValues() )
+			{
+				return 0.0;
+			}
+			// otherwise, throw error
+			throw new NumberFormatException();
 		}
+		return new Double( o.toString() );    // will throw NumberFormatException if cannot convert
+	}
+
+	/**
+	 * converts a single Ptg number-type value to a double
+	 */
+	public static double getDoubleValueFromObject( Object o )
+	{
+		double ret = 0.0;
+		if( o == null )
+		{    // 20081103 KSC: don't error out if "" */
+			ret = 0.0;
+		}
+		else if( o instanceof Double )
+		{
+			ret = (Double) o;
+		}
+		else if( o instanceof Integer )
+		{
+			//noinspection RedundantCast - This is not redundant!
+			ret = (double) (Integer) o;
+		}
+		else if( o instanceof Boolean )
+		{    // Excel converts booleans to numbers in calculations 20090129 KSC
+			ret = ((Boolean) o ? 1.0 : 0.0);
+		}
+		else if( o instanceof PtgErr )
+		{
+			// ?
+		}
+		else
+		{
+			String s = o.toString();
+			// handle formatted dates from fields like TEXT() calcs
+			if( s.contains( "/" ) )
+			{
+				try
+				{
+					Calendar c = DateConverter.convertStringToCalendar( s );
+					if( c != null )
+					{
+						ret = DateConverter.getXLSDateVal( c );
+					}
+				}
+				catch( Exception e )
+				{
+					//guess not
+				}
+			}
+			if( ret == 0.0 )
+			{
+				ret = new Double( s );
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * return properly quoted sheetname
+	 *
+	 * @param s
+	 * @return
+	 */
+	public static String qualifySheetname( String s )
+	{
+		if( (s == null) || s.equals( "" ) )
+		{
+			return s;
+		}
+
+		if( (s.charAt( 0 ) != '\'') && ((s.indexOf( ' ' ) > -1) || (s.indexOf( '&' ) > -1) || (s.indexOf( ',' ) > -1) || (s.indexOf( '(' ) > -1)) )
+		{
+			if( !s.contains( "'" ) )    // normal case of no embedded ' s
+			{
+				return "'" + s + "'";
+			}
+			return "\"" + s + "\"";
+		}
+
+		return s;
 	}
 
 	/**
@@ -74,6 +166,51 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	}
 
 	/**
+	 * return cell address with $'s e.g.
+	 * cell AB12 ==> $AB$12
+	 * cell Sheet1!C2=>Sheet1!$C$2
+	 * Does NOT handle ranges
+	 *
+	 * @param s
+	 * @return
+	 */
+	public static String qualifyCellAddress( String s )
+	{
+		String prefix = "";
+		if( !s.contains( "$" ) )
+		{    // it's not qualified yet
+			int i = s.indexOf( "!" );
+			if( i > -1 )
+			{
+				prefix = s.substring( 0, i + 1 );
+				s = s.substring( i + 1 );
+			}
+			s = "$" + s;
+			i = 1;
+			while( (i < s.length()) && !Character.isDigit( s.charAt( i++ ) ) )
+			{
+				;
+			}
+			i--;
+			if( (i > 0) && (i < s.length()) )
+			{
+				s = s.substring( 0, i ) + "$" + s.substring( i );
+			}
+		}
+		return prefix + s;
+	}    // determine behavior
+
+	public static int getArrayLen( Object o )
+	{
+		int len = 0;
+		if( o instanceof double[] )
+		{
+			len = ((double[]) o).length;
+		}
+		return len;
+	}
+
+	/**
 	 * a locking mechanism so that Ptgs are not endlessly
 	 * re-calculated
 	 *
@@ -85,17 +222,249 @@ public abstract class GenericPtg implements Ptg, Cloneable
 		lock_id = x;
 	}
 
-	// determine behavior
+	@Override
+	public Object clone()
+	{
+		try
+		{
+			return super.clone();
+		}
+		catch( CloneNotSupportedException e )
+		{
+			// This is, in theory, impossible
+			return null;
+		}
+	}
+
+	public void init( byte[] b )
+	{
+		ptgId = b[0];
+		record = b;
+	}
+
 	@Override
 	public boolean getIsOperator()
 	{
 		return false;
 	}
 
+	/**
+	 * generic reading of a row byte pair with handling for Excel 2007 if necessary
+	 *
+	 * @param b0
+	 * @param b1
+	 * @return int row
+	 */
+	public int readRow( byte b0, byte b1 )
+	{
+		if( ((parent_rec != null) && !parent_rec.getWorkBook().getIsExcel2007()) )
+		{
+			int rw = ByteTools.readInt( b0, b1, (byte) 0, (byte) 0 );
+			if( (rw >= (MAXROWS_BIFF8 - 1)) || (rw < 0) || (this instanceof PtgRefN) )    // PtgRefN's are ALWAYS relative and therefore never over 32xxx
+			{
+				rw = ByteTools.readShort( b0, b1 );
+			}
+			return rw;
+		}
+		// issue when reading Excel2007 rw from bytes as limits exceed ... try to interpret as best one can
+		int rw = ByteTools.readInt( b0, b1, (byte) 0, (byte) 0 );
+		if( rw == 65535 )
+		{    // have to assume that this means a wholeCol reference
+			rw = -1;
+			((PtgRef) this).wholeCol = true;
+		}
+		return rw;
+	}
+
+	/**
+	 * Returns an array of doubles from number-type ptg's sent in.
+	 * This should only be referenced by sub-classes.
+	 * <p/>
+	 * Null values accessed are treated as 0.  Within excel (empty cell values == 0) Tested!
+	 * Sometimes as well you can get empty string values, "".  These are NOT EQUAL ("" != 0)
+	 *
+	 * @param pthings
+	 * @return
+	 */
+	protected static Object[] getValuesFromPtgs( Ptg[] pthings )
+	{
+		Object[] obar = new Object[pthings.length];
+
+		for( int t = 0; t < obar.length; t++ )
+		{
+			Ptg ptg = pthings[t];
+			if( ptg instanceof PtgErr )
+			{
+				return null;
+			}
+
+			if( ptg instanceof PtgArray )
+			{
+				obar[t] = ptg.getComponents();    // get all items in array as Ptgs
+				Object v = null;
+				try
+				{
+					v = getValuesFromObjects( (Object[]) obar[t] );    // get value array from the ptgs
+				}
+				catch( NumberFormatException e )
+				{    // string or non-numeric values
+					v = getStringValuesFromPtgs( (Ptg[]) obar[t] );
+				}
+				obar[t] = v;
+			}
+			else if( ptg instanceof PtgArea )
+			{
+				PtgArea ptgArea = (PtgArea) ptg;
+				Ptg[] components = ptgArea.getComponents();
+				Object[] values = getValuesFromPtgs( components );
+				obar[t] = values;
+			}
+			else
+			{
+				Object pval = ptg.getValue();
+				if( pval instanceof PtgArray )
+				{
+					obar[t] = ((PtgArray) pval).getComponents();    // get all items in array as Ptgs
+					Object v = null;
+					try
+					{
+						v = getValuesFromObjects( (Object[]) obar[t] );    // get value array from the ptgs
+					}
+					catch( NumberFormatException e )
+					{    // string or non-numeric values
+						v = getStringValuesFromPtgs( (Ptg[]) obar[t] );
+					}
+					obar[t] = v;
+				}
+				else if( pval instanceof Name )
+				{    // then get it's components ...
+					obar[t] = ptg.getComponents();
+					Object v = null;
+					try
+					{
+						v = getValuesFromPtgs( (Ptg[]) obar[t] );    // get value array from the ptgs
+					}
+					catch( NumberFormatException e )
+					{    // string or non-numeric values
+						v = getStringValuesFromPtgs( (Ptg[]) obar[t] );
+					}
+					obar[t] = v;
+				}
+				else
+				{    // it's a single value
+					try
+					{
+						obar[t] = getDoubleValueFromObject( pval );
+					}
+					catch( NumberFormatException e )
+					{
+						if( pval instanceof CalculationException )
+						{
+							obar[t] = pval.toString();
+						}
+						else
+						{
+							obar[t] = pval;
+						}
+					}
+				}
+			}
+		}
+		return obar;
+	}
+
 	@Override
 	public boolean getIsBinaryOperator()
 	{
 		return false;
+	}
+
+	/**
+	 * Returns an array of doubles from number-type ptg's sent in.
+	 * This should only be referenced by sub-classes.
+	 * <p/>
+	 * Null values accessed are treated as 0.  Within excel (empty cell values == 0) Tested!
+	 * Sometimes as well you can get empty string values, "".  These are NOT EQUAL ("" != 0)
+	 *
+	 * @param pthings
+	 * @return
+	 */
+	protected static double[] getValuesFromObjects( Object[] pthings ) throws NumberFormatException
+	{
+		double[] returnDbl = new double[pthings.length];
+		for( int i = 0; i < pthings.length; i++ )
+		{
+
+			// Object o = pthings[i].getValue();
+			Object o = pthings[i];
+
+			if( o == null )
+			{    // NO!! "" is NOT "0", blank is, but not a zero length string.  Causes calc errors, need to handle diff somehow20081103 KSC: don't error out if "" */
+				returnDbl[i] = 0.0;
+			}
+			else if( o instanceof Double )
+			{
+				returnDbl[i] = (Double) o;
+			}
+			else if( o instanceof Integer )
+			{
+				returnDbl[i] = (double) (Integer) o;
+			}
+			else if( o instanceof Boolean )
+			{    // Excel converts booleans to numbers in calculations 20090129 KSC
+				returnDbl[i] = ((Boolean) o ? 1.0 : 0.0);
+			}
+			else if( o instanceof PtgBool )
+			{
+				returnDbl[i] = ((Boolean) (((PtgBool) o).getValue()) ? 1.0 : 0.0);
+			}
+			else if( o instanceof PtgErr )
+			{
+				// ?
+			}
+			else
+			{
+				String s = o.toString();
+				Double d = new Double( s );
+				returnDbl[i] = d;
+			}
+		}
+		return returnDbl;
+	}
+
+	/**
+	 * returns an array of strings from ptg's sent in.
+	 * This should only be referenced by sub-classes.
+	 */
+	protected static String[] getStringValuesFromPtgs( Ptg[] pthings )
+	{
+		String[] returnStr = new String[pthings.length];
+		for( int i = 0; i < pthings.length; i++ )
+		{
+			if( pthings[i] instanceof PtgErr )
+			{
+				return new String[]{ "#VALUE!" };    // 20081202 KSC: return error value ala Excel
+			}
+
+			Object o = pthings[i].getValue();
+			if( o != null )
+			{ // 20070215 KSC: avoid nullpointererror
+				try
+				{    // 20090205 KSC: try to convert numbers to ints when converting to string as otherwise all numbers come out as x.0
+					returnStr[i] = String.valueOf( ((Double) o).intValue() );
+				}
+				catch( Exception e )
+				{
+					String s = o.toString();
+					returnStr[i] = s;
+				}
+			}
+			else
+			{
+				returnStr[i] = "null"; // 20070216 KSC: Shouldn't match empty string!
+			}
+		}
+		return returnStr;
 	}
 
 	@Override
@@ -302,7 +671,7 @@ public abstract class GenericPtg implements Ptg, Cloneable
 //	                    if (vars[x] instanceof PtgStr) // 20060214 KSC: Quote string params
 //	                    	part= "\"" + part + "\"";
 						out.append( part );
-		                /*if(!part.equals(""))*/
+				        /*if(!part.equals(""))*/
 						out.append( "," );
 					}
 				}
@@ -348,12 +717,6 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	public byte getOpcode()
 	{
 		return ptgId;
-	}
-
-	public void init( byte[] b )
-	{
-		ptgId = b[0];
-		record = b;
 	}
 
 	/**
@@ -440,13 +803,13 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	}
 
 	/**
-	 * Gets the value of the ptg represented as an double.
+	 * Gets the value of the ptg represented as a double.
 	 * <p/>
 	 * This can result in loss of precision for floating point values.
 	 * <p/>
-	 * NAN will be returned for values that are not translateable to an double
+	 * NAN will be returned for values that are not translatable to a double
 	 * <p/>
-	 * overrideen in PtgNumber
+	 * Overridden in PtgNumber
 	 *
 	 * @return integer representing the ptg, or NAN
 	 */
@@ -536,9 +899,6 @@ public abstract class GenericPtg implements Ptg, Cloneable
 		return null;
 	}
 
-	// Parent Rec is the BiffRec record referenced by Operand Ptgs
-	protected XLSRecord parent_rec;
-
 	@Override
 	public void setParentRec( XLSRecord f )
 	{
@@ -549,261 +909,6 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	public XLSRecord getParentRec()
 	{
 		return parent_rec;
-	}
-
-	/**
-	 * Returns an array of doubles from number-type ptg's sent in.
-	 * This should only be referenced by sub-classes.
-	 * <p/>
-	 * Null values accessed are treated as 0.  Within excel (empty cell values == 0) Tested!
-	 * Sometimes as well you can get empty string values, "".  These are NOT EQUAL ("" != 0)
-	 *
-	 * @param pthings
-	 * @return
-	 */
-	protected static Object[] getValuesFromPtgs( Ptg[] pthings )
-	{
-		Object[] obar = new Object[pthings.length];
-		for( int t = 0; t < obar.length; t++ )
-		{
-			if( pthings[t] instanceof PtgErr )
-			{
-				return null;
-			}
-			if( pthings[t] instanceof PtgArray )
-			{
-				obar[t] = pthings[t].getComponents();    // get all items in array as Ptgs
-				Object v = null;
-				try
-				{
-					v = getValuesFromObjects( (Object[]) obar[t] );    // get value array from the ptgs
-				}
-				catch( NumberFormatException e )
-				{    // string or non-numeric values
-					v = getStringValuesFromPtgs( (Ptg[]) obar[t] );
-				}
-				obar[t] = v;
-			}
-			else
-			{
-				Object pval = pthings[t].getValue();
-				if( pval instanceof PtgArray )
-				{
-					obar[t] = ((PtgArray) pval).getComponents();    // get all items in array as Ptgs
-					Object v = null;
-					try
-					{
-						v = getValuesFromObjects( (Object[]) obar[t] );    // get value array from the ptgs
-					}
-					catch( NumberFormatException e )
-					{    // string or non-numeric values
-						v = getStringValuesFromPtgs( (Ptg[]) obar[t] );
-					}
-					obar[t] = v;
-				}
-				else if( pval instanceof Name )
-				{    // then get it's components ...
-					obar[t] = pthings[t].getComponents();
-					Object v = null;
-					try
-					{
-						v = getValuesFromPtgs( (Ptg[]) obar[t] );    // get value array from the ptgs
-					}
-					catch( NumberFormatException e )
-					{    // string or non-numeric values
-						v = getStringValuesFromPtgs( (Ptg[]) obar[t] );
-					}
-					obar[t] = v;
-				}
-				else
-				{    // it's a single value
-					try
-					{
-						obar[t] = getDoubleValueFromObject( pval );
-					}
-					catch( NumberFormatException e )
-					{
-						if( pval instanceof CalculationException )
-						{
-							obar[t] = pval.toString();
-						}
-						else
-						{
-							obar[t] = pval;
-						}
-					}
-				}
-			}
-		}
-		return obar;
-	}
-
-	/**
-	 * Returns an array of doubles from number-type ptg's sent in.
-	 * This should only be referenced by sub-classes.
-	 * <p/>
-	 * Null values accessed are treated as 0.  Within excel (empty cell values == 0) Tested!
-	 * Sometimes as well you can get empty string values, "".  These are NOT EQUAL ("" != 0)
-	 *
-	 * @param pthings
-	 * @return
-	 */
-	protected static double[] getValuesFromObjects( Object[] pthings ) throws NumberFormatException
-	{
-		double[] returnDbl = new double[pthings.length];
-		for( int i = 0; i < pthings.length; i++ )
-		{
-
-			// Object o = pthings[i].getValue();
-			Object o = pthings[i];
-
-			if( o == null )
-			{    // NO!! "" is NOT "0", blank is, but not a zero length string.  Causes calc errors, need to handle diff somehow20081103 KSC: don't error out if "" */
-				returnDbl[i] = 0.0;
-			}
-			else if( o instanceof Double )
-			{
-				returnDbl[i] = (Double) o;
-			}
-			else if( o instanceof Integer )
-			{
-				returnDbl[i] = (double)(Integer) o;
-			}
-			else if( o instanceof Boolean )
-			{    // Excel converts booleans to numbers in calculations 20090129 KSC
-				returnDbl[i] = ((Boolean) o ? 1.0 : 0.0);
-			}
-			else if( o instanceof PtgBool )
-			{
-				returnDbl[i] = ((Boolean) (((PtgBool) o).getValue()) ? 1.0 : 0.0);
-			}
-			else if( o instanceof PtgErr )
-			{
-				// ?
-			}
-			else
-			{
-				String s = o.toString();
-				Double d = new Double( s );
-				returnDbl[i] = d;
-			}
-		}
-		return returnDbl;
-	}
-
-	/**
-	 * convert a value to a double, throws exception if cannot
-	 *
-	 * @param o
-	 * @return double value if possible
-	 * @throws NumberFormatException
-	 */
-	public static double getDoubleValue( Object o, XLSRecord parent ) throws NumberFormatException
-	{
-		if( o instanceof Double )
-		{
-			return (Double) o;
-		}
-		if( (o == null) || o.toString().equals( "" ) )
-		{
-			// empty string is interpreted as 0 if show zero values
-			if( (parent != null) && parent.getSheet().getWindow2().getShowZeroValues() )
-			{
-				return 0.0;
-			}
-			// otherwise, throw error
-			throw new NumberFormatException();
-		}
-		return new Double( o.toString() );    // will throw NumberFormatException if cannot convert
-	}
-
-	/**
-	 * converts a single Ptg number-type value to a double
-	 */
-	public static double getDoubleValueFromObject( Object o )
-	{
-		double ret = 0.0;
-		if( o == null )
-		{    // 20081103 KSC: don't error out if "" */
-			ret = 0.0;
-		}
-		else if( o instanceof Double )
-		{
-			ret = (Double) o;
-		}
-		else if( o instanceof Integer )
-		{
-			ret = (double) (Integer)o;
-		}
-		else if( o instanceof Boolean )
-		{    // Excel converts booleans to numbers in calculations 20090129 KSC
-			ret = ((Boolean) o ? 1.0 : 0.0);
-		}
-		else if( o instanceof PtgErr )
-		{
-			// ?
-		}
-		else
-		{
-			String s = o.toString();
-			// handle formatted dates from fields like TEXT() calcs
-			if( s.indexOf( "/" ) > -1 )
-			{
-				try
-				{
-					Calendar c = DateConverter.convertStringToCalendar( s );
-					if( c != null )
-					{
-						ret = DateConverter.getXLSDateVal( c );
-					}
-				}
-				catch( Exception e )
-				{//guess not
-				}
-				;
-			}
-			if( ret == 0.0 )
-			{
-				Double d = new Double( s );
-				ret = d;
-			}
-		}
-		return ret;
-	}
-
-	/**
-	 * returns an array of strings from ptg's sent in.
-	 * This should only be referenced by sub-classes.
-	 */
-	protected static String[] getStringValuesFromPtgs( Ptg[] pthings )
-	{
-		String[] returnStr = new String[pthings.length];
-		for( int i = 0; i < pthings.length; i++ )
-		{
-			if( pthings[i] instanceof PtgErr )
-			{
-				return new String[]{ "#VALUE!" };    // 20081202 KSC: return error value ala Excel
-			}
-
-			Object o = pthings[i].getValue();
-			if( o != null )
-			{ // 20070215 KSC: avoid nullpointererror
-				try
-				{    // 20090205 KSC: try to convert numbers to ints when converting to string as otherwise all numbers come out as x.0
-					returnStr[i] = String.valueOf( ((Double) o).intValue() );
-				}
-				catch( Exception e )
-				{
-					String s = o.toString();
-					returnStr[i] = s;
-				}
-			}
-			else
-			{
-				returnStr[i] = "null"; // 20070216 KSC: Shouldn't match empty string!
-			}
-		}
-		return returnStr;
 	}
 
 	/**
@@ -866,108 +971,6 @@ public abstract class GenericPtg implements Ptg, Cloneable
 	public boolean isBlank()
 	{
 		return false;
-	}
-
-	/**
-	 * return properly quoted sheetname
-	 *
-	 * @param s
-	 * @return
-	 */
-	public static final String qualifySheetname( String s )
-	{
-		if( (s == null) || s.equals( "" ) )
-		{
-			return s;
-		}
-		try
-		{
-			if( (s.charAt( 0 ) != '\'') && ((s.indexOf( ' ' ) > -1) || (s.indexOf( '&' ) > -1) || (s.indexOf( ',' ) > -1) || (s.indexOf( '(' ) > -1)) )
-			{
-				if( s.indexOf( "'" ) == -1 )    // normal case of no embedded ' s
-				{
-					return "'" + s + "'";
-				}
-				return "\"" + s + "\"";
-			}
-		}
-		catch( StringIndexOutOfBoundsException e )
-		{
-		}
-		return s;
-	}
-
-	/**
-	 * return cell address with $'s e.g.
-	 * cell AB12 ==> $AB$12
-	 * cell Sheet1!C2=>Sheet1!$C$2
-	 * Does NOT handle ranges
-	 *
-	 * @param s
-	 * @return
-	 */
-	public static String qualifyCellAddress( String s )
-	{
-		String prefix = "";
-		if( s.indexOf( "$" ) == -1 )
-		{    // it's not qualified yet
-			int i = s.indexOf( "!" );
-			if( i > -1 )
-			{
-				prefix = s.substring( 0, i + 1 );
-				s = s.substring( i + 1 );
-			}
-			s = "$" + s;
-			i = 1;
-			while( (i < s.length()) && !Character.isDigit( s.charAt( i++ ) ) )
-			{
-				;
-			}
-			i--;
-			if( (i > 0) && (i < s.length()) )
-			{
-				s = s.substring( 0, i ) + "$" + s.substring( i );
-			}
-		}
-		return prefix + s;
-	}
-
-	public static int getArrayLen( Object o )
-	{
-		int len = 0;
-		if( o instanceof double[] )
-		{
-			len = ((double[]) o).length;
-		}
-		return len;
-	}
-
-	/**
-	 * generic reading of a row byte pair with handling for Excel 2007 if necessary
-	 *
-	 * @param b0
-	 * @param b1
-	 * @return int row
-	 */
-	public int readRow( byte b0, byte b1 )
-	{
-		if( ((parent_rec != null) && !parent_rec.getWorkBook().getIsExcel2007()) )
-		{
-			int rw = ByteTools.readInt( b0, b1, (byte) 0, (byte) 0 );
-			if( (rw >= (MAXROWS_BIFF8 - 1)) || (rw < 0) || (this instanceof PtgRefN) )    // PtgRefN's are ALWAYS relative and therefore never over 32xxx
-			{
-				rw = ByteTools.readShort( b0, b1 );
-			}
-			return rw;
-		}
-		// issue when reading Excel2007 rw from bytes as limits exceed ... try to interpret as best one can
-		int rw = ByteTools.readInt( b0, b1, (byte) 0, (byte) 0 );
-		if( rw == 65535 )
-		{    // have to assume that this means a wholeCol reference
-			rw = -1;
-			((PtgRef) this).wholeCol = true;
-		}
-		return rw;
 	}
 
 	/**

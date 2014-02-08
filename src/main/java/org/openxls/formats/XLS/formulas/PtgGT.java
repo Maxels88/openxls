@@ -98,10 +98,9 @@ public class PtgGT extends GenericPtg implements Ptg
 		try
 		{
 			// 20090202 KSC: Handle array formulas
-			Object[] o = super.getValuesFromPtgs( form );
+			Object[] o = getValuesFromPtgs( form );
 			if( !o[0].getClass().isArray() )
 			{
-				//double[] dub = super.getValuesFromPtgs(form);
 				// there should always be only two ptg's in this, error if not.
 				if( (o == null) || (o.length != 2) )
 				{
@@ -158,24 +157,16 @@ public class PtgGT extends GenericPtg implements Ptg
 					{
 						return new PtgErr( PtgErr.convertStringToLookupByte( o[1].toString() ) );
 					}
-					// KSC: ExcelTools.transformStringToIntVals does not work in all cases- think of date strings ...
 					res = (o[0].toString().compareTo( o[1].toString() ) > 0);
-/* KSC: ExcelTools.transformStringToIntVals does not work in all cases- think of date strings ...						
-					int[] i1 = ExcelTools.transformStringToIntVals(o[0].toString());
-					int[] i2 = ExcelTools.transformStringToIntVals(o[1].toString());
-					try {
-						res= true;
-						for(int k=0;k<i1.length && res;k++){
-							res= (i1[k] > i2[k]);
-						}
-					} catch (ArrayIndexOutOfBoundsException e) {
-						res= false;
-					}*/
 				}
 
 				PtgBool pboo = new PtgBool( res );
 				return pboo;
-			}    // handle array fomulas
+			}
+
+			//
+		    // handle array formulas
+			//
 			boolean res = false;
 			String retArry = "";
 			int nArrays = java.lang.reflect.Array.getLength( o );    // TODO: Should always be 2 ????????????????????
@@ -211,19 +202,7 @@ public class PtgGT extends GenericPtg implements Ptg
 						{
 							return new PtgErr( PtgErr.convertStringToLookupByte( o[1].toString() ) );
 						}
-						// KSC: ExcelTools.transformStringToIntVals does not work in all cases- think of date strings ...
 						res = (o[0].toString().compareTo( o[1].toString() ) > 0);
-	/* KSC: ExcelTools.transformStringToIntVals does not work in all cases- think of date strings ...
-						int[] i1 = ExcelTools.transformStringToIntVals(o[0].toString());
-						int[] i2 = ExcelTools.transformStringToIntVals(o[1].toString());
-						try {
-							res= true;
-							for(int k=0;k<i1.length && res;k++){
-								res= (i1[k] > i2[k]);
-							}
-						} catch (ArrayIndexOutOfBoundsException e) {
-							res= false;
-						}*/
 					}
 					retArry = retArry + res + ",";
 				}
@@ -232,31 +211,12 @@ public class PtgGT extends GenericPtg implements Ptg
 			PtgArray pa = new PtgArray();
 			pa.setVal( retArry );
 			return pa;
-			/*}catch(NumberFormatException e){ 20090203 KSC: ahndled above
-			String[] s = getStringValuesFromPtgs(form);
-			if (s==null || s.length<2) { // 20081203 KSC: Handle errors ala Excel
-			 	if (!(s.length==1 && s[0].equals(PtgErr.ERROR_VALUE))) {
-						// report error?
-				}
-	            return new PtgErr(PtgErr.ERROR_VALUE);
-			} 
-			// Unfortuately <, >, and <> can all deal with strings as well...
-			if (s[0].equalsIgnoreCase(s[1])) return new PtgBool(false);
-			try {
-				int[] i1 = ExcelTools.transformStringToIntVals(s[0]);
-				int[] i2 = ExcelTools.transformStringToIntVals(s[1]);
-				for(int i=0;i<s.length;i++){
-					if (i1[i] > i2[i])return new PtgBool(true);
-					if (i1[i] < i2[i])return new PtgBool(false);
-				}
-				return new PtgBool(true);
-				*/
 		}
 		catch( Exception ex )
 		{
+			log.debug( "Exception while performing GreaterThan operation", ex );
 			return new PtgErr( PtgErr.ERROR_VALUE );
 		}
-		/*}*/
 	}
 
 }

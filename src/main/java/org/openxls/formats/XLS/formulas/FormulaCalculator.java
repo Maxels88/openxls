@@ -23,6 +23,7 @@
 package org.openxls.formats.XLS.formulas;
 
 import org.openxls.formats.XLS.FunctionNotSupportedException;
+import org.openxls.formats.XLS.XLSRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,14 +61,15 @@ public class FormulaCalculator
 		stck = (Ptg[]) expression.toArray( stck );
 		Stack calcStack = new Stack();
 		for( int t = 0; t < sz; t++ )
-		{ // flip the stack TODO: investigate why needed
+		{
+			// flip the stack TODO: investigate why needed
 			calcStack.add( 0, stck[t] );
 		}
 		Stack tempstack = new Stack();
-		Stack newstck = calcStack;
-		while( !newstck.isEmpty() )
-		{// loop while there are Ptgs
-			handlePtg( newstck, tempstack );
+		while( !calcStack.isEmpty() )
+		{
+			// loop while there are Ptgs
+			handlePtg( calcStack, tempstack );
 		}
 		Ptg finalptg = (Ptg) tempstack.pop();
 		return finalptg.getValue();
@@ -109,57 +111,67 @@ public class FormulaCalculator
 	static void handlePtg( Stack newstck, Stack vals ) throws FunctionNotSupportedException
 	{
 		Ptg p = (Ptg) newstck.pop();
-		int x = 0;
-		int t = 0;
+
 		if( p.getIsOperator() || p.getIsControl() || p.getIsFunction() )
 		{
 			// Get rid of the parens ptgs
 			if( p.getIsControl() && !vals.isEmpty() )
 			{
 				if( p.getOpcode() == 0x15 )
-				{ // its a parens!
+				{
+					// its a parens!
 					// the parens is already pop'd so just return and it is gone...
 					return;
 				}
 				// we didn't use it, back it goes.
-				log.debug( "opr: " + p.toString() );
+				log.trace( "opr: " + p.toString() );
 			}
 			// make sure we have the correct amount popped back in..
+			int t = 0;
+
 			if( p.getIsBinaryOperator() )
 			{
 				t = 2;
 			}
+
 			if( p.getIsUnaryOperator() )
 			{
 				t = 1;
 			}
+
 			if( p.getIsStandAloneOperator() )
 			{
 				t = 0;
 			}
+
 			if( (p.getOpcode() == 0x22) || (p.getOpcode() == 0x42) || (p.getOpcode() == 0x62) )
 			{
 				t = p.getNumParams();
-			}// it's a ptgfunkvar!
-			if( (p.getOpcode() == 0x21) || (p.getOpcode() == 0x41) || (p.getOpcode() == 0x61) )
+			}
+			else if( (p.getOpcode() == 0x21) || (p.getOpcode() == 0x41) || (p.getOpcode() == 0x61) )
 			{
 				t = p.getNumParams();
 			}// guess that ptgfunc is not only one..
 
 			Ptg[] vx = new Ptg[t];
-			for(; x < t; x++ )
+
+			for( int x = 0; x < t; x++ )
 			{
-				vx[(t - 1) - x] = (Ptg) vals.pop();// get'em
+				// Ok, at this point we know how many operands this current function/method requires (t), so pop them off the vals stack
+				// into a new one for this function/operands processing.
+				vx[(t - 1) - x] = (Ptg) vals.pop();
 			}
 
-			// QUITE AN IMPORTANT LINE... FYI. -jm
+			Ptg result;
 			try
 			{
-				p = p.calculatePtg( vx );
+				// FIXME: We need to know if we are inside a SUMPRPODUCT here (and possibly other funky functions) where primitive operations
+				// FIXME: have different results - case in point: SUMPRODUCT( 0+ (A1:A10>0) )  - this is a coercion function within Excel.
+				result = p.calculatePtg( vx );
 			}
 			catch( CalculationException e )
 			{
-				p = new PtgErr( e.getErrorCode() );
+				result = new PtgErr( e.getErrorCode() );
 				if( e.getName().equals( "#CIR_ERR!" ) )
 				{
 					((PtgErr) p).setCircularError( true );
@@ -168,26 +180,27 @@ public class FormulaCalculator
 
         	/* useful for debugging*/
 			String adr = "";
-			if( p.getParentRec() != null )
+			XLSRecord parentRec = result.getParentRec();
+			if( parentRec != null )
 			{
-				adr = "addr: " + p.getParentRec().getCellAddress();
+				adr = "addr: " + parentRec.getCellAddress();
 			}
-			log.trace( adr + " val: " + p.toString() );
-			vals.push( p );// push it back on the stack
+			log.trace( "{} val: {}", adr, result.toString() );
+			vals.push( result );// push it back on the stack
 
 		}
 		else if( p.getIsOperand() )
 		{
-			log.trace( "opr: " + p.toString() );
+			log.trace( "opr: {}", p.toString() );
 
 			vals.push( p );
-
 		}
 		else if( p instanceof PtgAtr )
 		{
-
+			PtgAtr ptgAtr = (PtgAtr) p;
+			// FIXME: "Probably" ?
 			// this is probably just a space at this point, don't output error message
-
+			log.debug( "Possible 'space' - PtgAtr - ignoring for now: {}", ptgAtr.toString() );
 		}
 		else
 		{
