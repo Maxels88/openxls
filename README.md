@@ -18,7 +18,9 @@ doing this and will attempt to fix the ones we encounter as we go. The aim is to
 with us as the code base is around 10 years old and has lots of fixes and workarounds for oddities encountered in the field.
 
 ## 2014-02-07
-Check Workbook recalc mode, and if set to automatic recalc formulas on Workbook open (similar to how Excel does)
+Check Workbook recalc mode, and if set to automatic recalc formulas on Workbook open (similar to how Excel does). Several fixes - basic
+addition associativity when dealing with one array arg, unary minus handling with arrays, addition with arrays, formula handling with
+cell reference ranges, SUMPRODUCT fixes for coercive situations.
 
 ## 2014-01-30
 Squashed another bug relating to Mulblank handling
